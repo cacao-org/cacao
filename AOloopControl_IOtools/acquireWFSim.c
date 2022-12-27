@@ -159,7 +159,7 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF,
         ".comp.darksub",
-        "Subtract Dark aolX_wfsdark",
+        "Subtract Dark aolX_wfsdark -> imWFS0",
         "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSsubdark,
@@ -168,7 +168,7 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF,
         ".comp.WFSnormalize",
-        "normalize WFS frames",
+        "normalize WFS frames -> imWFS1",
         "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSnormalize,
@@ -177,7 +177,7 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF,
         ".comp.WFSrefsub",
-        "subtract WFS reference aol0_wfsref",
+        "subtract WFS reference aol0_wfsref -> imWFS2",
         "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSrefsub,
@@ -336,12 +336,24 @@ static errno_t compute_function()
 
 
     imageID IDwfsmask = -1;
+    IMGID imgwfsmask;
     {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%u_wfsmask", *AOloopindex);
-        IDwfsmask = read_sharedmem_image(name);
-        printf("reading image %s -> ID = %ld\n", name, IDwfsmask);
+        char wfsmaskname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(wfsmaskname, "aol%u_wfsmask", *AOloopindex);
+        imgwfsmask = stream_connect_create_2Df32(wfsmaskname, sizexWFS, sizeyWFS);
+        IDwfsmask = imgwfsmask.ID;
     }
+    if(imgwfsmask.md->creatorPID == getpid())
+    {
+        // if wfsmask created here, initialize it to 1
+        printf("INITIALIZING wfsmask to 1\n");
+        for(uint64_t ii; ii < imgwfsmask.md->nelement; ii++)
+        {
+            imgwfsmask.im->array.F[ii] = 1.0;
+        }
+    }
+
+
 
     list_image_ID();
 
@@ -547,11 +559,6 @@ static errno_t compute_function()
             }
 
             processinfo_update_output_stream(processinfo, ID_imWFS0);
-            // data.image[ID_imWFS0].md[0].cnt1 =
-            // data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].cnt1;
-            //                 COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS0, -1);
-            //                 data.image[ID_imWFS0].md[0].cnt0 ++;
-            //                 data.image[ID_imWFS0].md[0].write = 0;
         }
 
         DEBUG_TRACEPOINT(" ");
@@ -623,10 +630,6 @@ static errno_t compute_function()
             }
 
             processinfo_update_output_stream(processinfo, ID_imWFS1);
-
-            //                COREMOD_MEMORY_image_set_sempost_byID(ID_imWFS1, -1);
-            //                data.image[ID_imWFS1].md[0].cnt0 ++;
-            //                data.image[ID_imWFS1].md[0].write = 0;
         }
 
         // ===========================================
