@@ -51,3 +51,6 @@ sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
 sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBcycle 20"
 sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
 sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
+
+sendFPScmd "setval compfCM-0.SVDlim 0.01"
+sendFPScmd "confwupdate compfCM-0"

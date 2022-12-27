@@ -32,7 +32,8 @@ Subsequent tasks can perform specific parts of the AO loop.
     $ cacao-aorun-030-acqzRM start
     $ cacao-aorun-035-acqloRM start
     $ cacao-aorun-040-compfCM
-    $ mkdir AOcalibs
+    $ mkdir -p ../AOcalibs
+    $ cd ..; ln -s $(pwd)/AOcalibs $(pwd)/vispyr-rootdir/AOcalibs; cd -
     $ cacao-calib-archive cal000
     $ cacao-calib-apply cal000
 

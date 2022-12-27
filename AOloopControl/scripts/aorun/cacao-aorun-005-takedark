@@ -52,6 +52,7 @@ streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
 streamave ${CACAO_WFSSTREAM} ${CACAO_WFSSTREAM}_dark ${NBframe}
 saveFITS ${CACAO_WFSSTREAM}_dark "${CACAO_WFSSTREAM}_dark.fits"
+cpsh ${CACAO_WFSSTREAM}_dark aol${CACAO_LOOPNUMBER}_wfsdark
 listim
 exitCLI
 EOF
