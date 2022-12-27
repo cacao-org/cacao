@@ -55,13 +55,13 @@ echo "Loop ${CACAO_LOOPNUMBER}: Loading calibration from ${ARCHDIR}"
 if [[ -d "${ARCHDIR}" ]]; then
 
 # remove existing streams
-echo "Purging streams ..."
+echo "Purging/zeroing streams ..."
 
 milk-shmim-rm aol${CACAO_LOOPNUMBER}_modesWFS
 milk-shmim-rm aol${CACAO_LOOPNUMBER}_modevalWFS
 milk-shmim-rm aol${CACAO_LOOPNUMBER}_DMmodes
 milk-shmim-rm aol${CACAO_LOOPNUMBER}_modevalDM
-milk-shmim-rm aol${CACAO_LOOPNUMBER}_wfsref
+milk-shmim-zero aol${CACAO_LOOPNUMBER}_wfsref
 milk-shmim-rm aol${CACAO_LOOPNUMBER}_wfsmask
 milk-shmim-rm aol${CACAO_LOOPNUMBER}_wfsmap
 milk-shmim-rm aol${CACAO_LOOPNUMBER}_dmmask

@@ -388,8 +388,11 @@ if [ "${CACAO_FPSPROC_ACQUWFS}" = "ON" ]; then
         addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
 
 
+		addfpscmd "setval ${fpsfname}.comp.darksub ON"
         addfpscmd "setval ${fpsfname}.comp.WFSnormalize ON"
-        addfpscmd "setval ${fpsfname}.comp.darksub ON"
+        addfpscmd "setval ${fpsfname}.comp.WFSrefsub ON"
+        addfpscmd "setval ${fpsfname}.comp.WFSsigav ON"
+        addfpscmd "setval ${fpsfname}.comp.WFSrefc ON"
         addfpscmd "setval ${fpsfname}.comp.imtotal ON"
         addfpscmd "setval ${fpsfname}.comp.normwfsim ON"
 
@@ -875,8 +878,8 @@ if [ "${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
 
-        #TODO : populate wfsref
-        addfpscmd "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref"
+        # is using imWFS2 as input, no need to subtract reference
+        addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
 
         addfpscmd "setval ${fpsfname}.outinit ON"
 
