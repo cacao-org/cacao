@@ -40,6 +40,8 @@ fi
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.compphnoise OFF"
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 
+sendFPScmd "setval acquWFS-0.WFSnormfloor 0.01"
+
 sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.normalize ON"
 sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.LOmaxCPA 3.0"
 sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.timing.NBcycle 4"
