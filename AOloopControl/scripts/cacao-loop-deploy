@@ -48,6 +48,22 @@ function set_force() {
 	FORCE="1"
 }
 
+CPCONF="ON"
+RUNCONF="ON"
+
+MSopt+=( "c:copy:set_copy::copy configuration, do not run it" )
+function set_copy() {
+	RUNCONF="OFF"
+}
+
+
+MSopt+=( "r:run:set_run::run configuration, do not copy it" )
+function set_run() {
+	CPCONF="OFF"
+}
+
+
+
 
 # parse arguments
 source milk-argparse
@@ -61,6 +77,8 @@ echo "Configuration ${cacaoconfname}"
 confsrcdir="${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf"
 
 
+if [ ${CPCONF} == "ON" ]; then
+
 if [[ -d "$confsrcdir" ]]
 then
 	rsync -au --progress ${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf .
@@ -69,8 +87,15 @@ else
 	exit
 fi
 
-# LOOPNAME="$( cat ${cacaoconfname}-conf/LOOPNAME )"
-# echo "LOOPNAME = ${LOOPNAME}"
+
+fi
+
+
+
+
+
+if [ ${RUNCONF} == "ON" ]; then
+
 
 nbtask=$( grep -c '^[^#]' ${cacaoconfname}-conf////tasklist.txt )
 echo "${nbtask} TASKS"
@@ -78,7 +103,6 @@ echo "${nbtask} TASKS"
 
 
 # Run cacao task manager
-
 
 
 cacao-task-manager -X ${nbtask} ${cacaoconfname}
@@ -91,3 +115,5 @@ echo "CACAO_LOOPROOTDIR = ${CACAO_LOOPROOTDIR}"
 echo "CACAO_LOOPRUNDIR = ${CACAO_LOOPRUNDIR}"
 
 cp ${cacaoconfname}-conf/aorun-* ./${CACAO_LOOPROOTDIR}/
+
+fi
