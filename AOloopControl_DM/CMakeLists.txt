@@ -30,6 +30,7 @@ set(SCRIPTS
     scripts/cacao-astrogrid-mkgrid
     scripts/cacao-fpslistadd-DMATMTURB
     scripts/cacao-fpslistadd-DMCH2DISP
+    scripts/cacao-fpslistadd-DMCH2DISPSIM
 )
 
 set(LINKLIBS

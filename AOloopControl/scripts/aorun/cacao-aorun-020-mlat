@@ -39,7 +39,7 @@ fi
 
 # Checking stream
 streamcheckOK="OK"
-checkstream ${CACAO_WFSSTREAM}
+checkstream aol${CACAO_LOOPNUMBER}_wfsim
 
 if [ ${streamcheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"

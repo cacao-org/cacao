@@ -25,7 +25,7 @@ fi
 
 # Checking FPS
 FPScheckOK="OK"
-checkFPSON CACAO_FPSPROC_DMCH2DISP ${CACAO_FPSPROC_DMCH2DISP}
+checkFPSON CACAO_FPSPROC_DMCH2DISP ${CACAO_FPSPROC_DMCH2DISPSIM}
 checkFPSON CACAO_FPSPROC_STREAMDELAY ${CACAO_FPSPROC_STREAMDELAY}
 checkFPSON CACAO_FPSPROC_SIMMVMGPU ${CACAO_FPSPROC_SIMMVMGPU}
 checkFPSON CACAO_FPSPROC_WFSCAMSIM ${CACAO_FPSPROC_WFSCAMSIM}
@@ -46,8 +46,8 @@ ACTIONOK=1
 # Starting DM hardware delay simulator
 # ======================================================================
 
-sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEX}"
-sendFPScmd "runstart streamDelay-${CACAO_DMINDEX}"
+sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEXSIM}"
+sendFPScmd "runstart streamDelay-${CACAO_DMINDEXSIM}"
 
 
 # ======================================================================
@@ -71,7 +71,7 @@ done
 # ======================================================================
 
 milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_simwfsdark
-sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.wfscamim ${CACAO_WFSSTREAM}"
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.wfscamim ${CACAO_WFSSTREAMSIM}"
 FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
@@ -84,7 +84,7 @@ if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
 sendFPScmd "runstop wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstop simmvmgpu-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstop streamDelay-${CACAO_DMINDEX}"
+sendFPScmd "runstop streamDelay-${CACAO_DMINDEXSIM}"
 fi
 
 

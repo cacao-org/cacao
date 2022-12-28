@@ -24,12 +24,13 @@ if [ "${CACAO_FPSPROC_DMCH2DISP}" = "ON" ]; then
     # FPS full name
     fpsfname="${fpsname}-${fpsarg0}"
 
-    if grep -q "${fpsname}" fpslist.txt
+    fpslistline="${fpsname} cacaodm.DMcomb ${CACAO_DMINDEX}"
+    if grep -q "${fpslistline}" fpslist.txt
     then
         echolog "Process ${fpsname} already registered - skipping"
     else
         echolog "Adding process ${fpsname}"
-        echo "${fpsname}      cacaodm.DMcomb       ${CACAO_DMINDEX}"  >> fpslist.txt
+        echo "${fpslistline}"  >> fpslist.txt
 
         addfpscmdheader
         # infinite loop

@@ -45,11 +45,11 @@ ACTIONOK=1
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEXSIM}.option.voltmode OFF"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEXSIM}.option.DClevel 0.0"
 #taskset_DMch2disp="3"
-#sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
+#sendFPScmd "setval DMch2disp-${CACAO_DMINDEXSIM}.procinfo.taskset ${taskset_DMch2disp}"
 sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEXSIM}"
 sendFPScmd "runstart DMch2disp-${CACAO_DMINDEXSIM}"
 
-# WAIT for dm${CACAO_DMINDEX}disp to appear
+# WAIT for dm${CACAO_DMINDEXSIM}disp to appear
 filename="${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp.im.shm"
 echo "Waiting for file ${filename} ..."
 until [ -f "$filename" ]

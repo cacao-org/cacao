@@ -18,18 +18,19 @@ if [ "${CACAO_FPSPROC_DMCH2DISPSIM}" = "ON" ]; then
     # ==============================================================================
 
     # FPS name
-    fpsname="DMch2dispsim"
+    fpsname="DMch2disp"
     fpsarg0="${CACAO_DMINDEXSIM}"
 
     # FPS full name
     fpsfname="${fpsname}-${fpsarg0}"
 
-    if grep -q "${fpsname}" fpslist.txt
+	fpslistline="${fpsname} cacaodm.DMcomb ${CACAO_DMINDEXSIM}"
+    if grep -q "${fpslistline}" fpslist.txt
     then
         echolog "Process ${fpsname} already registered - skipping"
     else
         echolog "Adding process ${fpsname}"
-        echo "${fpsname}      cacaodm.DMcomb       ${CACAO_DMINDEXSIM}"  >> fpslist.txt
+        echo "${fpslistline}"  >> fpslist.txt
 
         addfpscmdheader
         # infinite loop
