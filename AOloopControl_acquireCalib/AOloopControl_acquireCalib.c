@@ -2471,6 +2471,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
             //
             if(fps.parray[fpi_comp_RM_DMmask].fpflag & FPFLAG_ONOFF)
             {
+
+
                 if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0)
                 {
                     int DMxsize =
@@ -2482,6 +2484,14 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     int DMMODE =
                         functionparameter_GetParamValue_INT64(&FPS_DMcomb,
                                 ".DMMODE");
+
+
+                    DMxsize = atoi(getenv("CACAO_DMxsize"));
+                    DMysize = atoi(getenv("CACAO_DMysize"));
+                    DMMODE  = 1 - atoi(getenv("CACAO_DMSPATIAL"));
+
+                    printf(">>>>>>>>> %d >>>>>>>>>>> DMsize %d %d\n", __LINE__, DMxsize, DMysize);
+
 
                     if(DMMODE == 0)  // square grid DM
                     {
@@ -2529,6 +2539,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
             //
             if(fps.parray[fpi_comp_RM_Mpoke].fpflag & FPFLAG_ONOFF)
             {
+
                 if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0)
                 {
 
@@ -2543,6 +2554,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     __attribute__((unused)) int DMMODE =
                         functionparameter_GetParamValue_INT64(&FPS_DMcomb,
                                 ".DMMODE");
+
+
 
                     AOloopControl_compTools_mkSimpleZpokeM(DMxsize,
                                                            DMysize,
@@ -3411,6 +3424,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN()
     free(pokearray);
 
     functionparameter_SaveFPS2disk(&fps);
+
 
     // Run RM decode exec script
     // Will perform task(s) unless set to cacao-NULL script
