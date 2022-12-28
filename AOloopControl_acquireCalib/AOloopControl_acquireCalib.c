@@ -2469,6 +2469,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
             //
             // Compute action: make DM RM mask
             //
+            printf("======== Compute action: make DM RM mask ============\n"); // TBE
+            fflush(stdout);
             if(fps.parray[fpi_comp_RM_DMmask].fpflag & FPFLAG_ONOFF)
             {
 
@@ -2486,11 +2488,15 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                                 ".DMMODE");
 
 
+                    printf("======== GET DM SIZE ============\n"); // TBE
+                    fflush(stdout);
+
                     DMxsize = atoi(getenv("CACAO_DMxsize"));
                     DMysize = atoi(getenv("CACAO_DMysize"));
                     DMMODE  = 1 - atoi(getenv("CACAO_DMSPATIAL"));
 
                     printf(">>>>>>>>> %d >>>>>>>>>>> DMsize %d %d\n", __LINE__, DMxsize, DMysize);
+                    fflush(stdout);
 
 
                     if(DMMODE == 0)  // square grid DM
