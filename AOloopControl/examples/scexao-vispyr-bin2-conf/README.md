@@ -23,7 +23,7 @@ Subsequent tasks can perform specific parts of the AO loop.
 ## Setup and Calibration
 
     $ cacao-loop-deploy scexao-vispyr-bin2
-    $ cd vispyr-rootdir
+    $ cd vispyr2-rootdir
     $ ./aorun-setmode-sim
     $ cacao-aorun-000-dm start
     $ cacao-aorun-001-simwfs start
@@ -34,7 +34,7 @@ Subsequent tasks can perform specific parts of the AO loop.
     $ cacao-aorun-035-acqloRM start
     $ cacao-aorun-040-compfCM
     $ mkdir -p ../AOcalibs
-    $ cd ..; ln -s $(pwd)/AOcalibs $(pwd)/vispyr-rootdir/AOcalibs; cd -
+    $ cd ..; ln -s $(pwd)/AOcalibs $(pwd)/vispyr2-rootdir/AOcalibs; cd -
     $ cacao-calib-archive cal000
     $ cacao-calib-apply cal000
 

@@ -2,7 +2,7 @@
 # This file will be sourced by cacao-setup
 
 
-export CACAO_LOOPNAME="vispyr"
+export CACAO_LOOPNAME="vispyr2"
 export CACAO_LOOPNUMBER="0"
 
 # ====== DEFORMABLE MIRROR ==========
@@ -10,7 +10,8 @@ export CACAO_LOOPNUMBER="0"
 # Deformable mirror (DM) size
 # If DM is single dimension, enter "1" for DMsize
 #
-export CACAO_DMINDEX="00"
+export CACAO_DMINDEX="00"    # Hardware DM - connected to physical DM
+export CACAO_DMINDEXSIM="10" # Simulation DM
 export CACAO_DMxsize="50"
 export CACAO_DMysize="50"
 
@@ -32,7 +33,8 @@ export CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"
 
 
 # input WFS stream
-export CACAO_WFSSTREAM="ocam2d"
+export CACAO_WFSSTREAM="ocam2d"    # Hardware stream, connected to physical camera
+export CACAO_WFSSTREAMSIM="ocam2dsim" # Simulation camera stream
 
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
@@ -46,7 +48,7 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 # Manages mutipe DM channels
 #
 export CACAO_FPSPROC_DMCH2DISP="ON"
-
+export CACAO_FPSPROC_DMCH2DISPSIM="ON"
 
 
 
