@@ -109,7 +109,8 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacaotask-CACAOSETUP
 	scripts/cacaotask-STARTDMCOMB
 	scripts/cacaotask-STARTSTREAMDELAY
-	scripts/aorun/cacao-aorun-000-simwfs
+	scripts/aorun/cacao-aorun-000-dm
+	scripts/aorun/cacao-aorun-001-simwfs
 	scripts/aorun/cacao-aorun-005-takedark
 	scripts/aorun/cacao-aorun-020-mlat
 	scripts/aorun/cacao-aorun-025-acqWFS

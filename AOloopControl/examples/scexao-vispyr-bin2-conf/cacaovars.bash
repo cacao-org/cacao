@@ -96,7 +96,7 @@ export CACAO_FPSPROC_COMPFCM="ON"
 
 # Compute control matrix - straight
 #
-#export CACAO_FPSPROC_COMPSCM="ON"
+export CACAO_FPSPROC_COMPSCM="ON"
 
 
 export CACAO_FPSPROC_COMPCTRLMODES="ON"
@@ -121,23 +121,18 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 
 
 
-# Zonal control
-#export CACAO_FPSPROC_AOLOOP_RUN="ON"
-
-
-
 
 # Zero Point Offset from DM to WFS
-#export CACAO_FPSPROC_MVMGPU_ZPO="ON"
+export CACAO_FPSPROC_MVMGPU_ZPO="ON"
 
 # Modal control statistics
-#export CACAO_FPSPROC_MODALCTRL_STATS="ON"
+export CACAO_FPSPROC_MODALCTRL_STATS="ON"
 
 # Reconstruct DM shape from OL mode values
-#export CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM="ON"
+export CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM="ON"
 
 # Reconstruct DM shape from OL mode values
-#export CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM="ON"
+export CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM="ON"
 
 
 # Modal control DM comb
@@ -147,6 +142,6 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 ##export CACAO_FPSPROC_ACQLINCMRM="ON"
 
 # Predictive control
-#export CACAO_PF_NBBLOCK=6
-#export CACAO_FPSPROC_MKPF="ON"
-#export CACAO_FPSPROC_APPLYPF="ON"
+export CACAO_PF_NBBLOCK=6
+export CACAO_FPSPROC_MKPF="ON"
+export CACAO_FPSPROC_APPLYPF="ON"

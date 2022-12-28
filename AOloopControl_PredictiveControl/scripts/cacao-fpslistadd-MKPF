@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 if [ -z ${FPSLISTADDSCRIPT+x} ]; then
+	echo "Compute predictive filter (in module PredictiveControl)"
 	echo "Not a standalone script, must be run within cacao-fpslistadd script"
+	echo "To activate, add in cacaovars:"
+	echo "export CACAO_FPSPROC_MKPF=\"ON\""
+	echo "export CACAO_PF_NBBLOCK=XX # number of prefictive filter blocks"
 else
 
 

@@ -29,6 +29,7 @@ set(INCLUDEFILES
 set(SCRIPTS
     scripts/cacao-astrogrid-mkgrid
     scripts/cacao-fpslistadd-DMATMTURB
+    scripts/cacao-fpslistadd-DMCH2DISP
 )
 
 set(LINKLIBS
