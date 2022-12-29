@@ -33,9 +33,9 @@ function set_amplitude() {
 }
 
 MSopt+=( "n:nbframe:set_nbframe:nbfr[int]:switch pattern every n AO frames (default=2)" )
-AGNBFRAME=2
+nbframe=2
 function set_nbframe() {
-	AGNBFRAME=$1
+	nbframe=$1
 }
 
 MSopt+=( "b:binfact:set_binfact:binfact[int]:bin factor (default=2)" )
@@ -49,7 +49,7 @@ function set_binfact() {
 
 
 
-echo "$amplitude $AGNBAVE $binfact"
+echo "$amplitude $nbframe $binfact"
 
 ACTIONOK=0
 
