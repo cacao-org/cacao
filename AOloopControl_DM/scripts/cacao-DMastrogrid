@@ -49,7 +49,7 @@ function set_binfact() {
 
 
 
-echo "$ampl $AGNBAVE $binfact"
+echo "$amplitude $AGNBAVE $binfact"
 
 ACTIONOK=0
 
