@@ -25,12 +25,53 @@ echo "CACAO_DMINDEX = ${CACAO_DMINDEX}"
 echo "CACAO_LOOPNAME = ${CACAO_LOOPNAME}"
 echo "fpsCTRLfifo = ${fpsCTRLfifo}"
 
+
+MSopt+=( "a:amplitude:set_amplitude:val[float]:amplitude [um] (default=0.05)" )
+amplitude=0.05
+function set_amplitude() {
+	amplitude=$1
+}
+
+MSopt+=( "n:nbframe:set_nbframe:nbfr[int]:switch pattern every n AO frames (default=2)" )
+AGNBFRAME=2
+function set_nbframe() {
+	AGNBFRAME=$1
+}
+
+MSopt+=( "b:binfact:set_binfact:binfact[int]:bin factor (default=2)" )
+binfact=2
+function set_binfact() {
+	binfact=$1
+}
+
+
+
+
+
+
+echo "$ampl $AGNBAVE $binfact"
+
+ACTIONOK=0
+
+if [ ${ACTION} = "start" ]; then
+echo "start"
+ACTIONOK=1
+fi
+
+if [ ${ACTION} = "stop" ]; then
+echo "stop"
+ACTIONOK=0
+fi
+
+if [ ${ACTION} = "check" ]; then
+echo "check"
+ACTIONOK=0
+fi
+
+
 exit
 
-ampl=${1:-0.025}
-AGNBAVE=${2:-2}
 
-echo "$ampl $AGNBAVE"
 
 
 # create XY astrogrid pattern
