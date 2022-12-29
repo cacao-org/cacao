@@ -26,7 +26,7 @@ fi
 # Checking FPS
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_DMCH2DISP ${CACAO_FPSPROC_DMCH2DISPSIM}
-checkFPSON CACAO_FPSPROC_STREAMDELAY ${CACAO_FPSPROC_STREAMDELAY}
+checkFPSON CACAO_FPSPROC_DMSIMDELAY ${CACAO_FPSPROC_DMSIMDELAY}
 checkFPSON CACAO_FPSPROC_SIMMVMGPU ${CACAO_FPSPROC_SIMMVMGPU}
 checkFPSON CACAO_FPSPROC_WFSCAMSIM ${CACAO_FPSPROC_WFSCAMSIM}
 echo "FPScheckOK = ${FPScheckOK}"
@@ -46,8 +46,8 @@ ACTIONOK=1
 # Starting DM hardware delay simulator
 # ======================================================================
 
-sendFPScmd "confwupdate streamDelay-${CACAO_DMINDEXSIM}"
-sendFPScmd "runstart streamDelay-${CACAO_DMINDEXSIM}"
+sendFPScmd "confwupdate DMstreamDelay-${CACAO_DMINDEXSIM}"
+sendFPScmd "runstart DMstreamDelay-${CACAO_DMINDEXSIM}"
 
 
 # ======================================================================

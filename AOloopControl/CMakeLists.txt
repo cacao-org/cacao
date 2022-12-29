@@ -85,6 +85,7 @@ install(TARGETS ${LIBNAME} DESTINATION lib)
 install(PROGRAMS scripts/cacao-setup
 	scripts/cacao
 	scripts/cacao-check-cacaovars
+	scripts/cacao-fpsctrl
 	scripts/cacao-RMdecode
 	scripts/cacao-mkDMWFSmasks
 	scripts/cacao-mkDMslaveActprox
@@ -118,6 +119,9 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-030-acqzRM
 	scripts/aorun/cacao-aorun-035-acqloRM
 	scripts/aorun/cacao-aorun-040-compfCM
+	scripts/aorun/cacao-aorun-050-wfs2cmval
+	scripts/aorun/cacao-aorun-060-mfilt
+	scripts/aorun/cacao-aorun-070-cmval2dm
 	DESTINATION bin)
 
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})

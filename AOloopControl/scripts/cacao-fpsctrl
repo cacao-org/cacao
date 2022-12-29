@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="cacao control"
+
+MSextdescr="cacao control
+interface to fpsCTRL
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+MSarg+=( "cmd:string:FPS command (setval etc..)" )
+MSarg+=( "fpsname:string:FPS name" )
+MSarg+=( "key:string:key" )
+MSarg+=( "val:string:value" )
+
+source milk-argparse
+fpscmd="${inputMSargARRAY[0]}"
+fpsname="${inputMSargARRAY[1]}"
+key="${inputMSargARRAY[2]}"
+val="${inputMSargARRAY[3]}"
+
+ACTIONOK=0
+
+sendFPScmd "${fpscmd} ${fpsname}-${CACAO_LOOPNUMBER}.${key} ${val}"

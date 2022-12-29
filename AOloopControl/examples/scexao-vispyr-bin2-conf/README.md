@@ -36,7 +36,7 @@ cd vispyr2-rootdir
 # (alternatively, run ./scripts/aorun-setmode-hardw to connect to hardware)
 
 # Run hardware DM (optional if running in simulation mode)
-cacao-aorun-000-dm start
+# cacao-aorun-000-dm start
 
 # Run simulation DM
 cacao-aorun-001-dmsim start
@@ -76,9 +76,33 @@ cacao-calib-apply cal000
 
 ## Running the loop
 
-From directory vispyr-rootdir :
+From directory vispyr-rootdir, start 3 processes :
 
+```bash
+# start WFS -> mode coefficient values
+cacao-aorun-050-wfs2cmval start
 
+# start modal filtering
+cacao-aorun-060-mfilt start
+
+# start mode coeff values -> DM
+cacao-aorun-070-cmval2dm start
+
+```
+
+Closing the loop and setting loop parameters with mfilt:
+
+```bash
+# Set loop gain
+cacao-fpsctrl setval mfilt loopgain 0.1
+
+# Set loop mult
+cacao-fpsctrl setval mfilt loopmult 0.98
+
+# close loop
+cacao-fpsctrl setval mfilt loopON ON
+
+```
 
 
 

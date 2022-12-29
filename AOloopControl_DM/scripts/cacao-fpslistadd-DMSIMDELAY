@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+if [ -z ${FPSLISTADDSCRIPT+x} ]; then
+	echo "Combine DM channels (in module DM)"
+	echo "Not a standalone script, must be run within cacao-fpslistadd script"
+	echo "To activate, add in cacaovars:"
+	echo "export CACAO_FPSPROC_DMSIMDELAY=\"ON\""
+else
+
+
+
+
+if [ "${CACAO_FPSPROC_DMSIMDELAY}" = "ON" ]; then
+
+    echolog "ON  CACAO_FPSPROC_STREAMDELAY"
+    # ==============================================================================
+    # ==========  streamdelay for simulation mode ==================================
+    # ==============================================================================
+
+    # FPS name
+    fpsname="DMstreamDelay"
+    fpsarg0="${CACAO_DMINDEXSIM}"
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "${fpsname}    streamdelay         ${fpsarg0}"  >> fpslist.txt
+
+        addfpscmdheader
+
+        # Run simulator at finite frame rate
+        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+        # tigger mode is delay
+        addfpscmd "setval ${fpsfname}.procinfo.triggermode 4"
+        # set delay to 100us = 10 kHz
+        addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.0001"
+
+        addfpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
+        addfpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
+        addfpscmd "setval ${fpsfname}.delaysec 0.001"
+        #addfpscmd "setval ${fpsfname}.dtus 10000"
+        #addfpscmd "setval ${fpsfname}.timebuffsize 1000"
+        #addfpscmd "setval ${fpsfname}.option.avedt 0.005"
+    fi
+
+
+fi # end of if [ "${CACAO_FPSPROC_DMSIMDELAY}" = "ON" ]
+
+fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]

@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop execution script"
+
+MSextdescr="AO loop script"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+MSarg+=( "action:string:action (start/stop/check)" )
+source milk-argparse
+ACTION="${inputMSargARRAY[0]}"
+
+
+ACTIONOK=0
+
+if [ ${ACTION} == "check" ]; then
+ACTIONOK=1
+fi
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+exit
+fi
+
+
+
+
+if [ ${ACTION} == "start" ]; then
+ACTIONOK=1
+
+sendFPScmd "confwupdate mfilt-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart mfilt-${CACAO_LOOPNUMBER}"
+
+fi
+
+
+if [ ${ACTION} == "stop" ]; then
+ACTIONOK=1
+sendFPScmd "runstop mfilt-${CACAO_LOOPNUMBER}"
+fi
+
+
+
+
+if [ ${ACTIONOK} == 0 ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+fi
