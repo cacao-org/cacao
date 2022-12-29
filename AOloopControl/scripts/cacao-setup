@@ -539,6 +539,7 @@ checkCommand cacao-fpslistadd
 
 checkFile cacaovars.${LOOPNAME}.bash
 
+
 if [ ${EXITSTATUS} -eq 1 ]; then
     echo "$(tput setaf 1)$(tput bold) -> EXITING $(tput sgr0)"
     exit ${EXITSTATUS}

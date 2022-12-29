@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+
+# script 1-line description
+MSdescr="Run DM astrogrid"
+# Extended description
+MSextdescr="DM grid pattern modulation for astrometry and photometric calibration"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+MSarg+=( "action:string:action (start/stop/check)" )
+source milk-argparse
+ACTION="${inputMSargARRAY[0]}"
+
+
+echo "CACAO_DMINDEX = ${CACAO_DMINDEX}"
+echo "CACAO_LOOPNAME = ${CACAO_LOOPNAME}"
+
+exit
+
+ampl=${1:-0.025}
+AGNBAVE=${2:-2}
+
+echo "$ampl $AGNBAVE"
+
+
+# create XY astrogrid pattern
+cacao-astrogrid-mkgrid -b2 0
+
+fifoname="/milk/shm/${CACAO_LOOPNAME}_fpsCTRL.fifo"
+
+echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.nbframe ${AGNBAVE}" >> ${fifoname}
+echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.delay 0" >> ${fifoname}
+echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mult $ampl" >> ${fifoname}
+echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mode ON" >> ${fifoname}
+
+
+# log information
+dologext "ASTROGID ON  amp = $1 um  nbframe = ${AGNBAVE}  15.5 l/d diag" &
+
+scxkw-setter set X_GRDST XYdiag 0
+scxkw-setter set X_GRDAMP $ampl
+scxkw-setter set X_GRDSEP 15.5
+
+loopfrq=$( scxkw-getsetpm X_PYWFRQ )
+agfrq=$(( $loopfrq / $AGNBAVE))
+
+echo "loopfrq = $loopfrq"
+echo "AGNBAVE = $AGNBAVE"
+
+echo "X_GRDMOD = ${agfrq}"
+
+scxkw-setter set X_GRDMOD $agfrq

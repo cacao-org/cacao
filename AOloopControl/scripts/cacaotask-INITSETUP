@@ -29,7 +29,10 @@ cp ${CONFDIR}/cacao-fpslistadd-* ${CACAO_LOOPROOTDIR}/
 
 cp ${CONFDIR}/fpssetup.setval.conf ${CACAO_LOOPROOTDIR}/fpssetup.setval.${CACAO_LOOPNAME}.conf
 
+# copy all scripts
+
 cp ${CONFDIR}/aorun-* ${CACAO_LOOPROOTDIR}/
+
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
