@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+amplitude=${1:-"0.050"}
+nbframe=${2:-2}
+binfact=${3:-2}
+pattern=${4:-0}
+
+cacao-DMastrogrid -a ${amplitude} -n ${nbframe} -b ${binfact} -p ${pattern} start
+
+# log information
+dologext "cacao-DMastrogrid -a ${amplitude} -n ${nbframe} -b ${binfact} -p ${pattern}" &
+
+
+echo "$amplitude $nbframe $binfact $pattern"
+
+case ${pattern} in
+
+  "0")
+    pstring="XYgrid"
+    ;;
+
+  "1")
+    pstring="Xgrid"
+    ;;
+
+  "2")
+    pstring="Ygrid"
+    ;;
+
+  "3")
+    pstring="Xdiag"
+    ;;
+
+  "4")
+    pstring="Ydiag"
+    ;;
+
+  "5")
+    pstring="XYgrid0"
+    ;;
+
+  *)
+    pstring="unknown"
+    ;;
+esac
+
+echo "pattern : $pstring"
+
+
+sep=$( echo 1k 31.0 ${binfact} /p | dc )
+echo "sep = $sep"
+
+loopfrq=$( scxkw-getsetpm X_PYWFRQ )
+agfrq=$(( $loopfrq / $nbframe))
+
+echo "loopfrq = $loopfrq"
+echo "nbframe = $nbframe"
+
+echo "X_GRDMOD = ${agfrq}"
+
+scxkw-setter set X_GRDST ${pstring} 0
+scxkw-setter set X_GRDAMP ${amplitude}
+scxkw-setter set X_GRDSEP ${sep}
+scxkw-setter set X_GRDMOD ${agfrq}

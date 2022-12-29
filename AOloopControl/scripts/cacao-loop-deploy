@@ -114,6 +114,8 @@ echo ""
 echo "CACAO_LOOPROOTDIR = ${CACAO_LOOPROOTDIR}"
 echo "CACAO_LOOPRUNDIR = ${CACAO_LOOPRUNDIR}"
 
-cp ${cacaoconfname}-conf/aorun-* ./${CACAO_LOOPROOTDIR}/
+# copy all scripts to rootdir
+mkdir -p ./${CACAO_LOOPROOTDIR}/scripts
+cp ${cacaoconfname}-conf/scripts/* ./${CACAO_LOOPROOTDIR}/scripts/
 
 fi

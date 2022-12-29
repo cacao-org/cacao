@@ -8,11 +8,15 @@
 MSdescr="Run DM astrogrid"
 # Extended description
 MSextdescr="DM grid pattern modulation for astrometry and photometric calibration"
+
+
 source milk-script-std-config
 
-RequiredCommands+=(cacao-astrogrid-mkgrid)
+
 
 source cacao-check-cacaovars
+RequiredCommands+=(cacao-astrogrid-mkgrid)
+
 
 MSarg+=( "action:string:action (start/stop/check)" )
 source milk-argparse
@@ -46,6 +50,12 @@ function set_binfact() {
 	binfact=$1
 }
 
+MSopt+=( "p:pattern:set_pattern:pattern[int]:pattern (default=0)" )
+pattern=0
+function set_pattern() {
+	pattern=$1
+}
+
 
 
 
@@ -56,18 +66,38 @@ echo "$amplitude $nbframe $binfact"
 ACTIONOK=0
 
 if [ ${ACTION} = "start" ]; then
+
 echo "start"
+# create XY astrogrid pattern
+cacao-astrogrid-mkgrid -b${binfact} ${pattern}
+echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.nbframe ${nbframe}" >> ${fpsCTRLfifo}
+echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.delay 0" >> ${fpsCTRLfifo}
+echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mult ${amplitude}" >> ${fpsCTRLfifo}
+echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mode ON" >> ${fpsCTRLfifo}
+
 ACTIONOK=1
+
 fi
+
+
+
 
 if [ ${ACTION} = "stop" ]; then
+
 echo "stop"
-ACTIONOK=0
+
+echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mode OFF" >> ${fpsCTRLfifo}
+
+ACTIONOK=1
+
 fi
 
+
+
+
 if [ ${ACTION} = "check" ]; then
-echo "check"
-ACTIONOK=0
+	echo "check"
+	ACTIONOK=1
 fi
 
 
@@ -80,23 +110,13 @@ if [ ${ACTIONOK} == 0 ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
 fi
 
+
+
 exit
 
 
 
-
-# create XY astrogrid pattern
-cacao-astrogrid-mkgrid -b2 0
-
-fifoname="/milk/shm/${CACAO_LOOPNAME}_fpsCTRL.fifo"
-
-echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.nbframe ${AGNBAVE}" >> ${fifoname}
-echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.delay 0" >> ${fifoname}
-echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mult $ampl" >> ${fifoname}
-echo "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mode ON" >> ${fifoname}
-
-
-# log information
+# log information_
 dologext "ASTROGID ON  amp = $1 um  nbframe = ${AGNBAVE}  15.5 l/d diag" &
 
 scxkw-setter set X_GRDST XYdiag 0

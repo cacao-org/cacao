@@ -797,6 +797,13 @@ mkdir -p ${CACAO_LOOPRUNDIR}/
 echo "${CACAO_LOOPNAME}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNAME
 echo "${CACAO_LOOPNUMBER}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNUMBER
 
+
+# create default fpstmuxenv file, sourced by all tmux sessions
+# this ensures all conf and run processes inherit env variables from cacaovars
+#
+echo "source ../cacaovars.*" > ${CACAO_LOOPRUNDIR}/fpstmuxenv
+
+
 # create symlink to data storage
 if [ ! -d ${CACAO_LOOPDATALOGDIR} ]; then
     echo "  ${CACAO_LOOPDATALOGDIR}"

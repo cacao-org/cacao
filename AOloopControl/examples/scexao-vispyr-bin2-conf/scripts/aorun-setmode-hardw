@@ -42,9 +42,15 @@ exit
 fi
 
 
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode ON"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltname dmvolt"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.7"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.maxvolt 150.0"
+sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
 
 
-sendFPScmd "setval acquWFS-0.WFSnormfloor 0.1"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.WFSnormfloor 0.1"
+sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
 
 
 sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.ampl 0.02"
