@@ -17,13 +17,14 @@ errstatus="0"
 
 if [ ${fnb} == 1 ]; then
 	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Found cavaovar file $filename"
+	source cacaovars.*.bash
 else
 	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Found ${fnb} cacaovar file(s). Need 1 cacaovar file to proceed"
 	errstatus="1"
 fi;
 
 
-source cacaovars.*.bash
+
 
 
 
@@ -99,16 +100,21 @@ fi
 
 
 
+fpsCTRLtmuxname=""
+fpsCTRLfifo=""
 if [ $errstatus == "1" ]; then
 	echo "           Note: This script needs to run in a cacao rootdir directory"
 	echo "           Check that cacaovar file includes variables definitions"
 	echo "           -> Cannot proceed"
-	exit
+	# Setting EXITSTATUS to 1 informs milk-argparse that we should exit on error
+	EXITSTATUS=1
+else
+	fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
+	fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
 fi
 
 
-fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
-fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
+
 
 function sendFPScmd {
     echo "SENDING: $1"
@@ -136,7 +142,6 @@ fi
 }
 
 
-echo "$(tput bold)CACAO_LOOPNAME = ${CACAO_LOOPNAME}$(tput sgr0)"
 
 RequiredCommands=( tmux milk )
 RequiredPipes=( ${fpsCTRLfifo} )
