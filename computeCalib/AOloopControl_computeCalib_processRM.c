@@ -636,6 +636,11 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     return RETURN_SUCCESS;
 }
 
+
+
+
+
+
 errno_t AOloopControl_computeCalib_mkCM_FPCONF()
 {
     // ===========================
@@ -739,6 +744,15 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
     return RETURN_SUCCESS;
 }
 
+
+
+
+
+
+
+
+
+
 errno_t AOloopControl_computeCalib_mkCM_RUN()
 {
     FPS_CONNECT(data.FPS_name, FPSCONNECT_RUN);
@@ -787,7 +801,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
                                                 100000,
                                                 "VTmat",
                                                 0,
-                                                0,
+                                                1,
                                                 64,
                                                 0, // GPU device
                                                 NULL);
@@ -805,12 +819,70 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
     }
 #endif
 
-    // save_fits("VTmat", "./mkmodestmp/VTmat.fits");
-    delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
+    {
+        char ffname[STRINGMAXLEN_FULLFILENAME];
 
-    char ffname[STRINGMAXLEN_FULLFILENAME];
-    WRITE_FULLFILENAME(ffname, "%s/sCMat00.fits", outdirname);
-    save_fits(cm_name, ffname);
+        WRITE_FULLFILENAME(ffname, "%s/VTmat.fits", outdirname);
+        save_fits("VTmat", ffname);
+        //"./mkmodestmp/VTmat.fits");
+
+        // save as 3D cube
+        imageID ID_VTmat = image_ID("VTmat");
+        imageID ID_DMmodes;
+        uint32_t DMxsize = atoi(getenv("CACAO_DMxsize"));
+        uint32_t DMysize = atoi(getenv("CACAO_DMysize"));
+        uint32_t DMxysize = DMxsize * DMysize;
+        create_3Dimage_ID("DMmodes", DMxsize, DMysize, DMxysize, &ID_DMmodes);
+        list_image_ID();
+        for(int kk = 0; kk < DMxysize; kk++)
+        {
+            for(int ii = 0; ii < DMxysize; ii++)
+            {
+                data.image[ID_DMmodes].array.F[kk * DMxysize + ii] =
+                    data.image[ID_VTmat].array.F[ii * DMxysize + kk];
+            }
+        }
+        delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
+        WRITE_FULLFILENAME(ffname, "%s/DMmodes.fits", outdirname);
+        save_fits("DMmodes", ffname);
+
+        imageID ID_WFSmodes;
+        uint32_t WFSxsize;
+        uint32_t WFSysize;
+
+        imageID IDrespM = image_ID("respM");
+        WFSxsize = data.image[IDrespM].md->size[0];
+        WFSysize = data.image[IDrespM].md->size[1];
+
+        uint32_t WFSxysize = WFSxsize * WFSysize;
+        create_3Dimage_ID("WFSmodes", WFSxsize, WFSysize, DMxysize, &ID_WFSmodes);
+        printf("Computing WFS modes ...\n");
+        fflush(stdout);
+        int mimax = 50;
+        for(int mi = 0; mi < mimax; mi++)
+        {
+            printf("Mode %5d / %5d\n", mi, DMxysize);
+            for(int ii = 0; ii < WFSxysize; ii++)
+            {
+                data.image[ID_WFSmodes].array.F[mi * WFSxysize + ii] = 0.0;
+                for(int jj = 0; jj < DMxysize; jj++)
+                {
+                    data.image[ID_WFSmodes].array.F[mi * WFSxysize + ii] +=
+                        data.image[ID_DMmodes].array.F[mi * DMxysize + jj]
+                        * data.image[IDrespM].array.F[jj * WFSxysize + ii];
+                }
+            }
+        }
+        printf(" DONE\n");
+        fflush(stdout);
+        WRITE_FULLFILENAME(ffname, "%s/WFSmodes.fits", outdirname);
+        save_fits("WFSmodes", ffname);
+
+
+
+        WRITE_FULLFILENAME(ffname, "%s/sCMat00.fits", outdirname);
+        save_fits(cm_name, ffname);
+    }
 
     functionparameter_SaveFPS2disk(&fps);
 
@@ -827,6 +899,17 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
     return RETURN_SUCCESS;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 // make control matrix
 //

@@ -804,9 +804,6 @@ static errno_t compute_function()
             fprintf(fpout, "%8.6f", 1.01);
             fclose(fpout);
         }
-
-        printf(">>>>>>>>>>>>>>>>>>>> mlat iteration done\n");
-
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

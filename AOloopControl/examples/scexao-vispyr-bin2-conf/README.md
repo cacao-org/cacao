@@ -20,7 +20,7 @@ Subsequent tasks can perform specific parts of the AO loop.
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
-## Setup and Calibration
+## Simulator/hardware link
 
 
 ```bash
@@ -44,20 +44,40 @@ cacao-aorun-001-dmsim start
 # Start simulation processes
 # (skip if in hardware mode)
 cacao-aorun-002-simwfs start
+```
+
+## Dark and latency
+
+
+```bash
 cacao-aorun-005-takedark
 
 # Measure latency
 cacao-aorun-020-mlat -w
+```
 
+## Start WFS acquisition
+
+```bash
 # Acquire WFS frames
 cacao-aorun-025-acqWFS start
+```
 
+## Acquire response matrix
+
+```bash
 # Acquire zonal response matrix
 cacao-aorun-030-acqzRM start
 
 # Acquire low-order response matrix
 cacao-aorun-035-acqloRM start
+```
 
+## Compute control matrix
+
+Compute control modes, in both WFS and DM spaces.
+
+```bash
 # Compute control matrix using Fourier modes
 cacao-aorun-040-compfCM
 
@@ -105,7 +125,7 @@ cacao-fpsctrl setval mfilt loopON ON
 ```
 
 
-
+cacao-fpsctrl setval compsCM fname_respM "../../AOcalibs/cal000_2022-12-29T11:26:54/aol0_zrespM.fits"
 
 
 THE END

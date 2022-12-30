@@ -98,7 +98,7 @@ export CACAO_FPSPROC_COMPFCM="ON"
 
 # Compute control matrix - straight
 #
-#export CACAO_FPSPROC_COMPSCM="ON"
+export CACAO_FPSPROC_COMPSCM="ON"
 
 
 #export CACAO_FPSPROC_COMPCTRLMODES="ON"

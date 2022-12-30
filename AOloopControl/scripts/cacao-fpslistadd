@@ -631,6 +631,7 @@ if [ "${CACAO_FPSPROC_COMPSCM}" = "ON" ]; then
         echolog "Process ${fpsname} already registered - skipping"
     else
         echolog "Adding process ${fpsname}"
+        echo "+milkcudacomp" >> fpslist.txt
         echo "${fpsname}         cacaocc.aolRM2CM       ${fpsarg0}" >> fpslist.txt
 
         addfpscmdheader

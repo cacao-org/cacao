@@ -53,12 +53,6 @@ static long     fpi_compWFSsigav;
 static int64_t *compWFSrefc;
 static long     fpi_compWFSrefc;
 
-static int64_t *compimtotal;
-static long     fpi_compimtotal;
-
-static int64_t *compnormwfsim;
-static long     fpi_compnormwfsim;
-
 static char *wfszposname;
 static long  fpi_wfszposname;
 
@@ -200,24 +194,6 @@ static CLICMDARGDEF farg[] =
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSrefc,
         &fpi_compWFSrefc
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.imtotal",
-        "Compute WFS frame total flux",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compimtotal,
-        &fpi_compimtotal
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.normwfsim",
-        "Compute normalized WFS frame",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compnormwfsim,
-        &fpi_compnormwfsim
     },
     {
         CLIARG_STREAM,
@@ -480,103 +456,137 @@ static errno_t compute_function()
                 break;
         }
 
-        // WFScnt = data.image[ID_wfsim].md[0].cnt0;
+
+
+
+
+
 
         // ===========================================
         // SUBTRACT DARK -> imWFS0
         // ===========================================
         DEBUG_TRACEPOINT(" ");
+
+        // check dark is to be subtracted
+        int status_darksub = 0;
         if(data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF)
         {
-            data.image[ID_imWFS0].md[0].write = 1;
-            DEBUG_TRACEPOINT(" ");
-            switch(WFSatype)
+            if(IDwfsdark != -1)
             {
-
-                case _DATATYPE_UINT16:
-                    if(IDwfsdark == -1)
-                    {
-                        for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                        {
-                            data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
-                        }
-                    }
-                    else
-                    {
-                        for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                        {
-                            data.image[ID_imWFS0].array.F[ii] =
-                                ((float) arrayutmp[ii]) -
-                                data.image[IDwfsdark].array.F[ii];
-                        }
-                    }
-                    break;
-
-                case _DATATYPE_INT16:
-
-                    if(IDwfsdark == -1)
-                    {
-                        for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                        {
-                            data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
-                        }
-                    }
-                    else
-                    {
-                        for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                        {
-                            data.image[ID_imWFS0].array.F[ii] =
-                                ((float) arraystmp[ii]) -
-                                data.image[IDwfsdark].array.F[ii];
-                        }
-                    }
-                    break;
-
-                case _DATATYPE_FLOAT:
-                    if(IDwfsdark == -1)
-                    {
-                        memcpy(data.image[ID_imWFS0].array.F,
-                               arrayftmp,
-                               sizeof(float) * sizeWFS);
-                    }
-                    else
-                    {
-                        for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                        {
-                            data.image[ID_imWFS0].array.F[ii] =
-                                arrayftmp[ii] - data.image[IDwfsdark].array.F[ii];
-                        }
-                    }
-                    break;
-
-                default:
-                    printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                           __FILE__,
-                           __LINE__);
-                    printf("datatype = %d\n", WFSatype);
-                    exit(0);
-                    break;
+                status_darksub = 1;
             }
-
-            processinfo_update_output_stream(processinfo, ID_imWFS0);
         }
+
+        data.image[ID_imWFS0].md[0].write = 1;
+
+        switch(WFSatype)
+        {
+            case _DATATYPE_UINT16:
+                if(status_darksub == 0)
+                {
+                    // no dark subtraction, convert data to float
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
+                    }
+                }
+                else
+                {
+                    // dark subtraction
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] =
+                            ((float) arrayutmp[ii]) -
+                            data.image[IDwfsdark].array.F[ii];
+                    }
+                }
+                break;
+
+            case _DATATYPE_INT16:
+
+                if(status_darksub == 0)
+                {
+                    // no dark subtraction, convert data to float
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
+                    }
+                }
+                else
+                {
+                    // dark subtraction
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] =
+                            ((float) arraystmp[ii]) -
+                            data.image[IDwfsdark].array.F[ii];
+                    }
+                }
+                break;
+
+            case _DATATYPE_FLOAT:
+                if(status_darksub == 0)
+                {
+                    // no dark subtraction, copy data to imWFS0
+                    memcpy(data.image[ID_imWFS0].array.F,
+                           arrayftmp,
+                           sizeof(float) * sizeWFS);
+                }
+                else
+                {
+                    // dark subtraction
+                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        data.image[ID_imWFS0].array.F[ii] =
+                            arrayftmp[ii] - data.image[IDwfsdark].array.F[ii];
+                    }
+                }
+                break;
+
+            default:
+                printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                       __FILE__,
+                       __LINE__);
+                printf("datatype = %d\n", WFSatype);
+                exit(0);
+                break;
+        }
+
+        processinfo_update_output_stream(processinfo, ID_imWFS0);
+
+
+
+
+
 
         DEBUG_TRACEPOINT(" ");
 
+
+
+
+
+
+
+
         // ===========================================
-        // COMPUTE TOTAL -> WFSfluxtotal
+        // NORMALIZE -> imWFS1
         // ===========================================
-        double IMTOTAL;
-        if(data.fpsptr->parray[fpi_compimtotal].fpflag & FPFLAG_ONOFF)
+        int status_normalize = 0;
+
+        if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
         {
+            status_normalize = 1;
+
+            // Compute image total
+            double imtotal = 0.0;
             uint64_t nelem = data.image[ID_imWFS0].md[0].size[0] *
                              data.image[ID_imWFS0].md[0].size[1];
-            IMTOTAL = 0.0;
+
             if(IDwfsmask != -1)
             {
                 for(uint64_t ii = 0; ii < nelem; ii++)
                 {
-                    IMTOTAL += data.image[ID_imWFS0].array.F[ii] *
+                    imtotal += data.image[ID_imWFS0].array.F[ii] *
                                data.image[IDwfsmask].array.F[ii];
                 }
             }
@@ -584,44 +594,23 @@ static errno_t compute_function()
             {
                 for(uint64_t ii = 0; ii < nelem; ii++)
                 {
-                    IMTOTAL += data.image[ID_imWFS0].array.F[ii];
+                    imtotal += data.image[ID_imWFS0].array.F[ii];
                 }
             }
-            *fluxtotal = IMTOTAL;
-        }
+            *fluxtotal = imtotal;
 
-        DEBUG_TRACEPOINT(" ");
 
-        // ===========================================
-        // NORMALIZE -> imWFS1
-        // ===========================================
 
-        double totalinv;
-        double normfloorcoeff;
 
-        if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
-        {
-            DEBUG_TRACEPOINT(" ");
-            totalinv       = 1.0 / (*fluxtotal + *WFSnormfloor * sizeWFS);
-            normfloorcoeff = *fluxtotal / (*fluxtotal + *WFSnormfloor * sizeWFS);
-        }
-        else
-        {
-            DEBUG_TRACEPOINT(" ");
-            totalinv       = 1.0;
-            normfloorcoeff = 1.0;
-        }
-
-        DEBUG_TRACEPOINT(" ");
-        *GPUalpha = totalinv;
-
-        *GPUbeta = -normfloorcoeff;
-
-        if(data.fpsptr->parray[fpi_compnormwfsim].fpflag &
-                FPFLAG_ONOFF) // normalize WFS image by totalinv
-        {
-
-            data.image[ID_imWFS1].md[0].write = 1;
+            // avoiding division by zero
+            //
+            double fluxtotpos = *fluxtotal;
+            if(fluxtotpos < 0.0)
+            {
+                fluxtotpos = 0.0;
+            }
+            double totalinv       = 1.0 / (*fluxtotal + *WFSnormfloor * sizeWFS);
+            //double normfloorcoeff = *fluxtotal / (*fluxtotal + *WFSnormfloor * sizeWFS);
 
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
@@ -629,16 +618,32 @@ static errno_t compute_function()
                     data.image[ID_imWFS0].array.F[ii] * totalinv;
             }
 
+        }
+        else
+        {
+            data.image[ID_imWFS1].md->write = 1;
+            memcpy(data.image[ID_imWFS1].array.F,
+                   data.image[ID_imWFS0].array.F,
+                   sizeof(float) * sizeWFS);
             processinfo_update_output_stream(processinfo, ID_imWFS1);
         }
+
+//                *GPUalpha = totalinv;
+//                *GPUbeta = -normfloorcoeff;
+
+
+
+
 
         // ===========================================
         // REFERENCE SUBTRACT -> imWFS2
         // ===========================================
 
-        if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag &
-                FPFLAG_ONOFF) // subtract reference
+        int status_refsub = 0;
+        if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF)
         {
+            // subtract reference
+            status_refsub = 1;
             data.image[ID_imWFS2].md[0].write = 1;
 
             if(IDwfsrefc != -1)
@@ -652,13 +657,26 @@ static errno_t compute_function()
             }
             processinfo_update_output_stream(processinfo, ID_imWFS2);
         }
+        else
+        {
+            data.image[ID_imWFS2].md->write = 1;
+            memcpy(data.image[ID_imWFS2].array.F,
+                   data.image[ID_imWFS1].array.F,
+                   sizeof(float) * sizeWFS);
+            processinfo_update_output_stream(processinfo, ID_imWFS2);
+        }
+
+
+
 
         // ===========================================
         // AVERAGE -> imWFS3
         // ===========================================
 
+        int status_ave = 0;
         if(data.fpsptr->parray[fpi_compWFSsigav].fpflag & FPFLAG_ONOFF)
         {
+            status_ave = 1;
             data.image[ID_imWFS3].md[0].write = 1;
             float tave_gain                   = *WFStaveragegain;
             float tave_mult                   = *WFStaveragemult;
@@ -672,12 +690,19 @@ static errno_t compute_function()
             processinfo_update_output_stream(processinfo, ID_imWFS3);
         }
 
+
+
+
+
+
         // ===========================================
         // UPDATE wfsrefc
         // ===========================================
 
+        int status_wfsrefc = 0;
         if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
         {
+            status_wfsrefc = 1;
             data.image[IDwfsrefc].md[0].write = 1;
             float refcgain                    = *WFSrefcgain;
             float refcmult                    = *WFSrefcmult;
@@ -704,6 +729,15 @@ static errno_t compute_function()
 
             processinfo_update_output_stream(processinfo, IDwfsrefc);
         }
+
+        processinfo_WriteMessage_fmt(
+            processinfo, "d%d n%d s%d a%d c%d",
+            status_darksub,
+            status_normalize,
+            status_refsub,
+            status_ave,
+            status_wfsrefc
+        );
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
@@ -711,7 +745,12 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
+
+
 INSERT_STD_FPSCLIfunctions
+
+
+
 
 // Register function in CLI
 errno_t
