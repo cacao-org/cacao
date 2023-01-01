@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+if [ -z ${FPSLISTADDSCRIPT+x} ]; then
+	echo "Not a standalone script, must be run within cacao-fpslistadd script"
+else
+
+if [ "${CACAO_FPSPROC_MEASURELINRESP}" = "ON" ]; then
+
+echolog "ON  CACAO_FPSPROC_MEASURELINRESP"
+# ==============================================================================
+# ========== DM Atmospheric Turbulence simulator ===============================
+# ==============================================================================
+
+# FPS name
+fpsname="measlinresp"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+if grep -q "${fpsname}" fpslist.txt
+then
+    echolog "Process ${fpsname} already registered - skipping"
+else
+    echolog "Adding process ${fpsname}"
+    echo "${fpsname}           cacaoac.measlinresp     ${fpsarg0}" >> fpslist.txt
+
+    addfpscmdheader
+    addfpscmd "setval ${fpsfname}.streamin aol${CACAO_LOOPNUMBER}_dmRM"
+    addfpscmd "setval ${fpsfname}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
+fi
+
+fi
+
+fi

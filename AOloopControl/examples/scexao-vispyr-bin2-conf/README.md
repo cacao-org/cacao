@@ -46,6 +46,18 @@ cacao-aorun-001-dmsim start
 cacao-aorun-002-simwfs start
 ```
 
+
+
+```bash
+
+cacao-fpsctrl setval measlinresp streamin aol0_dmRM
+cacao-fpsctrl setval measlinresp streamout aol0_imWFS2
+cacao-fpsctrl setval measlinresp inmodes "fps.acqlin_zRM-0.datadir/Hpoke.fits"
+cacao-fpsctrl setval measlinresp outmodes "outmodeC.fits"
+```
+
+
+
 ## Dark and latency
 
 

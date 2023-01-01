@@ -741,16 +741,10 @@ static errno_t compute_function()
 
             // PROCESS RESULTS
 
-            {
-                int  stringmaxlen = 500;
-                char msgstring[stringmaxlen];
 
-                snprintf(msgstring,
-                         stringmaxlen,
-                         "Processing Data (%u iterations)",
-                         (*NBiter));
-                processinfo_WriteMessage(processinfo, msgstring);
-            }
+            processinfo_WriteMessage_fmt(processinfo, "Processing Data (%u iterations)",
+                                         (*NBiter));
+
 
             copy_image_ID("_testdm0", dmstream, 1);
 

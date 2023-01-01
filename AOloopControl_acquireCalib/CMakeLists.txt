@@ -11,15 +11,18 @@ set(SOURCEFILES
 	${SRCNAME}.c
     ${SRCNAME}.h
     acquireWFSlincalib.c
+    measure_linear_resp.c
 )
 
 set(INCLUDEFILES
 	${SRCNAME}.h
     acquireWFSlincalib.h
+    measure_linear_resp.h
 )
 
 
 set(SCRIPTS
+    scripts/cacao-fpslistadd-MEASURELINRESP
 )
 
 set(LINKLIBS

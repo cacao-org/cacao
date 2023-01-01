@@ -82,10 +82,25 @@ export CACAO_FPSPROC_MLAT="ON"
 #
 export CACAO_FPSPROC_ACQUWFS="ON"
 
+
+
+
 # Acquire linear RM (zonal)
 #
+
+# to be deprecated
 export CACAO_FPSPROC_ACQLINZRM="ON"
-#export CACAO_FPSPROC_ACQWFSLINCALZ="ON"
+
+# to be deprecated
+export CACAO_FPSPROC_ACQWFSLINCALZ="ON"
+
+
+export CACAO_FPSPROC_MEASURELINRESP="ON"
+
+
+
+
+
 
 # Acquire low-order modal RM
 #

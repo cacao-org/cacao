@@ -24,6 +24,4 @@ fpsname="${inputMSargARRAY[1]}"
 key="${inputMSargARRAY[2]}"
 val="${inputMSargARRAY[3]}"
 
-ACTIONOK=0
-
 sendFPScmd "${fpscmd} ${fpsname}-${CACAO_LOOPNUMBER}.${key} ${val}"

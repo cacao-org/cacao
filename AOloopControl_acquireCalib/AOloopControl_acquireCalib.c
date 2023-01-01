@@ -69,6 +69,7 @@
 #include "computeCalib/computeCalib.h"
 
 #include "AOloopControl_acquireCalib/acquireWFSlincalib.h"
+#include "AOloopControl_acquireCalib/measure_linear_resp.h"
 
 /* ===============================================================================================
  */
@@ -493,6 +494,7 @@ static errno_t init_module_CLI()
         "refstart, int refend, char *IDout_name)");
 
     CLIADDCMD_milk_AOloopControl_acquireCalib__acquireWFSlincalib();
+    CLIADDCMD_AOloopControl__measure_linear_resp();
 
     // add atexit functions here
     // atexit((void*) myfunc);
@@ -677,8 +679,8 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN()
 /**
  * ## Purpose
  *
- * Acquire WFS response to a series of DM patterns.\n
- * Called by AOloopControl_acquireCalib_Measure_WFS_linResponse()\n
+ * Acquire WFS response to a series of DM patterns.
+ * Called by AOloopControl_acquireCalib_Measure_WFS_linResponse()
  *
  * ## Description
  *
@@ -836,18 +838,19 @@ errno_t AOloopControl_acquireCalib_Measure_WFSrespC_RUN()
  *
  */
 
-imageID AOloopControl_acquireCalib_Measure_WFSrespC(long        loop,
-        long        delayfr,
-        long        delayRM1us,
-        uint32_t    NBave,
-        uint32_t    NBexcl,
-        const char *IDpokeC_name,
-        const char *IDoutC_name,
-        int         normalize,
-        int         AOinitMode,
-        uint32_t    NBcycle,
-        uint32_t    SequInitMode,
-        const char *outdir)
+imageID AOloopControl_acquireCalib_Measure_WFSrespC(
+    long        loop,
+    long        delayfr,
+    long        delayRM1us,
+    uint32_t    NBave,
+    uint32_t    NBexcl,
+    const char *IDpokeC_name,
+    const char *IDoutC_name,
+    int         normalize,
+    int         AOinitMode,
+    uint32_t    NBcycle,
+    uint32_t    SequInitMode,
+    const char *outdir)
 {
     int stringmaxlen = 500;
 
@@ -1965,6 +1968,12 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(long        loop,
     return IDoutC;
 }
 
+
+
+
+
+
+
 errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 {
     // ===========================
@@ -2469,10 +2478,12 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
             //
             // Compute action: make DM RM mask
             //
-            printf("======== Compute action: make DM RM mask ============\n"); // TBE
-            fflush(stdout);
+
             if(fps.parray[fpi_comp_RM_DMmask].fpflag & FPFLAG_ONOFF)
             {
+
+                printf("======== Compute action: make DM RM mask ============\n");
+                fflush(stdout);
 
 
                 if(fps.parray[fpi_FPS_DMcomb].info.fps.FPSNBparamMAX > 0)
@@ -2517,6 +2528,8 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                                   0.5 * DMysize,
                                   (DMxsize + DMysize));
                     }
+
+                    list_image_ID();
 
                     fps_write_RUNoutput_image(&fps, "RMDMmask", "RM_DMmask");
 
@@ -2566,6 +2579,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                     AOloopControl_compTools_mkSimpleZpokeM(DMxsize,
                                                            DMysize,
                                                            "Spoke");
+                    list_image_ID();
                     fps_write_RUNoutput_image(&fps, "Spoke", "Spoke");
                     // save_fl_fits("Spoke", "./conf/Spoke.fits");
                     delete_image_ID("Spoke", DELETE_IMAGE_ERRMODE_WARNING);
@@ -2578,7 +2592,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                         //                        sprintf(fnameRMDMmask,
                         //                        "%s/RM_DMmask.fits",
                         //                        fps.md->datadir);
-                        load_fits(fnameRMDMmask, "RMDMmask", 1, NULL);
+                        load_fits(fnameRMDMmask, "RMDMmask", LOADFITS_ERRMODE_EXIT, NULL);
                     }
                     //                    load_fits("./conf/RM_DMmask.fits",
                     //                    "RMDMmask", 1);
@@ -2726,6 +2740,9 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 
     return RETURN_SUCCESS;
 }
+
+
+
 
 errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN()
 {
