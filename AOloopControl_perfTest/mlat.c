@@ -451,11 +451,11 @@ static errno_t compute_function()
                          *NBiter);
                 processinfo_WriteMessage(processinfo, msgstring);
 
-                printf(" - ITERATION %u / %u\n", iter, *NBiter);
-                fflush(stdout);
+                /*                printf(" - ITERATION %u / %u\n", iter, *NBiter);
+                                fflush(stdout);
 
-                printf("write to %s\n", dmstream);
-                fflush(stdout);
+                                printf("write to %s\n", dmstream);
+                                fflush(stdout);*/
                 copy_image_ID("_testdm0", dmstream, 1);
 
                 unsigned int dmstate = 0;
@@ -504,7 +504,7 @@ static errno_t compute_function()
                 long wfsframe = 0;
                 int  wfsslice = 0;
                 wfscnt0       = imgwfs.md->cnt0;
-                printf("\n");
+                //printf("\n");
                 while((dt < dtmax) && (wfsframe < *wfsNBframemax))
                 {
                     // WAITING for image
@@ -523,12 +523,12 @@ static errno_t compute_function()
                     }
 
                     wfscnt0 = imgwfs.md->cnt0;
-                    printf("[%8ld / %8u]  %lf  %lf\n",
+                    /*printf("[%8ld / %8u]  %lf  %lf\n",
                            wfsframe,
                            *wfsNBframemax,
                            dt,
                            dtmax);
-                    fflush(stdout);
+                    fflush(stdout);*/
 
                     /*
                     if(CIRCBUFFER == 1) //TODO
@@ -579,9 +579,9 @@ static errno_t compute_function()
                             nanosleep(&timesleep, NULL);
                         }
 
-                        printf("\nDM STATE CHANGED ON ITERATION %ld   / %ld\n\n",
+                        /*printf("\nDM STATE CHANGED ON ITERATION %ld   / %ld\n\n",
                                wfsframe,
-                               wfsframeoffset);
+                               wfsframeoffset);*/
                         kkoffset = wfsframe;
 
                         dmstate = 1;
@@ -591,12 +591,12 @@ static errno_t compute_function()
                         tdouble   = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
                         dt        = tdouble - tstartdouble;
                         *dtoffset = dt; // time at which DM command is sent
-                        printf("    dt = %lf\n\n", dt);
+                        //printf("    dt = %lf\n\n", dt);
                     }
                     wfsframe++;
                 }
-                printf("\n\n %ld frames recorded\n", wfsframe);
-                fflush(stdout);
+                //printf("\n\n %ld frames recorded\n", wfsframe);
+                //fflush(stdout);
 
                 copy_image_ID("_testdm0", dmstream, 1);
                 dmstate = 0;
@@ -698,18 +698,18 @@ static errno_t compute_function()
                             valarray[wfsframe]);
                 }
 
-                printf("mean interval =  %10.2f ns\n",
-                       1.0e9 * (dt - *dtoffset) / NBwfsframe);
-                fflush(stdout);
+                /*                printf("mean interval =  %10.2f ns\n",
+                                       1.0e9 * (dt - *dtoffset) / NBwfsframe);
+                                fflush(stdout);*/
 
                 free(valarray);
 
                 latency = valmaxdt - *dtoffset;
                 // latencystep = kkmax;
 
-                printf("... Hardware latency = %f ms  = %ld frames\n",
-                       1000.0 * latency,
-                       kkmax);
+                /*                printf("... Hardware latency = %f ms  = %ld frames\n",
+                                       1000.0 * latency,
+                                       kkmax);*/
 
                 if(latency > latencymax)
                 {
@@ -792,11 +792,31 @@ static errno_t compute_function()
             *latencyfr = latencystepave;
             functionparameter_SaveParam2disk(data.fpsptr, ".out.latencyfr");
 
-            FILE *fpout;
-            fpout =
-                fps_write_RUNoutput_file(data.fpsptr, "param_hardwlatency", "txt");
-            fprintf(fpout, "%8.6f", 1.01);
-            fclose(fpout);
+            {
+                FILE *fpout;
+                fpout =
+                    fps_write_RUNoutput_file(data.fpsptr, "param_hardwlatency", "txt");
+                fprintf(fpout, "%8.6f", 1.01);
+                fclose(fpout);
+            }
+
+
+            // write results as env variables
+            {
+                char ffname[STRINGMAXLEN_FULLFILENAME];
+                WRITE_FULLFILENAME(ffname, "%s/cacaovars.bash", data.fpsptr->md->datadir);
+
+                printf("SAVING TO %s\n", ffname);
+
+                FILE *fpout;
+                fpout = fopen(ffname, "w");
+                fprintf(fpout, "export CACAO_WFSFRATE=%.3f\n", *framerateHz);
+                fprintf(fpout, "export CACAO_LATENCYFR=%.3f\n", *latencyfr);
+                fclose(fpout);
+            }
+
+
+
         }
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END

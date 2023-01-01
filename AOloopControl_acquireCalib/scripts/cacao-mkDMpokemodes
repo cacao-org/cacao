@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+
+MSdescr="make DM poke modes"
+
+MSextdescr="Make DM poke modes for response matrix acquisition"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+source milk-argparse
+
+
+
+echo "DM size  : $CACAO_DMxsize x $CACAO_DMysize"
+
+
+DMMODEDIR="conf/DMmodes"
+mkdir -p ${DMMODEDIR}
+
+
+# Make DM mask if it doesn't exist
+
+cacao << EOF
+dmxc=0.5*${CACAO_DMxsize}
+dmyc=0.5*${CACAO_DMysize}
+dmr=0.5*${CACAO_DMysize}
+imgen.mkdisk DMmask ${CACAO_DMxsize} ${CACAO_DMysize} dmxc dmyc dmr
+saveFITS DMmask "${DMMODEDIR}/DMmask.fits"
+listim
+exitCLI
+EOF
+
+
+
+# Hadamard modes
+
+cacao << EOF
+loadfits "${DMMODEDIR}/DMmask.fits" DMmask
+cacaocc.mkHadamard DMmask HpokeC
+saveFITS HpokeC "${DMMODEDIR}/HpokeC.fits"
+saveFITS Hpixindex "${DMMODEDIR}/Hpixindex.fits"
+saveFITS Hmat "${DMMODEDIR}/Hmat.fits"
+listim
+exitCLI
+EOF
+
+
+
+# Fourier modes
+# For square DM only !!!
+
+CPAmax=8.0
+deltaCPA=0.8
+
+cacao << EOF
+dmr=0.5*${CACAO_DMysize}
+lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CPAmax} ${deltaCPA} dmr 1.1 0
+listim
+exitCLI
+EOF

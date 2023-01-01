@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This file will be sourced by cacao-setup
+# This file will be sourced by cacao-setup and high-level cacao scripts
 
 
 export CACAO_LOOPNAME="vispyr2"

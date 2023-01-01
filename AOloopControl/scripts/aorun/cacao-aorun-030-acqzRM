@@ -31,7 +31,7 @@ errexit=0
 # Checking FPS
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
-checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_ACQLINZRM}
+checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_MEASURELINRESP}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
@@ -65,13 +65,11 @@ fi
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
 
-# ======================================================================
-# acquWFS
-# ======================================================================
-sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.AOloopindex ${CACAO_LOOPNUMBER}"
-
-sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart acqlin_zRM-${CACAO_LOOPNUMBER}"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.WFSfrequ ${CACAO_WFSFRATE}"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.hardwlatfr ${CACAO_LATENCYFR}"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.autoTiming ON"
+sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
+#sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
 
 fi
 

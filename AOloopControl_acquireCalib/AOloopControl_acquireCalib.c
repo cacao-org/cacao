@@ -154,7 +154,7 @@ INIT_MODULE_LIB(AOloopControl_acquireCalib)
 
 errno_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli()
 {
-    if(CLI_checkarg(1, CLIARG_IMG) + CLI_checkarg(2, CLIARG_LONG) +
+    if(CLI_checkarg(1, CLIARG_IMG) + CLI_checkarg(2, CLIARG_INT64) +
             CLI_checkarg(3, CLIARG_STR) + CLI_checkarg(4, CLIARG_STR) ==
             0)
     {
@@ -176,9 +176,9 @@ errno_t AOloopControl_acquireCalib_mkRandomLinPokeSequence_cli()
 errno_t AOloopControl_acquireCalib_RespMatrix_Fast_cli()
 {
     if(CLI_checkarg(1, CLIARG_IMG) + CLI_checkarg(2, CLIARG_IMG) +
-            CLI_checkarg(3, CLIARG_IMG) + CLI_checkarg(4, CLIARG_LONG) +
-            CLI_checkarg(5, CLIARG_FLOAT) + CLI_checkarg(6, CLIARG_FLOAT) +
-            CLI_checkarg(7, CLIARG_FLOAT) +
+            CLI_checkarg(3, CLIARG_IMG) + CLI_checkarg(4, CLIARG_INT64) +
+            CLI_checkarg(5, CLIARG_FLOAT64) + CLI_checkarg(6, CLIARG_FLOAT64) +
+            CLI_checkarg(7, CLIARG_FLOAT64) +
             CLI_checkarg(8, CLIARG_STR_NOT_IMG) ==
             0)
     {
@@ -203,11 +203,11 @@ errno_t AOloopControl_acquireCalib_RespMatrix_Fast_cli()
 /** @brief CLI function for AOloopControl_Measure_WFSrespC */
 errno_t AOloopControl_acquireCalib_Measure_WFSrespC_cli()
 {
-    if(CLI_checkarg(1, CLIARG_LONG) + CLI_checkarg(2, CLIARG_LONG) +
-            CLI_checkarg(3, CLIARG_LONG) + CLI_checkarg(4, CLIARG_LONG) +
+    if(CLI_checkarg(1, CLIARG_INT64) + CLI_checkarg(2, CLIARG_INT64) +
+            CLI_checkarg(3, CLIARG_INT64) + CLI_checkarg(4, CLIARG_INT64) +
             CLI_checkarg(5, CLIARG_IMG) + CLI_checkarg(6, CLIARG_STR) +
-            CLI_checkarg(7, CLIARG_LONG) + CLI_checkarg(8, CLIARG_LONG) +
-            CLI_checkarg(9, CLIARG_LONG) + CLI_checkarg(10, CLIARG_LONG) ==
+            CLI_checkarg(7, CLIARG_INT64) + CLI_checkarg(8, CLIARG_INT64) +
+            CLI_checkarg(9, CLIARG_INT64) + CLI_checkarg(10, CLIARG_INT64) ==
             0)
     {
         AOloopControl_acquireCalib_Measure_WFSrespC(
@@ -254,12 +254,12 @@ errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli()
     }
 
     // call non FPS implementation - all parameters specified at function launch
-    if(CLI_checkarg(1, CLIARG_FLOAT) + CLI_checkarg(2, CLIARG_LONG) +
-            CLI_checkarg(3, CLIARG_LONG) + CLI_checkarg(4, CLIARG_LONG) +
-            CLI_checkarg(5, CLIARG_LONG) + CLI_checkarg(6, CLIARG_IMG) +
+    if(CLI_checkarg(1, CLIARG_FLOAT64) + CLI_checkarg(2, CLIARG_INT64) +
+            CLI_checkarg(3, CLIARG_INT64) + CLI_checkarg(4, CLIARG_INT64) +
+            CLI_checkarg(5, CLIARG_INT64) + CLI_checkarg(6, CLIARG_IMG) +
             CLI_checkarg(7, CLIARG_STR) + CLI_checkarg(8, CLIARG_STR) +
-            CLI_checkarg(9, CLIARG_LONG) + CLI_checkarg(10, CLIARG_LONG) +
-            CLI_checkarg(11, CLIARG_LONG) + CLI_checkarg(12, CLIARG_LONG) ==
+            CLI_checkarg(9, CLIARG_INT64) + CLI_checkarg(10, CLIARG_INT64) +
+            CLI_checkarg(11, CLIARG_INT64) + CLI_checkarg(12, CLIARG_INT64) ==
             0)
     {
         AOloopControl_acquireCalib_Measure_WFS_linResponse(
@@ -288,14 +288,14 @@ errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse_cli()
 /** @brief CLI function for AOloopControl_Measure_zonalRM */
 errno_t AOloopControl_acquireCalib_Measure_zonalRM_cli()
 {
-    if(CLI_checkarg(1, CLIARG_FLOAT) + CLI_checkarg(2, CLIARG_LONG) +
-            CLI_checkarg(3, CLIARG_LONG) + CLI_checkarg(4, CLIARG_LONG) +
-            CLI_checkarg(5, CLIARG_LONG) + CLI_checkarg(6, CLIARG_STR_NOT_IMG) +
+    if(CLI_checkarg(1, CLIARG_FLOAT64) + CLI_checkarg(2, CLIARG_INT64) +
+            CLI_checkarg(3, CLIARG_INT64) + CLI_checkarg(4, CLIARG_INT64) +
+            CLI_checkarg(5, CLIARG_INT64) + CLI_checkarg(6, CLIARG_STR_NOT_IMG) +
             CLI_checkarg(7, CLIARG_STR_NOT_IMG) +
             CLI_checkarg(8, CLIARG_STR_NOT_IMG) +
             CLI_checkarg(9, CLIARG_STR_NOT_IMG) +
-            CLI_checkarg(10, CLIARG_LONG) + CLI_checkarg(11, CLIARG_LONG) +
-            CLI_checkarg(12, CLIARG_LONG) + CLI_checkarg(13, CLIARG_LONG) ==
+            CLI_checkarg(10, CLIARG_INT64) + CLI_checkarg(11, CLIARG_INT64) +
+            CLI_checkarg(12, CLIARG_INT64) + CLI_checkarg(13, CLIARG_INT64) ==
             0)
     {
         AOloopControl_acquireCalib_Measure_zonalRM(
@@ -325,9 +325,9 @@ errno_t AOloopControl_acquireCalib_Measure_zonalRM_cli()
 /** @brief CLI function for AOloopControl_Measure_Resp_Matrix */
 errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli()
 {
-    if(CLI_checkarg(1, CLIARG_LONG) + CLI_checkarg(2, CLIARG_FLOAT) +
-            CLI_checkarg(3, CLIARG_LONG) + CLI_checkarg(4, CLIARG_LONG) +
-            CLI_checkarg(5, CLIARG_LONG) ==
+    if(CLI_checkarg(1, CLIARG_INT64) + CLI_checkarg(2, CLIARG_FLOAT64) +
+            CLI_checkarg(3, CLIARG_INT64) + CLI_checkarg(4, CLIARG_INT64) +
+            CLI_checkarg(5, CLIARG_INT64) ==
             0)
     {
         AOloopControl_acquireCalib_Measure_Resp_Matrix(
@@ -348,9 +348,9 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix_cli()
 
 errno_t AOloopControl_acquireCalib_RMseries_deinterlace_cli()
 {
-    if(CLI_checkarg(1, CLIARG_LONG) + CLI_checkarg(2, CLIARG_LONG) +
-            CLI_checkarg(3, CLIARG_LONG) + CLI_checkarg(4, CLIARG_STR_NOT_IMG) +
-            CLI_checkarg(5, CLIARG_LONG) + CLI_checkarg(6, CLIARG_LONG) ==
+    if(CLI_checkarg(1, CLIARG_INT64) + CLI_checkarg(2, CLIARG_INT64) +
+            CLI_checkarg(3, CLIARG_INT64) + CLI_checkarg(4, CLIARG_STR_NOT_IMG) +
+            CLI_checkarg(5, CLIARG_INT64) + CLI_checkarg(6, CLIARG_INT64) ==
             0)
     {
         AOloopControl_acquireCalib_RMseries_deinterlace(

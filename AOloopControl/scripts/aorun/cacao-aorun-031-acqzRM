@@ -6,27 +6,32 @@
 # script 1-line description
 MSdescr="AO loop execution script"
 
-
 MSextdescr="AO loop script"
 source milk-script-std-config
 source cacao-check-cacaovars
 
-
-WaitForCompletion=0
-MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
-function set_WaitForCompletion() {
-	WaitForCompletion=1
-}
-
+MSarg+=( "action:string:action (start/check)" )
 
 source milk-argparse
+ACTION="${inputMSargARRAY[0]}"
+
+
+ACTIONOK=0
+
+
+
+
+if [ ${ACTION} == "check" ]; then
+ACTIONOK=1
+fi
 
 
 errexit=0
 
 # Checking FPS
 FPScheckOK="OK"
-checkFPSON CACAO_FPSPROC_MLAT ${CACAO_FPSPROC_MLAT}
+checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
+checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_ACQLINZRM}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
@@ -36,7 +41,9 @@ fi
 
 # Checking stream
 streamcheckOK="OK"
-checkstream aol${CACAO_LOOPNUMBER}_wfsim
+checkstream aol${CACAO_LOOPNUMBER}_imWFS0
+checkstream aol${CACAO_LOOPNUMBER}_imWFS1
+checkstream aol${CACAO_LOOPNUMBER}_imWFS2
 
 if [ ${streamcheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
@@ -54,18 +61,25 @@ fi
 
 
 
-# ======================================================================
-# mlat
-# ======================================================================
 
-sendFPScmd "confwupdate mlat-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart mlat-${CACAO_LOOPNUMBER}"
+if [ ${ACTION} == "start" ]; then
+ACTIONOK=1
 
-if [ $WaitForCompletion == "1" ]; then
-echo "Waiting for completion ..."
-pOK=1
-while [ $pOK -gt 0 ]; do
-	sleep 0.2
-	pOK=$(ps -alx| grep mlat-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l)
-done
+# ======================================================================
+# acquWFS
+# ======================================================================
+sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.AOloopindex ${CACAO_LOOPNUMBER}"
+
+sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acqlin_zRM-${CACAO_LOOPNUMBER}"
+
+fi
+
+
+
+
+
+
+if [ ${ACTIONOK} == 0 ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
 fi

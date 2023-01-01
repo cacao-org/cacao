@@ -1,16 +1,12 @@
 /**
  * @file    AOloopControl_computeCalib_Hadamard.c
- * @brief   Adaptive Optics Control loop engine compute calibration
- *
- * AO engine uses stream data structure
- *
+ * @brief   Compute Hadamard modes
  *
  */
 
 #define _GNU_SOURCE
 
-// uncomment for test print statements to stdout
-//#define _PRINT_TEST
+
 
 #include "CommandLineInterface/CLIcore.h"
 
@@ -24,15 +20,92 @@
 #define OMP_NELEMENT_LIMIT 1000000
 #endif
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl_computeCalib - 1. COMPUTING CALIBRATION */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
+
+
+
+
+// Local variables pointers
+
+static char *inmask;
+static long  fpi_inmask;
+
+static char *outHcube;
+static long  fpi_outHcube;
+
+
+
+
+
+
+static CLICMDARGDEF farg[] =
+{
+    {
+        // AO loop index. Used for naming streams aolX_
+        CLIARG_STR,
+        ".inmask",
+        "pixel mask (0 and 1 vals)",
+        "imm",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &inmask,
+        &fpi_inmask
+    },
+    {
+        CLIARG_STR,
+        ".outHcube",
+        "output Hadamard cube",
+        "Hcube",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &outHcube,
+        &fpi_outHcube
+    }
+};
+
+
+static errno_t customCONFsetup()
+{
+    if(data.fpsptr != NULL)
+    {
+    }
+
+    return RETURN_SUCCESS;
+}
+
+
+
+// Optional custom configuration checks.
+// Runs at every configuration check loop iteration
+//
+static errno_t customCONFcheck()
+{
+
+    if(data.fpsptr != NULL)
+    {
+    }
+
+    return RETURN_SUCCESS;
+}
+
+
+
+
+
+static CLICMDDATA CLIcmddata =
+{
+    "mkHadamard", "make Hadamard modes", CLICMD_FIELDS_DEFAULTS
+};
+
+
+
+
+// detailed help
+static errno_t help_function()
+{
+    return RETURN_SUCCESS;
+}
+
+
+
+
 
 // output:
 // Hadamard modes (outname)
@@ -193,10 +266,14 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     return IDout;
 }
 
-imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
-        const char *Hmatname,
-        const char *indexname,
-        const char *outname)
+
+
+
+imageID AOloopControl_computeCalib_Hadamard_decodeRM(
+    const char *inname,
+    const char *Hmatname,
+    const char *indexname,
+    const char *outname)
 {
     imageID  IDin, IDhad, IDout, IDindex;
     long     NBframes, sizexwfs, sizeywfs, sizewfs;
@@ -260,4 +337,44 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
     printf("\n\n");
 
     return (IDout);
+}
+
+
+
+static errno_t compute_function()
+{
+    DEBUG_TRACE_FSTART();
+
+
+    printf("INPUT  : %s\n", inmask);
+    printf("OUTPUT : %s\n", outHcube);
+
+    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    {
+        AOloopControl_computeCalib_mkHadamardModes(
+            inmask,
+            outHcube);
+    }
+    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    DEBUG_TRACE_FEXIT();
+    return RETURN_SUCCESS;
+}
+
+
+
+
+INSERT_STD_FPSCLIfunctions
+
+
+
+// Register function in CLI
+errno_t
+CLIADDCMD_AOloopControl_computeCalib__mkHadamard()
+{
+    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
+    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+    INSERT_STD_CLIREGISTERFUNC
+
+    return RETURN_SUCCESS;
 }

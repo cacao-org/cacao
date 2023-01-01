@@ -97,15 +97,15 @@ errno_t AOloopControl_DM_CombineChannels_cli()
     }
 
     // call non FPS implementation - all parameters specified at function launch
-    if(0 + CLI_checkarg(1, CLIARG_LONG) + CLI_checkarg(2, CLIARG_LONG) +
-            CLI_checkarg(3, CLIARG_LONG) + CLI_checkarg(4, CLIARG_LONG) +
-            CLI_checkarg(5, CLIARG_LONG) + CLI_checkarg(6, CLIARG_LONG) +
+    if(0 + CLI_checkarg(1, CLIARG_INT64) + CLI_checkarg(2, CLIARG_INT64) +
+            CLI_checkarg(3, CLIARG_INT64) + CLI_checkarg(4, CLIARG_INT64) +
+            CLI_checkarg(5, CLIARG_INT64) + CLI_checkarg(6, CLIARG_INT64) +
             CLI_checkarg(7, CLIARG_STR) + CLI_checkarg(8, CLIARG_STR) +
-            CLI_checkarg(9, CLIARG_LONG) + CLI_checkarg(10, CLIARG_STR) +
-            CLI_checkarg(11, CLIARG_STR) + CLI_checkarg(12, CLIARG_LONG) +
-            CLI_checkarg(13, CLIARG_LONG) + CLI_checkarg(14, CLIARG_FLOAT) +
-            CLI_checkarg(15, CLIARG_STR) + CLI_checkarg(16, CLIARG_FLOAT) +
-            CLI_checkarg(17, CLIARG_FLOAT) ==
+            CLI_checkarg(9, CLIARG_INT64) + CLI_checkarg(10, CLIARG_STR) +
+            CLI_checkarg(11, CLIARG_STR) + CLI_checkarg(12, CLIARG_INT64) +
+            CLI_checkarg(13, CLIARG_INT64) + CLI_checkarg(14, CLIARG_FLOAT64) +
+            CLI_checkarg(15, CLIARG_STR) + CLI_checkarg(16, CLIARG_FLOAT64) +
+            CLI_checkarg(17, CLIARG_FLOAT64) ==
             0)
     {
         AOloopControl_DM_CombineChannels(data.cmdargtoken[1].val.numl,

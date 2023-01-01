@@ -23,6 +23,7 @@ set(INCLUDEFILES
 
 set(SCRIPTS
     scripts/cacao-fpslistadd-MEASURELINRESP
+    scripts/cacao-mkDMpokemodes
 )
 
 set(LINKLIBS

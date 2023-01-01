@@ -54,7 +54,7 @@
 
 #include "compute_control_modes.h"
 #include "compute_straight_CM.h"
-
+#include "computeHadamard.h"
 
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
@@ -673,6 +673,9 @@ static errno_t init_module_CLI()
     CLIADDCMD_cacao_computeCalib__compute_control_modes();
 
     CLIADDCMD_AOloopControl_computeCalib__compsCM();
+
+    CLIADDCMD_AOloopControl_computeCalib__mkHadamard();
+
 
     // add atexit functions here
     // atexit((void*) myfunc);

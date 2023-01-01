@@ -146,3 +146,12 @@ fi
 RequiredCommands=( tmux milk )
 RequiredPipes=( ${fpsCTRLfifo} )
 RequiredDirs=()
+
+
+# source all datadir cacaovars
+for f in */*.datadir/cacaovars.bash; do
+	if [ -f $f ]; then
+		echo "sourcing ${f}"
+		source ${f}
+	fi
+done;

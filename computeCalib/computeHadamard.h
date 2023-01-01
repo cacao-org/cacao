@@ -7,4 +7,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     const char *outname
 );
 
+errno_t CLIADDCMD_AOloopControl_computeCalib__mkHadamard();
+
+
 #endif
