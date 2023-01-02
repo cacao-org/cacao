@@ -6,32 +6,57 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
 
-// holds info for each poke
+// Holds info for each poke frame
+// A poke frame starts with a stream read.
+// The input stream may is poked during the pokeframe.
+// If so, it is done with a time delay from the start of the pokeframe (= stream read)
+//
+// The PokeInfo structure contains the following information
+//
+// Measurement :
+// - [PokeIndexMEAS]        Mode index being measured (-1 if none). This increments during the sequence.
+// - [PokeIndexMEAS_Mapped] Original mode to to which PokeIndexMEAS maps. This generally does not increase monotically.
+// - [aveindex]             Average index. If averaging 3 frames per measurement, this will increment from 0 to 2. If >2, discard frame
+//
+// Control
+// - [PokeIndexCTRL]        Mode to be poked during the poke frame. This increments during the sequence.
+// - [PokeIndexCTRL_Mapped] Original mode to to which PokeIndexCTRL maps. This generally does not increase monotically.
+// - [pokedelayus]          Delay [us] from poke frame start to poking
+//
+// Timing log
+// - [tstart]               Start of poke frame
+// - [tpoke]                Time at which poke was completed
+//
+// The sequence of PokeIndexMEAS and PokeIndexCTRL values follows the same pattern, but offset in time to account for latency between the streams.
+// The integer offset bettween the sequences, and the pokedelayus value, are derived from the framerate and latency between streams.
+// We follow here the latency convention that if the poke responds instantaneously and the read is at full duty cycle, the latency is 0.5 frame.
+//
+// [lantencyfr] Latency in unit of frame
+// [framerateHz]  Frame rate in Hz
+// [Nexcl]      Number of excluded frames
+//
+// We define the start of a poke cycle as the arrival of the first frame (aveindex=0)
+// This is followed by a number of measurement frames to be included (aveindex=1, 2, ... NBave-1) and excluded (aveindex = NBave ... NBave-Nexcl)
+//
+// The time offset between poke actuation and start of poke cycle is :
+// dt1 [fr] = (latencyfr-0.5) + Nexcl/2
+// positive value indicates the DM poke occurs before cycle start
+//
+// dt1 is then split into an integer offset [RMdelayfr] and the pokedelayus [delayMR1us] :
+//
+// RMdelayfr = ceil(dt1)
+// delayMR1us = (RMdelayfr-dt1) * (1/framerateHz)*1000000.0
+//
+
+
 typedef struct
 {
-
-    // Cycle number
-    uint64_t iter;
-
-    // Did we poke DM during this time interval ?
-    int poke;
-
-    // Does frame count toward accumulated signal ?
-    int accum;
-
-    // frame index within poke mode acquisition
-    // -1 if not part of signal
-    int aveindex;
-
-    // frame counter within poke mode acquisition, starts negative
-    // becomes positive when accumulating signal
-    int pokeframeindex;
-
     // Poke mode being measured
     int PokeIndexMEAS;
 
@@ -44,9 +69,36 @@ typedef struct
     // Current poke mode on DM, index in poke cube
     int PokeIndexCTRL_Mapped;
 
+    // frame index within poke mode acquisition
+    // -1 if not part of signal
+    int aveindex;
 
-    struct timespec ts;
+    // Time delay between start of pokeframe and poke actuation command
+    int pokedelayus;
 
+    struct timespec tstart;
+    struct timespec tpoke;
+
+
+    /*
+
+        // Cycle number
+        uint64_t iter;
+
+        // Did we poke DM during this time interval ?
+        int poke;
+
+        // Does frame count toward accumulated signal ?
+        int accum;
+
+
+
+        // frame counter within poke mode acquisition, starts negative
+        // becomes positive when accumulating signal
+        int pokeframeindex;
+
+        struct timespec ts;
+    */
 } PokeInfo;
 
 static PokeInfo *pkinfarray;
@@ -85,22 +137,13 @@ long          fpi_pokeampl;
 
 // TIMING
 
-// Toggles
-static uint64_t *autotiming;
-static long fpi_autotiming;
+// Frame rate [Hz]
+static float *timing_framerateHz;
+long fpi_timing_framerateHz;
 
-// WFS frame rate [Hz]
-static float *WFSfrequ;
-long fpi_WFSfrequ;
-
-// Hardware latency in unit of WFS frame
-static float *hardwlatfr;
-long fpi_hardwlatfr;
-
-static uint32_t *delayfr;
-static long fpi_delayfr;
-static uint32_t *delayRM1us;
-static long fpi_delayRM1us;
+// Latency in unit of WFS frame
+static float *timing_latencyfr;
+long fpi_timing_latencyfr;
 
 static uint32_t *NBave;
 static uint32_t *NBexcl;
@@ -164,8 +207,8 @@ static CLICMDARGDEF farg[] =
         "WFS frame rate [Hz]",
         "1000",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &WFSfrequ,
-        &fpi_WFSfrequ
+        (void **) &timing_framerateHz,
+        &fpi_timing_framerateHz
     },
     {
         CLIARG_FLOAT32,
@@ -173,35 +216,8 @@ static CLICMDARGDEF farg[] =
         "hardware latency [fr]",
         "1000",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &hardwlatfr,
-        &fpi_hardwlatfr
-    },
-    {
-        CLIARG_ONOFF,
-        ".timing.autoTiming",
-        "Auto Timing",
-        "ON",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &autotiming,
-        &fpi_autotiming
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.delayfr",
-        "frame delay, whole part",
-        "2",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &delayfr,
-        &fpi_delayfr
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.delayRM1us",
-        "Sub-frame delay [us]",
-        "100",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &delayRM1us,
-        &fpi_delayRM1us
+        (void **) &timing_latencyfr,
+        &fpi_timing_latencyfr
     },
     {
         CLIARG_UINT32,
@@ -265,65 +281,6 @@ static errno_t customCONFcheck()
 
     if(data.fpsptr != NULL)
     {
-        if(data.fpsptr->parray[fpi_autotiming].fpflag & FPFLAG_ONOFF)  // ON state
-        {
-            printf("UPDATE TIMING >>>>>>>>>\n");
-
-
-            {
-                char *envvar = "CACAO_HARDWLAT_FRAME";
-                if(!getenv(envvar))
-                {
-                    fprintf(stderr, "The environment variable %s was not found.\n", envvar);
-                }
-                else
-                {
-                    float tmpv = atof(getenv(envvar));
-                    data.fpsptr->parray[fpi_hardwlatfr].val.i64[0]    = tmpv;
-                }
-            }
-
-
-
-            {
-                char *envar = "CACAO_WFS_FRATE";
-                if(!getenv(envar))
-                {
-                    fprintf(stderr, "The environment variable %s was not found.\n", envar);
-                }
-                else
-                {
-                    float tmpv = atof(getenv(envar));
-                    data.fpsptr->parray[fpi_WFSfrequ].val.i64[0]    = tmpv;
-                }
-            }
-
-
-
-            // RMdelay = hardwlaten - 0.5 - excl/2
-            double RMdelay = (*hardwlatfr) - 0.5 - 0.5 * (*NBexcl);
-
-            int RMdelayfr =
-                ((int)((*hardwlatfr) - 0.5 - 0.5 * (*NBexcl) +  10.0)) + 1 - 10;
-
-            int delayRM1us = (int)((1.0 * RMdelayfr - RMdelay) / (*WFSfrequ) * 1000000.0);
-
-            if(RMdelay < 0)
-            {
-                RMdelayfr    = 0;
-                delayRM1us   = 0;
-            }
-
-            printf("RMdelayfr  = %d\n", RMdelayfr);
-            printf("delayRM1us = %d\n", delayRM1us);
-
-
-            data.fpsptr->parray[fpi_delayfr].val.i64[0]    = RMdelayfr;
-            data.fpsptr->parray[fpi_delayRM1us].val.i64[0] = delayRM1us;
-
-            // set back to OFF
-            data.fpsptr->parray[fpi_autotiming].fpflag &= ~FPFLAG_ONOFF;
-        }
     }
 
     return RETURN_SUCCESS;
@@ -347,42 +304,6 @@ static errno_t help_function()
     return RETURN_SUCCESS;
 }
 
-
-
-
-
-static errno_t PokeUpdate(
-    PokeInfo pkinf,
-    PokeInfo *pkinfarray,
-    int pokecnt,
-    int NBpokeTotal
-)
-{
-
-    if(pokecnt > NBpokeTotal - 1)
-    {
-        printf("ERROR: pokecnt %d   / %d\n", pokecnt, NBpokeTotal);
-        exit(0);
-    }
-
-
-    pkinfarray[pokecnt].iter = pkinf.iter;
-    pkinfarray[pokecnt].poke = pkinf.poke;
-    pkinfarray[pokecnt].accum = pkinf.accum;
-    pkinfarray[pokecnt].aveindex = pkinf.aveindex;
-    pkinfarray[pokecnt].pokeframeindex = pkinf.pokeframeindex;
-    pkinfarray[pokecnt].PokeIndexMEAS = pkinf.PokeIndexMEAS;
-    pkinfarray[pokecnt].PokeIndexCTRL = pkinf.PokeIndexCTRL;
-    pkinfarray[pokecnt].PokeIndexMEAS_Mapped = pkinf.PokeIndexMEAS_Mapped;
-    pkinfarray[pokecnt].PokeIndexCTRL_Mapped = pkinf.PokeIndexCTRL_Mapped;
-
-    struct timespec poke_ts;
-    clock_gettime(CLOCK_REALTIME, &poke_ts);
-    pkinfarray[pokecnt].ts.tv_sec = poke_ts.tv_sec;
-    pkinfarray[pokecnt].ts.tv_nsec = poke_ts.tv_nsec;
-
-    return RETURN_SUCCESS;
-}
 
 
 
@@ -536,8 +457,8 @@ static errno_t PokeUpdate(
  * @param imgin                Input stream to be poked
  * @param imgout               Output stream to be measured
  * @param imginmodeC           Poke pattern, modes to be sensed
- * @param timing_delayfr       Integer delay [frame]
- * @param timing_delayRM1us    Fractional delay [us]
+ * @param framerateHz          Frame rate [Hz]
+ * @param latencyfr            Latency [fr]
  * @param timing_NBave         Number of frames averaged per poke state
  * @param timing_NBexcl        Number of frames excluded
  * @param timing_NBcycle       Number of cycles averaged (outer)
@@ -562,8 +483,8 @@ static errno_t Measure_Linear_Response_Modal(
     IMGID       imgout,
     IMGID       imginmodeC,
     float       ampl,
-    long        timing_delayfr,
-    long        timing_delayRM1us,
+    float       framerateHz,
+    float       latencyfr,
     uint32_t    timing_NBave,
     uint32_t    timing_NBexcl,
     uint32_t    SequInitMode,
@@ -630,11 +551,65 @@ static errno_t Measure_Linear_Response_Modal(
     printf("    input modes size  : %u %u %u\n", imginmodeC.md->size[0],
            imginmodeC.md->size[1], imginmodeC.md->size[2]);
 
-    printf("    timing_delayfr    : %ld\n", timing_delayfr);
-    printf("    timimg_delayRM1us : %ld us\n", timing_delayRM1us);
+    printf("    framerateHz       : %f\n", framerateHz);
+    printf("    latencyfr         : %f\n", latencyfr);
     printf("    timing_NBave      : %u\n", timing_NBave);
     printf("    timing_NBexcl     : %u\n", timing_NBexcl);
     printf("    SequInitMode      : %u\n", SequInitMode);
+
+
+
+    // Compute timing parameters
+    // Time offset between poke actuation and start of poke cycle is
+
+    float dtfr = (latencyfr - 0.5) + 0.5 * timing_NBexcl;
+    // positive value indicates the DM poke occurs before cycle start
+
+    int RMdelayfr = 0;
+    int delayMR1us = 0;
+    if(dtfr > 0.0)
+    {
+        // dtfr is then split into an integer offset [RMdelayfr] and the pokedelayus [delayMR1us] :
+        RMdelayfr = ceil(dtfr);
+        delayMR1us = (int)((1.0 * RMdelayfr - dtfr) * (1.0 / framerateHz) * 1000000.0 +
+                           0.5);
+    }
+
+
+    // number of poke frames
+    uint64_t NBpokeframe;
+    NBpokeframe  = timing_NBave + timing_NBexcl;  // for each mode
+    NBpokeframe *= NBmode2;                       // multiplied by number of modes
+    NBpokeframe += RMdelayfr;                // to allow for latency at startup
+
+    pkinfarray = (PokeInfo *) malloc(sizeof(PokeInfo) * NBpokeframe);
+
+
+    // initialization
+    for(uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe ++)
+    {
+        // poke first mode
+        pkinfarray[pokeframe].PokeIndexCTRL = 0;
+        pkinfarray[pokeframe].pokedelayus   = delayMR1us;
+
+        // don't measure anything
+        pkinfarray[pokeframe].PokeIndexMEAS = -1;
+    }
+
+    for(int pokemode = 0; pokemode < NBmode2; pokemode++)
+    {
+        for(int aveindex = 0; aveindex < timing_NBave + timing_NBexcl; aveindex++)
+        {
+            int pokeCTRLindex = pokemode * (timing_NBave + timing_NBexcl) + aveindex;
+            int pokeMEASindex = pokeCTRLindex + RMdelayfr;
+
+            pkinfarray[pokeCTRLindex].PokeIndexCTRL = pokemode;
+            pkinfarray[pokeMEASindex].PokeIndexMEAS = pokemode;
+            pkinfarray[pokeMEASindex].aveindex = aveindex;
+        }
+    }
+
+
 
 
 
@@ -663,22 +638,6 @@ static errno_t Measure_Linear_Response_Modal(
 
 
 
-
-    // Timing info for pokes
-    //
-    // The total number of pokes (1 poke = 1 frame)
-    // consecutive identical pokes are counted as separate
-    //
-    uint64_t NBpokeTotal;
-    NBpokeTotal  = timing_NBave + timing_NBexcl;  // for each DM mode
-    NBpokeTotal *= NBmode2;                       // multiplied by number of modes
-    NBpokeTotal += timing_delayfr;                // to allow for latency at startup
-    NBpokeTotal += 4; // ???
-
-//    (4 + timing_delayfr + (timing_NBave + timing_NBexcl) * NBmode2) * NBiter + 4;
-
-
-    uint64_t pokecnt = 0;
 
 
 
@@ -723,14 +682,6 @@ static errno_t Measure_Linear_Response_Modal(
     }
 
 
-    /*
-    LATENCY CONVENTION
-
-    hardwlat = 0.5 frame : DM poke synced with readout
-
-    */
-
-    pkinfarray = (PokeInfo *) malloc(sizeof(PokeInfo) * NBpokeTotal);
 
 
 
@@ -777,25 +728,17 @@ static errno_t Measure_Linear_Response_Modal(
     printf("Using semaphore %d\n", semindexout);
 
 
-    pkinf.iter = 0;
-    pkinf.pokeframeindex = 0;
-    pkinf.PokeIndexMEAS  = 0;     // Poked mode index being measured
-    pkinf.PokeIndexCTRL = 0;  // Poke mode being actuated
+    int iter = 0;
 
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
     {
-        pokecnt = 0;
-
-        printf("ITERATION %lu\n", pkinf.iter);
-        fflush(stdout);
-
-        printf("    %5d  pokecnt %8lu / %8lu\n", __LINE__, pokecnt, NBpokeTotal);
+        printf("ITERATION %d\n", iter);
         fflush(stdout);
 
         processinfo_WriteMessage_fmt(processinfo, "it %lu/%lu",
-                                     pkinf.iter,
+                                     iter,
                                      processinfo->loopcntMax
                                     );
 
@@ -835,215 +778,75 @@ static errno_t Measure_Linear_Response_Modal(
 
 
 
-        processinfo_WriteMessage_fmt(processinfo, "%lu init first poke", pkinf.iter);
 
-        pkinf.pokeframeindex = 0;
-        pkinf.PokeIndexMEAS  = 0; // Poked mode index
-        pkinf.PokeIndexCTRL = 0;
 
-        pkinf.PokeIndexMEAS_Mapped  = array_PokeSequ[pkinf.PokeIndexMEAS];
-        pkinf.PokeIndexCTRL_Mapped = array_PokeSequ[pkinf.PokeIndexCTRL];
 
-        if((pkinf.PokeIndexCTRL_Mapped > (uint32_t)(NBmode2 - 1)))
+        for(uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe ++)
         {
-            printf("ERROR: PokeIndexCTRL_Mapped = %u is outside range 0 - %ld\n",
-                   pkinf.PokeIndexCTRL_Mapped,
-                   NBmode2);
-            exit(0);
-        }
 
-        usleep(timing_delayRM1us);
+            pkinfarray[pokeframe].PokeIndexCTRL_Mapped =
+                array_PokeSequ[pkinfarray[pokeframe].PokeIndexCTRL];
 
-
-
-
-
-        // POKE first pattern
-        // (pokecnt increments by 1)
-        //
-        pkinf.aveindex = -1; // not part of signal
-
-        imgin.md->write = 1;
-        memcpy((void *) imgin.im->array.F,
-               (void *)(ptr0 + pkinf.PokeIndexCTRL_Mapped * framesize),
-               sizeof(float) * sizexyin);
-        imgin.md->cnt1 = pkinf.PokeIndexCTRL_Mapped;
-        processinfo_update_output_stream(processinfo, imgin.ID);
-
-        PokeUpdate(pkinf, pkinfarray, pokecnt, NBpokeTotal);
-
-        printf("    %5d  pokecnt %8lu / %8lu\n", __LINE__, pokecnt, NBpokeTotal);
-        fflush(stdout);
-
-        pokecnt++;
+            if(pkinfarray[pokeframe].PokeIndexMEAS != -1)
+            {
+                pkinfarray[pokeframe].PokeIndexMEAS_Mapped =
+                    array_PokeSequ[pkinfarray[pokeframe].PokeIndexMEAS];
+            }
+            else
+            {
+                pkinfarray[pokeframe].PokeIndexMEAS_Mapped = -1;
+            }
 
 
 
-        ImageStreamIO_semwait(imgout.im, semindexout);
-
-
-        // Is this needed ??
-        //COREMOD_MEMORY_image_set_sempost_byID(imgin.ID, -1);
-        //imgin.md->cnt0++;
-
-
-
-
-
-        // WAIT FOR LOOP DELAY, PRIMING
-        // POKE first pattern
-        // (pokecnt increments by 1+timing_delayfr)
-
-
-        // Read delayfr frames (priming)
-        //
-        for(int delayindex = 0; delayindex < timing_delayfr; delayindex++)
-        {
-            // pokecnt++; ???
-
-            // Read_cam_frame(loop, 1, normalize, 0, 0);
+            // Read stream
+            //
             ImageStreamIO_semwait(imgout.im, semindexout);
+            clock_gettime(CLOCK_REALTIME, &pkinfarray[pokeframe].tstart);
 
-            pkinf.pokeframeindex++;
-            if(pkinf.pokeframeindex == (int) timing_NBave)
+            // Wait for time delay
+            //
             {
-                pkinf.pokeframeindex = -timing_NBexcl;
-                pkinf.PokeIndexCTRL++;
+                long nsec           = (long)(1000 * (pkinfarray[pokeframe].pokedelayus));
+                long nsec_remaining = nsec % 1000000000;
+                long sec            = nsec / 1000000000;
 
-                if(pkinf.PokeIndexCTRL > NBmode2 - 1)
+                struct timespec timesleep;
+                timesleep.tv_sec  = sec;
+                timesleep.tv_nsec = nsec_remaining;
+
+                nanosleep(&timesleep, NULL);
+            }
+
+
+
+            // Poke
+            //
+            imgin.md->write = 1;
+            memcpy((void *)(imgin.im->array.F),
+                   (void *)(ptr0 + pkinfarray[pokeframe].PokeIndexCTRL_Mapped * framesize),
+                   sizeof(float) * sizexyin);
+            imgin.md->cnt1 = pkinfarray[pokeframe].PokeIndexCTRL_Mapped;
+            processinfo_update_output_stream(processinfo, imgin.ID);
+            clock_gettime(CLOCK_REALTIME, &pkinfarray[pokeframe].tpoke);
+
+
+            // Collect signal
+            //
+            if((pkinfarray[pokeframe].aveindex < timing_NBave)
+                    && (pkinfarray[pokeframe].PokeIndexMEAS_Mapped != -1))
+            {
                 {
-                    pkinf.PokeIndexCTRL -= NBmode2;
+                    char *ptr = (char *)
+                                data.image[IDoutCstep[pkinfarray[pokeframe].aveindex]].array.F;
+                    ptr += sizeof(float) * pkinfarray[pokeframe].PokeIndexMEAS_Mapped * sizexyout;
+                    memcpy(ptr,
+                           imgout.im->array.F,
+                           sizeof(float) * sizexyout);
                 }
-
-                pkinf.PokeIndexCTRL_Mapped = array_PokeSequ[pkinf.PokeIndexCTRL];
-
-                if((pkinf.PokeIndexCTRL_Mapped > (uint32_t)(NBmode2 - 1)))
-                {
-                    printf(
-                        "ERROR: PokeIndexCTRLMapped = %u is outside range 0 - "
-                        "%ld\n",
-                        pkinf.PokeIndexCTRL_Mapped,
-                        NBmode2);
-                    exit(0);
-                }
-
-
-                usleep(timing_delayRM1us);
-
-                // POKE
-                imgin.md->write = 1;
-                memcpy((void *) imgin.im->array.F,
-                       (void *)(ptr0 + pkinf.PokeIndexCTRL_Mapped * framesize),
-                       sizeof(float) * sizexyin);
-                imgin.md->cnt1 = pkinf.PokeIndexCTRL_Mapped;
-                processinfo_update_output_stream(processinfo, imgin.ID);
-
-                pkinf.poke = 1;
-
-                PokeUpdate(pkinf, pkinfarray, pokecnt, NBpokeTotal);
-                pokecnt ++;
-
             }
         }
 
-
-        printf("    %5d  pokecnt %8lu / %8lu\n", __LINE__, pokecnt, NBpokeTotal);
-        printf("    PokeIndex = %u\n", pkinf.PokeIndexMEAS);
-        fflush(stdout);
-
-
-
-
-
-
-        // First inner loop increment poke mode
-        //
-        while((pkinf.PokeIndexMEAS < NBmode2) && (data.signal_INT == 0))
-        {
-            // INTEGRATION
-
-            processinfo_WriteMessage_fmt(processinfo, "iter %lu/%lu poke %u/%ld",
-                                         pkinf.iter,
-                                         processinfo->loopcntMax,
-                                         pkinf.PokeIndexMEAS,
-                                         NBmode2);
-
-            for(int aveindex = 0; aveindex < timing_NBave + timing_NBexcl; aveindex++)
-            {
-                PokeUpdate(pkinf, pkinfarray, pokecnt, NBpokeTotal);
-                pokecnt++;
-
-
-
-                // Capture signal
-                //
-                ImageStreamIO_semwait(imgout.im, semindexout);
-                //
-                //
-                //
-                if(aveindex < timing_NBave)
-                {
-                    {
-                        char *ptr = (char *) data.image[IDoutCstep[aveindex]].array.F;
-                        ptr += sizeof(float) * pkinf.PokeIndexMEAS_Mapped * sizexyout;
-                        memcpy(ptr,
-                               imgout.im->array.F,
-                               sizeof(float) * sizexyout);
-                    }
-                    pkinf.accum = 1;
-                }
-
-
-
-
-
-                pkinf.pokeframeindex++;
-                // wait for NBexcl excluded frames. We poke after delayRM1us
-                if(pkinf.pokeframeindex == (int) timing_NBave)
-                {
-                    pkinf.pokeframeindex = -timing_NBexcl;
-                    pkinf.PokeIndexCTRL++;
-
-                    if(pkinf.PokeIndexCTRL > NBmode2 - 1)
-                    {
-                        pkinf.PokeIndexCTRL -= NBmode2;
-                    }
-
-                    pkinf.PokeIndexCTRL_Mapped = array_PokeSequ[pkinf.PokeIndexCTRL];
-
-                    usleep(timing_delayRM1us);
-
-                    //printf(">>>>>>>>>>>>>>>>>>> %d %d %d <<<<<<<<<<<<<<<<<\n", __LINE__, PokeIndex1, PokeIndex1Mapped);
-                    //fflush(stdout);
-
-                    // POKE
-                    imgin.md->write = 1;
-                    memcpy((void *)(imgin.im->array.F),
-                           (void *)(ptr0 + pkinf.PokeIndexCTRL_Mapped * framesize),
-                           sizeof(float) * sizexyin);
-                    imgin.md->cnt1 = pkinf.PokeIndexCTRL_Mapped;
-                    processinfo_update_output_stream(processinfo, imgin.ID);
-
-
-
-                    pkinf.poke = 1;
-                }
-
-            }
-
-            pkinf.PokeIndexMEAS++;
-            pkinf.PokeIndexMEAS_Mapped = array_PokeSequ[pkinf.PokeIndexMEAS];
-        }
-
-
-        printf("    %5d  pokecnt %8lu / %8lu\n", __LINE__, pokecnt, NBpokeTotal);
-        fflush(stdout);
-
-
-
-
-
-        usleep(timing_delayRM1us);
 
         // zero DM channel
         {
@@ -1064,7 +867,9 @@ static errno_t Measure_Linear_Response_Modal(
 
 
 
-        pkinf.poke = 1;
+
+
+
 
         printf("Combining results ... ");
         fflush(stdout);
@@ -1103,8 +908,8 @@ static errno_t Measure_Linear_Response_Modal(
             char tmpfname[STRINGMAXLEN_FULLFILENAME];
             WRITE_FULLFILENAME(tmpfname, "%s/RMacqulog.txt", outdir);
             fplog = fopen(tmpfname, "w");
-            fprintf(fplog, "%-20s  %ld\n", "delayfr", timing_delayfr);
-            fprintf(fplog, "%-20s  %ld\n", "delayRM1us", timing_delayRM1us);
+            fprintf(fplog, "%-20s  %f\n", "framerateHz", framerateHz);
+            fprintf(fplog, "%-20s  %f\n", "latencyfr", latencyfr);
             fprintf(fplog, "%-20s  %u\n", "NBave", timing_NBave);
             fprintf(fplog, "%-20s  %u\n", "NBexcl", timing_NBexcl);
             fprintf(fplog, "%-20s  %s\n", "IDpokeC_name", imgin.md->name);
@@ -1124,10 +929,10 @@ static errno_t Measure_Linear_Response_Modal(
 
                 char tmpfname[STRINGMAXLEN_FULLFILENAME];
                 WRITE_FULLFILENAME(tmpfname,
-                                   "%s/wfsresp.tstep%03u.iter%03lu.fits",
+                                   "%s/wfsresp.tstep%03u.iter%04d.fits",
                                    outdir,
                                    AveStep,
-                                   pkinf.iter);
+                                   iter);
                 printf("SAVING %s -> %s ... ", imname, tmpfname);
                 fflush(stdout);
                 save_fits(imname, tmpfname);
@@ -1136,7 +941,72 @@ static errno_t Measure_Linear_Response_Modal(
             }
         }
 
-        pkinf.iter++;
+
+
+
+
+        // print poke log
+        {
+            char tmpfname[STRINGMAXLEN_FULLFILENAME];
+            if(strlen(outdir) > 0)
+            {
+                WRITE_FULLFILENAME(tmpfname, "%s/RMpokelog.iter%04d.txt", outdir, iter);
+            }
+            else
+            {
+                WRITE_FULLFILENAME(tmpfname, "RMpokelog.iter%04d.txt", iter);
+            }
+
+            FILE *fp = fopen(tmpfname, "w");
+            for(int pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
+            {
+                fprintf(fp,
+                        "%6d %3d    %4d %4d   %4d %4d     %3ld %3u %3u\n",
+                        pokeframe,
+                        pkinfarray[pokeframe].aveindex,
+                        pkinfarray[pokeframe].PokeIndexMEAS,
+                        pkinfarray[pokeframe].PokeIndexCTRL,
+                        pkinfarray[pokeframe].PokeIndexMEAS_Mapped,
+                        pkinfarray[pokeframe].PokeIndexCTRL_Mapped,
+                        NBmode2,
+                        timing_NBexcl,
+                        timing_NBave);
+            }
+            fclose(fp);
+        }
+
+
+
+        {
+            char tmpfname[STRINGMAXLEN_FULLFILENAME];
+
+            printf("Writing poke timing to file ... ");
+            fflush(stdout);
+
+            WRITE_FULLFILENAME(tmpfname, "%s/RMpokeTiming.iter%04d.txt", outdir, iter);
+            FILE *fp            = fopen(tmpfname, "w");
+            double ftime0 = pkinfarray[0].tstart.tv_sec + 1.0e-9 * pkinfarray[0].tstart.tv_nsec;
+            double ftime;
+            for(uint64_t ii = 0; ii < NBpokeframe; ii++)
+            {
+                ftime = pkinfarray[ii].tstart.tv_sec + 1.0e-9 * pkinfarray[ii].tstart.tv_nsec;
+                fprintf(fp,
+                        "%5lu  %16ld.%09ld  %16ld.%09ld  %5d  %12.9lf\n",
+                        ii,
+                        pkinfarray[ii].tstart.tv_sec,
+                        pkinfarray[ii].tstart.tv_nsec,
+                        pkinfarray[ii].tpoke.tv_sec,
+                        pkinfarray[ii].tpoke.tv_nsec,
+                        pkinfarray[ii].PokeIndexMEAS,
+                        ftime - ftime0);
+                ftime0 = ftime;
+            }
+            fclose(fp);
+        }
+
+
+
+        iter++;
 
 
 
@@ -1149,8 +1019,7 @@ static errno_t Measure_Linear_Response_Modal(
             {
                 for(uint64_t ii = 0; ii < sizexyout; ii++)
                 {
-                    imgoutC.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * pkinf.iter *
-                    ampl;
+                    imgoutC.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * iter * ampl;
                 }
             }
 
@@ -1164,67 +1033,8 @@ static errno_t Measure_Linear_Response_Modal(
 
 
 
-    // print poke log
-    {
-        char tmpfname[STRINGMAXLEN_FULLFILENAME];
-        if(strlen(outdir) > 0)
-        {
-            WRITE_FULLFILENAME(tmpfname, "%s/RMpokelog.txt", outdir);
-        }
-        else
-        {
-            WRITE_FULLFILENAME(tmpfname, "RMpokelog.txt");
-        }
-
-        FILE *fp = fopen(tmpfname, "w");
-        for(pokecnt = 0; pokecnt < NBpokeTotal; pokecnt++)
-        {
-            fprintf(fp,
-                    "%6lu %3lu    %1u %1u     %6u  %6d     %4u %4u   %4u %4u     "
-                    "%3ld %3u %3u\n",
-                    pokecnt,
-                    pkinfarray[pokecnt].iter,
-                    pkinfarray[pokecnt].poke,
-                    pkinfarray[pokecnt].accum,
-                    pkinfarray[pokecnt].aveindex,
-                    pkinfarray[pokecnt].pokeframeindex,
-                    pkinfarray[pokecnt].PokeIndexMEAS,
-                    pkinfarray[pokecnt].PokeIndexCTRL,
-                    pkinfarray[pokecnt].PokeIndexMEAS_Mapped,
-                    pkinfarray[pokecnt].PokeIndexCTRL_Mapped,
-                    NBmode2,
-                    timing_NBexcl,
-                    timing_NBave);
-        }
-        fclose(fp);
-    }
 
 
-
-    {
-        char tmpfname[STRINGMAXLEN_FULLFILENAME];
-
-        printf("Writing poke timing to file ... ");
-        fflush(stdout);
-
-        WRITE_FULLFILENAME(tmpfname, "%s/RMpokeTiming.txt", outdir);
-        FILE *fp            = fopen(tmpfname, "w");
-        double ftime0 = pkinfarray[0].ts.tv_sec + 1.0e-9 * pkinfarray[0].ts.tv_nsec;
-        double ftime;
-        for(uint64_t ii = 0; ii < pokecnt; ii++)
-        {
-            ftime = pkinfarray[ii].ts.tv_sec + 1.0e-9 * pkinfarray[ii].ts.tv_nsec;
-            fprintf(fp,
-                    "%5lu  %16ld.%09ld  %5d  %12.9lf\n",
-                    ii,
-                    pkinfarray[ii].ts.tv_sec,
-                    pkinfarray[ii].ts.tv_nsec,
-                    pkinfarray[ii].PokeIndexMEAS,
-                    ftime - ftime0);
-            ftime0 = ftime;
-        }
-        fclose(fp);
-    }
 
 
     free(IDoutCstep);
@@ -1274,8 +1084,8 @@ static errno_t compute_function()
         imgout,
         imginmodeC,
         *pokeampl,
-        *delayfr,
-        *delayRM1us,
+        *timing_latencyfr,
+        *timing_framerateHz,
         *NBave,
         *NBexcl,
         1,
