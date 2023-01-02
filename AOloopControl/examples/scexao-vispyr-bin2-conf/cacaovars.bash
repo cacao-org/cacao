@@ -15,6 +15,11 @@ export CACAO_DMINDEXSIM="10" # Simulation DM
 export CACAO_DMxsize="50"
 export CACAO_DMysize="50"
 
+# OPTIONAL: DM alignment
+export CACAO_DM_beam_xcent="24.5"
+export CACAO_DM_beam_ycent="26.0"
+export CACAO_DM_beam_rad="24.0"
+
 # 1 if DM actuators are on a coordinate grid
 # This informs processes if a spatial relationship exists
 # between DM actuators

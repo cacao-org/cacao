@@ -67,9 +67,18 @@ ACTIONOK=1
 
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.WFSfrequ ${CACAO_WFSFRATE}"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.hardwlatfr ${CACAO_LATENCYFR}"
+
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.streamin aol${CACAO_LOOPNUMBER}_dmRM"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
+
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.inmodes ../conf/DMmodes/HpokeC.fits"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.outmodes outmodeC.fits"
+
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.autoTiming ON"
+
+
 sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
-#sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
 
 fi
 

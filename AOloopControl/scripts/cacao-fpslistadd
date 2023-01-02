@@ -23,6 +23,7 @@ mkdir $LOGFILEDIR
 LOGFILENAME="${LOGFILEDIR}/$(basename $0).log"
 rm $LOGFILENAME
 
+
 mkdir -p fps.conf
 
 function echolog {

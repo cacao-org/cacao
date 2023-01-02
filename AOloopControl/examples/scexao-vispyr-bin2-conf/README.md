@@ -20,7 +20,7 @@ Subsequent tasks can perform specific parts of the AO loop.
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
-## Simulator/hardware link
+## Setting up processes
 
 
 ```bash
@@ -34,7 +34,11 @@ cd vispyr2-rootdir
 # select simulation mode
 ./scripts/aorun-setmode-sim
 # (alternatively, run ./scripts/aorun-setmode-hardw to connect to hardware)
+```
 
+## Run DM and WFS simulators
+
+```bash
 # Run hardware DM (optional if running in simulation mode)
 # cacao-aorun-000-dm start
 
@@ -48,17 +52,7 @@ cacao-aorun-002-simwfs start
 
 
 
-```bash
-
-cacao-fpsctrl setval measlinresp streamin aol0_dmRM
-cacao-fpsctrl setval measlinresp streamout aol0_imWFS2
-cacao-fpsctrl setval measlinresp inmodes "fps.acqlin_zRM-0.datadir/Hpoke.fits"
-cacao-fpsctrl setval measlinresp outmodes "outmodeC.fits"
-```
-
-
-
-## Dark and latency
+## Measure WFS dark and DM to WFS latency
 
 
 ```bash
@@ -68,6 +62,8 @@ cacao-aorun-005-takedark
 cacao-aorun-020-mlat -w
 ```
 
+
+
 ## Start WFS acquisition
 
 ```bash
@@ -75,7 +71,36 @@ cacao-aorun-020-mlat -w
 cacao-aorun-025-acqWFS start
 ```
 
+
+
 ## Acquire response matrix
+
+
+### Prepare DM poke modes
+
+```bash
+# Create DM poke mode cubes
+cacao-mkDMpokemodes
+```
+The following files are written to ./conf/DMmodes/ :
+- DMmask.fits    : DM mask
+- Fmodes.fits    : Fourier modes
+- HpokeC.fits    : Hadamard modes
+- Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
+- Hpixindex.fits : Hadamard pixel index
+
+
+
+### Run acquisition
+
+
+```bash
+
+cacao-fpsctrl setval measlinresp streamin aol0_dmRM
+cacao-fpsctrl setval measlinresp streamout aol0_imWFS2
+cacao-fpsctrl setval measlinresp inmodes "conf/Hpoke.fits"
+cacao-fpsctrl setval measlinresp outmodes "outmodeC.fits"
+```
 
 ```bash
 # Acquire zonal response matrix

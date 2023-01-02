@@ -23,13 +23,28 @@ DMMODEDIR="conf/DMmodes"
 mkdir -p ${DMMODEDIR}
 
 
+
+x0default=$(echo "scale=3; $CACAO_DMxsize/2" | bc)
+y0default=$(echo "scale=3; $CACAO_DMysize/2" | bc)
+r0default=$(echo "scale=3; 0.450*$CACAO_DMxsize" | bc)
+
+
+
+DMx0=${CACAO_DM_beam_xcent:-$x0default}
+DMy0=${CACAO_DM_beam_ycent:-$y0default}
+DMr0=${CACAO_DM_beam_rad:-$r0default}
+
+echo "using DMx0 = ${DMx0}"
+echo "using DMy0 = ${DMy0}"
+echo "using DMr0 = ${DMr0}"
+
+
+
+
 # Make DM mask if it doesn't exist
 
 cacao << EOF
-dmxc=0.5*${CACAO_DMxsize}
-dmyc=0.5*${CACAO_DMysize}
-dmr=0.5*${CACAO_DMysize}
-imgen.mkdisk DMmask ${CACAO_DMxsize} ${CACAO_DMysize} dmxc dmyc dmr
+imgen.mkdisk DMmask ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0}
 saveFITS DMmask "${DMMODEDIR}/DMmask.fits"
 listim
 exitCLI
@@ -57,9 +72,14 @@ EOF
 CPAmax=8.0
 deltaCPA=0.8
 
+
+
+#DMrad=${CACAO_DMbeamrad:/-}
+#DMxcent=$()
+
+
 cacao << EOF
-dmr=0.5*${CACAO_DMysize}
-lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} dmr 1.1 0
+lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 0
 saveFITS Fmodes "${DMMODEDIR}/Fmodes.fits"
 listim
 exitCLI
