@@ -52,14 +52,15 @@ EOF
 
 
 # Fourier modes
-# For square DM only !!!
+
 
 CPAmax=8.0
 deltaCPA=0.8
 
 cacao << EOF
 dmr=0.5*${CACAO_DMysize}
-lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CPAmax} ${deltaCPA} dmr 1.1 0
+lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} dmr 1.1 0
+saveFITS Fmodes "${DMMODEDIR}/Fmodes.fits"
 listim
 exitCLI
 EOF
