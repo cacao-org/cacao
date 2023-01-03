@@ -4,26 +4,31 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="cacao script: measure WFS response to DM modes"
 
-MSextdescr="AO loop script"
+MSextdescr="
+Input DM modes in:
+<rundir>/conf/DMmodes/<name>.fits
+
+Output WFS response written as:
+<rundir>/conf/WFSmodes/<name>.WFSresp.fits
+
+"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
-MSarg+=( "action:string:action (start/check)" )
+MSarg+=( "DMmodes:string:DM modes cube FITS file" )
+
 
 source milk-argparse
-ACTION="${inputMSargARRAY[0]}"
+
+DMmodeCname="${inputMSargARRAY[0]}"
+DMmCfname="conf/DMmodes/${DMmodeCname}.fits"
 
 
-ACTIONOK=0
+checkFile ${DMmCfname}
 
-
-
-
-if [ ${ACTION} == "check" ]; then
-ACTIONOK=1
-fi
 
 
 errexit=0
@@ -55,15 +60,17 @@ if [ $errexit = 1 ]; then
 exit
 fi
 
+if [ $EXITSTATUS = 1 ]; then
+exit
+fi
 
 
 
 
 
 
-
-if [ ${ACTION} == "start" ]; then
-ACTIONOK=1
+mkdir -p ./conf/DMmodes/
+mkdir -p ./conf/WFSmodes/
 
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.WFSfrequ ${CACAO_WFSFRATE}"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.hardwlatfr ${CACAO_LATENCYFR}"
@@ -72,21 +79,10 @@ sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.streamin aol${CACAO_LOOPNUMBE
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
 
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.inmodes ../conf/DMmodes/HpokeC.fits"
-sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.outmodes outmodeC.fits"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.outmodes ../conf/WFSmodes/HpokeC.WFSresp.fits"
 
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.autoTiming ON"
 
 
 sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
-
-fi
-
-
-
-
-
-
-if [ ${ACTIONOK} == 0 ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
-fi

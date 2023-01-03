@@ -575,6 +575,10 @@ static errno_t Measure_Linear_Response_Modal(
                            0.5);
     }
 
+    printf("dtfr       = %f\n", dtfr);
+    printf("RMdelayfr  = %d\n", RMdelayfr);
+    printf("delayMR1us = %d\n", delayMR1us);
+
 
     // number of poke frames
     uint64_t NBpokeframe;
@@ -664,8 +668,8 @@ static errno_t Measure_Linear_Response_Modal(
     //
     // Output array is created and initialized to hold the WFS response to each poke mode.
     //
-    IMGID imgoutC = makeIMGID_3D(outCname, sizexout, sizeyout, NBmode2);
-    imageID IDoutC = createimagefromIMGID(&imgoutC);
+    IMGID imgoutC2 = makeIMGID_3D("tmpmoderespraw", sizexout, sizeyout, NBmode2);
+    imageID IDoutC2 = createimagefromIMGID(&imgoutC2);
 
     for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
     {
@@ -673,7 +677,7 @@ static errno_t Measure_Linear_Response_Modal(
 
         for(uint64_t ii = 0; ii < imgout.md->size[0]*imgout.md->size[1]; ii++)
         {
-            imgoutC.im->array.F[PokeIndex * sizexyout + ii] = 0.0;
+            imgoutC2.im->array.F[PokeIndex * sizexyout + ii] = 0.0;
             for(uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
             {
                 data.image[IDoutCstep[AveStep]].array.F[PokeIndex * sizexyout + ii] = 0.0;
@@ -749,7 +753,7 @@ static errno_t Measure_Linear_Response_Modal(
         //
         if(SequInitMode & 0x02)
         {
-            printf("SWAPPING MODE 2\n");
+            printf("SWAPPING, MODE 2\n");
             fflush(stdout);
             permut_offset++;
             if(permut_offset == 2)
@@ -784,6 +788,13 @@ static errno_t Measure_Linear_Response_Modal(
         for(uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe ++)
         {
 
+            processinfo_WriteMessage_fmt(processinfo, "it %lu/%lu pokeframe %6lu / %6lu",
+                                         iter,
+                                         processinfo->loopcntMax,
+                                         pokeframe,
+                                         NBpokeframe
+                                        );
+
             pkinfarray[pokeframe].PokeIndexCTRL_Mapped =
                 array_PokeSequ[pkinfarray[pokeframe].PokeIndexCTRL];
 
@@ -801,11 +812,16 @@ static errno_t Measure_Linear_Response_Modal(
 
             // Read stream
             //
+            //printf("%5lu  waiting for frame\n", pokeframe);
+
             ImageStreamIO_semwait(imgout.im, semindexout);
             clock_gettime(CLOCK_REALTIME, &pkinfarray[pokeframe].tstart);
 
+
+
             // Wait for time delay
             //
+            //printf("%5lu  waiting for delay %d us\n", pokeframe, pkinfarray[pokeframe].pokedelayus);
             {
                 long nsec           = (long)(1000 * (pkinfarray[pokeframe].pokedelayus));
                 long nsec_remaining = nsec % 1000000000;
@@ -819,7 +835,7 @@ static errno_t Measure_Linear_Response_Modal(
             }
 
 
-
+            //printf("%5lu Poking\n", pokeframe);
             // Poke
             //
             imgin.md->write = 1;
@@ -882,7 +898,7 @@ static errno_t Measure_Linear_Response_Modal(
             {
                 for(uint64_t ii = 0; ii < sizexyout; ii++)
                 {
-                    imgoutC.im->array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout + ii] +=
+                    imgoutC2.im->array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout + ii] +=
                     data.image[IDoutCstep[AveStep]].array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout +
                                                             ii];
                 }
@@ -1013,19 +1029,40 @@ static errno_t Measure_Linear_Response_Modal(
         // compile and save
         {
             char tmpoutfname[STRINGMAXLEN_FULLFILENAME];
-            WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.fits", outdir);
+            WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp_raw.fits", outdir);
 
             for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
             {
                 for(uint64_t ii = 0; ii < sizexyout; ii++)
                 {
-                    imgoutC.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * iter * ampl;
+                    imgoutC2.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * iter * ampl;
                 }
             }
 
-            save_fits(imgoutC.name, tmpoutfname);
+            save_fits(imgoutC2.name, tmpoutfname);
 
+
+            WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.fits", outdir);
+            IMGID imgmoderespC = makeIMGID_3D("moderespC", sizexout, sizeyout, NBmode);
+            imageID IDinmoderespC = createimagefromIMGID(&imgmoderespC);
+
+            for(int mode = 0; mode < NBmode; mode++)
+            {
+                for(uint64_t ii = 0; ii < sizexyout; ii++)
+                {
+                    float posval = imgoutC2.im->array.F[(mode * 2) * sizexyout + ii];
+                    float negval = imgoutC2.im->array.F[(mode * 2 + 1) * sizexyout + ii];
+                    imgmoderespC.im->array.F[ mode * sizexyout + ii ] = (posval - negval) / 2;
+
+                }
+
+            }
+            save_fits(imgmoderespC.name, outCname);
         }
+
+
+
+
 
 
     }
@@ -1084,8 +1121,8 @@ static errno_t compute_function()
         imgout,
         imginmodeC,
         *pokeampl,
-        *timing_latencyfr,
         *timing_framerateHz,
+        *timing_latencyfr,
         *NBave,
         *NBexcl,
         1,

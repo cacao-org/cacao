@@ -95,19 +95,11 @@ The following files are written to ./conf/DMmodes/ :
 
 
 ```bash
+# Acquire response matrix - Hadamard modes
+cacao-aorun-030-acqlinResp HpokeC
 
-cacao-fpsctrl setval measlinresp streamin aol0_dmRM
-cacao-fpsctrl setval measlinresp streamout aol0_imWFS2
-cacao-fpsctrl setval measlinresp inmodes "conf/Hpoke.fits"
-cacao-fpsctrl setval measlinresp outmodes "outmodeC.fits"
-```
-
-```bash
-# Acquire zonal response matrix
-cacao-aorun-030-acqzRM start
-
-# Acquire low-order response matrix
-cacao-aorun-035-acqloRM start
+# Acquire response matrix - Fourier modes
+cacao-aorun-030-acqlinResp Fmodes
 ```
 
 ## Compute control matrix
