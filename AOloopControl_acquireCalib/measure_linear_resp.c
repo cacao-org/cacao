@@ -27,14 +27,14 @@
 // Control
 // - [PokeIndexCTRL]        Mode to be poked during the poke frame. This increments during the sequence.
 // - [PokeIndexCTRL_Mapped] Original mode to to which PokeIndexCTRL maps. This generally does not increase monotically.
-// - [pokedelayus]          Delay [us] from poke frame start to poking
+// - [pokedelayns]          Delay [ns] from poke frame start to poking
 //
 // Timing log
 // - [tstart]               Start of poke frame
 // - [tpoke]                Time at which poke was completed
 //
 // The sequence of PokeIndexMEAS and PokeIndexCTRL values follows the same pattern, but offset in time to account for latency between the streams.
-// The integer offset bettween the sequences, and the pokedelayus value, are derived from the framerate and latency between streams.
+// The integer offset bettween the sequences, and the pokedelayns value, are derived from the framerate and latency between streams.
 // We follow here the latency convention that if the poke responds instantaneously and the read is at full duty cycle, the latency is 0.5 frame.
 //
 // [lantencyfr] Latency in unit of frame
@@ -48,10 +48,10 @@
 // dt1 [fr] = (latencyfr-0.5) + Nexcl/2
 // positive value indicates the DM poke occurs before cycle start
 //
-// dt1 is then split into an integer offset [RMdelayfr] and the pokedelayus [delayMR1us] :
+// dt1 is then split into an integer offset [RMdelayfr] and the pokedelayns [delayMR1ns] :
 //
 // RMdelayfr = ceil(dt1)
-// delayMR1us = (RMdelayfr-dt1) * (1/framerateHz)*1000000.0
+// delayMR1ns = (RMdelayfr-dt1) * (1/framerateHz)*1000000.0
 //
 
 
@@ -73,8 +73,8 @@ typedef struct
     // -1 if not part of signal
     int aveindex;
 
-    // Time delay between start of pokeframe and poke actuation command
-    int pokedelayus;
+    // Time delay between start of pokeframe and poke actuation command, unit: nanosec
+    int pokedelayns;
 
     struct timespec tstart;
     struct timespec tpoke;
@@ -330,7 +330,7 @@ static errno_t help_function()
  *
  * Timing offset between actuator and sensor is specified as a delay in unit
  * of sensor frames. The delay is the sum of an integer number of sensor
- * frames (timing_delayfr) and an additional time delay in microsecond (timing_delayRM1us).
+ * frames (timing_delayfr) and an additional time delay in microsecond (timing_delayRM1ns).
  *
  * timing_NBave consecutive sensor frame(s) are averaged for each poke. timing_NBexcl frame(s)
  * are ignored between pokes to allow for actuator and sensor finite time
@@ -566,18 +566,18 @@ static errno_t Measure_Linear_Response_Modal(
     // positive value indicates the DM poke occurs before cycle start
 
     int RMdelayfr = 0;
-    int delayMR1us = 0;
+    int delayMR1ns = 0;
     if(dtfr > 0.0)
     {
-        // dtfr is then split into an integer offset [RMdelayfr] and the pokedelayus [delayMR1us] :
+        // dtfr is then split into an integer offset [RMdelayfr] and the pokedelayns [delayMR1ns] :
         RMdelayfr = ceil(dtfr);
-        delayMR1us = (int)((1.0 * RMdelayfr - dtfr) * (1.0 / framerateHz) * 1000000.0 +
+        delayMR1ns = (int)((1.0 * RMdelayfr - dtfr) * (1.0 / framerateHz) * 1.0e9 +
                            0.5);
     }
 
     printf("dtfr       = %f\n", dtfr);
     printf("RMdelayfr  = %d\n", RMdelayfr);
-    printf("delayMR1us = %d\n", delayMR1us);
+    printf("delayMR1ns = %d\n", delayMR1ns);
 
 
     // number of poke frames
@@ -594,7 +594,7 @@ static errno_t Measure_Linear_Response_Modal(
     {
         // poke first mode
         pkinfarray[pokeframe].PokeIndexCTRL = 0;
-        pkinfarray[pokeframe].pokedelayus   = delayMR1us;
+        pkinfarray[pokeframe].pokedelayns   = delayMR1ns;
 
         // don't measure anything
         pkinfarray[pokeframe].PokeIndexMEAS = -1;
@@ -821,9 +821,9 @@ static errno_t Measure_Linear_Response_Modal(
 
             // Wait for time delay
             //
-            //printf("%5lu  waiting for delay %d us\n", pokeframe, pkinfarray[pokeframe].pokedelayus);
+            //printf("%5lu  waiting for delay %d ns\n", pokeframe, pkinfarray[pokeframe].pokedelayns);
             {
-                long nsec           = (long)(1000 * (pkinfarray[pokeframe].pokedelayus));
+                long nsec           = pkinfarray[pokeframe].pokedelayns;
                 long nsec_remaining = nsec % 1000000000;
                 long sec            = nsec / 1000000000;
 

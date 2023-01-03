@@ -26,6 +26,7 @@ else
     echo "${fpsname}           cacaoac.measlinresp     ${fpsarg0}" >> fpslist.txt
 
     addfpscmdheader
+    addfpscmd "setval ${fpsfname}.procinfo.loopcntMax_10"
     addfpscmd "setval ${fpsfname}.streamin aol${CACAO_LOOPNUMBER}_dmRM"
     addfpscmd "setval ${fpsfname}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
 fi

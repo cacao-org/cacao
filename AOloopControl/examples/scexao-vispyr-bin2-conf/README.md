@@ -85,6 +85,7 @@ cacao-mkDMpokemodes
 The following files are written to ./conf/DMmodes/ :
 - DMmask.fits    : DM mask
 - Fmodes.fits    : Fourier modes
+- Zmodes.fits    : Zernike modes
 - HpokeC.fits    : Hadamard modes
 - Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
 - Hpixindex.fits : Hadamard pixel index
@@ -96,9 +97,11 @@ The following files are written to ./conf/DMmodes/ :
 
 ```bash
 # Acquire response matrix - Hadamard modes
+cacao-fpsctrl setval measlinresp procinfo.loopcntMax 10
 cacao-aorun-030-acqlinResp HpokeC
 
 # Acquire response matrix - Fourier modes
+cacao-fpsctrl setval measlinresp procinfo.loopcntMax 50
 cacao-aorun-030-acqlinResp Fmodes
 ```
 

@@ -74,10 +74,6 @@ deltaCPA=0.8
 
 
 
-#DMrad=${CACAO_DMbeamrad:/-}
-#DMxcent=$()
-
-
 cacao << EOF
 lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 0
 saveFITS Fmodes "${DMMODEDIR}/Fmodes.fits"
