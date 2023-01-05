@@ -20,9 +20,11 @@ errexit=0
 
 # Checking FPS
 FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_DMCH2DISPSIM ${CACAO_FPSPROC_DMCH2DISPSIM}
+checkFPSON CACAO_FPSPROC_MLAT ${CACAO_FPSPROC_MLAT}
 checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
-#checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_ACQLINZRM}
-#checkFPSON CACAO_FPSPROC_ACQLINLORM ${CACAO_FPSPROC_ACQLINLORM}
+checkFPSON CACAO_FPSPROC_MEASURELINRESP ${CACAO_FPSPROC_MEASURELINRESP}
+
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
@@ -34,26 +36,6 @@ if [ $errexit = 1 ]; then
 exit
 fi
 
-
-
-
-sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.compphnoise OFF"
-sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
-
-sendFPScmd "setval acquWFS-0.WFSnormfloor 0.01"
-
-#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.normalize ON"
-#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.LOmaxCPA 3.0"
-#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.timing.NBcycle 4"
-#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
-#sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
-
-#sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBcycle 20"
-#sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
-#sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
-
-#sendFPScmd "setval compfCM-0.SVDlim 0.01"
-#sendFPScmd "confwupdate compfCM-0"
 
 
 
@@ -73,30 +55,6 @@ ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp03.im.shm ${MILK_SHM_DIR}/aol${CA
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
 ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP0.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp04.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP0.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP1.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp05.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP1.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP2.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp06.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP2.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP3.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp07.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP3.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP4.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp08.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP4.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP5.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp09.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP5.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP6.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP6.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP7.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp11.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP7.im.shm
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
 ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp02.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm

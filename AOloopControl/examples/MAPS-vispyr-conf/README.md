@@ -26,10 +26,10 @@ Subsequent tasks can perform specific parts of the AO loop.
 ```bash
 # Deploy configuration :
 # download from source and start conf processes
-cacao-loop-deploy scexao-vispyr-bin2
+cacao-loop-deploy MAPS-vispyr
 
 # Go to rootdir, from which user controls the loop
-cd vispyr2-rootdir
+cd MAPS-vispyr-rootdir
 
 # select simulation mode
 ./scripts/aorun-setmode-sim

@@ -35,7 +35,6 @@ export CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"
 
 # input WFS stream
 export CACAO_WFSSTREAM="vispyrcam"    # Hardware stream, connected to physical camera
-export CACAO_WFSSTREAMSIM="vispyrcamsim" # Simulation camera stream
 
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
