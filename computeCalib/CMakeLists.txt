@@ -34,6 +34,7 @@ set(INCLUDEFILES
 
 # list scripts that should be installed on system
 set(SCRIPTFILES
+	scripts/cacao-fpslistadd-COMPSTRCM
 )
 
 

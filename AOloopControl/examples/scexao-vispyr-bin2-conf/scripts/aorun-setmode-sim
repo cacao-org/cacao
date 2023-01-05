@@ -21,8 +21,8 @@ errexit=0
 # Checking FPS
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
-checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_ACQLINZRM}
-checkFPSON CACAO_FPSPROC_ACQLINLORM ${CACAO_FPSPROC_ACQLINLORM}
+#checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_ACQLINZRM}
+#checkFPSON CACAO_FPSPROC_ACQLINLORM ${CACAO_FPSPROC_ACQLINLORM}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
@@ -42,18 +42,18 @@ sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 
 sendFPScmd "setval acquWFS-0.WFSnormfloor 0.01"
 
-sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.normalize ON"
-sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.LOmaxCPA 3.0"
-sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.timing.NBcycle 4"
-sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
-sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
+#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.normalize ON"
+#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.LOmaxCPA 3.0"
+#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.timing.NBcycle 4"
+#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
+#sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
 
-sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBcycle 20"
-sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
-sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
+#sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBcycle 20"
+#sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
+#sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
 
-sendFPScmd "setval compfCM-0.SVDlim 0.01"
-sendFPScmd "confwupdate compfCM-0"
+#sendFPScmd "setval compfCM-0.SVDlim 0.01"
+#sendFPScmd "confwupdate compfCM-0"
 
 
 

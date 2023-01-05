@@ -5,6 +5,7 @@
 
 
 #include "CommandLineInterface/CLIcore.h"
+#include "COREMOD_iofits/COREMOD_iofits.h"
 
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_eigen.h>
@@ -12,7 +13,7 @@
 #include <gsl/gsl_matrix.h>
 
 #include "linopt_imtools/compute_SVDpseudoInverse.h"
-
+P
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
 #endif
@@ -22,8 +23,17 @@
 
 static uint64_t *AOloopindex;
 
-static char *respM;
-static long  fpi_respM;
+static char *RMmodesDM;
+static long  fpi_RMmodesDM;
+
+static char *RMmodesWFS;
+static long  fpi_RMmodesWFS;
+
+static char *CMmodesDM;
+static long  fpi_CMmodesDM;
+
+static char *CMmodesWFS;
+static long  fpi_CMmodesWFS;
 
 static char *controlM;
 static long  fpi_controlM;
@@ -49,24 +59,44 @@ static CLICMDARGDEF farg[] =
         NULL
     },
     {
-        // input stream : response matrix
-        CLIARG_STREAM,
-        ".respMat",
-        "input response matrix",
-        "respM",
+        // input RM : DM modes
+        CLIARG_FILENAME,
+        ".RMmodesDM",
+        "input response matrix DM modes",
+        "RMmodesDM.fits",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &respM,
-        &fpi_respM
+        (void **) &RMmodesDM,
+        &fpi_RMmodesDM
     },
     {
-        // input stream : response matrix
-        CLIARG_STREAM,
-        ".ctrlMat",
-        "output control matrix",
-        "contrM",
+        // input RM : WFS modes
+        CLIARG_FILENAME,
+        ".RMmodesWFS",
+        "input response matrix WFS modes",
+        "RMmodesWFS.fits",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &controlM,
-        &fpi_controlM
+        (void **) &RMmodesWFS,
+        &fpi_RMmodesWFS
+    },
+    {
+        // output CM : DM modes
+        CLIARG_FILENAME,
+        ".CMmodesDM",
+        "output control matrix DM modes",
+        "CMmodesDM",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &CMmodesDM,
+        &fpi_CMmodesDM
+    },
+    {
+        // output CM : WFS modes
+        CLIARG_FILENAME,
+        ".CMmodesWFS",
+        "output control matrix WFS modes",
+        "CMmodesWFS",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &CMmodesWFS,
+        &fpi_CMmodesWFS
     },
     {
         // Singular Value Decomposition limit
@@ -100,10 +130,17 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
+        data.fpsptr->parray[fpi_RMmodesDM].fpflag |=
+            FPFLAG_FILE_RUN_REQUIRED;
+
+        data.fpsptr->parray[fpi_RMmodesWFS].fpflag |=
+            FPFLAG_FILE_RUN_REQUIRED;
     }
 
     return RETURN_SUCCESS;
 }
+
+
 
 // Optional custom configuration checks.
 // Runs at every configuration check loop iteration
@@ -142,6 +179,11 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
 
+
+    load_fits(RMmodesDM, "RMmodesDM", LOADFITS_ERRMODE_WARNING, NULL);
+    load_fits(RMmodesDM, "RMmodesWFS", LOADFITS_ERRMODE_WARNING, NULL);
+
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
 
@@ -149,8 +191,8 @@ static errno_t compute_function()
 #ifdef HAVE_CUDA
         if(*GPUdevice >= 0)
         {
-            CUDACOMP_magma_compute_SVDpseudoInverse(respM,
-                                                    controlM,
+            CUDACOMP_magma_compute_SVDpseudoInverse("RMmodesWFS",
+                                                    "controlM",
                                                     *svdlim,
                                                     100000,
                                                     "VTmat",
@@ -163,8 +205,8 @@ static errno_t compute_function()
         else
         {
 #endif
-            linopt_compute_SVDpseudoInverse(respM,
-                                            controlM,
+            linopt_compute_SVDpseudoInverse("RMmodesWFS",
+                                            "controlM",
                                             *svdlim,
                                             10000,
                                             "VTmat",
@@ -173,8 +215,11 @@ static errno_t compute_function()
         }
 #endif
 
+
+        list_image_ID();
+
         // save_fits("VTmat", "./mkmodestmp/VTmat.fits");
-        delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
+        //delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END

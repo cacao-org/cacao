@@ -97,15 +97,24 @@ The following files are written to ./conf/DMmodes/ :
 
 ```bash
 # Acquire response matrix - Hadamard modes
-cacao-fpsctrl setval measlinresp procinfo.loopcntMax 10
+cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
 cacao-aorun-030-acqlinResp HpokeC
 
 # Acquire response matrix - Fourier modes
-cacao-fpsctrl setval measlinresp procinfo.loopcntMax 50
+cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
 cacao-aorun-030-acqlinResp Fmodes
 ```
 
-## Compute control matrix
+
+
+
+## Compute control matrix (straight)
+
+
+```bash
+cacao-fpsctrl setval compstrCM fname_respM "../conf/WFSmodes/Fmodes.WFSresp.fits"
+```
+
 
 Compute control modes, in both WFS and DM spaces.
 

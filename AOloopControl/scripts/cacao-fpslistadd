@@ -609,7 +609,7 @@ fi
 
 
 
-
+# to be deprecated
 if [ "${CACAO_FPSPROC_COMPSCM}" = "ON" ]; then
     echolog "ON  CACAO_FPSPROC_COMPSCM"
     # ==============================================================================
