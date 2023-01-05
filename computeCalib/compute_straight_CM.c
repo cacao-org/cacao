@@ -13,7 +13,7 @@
 #include <gsl/gsl_matrix.h>
 
 #include "linopt_imtools/compute_SVDpseudoInverse.h"
-P
+
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
 #endif
