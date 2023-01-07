@@ -7,10 +7,16 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
+/*
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_eigen.h>
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_matrix.h>
+*/
+
+#include <cblas.h>
+#include <lapacke.h>
+
 
 #include "linopt_imtools/compute_SVDpseudoInverse.h"
 
@@ -20,8 +26,6 @@
 
 
 
-
-static uint64_t *AOloopindex;
 
 static char *RMmodesDM;
 static long  fpi_RMmodesDM;
@@ -48,16 +52,6 @@ static long     fpi_GPUdevice;
 
 static CLICMDARGDEF farg[] =
 {
-    {
-        // AO loop index - used for automatic naming of streams aolX_
-        CLIARG_UINT64,
-        ".AOloopindex",
-        "AO loop index",
-        "0",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &AOloopindex,
-        NULL
-    },
     {
         // input RM : DM modes
         CLIARG_FILENAME,
@@ -179,16 +173,31 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
 
+    list_image_ID();
 
-    load_fits(RMmodesDM, "RMmodesDM", LOADFITS_ERRMODE_WARNING, NULL);
-    load_fits(RMmodesDM, "RMmodesWFS", LOADFITS_ERRMODE_WARNING, NULL);
+
+    imageID ID;
+
+    load_fits(RMmodesDM, "RMmodesDM", LOADFITS_ERRMODE_WARNING, &ID);
+    IMGID imgRMDM = makesetIMGID("RMmodesDM", ID);
+
+    load_fits(RMmodesWFS, "RMmodesWFS", LOADFITS_ERRMODE_WARNING, &ID);
+    IMGID imgRMWFS = makesetIMGID("RMmodesWFS", ID);
+
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
 
 
+
+
+
+
+
+
 #ifdef HAVE_CUDA
+printf("USING CUDA\n");
         if(*GPUdevice >= 0)
         {
             CUDACOMP_magma_compute_SVDpseudoInverse("RMmodesWFS",
@@ -205,6 +214,7 @@ static errno_t compute_function()
         else
         {
 #endif
+printf("USING CPU\n");
             linopt_compute_SVDpseudoInverse("RMmodesWFS",
                                             "controlM",
                                             *svdlim,
@@ -216,9 +226,134 @@ static errno_t compute_function()
 #endif
 
 
-        list_image_ID();
 
-        // save_fits("VTmat", "./mkmodestmp/VTmat.fits");
+
+
+        ID = image_ID("VTmat");
+        IMGID imgVT = makesetIMGID("VTmat", ID);
+
+        printf("Number of modes    : %d\n", imgRMDM.md->size[2]);
+        printf("Number of DM act   : %d x %d\n", imgRMDM.md->size[0], imgRMDM.md->size[1]);
+        printf("Number of WFS pix  : %d x %d\n", imgRMWFS.md->size[0], imgRMWFS.md->size[1]);
+
+        int nbmode = imgRMDM.md->size[2];
+        int nbact = imgRMDM.md->size[0] * imgRMDM.md->size[1];
+        int nbwfspix = imgRMWFS.md->size[0] * imgRMWFS.md->size[1];
+
+
+
+         EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");
+
+
+
+
+        {
+        // create ATA
+        IMGID imgATA = makeIMGID_2D("ATA", nbmode, nbmode);
+        createimagefromIMGID(&imgATA);
+        cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans,
+                nbmode, nbmode, nbwfspix, 1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix, 0.0, imgATA.im->array.F, nbmode);
+        save_fits("ATA", "./mkmodestmp/ATA.fits");
+
+        float *d = (float*) malloc(sizeof(float)*nbmode);
+        float *e = (float*) malloc(sizeof(float)*nbmode);
+        float *t = (float*) malloc(sizeof(float)*nbmode);
+
+        LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, d, e, t);
+
+        // Assemble Q matrix
+        LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, t );
+
+
+       // create eigenvectors array
+        IMGID imgevec = makeIMGID_2D("eigenvec", nbmode, nbmode);
+        createimagefromIMGID(&imgevec);
+
+
+        if(0)
+        {
+        int evfound;
+
+        // create eigenvalues array
+        IMGID imgeval = makeIMGID_2D("eigenval", nbmode, 1);
+        createimagefromIMGID(&imgeval);
+
+        int * isuppz = (int*) malloc(sizeof(int)*2*nbmode);
+        lapack_logical tryrac = 0;
+        LAPACKE_sstemr(LAPACK_COL_MAJOR, 'V', 'I', nbmode, d, e, 0.0, 0.0, nbmode-10, nbmode, &evfound, imgeval.im->array.F, imgevec.im->array.F, nbmode, nbmode, isuppz, &tryrac);
+
+        printf("Found %d eigenvalues\n", evfound);
+        }
+
+        memcpy(imgevec.im->array.F, imgATA.im->array.F, sizeof(float)*nbmode*nbmode);
+        LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
+
+
+        free(d);
+        free(e);
+        free(t);
+
+        save_fits("eigenvec", "./mkmodestmp/eigenvec.fits");
+        }
+
+
+
+
+
+        // create CM WFS
+        IMGID imgCMWFS = makeIMGID_3D("CMmodesWFS", imgRMWFS.md->size[0], imgRMWFS.md->size[1], imgRMDM.md->size[2]);
+        createimagefromIMGID(&imgCMWFS);
+
+        // Compute WFS modes
+        // Multiply RMmodesWFS by Vmat
+        //
+
+       cblas_sgemm (CblasColMajor, CblasNoTrans, CblasTrans,
+                nbwfspix, nbmode, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgVT.im->array.F, nbmode, 0.0, imgCMWFS.im->array.F, nbwfspix);
+
+
+
+        // create CM DM
+        IMGID imgCMDM = makeIMGID_3D("CMmodesDM", imgRMDM.md->size[0], imgRMDM.md->size[1], imgRMDM.md->size[2]);
+        createimagefromIMGID(&imgCMDM);
+
+        // Compute DM modes
+        // Multiply RMmodesDM by Vmat
+        //
+
+       cblas_sgemm (CblasColMajor, CblasNoTrans, CblasTrans,
+                nbact, nbmode, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgVT.im->array.F, nbmode, 0.0, imgCMDM.im->array.F, nbact);
+
+
+
+       
+
+        {
+            // measure norm of moces in DM and WFS space
+        //
+        FILE *fp = fopen("mkmodestmp/mode_norm.txt", "w");
+        for(int mi=0; mi<nbmode; mi++)
+        {
+            char *ptr;
+
+            ptr = (void*) imgCMDM.im->array.F;
+            ptr += sizeof(float)*mi*nbact;
+            float n2cmDM = cblas_snrm2(nbact, (float*) ptr, 1);
+
+            ptr = (void*) imgCMWFS.im->array.F;
+            ptr += sizeof(float)*mi*nbwfspix;
+            float n2cmWFS = cblas_snrm2(nbwfspix, (float*) ptr, 1);
+
+            fprintf(fp, "%4d    %20g    %20g\n", mi, n2cmDM, n2cmWFS);
+        }
+        fclose(fp);
+        }
+
+
+
+        save_fits("VTmat", "./mkmodestmp/VTmat.fits");
+        save_fits("CMmodesWFS", "./mkmodestmp/CMmodesWFS.fits");
+        save_fits("CMmodesDM", "./mkmodestmp/CMmodesDM.fits");
         //delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
 
     }
@@ -227,6 +362,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
+
 
 
 

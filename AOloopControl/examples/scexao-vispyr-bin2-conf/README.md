@@ -112,7 +112,8 @@ cacao-aorun-030-acqlinResp Fmodes
 
 
 ```bash
-cacao-fpsctrl setval compstrCM fname_respM "../conf/WFSmodes/Fmodes.WFSresp.fits"
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/DMmodes/Fmodes.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/WFSmodes/Fmodes.WFSresp.fits"
 ```
 
 
