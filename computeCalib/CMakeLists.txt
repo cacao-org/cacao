@@ -72,9 +72,9 @@ endif(USE_MAGMA)
 endif(USE_CUDA)
 
 
-#if(USE_OPENBLAS)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(OPENBLAS REQUIRED openblas)
+pkg_check_modules(OPENBLAS openblas)
+if(OPENBLAS_FOUND)
 message("---- OPENBLAS_LIBRARY_DIRS =  ${OPENBLAS_LIBRARY_DIRS}")
 message("---- OPENBLAS_LIBRARIES    =  ${OPENBLAS_LIBRARIES}" )
 message("---- OPENBLAS_CFLAGS_OTHER =  ${OPENBLAS_CFLAGS_OTHER}" )
@@ -82,10 +82,7 @@ target_include_directories(${LIBNAME} PUBLIC ${OPENBLAS_INCLUDE_DIRS})
 target_link_directories(${LIBNAME} PUBLIC ${OPENBLAS_LIBRARY_DIRS})
 target_link_libraries(${LIBNAME} PUBLIC ${OPENBLAS_LIBRARIES})
 target_compile_options(${LIBNAME} PUBLIC -DHAVE_OPENBLAS ${OPENBLAS_CFLAGS_OTHER})
-#endif(USE_OPENBLAS)
-
-
-
+endif()
 
 
 # DEFAULT SETTINGS

@@ -7,6 +7,8 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
+#include "CommandLineInterface/timeutils.h"
+
 /*
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_eigen.h>
@@ -27,20 +29,20 @@
 
 
 
-static char *RMmodesDM;
-static long  fpi_RMmodesDM;
+static char *RMmodesDMfname;
+static long  fpi_RMmodesDMfname;
 
-static char *RMmodesWFS;
-static long  fpi_RMmodesWFS;
+static char *RMmodesWFSfname;
+static long  fpi_RMmodesWFSfname;
 
-static char *CMmodesDM;
-static long  fpi_CMmodesDM;
+static char *CMmodesDMfname;
+static long  fpi_CMmodesDMfname;
 
-static char *CMmodesWFS;
-static long  fpi_CMmodesWFS;
+static char *CMmodesWFSfname;
+static long  fpi_CMmodesWFSfname;
 
-static char *controlM;
-static long  fpi_controlM;
+//static char *controlM;
+//static long  fpi_controlM;
 
 static float *svdlim;
 static long   fpi_svdlim;
@@ -59,8 +61,8 @@ static CLICMDARGDEF farg[] =
         "input response matrix DM modes",
         "RMmodesDM.fits",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &RMmodesDM,
-        &fpi_RMmodesDM
+        (void **) &RMmodesDMfname,
+        &fpi_RMmodesDMfname
     },
     {
         // input RM : WFS modes
@@ -69,8 +71,8 @@ static CLICMDARGDEF farg[] =
         "input response matrix WFS modes",
         "RMmodesWFS.fits",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &RMmodesWFS,
-        &fpi_RMmodesWFS
+        (void **) &RMmodesWFSfname,
+        &fpi_RMmodesWFSfname
     },
     {
         // output CM : DM modes
@@ -79,8 +81,8 @@ static CLICMDARGDEF farg[] =
         "output control matrix DM modes",
         "CMmodesDM",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &CMmodesDM,
-        &fpi_CMmodesDM
+        (void **) &CMmodesDMfname,
+        &fpi_CMmodesDMfname
     },
     {
         // output CM : WFS modes
@@ -89,8 +91,8 @@ static CLICMDARGDEF farg[] =
         "output control matrix WFS modes",
         "CMmodesWFS",
         CLIARG_VISIBLE_DEFAULT,
-        (void **) &CMmodesWFS,
-        &fpi_CMmodesWFS
+        (void **) &CMmodesWFSfname,
+        &fpi_CMmodesWFSfname
     },
     {
         // Singular Value Decomposition limit
@@ -124,10 +126,10 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_RMmodesDM].fpflag |=
+        data.fpsptr->parray[fpi_RMmodesDMfname].fpflag |=
             FPFLAG_FILE_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_RMmodesWFS].fpflag |=
+        data.fpsptr->parray[fpi_RMmodesWFSfname].fpflag |=
             FPFLAG_FILE_RUN_REQUIRED;
     }
 
@@ -178,12 +180,14 @@ static errno_t compute_function()
 
     imageID ID;
 
-    load_fits(RMmodesDM, "RMmodesDM", LOADFITS_ERRMODE_WARNING, &ID);
+    load_fits(RMmodesDMfname, "RMmodesDM", LOADFITS_ERRMODE_WARNING, &ID);
     IMGID imgRMDM = makesetIMGID("RMmodesDM", ID);
 
-    load_fits(RMmodesWFS, "RMmodesWFS", LOADFITS_ERRMODE_WARNING, &ID);
+    load_fits(RMmodesWFSfname, "RMmodesWFS", LOADFITS_ERRMODE_WARNING, &ID);
     IMGID imgRMWFS = makesetIMGID("RMmodesWFS", ID);
 
+
+    struct timespec t0, t1, t2, t3, t4, t5, t6, t7, t8, t9;
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
@@ -197,7 +201,7 @@ static errno_t compute_function()
 
 
 #ifdef HAVE_CUDA
-printf("USING CUDA\n");
+        printf("USING CUDA\n");
         if(*GPUdevice >= 0)
         {
             CUDACOMP_magma_compute_SVDpseudoInverse("RMmodesWFS",
@@ -214,13 +218,16 @@ printf("USING CUDA\n");
         else
         {
 #endif
-printf("USING CPU\n");
+            printf("USING CPU\n");
+
+            clock_gettime(CLOCK_REALTIME, &t0);
             linopt_compute_SVDpseudoInverse("RMmodesWFS",
                                             "controlM",
                                             *svdlim,
                                             10000,
                                             "VTmat",
                                             NULL);
+            clock_gettime(CLOCK_REALTIME, &t1);
 #ifdef HAVE_CUDA
         }
 #endif
@@ -242,58 +249,77 @@ printf("USING CPU\n");
 
 
 
-         EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");
+        EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");
 
 
 
 
-        {
-        // create ATA
-        IMGID imgATA = makeIMGID_2D("ATA", nbmode, nbmode);
-        createimagefromIMGID(&imgATA);
-        cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans,
-                nbmode, nbmode, nbwfspix, 1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix, 0.0, imgATA.im->array.F, nbmode);
-        save_fits("ATA", "./mkmodestmp/ATA.fits");
-
-        float *d = (float*) malloc(sizeof(float)*nbmode);
-        float *e = (float*) malloc(sizeof(float)*nbmode);
-        float *t = (float*) malloc(sizeof(float)*nbmode);
-
-        LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, d, e, t);
-
-        // Assemble Q matrix
-        LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, t );
-
-
-       // create eigenvectors array
+        // create eigenvectors array
         IMGID imgevec = makeIMGID_2D("eigenvec", nbmode, nbmode);
         createimagefromIMGID(&imgevec);
-
-
-        if(0)
-        {
-        int evfound;
 
         // create eigenvalues array
         IMGID imgeval = makeIMGID_2D("eigenval", nbmode, 1);
         createimagefromIMGID(&imgeval);
 
-        int * isuppz = (int*) malloc(sizeof(int)*2*nbmode);
-        lapack_logical tryrac = 0;
-        LAPACKE_sstemr(LAPACK_COL_MAJOR, 'V', 'I', nbmode, d, e, 0.0, 0.0, nbmode-10, nbmode, &evfound, imgeval.im->array.F, imgevec.im->array.F, nbmode, nbmode, isuppz, &tryrac);
 
-        printf("Found %d eigenvalues\n", evfound);
-        }
-
-        memcpy(imgevec.im->array.F, imgATA.im->array.F, sizeof(float)*nbmode*nbmode);
-        LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
+        clock_gettime(CLOCK_REALTIME, &t2);
 
 
-        free(d);
-        free(e);
-        free(t);
+        {
+            // create ATA
+            IMGID imgATA = makeIMGID_2D("ATA", nbmode, nbmode);
+            createimagefromIMGID(&imgATA);
+            cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans,
+                        nbmode, nbmode, nbwfspix, 1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix, 0.0, imgATA.im->array.F, nbmode);
 
-        save_fits("eigenvec", "./mkmodestmp/eigenvec.fits");
+
+            clock_gettime(CLOCK_REALTIME, &t3);
+            //save_fits("ATA", "./mkmodestmp/ATA.fits");
+
+            float *d = (float*) malloc(sizeof(float)*nbmode);
+            float *e = (float*) malloc(sizeof(float)*nbmode);
+            float *t = (float*) malloc(sizeof(float)*nbmode);
+
+            LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, d, e, t);
+
+            clock_gettime(CLOCK_REALTIME, &t4);
+
+            // Assemble Q matrix
+            LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, t );
+
+
+            clock_gettime(CLOCK_REALTIME, &t5);
+
+
+            if(0)
+            {
+                // compute some of the eigenvalues and eigenvectors
+                //
+                int evfound;
+
+
+                int * isuppz = (int*) malloc(sizeof(int)*2*nbmode);
+                lapack_logical tryrac = 0;
+                LAPACKE_sstemr(LAPACK_COL_MAJOR, 'V', 'I', nbmode, d, e, 0.0, 0.0, nbmode-10, nbmode, &evfound, imgeval.im->array.F, imgevec.im->array.F, nbmode, nbmode, isuppz, &tryrac);
+
+                printf("Found %d eigenvalues\n", evfound);
+            }
+            else
+            {
+                // compute all eigenvalues and eivenvectors
+                //
+                memcpy(imgevec.im->array.F, imgATA.im->array.F, sizeof(float)*nbmode*nbmode);
+                LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
+                memcpy(imgeval.im->array.F, d, sizeof(float)*nbmode);
+            }
+            clock_gettime(CLOCK_REALTIME, &t6);
+
+            free(d);
+            free(e);
+            free(t);
+
+            //save_fits("eigenvec", "./mkmodestmp/eigenvec.fits");
         }
 
 
@@ -301,63 +327,169 @@ printf("USING CPU\n");
 
 
         // create CM WFS
-        IMGID imgCMWFS = makeIMGID_3D("CMmodesWFS", imgRMWFS.md->size[0], imgRMWFS.md->size[1], imgRMDM.md->size[2]);
-        createimagefromIMGID(&imgCMWFS);
+        IMGID imgCMWFSall = makeIMGID_3D("CMmodesWFSall", imgRMWFS.md->size[0], imgRMWFS.md->size[1], imgRMDM.md->size[2]);
+        createimagefromIMGID(&imgCMWFSall);
+
+        clock_gettime(CLOCK_REALTIME, &t7);
 
         // Compute WFS modes
         // Multiply RMmodesWFS by Vmat
         //
+        cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
+                     nbwfspix, nbmode, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgevec.im->array.F, nbmode, 0.0, imgCMWFSall.im->array.F, nbwfspix);
 
-       cblas_sgemm (CblasColMajor, CblasNoTrans, CblasTrans,
-                nbwfspix, nbmode, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgVT.im->array.F, nbmode, 0.0, imgCMWFS.im->array.F, nbwfspix);
 
-
+        clock_gettime(CLOCK_REALTIME, &t8);
 
         // create CM DM
-        IMGID imgCMDM = makeIMGID_3D("CMmodesDM", imgRMDM.md->size[0], imgRMDM.md->size[1], imgRMDM.md->size[2]);
-        createimagefromIMGID(&imgCMDM);
+        IMGID imgCMDMall = makeIMGID_3D("CMmodesDMall", imgRMDM.md->size[0], imgRMDM.md->size[1], imgRMDM.md->size[2]);
+        createimagefromIMGID(&imgCMDMall);
 
         // Compute DM modes
         // Multiply RMmodesDM by Vmat
         //
 
-       cblas_sgemm (CblasColMajor, CblasNoTrans, CblasTrans,
-                nbact, nbmode, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgVT.im->array.F, nbmode, 0.0, imgCMDM.im->array.F, nbact);
+        cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
+                     nbact, nbmode, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgevec.im->array.F, nbmode, 0.0, imgCMDMall.im->array.F, nbact);
+
+        clock_gettime(CLOCK_REALTIME, &t9);
 
 
-
-       
+        // norm2 of WFS and DM modes
+        float * n2cmWFS = (float *) malloc( sizeof(float) * nbmode);
+        float * n2cmDM  = (float *) malloc( sizeof(float) * nbmode);
 
         {
             // measure norm of moces in DM and WFS space
-        //
-        FILE *fp = fopen("mkmodestmp/mode_norm.txt", "w");
-        for(int mi=0; mi<nbmode; mi++)
+            //
+            FILE *fp = fopen("mkmodestmp/mode_norm.txt", "w");
+            for(int mi=0; mi<nbmode; mi++)
+            {
+                char *ptr;
+
+                ptr = (void*) imgCMDMall.im->array.F;
+                ptr += sizeof(float)*mi*nbact;
+                n2cmDM[mi] = cblas_snrm2(nbact, (float*) ptr, 1);
+
+                ptr = (void*) imgCMWFSall.im->array.F;
+                ptr += sizeof(float)*mi*nbwfspix;
+                n2cmWFS[mi] = cblas_snrm2(nbwfspix, (float*) ptr, 1);
+
+                fprintf(fp, "%4d    %20g    %20g   %20g\n", mi, n2cmDM[mi], n2cmWFS[mi], imgeval.im->array.F[mi]);
+            }
+            fclose(fp);
+        }
+
+
+        // select modes
+        float evalmax = imgeval.im->array.F[nbmode-1];
+        int ecnt = 0;
+        float evlim = *svdlim * *svdlim;
         {
-            char *ptr;
-
-            ptr = (void*) imgCMDM.im->array.F;
-            ptr += sizeof(float)*mi*nbact;
-            float n2cmDM = cblas_snrm2(nbact, (float*) ptr, 1);
-
-            ptr = (void*) imgCMWFS.im->array.F;
-            ptr += sizeof(float)*mi*nbwfspix;
-            float n2cmWFS = cblas_snrm2(nbwfspix, (float*) ptr, 1);
-
-            fprintf(fp, "%4d    %20g    %20g\n", mi, n2cmDM, n2cmWFS);
-        }
-        fclose(fp);
+            int mi = 0;
+            while ( imgeval.im->array.F[mi] < evalmax * evlim )
+            {
+                mi ++;
+            }
+            ecnt = nbmode - mi;
+            printf("Selected %d modes\n", ecnt);
         }
 
+        // create CMWFS and CMDM
+        // contains strongest (highest singular values) modes from CMWFSall
+        //
+
+        IMGID imgCMWFS = makeIMGID_3D("CMmodesWFS", imgRMWFS.md->size[0], imgRMWFS.md->size[1], ecnt);
+        createimagefromIMGID(&imgCMWFS);
+
+        IMGID imgCMDM = makeIMGID_3D("CMmodesDM", imgRMDM.md->size[0], imgRMDM.md->size[1], ecnt);
+        createimagefromIMGID(&imgCMDM);
+
+
+        for(int CMmode=0; CMmode < ecnt; CMmode ++)
+        {
+            // index in WFSall and CMall cubes
+            //
+            int mi = nbmode-1-CMmode;
+
+            // copy and normalize by norm2 WFS
+
+            for(int ii=0; ii<nbwfspix; ii++)
+            {
+                imgCMWFS.im->array.F[CMmode*nbwfspix + ii] = imgCMWFSall.im->array.F[mi*nbwfspix + ii] / n2cmWFS[mi];
+            }
+
+            for(int ii=0; ii<nbact; ii++)
+            {
+                imgCMDM.im->array.F[CMmode*nbact + ii] = imgCMDMall.im->array.F[mi*nbact + ii] / n2cmWFS[mi];
+            }
+
+        }
+
+
+
+        free(n2cmDM);
+        free(n2cmWFS);
 
 
         save_fits("VTmat", "./mkmodestmp/VTmat.fits");
         save_fits("CMmodesWFS", "./mkmodestmp/CMmodesWFS.fits");
         save_fits("CMmodesDM", "./mkmodestmp/CMmodesDM.fits");
-        //delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
+
+
+        save_fits("CMmodesDM", CMmodesDMfname);
+        save_fits("CMmodesWFS", CMmodesWFSfname);
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+
+    struct timespec tdiff;
+
+
+    tdiff = timespec_diff(t0, t1);
+    double t01d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+
+
+
+    tdiff = timespec_diff(t1, t2);
+    double t12d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+
+    tdiff = timespec_diff(t2, t3);
+    double t23d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+
+    tdiff = timespec_diff(t3, t4);
+    double t34d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+
+    tdiff = timespec_diff(t4, t5);
+    double t45d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+
+    tdiff = timespec_diff(t5, t6);
+    double t56d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+
+    tdiff = timespec_diff(t6, t7);
+    double t67d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+
+    tdiff = timespec_diff(t7, t8);
+    double t78d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+
+    tdiff = timespec_diff(t8, t9);
+    double t89d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
+
+
+
+
+    printf("GSL         %5.3f s\n", t01d);
+    printf("OpenBLAS    %5.3f s\n", t12d+t23d+t34d+t45d+t56d+t67d+t78d+t89d);
+    printf("   1-2      %5.3f s\n", t12d);
+    printf("   2-3      %5.3f s\n", t23d);
+    printf("   3-4      %5.3f s\n", t34d);
+    printf("   4-5      %5.3f s\n", t45d);
+    printf("   5-6      %5.3f s\n", t56d);
+    printf("   6-7      %5.3f s\n", t67d);
+    printf("   7-8      %5.3f s\n", t78d);
+    printf("   8-9      %5.3f s\n", t89d);
+
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
