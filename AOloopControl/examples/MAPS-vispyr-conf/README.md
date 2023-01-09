@@ -60,16 +60,12 @@ cacao-aorun-002-simwfs start
 cacao-aorun-020-mlat -w
 ```
 
-
-
 ## Start WFS acquisition
 
 ```bash
 # Acquire WFS frames
 cacao-aorun-025-acqWFS start
 ```
-
-
 
 ## Acquire response matrix
 
@@ -89,7 +85,6 @@ The following files are written to ./conf/DMmodes/ :
 - Hpixindex.fits : Hadamard pixel index
 
 
-
 ### Run acquisition
 
 
@@ -98,8 +93,6 @@ The following files are written to ./conf/DMmodes/ :
 cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
 cacao-aorun-030-acqlinResp HpokeC
 ```
-
-
 
 
 ## Compute control matrix (straight)
