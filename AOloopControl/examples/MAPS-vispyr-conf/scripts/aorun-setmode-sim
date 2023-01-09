@@ -48,7 +48,7 @@ rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
 ln -s ${MILK_SHM_DIR}/${CACAO_WFSSTREAMSIM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
 
 # DM
-echo "Linking DM"
+echo "Linking DM ${CACAO_DMINDEXSIM}"
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
 ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm

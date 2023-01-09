@@ -16,14 +16,43 @@
 #include <gsl/gsl_matrix.h>
 */
 
+
+// Use MKL if available
+// Otherwise use openBLAS
+//
+#ifdef HAVE_MKL
+#include "mkl.h"
+#define BLASLIB "IntelMKL"
+#else
+#ifdef HAVE_OPENBLAS
 #include <cblas.h>
 #include <lapacke.h>
+#define BLASLIB "OpenBLAS"
+#endif
+#endif
+
 
 
 #include "linopt_imtools/compute_SVDpseudoInverse.h"
 
+/*
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
+#endif
+*/
+
+// CPU mode: Use MKL if available
+// Otherwise use openBLAS
+//
+#ifdef HAVE_MKL
+#include "mkl.h"
+#define BLASLIB "IntelMKL"
+#else
+#ifdef HAVE_OPENBLAS
+#include <cblas.h>
+#include <lapacke.h>
+#define BLASLIB "OpenBLAS"
+#endif
 #endif
 
 
@@ -105,10 +134,10 @@ static CLICMDARGDEF farg[] =
         &fpi_svdlim
     },
     {
-        // using GPU (-1 : no GPU, otherwise GPU device)
+        // using GPU (99 : no GPU, otherwise GPU device)
         CLIARG_INT32,
         ".GPUdevive",
-        "GPU device",
+        "GPU device, 99 for CPU",
         "-1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &GPUdevice,
@@ -195,43 +224,63 @@ static errno_t compute_function()
 
 
 
+#ifdef HAVE_OPENBLAS
+        printf("OpenBLASS  YES\n");
+#else
+        printf("OpenBLASS  NO\n");
+#endif
 
-
-
+#ifdef HAVE_MKL
+        printf("MKL        YES\n");
+#else
+        printf("MKL        NO\n");
+#endif
 
 
 #ifdef HAVE_CUDA
-        printf("USING CUDA\n");
-        if(*GPUdevice >= 0)
-        {
-            CUDACOMP_magma_compute_SVDpseudoInverse("RMmodesWFS",
+        printf("CUDA       YES\n");
+#else
+        printf("CUDA       NO\n");
+#endif
+
+
+
+
+
+
+        /*
+        #ifdef HAVE_CUDA
+                printf("USING CUDA\n");
+                if(*GPUdevice >= 0)
+                {
+                    CUDACOMP_magma_compute_SVDpseudoInverse("RMmodesWFS",
+                                                            "controlM",
+                                                            *svdlim,
+                                                            100000,
+                                                            "VTmat",
+                                                            0,
+                                                            0,
+                                                            64,
+                                                            *GPUdevice, // GPU device
+                                                            NULL);
+                }
+                else
+                {
+        #endif
+                    printf("USING CPU\n");
+
+                    clock_gettime(CLOCK_REALTIME, &t0);
+                    linopt_compute_SVDpseudoInverse("RMmodesWFS",
                                                     "controlM",
                                                     *svdlim,
-                                                    100000,
+                                                    10000,
                                                     "VTmat",
-                                                    0,
-                                                    0,
-                                                    64,
-                                                    *GPUdevice, // GPU device
                                                     NULL);
-        }
-        else
-        {
-#endif
-            printf("USING CPU\n");
-
-            clock_gettime(CLOCK_REALTIME, &t0);
-            linopt_compute_SVDpseudoInverse("RMmodesWFS",
-                                            "controlM",
-                                            *svdlim,
-                                            10000,
-                                            "VTmat",
-                                            NULL);
-            clock_gettime(CLOCK_REALTIME, &t1);
-#ifdef HAVE_CUDA
-        }
-#endif
-
+                    clock_gettime(CLOCK_REALTIME, &t1);
+        #ifdef HAVE_CUDA
+                }
+        #endif
+        */
 
 
 

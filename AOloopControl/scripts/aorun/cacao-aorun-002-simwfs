@@ -28,7 +28,13 @@ FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_DMCH2DISP ${CACAO_FPSPROC_DMCH2DISPSIM}
 checkFPSON CACAO_FPSPROC_DMSIMDELAY ${CACAO_FPSPROC_DMSIMDELAY}
 checkFPSON CACAO_FPSPROC_SIMMVMGPU ${CACAO_FPSPROC_SIMMVMGPU}
+
+if [ "$CACAO_WFSSTREAM_PROCESSED" = "ON" ]; then
+echo "Processed WFS stream -> no scaling"
+else
 checkFPSON CACAO_FPSPROC_WFSCAMSIM ${CACAO_FPSPROC_WFSCAMSIM}
+fi
+
 echo "FPScheckOK = ${FPScheckOK}"
 
 if [ ${FPScheckOK} == "FAIL" ]; then
@@ -54,6 +60,7 @@ sendFPScmd "runstart DMstreamDelay-${CACAO_DMINDEXSIM}"
 # Starting MVM simulator
 # ======================================================================
 #sendFPScmd "setval simmvmgpu-${CACAO_LOOPNUMBER}.procinfo.triggerdelay ${TRIGDELAY}"
+sendFPScmd "setval simmvmgpu-${CACAO_LOOPNUMBER}.GPUindex -1"
 sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
 
@@ -66,6 +73,15 @@ do
      sleep 0.1
 done
 
+
+if [ "$CACAO_WFSSTREAM_PROCESSED" = "ON" ]; then
+echo "Processed WFS stream -> no scaling"
+
+rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
+echo "linking aol${CACAO_LOOPNUMBER}_linsimWFS -> aol${CACAO_LOOPNUMBER}_wfsim"
+ln -s ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_linsimWFS.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
+
+else
 # ======================================================================
 # Starting WFC camera simulator
 # ======================================================================
@@ -76,8 +92,9 @@ FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
+fi # end of if [ "$CACAO_WFSSTREAM_PROCESSED" = "ON" ]
 
-fi
+fi # end of if [ ${ACTION} == "start" ]
 
 
 if [ ${ACTION} == "stop" ]; then

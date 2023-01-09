@@ -63,11 +63,20 @@ fi
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
 
+if [ "$CACAO_WFSSTREAM_PROCESSED" = "ON" ]; then
+echo "Processed WFS stream -> no scaling"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize OFF"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub OFF"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.imtotal OFF"
+else
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize ON"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub ON"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.imtotal ON"
+fi
 
 sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"

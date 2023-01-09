@@ -97,7 +97,7 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_FLOAT32,
         ".fluxtotal",
-        "total output flux [phe-]",
+        "total output flux [phe-], <0 if no scaling",
         "1000.0",
         CLIARG_OUTPUT_DEFAULT,
         (void **) &fluxtotal,
@@ -218,53 +218,74 @@ static errno_t compute_function()
 
         // scale flux
         // ensure there is no negative value
-        for(uint64_t ii = 0; ii < sizeWFS; ii++)
+        //
+        if(*fluxtotal < 0.0)
         {
-            if(wfssignalimg.im->array.F[ii] > 0.0)
+            // do not scale
+            memcpy(imcamtmpimg.im->array.F, wfssignalimg.im->array.F, sizeof(float)* sizexWFS);
+        }
+        else
+        {
+            for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
-                imcamtmpimg.im->array.F[ii] = (*fluxtotal) * wfssignalimg.im->array.F[ii];
-            }
-            else
-            {
-                imcamtmpimg.im->array.F[ii] = 0.0;
+                if(wfssignalimg.im->array.F[ii] > 0.0)
+                {
+                    imcamtmpimg.im->array.F[ii] = (*fluxtotal) * wfssignalimg.im->array.F[ii];
+                }
+                else
+                {
+                    imcamtmpimg.im->array.F[ii] = 0.0;
+                }
             }
         }
 
         // add photon noise
         //
-        if(data.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF)
+        if(*fluxtotal >= 0.0)
         {
-            for(uint64_t ii = 0; ii < sizeWFS; ii++)
+            if(data.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF)
             {
-                imcamtmpimg.im->array.F[ii] = poisson(imcamtmpimg.im->array.F[ii]);
+                for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                {
+                    imcamtmpimg.im->array.F[ii] = poisson(imcamtmpimg.im->array.F[ii]);
+                }
             }
         }
 
         // add readout noise
         //
-        if(*camRON > 0.0)
+        if(*fluxtotal >= 0.0)
         {
-            for(uint64_t ii = 0; ii < sizeWFS; ii++)
+            if(*camRON > 0.0)
             {
-                imcamtmpimg.im->array.F[ii] += (*camRON) * gauss();
+                for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                {
+                    imcamtmpimg.im->array.F[ii] += (*camRON) * gauss();
+                }
             }
         }
 
         // convert to ADU
         //
-        for(uint64_t ii = 0; ii < sizeWFS; ii++)
+        if(*fluxtotal >= 0.0)
         {
-            imcamtmpimg.im->array.F[ii] /= (*camgain);
+            for(uint64_t ii = 0; ii < sizeWFS; ii++)
+            {
+                imcamtmpimg.im->array.F[ii] /= (*camgain);
+            }
         }
 
 
         // add dark
         //
-        if(wfsdarkimg.ID != -1)
+        if(*fluxtotal >= 0.0)
         {
-            for(uint64_t ii = 0; ii < sizeWFS; ii++)
+            if(wfsdarkimg.ID != -1)
             {
-                imcamtmpimg.im->array.F[ii] += wfsdarkimg.im->array.F[ii];
+                for(uint64_t ii = 0; ii < sizeWFS; ii++)
+                {
+                    imcamtmpimg.im->array.F[ii] += wfsdarkimg.im->array.F[ii];
+                }
             }
         }
 

@@ -1,7 +1,7 @@
 # Overview
 
-SCExAO system pyramid WFS.
-Low-resolution WFS mode (120x120)
+MMT MAPS project.
+Visible light Pyramid WFS. Slopes input.
 
 cacao-task-manager tasks for this example :
 
@@ -29,7 +29,7 @@ Subsequent tasks can perform specific parts of the AO loop.
 cacao-loop-deploy MAPS-vispyr
 
 # Go to rootdir, from which user controls the loop
-cd MAPS-vispyr-rootdir
+cd maps-rootdir
 
 # select simulation mode
 ./scripts/aorun-setmode-sim
@@ -52,12 +52,10 @@ cacao-aorun-002-simwfs start
 
 
 
-## Measure WFS dark and DM to WFS latency
+## Measure DM to WFS latency
 
 
 ```bash
-cacao-aorun-005-takedark
-
 # Measure latency
 cacao-aorun-020-mlat -w
 ```
@@ -99,10 +97,6 @@ The following files are written to ./conf/DMmodes/ :
 # Acquire response matrix - Hadamard modes
 cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
 cacao-aorun-030-acqlinResp HpokeC
-
-# Acquire response matrix - Fourier modes
-cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
-cacao-aorun-030-acqlinResp Fmodes
 ```
 
 
@@ -111,31 +105,35 @@ cacao-aorun-030-acqlinResp Fmodes
 ## Compute control matrix (straight)
 
 
-```bash
-cacao-fpsctrl setval compstrCM fname_respM "../conf/WFSmodes/Fmodes.WFSresp.fits"
-```
-
-
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-# Compute control matrix using Fourier modes
-cacao-aorun-040-compfCM
-
-# Make directory for storing calibrations
-mkdir -p ../AOcalibs
-cd ..; ln -s $(pwd)/AOcalibs $(pwd)/vispyr2-rootdir/AOcalibs; cd -
-
-# Save current calibration
-cacao-calib-archive cal000
-
-
-# Apply calibration
-cacao-calib-apply cal000
+mkdir conf/CMmodesDM
+mkdir conf/CMmodesWFS
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/HpokeC.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/HpokeC.WFSresp.fits"
+cacao-fpsctrl setval compstrCM CMmodesDM "../conf/CMmodesDM/CMmodesDM.fits"
+cacao-fpsctrl setval compstrCM CMmodesWFS "../conf/CMmodesWFS/CMmodesWFS.fits"
+cacao-fpsctrl setval compstrCM svdlim 0.2
 ```
+Then run the compstrCM process.
+
 
 
 ## Running the loop
+
+Load the CM
+```bash
+milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol2_modesWFS
+milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol2_DMmodes
+```
+
+Configuring CPU mode
+```bash
+cacao-fpsctrl setval wfs2cmodeval GPUindex 99
+cacao-fpsctrl setval mvalC2dm GPUindex 99
+```
+
 
 From directory vispyr-rootdir, start 3 processes :
 
