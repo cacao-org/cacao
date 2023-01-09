@@ -36,7 +36,7 @@ cd maps-rootdir
 # (alternatively, run ./scripts/aorun-setmode-hardw to connect to hardware)
 ```
 
-## Run DM and WFS simulators
+## Run DM, DM+WFS simulators
 
 ```bash
 # Run hardware DM (optional if running in simulation mode)
@@ -116,8 +116,10 @@ cacao-fpsctrl setval compstrCM CMmodesDM "../conf/CMmodesDM/CMmodesDM.fits"
 cacao-fpsctrl setval compstrCM CMmodesWFS "../conf/CMmodesWFS/CMmodesWFS.fits"
 cacao-fpsctrl setval compstrCM svdlim 0.2
 ```
-Then run the compstrCM process.
-
+Then run the compstrCM process :
+```bash
+cacao-aorun-039-compstrCM
+```
 
 
 ## Running the loop
@@ -128,7 +130,7 @@ milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol2_modesWFS
 milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol2_DMmodes
 ```
 
-Configuring CPU mode
+Configuring to CPU mode
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 99
 cacao-fpsctrl setval mvalC2dm GPUindex 99
@@ -162,9 +164,6 @@ cacao-fpsctrl setval mfilt loopmult 0.98
 cacao-fpsctrl setval mfilt loopON ON
 
 ```
-
-
-cacao-fpsctrl setval compsCM fname_respM "../../AOcalibs/cal000_2022-12-29T11:26:54/aol0_zrespM.fits"
 
 
 THE END
