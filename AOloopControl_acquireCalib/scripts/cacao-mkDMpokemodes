@@ -51,6 +51,15 @@ exitCLI
 EOF
 
 
+# Simple zonal modes
+
+cacao << EOF
+loadfits "${DMMODEDIR}/DMmask.fits" DMmask
+cacaoct.aolmksimplezpM ${CACAO_DMxsize} ${CACAO_DMysize} Spoke
+saveFITS Spoke "${DMMODEDIR}/Smodes.fits"
+exitCLI
+EOF
+
 
 # Hadamard modes
 

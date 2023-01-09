@@ -79,7 +79,7 @@ cacao-mkDMpokemodes
 The following files are written to ./conf/DMmodes/ :
 - DMmask.fits    : DM mask
 - Fmodes.fits    : Fourier modes
-- Zmodes.fits    : Zernike modes
+- Smodes.fits    : Simple zonal modes
 - HpokeC.fits    : Hadamard modes
 - Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
 - Hpixindex.fits : Hadamard pixel index

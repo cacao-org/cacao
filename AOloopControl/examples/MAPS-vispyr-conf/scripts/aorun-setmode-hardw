@@ -38,6 +38,11 @@ fi
 
 
 
+# DM averaging off
+
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.AveMode 0"
+
+
 # stream linking
 
 # WFS
