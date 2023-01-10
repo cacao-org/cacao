@@ -1031,14 +1031,14 @@ static errno_t Measure_Linear_Response_Modal(
             char tmpoutfname[STRINGMAXLEN_FULLFILENAME];
             WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp_raw.fits", outdir);
 
-            for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
+/*            for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
             {
                 for(uint64_t ii = 0; ii < sizexyout; ii++)
                 {
                     imgoutC2.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * iter * ampl;
                 }
             }
-
+*/
             save_fits(imgoutC2.name, tmpoutfname);
 
 
@@ -1052,7 +1052,7 @@ static errno_t Measure_Linear_Response_Modal(
                 {
                     float posval = imgoutC2.im->array.F[(mode * 2) * sizexyout + ii];
                     float negval = imgoutC2.im->array.F[(mode * 2 + 1) * sizexyout + ii];
-                    imgmoderespC.im->array.F[ mode * sizexyout + ii ] = (posval - negval) / 2;
+                    imgmoderespC.im->array.F[ mode * sizexyout + ii ] = (posval - negval) / 2 / (timing_NBave * iter * ampl);
 
                 }
 

@@ -76,7 +76,7 @@ cacao-aorun-025-acqWFS start
 # Create DM poke mode cubes
 cacao-mkDMpokemodes
 ```
-The following files are written to ./conf/DMmodes/ :
+The following files are written to ./conf/RMmodesDM/ :
 - DMmask.fits    : DM mask
 - Fmodes.fits    : Fourier modes
 - Smodes.fits    : Simple zonal modes
