@@ -11,7 +11,8 @@ export CACAO_LOOPNUMBER="6"
 # Deformable mirror (DM) size
 # If DM is single dimension, enter "1" for DMsize
 #
-export CACAO_DMINDEX="00"
+export CACAO_DMINDEX="00"     # Hardware DM - connected to physical DM
+export CACAO_DMINDEXSIM="10"  # Simulation DM
 export CACAO_DMxsize="50"
 export CACAO_DMysize="50"
 
@@ -24,20 +25,23 @@ export CACAO_DMSPATIAL="1"
 
 # ====== DIRECTORIES ================
 
-# Optional. If not defined, will take value "LOOPNAME-rootdir"
-export CACAO_LOOPROOTDIR="NIRPL-rootdir"
+# Root directory
+export CACAO_LOOPROOTDIR="${CACAO_LOOPNAME}-rootdir"
 
-# Optional. If not defined, will take value "LOOPNAME-rundir"
-export CACAO_LOOPRUNDIR="NIRPL-rundir"
-
-
-
-
+# Run directory. This is a subdirectory of rootdir
+# processes run in CACAO_LOOPROOTDIR/CACAO_LOOPRUNDIR
+export CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"
 
 # input WFS stream
-export CACAO_WFSSTREAM="glint"
+export CACAO_WFSSTREAM="glint"     # Hardware stream, connected to physical camera
+export CACAO_WFSSTREAMSIM="glintsim"
+
+# Specify that WFS stream is not raw image, but processed WFS signal
+# This turns off intensity scaling
+#export CACAO_WFSSTREAM_PROCESSED="ON"
 
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
+
 
 # ========================================
 #       FPS processes to be set up
@@ -47,7 +51,7 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 # Manages mutipe DM channels
 #
 export CACAO_FPSPROC_DMCH2DISP="ON"
-
+export CACAO_FPSPROC_DMCH2DISPSIM="ON"
 
 
 # Delay stream: emulates time lag in hardware
@@ -62,10 +66,6 @@ export CACAO_FPSPROC_SIMMVMGPU="ON"
 # Camera simulator
 #
 export CACAO_FPSPROC_WFSCAMSIM="ON"
-
-
-
-
 
 
 

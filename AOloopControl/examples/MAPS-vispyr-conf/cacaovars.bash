@@ -32,7 +32,6 @@ export CACAO_LOOPROOTDIR="${CACAO_LOOPNAME}-rootdir"
 # processes run in CACAO_LOOPROOTDIR/CACAO_LOOPRUNDIR
 export CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"
 
-
 # input WFS stream
 export CACAO_WFSSTREAM="vispyrcam"    # Hardware stream, connected to physical camera
 export CACAO_WFSSTREAMSIM="mapsvcamsim"
@@ -41,9 +40,7 @@ export CACAO_WFSSTREAMSIM="mapsvcamsim"
 # This turns off intensity scaling
 export CACAO_WFSSTREAM_PROCESSED="ON"
 
-
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
-
 
 
 # ========================================

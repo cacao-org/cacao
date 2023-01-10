@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop execution script"
+
+MSextdescr="AO loop script"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+source milk-argparse
+
+
+
+
+
+errexit=0
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_DMCH2DISP ${CACAO_FPSPROC_DMCH2DISP}
+checkFPSON CACAO_FPSPROC_MLAT ${CACAO_FPSPROC_MLAT}
+checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
+checkFPSON CACAO_FPSPROC_MEASURELINRESP ${CACAO_FPSPROC_MEASURELINRESP}
+
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+errexit=1
+fi
+
+
+if [ $errexit = 1 ]; then
+exit
+fi
+
+
+
+# DM averaging off
+
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.AveMode 0"
+
+
+# stream linking
+
+# WFS
+echo "Linking WFS"
+
+rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
+ln -s ${MILK_SHM_DIR}/${CACAO_WFSSTREAM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
+
+# DM
+echo "Linking DM"
+
+rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
+ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
+
+rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
+ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
+
+rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
+ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
+
+rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
+ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
