@@ -67,3 +67,99 @@ cacao-aorun-020-mlat -w
 cacao-aorun-025-acqWFS start
 ```
 
+
+## Acquire response matrix
+
+
+### Prepare DM poke modes
+
+```bash
+# Create DM poke mode cubes
+cacao-mkDMpokemodes
+```
+The following files are written to ./conf/DMmodes/ :
+- DMmask.fits    : DM mask
+- Fmodes.fits    : Fourier modes
+- Smodes.fits    : Simple zonal modes
+- HpokeC.fits    : Hadamard modes
+- Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
+- Hpixindex.fits : Hadamard pixel index
+
+
+### Run acquisition
+
+
+```bash
+# Acquire response matrix - Hadamard modes
+cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
+cacao-aorun-030-acqlinResp HpokeC
+```
+
+
+## Compute control matrix (straight)
+
+
+Compute control modes, in both WFS and DM spaces.
+
+```bash
+mkdir conf/CMmodesDM
+mkdir conf/CMmodesWFS
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/HpokeC.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/HpokeC.WFSresp.fits"
+cacao-fpsctrl setval compstrCM CMmodesDM "../conf/CMmodesDM/CMmodesDM.fits"
+cacao-fpsctrl setval compstrCM CMmodesWFS "../conf/CMmodesWFS/CMmodesWFS.fits"
+cacao-fpsctrl setval compstrCM svdlim 0.2
+```
+Then run the compstrCM process :
+```bash
+cacao-aorun-039-compstrCM
+```
+
+
+## Running the loop
+
+Load the CM
+```bash
+milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol2_modesWFS
+milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol2_DMmodes
+```
+
+Configuring to CPU mode
+```bash
+cacao-fpsctrl setval wfs2cmodeval GPUindex 99
+cacao-fpsctrl setval mvalC2dm GPUindex 99
+```
+
+
+From directory vispyr-rootdir, start 3 processes :
+
+```bash
+# start WFS -> mode coefficient values
+cacao-aorun-050-wfs2cmval start
+
+# start modal filtering
+cacao-aorun-060-mfilt start
+
+# start mode coeff values -> DM
+cacao-aorun-070-cmval2dm start
+
+```
+
+Closing the loop and setting loop parameters with mfilt:
+
+```bash
+# Set loop gain
+cacao-fpsctrl setval mfilt loopgain 0.1
+
+# Set loop mult
+cacao-fpsctrl setval mfilt loopmult 0.98
+
+# close loop
+cacao-fpsctrl setval mfilt loopON ON
+
+```
+
+
+THE END
+
+
