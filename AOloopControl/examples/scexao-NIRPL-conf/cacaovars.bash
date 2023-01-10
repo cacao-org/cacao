@@ -38,7 +38,7 @@ export CACAO_WFSSTREAMSIM="glintsim"
 
 # Specify that WFS stream is not raw image, but processed WFS signal
 # This turns off intensity scaling
-#export CACAO_WFSSTREAM_PROCESSED="ON"
+export CACAO_WFSSTREAM_PROCESSED="OFF"
 
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
@@ -57,7 +57,7 @@ export CACAO_FPSPROC_DMCH2DISPSIM="ON"
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
 #
-export CACAO_FPSPROC_STREAMDELAY="ON"
+export CACAO_FPSPROC_DMSIMDELAY="ON"
 
 # MVM lop on GPU: used to simulate hardware
 #
