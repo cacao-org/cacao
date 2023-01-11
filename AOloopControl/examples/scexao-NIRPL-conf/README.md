@@ -51,6 +51,19 @@ cacao-aorun-002-simwfs start
 ```
 
 
+## Find spots
+
+```bash
+./scripts/scexao-NIRPL-findspots 100000
+milk-FITS2shm "conf/spotmap.fits" aol6_wfsmapping
+```
+
+## Start remapping
+
+```bash
+cacao-aorun-003-wfsmapping
+```
+
 
 ## Measure DM to WFS latency
 
@@ -59,6 +72,7 @@ cacao-aorun-002-simwfs start
 # Measure latency
 cacao-aorun-020-mlat -w
 ```
+
 
 ## Start WFS acquisition
 
@@ -120,8 +134,8 @@ cacao-aorun-039-compstrCM
 
 Load the CM
 ```bash
-milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol2_modesWFS
-milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol2_DMmodes
+milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol6_modesWFS
+milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol6_DMmodes
 ```
 
 Configuring to CPU mode

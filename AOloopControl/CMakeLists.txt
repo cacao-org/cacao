@@ -113,6 +113,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-000-dm
 	scripts/aorun/cacao-aorun-001-dmsim
 	scripts/aorun/cacao-aorun-002-simwfs
+	scripts/aorun/cacao-aorun-003-wfsmapping
 	scripts/aorun/cacao-aorun-005-takedark
 	scripts/aorun/cacao-aorun-020-mlat
 	scripts/aorun/cacao-aorun-025-acqWFS

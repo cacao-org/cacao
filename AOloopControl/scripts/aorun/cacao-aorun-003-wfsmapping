@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="WFS remapping"
+# Extended description
+MSextdescr="WFS remapping"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+source milk-argparse
+
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MAPWFS ${CACAO_FPSPROC_MAPWFS}
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+exit
+fi
+
+
+# start WFS mapping
+sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.wfsin aol${CACAO_LOOPNUMBER}_wfsim"
+sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.wfsout aol${CACAO_LOOPNUMBER}m_wfsim"
+sendFPScmd "confwupdate mapWFS-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart mapWFS-${CACAO_LOOPNUMBER}"
+# creaates stream aol${CACAO_LOOPNUMBER}_wfsimmap
+

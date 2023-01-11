@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="Find Photonic Lantern Spots"
+
+MSextdescr="The photonic lantern should be illuminated for the script to run"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+MSarg+=( "nbave:integer:number of frames averaged" )
+
+source milk-argparse
+
+NBAVE="${inputMSargARRAY[0]}"
+
+
+
+# average #NBAVE frames, write result to conf/wfsimave.fits
+
+cacao << EOF
+readshmim aol${CACAO_LOOPNUMBER}_wfsim
+streamave ..procinfo 1
+streamave ..triggermode 3
+streamave ..triggersname aol${CACAO_LOOPNUMBER}_wfsim
+streamave ..loopcntMax ${NBAVE}
+streamave aol${CACAO_LOOPNUMBER}_wfsim imave ${NBAVE}
+saveFITS imave "conf/wfsimave.fits"
+exitCLI
+EOF
+
+spotsize="10"
+spotexcldist="30"
+nbspots="19"
+
+cacao << EOF
+loadfits "conf/wfsimave.fits" imave
+cacaoio.findspots imave ${spotsize} ${spotexcldist} ${nbspots} spotmap
+saveFITS spotmap "conf/spotmap.fits"
+listim
+exitCLI
+EOF
+
+
