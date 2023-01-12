@@ -54,23 +54,13 @@ cacao-aorun-002-simwfs start
 ## Find spots
 
 ```bash
-./scripts/scexao-NIRPL-findspots 100000
-milk-FITS2shm "conf/spotmap.fits" aol6_wfsmapping
+./scripts/scexao-NIRPL-findspots 1000
 ```
 
 ## Start remapping
 
 ```bash
 cacao-aorun-003-wfsmapping
-```
-
-
-## Measure DM to WFS latency
-
-
-```bash
-# Measure latency
-cacao-aorun-020-mlat -w
 ```
 
 
@@ -81,16 +71,28 @@ cacao-aorun-020-mlat -w
 cacao-aorun-025-acqWFS start
 ```
 
+## Measure DM to WFS latency
+
+
+```bash
+# Measure latency
+cacao-aorun-020-mlat -w
+```
+
 
 ## Acquire response matrix
 
 
 ### Prepare DM poke modes
 
+
+We will use Fourier modes, with maximum spatial frequency of 3.0 cycles per aperture (CPA).
+
 ```bash
 # Create DM poke mode cubes
-cacao-mkDMpokemodes
+cacao-mkDMpokemodes -c 3.0
 ```
+
 The following files are written to ./conf/DMmodes/ :
 - DMmask.fits    : DM mask
 - Fmodes.fits    : Fourier modes
@@ -104,9 +106,9 @@ The following files are written to ./conf/DMmodes/ :
 
 
 ```bash
-# Acquire response matrix - Hadamard modes
+# Acquire response matrix - Fourier modes
 cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
-cacao-aorun-030-acqlinResp HpokeC
+cacao-aorun-030-acqlinResp Fmodes
 ```
 
 
@@ -116,27 +118,17 @@ cacao-aorun-030-acqlinResp HpokeC
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-mkdir conf/CMmodesDM
-mkdir conf/CMmodesWFS
-cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/HpokeC.fits"
-cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/HpokeC.WFSresp.fits"
-cacao-fpsctrl setval compstrCM CMmodesDM "../conf/CMmodesDM/CMmodesDM.fits"
-cacao-fpsctrl setval compstrCM CMmodesWFS "../conf/CMmodesWFS/CMmodesWFS.fits"
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/Fmodes.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/Fmodes.WFSresp.fits"
 cacao-fpsctrl setval compstrCM svdlim 0.2
 ```
-Then run the compstrCM process :
+Then run the compstrCM process to compute CM and load it to shared memory :
 ```bash
 cacao-aorun-039-compstrCM
 ```
 
 
 ## Running the loop
-
-Load the CM
-```bash
-milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol6_modesWFS
-milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol6_DMmodes
-```
 
 Configuring to CPU mode
 ```bash

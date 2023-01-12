@@ -43,6 +43,10 @@ fi
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.AveMode 0"
 
 
+# set input to be mapped
+
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.insname aol${CACAO_LOOPNUMBER}m_wfsim"
+
 # stream linking
 
 # WFS

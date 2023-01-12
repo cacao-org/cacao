@@ -7,6 +7,10 @@
 #include "CommandLineInterface/CLIcore.h"
 
 // Local variables pointers
+
+static char *insname;
+long fpi_insname;
+
 static uint32_t *AOloopindex;
 static long      fpi_AOloopindex;
 
@@ -60,6 +64,15 @@ static long  fpi_wfszposname;
 
 static CLICMDARGDEF farg[] =
 {
+    {
+        CLIARG_STREAM,
+        ".insname",
+        "input stream name",
+        "inV",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &insname,
+        &fpi_insname
+    },
     {
         CLIARG_UINT32,
         ".AOloopindex",
@@ -215,6 +228,10 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
+        data.fpsptr->parray[fpi_insname].fpflag |=
+            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+
+
         data.fpsptr->parray[fpi_WFStaveragegain].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_WFStaveragemult].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_WFSnormfloor].fpflag |= FPFLAG_WRITERUN;
@@ -255,9 +272,9 @@ static errno_t compute_function()
 
 
     // connect to WFS image
-    char WFSname[100];
-    sprintf(WFSname, "aol%u_wfsim", *AOloopindex);
-    long ID_wfsim = read_sharedmem_image(WFSname);
+    //char WFSname[100];
+    //sprintf(WFSname, "aol%u_wfsim", *AOloopindex);
+    long ID_wfsim = read_sharedmem_image(insname);
     if(ID_wfsim == -1)
     {
         printf("ERROR: no WFS input\n");
@@ -432,28 +449,28 @@ static errno_t compute_function()
         char *ptrv;
         switch(WFSatype)
         {
-            case _DATATYPE_FLOAT:
-                ptrv = (char *) data.image[ID_wfsim].array.F;
-                ptrv += sizeof(float) * slice * sizeWFS;
-                memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
-                break;
+        case _DATATYPE_FLOAT:
+            ptrv = (char *) data.image[ID_wfsim].array.F;
+            ptrv += sizeof(float) * slice * sizeWFS;
+            memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
+            break;
 
-            case _DATATYPE_UINT16:
-                ptrv = (char *) data.image[ID_wfsim].array.UI16;
-                ptrv += sizeof(unsigned short) * slice * sizeWFS;
-                memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
-                break;
+        case _DATATYPE_UINT16:
+            ptrv = (char *) data.image[ID_wfsim].array.UI16;
+            ptrv += sizeof(unsigned short) * slice * sizeWFS;
+            memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
+            break;
 
-            case _DATATYPE_INT16:
-                ptrv = (char *) data.image[ID_wfsim].array.SI16;
-                ptrv += sizeof(signed short) * slice * sizeWFS;
-                memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
-                break;
+        case _DATATYPE_INT16:
+            ptrv = (char *) data.image[ID_wfsim].array.SI16;
+            ptrv += sizeof(signed short) * slice * sizeWFS;
+            memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
+            break;
 
-            default:
-                printf("ERROR: DATA TYPE NOT SUPPORTED\n");
-                exit(0);
-                break;
+        default:
+            printf("ERROR: DATA TYPE NOT SUPPORTED\n");
+            exit(0);
+            break;
         }
 
 
@@ -481,75 +498,75 @@ static errno_t compute_function()
 
         switch(WFSatype)
         {
-            case _DATATYPE_UINT16:
-                if(status_darksub == 0)
+        case _DATATYPE_UINT16:
+            if(status_darksub == 0)
+            {
+                // no dark subtraction, convert data to float
+                for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
-                    // no dark subtraction, convert data to float
-                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
-                    }
+                    data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
                 }
-                else
+            }
+            else
+            {
+                // dark subtraction
+                for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
-                    // dark subtraction
-                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] =
-                            ((float) arrayutmp[ii]) -
-                            data.image[IDwfsdark].array.F[ii];
-                    }
+                    data.image[ID_imWFS0].array.F[ii] =
+                        ((float) arrayutmp[ii]) -
+                        data.image[IDwfsdark].array.F[ii];
                 }
-                break;
+            }
+            break;
 
-            case _DATATYPE_INT16:
+        case _DATATYPE_INT16:
 
-                if(status_darksub == 0)
+            if(status_darksub == 0)
+            {
+                // no dark subtraction, convert data to float
+                for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
-                    // no dark subtraction, convert data to float
-                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
-                    }
+                    data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
                 }
-                else
+            }
+            else
+            {
+                // dark subtraction
+                for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
-                    // dark subtraction
-                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] =
-                            ((float) arraystmp[ii]) -
-                            data.image[IDwfsdark].array.F[ii];
-                    }
+                    data.image[ID_imWFS0].array.F[ii] =
+                        ((float) arraystmp[ii]) -
+                        data.image[IDwfsdark].array.F[ii];
                 }
-                break;
+            }
+            break;
 
-            case _DATATYPE_FLOAT:
-                if(status_darksub == 0)
+        case _DATATYPE_FLOAT:
+            if(status_darksub == 0)
+            {
+                // no dark subtraction, copy data to imWFS0
+                memcpy(data.image[ID_imWFS0].array.F,
+                       arrayftmp,
+                       sizeof(float) * sizeWFS);
+            }
+            else
+            {
+                // dark subtraction
+                for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
-                    // no dark subtraction, copy data to imWFS0
-                    memcpy(data.image[ID_imWFS0].array.F,
-                           arrayftmp,
-                           sizeof(float) * sizeWFS);
+                    data.image[ID_imWFS0].array.F[ii] =
+                        arrayftmp[ii] - data.image[IDwfsdark].array.F[ii];
                 }
-                else
-                {
-                    // dark subtraction
-                    for(uint64_t ii = 0; ii < sizeWFS; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] =
-                            arrayftmp[ii] - data.image[IDwfsdark].array.F[ii];
-                    }
-                }
-                break;
+            }
+            break;
 
-            default:
-                printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                       __FILE__,
-                       __LINE__);
-                printf("datatype = %d\n", WFSatype);
-                exit(0);
-                break;
+        default:
+            printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                   __FILE__,
+                   __LINE__);
+            printf("datatype = %d\n", WFSatype);
+            exit(0);
+            break;
         }
 
         processinfo_update_output_stream(processinfo, ID_imWFS0);

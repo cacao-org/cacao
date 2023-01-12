@@ -12,6 +12,16 @@ source milk-script-std-config
 source cacao-check-cacaovars
 
 
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+
+MSopt+=( "c:CPAmax:setCPAmax:cpamax[float]:Set maximum cycles per aperture (CPA)" )
+CPAmax="8.0"
+function setCPAmax()
+{
+	CPAmax=$1
+}
+
 source milk-argparse
 
 
@@ -77,11 +87,7 @@ EOF
 
 # Fourier modes
 
-
-CPAmax=8.0
 deltaCPA=0.8
-
-
 
 cacao << EOF
 lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 0

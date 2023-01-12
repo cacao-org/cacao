@@ -45,3 +45,4 @@ exitCLI
 EOF
 
 
+milk-FITS2shm "conf/spotmap.fits" aol${CACAO_LOOPNUMBER}_wfsmapping

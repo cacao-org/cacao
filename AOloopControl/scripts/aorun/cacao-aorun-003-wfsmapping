@@ -25,6 +25,9 @@ fi
 
 
 # start WFS mapping
+#
+milk-FITS2shm "conf/spotmap.fits" aol${CACAO_LOOPNUMBER}_wfsmapping
+
 sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.wfsin aol${CACAO_LOOPNUMBER}_wfsim"
 sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.wfsout aol${CACAO_LOOPNUMBER}m_wfsim"
 sendFPScmd "confwupdate mapWFS-${CACAO_LOOPNUMBER}"

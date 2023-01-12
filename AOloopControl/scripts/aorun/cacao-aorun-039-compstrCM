@@ -37,5 +37,18 @@ fi
 # Compute straight CM
 # ======================================================================
 
+# set ouput files
+mkdir -p ../conf/CMmodesDM/
+mkdir -p ../conf/CMmodesWFS/
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesDM \"../conf/CMmodesDM/CMmodesDM.fits\""
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesWFS \"../conf/CMmodesWFS/CMmodesWFS.fits\""
+
+
 sendFPScmd "confwupdate compstrCM-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart compstrCM-${CACAO_LOOPNUMBER}"
+
+
+# Load CM to shared memory
+
+milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol${CACAO_LOOPNUMBER}_modesWFS
+milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes
