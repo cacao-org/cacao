@@ -38,10 +38,10 @@ fi
 # ======================================================================
 
 # set ouput files
-mkdir -p ../conf/CMmodesDM/
-mkdir -p ../conf/CMmodesWFS/
-sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesDM \"../conf/CMmodesDM/CMmodesDM.fits\""
-sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesWFS \"../conf/CMmodesWFS/CMmodesWFS.fits\""
+mkdir -p conf/CMmodesDM/
+mkdir -p conf/CMmodesWFS/
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesDM ../conf/CMmodesDM/CMmodesDM.fits"
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesWFS ../conf/CMmodesWFS/CMmodesWFS.fits"
 
 
 sendFPScmd "confwupdate compstrCM-${CACAO_LOOPNUMBER}"
