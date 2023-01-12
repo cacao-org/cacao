@@ -93,6 +93,10 @@ export CACAO_FPSPROC_MEASURELINRESP="ON"
 export CACAO_FPSPROC_COMPSTRCM="ON"
 
 
+# Extract control modes
+#
+export CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL="ON"
+
 # Modal control filtering
 #
 export CACAO_FPSPROC_MODALFILTERING="ON"
