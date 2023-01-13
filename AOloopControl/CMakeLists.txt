@@ -117,6 +117,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-005-takedark
 	scripts/aorun/cacao-aorun-020-mlat
 	scripts/aorun/cacao-aorun-025-acqWFS
+	scripts/aorun/cacao-aorun-026-takeref
 	scripts/aorun/cacao-aorun-030-acqlinResp
 	scripts/aorun/cacao-aorun-035-acqloRM
 	scripts/aorun/cacao-aorun-039-compstrCM

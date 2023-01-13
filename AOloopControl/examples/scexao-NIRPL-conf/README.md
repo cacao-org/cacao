@@ -107,8 +107,16 @@ The following files are written to ./conf/DMmodes/ :
 
 ```bash
 # Acquire response matrix - Fourier modes
-cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
+cacao-fpsctrl setval measlinresp procinfo.loopcntMax 4
 cacao-aorun-030-acqlinResp Fmodes
+```
+
+
+### Take reference
+
+```bash
+# Acquire reference
+cacao-aorun-026-takeref
 ```
 
 
