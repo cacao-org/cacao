@@ -48,7 +48,22 @@ sendFPScmd "confwupdate compstrCM-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart compstrCM-${CACAO_LOOPNUMBER}"
 
 
+
+
 # Load CM to shared memory
 
+
+echo "Waiting for file conf/CMmodesWFS/CMmodesWFS.fits"
+until [ -f "conf/CMmodesWFS/CMmodesWFS.fits" ]
+do
+     sleep 0.2
+done
 milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol${CACAO_LOOPNUMBER}_modesWFS
+
+
+echo "Waiting for file conf/CMmodesDM/CMmodesDM.fits"
+until [ -f "conf/CMmodesDM/CMmodesDM.fits" ]
+do
+     sleep 0.2
+done
 milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes

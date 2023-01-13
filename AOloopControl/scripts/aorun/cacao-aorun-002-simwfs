@@ -91,8 +91,13 @@ milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_simwfsdark
 fi
 
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.wfscamim ${CACAO_WFSSTREAMSIM}"
-FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
+
+FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-10000000}
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"
+
+camRON=${CACAO_FPS_wfscamsim_camRON:-3}
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.camRON ${camRON}"
+
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
 fi # end of if [ "$CACAO_WFSSTREAM_PROCESSED" = "ON" ]
