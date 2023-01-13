@@ -60,7 +60,7 @@ sendFPScmd "runstart DMstreamDelay-${CACAO_DMINDEXSIM}"
 # Starting MVM simulator
 # ======================================================================
 #sendFPScmd "setval simmvmgpu-${CACAO_LOOPNUMBER}.procinfo.triggerdelay ${TRIGDELAY}"
-sendFPScmd "setval simmvmgpu-${CACAO_LOOPNUMBER}.GPUindex -1"
+sendFPScmd "setval simmvmgpu-${CACAO_LOOPNUMBER}.GPUindex 0"
 sendFPScmd "confwupdate simmvmgpu-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart simmvmgpu-${CACAO_LOOPNUMBER}"
 
