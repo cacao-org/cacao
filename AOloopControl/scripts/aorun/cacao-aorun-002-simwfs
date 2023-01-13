@@ -86,7 +86,7 @@ else
 # Starting WFC camera simulator
 # ======================================================================
 
-if [-f "simLHS/wfsdark.fits" ]; then
+if [ -f "simLHS/wfsdark.fits" ]; then
 milk-FITS2shm "simLHS/wfsdark.fits" aol${CACAO_LOOPNUMBER}_simwfsdark
 fi
 
