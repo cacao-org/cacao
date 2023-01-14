@@ -34,7 +34,7 @@ fi
 
 #MILK_QUIET=1 
 milk << EOF
-readshmim aol${CACAO_LOOPNUMBER}_imWFS2
+readshmim aol${CACAO_LOOPNUMBER}_imWFS1
 streamave ..procinfo 1
 streamave ..triggersname aol${CACAO_LOOPNUMBER}_imWFS2
 streamave ..triggermode 3
