@@ -220,6 +220,14 @@ static errno_t find_image_spots(
     mapcimg =
         stream_connect_create_3Df32(outmapcname, xsize, ysize, nb_spot_max);
 
+    // zero out array
+    //
+
+    for (uint64_t ii=0; ii<mapcimg.md->nelement; ii++)
+    {
+        mapcimg.im->array.F[ii] = 0.0;
+    }
+
 
     // find spots
     //
