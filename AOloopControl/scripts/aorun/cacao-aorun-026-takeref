@@ -39,7 +39,7 @@ streamave ..procinfo 1
 streamave ..triggersname aol${CACAO_LOOPNUMBER}_imWFS2
 streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
-streamave aol${CACAO_LOOPNUMBER}_imWFS2 wfsref ${NBframe}
+streamave aol${CACAO_LOOPNUMBER}_imWFS1 wfsref ${NBframe}
 saveFITS wfsref "aol${CACAO_LOOPNUMBER}_wfsref.fits"
 cpsh wfsref aol${CACAO_LOOPNUMBER}_wfsref
 cpsh wfsref aol${CACAO_LOOPNUMBER}_wfsrefc
