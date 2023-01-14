@@ -60,14 +60,6 @@ if [ $errexit = 1 ]; then
 exit
 fi
 
-if [ $EXITSTATUS = 1 ]; then
-exit
-fi
-
-
-
-
-
 
 mkdir -p ./conf/RMmodesDM/
 mkdir -p ./conf/RMmodesWFS/
