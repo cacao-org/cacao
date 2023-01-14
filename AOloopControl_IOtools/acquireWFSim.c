@@ -590,6 +590,8 @@ static errno_t compute_function()
         // ===========================================
         int status_normalize = 0;
 
+        data.image[ID_imWFS1].md->write = 1;
+
         if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
         {
             status_normalize = 1;
@@ -638,12 +640,11 @@ static errno_t compute_function()
         }
         else
         {
-            data.image[ID_imWFS1].md->write = 1;
             memcpy(data.image[ID_imWFS1].array.F,
                    data.image[ID_imWFS0].array.F,
                    sizeof(float) * sizeWFS);
-            processinfo_update_output_stream(processinfo, ID_imWFS1);
         }
+        processinfo_update_output_stream(processinfo, ID_imWFS1);
 
 //                *GPUalpha = totalinv;
 //                *GPUbeta = -normfloorcoeff;
