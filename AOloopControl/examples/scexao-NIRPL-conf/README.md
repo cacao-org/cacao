@@ -71,6 +71,12 @@ Then turn light source back on.
 cacao-aorun-003-wfsmapping
 ```
 
+## Remap dark frame
+
+```bash
+./scripts/scexao-NIRPL-mapdark
+```
+
 
 ## Start WFS acquisition
 
