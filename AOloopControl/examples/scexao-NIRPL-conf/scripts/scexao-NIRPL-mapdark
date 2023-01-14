@@ -20,7 +20,7 @@ source milk-argparse
 
 rm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm
 cacao << EOF
-loadfits "conf/aol${CACAO_LOOPNUMBER}_wfsimraw.fits" darkraw
+loadfits "conf/aol${CACAO_LOOPNUMBER}_wfsdarkraw.fits" darkraw
 loadfits "conf/spotmap.fits" spotmap
 cacaoio.mapWFS darkraw spotmap darkm
 saveFITS darkm "conf/aol${CACAO_LOOPNUMBER}_wfsdark.fits"
