@@ -36,7 +36,7 @@ fi
 milk << EOF
 readshmim aol${CACAO_LOOPNUMBER}_imWFS1
 streamave ..procinfo 1
-streamave ..triggersname aol${CACAO_LOOPNUMBER}_imWFS2
+streamave ..triggersname aol${CACAO_LOOPNUMBER}_imWFS1
 streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
 streamave aol${CACAO_LOOPNUMBER}_imWFS1 wfsref ${NBframe}
