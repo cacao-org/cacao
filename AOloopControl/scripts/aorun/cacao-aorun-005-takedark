@@ -44,6 +44,8 @@ fi
 
 sleep 1
 
+mkdir -p conf
+
 MILK_QUIET=1 milk << EOF
 readshmim aol${CACAO_LOOPNUMBER}_wfsim
 streamave ..procinfo 1
@@ -51,7 +53,7 @@ streamave ..triggersname aol${CACAO_LOOPNUMBER}_wfsim
 streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
 streamave aol${CACAO_LOOPNUMBER}_wfsim imdark ${NBframe}
-saveFITS imdark "aol${CACAO_LOOPNUMBER}_wfsdark.fits"
+saveFITS imdark "conf/aol${CACAO_LOOPNUMBER}_wfsdarkraw.fits"
 cpsh imdark aol${CACAO_LOOPNUMBER}_wfsdarkraw
 listim
 exitCLI
