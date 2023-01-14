@@ -52,11 +52,14 @@ streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
 streamave aol${CACAO_LOOPNUMBER}_wfsim imdark ${NBframe}
 saveFITS imdark "aol${CACAO_LOOPNUMBER}_wfsdark.fits"
-cpsh imdark aol${CACAO_LOOPNUMBER}_wfsdark
+cpsh imdark aol${CACAO_LOOPNUMBER}_wfsdarkraw
 listim
 exitCLI
 EOF
 
+# by default, link dark to raw dark (may be overridden if mapping)
+
+ln -s ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdarkraw.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm 
 
 # ======================================================================
 # Turning source on

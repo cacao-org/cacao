@@ -51,6 +51,14 @@ cacao-aorun-002-simwfs start
 ```
 
 
+## Take full frame dark -> will store it in aolX_wfsdark
+
+Turn off light source, and run:
+```bash
+cacao-aorun-005-takedark
+```
+Then turn light source back on.
+
 ## Find spots
 
 ```bash

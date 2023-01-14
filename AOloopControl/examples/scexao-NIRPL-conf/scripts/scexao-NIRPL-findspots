@@ -28,6 +28,8 @@ streamave ..triggermode 3
 streamave ..triggersname aol${CACAO_LOOPNUMBER}_wfsim
 streamave ..loopcntMax ${NBAVE}
 streamave aol${CACAO_LOOPNUMBER}_wfsim imave ${NBAVE}
+readshmim aol${CACAO_LOOPNUMBER}_wfsdark
+imaved=imave-aol${CACAO_LOOPNUMBER}_wfsdark
 saveFITS imave "conf/wfsimave.fits"
 exitCLI
 EOF
