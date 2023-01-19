@@ -52,16 +52,16 @@ rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
 ln -s ${MILK_SHM_DIR}/${CACAO_WFSSTREAMSIM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
 
 # DM
-echo "Linking DM ${CACAO_DMINDEXSIM}"
+echo "Linking DM ${CACAO_DMSIMINDEX}"
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
+ln -s ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
+ln -s ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp02.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
+ln -s ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
+ln -s ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm

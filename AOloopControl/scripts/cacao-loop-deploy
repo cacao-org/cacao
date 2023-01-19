@@ -15,6 +15,13 @@ conflist=$( ls $MILK_ROOT/plugins/cacao-src/AOloopControl/examples | grep "\-con
 
 MSextdescr="Configuration is loaded from cacao source code
 
+Env variables (optional) as cacaovars modifiers :
+	CACAO_LOOPNUMBER   [integer] loop number
+	CACAO_LOOPNAME     [string]  loop name
+	CACAO_DMINDEX      [integer] DM index
+	CACAO_DMSIMINDEX   [integer] simulation DM index
+
+
 Available configurations :
 
 $conflist
@@ -89,6 +96,66 @@ fi
 
 
 fi
+
+
+# modify cacaovars file
+echo "Modifying cacaovars (optional) ..."
+
+CACAOVARSFILE="${cacaoconfname}-conf/cacaovars.bash"
+
+set +u
+if [ ! -z ${CACAO_LOOPNUMBER+x} ]; then
+
+re='^[0-9]+$'
+if ! [[ $CACAO_LOOPNUMBER =~ $re ]] ; then
+	echo "CACAO_LOOPNUMBER is not a number"
+else
+	echo "CACAO_LOOPNUMBER = ${CACAO_LOOPNUMBER}"
+	sed -i 's/CACAO_LOOPNUMBER="[0-9]*"/CACAO_LOOPNUMBER="'$CACAO_LOOPNUMBER'"/g' ${CACAOVARSFILE}
+fi
+
+fi
+set -u
+
+
+set +u
+if [ ! -z ${CACAO_DMINDEX+x} ]; then
+
+re='^[0-9]+$'
+if ! [[ $CACAO_DMINDEX =~ $re ]] ; then
+	echo "CACAO_DMINDEX is not a number"
+else
+	echo "CACAO_DMINDEX = ${CACAO_DMINDEX}"
+	sed -i 's/CACAO_DMINDEX="[0-9]*"/CACAO_DMINDEX="'$CACAO_DMINDEX'"/g' ${CACAOVARSFILE}
+fi
+
+fi
+set -u
+
+
+set +u
+if [ ! -z ${CACAO_DMSIMINDEX+x} ]; then
+
+re='^[0-9]+$'
+if ! [[ $CACAO_DMSIMINDEX =~ $re ]] ; then
+	echo "CACAO_DMSIMINDEX is not a number"
+else
+	echo "CACAO_DMSIMINDEX = ${CACAO_DMSIMINDEX}"
+	sed -i 's/CACAO_DMSIMINDEX="[0-9]*"/CACAO_DMSIMINDEX="'$CACAO_DMSIMINDEX'"/g' ${CACAOVARSFILE}
+fi
+
+fi
+set -u
+
+
+set +u
+if [ ! -z ${CACAO_LOOPNAME+x} ]; then
+echo "CACAO_LOOPNAME = ${CACAO_LOOPNAME}"
+sed -i 's/CACAO_LOOPNAME=\"[^\"]*\"/CACAO_LOOPNAME=\"'$CACAO_LOOPNAME'\"/g' ${CACAOVARSFILE}
+fi
+set -u
+
+
 
 
 

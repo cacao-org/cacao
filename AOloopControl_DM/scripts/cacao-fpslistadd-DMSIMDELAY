@@ -19,7 +19,7 @@ if [ "${CACAO_FPSPROC_DMSIMDELAY}" = "ON" ]; then
 
     # FPS name
     fpsname="DMstreamDelay"
-    fpsarg0="${CACAO_DMINDEXSIM}"
+    fpsarg0="${CACAO_DMSIMINDEX}"
 
     # FPS full name
     fpsfname="${fpsname}-${fpsarg0}"

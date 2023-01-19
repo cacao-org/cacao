@@ -42,15 +42,15 @@ ACTIONOK=1
 # Starting DM combination process
 # ======================================================================
 
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEXSIM}.option.voltmode OFF"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEXSIM}.option.DClevel 0.0"
+sendFPScmd "setval DMch2disp-${CACAO_DMSIMINDEX}.option.voltmode OFF"
+sendFPScmd "setval DMch2disp-${CACAO_DMSIMINDEX}.option.DClevel 0.0"
 #taskset_DMch2disp="3"
-#sendFPScmd "setval DMch2disp-${CACAO_DMINDEXSIM}.procinfo.taskset ${taskset_DMch2disp}"
-sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEXSIM}"
-sendFPScmd "runstart DMch2disp-${CACAO_DMINDEXSIM}"
+#sendFPScmd "setval DMch2disp-${CACAO_DMSIMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
+sendFPScmd "confwupdate DMch2disp-${CACAO_DMSIMINDEX}"
+sendFPScmd "runstart DMch2disp-${CACAO_DMSIMINDEX}"
 
-# WAIT for dm${CACAO_DMINDEXSIM}disp to appear
-filename="${MILK_SHM_DIR}/dm${CACAO_DMINDEXSIM}disp.im.shm"
+# WAIT for dm${CACAO_DMSIMINDEX}disp to appear
+filename="${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp.im.shm"
 echo "Waiting for file ${filename} ..."
 until [ -f "$filename" ]
 do
@@ -63,7 +63,7 @@ fi
 
 if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
-sendFPScmd "runstop DMch2disp-${CACAO_DMINDEXSIM}"
+sendFPScmd "runstop DMch2disp-${CACAO_DMSIMINDEX}"
 fi
 
 

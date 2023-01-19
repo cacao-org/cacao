@@ -12,7 +12,7 @@ export CACAO_LOOPNUMBER="6"
 # If DM is single dimension, enter "1" for DMsize
 #
 export CACAO_DMINDEX="00"     # Hardware DM - connected to physical DM
-export CACAO_DMINDEXSIM="10"  # Simulation DM
+export CACAO_DMSIMINDEX="10"  # Simulation DM
 export CACAO_DMxsize="50"
 export CACAO_DMysize="50"
 
@@ -37,7 +37,7 @@ export CACAO_WFSSTREAM="glint"     # Hardware stream, connected to physical came
 export CACAO_WFSSTREAMSIM="glintsim"
 
 # Specify that WFS stream is not raw image, but processed WFS signal
-# This turns off intensity scaling
+# If set to ON, this turns off intensity scaling
 export CACAO_WFSSTREAM_PROCESSED="OFF"
 
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"

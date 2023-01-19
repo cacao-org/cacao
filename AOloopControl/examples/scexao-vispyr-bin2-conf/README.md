@@ -25,8 +25,22 @@ Subsequent tasks can perform specific parts of the AO loop.
 
 ```bash
 # Deploy configuration :
-# download from source and start conf processes
-cacao-loop-deploy scexao-vispyr-bin2
+# download from source to current directory
+cacao-loop-deploy -c scexao-vispyr-bin2
+
+# OPTIONAL: Change loop number, name, DM index, simulation DM index:
+# CACAO_LOOPNUMBER=7 cacao-loop-deploy -c scexao-vispyr-bin2
+# CACAO_LOOPNUMBER=7 CACAO_DMINDEX="03" cacao-loop-deploy -c scexao-vispyr-bin2
+
+# OPTIONAL: Edit file scexao-vispyr-bin2-conf/cacaovars.bash as needed
+# For example, change loop index, DM index, etc ...
+
+# Run deployment (starts conf processes)
+cacao-loop-deploy -r scexao-vispyr-bin2
+
+# Note: the copy and run steps can be done at once with :
+# cacao-loop-deploy scexao-vispyr-bin2
+
 
 # Go to rootdir, from which user controls the loop
 cd vispyr2-rootdir

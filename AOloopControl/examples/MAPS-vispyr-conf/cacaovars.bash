@@ -11,7 +11,7 @@ export CACAO_LOOPNUMBER="2"
 # If DM is single dimension, enter "1" for DMsize
 #
 export CACAO_DMINDEX="00"    # Hardware DM - connected to physical DM
-export CACAO_DMINDEXSIM="10" # Simulation DM
+export CACAO_DMSIMINDEX="10" # Simulation DM
 export CACAO_DMxsize="336"
 export CACAO_DMysize="1"
 

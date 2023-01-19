@@ -52,8 +52,8 @@ ACTIONOK=1
 # Starting DM hardware delay simulator
 # ======================================================================
 
-sendFPScmd "confwupdate DMstreamDelay-${CACAO_DMINDEXSIM}"
-sendFPScmd "runstart DMstreamDelay-${CACAO_DMINDEXSIM}"
+sendFPScmd "confwupdate DMstreamDelay-${CACAO_DMSIMINDEX}"
+sendFPScmd "runstart DMstreamDelay-${CACAO_DMSIMINDEX}"
 
 
 # ======================================================================
@@ -109,7 +109,7 @@ if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
 sendFPScmd "runstop wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstop simmvmgpu-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstop streamDelay-${CACAO_DMINDEXSIM}"
+sendFPScmd "runstop streamDelay-${CACAO_DMSIMINDEX}"
 fi
 
 
