@@ -110,49 +110,48 @@ The following files are written to ./conf/DMmodes/ :
 
 
 ```bash
-# Acquire response matrix - Hadamard modes
-cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
-cacao-aorun-030-acqlinResp HpokeC
-
 # Acquire response matrix - Fourier modes
 cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
 cacao-aorun-030-acqlinResp Fmodes
+
+# NOTE: Alternate option is Hadamard modes
+# Acquire response matrix - Hadamard modes
+#cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
+#cacao-aorun-030-acqlinResp HpokeC
 ```
 
+### Take reference
 
+```bash
+# Acquire reference
+cacao-aorun-026-takeref
+```
 
 
 ## Compute control matrix (straight)
 
-
-```bash
-cacao-fpsctrl setval compstrCM RMmodesDM "../conf/DMmodes/Fmodes.fits"
-cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/WFSmodes/Fmodes.WFSresp.fits"
-cacao-fpsctrl setval compstrCM CMmodesDM "../conf/CM/CMmodesDM.fits"
-cacao-fpsctrl setval compstrCM CMmodesWFS "../conf/CM/CMmodesWFS.fits"
-```
-
-
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-# Compute control matrix using Fourier modes
-cacao-aorun-040-compfCM
-
-# Make directory for storing calibrations
-mkdir -p ../AOcalibs
-cd ..; ln -s $(pwd)/AOcalibs $(pwd)/vispyr2-rootdir/AOcalibs; cd -
-
-# Save current calibration
-cacao-calib-archive cal000
-
-
-# Apply calibration
-cacao-calib-apply cal000
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/Fmodes.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/Fmodes.WFSresp.fits"
+cacao-fpsctrl setval compstrCM svdlim 0.2
+```
+Then run the compstrCM process to compute CM and load it to shared memory :
+```bash
+cacao-aorun-039-compstrCM
 ```
 
 
+
 ## Running the loop
+
+Select GPUs
+```bash
+cacao-fpsctrl setval wfs2cmodeval GPUindex 0
+cacao-fpsctrl setval mvalC2dm GPUindex 3
+```
+
 
 From directory vispyr-rootdir, start 3 processes :
 
@@ -181,9 +180,6 @@ cacao-fpsctrl setval mfilt loopmult 0.98
 cacao-fpsctrl setval mfilt loopON ON
 
 ```
-
-
-cacao-fpsctrl setval compsCM fname_respM "../../AOcalibs/cal000_2022-12-29T11:26:54/aol0_zrespM.fits"
 
 
 THE END
