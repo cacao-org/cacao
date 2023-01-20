@@ -40,7 +40,7 @@ fi
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.compphnoise OFF"
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 
-sendFPScmd "setval acquWFS-0.WFSnormfloor 0.01"
+
 
 #sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.normalize ON"
 #sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.LOmaxCPA 3.0"
@@ -64,6 +64,10 @@ echo "Linking WFS"
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
 ln -s ${MILK_SHM_DIR}/${CACAO_WFSSTREAMSIM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
+
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.insname aol${CACAO_LOOPNUMBER}_wfsim"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.WFSnormfloor 0.01"
+
 
 # DM
 echo "Linking DM"
