@@ -31,8 +31,8 @@ cacao-loop-deploy scexao-NIRPL
 cd NIRPL-rootdir
 
 # select simulation mode
-./scripts/aorun-setmode-sim
-# (alternatively, run ./scripts/aorun-setmode-hardw to connect to hardware)
+./scripts/aorun-setmode-hardw
+# (alternatively, run ./scripts/aorun-setmode-sim to connect to simulator)
 ```
 
 ## Run DM and WFS simulators
