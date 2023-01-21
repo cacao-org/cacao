@@ -38,9 +38,12 @@ fi
 # Turning source off
 # ======================================================================
 
+
+set +u
 if [ $CACAO_FPSPROC_WFSCAMSIM = "ON" ]; then
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal 0.0"
 fi
+set -u
 
 sleep 1
 
@@ -67,7 +70,9 @@ ln -s ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdarkraw.im.shm ${MILK_SHM_DIR}/a
 # Turning source on
 # ======================================================================
 
+set +u
 if [ $CACAO_FPSPROC_WFSCAMSIM = "ON" ]; then
 FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"
 fi
+set -u
