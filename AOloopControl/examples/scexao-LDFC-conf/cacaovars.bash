@@ -87,6 +87,8 @@ export CACAO_FPSPROC_DMCH2DISP="OFF"
 #
 export CACAO_FPSPROC_WFSCROPMASK="ON"
 
+export CACAO_FPSPROC_SCICROPMASK="ON"
+
 
 # Measure hardware latency
 #

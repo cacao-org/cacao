@@ -48,10 +48,9 @@ sendFPScmd "confwupdate mvalC2dm-${CACAO_LOOPNUMBER}"
 # stream linking
 
 # WFS
-echo "Linking WFS"
+echo "removing WFS link (wfsim to be written by cropmask)"
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
-ln -s ${MILK_SHM_DIR}/${CACAO_WFSSTREAM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
 
 
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.insname aol${CACAO_LOOPNUMBER}_wfsim"
