@@ -35,30 +35,12 @@ cd NIRPL-rootdir
 # (alternatively, run ./scripts/aorun-setmode-sim to connect to simulator)
 ```
 
-## Run DM and WFS simulators
 
-```bash
-# Run hardware DM (optional if running in simulation mode)
-# cacao-aorun-000-dm start
-
-# Run simulation DM
-cacao-aorun-001-dmsim start
-
-# Start simulation processes
-# (skip if in hardware mode)
-cacao-aorun-002-simwfs start
-```
-
-
-
-## Measure WFS dark and DM to WFS latency
+## Measure WFS dark
 
 
 ```bash
 cacao-aorun-005-takedark
-
-# Measure latency
-cacao-aorun-020-mlat -w
 ```
 
 
@@ -68,6 +50,14 @@ cacao-aorun-020-mlat -w
 ```bash
 # Acquire WFS frames
 cacao-aorun-025-acqWFS start
+```
+
+
+## Measure DM to WFS latency
+
+```bash
+# Measure latency
+cacao-aorun-020-mlat -w
 ```
 
 
