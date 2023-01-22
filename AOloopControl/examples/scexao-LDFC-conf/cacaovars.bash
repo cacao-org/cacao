@@ -83,6 +83,10 @@ export CACAO_FPSPROC_DMCH2DISP="OFF"
 #export CACAO_FPSPROC_DMATMTURB="ON"
 
 
+# crop and mask WFS raw image
+#
+export CACAO_FPSPROC_WFSCROPMASK="ON"
+
 
 # Measure hardware latency
 #
