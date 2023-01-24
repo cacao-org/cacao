@@ -73,6 +73,7 @@ EOF
 
 # by default, link dark to raw dark (may be overridden if mapping)
 
+rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm
 ln -s ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdarkraw.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm 
 
 # ======================================================================
