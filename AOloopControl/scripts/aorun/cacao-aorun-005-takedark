@@ -43,12 +43,14 @@ set +u
 if [ -z ${CACAO_FPSPROC_WFSCAMSIM+x} ]; then
 echo "CACAO_FPSPROC_WFSCAMSIM does not exist"
 else
+
 if [ $CACAO_FPSPROC_WFSCAMSIM = "ON" ]; then
 echo "CACAO_FPSPROC_WFSCAMSIM set -> simulator"
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal 0.0"
 else
 echo "CACAO_FPSPROC_WFSCAMSIM not set -> no simulator"
 fi
+
 fi
 set -u
 
@@ -78,12 +80,18 @@ ln -s ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdarkraw.im.shm ${MILK_SHM_DIR}/a
 # ======================================================================
 
 set +u
+
 if [ -z ${CACAO_FPSPROC_WFSCAMSIM+x} ]; then
+echo "CACAO_FPSPROC_WFSCAMSIM does not exist"
+else
+
 if [ $CACAO_FPSPROC_WFSCAMSIM = "ON" ]; then
 FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"
-fi
 else
 echo "CACAO_FPSPROC_WFSCAMSIM not set -> no simulator"
 fi
+
+fi
+
 set -u
