@@ -41,15 +41,14 @@ fi
 
 set +u
 if [ -z ${CACAO_FPSPROC_WFSCAMSIM+x} ]; then
+echo "CACAO_FPSPROC_WFSCAMSIM does not exist"
+else
 if [ $CACAO_FPSPROC_WFSCAMSIM = "ON" ]; then
 echo "CACAO_FPSPROC_WFSCAMSIM set -> simulator"
 sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal 0.0"
 else
 echo "CACAO_FPSPROC_WFSCAMSIM not set -> no simulator"
 fi
-else
-echo "CACAO_FPSPROC_WFSCAMSIM does not exist"
-echo "CACAO_FPSPROC_WFSCAMSIM = ${CACAO_FPSPROC_WFSCAMSIM}"
 fi
 set -u
 
