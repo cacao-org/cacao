@@ -49,6 +49,7 @@ echo "CACAO_FPSPROC_WFSCAMSIM not set -> no simulator"
 fi
 else
 echo "CACAO_FPSPROC_WFSCAMSIM does not exist"
+echo "CACAO_FPSPROC_WFSCAMSIM = ${CACAO_FPSPROC_WFSCAMSIM}"
 fi
 set -u
 
