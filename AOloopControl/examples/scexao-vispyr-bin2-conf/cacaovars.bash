@@ -143,13 +143,13 @@ export CACAO_FPSPROC_COMPSTRCM="ON"
 
 # Extract control modes from WFS using MVM
 #
-#export CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL="ON"
+export CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL="ON"
 
 # Modal control filtering
-#export CACAO_FPSPROC_MODALFILTERING="ON"
+export CACAO_FPSPROC_MODALFILTERING="ON"
 
 # Compute DM command from control mode values
-#export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
+export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 
 
 

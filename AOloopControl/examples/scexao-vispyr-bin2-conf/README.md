@@ -66,14 +66,11 @@ cacao-aorun-002-simwfs start
 
 
 
-## Measure WFS dark and DM to WFS latency
+## Measure WFS dark
 
 
 ```bash
 cacao-aorun-005-takedark
-
-# Measure latency
-cacao-aorun-020-mlat -w
 ```
 
 
@@ -83,6 +80,13 @@ cacao-aorun-020-mlat -w
 ```bash
 # Acquire WFS frames
 cacao-aorun-025-acqWFS start
+```
+
+## Measure DM to WFS latency
+
+```bash
+# Measure latency
+cacao-aorun-020-mlat -w
 ```
 
 
