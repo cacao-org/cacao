@@ -40,12 +40,8 @@ exit
 fi
 
 
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode ON"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltname dmvolt"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.7"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.maxvolt 150.0"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
 sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
-
 
 
 sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.SVDlim 0.1"

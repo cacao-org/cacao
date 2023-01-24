@@ -52,10 +52,10 @@ cd kalaodmloop-rootdir
 ## Run DM and WFS simulators
 
 ```bash
-# Run hardware DM (optional if running in simulation mode)
+# Run hardware DM
 # cacao-aorun-000-dm start
 
-# Run simulation DM
+# Run simulation DM (simulation mode only)
 cacao-aorun-001-dmsim start
 
 # Start simulation processes
@@ -145,7 +145,7 @@ cacao-aorun-039-compstrCM
 Select GPUs
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 0
-cacao-fpsctrl setval mvalC2dm GPUindex 3
+cacao-fpsctrl setval mvalC2dm GPUindex 0
 ```
 
 
