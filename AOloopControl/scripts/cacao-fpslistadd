@@ -1223,7 +1223,7 @@ fi
 #
 milkbindir="$MILK_INSTALLDIR/bin"
 for fpslistaddexec in ${milkbindir}/cacao-fpslistadd-*; do
-        echo "Found ${fpslistaddexec}"
+        echo "Running ${fpslistaddexec}"
         source ${fpslistaddexec}
 done
 
