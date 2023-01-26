@@ -4,6 +4,7 @@
  *
  *
  */
+#include <float.h>
 
 #include "CommandLineInterface/CLIcore.h"
 
@@ -159,8 +160,8 @@ static errno_t find_image_spots(
         stream_connect_create_2D("spotscan", xsize, ysize, _DATATYPE_FLOAT);
 
     // median scan
-    float *valarray = (float *) malloc(sizeof(float) * 4 * ((
-                                           int) spot_size + 1) * ((int) spot_size + 1));
+    float *valarray =
+        (float *) malloc(sizeof(float) * 4 * ((int) spot_size + 1) * ((int) spot_size + 1));
 
     for(uint32_t ii = 0; ii < xsize; ii++)
     {
@@ -204,6 +205,7 @@ static errno_t find_image_spots(
                     }
                 }
             }
+
             quick_sort_float(valarray, nbpix);
 
             float val = valarray[(int)(0.5 * nbpix)];
@@ -222,7 +224,6 @@ static errno_t find_image_spots(
 
     // zero out array
     //
-
     for (uint64_t ii=0; ii<mapcimg.md->nelement; ii++)
     {
         mapcimg.im->array.F[ii] = 0.0;
@@ -240,7 +241,7 @@ static errno_t find_image_spots(
     {
         // Find strongest peak
         //
-        float vpeak = 0.0;
+        float vpeak = -FLT_MAX;
         uint32_t iipeak = 0;
         uint32_t jjpeak = 0;
         for(uint32_t ii = 0; ii < xsize; ii++)
@@ -296,7 +297,7 @@ static errno_t find_image_spots(
                     float r2 = dx * dx + dy * dy;
                     if(r2 < spot_excl_dist * spot_excl_dist)
                     {
-                        spotoutimg.im->array.F[jj1 * xsize + ii1] = 0.0;
+                        spotoutimg.im->array.F[jj1 * xsize + ii1] = -FLT_MAX;
                     }
                 }
             }
