@@ -40,12 +40,17 @@ fi
 
 # DM averaging off
 
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.AveMode 0"
-
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.AveMode 1"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode ON"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltname dmvolt"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.7"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.maxvolt 150.0"
+sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
 
 # set input to be mapped
 
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.insname aol${CACAO_LOOPNUMBER}m_wfsim"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.procinfo.triggersname aol${CACAO_LOOPNUMBER}m_wfsim"
 
 # stream linking
 

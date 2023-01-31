@@ -297,10 +297,9 @@ if [ "${CACAO_FPSPROC_ACQUWFS}" = "ON" ]; then
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
-        # run simulator at finite frame rate
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim"
 
 
 		addfpscmd "setval ${fpsfname}.comp.darksub ON"

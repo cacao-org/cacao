@@ -41,7 +41,7 @@ fi
 # set input to be mapped
 
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.insname aol${CACAO_LOOPNUMBER}m_wfsim"
-
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.procinfo.triggersname aol${CACAO_LOOPNUMBER}m_wfsim"
 
 # stream linking
 
