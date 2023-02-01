@@ -88,8 +88,7 @@ sendFPScmd "confwupdate mvalC2dm-${CACAO_LOOPNUMBER}"
 # WFS
 echo "Linking WFS"
 
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
-ln -s ${MILK_SHM_DIR}/${CACAO_WFSSTREAM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
+ln -sf ${MILK_SHM_DIR}/${CACAO_WFSSTREAM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
 
 
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.insname aol${CACAO_LOOPNUMBER}_wfsim"
@@ -99,38 +98,19 @@ sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
 # DM
 echo "Linking DM"
 
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
 
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
 
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP0.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp04.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP0.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp04.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP0.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp05.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP1.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp06.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP2.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp07.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP3.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp08.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP4.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp09.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP5.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP6.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp11.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP7.im.shm
 
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP1.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp05.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP1.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
 
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP2.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp06.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP2.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP3.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp07.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP3.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP4.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp08.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP4.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP5.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp09.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP5.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP6.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP6.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP7.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp11.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP7.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
-ln -s ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
