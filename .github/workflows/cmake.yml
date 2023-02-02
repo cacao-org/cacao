@@ -20,7 +20,7 @@ jobs:
       
     - name: Install openblas with lapack
       run: |
-        sudo apt-get install gfortran
+        sudo apt-get install gfortran liblapack-dev libopenblas-dev
 
     - name: get milk and cacao
       run: |
