@@ -17,6 +17,10 @@ jobs:
       
     - name: Install Dependencies
       run: sudo apt-get install -qq libcfitsio-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison
+      
+    - name: Install openblas with lapack
+      run: |
+        sudo apt-get install gfortran
 
     - name: get milk and cacao
       run: |
