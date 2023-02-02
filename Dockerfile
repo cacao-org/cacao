@@ -20,6 +20,7 @@ RUN apt-get update && \
         libfl-dev \
         libreadline-dev \
 	pkg-config \
+	gfortran libopenblas-dev liblapacke-dev \
 	gcc-10 \
 	g++-10
 
