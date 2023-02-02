@@ -2,7 +2,7 @@
 # This file will be sourced by cacao-setup
 
 
-export CACAO_LOOPNAME="ttmloop"
+export CACAO_LOOPNAME="kalaottmloop"
 export CACAO_LOOPNUMBER="2"
 
 
@@ -13,6 +13,7 @@ export CACAO_LOOPNUMBER="2"
 # If DM is single dimension, enter "1" for DMsize
 #
 export CACAO_DMINDEX="02"
+export CACAO_DMSIMINDEX="12" # Simulation DM
 export CACAO_DMxsize="2"
 export CACAO_DMysize="1"
 
@@ -25,18 +26,23 @@ export CACAO_DMSPATIAL="0"
 
 # ====== DIRECTORIES ================
 
-# Optional. If not defined, will take value "LOOPNAME-rootdir"
-export CACAO_LOOPROOTDIR="ttmloop-rootdir"
+# Root directory
+export CACAO_LOOPROOTDIR="${CACAO_LOOPNAME}-rootdir"
 
-# Optional. If not defined, will take value "LOOPNAME-rundir"
-export CACAO_LOOPRUNDIR="ttmloop-rundir"
+# Run directory. This is a subdirectory of rootdir
+# processes run in CACAO_LOOPROOTDIR/CACAO_LOOPRUNDIR
+export CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"
 
 
+# Specify that WFS stream is not raw image, but processed WFS signal
+# If set to ON, this turns off intensity scaling
+export CACAO_WFSSTREAM_PROCESSED="ON"
 
 
 
 # input WFS stream
-export CACAO_WFSSTREAM="dm01disp"
+export CACAO_WFSSTREAM="dm01disp03"
+export CACAO_WFSSTREAMSIM="shwfs_slopes_sim" # Simulation camera stream
 
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
@@ -48,15 +54,20 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 # Manages mutipe DM channels
 #
 export CACAO_FPSPROC_DMCH2DISP="ON"
+export CACAO_FPSPROC_DMCH2DISPSIM="ON"
+
+
 
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
-# should not be needed
-export CACAO_FPSPROC_STREAMDELAY="ON"
+#
+export CACAO_FPSPROC_DMSIMDELAY="ON"
 
 # MVM lop on GPU: used to simulate hardware
-# should not be needed
+#
 export CACAO_FPSPROC_SIMMVMGPU="ON"
+
+
 
 # Measure hardware latency
 #
@@ -66,37 +77,28 @@ export CACAO_FPSPROC_MLAT="ON"
 #
 export CACAO_FPSPROC_ACQUWFS="ON"
 
-# Acquire linear RM (zonal)
+
+
+# Acquire linear RM
 #
-export CACAO_FPSPROC_ACQLINZRM="ON"
+export CACAO_FPSPROC_MEASURELINRESP="ON"
 
-# Acquire low-order modal RM
+
+
+# Compute control matrix
 #
-export CACAO_FPSPROC_ACQLINLORM="ON"
+export CACAO_FPSPROC_COMPSTRCM="ON"
 
 
-# Compute control matrix - Fourier
-#
-export CACAO_FPSPROC_COMPFCM="ON"
-
-# Compute control matrix - straight
-#
-export CACAO_FPSPROC_COMPSCM="ON"
-
-
-# Extract control modes
-#
-export CACAO_FPSPROC_MODESEXTRACTWFSGPU="ON"
-
-# Control loop
-#
-export CACAO_FPSPROC_AOLOOP_RUN="ON"
 
 # Extract control modes from WFS using MVM
+#
 export CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL="ON"
 
 # Modal control filtering
+#
 export CACAO_FPSPROC_MODALFILTERING="ON"
 
 # Compute DM command from control mode values
+#
 export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
