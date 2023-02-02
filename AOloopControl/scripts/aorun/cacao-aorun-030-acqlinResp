@@ -21,6 +21,13 @@ source cacao-check-cacaovars
 MSarg+=( "DMmodes:string:DM modes cube FITS file" )
 
 
+WaitForCompletion=0
+MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
+function set_WaitForCompletion() {
+	WaitForCompletion=1
+}
+
+
 source milk-argparse
 
 DMmodeCname="${inputMSargARRAY[0]}"
@@ -78,3 +85,13 @@ sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.autoTiming ON"
 
 sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
+
+
+if [ $WaitForCompletion == "1" ]; then
+echo "Waiting for completion ..."
+pOK=1
+while [ $pOK -gt 0 ]; do
+	sleep 0.2
+	pOK=$(ps -alx| grep measlinresp-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l)
+done
+fi

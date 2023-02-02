@@ -28,8 +28,8 @@ Subsequent tasks can perform specific parts of the AO loop.
 cacao-loop-deploy -c KalAO-dmloop
 
 # OPTIONAL: Change loop number, name, DM index, simulation DM index:
-# CACAO_LOOPNUMBER=7 cacao-loop-deploy -c scexao-vispyr-bin2
-# CACAO_LOOPNUMBER=7 CACAO_DMINDEX="03" cacao-loop-deploy -c scexao-vispyr-bin2
+# CACAO_LOOPNUMBER=7 cacao-loop-deploy -c KalAO-dmloop
+# CACAO_LOOPNUMBER=7 CACAO_DMINDEX="03" cacao-loop-deploy -c KalAO-dmloop
 
 # OPTIONAL: Edit file scexao-vispyr-bin2-conf/cacaovars.bash as needed
 # For example, change loop index, DM index, etc ...

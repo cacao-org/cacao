@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+
+cd kalaodmloop-rootdir
+
+./scripts/aorun-setmode-sim
+
+cacao-aorun-001-dmsim start
+
+cacao-aorun-002-simwfs start
+
+cacao-aorun-025-acqWFS start
+
+cacao-aorun-020-mlat -w
+
+cacao-mkDMpokemodes
+
+cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
+
+cacao-aorun-030-acqlinResp -w Fmodes
+
+cacao-aorun-026-takeref
+
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/Fmodes.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/Fmodes.WFSresp.fits"
+cacao-fpsctrl setval compstrCM svdlim 0.2
+
+cacao-aorun-039-compstrCM
