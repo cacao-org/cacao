@@ -45,6 +45,8 @@ fi
 
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.AveMode 1"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode ON"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.volttype 2"
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.stroke100 1.0"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltname dmvolt"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.7"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.maxvolt 150.0"

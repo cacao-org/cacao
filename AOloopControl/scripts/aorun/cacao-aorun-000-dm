@@ -50,8 +50,8 @@ ACTIONOK=1
 # Starting DM combination process
 # ======================================================================
 if [ ${DMrunning} == "0" ]; then
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.0"
+#sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
+#sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.0"
 #taskset_DMch2disp="3"
 #sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
 sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
