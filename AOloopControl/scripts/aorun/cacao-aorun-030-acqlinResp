@@ -94,13 +94,13 @@ sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.autoTiming ON"
 sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
 
-rm -f ../conf/RMmodesDM/RMmodesDM.fits
-ln -s ../conf/RMmodesDM/${DMmodeCname}.fits ../conf/RMmodesDM/RMmodesDM.fits
 
-rm -f ../conf/RMmodesWFS/RMmodesWFS.fits
-ln -s ../conf/RMmodesDM/${DMmodeCname}.WFSresp.fits ../conf/RMmodesDM/RMmodesWFS.fits
+pwd
+rm -f ./conf/RMmodesDM/RMmodesDM.fits
+ln -s ./conf/RMmodesDM/${DMmodeCname}.fits ./conf/RMmodesDM/RMmodesDM.fits
 
-
+rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
+ln -s ./conf/RMmodesDM/${DMmodeCname}.WFSresp.fits ./conf/RMmodesDM/RMmodesWFS.fits
 
 if [ $WaitForCompletion == "1" ]; then
 echo "Waiting for completion ..."
@@ -110,3 +110,4 @@ while [ $pOK -gt 0 ]; do
 	pOK=$(ps -alx| grep measlinresp-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l)
 done
 fi
+
