@@ -27,10 +27,10 @@ else
     
     # default init values
     addfpscmd "setval ${fpsfname}.procinfo.loopcntMax_10"
-    addfpscmd "setval ${fpsfname}.RMmodesDM ../conf/RMmodesDM.fits"
-    addfpscmd "setval ${fpsfname}.RMmodesWFS ../conf/RMmodesWFS.fits"
-    addfpscmd "setval ${fpsfname}.CMmodesDM ../conf/CMmodesDM.fits"
-    addfpscmd "setval ${fpsfname}.CMmodesWFS ../conf/CMmodesWFS.fits"
+    addfpscmd "setval ${fpsfname}.RMmodesDM ../conf/RMmodesDM/RMmodesDM.fits"
+    addfpscmd "setval ${fpsfname}.RMmodesWFS ../conf/RMmodesWFS/RMmodesWFS.fits"
+    addfpscmd "setval ${fpsfname}.CMmodesDM ../conf/CMmodesDM/CMmodesDM.fits"
+    addfpscmd "setval ${fpsfname}.CMmodesWFS ../conf/CMmodesWFS/CMmodesWFS.fits"
     addfpscmd "setval ${fpsfname}.svdlim 0.1"
 fi
 
