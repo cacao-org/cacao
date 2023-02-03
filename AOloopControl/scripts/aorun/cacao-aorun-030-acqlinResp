@@ -100,7 +100,7 @@ rm -f ./conf/RMmodesDM/RMmodesDM.fits
 ln -s ./conf/RMmodesDM/${DMmodeCname}.fits ./conf/RMmodesDM/RMmodesDM.fits
 
 rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
-ln -s ./conf/RMmodesDM/${DMmodeCname}.WFSresp.fits ./conf/RMmodesDM/RMmodesWFS.fits
+ln -s ./conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 
 if [ $WaitForCompletion == "1" ]; then
 echo "Waiting for completion ..."
