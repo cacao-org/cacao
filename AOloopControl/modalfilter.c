@@ -1089,6 +1089,7 @@ static errno_t compute_function()
             if((selfRM_pokecnt == 0) && (selfRM_pokemode == 0) &&
                     (blockcnt == 0) && (selfRMiter == 0))
             {
+                processinfo_WriteMessage(processinfo, "init selfRM");
                 printf("INITIALIZING selfRM\n");
                 for(uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
                 {
@@ -1102,19 +1103,15 @@ static errno_t compute_function()
                 {
                     // start poke sign
                     selfRMpokesign = 1.0 - 2.0 * ((selfRMiter / 4) % 2);
+                }
 
-                    printf(
-                        "iteration %u / %u  pokepolarity %d  poke sequence  [ "
-                        "%+3.1f ",
-                        selfRMiter,
-                        *selfRMnbiter,
-                        selfRMpokeparity,
-                        selfRMpokesign);
-                }
-                else
-                {
-                    printf(" %+3.1f ]\n", selfRMpokesign);
-                }
+                processinfo_WriteMessage_fmt(processinfo,
+                                             "sRM %u/%u  ppol %d  pseq "
+                                             "%+3.1f ",
+                                             selfRMiter,
+                                             *selfRMnbiter,
+                                             selfRMpokeparity,
+                                             selfRMpokesign);
             }
 
 
