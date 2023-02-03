@@ -33,11 +33,14 @@ echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
 exit
 fi
 
+DMrunning=0
 pOK=$(ps -alx| grep DMch2disp-${CACAO_DMINDEX} | grep RUNSTART | wc -l)
 if [ $pOK -gt 0 ]; then
 echo "Process DMch2disp-${CACAO_DMINDEX} is already running"
+DMrunning=1
 else
 echo "Process DMch2disp-${CACAO_DMINDEX} not currently running"
+DMrunning=0
 fi
 
 
@@ -46,7 +49,7 @@ ACTIONOK=1
 # ======================================================================
 # Starting DM combination process
 # ======================================================================
-
+if [ ${DMrunning} == "0" ]; then
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode OFF"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.0"
 #taskset_DMch2disp="3"
@@ -62,7 +65,9 @@ do
      sleep 0.1
 done
 milk-shmim-zero aol${CACAO_LOOPNUMBER}_dmC
-
+else
+echo "DM already running -> nothing to do"
+fi
 fi
 
 
