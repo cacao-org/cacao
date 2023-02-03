@@ -21,6 +21,12 @@ source cacao-check-cacaovars
 MSarg+=( "DMmodes:string:DM modes cube FITS file" )
 
 
+NBloop=10
+MSopt+=( "n:nbloop:set_NBloop:nbloop[long]:number of loops" )
+function set_NBloop() {
+	NBloop="$1"
+}
+
 WaitForCompletion=0
 MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
 function set_WaitForCompletion() {
@@ -70,6 +76,8 @@ fi
 
 mkdir -p ./conf/RMmodesDM/
 mkdir -p ./conf/RMmodesWFS/
+
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.procinfo.loopcntMax ${NBloop}"
 
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.WFSfrequ ${CACAO_WFSFRATE}"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.hardwlatfr ${CACAO_LATENCYFR}"
