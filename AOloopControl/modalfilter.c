@@ -1106,7 +1106,7 @@ static errno_t compute_function()
                 }
 
                 processinfo_WriteMessage_fmt(processinfo,
-                                             "sRM %u/%u  ppol %d  pseq "
+                                             "sRM %u/%u  ppol %d  sign "
                                              "%+3.1f ",
                                              selfRMiter,
                                              *selfRMnbiter,
@@ -1196,6 +1196,8 @@ static errno_t compute_function()
 
                 // testing
                 save_fits(imgselfRM.name, "selfRM.fits");
+
+                 processinfo_WriteMessage(processinfo, "selfRM done");
             }
         }
 
