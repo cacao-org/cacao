@@ -34,7 +34,7 @@ exit
 fi
 
 pOK=$(ps -alx| grep DMch2disp-${CACAO_DMINDEX} | grep RUNSTART | wc -l)
-if [ $pOK -gt 0 ]; do
+if [ $pOK -gt 0 ]; then
 echo "Process DMch2disp-${CACAO_DMINDEX} is already running"
 else
 echo "Process DMch2disp-${CACAO_DMINDEX} not currently running"
