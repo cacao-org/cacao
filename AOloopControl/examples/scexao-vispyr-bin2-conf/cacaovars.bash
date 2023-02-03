@@ -3,7 +3,7 @@
 
 
 export CACAO_LOOPNAME="vispyr2"
-export CACAO_LOOPNUMBER="23"
+export CACAO_LOOPNUMBER="7"
 
 # ====== DEFORMABLE MIRROR ==========
 
@@ -57,23 +57,23 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 # Manages mutipe DM channels
 #
 export CACAO_FPSPROC_DMCH2DISP="ON"
-export CACAO_FPSPROC_DMCH2DISPSIM="ON"
+#export CACAO_FPSPROC_DMCH2DISPSIM="ON"
 
 
 
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
 #
-export CACAO_FPSPROC_DMSIMDELAY="ON"
+#export CACAO_FPSPROC_DMSIMDELAY="ON"
 
 # MVM lop on GPU: used to simulate hardware
 #
-export CACAO_FPSPROC_SIMMVMGPU="ON"
+#export CACAO_FPSPROC_SIMMVMGPU="ON"
 
 # Camera simulator
 #
-export CACAO_FPSPROC_WFSCAMSIM="ON"
-export CACAO_FPS_wfscamsim_fluxtotal="1000000"
+#export CACAO_FPSPROC_WFSCAMSIM="ON"
+#export CACAO_FPS_wfscamsim_fluxtotal="1000000"
 
 
 

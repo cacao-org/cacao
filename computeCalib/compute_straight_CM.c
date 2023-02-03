@@ -286,7 +286,7 @@ static errno_t compute_function()
 
 
         ID = image_ID("VTmat");
-        IMGID imgVT = makesetIMGID("VTmat", ID);
+        //IMGID imgVT = makesetIMGID("VTmat", ID);
 
         printf("Number of modes    : %d\n", imgRMDM.md->size[2]);
         printf("Number of DM act   : %d x %d\n", imgRMDM.md->size[0], imgRMDM.md->size[1]);
@@ -345,14 +345,15 @@ static errno_t compute_function()
             {
                 // compute some of the eigenvalues and eigenvectors
                 //
-                int evfound;
+                lapack_int evfound;
 
 
-                int * isuppz = (int*) malloc(sizeof(int)*2*nbmode);
+                lapack_int * isuppz = (lapack_int*) malloc(sizeof(lapack_int)*2*nbmode);
                 lapack_logical tryrac = 0;
-                LAPACKE_sstemr(LAPACK_COL_MAJOR, 'V', 'I', nbmode, d, e, 0.0, 0.0, nbmode-10, nbmode, &evfound, imgeval.im->array.F, imgevec.im->array.F, nbmode, nbmode, isuppz, &tryrac);
+                LAPACKE_sstemr(LAPACK_COL_MAJOR, 'V', 'I', nbmode, d, e, 0.0, 0.0, nbmode-10,
+                               nbmode, &evfound, imgeval.im->array.F, imgevec.im->array.F, nbmode, nbmode, isuppz, &tryrac);
 
-                printf("Found %d eigenvalues\n", evfound);
+                printf("Found %d eigenvalues\n", (int) evfound);
             }
             else
             {
