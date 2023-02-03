@@ -177,3 +177,14 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 #export CACAO_PF_NBBLOCK=6
 #export CACAO_FPSPROC_MKPF="ON"
 #export CACAO_FPSPROC_APPLYPF="ON"
+
+
+# User-provided additions to cacaovars
+
+# Run local fpslistadd files
+#
+for cvarf in ../cacaovars-${CACAO_LOOPNAME}*; do
+echo "Processing cacaovars file ${cvarf}"
+. ./${cvarf}
+done
+

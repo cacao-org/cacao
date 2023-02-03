@@ -33,7 +33,12 @@ echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
 exit
 fi
 
-
+pOK=$(ps -alx| grep DMch2disp-${CACAO_DMINDEX} | grep RUNSTART | wc -l)
+if [ $pOK -gt 0 ]; do
+echo "Process DMch2disp-${CACAO_DMINDEX} is already running"
+else
+echo "Process DMch2disp-${CACAO_DMINDEX} not currently running"
+fi
 
 
 if [ ${ACTION} == "start" ]; then
