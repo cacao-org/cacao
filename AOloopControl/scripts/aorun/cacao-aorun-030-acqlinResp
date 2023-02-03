@@ -94,10 +94,10 @@ sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.autoTiming ON"
 sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
 
-rm ../conf/RMmodesDM/RMmodesDM.fits
+rm -f ../conf/RMmodesDM/RMmodesDM.fits
 ln -s ../conf/RMmodesDM/${DMmodeCname}.fits ../conf/RMmodesDM/RMmodesDM.fits
 
-rm ../conf/RMmodesWFS/RMmodesWFS.fits
+rm -f ../conf/RMmodesWFS/RMmodesWFS.fits
 ln -s ../conf/RMmodesDM/${DMmodeCname}.WFSresp.fits ../conf/RMmodesDM/RMmodesWFS.fits
 
 
