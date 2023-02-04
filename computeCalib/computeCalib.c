@@ -53,6 +53,7 @@
 #include "info/info.h"
 
 #include "compute_control_modes.h"
+#include "compute_masksWFSDM.h"
 #include "compute_straight_CM.h"
 #include "computeHadamard.h"
 
@@ -673,6 +674,8 @@ static errno_t init_module_CLI()
     CLIADDCMD_cacao_computeCalib__compute_control_modes();
 
     CLIADDCMD_AOloopControl_computeCalib__compsCM();
+
+    CLIADDCMD_AOloopControl_computeCalib__compmasksWFSDM();
 
     CLIADDCMD_AOloopControl_computeCalib__mkHadamard();
 

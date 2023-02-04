@@ -3,15 +3,16 @@ project(lib_${LIBNAME}_project)
 
 # list source files (.c) other than modulename.c
 set(SOURCEFILES
-AOloopControl_computeCalib_CM.c
-AOloopControl_computeCalib_dm.c
-computeHadamard.c
-AOloopControl_computeCalib_loDMmodes.c
-mkmodes.c
-AOloopControl_computeCalib_processRM.c
-compute_straight_CM.c
-compute_control_modes.c
-modes_spatial_extrapolate.c
+	AOloopControl_computeCalib_CM.c
+	AOloopControl_computeCalib_dm.c
+	computeHadamard.c
+	AOloopControl_computeCalib_loDMmodes.c
+	mkmodes.c
+	AOloopControl_computeCalib_processRM.c
+	compute_straight_CM.c
+	compute_control_modes.c
+	compute_masksWFSDM.c
+	modes_spatial_extrapolate.c
 )
 
 
