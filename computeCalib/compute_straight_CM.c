@@ -437,7 +437,9 @@ static errno_t compute_function()
 
 
 
-
+        // Compute WFS modes
+        // Multiply RMmodesWFS by Vmat
+        //
 #ifdef HAVE_CUDA
         {
             printf("Running SGEMM 2 on GPU\n");
@@ -474,13 +476,10 @@ static errno_t compute_function()
             cudaMemcpy(imgCMWFSall.im->array.F, d_CMWFSall, imgCMWFSall.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
 
             cudaFree(d_RMWFS);
+             cudaFree(d_evec);
             cudaFree(d_CMWFSall);
         }
 #elif
-
-        // Compute WFS modes
-        // Multiply RMmodesWFS by Vmat
-        //
         printf("Running SGEMM 2 on CPU\n");
         fflush(stdout);
 
@@ -498,12 +497,59 @@ static errno_t compute_function()
         IMGID imgCMDMall = makeIMGID_3D("CMmodesDMall", imgRMDM.md->size[0], imgRMDM.md->size[1], imgRMDM.md->size[2]);
         createimagefromIMGID(&imgCMDMall);
 
+
+
+
         // Compute DM modes
         // Multiply RMmodesDM by Vmat
         //
+#ifdef HAVE_CUDA
+        {
+            printf("Running SGEMM 3 on GPU\n");
+            fflush(stdout);
+
+            const float alf = 1;
+            const float bet = 0;
+            const float *alpha = &alf;
+            const float *beta = &bet;
+
+            float *d_RMDM;
+            cudaMalloc((void **)&d_RMDM, imgRMDM.md->nelement * sizeof(float));
+            cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+
+            float *d_evec;
+            cudaMalloc((void **)&d_evec, imgevec.md->nelement * sizeof(float));
+            cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+
+            float *d_CMDMall;
+            cudaMalloc((void **)&d_CMDMall, imgCMDMall.md->nelement * sizeof(float));
+
+            // Create a handle for CUBLAS
+            cublasHandle_t handle;
+            cublasCreate(&handle);
+
+            // Do the actual multiplication
+            cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
+                        nbact, nbmode, nbmode, alpha, d_RMDM, nbact, d_evec, nbmode, beta, d_CMDMall, nbact);
+
+            // Destroy the handle
+            cublasDestroy(handle);
+
+            cudaMemcpy(imgCMDMall.im->array.F, d_CMDMall, imgCMDMall.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
+
+            cudaFree(d_RMDM);
+            cudaFree(d_evec);
+            cudaFree(d_CMDMall);
+        }
+#elif
+        printf("Running SGEMM 3 on CPU\n");
+        fflush(stdout);
 
         cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
                      nbact, nbmode, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgevec.im->array.F, nbmode, 0.0, imgCMDMall.im->array.F, nbact);
+#endif
+
+
 
         clock_gettime(CLOCK_REALTIME, &t7);
 
