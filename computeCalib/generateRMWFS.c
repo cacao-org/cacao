@@ -145,7 +145,8 @@ static errno_t compute_function()
     {
         for(uint32_t mode=0; mode < NBmodes; mode++)
         {
-           printf("Mode %u\n", mode);
+           printf(".");
+           fflush(stdout);
 
             for(uint64_t iidm=0; iidm < dmsize; iidm++)
             {
@@ -155,6 +156,7 @@ static errno_t compute_function()
                 }
             }
         }
+        printf("\n");
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
