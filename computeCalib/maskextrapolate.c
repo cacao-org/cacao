@@ -150,6 +150,64 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
+
+        for(uint32_t ii = 0; ii < xsize; ii++)
+        {
+            for(uint32_t jj = 0; jj < xsize; jj++)
+            {
+
+                if(imgmask.im->array.F[jj*xsize+ii] > 0.5)
+                {
+                    // in mask -> copy pixel value to output
+                    for(uint32_t mi=0; mi<NBmodes; mi++)
+                    {
+                        imgoutmoudeC.im->array.F[xysize*mi + ii] = imginmodeC.im->array.F[xysize*mi + ii];
+                    }
+                }
+                else if (imgextmask.im->array.F[jj*xsize+ii] > 0.5)
+                {
+                    // pixel is in extmask, but not in mask -> run extrapolation
+
+                    // find nearest active pixel
+                    float nearest_dist2 = xysize;
+                    uint32_t nearest_ii = 0;
+                    uint32_t nearest_jj = 0;
+                    for(uint32_t ii1=0; ii1<xsize; ii1++)
+                    {
+                        for(uint32_t jj1=0; jj1<ysize; jj1++)
+                        {
+                            if(imgmask.im->array.F[jj*xsize+ii] > 0.5)
+                            {
+                                float dx = ii-ii1;
+                                float dy = jj-jj1;
+                                float dr2 = dx*dx + dy*dy;
+
+                                if( dr2 < nearest_dist2 )
+                                {
+                                    nearest_dist2 = dr2;
+                                    nearest_ii = ii1;
+                                    nearest_jj = jj1;
+                                }
+                            }
+
+                        }
+                    }
+
+                    // nearest pixel
+                    //
+                    for(uint32_t mi=0; mi<NBmodes; mi++)
+                    {
+                        imgoutmoudeC.im->array.F[xysize*mi + jj*xsize + ii] = imginmodeC.im->array.F[xysize*mi + nearest_jj*xsize + nearest_ii];
+                    }
+
+
+                }
+
+            }
+        }
+
+
+
         for(uint32_t mi=0; mi<NBmodes; mi++)
         {
             for(uint64_t ii=0; ii<xysize; ii++)
