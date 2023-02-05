@@ -15,12 +15,21 @@ source cacao-check-cacaovars
 # SCRIPT OPTIONS
 # syntax: "short:long:functioncall:args[types]:description"
 
-MSopt+=( "c:CPAmax:setCPAmax:cpamax[float]:Set maximum cycles per aperture (CPA)" )
-CPAmax="8.0"
+MSopt+=( "c:CPAmax:setCPAmax:cpamax[float]:Set maximum cycles per aperture (CPA) [8]" )
+CPAmax="8"
 function setCPAmax()
 {
 	CPAmax=$1
 }
+
+MSopt+=( "z:NBzer:setNBzer:NBzer[int]:Set number of Zernike polynomials [5]" )
+NBzer=5
+function setNBzer()
+{
+	NBzer=$1
+}
+
+
 
 source milk-argparse
 
@@ -66,7 +75,7 @@ EOF
 cacao << EOF
 loadfits "${DMMODEDIR}/DMmask.fits" DMmask
 cacaoct.aolmksimplezpM ${CACAO_DMxsize} ${CACAO_DMysize} Spoke
-saveFITS Spoke "${DMMODEDIR}/Smodes.fits"
+saveFITS Spoke "${DMMODEDIR}/SmodesC.fits"
 exitCLI
 EOF
 
@@ -91,7 +100,20 @@ deltaCPA=0.8
 
 cacao << EOF
 lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 0
-saveFITS Fmodes "${DMMODEDIR}/Fmodes.fits"
+saveFITS Fmodes "${DMMODEDIR}/FpokesC.${CPAmax}.fits"
 listim
 exitCLI
 EOF
+
+
+# Zernike modes
+
+milk-all << EOF
+zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
+saveFITS zerc "ZpokesC.${NBzer}.fits"
+listim
+exitCLI
+EOF
+
+
+

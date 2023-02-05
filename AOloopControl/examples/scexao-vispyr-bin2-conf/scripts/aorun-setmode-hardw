@@ -48,6 +48,8 @@ sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.7"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.maxvolt 150.0"
 sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
 
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.ampl 0.03"
+
 
 sendFPScmd "setval wfs2cmodeval-${CACAO_LOOPNUMBER}.GPUindex 1"
 sendFPScmd "confwupdate wfs2cmodeval-${CACAO_LOOPNUMBER}"

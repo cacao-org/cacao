@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+
+MSdescr="Decode Hadamard response matrix"
+
+MSextdescr="Decode H RM to zonal RM"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+FILE_Hipixindex="conf/RMmodesDM/Hpixindex.fits"
+FILE_Hmat="conf/RMmodesDM/Hmat.fits"
+FILE_HpokeC="conf/RMmodesDM/HpokeC.fits"
+FILE_HrespC="conf/RMmodesWFS/HpokeC.WFSresp.fits"
+
+RequiredFiles=( $FILE_Hipixindex $FILE_Hmat $FILE_HpokeC $FILE_HrespC )
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+
+
+
+
+source milk-argparse
+
+
+cacao << EOF
+loadfits ${FILE_Hipixindex} pixiind
+loadfits ${FILE_Hmat} Hmat
+loadfits ${FILE_HpokeC} HpokeC
+loadfits ${FILE_HrespC} HrespC
+cacaocc.aolHaddec HpokeC Hmat pixiind zpokeC
+cacaocc.aolHaddec HrespC Hmat pixiind zrespC
+saveFITS ZpokeC "conf/RMmodesDM/zpokeC-H.fits"
+saveFITS ZrespC "conf/RMmodesWFS/zrespM-H.fits"
+exitCLI
+EOF
+
+
+
+
