@@ -4,48 +4,84 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Compute RM masks"
 
 
 MSextdescr="AO loop script"
 source milk-script-std-config
 source cacao-check-cacaovars
 
-MSarg+=( "action:string:action (start/check)" )
+
+DMmaskRMp0="0.2"
+DMmaskRMc0="0.5"
+DMmaskRMp1="0.5"
+DMmaskRMc1="0.5"
+
+WFSmaskRMp0="0.2"
+WFSmaskRMc0="0.5"
+WFSmaskRMp1="0.5"
+WFSmaskRMc1="0.5"
+
+
+MSopt+=( "dmp0:percentile0:set_DMp0:percentile0[float]:DM mask point 0 percentile [$DMmaskRMp0]" )
+function set_DMp0() {
+	DMmaskRMp0="$1"
+}
+
+MSopt+=( "dmc0:coeff0:set_DMc0:coeff0[float]:DM mask point 0 coefficient [$DMmaskRMc0]" )
+function set_DMc0() {
+	DMmaskRMc0="$1"
+}
+
+MSopt+=( "dmp1:percentile1:set_DMp1:percentile1[float]:DM mask point 1 percentile [$DMmaskRMp1]" )
+function set_DMp1() {
+	DMmaskRMp1="$1"
+}
+
+MSopt+=( "dmc1:coeff1:set_DMc1:coeff1[float]:DM mask point 1 coefficient [$DMmaskRMc1]" )
+function set_DMc1() {
+	DMmaskRMc1="$1"
+}
+
+
+MSopt+=( "wfsp0:percentile0:set_WFSp0:percentile0[float]:WFS mask point 0 percentile [$WFSmaskRMp0]" )
+function set_WFSp0() {
+	WFSmaskRMp0="$1"
+}
+
+MSopt+=( "wfsc0:coeff0:set_WFSc0:coeff0[float]:WFS mask point 0 coefficient [$WFSmaskRMc0]" )
+function set_WFSc0() {
+	WFSmaskRMc0="$1"
+}
+
+MSopt+=( "wfsp1:percentile1:set_WFSp1:percentile1[float]:WFS mask point 1 percentile [$WFSmaskRMp1]" )
+function set_WFSp1() {
+	WFSmaskRMp1="$1"
+}
+
+MSopt+=( "wfsc1:coeff1:set_WFSc1:coeff1[float]:WFS mask point 1 coefficient [$WFSmaskRMc1]" )
+function set_WFSc1() {
+	WFSmaskRMc1="$1"
+}
+
+
+
+
+
 
 source milk-argparse
-ACTION="${inputMSargARRAY[0]}"
 
 
-ACTIONOK=0
+echo "dmp0 = ${DMmaskRMp0}"
+echo "dmc0 = ${DMmaskRMc0}"
+echo "dmp1 = ${DMmaskRMp1}"
+echo "dmc1 = ${DMmaskRMc1}"
 
+echo "wfsp0 = ${WFSmaskRMp0}"
+echo "wfsc0 = ${WFSmaskRMc0}"
+echo "wfsp1 = ${WFSmaskRMp1}"
+echo "wfsc1 = ${WFSmaskRMc1}"
 
-
-
-if [ ${ACTION} == "check" ]; then
-ACTIONOK=1
-fi
-
-errexit=0
-
-# Checking FPS
-FPScheckOK="OK"
-checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
-
-if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-errexit=1
-fi
-
-
-# Checking stream
-streamcheckOK="OK"
-checkstream aol${CACAO_LOOPNUMBER}_wfsim
-
-if [ ${streamcheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
-errexit=1
-fi
 
 
 if [ $errexit = 1 ]; then
@@ -54,47 +90,24 @@ fi
 
 
 
+cacao << EOF
+loadfits "conf/zrespM-H.fits" zrespM
 
+cacaocc.compmasksWFSDM .dmmask.perc0 ${DMmaskRMp0}
+cacaocc.compmasksWFSDM .dmmask.coeff0 ${DMmaskRMc0}
+cacaocc.compmasksWFSDM .dmmask.perc1 ${DMmaskRMp1}
+cacaocc.compmasksWFSDM .dmmask.coeff1 ${DMmaskRMc1}
 
+cacaocc.compmasksWFSDM .wfsmask.perc0 ${WFSmaskRMp0}
+cacaocc.compmasksWFSDM .wfsmask.coeff0 ${WFSmaskRMc0}
+cacaocc.compmasksWFSDM .wfsmask.perc1 ${WFSmaskRMp1}
+cacaocc.compmasksWFSDM .wfsmask.coeff1 ${WFSmaskRMc1}
 
-
-
-
-if [ ${ACTION} == "start" ]; then
-ACTIONOK=1
-
-if [ "$CACAO_WFSSTREAM_PROCESSED" = "ON" ]; then
-echo "Processed WFS stream -> no scaling"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize OFF"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub OFF"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
-else
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize ON"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub ON"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
-fi
-
-sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
-
-fi
-
-
-
-
-
-if [ ${ACTION} == "stop" ]; then
-ACTIONOK=1
-
-sendFPScmd "runstop acquWFS-${CACAO_LOOPNUMBER}"
-
-fi
-
-
-
-
-if [ ${ACTIONOK} == 0 ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
-fi
+cacaocc.compmasksWFSDM zrespM 50 50
+saveFITS dmmap "conf/dmmap.fits"
+saveFITS dmmask "conf/dmmask.fits"
+saveFITS wfsmap "conf/wfsmap.fits"
+saveFITS wfsmask "conf/wfsmask.fits"
+listim
+exitCLI
+EOF

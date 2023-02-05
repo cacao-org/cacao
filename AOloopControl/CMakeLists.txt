@@ -115,6 +115,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-026-takeref
 	scripts/aorun/cacao-aorun-030-acqlinResp
 	scripts/aorun/cacao-aorun-031-RMHdecode
+	scripts/aorun/cacao-aorun-032-RMmkmask
 	scripts/aorun/cacao-aorun-035-acqloRM
 	scripts/aorun/cacao-aorun-039-compstrCM
 	scripts/aorun/cacao-aorun-040-compfCM
