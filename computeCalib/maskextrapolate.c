@@ -222,7 +222,7 @@ static errno_t compute_function()
                     //
                     for(uint32_t mi=0; mi<NBmodes; mi++)
                     {
-                        imgoutmoudeC.im->array.F[xysize*mi + jj*xsize + ii] = -1.0; //imginmodeC.im->array.F[xysize*mi + nearest_jj*xsize + nearest_ii];
+                        imgoutmoudeC.im->array.F[xysize*mi + jj*xsize + ii] = imginmodeC.im->array.F[xysize*mi + nearest_jj*xsize + nearest_ii];
                     }
 
 
