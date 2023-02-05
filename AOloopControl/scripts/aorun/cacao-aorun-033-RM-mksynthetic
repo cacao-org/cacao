@@ -90,11 +90,5 @@ exitCLI
 EOF
 
 
-
-
-
-
-
-
-
-
+ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.fits
+ln -s $(pwd)/conf/RMmodesDM/synRMmodesWFS.fits ./conf/RMmodesDM/RMmodesWFS.fits
