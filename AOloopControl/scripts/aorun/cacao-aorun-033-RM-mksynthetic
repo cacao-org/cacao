@@ -67,6 +67,8 @@ deltaCPA=0.8
 milk-all << EOF
 zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
 lintools.mkFouriermodes .fpowerlaw 0.0
+lintools.mkFouriermodes .fpowerlaw_minf 2.0
+lintools.mkFouriermodes .fpowerlaw_maxf 20.0
 lintools.mkFouriermodes ?
 lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 1
 merge3d zerc Fmodes synRMmodesDM
