@@ -271,7 +271,7 @@ static errno_t compute_function()
 
         EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");
 
-
+        printf("SVD limit = %f\n", *svdlim);
 
 
         // create eigenvectors array
