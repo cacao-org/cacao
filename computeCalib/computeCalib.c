@@ -55,6 +55,7 @@
 #include "compute_control_modes.h"
 #include "compute_masksWFSDM.h"
 #include "compute_straight_CM.h"
+#include "generateRMWFS.h"
 #include "computeHadamard.h"
 
 #ifdef HAVE_CUDA
@@ -676,6 +677,8 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_computeCalib__compsCM();
 
     CLIADDCMD_AOloopControl_computeCalib__compmasksWFSDM();
+
+    CLIADDCMD_AOloopControl_computeCalib__generateRMWFS();
 
     CLIADDCMD_AOloopControl_computeCalib__mkHadamard();
 

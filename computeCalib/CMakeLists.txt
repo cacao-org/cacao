@@ -12,6 +12,7 @@ set(SOURCEFILES
 	compute_straight_CM.c
 	compute_control_modes.c
 	compute_masksWFSDM.c
+	generateRMWFS.c
 	modes_spatial_extrapolate.c
 )
 
