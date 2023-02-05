@@ -30,6 +30,15 @@ function setNBzer()
 }
 
 
+MSopt+=( "a:alpha:setalpha:alpha[float]:Set powe law index [0.5]" )
+alpha="0.5"
+function setalpha()
+{
+	alpha=$1
+}
+
+
+
 
 source milk-argparse
 
@@ -65,9 +74,10 @@ echo "using DMr0 = ${DMr0}"
 deltaCPA=0.8
 
 milk-all << EOF
-zern.mkzerc .TTfactor 10.0
+zern.mkzerc .TTfactor 8.0
 zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
-lintools.mkFouriermodes .fpowerlaw -0.5
+zercm=zerc*3
+lintools.mkFouriermodes .fpowerlaw -${al[ha}
 lintools.mkFouriermodes .fpowerlaw_minf 1.0
 lintools.mkFouriermodes .fpowerlaw_maxf 100.0
 lintools.mkFouriermodes ?
@@ -77,7 +87,6 @@ saveFITS synRMmodesDM "conf/RMmodesDM/synRMmodesDM.fits"
 listim
 exitCLI
 EOF
-
 
 
 cacao << EOF
