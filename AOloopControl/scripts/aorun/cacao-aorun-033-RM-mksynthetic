@@ -71,9 +71,9 @@ echo "using DMr0 = ${DMr0}"
 # Zernike modes
 # Fourier modes
 
-deltaCPA=0.8
+deltaCPA="0.8"
 
-radmaskfact=1.1
+radmaskfact="1.1"
 
 
 # Create synthetic DM modes
@@ -91,7 +91,7 @@ lintools.mkFouriermodes ?
 lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
 merge3d zerc Fmodes synRMmodesDM
 loadfits "conf/dmmask.fits" dmmask
-synRMmodesDMm=synRMmodesDM*dmmask
+#synRMmodesDMm=synRMmodesDM*dmmask
 saveFITS synRMmodesDM "conf/RMmodesDM/synRMmodesDM.fits"
 listim
 exitCLI
