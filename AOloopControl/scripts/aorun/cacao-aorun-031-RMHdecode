@@ -29,10 +29,10 @@ source milk-argparse
 
 
 cacao << EOF
-loadfits ${FILE_Hipixindex} pixiind
-loadfits ${FILE_Hmat} Hmat
-loadfits ${FILE_HpokeC} HpokeC
-loadfits ${FILE_HrespC} HrespC
+loadfits "${FILE_Hipixindex}" pixiind
+loadfits "${FILE_Hmat}" Hmat
+loadfits "${FILE_HpokeC}" HpokeC
+loadfits "${FILE_HrespC}" HrespC
 cacaocc.aolHaddec HpokeC Hmat pixiind zpokeC
 cacaocc.aolHaddec HrespC Hmat pixiind zrespC
 saveFITS ZpokeC "conf/RMmodesDM/zpokeC-H.fits"
