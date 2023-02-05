@@ -58,7 +58,7 @@ message(STATUS "Found CUDA ${CUDA_VERSION_STRING} at ${CUDA_TOOLKIT_ROOT_DIR}")
 message("---- CUDA_INCLUDE_DIRS = ${CUDA_INCLUDE_DIRS}")
 message("---- CUDA_LIBRARIES    = ${CUDA_LIBRARIES}" )
 target_compile_options(${LIBNAME} PUBLIC -DHAVE_CUDA)
-target_link_libraries(${LIBNAME} PUBLIC ${CUDA_LIBRARIES})
+target_link_libraries(${LIBNAME} PUBLIC ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
 
 if(USE_MAGMA)
 find_package(PkgConfig REQUIRED)
