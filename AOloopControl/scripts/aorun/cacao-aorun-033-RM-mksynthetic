@@ -89,6 +89,8 @@ listim
 exitCLI
 EOF
 
-
+rm -f ./conf/RMmodesDM/RMmodesDM.fits
 ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.fits
+
+rm -f ./conf/RMmodesDM/RMmodesWFS.fits
 ln -s $(pwd)/conf/RMmodesDM/synRMmodesWFS.fits ./conf/RMmodesDM/RMmodesWFS.fits
