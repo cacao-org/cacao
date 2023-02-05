@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+
+MSdescr="make synthetic RM"
+
+MSextdescr="Assemble a Fourier RM from zonal RM"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+
+MSopt+=( "c:CPAmax:setCPAmax:cpamax[float]:Set maximum cycles per aperture (CPA) [8]" )
+CPAmax="8"
+function setCPAmax()
+{
+	CPAmax=$1
+}
+
+MSopt+=( "z:NBzer:setNBzer:NBzer[int]:Set number of Zernike polynomials [5]" )
+NBzer=5
+function setNBzer()
+{
+	NBzer=$1
+}
+
+
+
+source milk-argparse
+
+
+
+echo "DM size  : $CACAO_DMxsize x $CACAO_DMysize"
+
+
+DMMODEDIR="conf/RMmodesDM"
+mkdir -p ${DMMODEDIR}
+
+
+
+x0default=$(echo "scale=3; $CACAO_DMxsize/2" | bc)
+y0default=$(echo "scale=3; $CACAO_DMysize/2" | bc)
+r0default=$(echo "scale=3; 0.450*$CACAO_DMxsize" | bc)
+
+
+
+DMx0=${CACAO_DM_beam_xcent:-$x0default}
+DMy0=${CACAO_DM_beam_ycent:-$y0default}
+DMr0=${CACAO_DM_beam_rad:-$r0default}
+
+echo "using DMx0 = ${DMx0}"
+echo "using DMy0 = ${DMy0}"
+echo "using DMr0 = ${DMr0}"
+
+
+
+# Zernike modes
+# Fourier modes
+
+deltaCPA=0.8
+
+milk-all << EOF
+zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
+lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 0
+merge3d zerc Fmodes synRMmodesDM
+saveFITS synRMmodesDM "conf/RMmodesWFS/synRMmodesDM.fits"
+listim
+exitCLI
+EOF
+
+
+
+
+
+
+
+
