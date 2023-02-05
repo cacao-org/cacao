@@ -3,6 +3,8 @@
  *
  */
 
+#include <math.h>
+
 
 #include "CommandLineInterface/CLIcore.h"
 
