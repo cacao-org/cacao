@@ -271,6 +271,7 @@ static errno_t compute_function()
 
         EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");
 
+        printf("=============================\n");
         printf("GPU device = %d\n", (int) (*GPUdevice));
         printf("SVD limit  = %f\n", *svdlim);
 
