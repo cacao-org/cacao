@@ -35,8 +35,8 @@ loadfits "${FILE_HpokeC}" HpokeC
 loadfits "${FILE_HrespC}" HrespC
 cacaocc.aolHaddec HpokeC Hmat pixiind zpokeC
 cacaocc.aolHaddec HrespC Hmat pixiind zrespC
-saveFITS ZpokeC "conf/RMmodesDM/zpokeC-H.fits"
-saveFITS ZrespC "conf/RMmodesWFS/zrespM-H.fits"
+saveFITS zpokeC "conf/RMmodesDM/zpokeC-H.fits"
+saveFITS zrespC "conf/RMmodesWFS/zrespM-H.fits"
 exitCLI
 EOF
 
