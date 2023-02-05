@@ -296,7 +296,7 @@ static errno_t compute_function()
                 if( (*GPUdevice >= 0) && (*GPUdevice <= 99))
                 {
 #ifdef HAVE_CUDA
-                    printf("Running SGEMM 1 on GPU\n");
+                    printf("Running SGEMM 1 on GPU device %d\n", *GPUdevice);
                     fflush(stdout);
 
                     const float alf = 1;
@@ -414,7 +414,7 @@ static errno_t compute_function()
             if( (*GPUdevice >= 0) && (*GPUdevice <= 99))
             {
 #ifdef HAVE_CUDA
-                printf("Running SGEMM 2 on GPU\n");
+                printf("Running SGEMM 2 on GPU device %d\n", *GPUdevice);
                 fflush(stdout);
 
                 const float alf = 1;
@@ -487,7 +487,7 @@ static errno_t compute_function()
             if( (*GPUdevice >= 0) && (*GPUdevice <= 99))
             {
 #ifdef HAVE_CUDA
-                printf("Running SGEMM 3 on GPU\n");
+                printf("Running SGEMM 3 on GPU device %d\n", *GPUdevice);
                 fflush(stdout);
 
                 const float alf = 1;
