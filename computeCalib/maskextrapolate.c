@@ -162,7 +162,7 @@ static errno_t compute_function()
                     // in mask -> copy pixel value to output
                     for(uint32_t mi=0; mi<NBmodes; mi++)
                     {
-                        imgoutmoudeC.im->array.F[xysize*mi + ii] = imginmodeC.im->array.F[xysize*mi + ii];
+                        imgoutmoudeC.im->array.F[xysize*mi + jj*xsize + ii] = imginmodeC.im->array.F[xysize*mi + jj*xsize + ii];
                     }
                 }
                 else if (imgextmask.im->array.F[jj*xsize+ii] > 0.5)
@@ -218,13 +218,11 @@ static errno_t compute_function()
                         jjmax = ysize;
                     }
 
-
-
                     // nearest pixel
                     //
                     for(uint32_t mi=0; mi<NBmodes; mi++)
                     {
-                        imgoutmoudeC.im->array.F[xysize*mi + jj*xsize + ii] = imginmodeC.im->array.F[xysize*mi + nearest_jj*xsize + nearest_ii];
+                        imgoutmoudeC.im->array.F[xysize*mi + jj*xsize + ii] = -1.0; //imginmodeC.im->array.F[xysize*mi + nearest_jj*xsize + nearest_ii];
                     }
 
 
