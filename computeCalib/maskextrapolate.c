@@ -153,6 +153,10 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
 
+        // allocate nearest pixels array
+        double *npix_dist2 = (double*) malloc(sizeof(double) * xysize);
+        long *npix_index = (long*) malloc(sizeof(long)*xysize);
+
         for(uint32_t ii = 0; ii < xsize; ii++)
         {
             for(uint32_t jj = 0; jj < xsize; jj++)
@@ -171,8 +175,6 @@ static errno_t compute_function()
 
                     // find nearest active pixel
                     float nearest_dist2 = xysize;
-                    uint32_t nearest_ii = 0;
-                    uint32_t nearest_jj = 0;
 
                     for(uint32_t ii1=0; ii1<xsize; ii1++)
                     {
@@ -187,8 +189,6 @@ static errno_t compute_function()
                                 if( dr2 < nearest_dist2 )
                                 {
                                     nearest_dist2 = dr2;
-                                    nearest_ii = ii1;
-                                    nearest_jj = jj1;
                                 }
                             }
                         }
@@ -219,19 +219,45 @@ static errno_t compute_function()
                         jjmax = ysize;
                     }
 
+                    // find nearest pixels
+                    //
+                    long npixcnt = 0;
+                    for(uint32_t ii1=iimin; ii1<iimax; ii1++)
+                    {
+                        for(uint32_t jj1=jjmin; jj1<jjmax; jj1++)
+                        {
+                            float dx = 1.0*ii - ii1;
+                            float dy = 1.0*jj - jj1;
+                            double dr2 = dx*dx + dy*dy;
+                            if(dr2 < nearest_dist2+0.2)
+                            {
+                                npix_dist2[npixcnt] = dr2;
+                                npix_index[npixcnt] = jj1*xsize + ii1;
+                                npixcnt ++;
+                            }
+                        }
+                    }
+
 
                     // nearest pixel
                     //
                     for(uint32_t mi=0; mi<NBmodes; mi++)
                     {
-                        imgoutmoudeC.im->array.F[xysize*mi + jj*xsize + ii] = imginmodeC.im->array.F[xysize*mi + nearest_jj*xsize + nearest_ii];
+                        for(long npixi=0; npixi < npixcnt; npixi++)
+                        {
+                            imgoutmoudeC.im->array.F[xysize*mi + jj*xsize + ii] +=
+                                imginmodeC.im->array.F[xysize*mi + npix_index[npixi]];
+                        }
+                        imgoutmoudeC.im->array.F[xysize*mi + jj*xsize + ii] /= npixcnt;
                     }
-
 
                 }
 
             }
         }
+
+        free(npix_dist2);
+        free(npix_index);
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
