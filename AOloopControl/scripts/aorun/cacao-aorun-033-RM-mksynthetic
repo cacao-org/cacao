@@ -68,10 +68,23 @@ milk-all << EOF
 zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
 lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 0
 merge3d zerc Fmodes synRMmodesDM
-saveFITS synRMmodesDM "conf/RMmodesWFS/synRMmodesDM.fits"
+saveFITS synRMmodesDM "conf/RMmodesDM/synRMmodesDM.fits"
 listim
 exitCLI
 EOF
+
+
+
+cacao << EOF
+loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
+loadfits "conf/RMmodesDM/synRMmodesDM.fits" dmC
+cacaocc.generateRMWFS zrespM dmC wfsC
+saveFITS wfsC "conf/RMmodesWFS/synRMmodesWFS.fits"
+listim
+exitCLI
+EOF
+
+
 
 
 
