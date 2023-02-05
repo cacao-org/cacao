@@ -65,12 +65,13 @@ echo "using DMr0 = ${DMr0}"
 deltaCPA=0.8
 
 milk-all << EOF
+zern.mkzerc .TTfactor 10.0
 zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
 lintools.mkFouriermodes .fpowerlaw -1.0
-lintools.mkFouriermodes .fpowerlaw_minf 2.0
-lintools.mkFouriermodes .fpowerlaw_maxf 20.0
+lintools.mkFouriermodes .fpowerlaw_minf 1.0
+lintools.mkFouriermodes .fpowerlaw_maxf 100.0
 lintools.mkFouriermodes ?
-lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 1
+lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 0
 merge3d zerc Fmodes synRMmodesDM
 saveFITS synRMmodesDM "conf/RMmodesDM/synRMmodesDM.fits"
 listim
