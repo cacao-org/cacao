@@ -60,7 +60,7 @@ static CLICMDARGDEF farg[] =
         &fpi_extmaskim
     },
     {
-        CLIARG_IMG,
+        CLIARG_STR,
         ".outmodeC",
         "output modes",
         "outmodeC",
