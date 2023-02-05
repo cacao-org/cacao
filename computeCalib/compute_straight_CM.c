@@ -136,7 +136,7 @@ static CLICMDARGDEF farg[] =
     {
         // using GPU (99 : no GPU, otherwise GPU device)
         CLIARG_INT32,
-        ".GPUdevive",
+        ".GPUdevice",
         "GPU device, 99 for CPU",
         "-1",
         CLIARG_HIDDEN_DEFAULT,
@@ -312,7 +312,7 @@ static errno_t compute_function()
         createimagefromIMGID(&imgeval);
 
 
-        clock_gettime(CLOCK_REALTIME, &t2);
+        clock_gettime(CLOCK_REALTIME, &t0);
 
 
         {
@@ -323,7 +323,7 @@ static errno_t compute_function()
                         nbmode, nbmode, nbwfspix, 1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix, 0.0, imgATA.im->array.F, nbmode);
 
 
-            clock_gettime(CLOCK_REALTIME, &t3);
+            clock_gettime(CLOCK_REALTIME, &t1);
             //save_fits("ATA", "./mkmodestmp/ATA.fits");
 
             float *d = (float*) malloc(sizeof(float)*nbmode);
@@ -332,13 +332,13 @@ static errno_t compute_function()
 
             LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, d, e, t);
 
-            clock_gettime(CLOCK_REALTIME, &t4);
+            clock_gettime(CLOCK_REALTIME, &t2);
 
             // Assemble Q matrix
             LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, t );
 
 
-            clock_gettime(CLOCK_REALTIME, &t5);
+            clock_gettime(CLOCK_REALTIME, &t3);
 
 
             if(0)
@@ -363,7 +363,7 @@ static errno_t compute_function()
                 LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
                 memcpy(imgeval.im->array.F, d, sizeof(float)*nbmode);
             }
-            clock_gettime(CLOCK_REALTIME, &t6);
+            clock_gettime(CLOCK_REALTIME, &t4);
 
             free(d);
             free(e);
@@ -380,7 +380,7 @@ static errno_t compute_function()
         IMGID imgCMWFSall = makeIMGID_3D("CMmodesWFSall", imgRMWFS.md->size[0], imgRMWFS.md->size[1], imgRMDM.md->size[2]);
         createimagefromIMGID(&imgCMWFSall);
 
-        clock_gettime(CLOCK_REALTIME, &t7);
+        clock_gettime(CLOCK_REALTIME, &t5);
 
         // Compute WFS modes
         // Multiply RMmodesWFS by Vmat
@@ -389,7 +389,7 @@ static errno_t compute_function()
                      nbwfspix, nbmode, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgevec.im->array.F, nbmode, 0.0, imgCMWFSall.im->array.F, nbwfspix);
 
 
-        clock_gettime(CLOCK_REALTIME, &t8);
+        clock_gettime(CLOCK_REALTIME, &t6);
 
         // create CM DM
         IMGID imgCMDMall = makeIMGID_3D("CMmodesDMall", imgRMDM.md->size[0], imgRMDM.md->size[1], imgRMDM.md->size[2]);
@@ -402,7 +402,7 @@ static errno_t compute_function()
         cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
                      nbact, nbmode, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgevec.im->array.F, nbmode, 0.0, imgCMDMall.im->array.F, nbact);
 
-        clock_gettime(CLOCK_REALTIME, &t9);
+        clock_gettime(CLOCK_REALTIME, &t7);
 
 
         // norm2 of WFS and DM modes
@@ -430,6 +430,8 @@ static errno_t compute_function()
             fclose(fp);
         }
 
+        clock_gettime(CLOCK_REALTIME, &t8);
+
 
         // select modes
         float evalmax = imgeval.im->array.F[nbmode-1];
@@ -454,6 +456,9 @@ static errno_t compute_function()
 
         IMGID imgCMDM = makeIMGID_3D("CMmodesDM", imgRMDM.md->size[0], imgRMDM.md->size[1], ecnt);
         createimagefromIMGID(&imgCMDM);
+
+
+        clock_gettime(CLOCK_REALTIME, &t9);
 
 
         for(int CMmode=0; CMmode < ecnt; CMmode ++)
@@ -500,8 +505,6 @@ static errno_t compute_function()
     tdiff = timespec_diff(t0, t1);
     double t01d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
 
-
-
     tdiff = timespec_diff(t1, t2);
     double t12d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
 
@@ -529,8 +532,9 @@ static errno_t compute_function()
 
 
 
-    printf("GSL         %5.3f s\n", t01d);
-    printf("OpenBLAS    %5.3f s\n", t12d+t23d+t34d+t45d+t56d+t67d+t78d+t89d);
+//    printf("GSL         %5.3f s\n", t01d);
+    printf("total       %5.3f s\n", t01d+t12d+t23d+t34d+t45d+t56d+t67d+t78d+t89d);
+    printf("   0-1      %5.3f s\n", t01d);
     printf("   1-2      %5.3f s\n", t12d);
     printf("   2-3      %5.3f s\n", t23d);
     printf("   3-4      %5.3f s\n", t34d);
