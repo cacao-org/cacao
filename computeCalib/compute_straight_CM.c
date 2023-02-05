@@ -332,6 +332,9 @@ static errno_t compute_function()
 
 #ifdef HAVE_CUDA
             {
+                printf("Running SGEMM 1 on GPU\n");
+                fflush(stdout);
+
                 const float alf = 1;
                 const float bet = 0;
                 const float *alpha = &alf;
@@ -362,6 +365,9 @@ static errno_t compute_function()
                 cudaFree(d_ATA);
             }
 #elif
+            printf("Running SGEMM 1 on CPU\n");
+            fflush(stdout);
+
             cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans,
                         nbmode, nbmode, nbwfspix, 1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix, 0.0, imgATA.im->array.F, nbmode);
 #endif
