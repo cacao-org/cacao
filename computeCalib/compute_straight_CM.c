@@ -35,6 +35,10 @@
 
 #include "linopt_imtools/compute_SVDpseudoInverse.h"
 
+#ifdef HAVE_CUDA
+#include <cublas_v2.h>
+#endif
+
 /*
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
@@ -319,8 +323,45 @@ static errno_t compute_function()
             // create ATA
             IMGID imgATA = makeIMGID_2D("ATA", nbmode, nbmode);
             createimagefromIMGID(&imgATA);
+
+
+#ifdef HAVE_CUDA
+            {
+                const float alf = 1;
+                const float bet = 0;
+                const float *alpha = &alf;
+                const float *beta = &bet;
+
+                float *d_RMWFS;
+                cudaMalloc((void **)&d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
+                cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+
+                float *d_ATA;
+                cudaMalloc((void **)&d_ATA, imgATA.md->nelement * sizeof(float));
+                //cudaMemcpy(d_RMWFS,imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+
+                // Create a handle for CUBLAS
+                cublasHandle_t handle;
+                cublasCreate(&handle);
+
+                // Do the actual multiplication
+                cublasSgemm(handle, CUBLAS_OP_T, CUBLAS_OP_N,
+                            nbmode, nbmode, nbwfspix, alpha, d_RMWFS, nbwfspix, d_RMWFS, nbwfspix, beta, d_ATA, nbmode);
+
+                // Destroy the handle
+                cublasDestroy(handle);
+
+                cudaMemcpy(imgATA.im->array.F, d_ATA, imgATA.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
+
+                cudaFree(d_RMWFS);
+                cudaFree(d_ATA);
+            }
+#elif
             cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans,
                         nbmode, nbmode, nbwfspix, 1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix, 0.0, imgATA.im->array.F, nbmode);
+#endif
+
+
 
 
             clock_gettime(CLOCK_REALTIME, &t1);
