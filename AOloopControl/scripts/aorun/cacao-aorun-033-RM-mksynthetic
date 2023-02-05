@@ -97,4 +97,4 @@ echo "ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.f
 
 rm -f ./conf/RMmodesDM/RMmodesWFS.fits
 ln -s $(pwd)/conf/RMmodesDM/synRMmodesWFS.fits ./conf/RMmodesDM/RMmodesWFS.fits
-echo "ln -s $(pwd)/conf/RMmodesDM/synRMmodesWFS.fits ./conf/RMmodesDM/RMmodesWFS.fits"
+echo "ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesDM/RMmodesWFS.fits"
