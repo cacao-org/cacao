@@ -173,14 +173,15 @@ static errno_t compute_function()
                     float nearest_dist2 = xysize;
                     uint32_t nearest_ii = 0;
                     uint32_t nearest_jj = 0;
+
                     for(uint32_t ii1=0; ii1<xsize; ii1++)
                     {
                         for(uint32_t jj1=0; jj1<ysize; jj1++)
                         {
                             if(imgmask.im->array.F[jj1*xsize+ii1] > 0.5)
                             {
-                                float dx = ii-ii1;
-                                float dy = jj-jj1;
+                                float dx = 1.0*ii - ii1;
+                                float dy = 1.0*jj - jj1;
                                 float dr2 = dx*dx + dy*dy;
 
                                 if( dr2 < nearest_dist2 )
@@ -217,6 +218,7 @@ static errno_t compute_function()
                     {
                         jjmax = ysize;
                     }
+
 
                     // nearest pixel
                     //
