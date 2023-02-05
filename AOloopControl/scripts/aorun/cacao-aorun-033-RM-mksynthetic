@@ -67,7 +67,7 @@ deltaCPA=0.8
 milk-all << EOF
 zern.mkzerc .TTfactor 10.0
 zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
-lintools.mkFouriermodes .fpowerlaw -1.0
+lintools.mkFouriermodes .fpowerlaw -0.5
 lintools.mkFouriermodes .fpowerlaw_minf 1.0
 lintools.mkFouriermodes .fpowerlaw_maxf 100.0
 lintools.mkFouriermodes ?
@@ -97,4 +97,5 @@ echo "ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.f
 
 rm -f ./conf/RMmodesDM/RMmodesWFS.fits
 ln -s $(pwd)/conf/RMmodesDM/synRMmodesWFS.fits ./conf/RMmodesDM/RMmodesWFS.fits
-echo "ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesDM/RMmodesWFS.fits"
+echo "ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
+
