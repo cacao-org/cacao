@@ -80,6 +80,7 @@ radmaskfact="1.1"
 #
 
 milk-all << EOF
+mload cacaocomputeCalib
 radext=${DMr0}*${radmaskfact}
 imgen.mkdisk dmmaskext ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} radext
 zern.mkzerc .TTfactor 8.0
