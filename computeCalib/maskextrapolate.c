@@ -155,7 +155,6 @@ static errno_t compute_function()
         {
             for(uint32_t jj = 0; jj < xsize; jj++)
             {
-
                 if(imgmask.im->array.F[jj*xsize+ii] > 0.5)
                 {
                     // in mask -> copy pixel value to output
@@ -164,7 +163,7 @@ static errno_t compute_function()
                         imgoutmoudeC.im->array.F[xysize*mi + ii] = imginmodeC.im->array.F[xysize*mi + ii];
                     }
                 }
-                else //if (imgextmask.im->array.F[jj*xsize+ii] > 0.5)
+                else if (imgextmask.im->array.F[jj*xsize+ii] > 0.5)
                 {
                     // pixel is in extmask, but not in mask -> run extrapolation
 
@@ -192,6 +191,33 @@ static errno_t compute_function()
                         }
                     }
 
+                    // Kernel radius
+                    int kradint = (int) (sqrt(nearest_dist2)+1.0);
+
+                    int iimin = ii - kradint;
+                    if(iimin < 0)
+                    {
+                        iimin = 0;
+                    }
+                    int iimax = ii + kradint;
+                    if(iimax > xsize)
+                    {
+                        iimax = xsize;
+                    }
+
+                    int jjmin = jj - kradint;
+                    if(jjmin < 0)
+                    {
+                        jjmin = 0;
+                    }
+                    int jjmax = jj + kradint;
+                    if(jjmax > ysize)
+                    {
+                        jjmax = ysize;
+                    }
+
+
+
                     // nearest pixel
                     //
                     for(uint32_t mi=0; mi<NBmodes; mi++)
@@ -205,15 +231,6 @@ static errno_t compute_function()
             }
         }
 
-
-
-        for(uint32_t mi=0; mi<NBmodes; mi++)
-        {
-            for(uint64_t ii=0; ii<xysize; ii++)
-            {
-                imgoutmoudeC.im->array.F[xysize*mi + ii] = imginmodeC.im->array.F[xysize*mi + ii] * imgmask.im->array.F[ii];
-            }
-        }
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
