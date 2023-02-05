@@ -13,6 +13,7 @@ set(SOURCEFILES
 	compute_control_modes.c
 	compute_masksWFSDM.c
 	generateRMWFS.c
+	maskextrapolate.c
 	modes_spatial_extrapolate.c
 )
 

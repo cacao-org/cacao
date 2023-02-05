@@ -57,6 +57,7 @@
 #include "compute_straight_CM.h"
 #include "generateRMWFS.h"
 #include "computeHadamard.h"
+#include "maskextrapolate.h"
 
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
@@ -681,6 +682,8 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_computeCalib__generateRMWFS();
 
     CLIADDCMD_AOloopControl_computeCalib__mkHadamard();
+
+    CLIADDCMD_AOloopControl_computeCalib__maskextrapolate();
 
 
     // add atexit functions here

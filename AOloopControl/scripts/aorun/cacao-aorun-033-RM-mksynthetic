@@ -80,6 +80,8 @@ radmaskfact="1.1"
 #
 
 milk-all << EOF
+radext=${DMr0}*${radmaskfact}
+imgen.mkdisk dmmaskext ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} radext
 zern.mkzerc .TTfactor 8.0
 zern.mkzerc .radmaskfact ${radmaskfact}
 zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
@@ -90,8 +92,11 @@ lintools.mkFouriermodes .fpowerlaw_maxf 100.0
 lintools.mkFouriermodes ?
 lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
 merge3d zerc Fmodes synRMmodesDM
+
 loadfits "conf/dmmask.fits" dmmask
-synRMmodesDMm=synRMmodesDM*dmmask
+cacaocc.maskextrapolate synRMmodesDM dmmask dmmaskext synRMmodesDMm
+
+#synRMmodesDMm=synRMmodesDM*dmmask
 saveFITS synRMmodesDMm "conf/RMmodesDM/synRMmodesDM.fits"
 listim
 exitCLI
