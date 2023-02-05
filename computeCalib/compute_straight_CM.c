@@ -434,11 +434,62 @@ static errno_t compute_function()
 
         clock_gettime(CLOCK_REALTIME, &t5);
 
+
+
+
+
+#ifdef HAVE_CUDA
+        {
+            printf("Running SGEMM 2 on GPU\n");
+            fflush(stdout);
+
+            const float alf = 1;
+            const float bet = 0;
+            const float *alpha = &alf;
+            const float *beta = &bet;
+
+            float *d_RMWFS;
+            cudaMalloc((void **)&d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
+            cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+
+            float *d_evec;
+            cudaMalloc((void **)&d_evec, imgevec.md->nelement * sizeof(float));
+            cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+
+            float *d_CMWFSall;
+            cudaMalloc((void **)&d_CMWFSall, imgCMWFSall.md->nelement * sizeof(float));
+            //cudaMemcpy(d_RMWFS,imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+
+            // Create a handle for CUBLAS
+            cublasHandle_t handle;
+            cublasCreate(&handle);
+
+            // Do the actual multiplication
+            cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
+                        nbwfspix, nbmode, nbmode, alpha, d_RMWFS, nbwfspix, d_evec, nbmode, beta, d_CMWFSall, nbwfspix);
+
+            // Destroy the handle
+            cublasDestroy(handle);
+
+            cudaMemcpy(imgCMWFSall.im->array.F, d_CMWFSall, imgCMWFSall.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
+
+            cudaFree(d_RMWFS);
+            cudaFree(d_CMWFSall);
+        }
+#elif
+
         // Compute WFS modes
         // Multiply RMmodesWFS by Vmat
         //
+        printf("Running SGEMM 2 on CPU\n");
+        fflush(stdout);
+
         cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
                      nbwfspix, nbmode, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgevec.im->array.F, nbmode, 0.0, imgCMWFSall.im->array.F, nbwfspix);
+
+#endif
+
+
 
 
         clock_gettime(CLOCK_REALTIME, &t6);
