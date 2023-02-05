@@ -256,44 +256,6 @@ static errno_t compute_function()
 
 
 
-
-        /*
-        #ifdef HAVE_CUDA
-                printf("USING CUDA\n");
-                if(*GPUdevice >= 0)
-                {
-                    CUDACOMP_magma_compute_SVDpseudoInverse("RMmodesWFS",
-                                                            "controlM",
-                                                            *svdlim,
-                                                            100000,
-                                                            "VTmat",
-                                                            0,
-                                                            0,
-                                                            64,
-                                                            *GPUdevice, // GPU device
-                                                            NULL);
-                }
-                else
-                {
-        #endif
-                    printf("USING CPU\n");
-
-                    clock_gettime(CLOCK_REALTIME, &t0);
-                    linopt_compute_SVDpseudoInverse("RMmodesWFS",
-                                                    "controlM",
-                                                    *svdlim,
-                                                    10000,
-                                                    "VTmat",
-                                                    NULL);
-                    clock_gettime(CLOCK_REALTIME, &t1);
-        #ifdef HAVE_CUDA
-                }
-        #endif
-        */
-
-
-
-
         ID = image_ID("VTmat");
         //IMGID imgVT = makesetIMGID("VTmat", ID);
 
@@ -329,49 +291,55 @@ static errno_t compute_function()
             IMGID imgATA = makeIMGID_2D("ATA", nbmode, nbmode);
             createimagefromIMGID(&imgATA);
 
-
-#ifdef HAVE_CUDA
             {
-                printf("Running SGEMM 1 on GPU\n");
-                fflush(stdout);
+                int SGEMMcomputed = 0;
+                if( (*GPUdevice >= 0) && (*GPUdevice <= 99))
+                {
+#ifdef HAVE_CUDA
+                    printf("Running SGEMM 1 on GPU\n");
+                    fflush(stdout);
 
-                const float alf = 1;
-                const float bet = 0;
-                const float *alpha = &alf;
-                const float *beta = &bet;
+                    const float alf = 1;
+                    const float bet = 0;
+                    const float *alpha = &alf;
+                    const float *beta = &bet;
 
-                float *d_RMWFS;
-                cudaMalloc((void **)&d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
-                cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                    float *d_RMWFS;
+                    cudaMalloc((void **)&d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
+                    cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
 
-                float *d_ATA;
-                cudaMalloc((void **)&d_ATA, imgATA.md->nelement * sizeof(float));
-                //cudaMemcpy(d_RMWFS,imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                    float *d_ATA;
+                    cudaMalloc((void **)&d_ATA, imgATA.md->nelement * sizeof(float));
+                    //cudaMemcpy(d_RMWFS,imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
 
-                // Create a handle for CUBLAS
-                cublasHandle_t handle;
-                cublasCreate(&handle);
+                    // Create a handle for CUBLAS
+                    cublasHandle_t handle;
+                    cublasCreate(&handle);
 
-                // Do the actual multiplication
-                cublasSgemm(handle, CUBLAS_OP_T, CUBLAS_OP_N,
-                            nbmode, nbmode, nbwfspix, alpha, d_RMWFS, nbwfspix, d_RMWFS, nbwfspix, beta, d_ATA, nbmode);
+                    // Do the actual multiplication
+                    cublasSgemm(handle, CUBLAS_OP_T, CUBLAS_OP_N,
+                                nbmode, nbmode, nbwfspix, alpha, d_RMWFS, nbwfspix, d_RMWFS, nbwfspix, beta, d_ATA, nbmode);
 
-                // Destroy the handle
-                cublasDestroy(handle);
+                    // Destroy the handle
+                    cublasDestroy(handle);
 
-                cudaMemcpy(imgATA.im->array.F, d_ATA, imgATA.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
+                    cudaMemcpy(imgATA.im->array.F, d_ATA, imgATA.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
 
-                cudaFree(d_RMWFS);
-                cudaFree(d_ATA);
-            }
-#elif
-            printf("Running SGEMM 1 on CPU\n");
-            fflush(stdout);
+                    cudaFree(d_RMWFS);
+                    cudaFree(d_ATA);
 
-            cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans,
-                        nbmode, nbmode, nbwfspix, 1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix, 0.0, imgATA.im->array.F, nbmode);
+                    SGEMMcomputed = 1;
 #endif
+                }
+                if ( SGEMMcomputed == 0)
+                {
+                    printf("Running SGEMM 1 on CPU\n");
+                    fflush(stdout);
 
+                    cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans,
+                                nbmode, nbmode, nbwfspix, 1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix, 0.0, imgATA.im->array.F, nbmode);
+                }
+            }
 
 
 
@@ -440,53 +408,64 @@ static errno_t compute_function()
         // Compute WFS modes
         // Multiply RMmodesWFS by Vmat
         //
-#ifdef HAVE_CUDA
+
         {
-            printf("Running SGEMM 2 on GPU\n");
-            fflush(stdout);
+            int SGEMMcomputed = 0;
+            if( (*GPUdevice >= 0) && (*GPUdevice <= 99))
+            {
+#ifdef HAVE_CUDA
+                printf("Running SGEMM 2 on GPU\n");
+                fflush(stdout);
 
-            const float alf = 1;
-            const float bet = 0;
-            const float *alpha = &alf;
-            const float *beta = &bet;
+                const float alf = 1;
+                const float bet = 0;
+                const float *alpha = &alf;
+                const float *beta = &bet;
 
-            float *d_RMWFS;
-            cudaMalloc((void **)&d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
-            cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                float *d_RMWFS;
+                cudaMalloc((void **)&d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
+                cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
 
-            float *d_evec;
-            cudaMalloc((void **)&d_evec, imgevec.md->nelement * sizeof(float));
-            cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                float *d_evec;
+                cudaMalloc((void **)&d_evec, imgevec.md->nelement * sizeof(float));
+                cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
 
-            float *d_CMWFSall;
-            cudaMalloc((void **)&d_CMWFSall, imgCMWFSall.md->nelement * sizeof(float));
-            //cudaMemcpy(d_RMWFS,imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                float *d_CMWFSall;
+                cudaMalloc((void **)&d_CMWFSall, imgCMWFSall.md->nelement * sizeof(float));
+                //cudaMemcpy(d_RMWFS,imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
 
-            // Create a handle for CUBLAS
-            cublasHandle_t handle;
-            cublasCreate(&handle);
+                // Create a handle for CUBLAS
+                cublasHandle_t handle;
+                cublasCreate(&handle);
 
-            // Do the actual multiplication
-            cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
-                        nbwfspix, nbmode, nbmode, alpha, d_RMWFS, nbwfspix, d_evec, nbmode, beta, d_CMWFSall, nbwfspix);
+                // Do the actual multiplication
+                cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
+                            nbwfspix, nbmode, nbmode, alpha, d_RMWFS, nbwfspix, d_evec, nbmode, beta, d_CMWFSall, nbwfspix);
 
-            // Destroy the handle
-            cublasDestroy(handle);
+                // Destroy the handle
+                cublasDestroy(handle);
 
-            cudaMemcpy(imgCMWFSall.im->array.F, d_CMWFSall, imgCMWFSall.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
+                cudaMemcpy(imgCMWFSall.im->array.F, d_CMWFSall, imgCMWFSall.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
 
-            cudaFree(d_RMWFS);
-             cudaFree(d_evec);
-            cudaFree(d_CMWFSall);
-        }
-#elif
-        printf("Running SGEMM 2 on CPU\n");
-        fflush(stdout);
+                cudaFree(d_RMWFS);
+                cudaFree(d_evec);
+                cudaFree(d_CMWFSall);
 
-        cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
-                     nbwfspix, nbmode, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgevec.im->array.F, nbmode, 0.0, imgCMWFSall.im->array.F, nbwfspix);
-
+                SGEMMcomputed = 1;
 #endif
+            }
+
+            if ( SGEMMcomputed == 0 )
+            {
+
+                printf("Running SGEMM 2 on CPU\n");
+                fflush(stdout);
+
+                cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
+                             nbwfspix, nbmode, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgevec.im->array.F, nbmode, 0.0, imgCMWFSall.im->array.F, nbwfspix);
+
+            }
+        }
 
 
 
@@ -503,51 +482,60 @@ static errno_t compute_function()
         // Compute DM modes
         // Multiply RMmodesDM by Vmat
         //
-#ifdef HAVE_CUDA
         {
-            printf("Running SGEMM 3 on GPU\n");
-            fflush(stdout);
+            int SGEMMcomputed = 0;
+            if( (*GPUdevice >= 0) && (*GPUdevice <= 99))
+            {
+#ifdef HAVE_CUDA
+                printf("Running SGEMM 3 on GPU\n");
+                fflush(stdout);
 
-            const float alf = 1;
-            const float bet = 0;
-            const float *alpha = &alf;
-            const float *beta = &bet;
+                const float alf = 1;
+                const float bet = 0;
+                const float *alpha = &alf;
+                const float *beta = &bet;
 
-            float *d_RMDM;
-            cudaMalloc((void **)&d_RMDM, imgRMDM.md->nelement * sizeof(float));
-            cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                float *d_RMDM;
+                cudaMalloc((void **)&d_RMDM, imgRMDM.md->nelement * sizeof(float));
+                cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
 
-            float *d_evec;
-            cudaMalloc((void **)&d_evec, imgevec.md->nelement * sizeof(float));
-            cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                float *d_evec;
+                cudaMalloc((void **)&d_evec, imgevec.md->nelement * sizeof(float));
+                cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
 
-            float *d_CMDMall;
-            cudaMalloc((void **)&d_CMDMall, imgCMDMall.md->nelement * sizeof(float));
+                float *d_CMDMall;
+                cudaMalloc((void **)&d_CMDMall, imgCMDMall.md->nelement * sizeof(float));
 
-            // Create a handle for CUBLAS
-            cublasHandle_t handle;
-            cublasCreate(&handle);
+                // Create a handle for CUBLAS
+                cublasHandle_t handle;
+                cublasCreate(&handle);
 
-            // Do the actual multiplication
-            cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
-                        nbact, nbmode, nbmode, alpha, d_RMDM, nbact, d_evec, nbmode, beta, d_CMDMall, nbact);
+                // Do the actual multiplication
+                cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
+                            nbact, nbmode, nbmode, alpha, d_RMDM, nbact, d_evec, nbmode, beta, d_CMDMall, nbact);
 
-            // Destroy the handle
-            cublasDestroy(handle);
+                // Destroy the handle
+                cublasDestroy(handle);
 
-            cudaMemcpy(imgCMDMall.im->array.F, d_CMDMall, imgCMDMall.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
+                cudaMemcpy(imgCMDMall.im->array.F, d_CMDMall, imgCMDMall.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
 
-            cudaFree(d_RMDM);
-            cudaFree(d_evec);
-            cudaFree(d_CMDMall);
-        }
-#elif
-        printf("Running SGEMM 3 on CPU\n");
-        fflush(stdout);
+                cudaFree(d_RMDM);
+                cudaFree(d_evec);
+                cudaFree(d_CMDMall);
 
-        cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
-                     nbact, nbmode, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgevec.im->array.F, nbmode, 0.0, imgCMDMall.im->array.F, nbact);
+                SGEMMcomputed = 1;
 #endif
+            }
+
+            if ( SGEMMcomputed == 0 )
+            {
+                printf("Running SGEMM 3 on CPU\n");
+                fflush(stdout);
+
+                cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
+                             nbact, nbmode, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgevec.im->array.F, nbmode, 0.0, imgCMDMall.im->array.F, nbact);
+            }
+        }
 
 
 
