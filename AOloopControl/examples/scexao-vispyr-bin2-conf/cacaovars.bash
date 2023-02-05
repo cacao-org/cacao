@@ -16,8 +16,8 @@ export CACAO_DMxsize="50"
 export CACAO_DMysize="50"
 
 # OPTIONAL: DM alignment
-export CACAO_DM_beam_xcent="24.5"
-export CACAO_DM_beam_ycent="25.5"
+export CACAO_DM_beam_xcent="24.2"
+export CACAO_DM_beam_ycent="23.5"
 export CACAO_DM_beam_rad="24.5"
 
 # 1 if DM actuators are on a coordinate grid
