@@ -84,7 +84,7 @@ echo "wfsc1 = ${WFSmaskRMc1}"
 
 
 cacao << EOF
-loadfits "conf/zrespM-H.fits" zrespM
+loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
 
 cacaocc.compmasksWFSDM .dmmask.perc0 ${DMmaskRMp0}
 cacaocc.compmasksWFSDM .dmmask.coeff0 ${DMmaskRMc0}
@@ -96,7 +96,7 @@ cacaocc.compmasksWFSDM .wfsmask.coeff0 ${WFSmaskRMc0}
 cacaocc.compmasksWFSDM .wfsmask.perc1 ${WFSmaskRMp1}
 cacaocc.compmasksWFSDM .wfsmask.coeff1 ${WFSmaskRMc1}
 
-cacaocc.compmasksWFSDM zrespM 50 50
+cacaocc.compmasksWFSDM zrespM ${CACAO_DMxsize} ${CACAO_DMysize}
 saveFITS dmmap "conf/dmmap.fits"
 saveFITS dmmask "conf/dmmask.fits"
 saveFITS wfsmap "conf/wfsmap.fits"
