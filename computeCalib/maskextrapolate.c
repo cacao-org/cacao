@@ -177,7 +177,7 @@ static errno_t compute_function()
                     {
                         for(uint32_t jj1=0; jj1<ysize; jj1++)
                         {
-                            if(imgmask.im->array.F[jj*xsize+ii] > 0.5)
+                            if(imgmask.im->array.F[jj1*xsize+ii1] > 0.5)
                             {
                                 float dx = ii-ii1;
                                 float dy = jj-jj1;
