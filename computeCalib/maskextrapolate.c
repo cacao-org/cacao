@@ -164,7 +164,7 @@ static errno_t compute_function()
                         imgoutmoudeC.im->array.F[xysize*mi + ii] = imginmodeC.im->array.F[xysize*mi + ii];
                     }
                 }
-                else if (imgextmask.im->array.F[jj*xsize+ii] > 0.5)
+                else //if (imgextmask.im->array.F[jj*xsize+ii] > 0.5)
                 {
                     // pixel is in extmask, but not in mask -> run extrapolation
 
@@ -189,7 +189,6 @@ static errno_t compute_function()
                                     nearest_jj = jj1;
                                 }
                             }
-
                         }
                     }
 
