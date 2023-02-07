@@ -7,7 +7,7 @@ set(SOURCEFILES
 	AOloopControl_computeCalib_dm.c
 	computeHadamard.c
 	AOloopControl_computeCalib_loDMmodes.c
-	mkmodes.c
+	#mkmodes.c
 	AOloopControl_computeCalib_processRM.c
 	compute_straight_CM.c
 	compute_control_modes.c
