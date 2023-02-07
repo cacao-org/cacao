@@ -42,7 +42,7 @@ export CACAO_WFSSTREAM_PROCESSED="ON"
 
 # input WFS stream
 export CACAO_WFSSTREAM="dm01disp03"
-export CACAO_WFSSTREAMSIM="shwfs_slopes_sim" # Simulation camera stream
+#export CACAO_WFSSTREAMSIM="dm01disp03_sim" # Simulation camera stream
 
 export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 
@@ -54,18 +54,18 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 # Manages mutipe DM channels
 #
 export CACAO_FPSPROC_DMCH2DISP="ON"
-export CACAO_FPSPROC_DMCH2DISPSIM="ON"
+#export CACAO_FPSPROC_DMCH2DISPSIM="ON"
 
 
 
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
 #
-export CACAO_FPSPROC_DMSIMDELAY="ON"
+#export CACAO_FPSPROC_DMSIMDELAY="ON"
 
 # MVM lop on GPU: used to simulate hardware
 #
-export CACAO_FPSPROC_SIMMVMGPU="ON"
+#export CACAO_FPSPROC_SIMMVMGPU="ON"
 
 
 
@@ -78,17 +78,14 @@ export CACAO_FPSPROC_MLAT="ON"
 export CACAO_FPSPROC_ACQUWFS="ON"
 
 
-
 # Acquire linear RM
 #
 export CACAO_FPSPROC_MEASURELINRESP="ON"
 
 
-
 # Compute control matrix
 #
 export CACAO_FPSPROC_COMPSTRCM="ON"
-
 
 
 # Extract control modes from WFS using MVM
