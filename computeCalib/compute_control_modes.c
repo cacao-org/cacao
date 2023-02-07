@@ -531,8 +531,8 @@ static errno_t compute_function()
         //
         // if BlockNB < 0 : do all blocks
         // if BlockNB >= 0 : only update single block (untested)
-        int MaskMode = 0;
-        int BlockNB  = -1;
+        //int MaskMode = 0;
+        //int BlockNB  = -1;
 
         // full set of DM actuators to be controlled
         //
