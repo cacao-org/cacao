@@ -248,7 +248,7 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
                    dmdispcombconf[DMindex].dmdispgain[ch],
                    DMindex,
                    ch,
-                   dmdispcombconf[DMindex].dmdispcnt[ch]);
+                   (long) dmdispcombconf[DMindex].dmdispcnt[ch]);
         }
         printw("\n");
 
