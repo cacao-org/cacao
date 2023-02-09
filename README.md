@@ -54,9 +54,14 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 
 Install pre-requisite packages as needed. Check the [Dockerfile](https://github.com/cacao-org/cacao/blob/dev/Dockerfile) for list.
 
-cacao is a plugin of [milk page](https://github.com/milk-org/milk).
+cacao is a plugin of [milk](https://github.com/milk-org/milk).
+
 
 To install :
+
+
+To install :
+
 
 ```bash
 git clone https://github.com/milk-org/milk.git
@@ -75,7 +80,7 @@ Alternatively, the ./compile.sh script for can be run to install. Check compilat
 
 ## Documentation
 
-See [cacao's wiki page](https://github.com/cacao-org/cacao/wiki) for detailed instructions to install, configure and use cacao.
+See [cacao's wiki](https://github.com/cacao-org/cacao/wiki) for detailed instructions to install, configure and use cacao.
 
 
 ---

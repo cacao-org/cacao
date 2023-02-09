@@ -20,13 +20,8 @@ RUN apt-get update && \
         libfl-dev \
         libreadline-dev \
 	pkg-config \
-	gfortran libopenblas-dev liblapacke-dev \
-	gcc-10 \
-	g++-10
+	gfortran libopenblas-dev liblapacke-dev
 
-RUN rm /usr/bin/gcc /usr/bin/g++
-RUN ln /usr/bin/gcc-10 /usr/bin/gcc
-RUN ln /usr/bin/g++-10 /usr/bin/g++
 RUN git clone https://github.com/milk-org/milk.git /build
 WORKDIR /build
 RUN bash ./fetch_cacao_dev.sh
