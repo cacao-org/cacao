@@ -39,7 +39,6 @@ INIT_MODULE_LIB(AOloopControl_computeCalib)
 
 
 
-
 static errno_t init_module_CLI()
 {
 

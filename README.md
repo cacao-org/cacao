@@ -54,7 +54,6 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 
 Install pre-requisite packages as needed. Check the [Dockerfile](https://github.com/cacao-org/cacao/blob/dev/Dockerfile) for list.
 
-
 cacao is a plugin of [milk page](https://github.com/milk-org/milk).
 
 To install :
