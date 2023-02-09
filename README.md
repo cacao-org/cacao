@@ -60,9 +60,6 @@ cacao is a plugin of [milk](https://github.com/milk-org/milk).
 To install :
 
 
-To install :
-
-
 ```bash
 git clone https://github.com/milk-org/milk.git
 cd milk
