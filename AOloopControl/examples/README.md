@@ -6,7 +6,8 @@ Name                       |  Description
 ---------------------------|------------------------------------------------------------
 scexao-vispyr-bin2-conf    | SCExAO visible pyramid WFS loop, 2x2 binned WFS (this is the recommended example)
 scexao-vispyr-bin1-conf    | SCExAO visible pyramid WFS loop, unbinned WFS
-KalAO-dmloop-conf          | KalAO system, SHWFS
+KalAO-dmloop-conf          | KalAO system, SHWFS and main DM loop
+KalAO-ttmloop-conf         | KalAO system, Tip-Tilt offload loop
 
 
 ---
