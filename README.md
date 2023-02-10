@@ -52,25 +52,32 @@ Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues
 
 ## Installing cacao
 
-Install pre-requisite packages as needed. For example, under Ubuntu :
+Install pre-requisite packages as needed. Check the [Dockerfile](https://github.com/cacao-org/cacao/blob/dev/Dockerfile) for list.
 
-	sudo apt install git make dpkg-dev libc6-dev cmake pkg-config python3-dev libcfitsio-dev pybind11-dev python3-pybind11 libgsl-dev libfftw3-dev libncurses-dev libbison-dev libfl-dev libreadline-dev pkg-config gcc-10 g++-10
+cacao is a plugin of [milk](https://github.com/milk-org/milk).
 
-cacao is a plugin of [milk page](https://github.com/milk-org/milk).
 
-	git clone https://github.com/milk-org/milk.git
-	cd milk
-	./fetch_cacao_dev.sh
-	MILK_PYTHON="OFF" ./compile.sh
-	cd _build; sudo make install
+To install :
 
-Check compilation options with compile.sh -h option.
+
+```bash
+git clone https://github.com/milk-org/milk.git
+cd milk
+./fetch_cacao_dev.sh
+mkdir _build
+cd _build
+cmake ..
+make
+sudo make install
+```
+
+Alternatively, the ./compile.sh script for can be run to install. Check compilation options with compile.sh -h option.
 
 ---
 
 ## Documentation
 
-See [cacao's wiki page](https://github.com/cacao-org/cacao/wiki) for detailed instructions to install, configure and use cacao.
+See [cacao's wiki](https://github.com/cacao-org/cacao/wiki) for detailed instructions to install, configure and use cacao.
 
 
 ---
@@ -79,12 +86,16 @@ See [cacao's wiki page](https://github.com/cacao-org/cacao/wiki) for detailed in
 
 All functions are accessible from the command line interface (CLI). Enter the CLI and type "help" for instructions.
 
-    cacao
+
+```bash
+cacao
+```
 
 To set up a cacao AO loop, use the cacao-loop-deploy script. Consult help with :
 
-    cacao-loop-deploy -h
-
+```bash
+cacao-loop-deploy -h
+```
 
 ---
 

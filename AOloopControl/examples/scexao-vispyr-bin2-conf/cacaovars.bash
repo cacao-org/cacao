@@ -57,23 +57,23 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 # Manages mutipe DM channels
 #
 export CACAO_FPSPROC_DMCH2DISP="ON"
-#export CACAO_FPSPROC_DMCH2DISPSIM="ON"
+export CACAO_FPSPROC_DMCH2DISPSIM="ON"
 
 
 
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
 #
-#export CACAO_FPSPROC_DMSIMDELAY="ON"
+export CACAO_FPSPROC_DMSIMDELAY="ON"
 
 # MVM lop on GPU: used to simulate hardware
 #
-#export CACAO_FPSPROC_SIMMVMGPU="ON"
+export CACAO_FPSPROC_SIMMVMGPU="ON"
 
 # Camera simulator
 #
-#export CACAO_FPSPROC_WFSCAMSIM="ON"
-#export CACAO_FPS_wfscamsim_fluxtotal="1000000"
+export CACAO_FPSPROC_WFSCAMSIM="ON"
+export CACAO_FPS_wfscamsim_fluxtotal="1000000"
 
 
 
@@ -183,8 +183,11 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 
 # Run local fpslistadd files
 #
+shopt -s nullglob # needed to suppress error if no file found
+echo "Looking for local cacaovars modifiers ($(pwd)/../cacaovars-${CACAO_LOOPNAME}*)"
 for cvarf in ../cacaovars-${CACAO_LOOPNAME}*; do
 echo "Processing cacaovars file ${cvarf}"
 . ./${cvarf}
 done
+shopt -u nullglob #revert nullglob back to it's normal default state
 
