@@ -183,8 +183,11 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 
 # Run local fpslistadd files
 #
+shopt -s nullglob # needed to suppress error if no file found
+echo "Looking for local cacaovars modifiers ($(pwd)/../cacaovars-${CACAO_LOOPNAME}*)"
 for cvarf in ../cacaovars-${CACAO_LOOPNAME}*; do
 echo "Processing cacaovars file ${cvarf}"
 . ./${cvarf}
 done
+shopt -u nullglob #revert nullglob back to it's normal default state
 
