@@ -40,11 +40,11 @@ set(SCRIPTFILES
 	scripts/cacao-fpslistadd-COMPSTRCM
 )
 
-
 set(LINKLIBS
 	CLIcore
 	milkinfo
 	cacaoAOloopControl
+	lapacke
 )
 
 
