@@ -99,3 +99,7 @@ export CACAO_FPSPROC_MODALFILTERING="ON"
 # Compute DM command from control mode values
 #
 export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
+
+# Zero point offsetting
+#
+export CACAO_FPSPROC_MVMGPU_ZPO="ON"
