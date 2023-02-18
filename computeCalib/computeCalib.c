@@ -39,10 +39,39 @@
 
 INIT_MODULE_LIB(AOloopControl_computeCalib)
 
+/** @brief CLI function for AOloopControl_Hadamard_decodeRM */
+errno_t AOloopControl_computeCalib_Hadamard_decodeRM_cli()
+{
+    if(CLI_checkarg(1, 4) + CLI_checkarg(2, 4) + CLI_checkarg(3, 4) +
+            CLI_checkarg(4, 3) ==
+            0)
+    {
+        AOloopControl_computeCalib_Hadamard_decodeRM(
+            data.cmdargtoken[1].val.string,
+            data.cmdargtoken[2].val.string,
+            data.cmdargtoken[3].val.string,
+            data.cmdargtoken[4].val.string);
 
+        return CLICMD_SUCCESS;
+    }
+    else
+    {
+        return CLICMD_INVALID_ARG;
+    }
+}
 
 static errno_t init_module_CLI()
 {
+    RegisterCLIcommand(
+        "aolHaddec",
+        __FILE__,
+        AOloopControl_computeCalib_Hadamard_decodeRM_cli,
+        "decode Hadamard matrix",
+        "<input RM> <Hadamard matrix> <DMpix index frame> <output RM>",
+        "aolHaddec imRMh Hmat pixiind imRM",
+        "long AOloopControl_computeCalib_Hadamard_decodeRM(char *inname, char "
+        "*Hmatname, char "
+        "*indexname, char *outname)");
 
     CLIADDCMD_cacao_computeCalib__compute_control_modes();
 
