@@ -31,7 +31,7 @@ cacao-loop-deploy -c KalAO-dmloop
 # CACAO_LOOPNUMBER=7 cacao-loop-deploy -c KalAO-dmloop
 # CACAO_LOOPNUMBER=7 CACAO_DMINDEX="03" cacao-loop-deploy -c KalAO-dmloop
 
-# OPTIONAL: Edit file scexao-vispyr-bin2-conf/cacaovars.bash as needed
+# OPTIONAL: Edit file KalAO-dmloop-conf/cacaovars.bash as needed
 # For example, change loop index, DM index, etc ...
 
 # Run deployment (starts conf processes)
@@ -149,7 +149,7 @@ cacao-fpsctrl setval mvalC2dm GPUindex 0
 ```
 
 
-From directory vispyr-rootdir, start 3 processes :
+From directory kalaodmloop-rootdir, start 3 processes :
 
 ```bash
 # start WFS -> mode coefficient values

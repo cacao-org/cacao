@@ -31,7 +31,7 @@ cacao-loop-deploy -c KalAO-ttmloop
 # CACAO_LOOPNUMBER=7 cacao-loop-deploy -c KalAO-dmloop
 # CACAO_LOOPNUMBER=7 CACAO_DMINDEX="03" cacao-loop-deploy -c KalAO-dmloop
 
-# OPTIONAL: Edit file scexao-vispyr-bin2-conf/cacaovars.bash as needed
+# OPTIONAL: Edit file KalAO-ttmloop-conf/cacaovars.bash as needed
 # For example, change loop index, DM index, etc ...
 
 # Run deployment (starts conf processes)
