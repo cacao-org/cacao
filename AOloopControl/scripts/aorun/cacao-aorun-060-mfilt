@@ -37,6 +37,7 @@ fi
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
 
+sendFPScmd "setval mfilt-${CACAO_LOOPNUMBER}.AOloopindex ${CACAO_LOOPNUMBER}"
 sendFPScmd "confwupdate mfilt-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart mfilt-${CACAO_LOOPNUMBER}"
 
