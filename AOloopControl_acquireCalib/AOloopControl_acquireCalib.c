@@ -3546,8 +3546,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse(
     __attribute__((unused)) const char *IDwfsref_name,
     __attribute__((unused)) int         normalize,
     __attribute__((unused)) int         AOinitMode,
-    __attribute__((
-                      unused)) long NBcycle, /// Number of measurement cycles to be repeated
+    __attribute__((unused)) long NBcycle, /// Number of meas. cycles to be repeated
     __attribute__((unused)) long
     NBinnerCycle /// Number of inner cycles (how many consecutive times
     /// should a single +/- poke be repeated)
