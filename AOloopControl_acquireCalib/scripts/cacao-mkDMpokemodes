@@ -110,10 +110,7 @@ EOF
 
 milk-all << EOF
 zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
-saveFITS zerc "ZpokesC.${NBzer}.fits"
+saveFITS zerc "${DMMODEDIR}/ZpokesC.${NBzer}.fits"
 listim
 exitCLI
 EOF
-
-
-

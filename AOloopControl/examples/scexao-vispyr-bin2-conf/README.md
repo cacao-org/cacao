@@ -100,13 +100,16 @@ cacao-aorun-020-mlat -w
 # Create DM poke mode cubes
 cacao-mkDMpokemodes
 ```
-The following files are written to ./conf/DMmodes/ :
-- DMmask.fits    : DM mask
-- Fmodes.fits    : Fourier modes
-- Zmodes.fits    : Zernike modes
-- HpokeC.fits    : Hadamard modes
-- Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
-- Hpixindex.fits : Hadamard pixel index
+The following files are written to ./conf/RMmodesDM/
+| File                 | Contents                                            |
+| -------------------- | --------------------------------------------------- |
+| `DMmask.fits     `   | DM mask                                             |
+| `FpokesC.<CPA>.fits` | Fourier modes (where \<CPA> is an integer)          |
+| `ZpokesC.<NUM>.fits` | Zernike modes (where \<NUM> is the number of modes) |
+| `HpokeC.fits     `   | Hadamard modes                                      |
+| `Hmat.fits       `   | Hadamard matrix (to convert Hadamard-zonal)         |
+| `Hpixindex.fits  `   | Hadamard pixel index                                |
+| `SmodesC.fits    `   | *Simple* (single actuator) pokes                    |
 
 
 
@@ -115,8 +118,8 @@ The following files are written to ./conf/DMmodes/ :
 
 ```bash
 # Acquire response matrix - Fourier modes
-cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
-cacao-aorun-030-acqlinResp Fmodes
+# 20 cycles - default is 10.
+cacao-aorun-030-acqlinResp -n 20 FpokesC.<CPA>.fits
 
 # NOTE: Alternate option is Hadamard modes
 # Acquire response matrix - Hadamard modes
@@ -137,8 +140,12 @@ cacao-aorun-026-takeref
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/Fmodes.fits"
-cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/Fmodes.WFSresp.fits"
+# Note that file paths are relative to the rundir, not the CWD.
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/FpokesC.<CPA>.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/FpokesC.<CPA>.WFSresp.fits"
+# Alternatively, use the symlinks to the latest acqlinresp results:
+# ../conf/RMmodesDM/RMmodesDM.fits
+# ../conf/RMmodesWFS/RMmodesWFS.fits
 cacao-fpsctrl setval compstrCM svdlim 0.2
 ```
 Then run the compstrCM process to compute CM and load it to shared memory :

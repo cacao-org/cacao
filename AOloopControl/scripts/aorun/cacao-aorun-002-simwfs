@@ -108,7 +108,7 @@ if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
 sendFPScmd "runstop wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstop simmvmgpu-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstop streamDelay-${CACAO_DMSIMINDEX}"
+sendFPScmd "runstop DMstreamDelay-${CACAO_DMSIMINDEX}"
 fi
 
 
