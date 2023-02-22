@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop execution script"
+
+MSextdescr="AO loop script"
+source milk-script-std-config
+source cacao-check-cacaovars
+source milk-argparse
+
+echo "Loading file conf/CMmodesWFS/CMmodesWFS.fits"
+if [ -f "conf/CMmodesWFS/CMmodesWFS.fits" ]
+then
+     milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol${CACAO_LOOPNUMBER}_modesWFS
+else
+     echo "Failed to find."
+fi
+
+
+echo "Loading file conf/CMmodesDM/CMmodesDM.fits"
+if [ -f "conf/CMmodesDM/CMmodesDM.fits" ]
+then
+     milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes
+else
+     echo "Failed to find."
+fi
