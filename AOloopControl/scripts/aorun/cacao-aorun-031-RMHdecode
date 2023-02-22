@@ -40,6 +40,6 @@ saveFITS zrespC "conf/RMmodesWFS/zrespM-H.fits"
 exitCLI
 EOF
 
-
-
-
+# Override measlinresp symlinking
+ln -sf ${PWD}/conf/RMmodesDM/zpokeC-H.fits ./conf/RMmodesDM/RMmodesDM.fits
+ln -sf ${PWD}/conf/RMmodesWFS/zrespM-H.fits ./conf/RMmodesWFS/RMmodesWFS.fits
