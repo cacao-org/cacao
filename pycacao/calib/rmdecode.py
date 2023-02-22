@@ -6,10 +6,12 @@ import logging
 
 
 def decode_pokes_to_zonal_fitsio(
-        file_in_poke_modes: str,
-        file_in_resp: str,
-        file_out_zpokes: str,
-        file_out_zresp: str,
+        file_in_poke_modes: str,  # conf/RMmodesDM/HpokeC.fits
+        file_in_resp: str,  # conf/RMmodesWFS/HpokeC.WFSresp.fits
+        file_out_zpokes: str,  # conf/RMmodesDM/zpokeC-H.fits
+        file_out_zresp: str,  # conf/RMmodesWFS/zrespM-H.fits
+        *,
+        trim_to_mask: bool = True,
 ) -> None:
     '''
         Extension of cacaocc.aolHaddec
@@ -25,7 +27,7 @@ def decode_pokes_to_zonal_fitsio(
 
 
         file_out_zpokes:
-            Zonal poked actuators (<shape>) - corresponds to zpokeC-H.fits
+            Zonal poked actuators (<shape>) - corresponds to zpokeC.fits
         file_out_zreps:
             Zonal poke response - corresponds to zrespM.fits
 
@@ -33,13 +35,28 @@ def decode_pokes_to_zonal_fitsio(
     poke_modes = fits.getdata(file_in_poke_modes)
     resp_matrix = fits.getdata(file_in_resp)
 
+    dm_i, dm_j = poke_modes.shape[1], poke_modes.shape[2]
+
     mask_can_be_controlled, zonal_resp_matrix = decode_pokes_to_zonal(
             poke_modes, resp_matrix)
 
+    # For compat reasons... we'll see where that gets us.
+    if trim_to_mask:
+        n_actu_ctrl = np.sum(mask_can_be_controlled)
+        poke_matrix = np.zeros((n_actu_ctrl, dm_i * dm_j))
+        _wh = np.where(mask_can_be_controlled > 0)[0]
+        for kk, ww in enumerate(_wh):
+            poke_matrix[kk, ww] = 1.0
+        poke_matrix = poke_matrix.reshape(n_actu_ctrl, dm_i, dm_j)
+
+        zonal_resp_matrix = zonal_resp_matrix[mask_can_be_controlled]
+    else:
+        poke_matrix = np.diag(mask_can_be_controlled)
+        poke_matrix = poke_matrix.reshape(dm_i * dm_j, dm_i, dm_j)
+
     # TODO
-    fits.writeto('tmp_pycacao_mask.fits', zonal_resp_matrix)
-    fits.writeto('tmp_pycacao_zrespM.fits', mask_can_be_controlled)
-    #fits.writeto(file_out_zresp, resp)
+    fits.writeto(file_out_zpokes, poke_matrix, overwrite=True)
+    fits.writeto(file_out_zresp, zonal_resp_matrix, overwrite=True)
 
 
 def decode_pokes_to_zonal(
@@ -86,18 +103,16 @@ def decode_pokes_to_zonal(
     zonal_resp_matrix_2D = inverse_of_pokes @ resp_matrix_2D
     zonal_resp_matrix = zonal_resp_matrix_2D.reshape(dm_i * dm_j, wfs_i, wfs_j)
 
-    return mask_actu_ctrl, zonal_resp_matrix, _q, _r
+    return mask_actu_ctrl, zonal_resp_matrix
 
 
 if __name__ == "__main__":  # quick devdebug test
-    pfx = '/home/vdeo/sshfs/RM_2023_smartmodes'
-    A, B, _q, _r = decode_pokes_to_zonal(
-            fits.getdata(f'{pfx}/RMmodesDM/HpokeC.fits'),
-            fits.getdata(f'{pfx}/RMmodesWFS/HpokeC.WFSresp.fits'),
-    )
 
-    if False:
-        A, B, _q, _r = decode_pokes_to_zonal(
-                fits.getdata(f'{pfx}/RMmodesDM/synRMmodesDM.fits'),
-                fits.getdata(f'{pfx}/RMmodesWFS/synRMmodesWFS.fits'),
-        )
+    FILE_HpokeC = "conf/RMmodesDM/HpokeC.fits"
+    FILE_HrespC = "conf/RMmodesWFS/HpokeC.WFSresp.fits"
+
+    FILEOUT_zpokeC = "conf/RMmodesDM/zpokeC-H.fits"
+    FILEOUT_zrespC = "conf/RMmodesWFS/zrespM-H.fits"
+
+    decode_pokes_to_zonal_fitsio(FILE_HpokeC, FILE_HrespC, FILEOUT_zpokeC,
+                                 FILEOUT_zrespC)
