@@ -4,9 +4,13 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Take WFS camera dark frame"
 # Extended description
-MSextdescr="AO loop script"
+MSextdescr="Reads from aolX_wfsim stream
+Averages a number of frames
+Saes into stream aolX_wfsdarkraw
+Make aolX_wfsdark sym link pointer to aolX_wfsdarkraw
+Saves dark as conf/aolX_wfsdarkraw.fits"
 source milk-script-std-config
 source cacao-check-cacaovars
 
