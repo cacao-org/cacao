@@ -4,14 +4,24 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Simulate WFS stream"
 # Extended description
-MSextdescr="AO loop script"
+MSextdescr="Run linear simulator from DM to WFS"
 source milk-script-std-config
 source cacao-check-cacaovars
 
 MSarg+=( "action:string:action (start/stop/check)" )
+
+
+WaitForCompletion=0
+MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
+function set_WaitForCompletion() {
+	WaitForCompletion=1
+}
+
+
 source milk-argparse
+
 ACTION="${inputMSargARRAY[0]}"
 
 
@@ -99,6 +109,20 @@ sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.camRON ${camRON}"
 
 sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart wfscamsim-${CACAO_LOOPNUMBER}"
+
+
+if [ $WaitForCompletion == "1" ]; then
+# WAIT for aolX_wfsim to appear
+filename="${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm"
+echo "Waiting for file ${filename} ..."
+until [ -f "$filename" ]
+do
+     sleep 0.1
+done
+fi
+
+
+
 fi # end of if [ "$CACAO_WFSSTREAM_PROCESSED" = "ON" ]
 
 fi # end of if [ ${ACTION} == "start" ]
@@ -117,3 +141,6 @@ fi
 if [ ${ACTIONOK} == 0 ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
 fi
+
+
+
