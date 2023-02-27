@@ -39,6 +39,7 @@ set(LINKLIBS
 	CLIcore
     milkfft
     milkimagegen
+    milkimagefilter
     cacaoAOloopControl
 )
 

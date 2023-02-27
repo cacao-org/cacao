@@ -18,14 +18,30 @@
 static char *dmstream;
 static long  fpi_dmstream;
 
+
+// DM pixel scale
+static float *DMpixscale;
+static long  fpi_DMpixscale;
+
+
 // turbulence 3D cube
 static char *turbfname;
 static long  fpi_turbfname;
 
 
-// Wind speed m/s
+// Wind speed [m/s]
 static float *turbwspeed;
 static long   fpi_turbwspeed;
+
+
+// Wind angle [rad]
+static float *turbwangle;
+static long   fpi_turbwangle;
+
+// Wind amplitude [um]
+static float *turbampl;
+static long   fpi_turbampl;
+
 
 
 // number of time samples in turbulence cube
@@ -34,8 +50,38 @@ static long      fpi_NBsamples;
 
 
 
+// Compute turb seed screens
+static uint64_t *compTurbSeed;
+static long      fpi_compTurbSeed;
 
-static CLICMDARGDEF farg[] = {{
+static uint32_t *turbseedsize;
+static long      fpi_turbseedsize;
+
+// pixel scale [m/pix]
+static float *turbseedpixscale;
+static long   fpi_turbseedpixscale;
+
+// inner scale [m]
+static float *turbseedinnerscale;
+static long   fpi_turbseedinnerscale;
+
+// outer scale [m]
+static float *turbseedouterscale;
+static long   fpi_turbseedouterscale;
+
+
+
+
+
+
+// Compute turb cube
+static uint64_t *compTurbCube;
+static long      fpi_compTurbCube;
+
+
+
+static CLICMDARGDEF farg[] = {
+    {
         CLIARG_STREAM,
         ".dmstream",
         "output DM turbulence stream",
@@ -45,13 +91,13 @@ static CLICMDARGDEF farg[] = {{
         &fpi_dmstream
     },
     {
-        CLIARG_FILENAME,
-        ".turbfname",
-        "turbulence file cube",
-        "null",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &turbfname,
-        &fpi_turbfname
+        CLIARG_FLOAT32,
+        ".DMpixscale",
+        "DM pixel scale [m/pix]",
+        "0.2",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &DMpixscale,
+        &fpi_DMpixscale
     },
     {
         CLIARG_FLOAT32,
@@ -63,13 +109,67 @@ static CLICMDARGDEF farg[] = {{
         &fpi_turbwspeed
     },
     {
-        CLIARG_UINT32,
-        ".NBsamples",
-        "number of samples in cube",
-        "10000",
+        CLIARG_FLOAT32,
+        ".wangle",
+        "wind angle [rad]",
+        "1.2",
         CLIARG_HIDDEN_DEFAULT,
-        (void **) &NBsamples,
-        &fpi_NBsamples
+        (void **) &turbwangle,
+        &fpi_turbwangle
+    },
+    {
+        CLIARG_FLOAT32,
+        ".ampl",
+        "amplitude across aperture [um]",
+        "0.2",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &turbampl,
+        &fpi_turbampl
+    },
+    {
+        CLIARG_ONOFF,
+        ".turbseed.comp",
+        "(re)compute turbulence seed screen (../conf/turbseedX.fits)",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compTurbSeed,
+        &fpi_compTurbSeed
+    },
+    {
+        CLIARG_UINT32,
+        ".turbseed.size",
+        "screen seed size",
+        "1024",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &turbseedsize,
+        &fpi_turbseedsize
+    },
+    {
+        CLIARG_FLOAT32,
+        ".turbseed.pixscale",
+        "screen pixel scale [m/pix]",
+        "0.1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &turbseedpixscale,
+        &fpi_turbseedpixscale
+    },
+    {
+        CLIARG_FLOAT32,
+        ".turbseed.innerscale",
+        "screen inner scale [m]",
+        "0.01",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &turbseedinnerscale,
+        &fpi_turbseedinnerscale
+    },
+    {
+        CLIARG_FLOAT32,
+        ".turbseed.outerscale",
+        "screen outer scale [m]",
+        "20",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &turbseedouterscale,
+        &fpi_turbseedouterscale
     }
 };
 
@@ -84,19 +184,11 @@ static errno_t customCONFsetup()
     {
         data.fpsptr->parray[fpi_dmstream].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
-    }
 
-    return RETURN_SUCCESS;
-}
 
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
-
-    if(data.fpsptr != NULL)
-    {
+        data.fpsptr->parray[fpi_turbwspeed].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_turbwangle].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_turbampl].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -104,19 +196,6 @@ static errno_t customCONFcheck()
 
 
 
-
-static CLICMDDATA CLIcmddata =
-{
-    "dmturb", "DM turbulence", CLICMD_FIELDS_DEFAULTS
-};
-
-
-
-// detailed help
-static errno_t help_function()
-{
-    return RETURN_SUCCESS;
-}
 
 
 
@@ -125,11 +204,13 @@ static errno_t help_function()
 // innerscale and outerscale in pixel
 // von Karman spectrum
 //
-static errno_t make_master_turbulence_screen(const char *ID_name1,
-        const char *ID_name2,
-        long        size,
-        float       outerscale,
-        float       innerscale)
+static errno_t make_seed_turbulence_screen(
+    const char *ID_name1,
+    const char *ID_name2,
+    long        size,
+    float       outerscale,
+    float       innerscale
+)
 {
     imageID ID;
     float   value, C1, C2;
@@ -270,55 +351,72 @@ static errno_t make_master_turbulence_screen(const char *ID_name1,
 
 
 
-long make_DMturbcube(char    *IDoutname,
-                     uint32_t xsize,
-                     uint32_t ysize,
-                     uint32_t NBsamples)
+
+
+
+
+
+// Optional custom configuration checks.
+// Runs at every configuration check loop iteration
+//
+static errno_t customCONFcheck()
 {
-    uint32_t imsize = 2048;
 
-    uint64_t xysize = xsize;
-    xysize *= ysize;
-
-
-    uint32_t zsize = NBsamples;
-
-
-    imageID IDs1;
-    imageID IDs2;
-    load_fits("turbscreen1.fits", "screen1", 1, &IDs1);
-    load_fits("turbscreen2.fits", "screen2", 1, &IDs2);
-    list_image_ID();
-
-    if(IDs1 == -1)
+    if(data.fpsptr != NULL)
     {
-        make_master_turbulence_screen("screen1", "screen2", imsize, 200.0, 1.0);
-        IDs1          = image_ID("screen1");
-        imageID IDk   = make_gauss("kernim", imsize, imsize, 20.0, 1.0);
-        double  totim = 0.0;
-        for(uint64_t ii = 0; ii < imsize * imsize; ii++)
+        if(data.fpsptr->parray[fpi_compTurbSeed].fpflag & FPFLAG_ONOFF)
         {
-            totim += data.image[IDk].array.F[ii];
+            printf("RECOMPUTING DM TURB SEED\n");
+
+            make_seed_turbulence_screen(
+                "tseed0",
+                "tseed1",
+                *turbseedsize,
+                (*turbseedouterscale) / (*turbseedpixscale),
+                (*turbseedinnerscale) / (*turbseedpixscale)
+            );
+
+            list_image_ID();
+
+            save_fits("tseed0", "../conf/turbseed0.fits");
+            save_fits("tseed1", "../conf/turbseed1.fits");
+
+            data.fpsptr->parray[fpi_compTurbSeed].fpflag &= ~FPFLAG_ONOFF;
         }
-        for(uint64_t ii = 0; ii < imsize * imsize; ii++)
+
+
+
+        if(data.fpsptr->parray[fpi_compTurbCube].fpflag & FPFLAG_ONOFF)
         {
-            data.image[IDk].array.F[ii] /= totim;
+            printf("RECOMPUTING DM TURB CUBE\n");
+            data.fpsptr->parray[fpi_compTurbCube].fpflag &= ~FPFLAG_ONOFF;
         }
-        IDs2 = fconvolve("screen1", "kernim", "screen2");
-        delete_image_ID("kernim", DELETE_IMAGE_ERRMODE_WARNING);
-        save_fits("screen1", "turbscreen1.fits");
-        save_fits("screen2", "turbscreen2.fits");
+
+
     }
-
-    printf("ARRAY SIZE = %ld %ld\n",
-           (long) data.image[IDs1].md[0].size[0],
-           (long) data.image[IDs1].md[0].size[1]);
-    uint32_t size_sx = data.image[IDs1].md[0].size[0];
-    uint32_t size_sy = data.image[IDs1].md[0].size[1];
-
 
     return RETURN_SUCCESS;
 }
+
+
+
+
+static CLICMDDATA CLIcmddata =
+{
+    "dmturb", "DM turbulence", CLICMD_FIELDS_DEFAULTS
+};
+
+
+
+// detailed help
+static errno_t help_function()
+{
+    return RETURN_SUCCESS;
+}
+
+
+
+
 
 
 
@@ -340,13 +438,146 @@ static errno_t compute_function()
     uint32_t xsize = imgDM.md->size[0];
     uint32_t ysize = imgDM.md->size[1];
 
+
+    // temporary DM array
+    float *turbimarray = (float*) malloc(sizeof(float)*xsize*ysize);
+
+    imageID IDts0;
+    load_fits("../conf/turbseed0.fits", "tseed0", 1, &IDts0);
+    uint32_t Sxsize = data.image[IDts0].md->size[0];
+    uint32_t Sysize = data.image[IDts0].md->size[1];
+
+    list_image_ID();
+
+    // DM pixel scale
+    float psDM = *DMpixscale;
+    printf("psDM = %f\n", psDM);
+
+    // physical time
+    double phystime = 0.0;
+    double phystimeprev = 0.0;
+
+    // position on seed screen 0
+    double x0m = 0.0;
+    double y0m = 0.0;
+
+    double amplcoeff = 1.0; // amplitude adjustment coeff
+
+
+    struct timespec tstart;
+    struct timespec tnow;
+    clock_gettime(CLOCK_REALTIME, &tstart);
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
 
-        make_DMturbcube(turbfname, xsize, ysize, *NBsamples);
+        clock_gettime(CLOCK_REALTIME, &tnow);
+        long tdiffsec = tnow.tv_sec - tstart.tv_sec;
+        long tdiffnsec = tnow.tv_nsec - tstart.tv_nsec;
+        double tdiff = 1.0*tdiffsec + 1.0e-9*tdiffnsec;
+
+        phystimeprev = phystime;
+        phystime = tdiff;
+        double dt = phystime - phystimeprev;
+
+        // position on seed screen
+        x0m += dt * (*turbwspeed) * cos(*turbwangle);
+        y0m += dt * (*turbwspeed) * sin(*turbwangle);
+
+        double seedscreensizem = (*turbseedpixscale) * Sxsize;
+
+        while ( x0m < 0)
+        {
+            x0m += seedscreensizem;
+        }
+        while ( x0m > seedscreensizem)
+        {
+            x0m -= seedscreensizem;
+        }
+
+        while ( y0m < 0)
+        {
+            y0m += seedscreensizem;
+        }
+        while ( y0m > seedscreensizem)
+        {
+            y0m -= seedscreensizem;
+        }
+
+        // x0m and y0m are positive
+
+
+        double total = 0.0;
+        for(uint32_t ii=0; ii<xsize; ii++)
+        {
+            double xm = x0m + (*DMpixscale)*ii;
+            double xpix = xm / (*turbseedpixscale);
+
+            uint32_t xpix0 = (uint32_t) xpix;
+            double xfrac = xpix-xpix0;
+
+            xpix0 = xpix0 % (*turbseedsize);
+            uint32_t xpix1 = xpix0+1;
+            xpix1 = xpix1 % Sxsize;
+
+
+            for(uint32_t jj=0; jj<ysize; jj++)
+            {
+                double ym = y0m + (*DMpixscale)*jj;
+                double ypix = ym / (*turbseedpixscale);
+
+                uint32_t ypix0 = (uint32_t) ypix;
+                double yfrac = ypix-ypix0;
+
+                ypix0 = ypix0 % (*turbseedsize);
+                uint32_t ypix1 = ypix0+1;
+                ypix1 = ypix1 % Sysize;
+
+                double v00 = data.image[IDts0].array.F[ypix0*Sxsize + xpix0];
+                double v10 = data.image[IDts0].array.F[ypix0*Sxsize + xpix1];
+                double v01 = data.image[IDts0].array.F[ypix1*Sxsize + xpix0];
+                double v11 = data.image[IDts0].array.F[ypix1*Sxsize + xpix1];
+
+                // bilinear interpolation
+                float val = v00*(1.0-xfrac)*(1.0-yfrac) + v10*xfrac*(1.0-yfrac) + v01*(1.0-xfrac)*yfrac + v11*xfrac*yfrac;
+                val *= amplcoeff;
+                turbimarray[jj*xsize+ii] = val;
+                total += val;
+            }
+        }
+        double total2 = 0.0;
+        for(uint64_t ii=0; ii<xsize*ysize; ii++)
+        {
+            turbimarray[ii] -= total/(xsize*ysize);
+            total2 += turbimarray[ii]*turbimarray[ii];
+        }
+        double RMSval = sqrt(total2/(xsize*ysize));
+
+        processinfo_WriteMessage_fmt(processinfo, "pht %.3lf s (+ %.0f us) RMS %.3f", phystime, 1e6*dt, RMSval);
+
+        // tweak amplcoeff to match desired RMS
+        // large discrepancy lead ot large correction
+        //
+        double coeffstep = (*turbampl) / RMSval;
+        double logdiff = log10(coeffstep);
+        double logdiff3abs = pow(fabs(logdiff),3.0);
+        double amplloopgain = 1.0e-4 + logdiff3abs/(logdiff3abs+1.0);
+        amplcoeff *= pow(10.0, amplloopgain*logdiff);
+
+        printf("RMS= %6.3f / %6.3f  logdiff = %6.3f  factor = %6.3f\n", RMSval, (*turbampl), logdiff, pow(10.0, logdiff));
+
+
+
+
+
+        imgDM.md->write = 1;
+        memcpy(imgDM.im->array.F, turbimarray, sizeof(float)*xsize*ysize);
+        processinfo_update_output_stream(processinfo, imgDM.ID);
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    free(turbimarray);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
