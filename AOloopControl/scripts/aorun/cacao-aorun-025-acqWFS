@@ -4,14 +4,26 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Acquire WFS data"
 
 
-MSextdescr="AO loop script"
+MSextdescr="reads from aolX_wfsim
+Subtract dark      -> aolX_imWFS0
+Normalizes flux    -> aolX_imWFS1
+Subtract reference -> aolX_imWFS2"
 source milk-script-std-config
 source cacao-check-cacaovars
 
 MSarg+=( "action:string:action (start/check)" )
+
+
+WaitForCompletion=0
+MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
+function set_WaitForCompletion() {
+	WaitForCompletion=1
+}
+
+
 
 source milk-argparse
 ACTION="${inputMSargARRAY[0]}"
@@ -80,11 +92,14 @@ sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
 
 sname="aol${CACAO_LOOPNUMBER}_imWFS2"
+
+if [ $WaitForCompletion == "1" ]; then
 echo "Waiting for stream ${sname}"
 until [ -f "${MILK_SHM_DIR}/${sname}.im.shm" ]
 do
      sleep 0.1
 done
+fi
 
 fi
 
