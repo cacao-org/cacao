@@ -91,9 +91,9 @@ fi
 sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
 
-sname="aol${CACAO_LOOPNUMBER}_imWFS2"
 
 if [ $WaitForCompletion == "1" ]; then
+sname="aol${CACAO_LOOPNUMBER}_imWFS2"
 echo "Waiting for stream ${sname}"
 until [ -f "${MILK_SHM_DIR}/${sname}.im.shm" ]
 do
