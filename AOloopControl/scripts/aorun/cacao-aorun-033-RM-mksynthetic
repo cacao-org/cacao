@@ -121,6 +121,6 @@ ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.fits
 echo "ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.fits"
 
 
-rm -f ./conf/RMmodesDM/RMmodesWFS.fits
-ln -s $(pwd)/conf/RMmodesDM/synRMmodesWFS.fits ./conf/RMmodesDM/RMmodesWFS.fits
+rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
+ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 echo "ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
