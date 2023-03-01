@@ -346,7 +346,7 @@ static errno_t compute_function()
 
 
             clock_gettime(CLOCK_REALTIME, &t1);
-            save_fits("ATA", "compstrCM-ATA.fits");
+            //save_fits("ATA", "compstrCM-ATA.fits");
 
 
             //nbmode = 100;
@@ -356,16 +356,11 @@ static errno_t compute_function()
             float *t = (float*) malloc(sizeof(float)*nbmode);
 
 
-            printf("Calling LAPACKE_ssytrd\n");
-            printf("nbmode %d\n", nbmode);
             LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, (float*) imgATA.im->array.F, nbmode, d, e, t);
-            //LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, a, nbmode, d, e, t);
-            printf("LAPACKE_ssytrd done\n");
 
             clock_gettime(CLOCK_REALTIME, &t2);
 
             // Assemble Q matrix
-            printf("Calling LAPACKE_sorgtr\n");
             LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, t );
 
 
