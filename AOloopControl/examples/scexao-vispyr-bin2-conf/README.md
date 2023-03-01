@@ -61,7 +61,7 @@ cacao-aorun-001-dmsim start
 
 # Start simulation processes
 # (skip if in hardware mode)
-cacao-aorun-002-simwfs start
+cacao-aorun-002-simwfs -w start
 ```
 
 
@@ -79,8 +79,14 @@ cacao-aorun-005-takedark
 
 ```bash
 # Acquire WFS frames
-cacao-aorun-025-acqWFS start
+cacao-aorun-025-acqWFS -w start
 ```
+
+```bash
+# Acquire WFS reference
+cacao-aorun-026-takeref -n 2000
+```
+
 
 ## Measure DM to WFS latency
 
@@ -98,7 +104,7 @@ cacao-aorun-020-mlat -w
 
 ```bash
 # Create DM poke mode cubes
-cacao-mkDMpokemodes
+cacao-mkDMpokemodes -z 5 -c 25
 ```
 The following files are written to ./conf/RMmodesDM/
 | File                 | Contents                                            |
@@ -117,21 +123,27 @@ The following files are written to ./conf/RMmodesDM/
 
 
 ```bash
-# Acquire response matrix - Fourier modes
-# 20 cycles - default is 10.
-cacao-aorun-030-acqlinResp -n 20 FpokesC.<CPA>.fits
-
-# NOTE: Alternate option is Hadamard modes
 # Acquire response matrix - Hadamard modes
-#cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
-#cacao-aorun-030-acqlinResp HpokeC
+# 20 cycles - default is 10.
+cacao-aorun-030-acqlinResp -n 20 -w HpokeC
 ```
 
-### Take reference
+### Decode Hadamard matrix
 
 ```bash
-# Acquire reference
-cacao-aorun-026-takeref
+cacao-aorun-031-RMHdecode
+```
+
+### Make DM and WFS masks
+
+```bash
+cacao-aorun-032-RMmkmask
+```
+
+### Create synthetic (Fourier) response matrix
+
+```bash
+cacao-aorun-033-RM-mksynthetic -c 20
 ```
 
 
@@ -140,13 +152,7 @@ cacao-aorun-026-takeref
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-# Note that file paths are relative to the rundir, not the CWD.
-cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/FpokesC.<CPA>.fits"
-cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/FpokesC.<CPA>.WFSresp.fits"
-# Alternatively, use the symlinks to the latest acqlinresp results:
-# ../conf/RMmodesDM/RMmodesDM.fits
-# ../conf/RMmodesWFS/RMmodesWFS.fits
-cacao-fpsctrl setval compstrCM svdlim 0.2
+cacao-fpsctrl setval compstrCM svdlim 0.1
 ```
 Then run the compstrCM process to compute CM and load it to shared memory :
 ```bash
@@ -157,14 +163,14 @@ cacao-aorun-039-compstrCM
 
 ## Running the loop
 
-Select GPUs
+Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 0
-cacao-fpsctrl setval mvalC2dm GPUindex 3
+cacao-fpsctrl setval mvalC2dm GPUindex 0
 ```
 
 
-From directory vispyr-rootdir, start 3 processes :
+Start the 3 control loop processes :
 
 ```bash
 # start WFS -> mode coefficient values
