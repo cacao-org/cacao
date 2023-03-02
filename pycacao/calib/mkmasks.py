@@ -43,16 +43,18 @@ def make_masks_fitsio(
     dm_map, dm_mask, wfs_map, wfs_mask = make_masks(resp_4D, dm_perc, wfs_perc)
 
     fits.writeto('./conf/dmmap.fits', dm_map, overwrite=True)
-    fits.writeto('./conf/dmmask.fits', dm_mask * 1.0, overwrite=True)
+    fits.writeto('./conf/dmmask.fits', dm_mask.astype(np.float32),
+                 overwrite=True)
     fits.writeto('./conf/wfsmap.fits', wfs_map, overwrite=True)
-    fits.writeto('./conf/wfsmask.fits', wfs_mask * 1.0, overwrite=True)
+    fits.writeto('./conf/wfsmask.fits', wfs_mask.astype(np.float32),
+                 overwrite=True)
 
 
 def make_masks(
         resp_4D: np.ndarray,
         dm_perc: PercentileParam,
         wfs_perc: PercentileParam,
-) -> np.ndarray:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     '''
 
     '''
