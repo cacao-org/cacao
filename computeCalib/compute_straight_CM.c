@@ -55,6 +55,7 @@
 //
 #ifdef HAVE_MKL
 #include "mkl.h"
+#include "mkl_lapacke.h"
 #define BLASLIB "IntelMKL"
 #else
 #ifdef HAVE_OPENBLAS
@@ -79,8 +80,6 @@ static long  fpi_CMmodesDMfname;
 static char *CMmodesWFSfname;
 static long  fpi_CMmodesWFSfname;
 
-//static char *controlM;
-//static long  fpi_controlM;
 
 static float *svdlim;
 static long   fpi_svdlim;
@@ -355,6 +354,10 @@ static errno_t compute_function()
             float *e = (float*) malloc(sizeof(float)*nbmode);
             float *t = (float*) malloc(sizeof(float)*nbmode);
 
+
+            #ifdef HAVE_MKL
+            mkl_set_interface_layer(MKL_INTERFACE_LP64);
+            #endif
 
             LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, (float*) imgATA.im->array.F, nbmode, d, e, t);
 

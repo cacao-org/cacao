@@ -88,15 +88,16 @@ target_compile_options(${LIBNAME} PUBLIC -DHAVE_OPENBLAS ${OPENBLAS_CFLAGS_OTHER
 endif()
 
 
-# MKL detected in upstream CMakeList with find_package(MKL CONFIG)
+
+# MKL detected in upstream CMakeList with pkg_check_modules(MKL mkl-sdl)
 if(MKL_FOUND)
 message("---- MKL_LIBRARY_DIRS =  ${MKL_LIBRARY_DIRS}")
 message("---- MKL_LIBRARIES    =  ${MKL_LIBRARIES}" )
 message("---- MKL_CFLAGS_OTHER =  ${MKL_CFLAGS_OTHER}" )
+target_include_directories(${LIBNAME} PUBLIC ${MKL_INCLUDE_DIRS})
+target_link_directories(${LIBNAME} PUBLIC ${MKL_LIBRARY_DIRS})
+target_link_libraries(${LIBNAME} PUBLIC ${MKL_LIBRARIES})
 target_compile_options(${LIBNAME} PUBLIC -DHAVE_MKL ${MKL_CFLAGS_OTHER})
-target_compile_options(${LIBNAME} PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_COMPILE_OPTIONS>)
-target_include_directories(${LIBNAME} PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_INCLUDE_DIRECTORIES>)
-target_link_libraries(${LIBNAME} PUBLIC $<LINK_ONLY:MKL::MKL>)
 endif()
 
 
