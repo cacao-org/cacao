@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="Project modal RM to zonal basis"
+
+
+MSextdescr="Project modal RM to zonal basis"
+source milk-script-std-config
+
+MSarg+=( "RMdm:FITSfile:input RM in DM space" )
+MSarg+=( "RMwfs:FITSfile:input RM in WFS space" )
+
+MSarg+=( "RMzdm:FITSfile:output zonal RM in DM space" )
+MSarg+=( "RMzwfs:FITSfile:output zonal RM in WFS space" )
+
+source milk-argparse
+
+
+RMmDMifn="${inputMSargARRAY[0]}"
+RMmDMifn="${inputMSargARRAY[1]}"
+RMzDMofn="${inputMSargARRAY[2]}"
+RMzWFSofn="${inputMSargARRAY[3]}"
+
+cacao << EOF
+loadfits "${RMmDMifn}" RMdm
+loadfits "${RMmWFSifn}" RMwfs
+cacaocc.RM2zonal .GPUdevice -1
+cacaocc.RM2zonal RMdm RMwfs RMzdm RMzwfs 0.001
+listim
+saveFITS RMzwfs "${RMzWFSofn}"
+saveFITS RMzdm "${RMzWFSofn}"
+exitCLI
+EOF
