@@ -15,6 +15,7 @@ set(SOURCEFILES
 	generateRMWFS.c
 	maskextrapolate.c
 	modes_spatial_extrapolate.c
+	RM2zonal.c
 )
 
 

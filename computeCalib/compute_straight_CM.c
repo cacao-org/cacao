@@ -311,9 +311,7 @@ static errno_t compute_function()
 
                     float *d_ATA;
                     cudaMalloc((void **)&d_ATA, imgATA.md->nelement * sizeof(float));
-                    //cudaMemcpy(d_RMWFS,imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
 
-                    // Create a handle for CUBLAS
                     cublasHandle_t handle;
                     cublasCreate(&handle);
 
@@ -321,7 +319,6 @@ static errno_t compute_function()
                     cublasSgemm(handle, CUBLAS_OP_T, CUBLAS_OP_N,
                                 nbmode, nbmode, nbwfspix, alpha, d_RMWFS, nbwfspix, d_RMWFS, nbwfspix, beta, d_ATA, nbmode);
 
-                    // Destroy the handle
                     cublasDestroy(handle);
 
                     cudaMemcpy(imgATA.im->array.F, d_ATA, imgATA.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
@@ -355,9 +352,9 @@ static errno_t compute_function()
             float *t = (float*) malloc(sizeof(float)*nbmode);
 
 
-            #ifdef HAVE_MKL
+#ifdef HAVE_MKL
             mkl_set_interface_layer(MKL_INTERFACE_LP64);
-            #endif
+#endif
 
             LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, (float*) imgATA.im->array.F, nbmode, d, e, t);
 
@@ -370,28 +367,13 @@ static errno_t compute_function()
             clock_gettime(CLOCK_REALTIME, &t3);
 
 
-            if(0)
-            {
-                // compute some of the eigenvalues and eigenvectors
-                //
-                lapack_int evfound;
 
+            printf("Compute all eigenvalues and eivenvectors\n");
 
-                lapack_int * isuppz = (lapack_int*) malloc(sizeof(lapack_int)*2*nbmode);
-                lapack_logical tryrac = 0;
-                LAPACKE_sstemr(LAPACK_COL_MAJOR, 'V', 'I', nbmode, d, e, 0.0, 0.0, nbmode-10,
-                               nbmode, &evfound, imgeval.im->array.F, imgevec.im->array.F, nbmode, nbmode, isuppz, &tryrac);
+            memcpy(imgevec.im->array.F, imgATA.im->array.F, sizeof(float)*nbmode*nbmode);
+            LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
+            memcpy(imgeval.im->array.F, d, sizeof(float)*nbmode);
 
-                printf("Found %d eigenvalues\n", (int) evfound);
-            }
-            else
-            {
-                // compute all eigenvalues and eivenvectors
-                //
-                memcpy(imgevec.im->array.F, imgATA.im->array.F, sizeof(float)*nbmode*nbmode);
-                LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
-                memcpy(imgeval.im->array.F, d, sizeof(float)*nbmode);
-            }
             clock_gettime(CLOCK_REALTIME, &t4);
 
             free(d);

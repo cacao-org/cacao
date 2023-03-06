@@ -33,7 +33,7 @@
 #include "computeHadamard.h"
 #include "maskextrapolate.h"
 
-
+#include "RM2zonal.h"
 
 
 
@@ -84,6 +84,8 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_computeCalib__mkHadamard();
 
     CLIADDCMD_AOloopControl_computeCalib__maskextrapolate();
+
+    CLIADDCMD_AOloopControl_computeCalib__RM2zonal();
 
 
     // add atexit functions here
