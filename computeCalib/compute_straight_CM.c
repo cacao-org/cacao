@@ -288,6 +288,7 @@ static errno_t compute_function()
 
 
         {
+            processinfo_WriteMessage(processinfo, "Create ATA");
             // create ATA
             IMGID imgATA = makeIMGID_2D("ATA", nbmode, nbmode);
             createimagefromIMGID(&imgATA);
@@ -367,8 +368,7 @@ static errno_t compute_function()
             clock_gettime(CLOCK_REALTIME, &t3);
 
 
-
-            printf("Compute all eigenvalues and eivenvectors\n");
+            processinfo_WriteMessage(processinfo, "comp eigenv");
 
             memcpy(imgevec.im->array.F, imgATA.im->array.F, sizeof(float)*nbmode*nbmode);
             LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
@@ -387,7 +387,11 @@ static errno_t compute_function()
 
 
 
+
         // create CM WFS
+
+        processinfo_WriteMessage(processinfo, "create CM WFS");
+
         IMGID imgCMWFSall = makeIMGID_3D("CMmodesWFSall", imgRMWFS.md->size[0], imgRMWFS.md->size[1], imgRMDM.md->size[2]);
         createimagefromIMGID(&imgCMWFSall);
 
@@ -464,6 +468,7 @@ static errno_t compute_function()
         clock_gettime(CLOCK_REALTIME, &t6);
 
         // create CM DM
+        processinfo_WriteMessage(processinfo, "create CM DM");
         IMGID imgCMDMall = makeIMGID_3D("CMmodesDMall", imgRMDM.md->size[0], imgRMDM.md->size[1], imgRMDM.md->size[2]);
         createimagefromIMGID(&imgCMDMall);
 
@@ -533,6 +538,7 @@ static errno_t compute_function()
         clock_gettime(CLOCK_REALTIME, &t7);
 
 
+        processinfo_WriteMessage(processinfo, "mormalize modes");
         // norm2 of WFS and DM modes
         float * n2cmWFS = (float *) malloc( sizeof(float) * nbmode);
         float * n2cmDM  = (float *) malloc( sizeof(float) * nbmode);
@@ -578,6 +584,8 @@ static errno_t compute_function()
         // create CMWFS and CMDM
         // contains strongest (highest singular values) modes from CMWFSall
         //
+        processinfo_WriteMessage(processinfo, "create CMWFS and CMDM");
+
 
         IMGID imgCMWFS = makeIMGID_3D("CMmodesWFS", imgRMWFS.md->size[0], imgRMWFS.md->size[1], ecnt);
         createimagefromIMGID(&imgCMWFS);
