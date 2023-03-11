@@ -647,6 +647,8 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
     // SETUP FPS
     // ===========================
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
+
+    FPS2PROCINFOMAP fps2procinfo;
     fps_add_processinfo_entries(&fps);
 
     // ===========================

@@ -147,94 +147,36 @@ AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
 
     switch(datatype)
     {
-        case _DATATYPE_UINT16:
-            while(1)
+    case _DATATYPE_UINT16:
+        while(1)
+        {
+            usleep(10); // OK FOR NOW (NOT USED BY FAST WFS)
+            if(data.image[IDin].md[0].cnt0 != cnt0)
             {
-                usleep(10); // OK FOR NOW (NOT USED BY FAST WFS)
-                if(data.image[IDin].md[0].cnt0 != cnt0)
+                data.image[IDout].md[0].write = 1;
+                cnt0                          = data.image[IDin].md[0].cnt0;
+                if(datatypeout == _DATATYPE_UINT16)
                 {
-                    data.image[IDout].md[0].write = 1;
-                    cnt0                          = data.image[IDin].md[0].cnt0;
-                    if(datatypeout == _DATATYPE_UINT16)
-                    {
-                        for(iiout = 0; iiout < size_x; iiout++)
-                            for(jjout = 0; jjout < size_y; jjout++)
-                            {
-                                iiin = xstart + iiout;
-                                jjin = ystart + jjout;
-                                data.image[IDout]
-                                .array.UI16[jjout * size_x + iiout] =
-                                    data.image[IDin].array.UI16
-                                    [jjin * data.image[IDin].md[0].size[0] +
-                                          iiin];
-                            }
-                        if(IDmask != -1)
-                            for(uint64_t ii = 0; ii < sizeoutxy; ii++)
-                            {
-                                data.image[IDout].array.UI16[ii] *=
-                                    (int) data.image[IDmask].array.F[ii];
-                            }
-                    }
-                    else // FLOAT
-                    {
-                        if(IDdark == -1)
+                    for(iiout = 0; iiout < size_x; iiout++)
+                        for(jjout = 0; jjout < size_y; jjout++)
                         {
-                            for(iiout = 0; iiout < size_x; iiout++)
-                                for(jjout = 0; jjout < size_y; jjout++)
-                                {
-                                    iiin = xstart + iiout;
-                                    jjin = ystart + jjout;
-                                    data.image[IDout]
-                                    .array.F[jjout * size_x + iiout] =
-                                        data.image[IDin].array.UI16
-                                        [jjin * data.image[IDin].md[0].size[0] +
-                                              iiin];
-                                }
+                            iiin = xstart + iiout;
+                            jjin = ystart + jjout;
+                            data.image[IDout]
+                            .array.UI16[jjout * size_x + iiout] =
+                                data.image[IDin].array.UI16
+                                [jjin * data.image[IDin].md[0].size[0] +
+                                      iiin];
                         }
-                        else
+                    if(IDmask != -1)
+                        for(uint64_t ii = 0; ii < sizeoutxy; ii++)
                         {
-                            for(iiout = 0; iiout < size_x; iiout++)
-                                for(jjout = 0; jjout < size_y; jjout++)
-                                {
-                                    iiin = xstart + iiout;
-                                    jjin = ystart + jjout;
-                                    data.image[IDout]
-                                    .array.F[jjout * size_x + iiout] =
-                                        1.0 *
-                                        data.image[IDin]
-                                        .array.UI16[jjin * data.image[IDin]
-                                                         .md[0]
-                                                         .size[0] +
-                                                         iiin] -
-                                        data.image[IDdark].array.F
-                                        [jjin *
-                                              data.image[IDdark].md[0].size[0] +
-                                              iiin];
-                                }
+                            data.image[IDout].array.UI16[ii] *=
+                                (int) data.image[IDmask].array.F[ii];
                         }
-
-                        if(IDmask != -1)
-                            for(uint64_t ii = 0; ii < sizeoutxy; ii++)
-                            {
-                                data.image[IDout].array.F[ii] *=
-                                    data.image[IDmask].array.F[ii];
-                            }
-                    }
-
-                    data.image[IDout].md[0].cnt0  = cnt0;
-                    data.image[IDout].md[0].write = 0;
-                    COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
                 }
-            }
-            break;
-        case _DATATYPE_FLOAT:
-            while(1)
-            {
-                usleep(10); // OK FOR NOW (NOT USED BY FAST WFS)
-                if(data.image[IDin].md[0].cnt0 != cnt0)
+                else // FLOAT
                 {
-                    data.image[IDout].md[0].write = 1;
-                    cnt0                          = data.image[IDin].md[0].cnt0;
                     if(IDdark == -1)
                     {
                         for(iiout = 0; iiout < size_x; iiout++)
@@ -242,11 +184,11 @@ AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
                             {
                                 iiin = xstart + iiout;
                                 jjin = ystart + jjout;
-                                data.image[IDout].array.F[jjout * size_x + iiout] =
-                                    data.image[IDin]
-                                    .array
-                                    .F[jjin * data.image[IDin].md[0].size[0] +
-                                            iiin];
+                                data.image[IDout]
+                                .array.F[jjout * size_x + iiout] =
+                                    data.image[IDin].array.UI16
+                                    [jjin * data.image[IDin].md[0].size[0] +
+                                          iiin];
                             }
                     }
                     else
@@ -256,15 +198,18 @@ AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
                             {
                                 iiin = xstart + iiout;
                                 jjin = ystart + jjout;
-                                data.image[IDout].array.F[jjout * size_x + iiout] =
+                                data.image[IDout]
+                                .array.F[jjout * size_x + iiout] =
+                                    1.0 *
                                     data.image[IDin]
-                                    .array
-                                    .F[jjin * data.image[IDin].md[0].size[0] +
-                                            iiin] -
-                                    data.image[IDdark]
-                                    .array
-                                    .F[jjin * data.image[IDdark].md[0].size[0] +
-                                            iiin];
+                                    .array.UI16[jjin * data.image[IDin]
+                                                     .md[0]
+                                                     .size[0] +
+                                                     iiin] -
+                                    data.image[IDdark].array.F
+                                    [jjin *
+                                          data.image[IDdark].md[0].size[0] +
+                                          iiin];
                             }
                     }
 
@@ -274,17 +219,72 @@ AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
                             data.image[IDout].array.F[ii] *=
                                 data.image[IDmask].array.F[ii];
                         }
-
-                    data.image[IDout].md[0].cnt0  = cnt0;
-                    data.image[IDout].md[0].write = 0;
-                    COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
                 }
+
+                data.image[IDout].md[0].cnt0  = cnt0;
+                data.image[IDout].md[0].write = 0;
+                COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
             }
-            break;
-        default:
-            printf("ERROR: DATA TYPE NOT SUPPORTED\n");
-            exit(0);
-            break;
+        }
+        break;
+    case _DATATYPE_FLOAT:
+        while(1)
+        {
+            usleep(10); // OK FOR NOW (NOT USED BY FAST WFS)
+            if(data.image[IDin].md[0].cnt0 != cnt0)
+            {
+                data.image[IDout].md[0].write = 1;
+                cnt0                          = data.image[IDin].md[0].cnt0;
+                if(IDdark == -1)
+                {
+                    for(iiout = 0; iiout < size_x; iiout++)
+                        for(jjout = 0; jjout < size_y; jjout++)
+                        {
+                            iiin = xstart + iiout;
+                            jjin = ystart + jjout;
+                            data.image[IDout].array.F[jjout * size_x + iiout] =
+                                data.image[IDin]
+                                .array
+                                .F[jjin * data.image[IDin].md[0].size[0] +
+                                        iiin];
+                        }
+                }
+                else
+                {
+                    for(iiout = 0; iiout < size_x; iiout++)
+                        for(jjout = 0; jjout < size_y; jjout++)
+                        {
+                            iiin = xstart + iiout;
+                            jjin = ystart + jjout;
+                            data.image[IDout].array.F[jjout * size_x + iiout] =
+                                data.image[IDin]
+                                .array
+                                .F[jjin * data.image[IDin].md[0].size[0] +
+                                        iiin] -
+                                data.image[IDdark]
+                                .array
+                                .F[jjin * data.image[IDdark].md[0].size[0] +
+                                        iiin];
+                        }
+                }
+
+                if(IDmask != -1)
+                    for(uint64_t ii = 0; ii < sizeoutxy; ii++)
+                    {
+                        data.image[IDout].array.F[ii] *=
+                            data.image[IDmask].array.F[ii];
+                    }
+
+                data.image[IDout].md[0].cnt0  = cnt0;
+                data.image[IDout].md[0].write = 0;
+                COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
+            }
+        }
+        break;
+    default:
+        printf("ERROR: DATA TYPE NOT SUPPORTED\n");
+        exit(0);
+        break;
     }
     free(sizeout);
 
@@ -446,37 +446,37 @@ static void *compute_function_dark_subtract(void *ptr)
 
         switch(WFSatype)
         {
-            case _DATATYPE_UINT16:
-                for(ii = iistart; ii < iiend; ii++)
-                {
-                    data.image[ID_imWFS0].array.F[ii] =
-                        ((float) arrayutmp[ii]) -
-                        data.image[Average_cam_frames_IDdark].array.F[ii];
-                }
-                break;
-            case _DATATYPE_INT16:
-                for(ii = iistart; ii < iiend; ii++)
-                {
-                    data.image[ID_imWFS0].array.F[ii] =
-                        ((float) arraystmp[ii]) -
-                        data.image[Average_cam_frames_IDdark].array.F[ii];
-                }
-                break;
-            case _DATATYPE_FLOAT:
-                for(ii = iistart; ii < iiend; ii++)
-                {
-                    data.image[ID_imWFS0].array.F[ii] =
-                        ((float) arrayftmp[ii]) -
-                        data.image[Average_cam_frames_IDdark].array.F[ii];
-                }
-                break;
-            default:
-                printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                       __FILE__,
-                       __LINE__);
-                printf("datatype = %d\n", aoloopcontrol_var.WFSatype);
-                exit(0);
-                break;
+        case _DATATYPE_UINT16:
+            for(ii = iistart; ii < iiend; ii++)
+            {
+                data.image[ID_imWFS0].array.F[ii] =
+                    ((float) arrayutmp[ii]) -
+                    data.image[Average_cam_frames_IDdark].array.F[ii];
+            }
+            break;
+        case _DATATYPE_INT16:
+            for(ii = iistart; ii < iiend; ii++)
+            {
+                data.image[ID_imWFS0].array.F[ii] =
+                    ((float) arraystmp[ii]) -
+                    data.image[Average_cam_frames_IDdark].array.F[ii];
+            }
+            break;
+        case _DATATYPE_FLOAT:
+            for(ii = iistart; ii < iiend; ii++)
+            {
+                data.image[ID_imWFS0].array.F[ii] =
+                    ((float) arrayftmp[ii]) -
+                    data.image[Average_cam_frames_IDdark].array.F[ii];
+            }
+            break;
+        default:
+            printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                   __FILE__,
+                   __LINE__);
+            printf("datatype = %d\n", aoloopcontrol_var.WFSatype);
+            exit(0);
+            break;
         }
 
         sem_getvalue(&AOLCOMPUTE_DARK_SUBTRACT_RESULT_sem_name[threadindex],
@@ -498,6 +498,8 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF()
     // SETUP FPS
     // ===========================
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
+
+    FPS2PROCINFOMAP fps2procinfo;
     fps_add_processinfo_entries(&fps); // include real-time settings
 
     // ===========================
@@ -888,28 +890,28 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
             switch(WFSatype)
             {
 
-                case _DATATYPE_FLOAT:
-                    ptrv = (char *) data.image[ID_wfsim].array.F;
-                    ptrv += sizeof(float) * slice * sizeWFS;
-                    memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
-                    break;
+            case _DATATYPE_FLOAT:
+                ptrv = (char *) data.image[ID_wfsim].array.F;
+                ptrv += sizeof(float) * slice * sizeWFS;
+                memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
+                break;
 
-                case _DATATYPE_UINT16:
-                    ptrv = (char *) data.image[ID_wfsim].array.UI16;
-                    ptrv += sizeof(unsigned short) * slice * sizeWFS;
-                    memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
-                    break;
+            case _DATATYPE_UINT16:
+                ptrv = (char *) data.image[ID_wfsim].array.UI16;
+                ptrv += sizeof(unsigned short) * slice * sizeWFS;
+                memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
+                break;
 
-                case _DATATYPE_INT16:
-                    ptrv = (char *) data.image[ID_wfsim].array.SI16;
-                    ptrv += sizeof(signed short) * slice * sizeWFS;
-                    memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
-                    break;
+            case _DATATYPE_INT16:
+                ptrv = (char *) data.image[ID_wfsim].array.SI16;
+                ptrv += sizeof(signed short) * slice * sizeWFS;
+                memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
+                break;
 
-                default:
-                    printf("ERROR: DATA TYPE NOT SUPPORTED\n");
-                    exit(0);
-                    break;
+            default:
+                printf("ERROR: DATA TYPE NOT SUPPORTED\n");
+                exit(0);
+                break;
             }
 
             // WFScnt = data.image[ID_wfsim].md[0].cnt0;
@@ -925,82 +927,82 @@ errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN()
                 switch(WFSatype)
                 {
 
-                    case _DATATYPE_UINT16:
-                        if(Average_cam_frames_IDdark == -1)
+                case _DATATYPE_UINT16:
+                    if(Average_cam_frames_IDdark == -1)
+                    {
+                        for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                ii++)
                         {
-                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                                    ii++)
-                            {
-                                data.image[ID_imWFS0].array.F[ii] =
-                                    ((float) arrayutmp[ii]);
-                            }
+                            data.image[ID_imWFS0].array.F[ii] =
+                                ((float) arrayutmp[ii]);
                         }
-                        else
+                    }
+                    else
+                    {
+                        for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                ii++)
                         {
-                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                                    ii++)
-                            {
-                                data.image[ID_imWFS0].array.F[ii] =
-                                    ((float) arrayutmp[ii]) -
-                                    data.image[Average_cam_frames_IDdark]
-                                    .array.F[ii];
-                            }
+                            data.image[ID_imWFS0].array.F[ii] =
+                                ((float) arrayutmp[ii]) -
+                                data.image[Average_cam_frames_IDdark]
+                                .array.F[ii];
                         }
-                        break;
+                    }
+                    break;
 
-                    case _DATATYPE_INT16:
+                case _DATATYPE_INT16:
 
-                        if(Average_cam_frames_IDdark == -1)
+                    if(Average_cam_frames_IDdark == -1)
+                    {
+                        for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                ii++)
                         {
-                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                                    ii++)
-                            {
-                                data.image[ID_imWFS0].array.F[ii] =
-                                    ((float) arraystmp[ii]);
-                            }
+                            data.image[ID_imWFS0].array.F[ii] =
+                                ((float) arraystmp[ii]);
                         }
-                        else
+                    }
+                    else
+                    {
+                        for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                ii++)
                         {
-                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                                    ii++)
-                            {
-                                data.image[ID_imWFS0].array.F[ii] =
-                                    ((float) arraystmp[ii]) -
-                                    data.image[Average_cam_frames_IDdark]
-                                    .array.F[ii];
-                            }
+                            data.image[ID_imWFS0].array.F[ii] =
+                                ((float) arraystmp[ii]) -
+                                data.image[Average_cam_frames_IDdark]
+                                .array.F[ii];
                         }
-                        break;
+                    }
+                    break;
 
-                    case _DATATYPE_FLOAT:
-                        if(Average_cam_frames_IDdark == -1)
+                case _DATATYPE_FLOAT:
+                    if(Average_cam_frames_IDdark == -1)
+                    {
+                        memcpy(data.image[ID_imWFS0].array.F,
+                               arrayftmp,
+                               sizeof(float) * Average_cam_frames_nelem);
+                    }
+                    else
+                    {
+                        for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
+                                ii++)
                         {
-                            memcpy(data.image[ID_imWFS0].array.F,
-                                   arrayftmp,
-                                   sizeof(float) * Average_cam_frames_nelem);
+                            data.image[ID_imWFS0].array.F[ii] =
+                                arrayftmp[ii] -
+                                data.image[Average_cam_frames_IDdark]
+                                .array.F[ii];
                         }
-                        else
-                        {
-                            for(uint64_t ii = 0; ii < Average_cam_frames_nelem;
-                                    ii++)
-                            {
-                                data.image[ID_imWFS0].array.F[ii] =
-                                    arrayftmp[ii] -
-                                    data.image[Average_cam_frames_IDdark]
-                                    .array.F[ii];
-                            }
-                        }
-                        break;
+                    }
+                    break;
 
-                    default:
-                        printf(
-                            "ERROR: WFS data type not recognized\n File %s, "
-                            "line %d\n",
-                            __FILE__,
-                            __LINE__);
-                        printf("datatype = %d\n", WFSatype);
-                        exit(0);
-                        break;
+                default:
+                    printf(
+                        "ERROR: WFS data type not recognized\n File %s, "
+                        "line %d\n",
+                        __FILE__,
+                        __LINE__);
+                    printf("datatype = %d\n", WFSatype);
+                    exit(0);
+                    break;
                 }
                 processinfo_update_output_stream(processinfo, ID_imWFS0);
                 // data.image[ID_imWFS0].md[0].cnt1 =
@@ -1553,37 +1555,37 @@ Read_cam_frame(long                        loop,
     switch(WFSatype)
     {
 
-        case _DATATYPE_FLOAT:
-            ptrv = (char *) data.image[ID_wfsim].array.F;
-            ptrv += sizeof(float) * slice * sizeWFS; // AOconf[loop].WFSim.sizeWFS;
-            memcpy(arrayftmp,
-                   ptrv,
-                   sizeof(float) * sizeWFS); // AOconf[loop].WFSim.sizeWFS);
-            break;
+    case _DATATYPE_FLOAT:
+        ptrv = (char *) data.image[ID_wfsim].array.F;
+        ptrv += sizeof(float) * slice * sizeWFS; // AOconf[loop].WFSim.sizeWFS;
+        memcpy(arrayftmp,
+               ptrv,
+               sizeof(float) * sizeWFS); // AOconf[loop].WFSim.sizeWFS);
+        break;
 
-        case _DATATYPE_UINT16:
-            ptrv = (char *) data.image[ID_wfsim].array.UI16;
-            ptrv += sizeof(unsigned short) * slice *
-                    sizeWFS; // AOconf[loop].WFSim.sizeWFS;
-            memcpy(arrayutmp,
-                   ptrv,
-                   sizeof(unsigned short) *
-                   sizeWFS); // AOconf[loop].WFSim.sizeWFS);
-            break;
+    case _DATATYPE_UINT16:
+        ptrv = (char *) data.image[ID_wfsim].array.UI16;
+        ptrv += sizeof(unsigned short) * slice *
+                sizeWFS; // AOconf[loop].WFSim.sizeWFS;
+        memcpy(arrayutmp,
+               ptrv,
+               sizeof(unsigned short) *
+               sizeWFS); // AOconf[loop].WFSim.sizeWFS);
+        break;
 
-        case _DATATYPE_INT16:
-            ptrv = (char *) data.image[ID_wfsim].array.SI16;
-            ptrv += sizeof(signed short) * slice *
-                    sizeWFS; // AOconf[loop].WFSim.sizeWFS;
-            memcpy(arraystmp,
-                   ptrv,
-                   sizeof(signed short) * sizeWFS); // AOconf[loop].WFSim.sizeWFS);
-            break;
+    case _DATATYPE_INT16:
+        ptrv = (char *) data.image[ID_wfsim].array.SI16;
+        ptrv += sizeof(signed short) * slice *
+                sizeWFS; // AOconf[loop].WFSim.sizeWFS;
+        memcpy(arraystmp,
+               ptrv,
+               sizeof(signed short) * sizeWFS); // AOconf[loop].WFSim.sizeWFS);
+        break;
 
-        default:
-            printf("ERROR: DATA TYPE NOT SUPPORTED\n");
-            exit(0);
-            break;
+    default:
+        printf("ERROR: DATA TYPE NOT SUPPORTED\n");
+        exit(0);
+        break;
     }
 
     //	printf("WFS size = %ld\n", AOconf[loop].WFSim.sizeWFS);
@@ -1664,115 +1666,115 @@ Read_cam_frame(long                        loop,
         switch(WFSatype)
         {
 
-            case _DATATYPE_UINT16:
-                printf("================== TEST POINT LINE %d\n", __LINE__);
-                fflush(stdout);
-                if(Average_cam_frames_IDdark == -1)
+        case _DATATYPE_UINT16:
+            printf("================== TEST POINT LINE %d\n", __LINE__);
+            fflush(stdout);
+            if(Average_cam_frames_IDdark == -1)
+            {
+                for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
                 {
-                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
-                    }
+                    data.image[ID_imWFS0].array.F[ii] = ((float) arrayutmp[ii]);
                 }
-                else
+            }
+            else
+            {
+                //# ifdef _OPENMP
+                //            #pragma omp parallel num_threads(4) if
+                //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+                //        {
+                //# endif
+
+                //# ifdef _OPENMP
+                //            #pragma omp for
+                //# endif
+                for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
                 {
-                    //# ifdef _OPENMP
-                    //            #pragma omp parallel num_threads(4) if
-                    //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-                    //        {
-                    //# endif
-
-                    //# ifdef _OPENMP
-                    //            #pragma omp for
-                    //# endif
-                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] =
-                            ((float) arrayutmp[ii]) -
-                            data.image[Average_cam_frames_IDdark].array.F[ii];
-                    }
-                    //# ifdef _OPENMP
-                    //        }
-                    //# endif
+                    data.image[ID_imWFS0].array.F[ii] =
+                        ((float) arrayutmp[ii]) -
+                        data.image[Average_cam_frames_IDdark].array.F[ii];
                 }
-                break;
+                //# ifdef _OPENMP
+                //        }
+                //# endif
+            }
+            break;
 
-            case _DATATYPE_INT16:
-                printf("================== TEST POINT LINE %d\n", __LINE__);
-                fflush(stdout);
-                if(Average_cam_frames_IDdark == -1)
+        case _DATATYPE_INT16:
+            printf("================== TEST POINT LINE %d\n", __LINE__);
+            fflush(stdout);
+            if(Average_cam_frames_IDdark == -1)
+            {
+                for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
                 {
-                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
-                    }
+                    data.image[ID_imWFS0].array.F[ii] = ((float) arraystmp[ii]);
                 }
-                else
+            }
+            else
+            {
+                //# ifdef _OPENMP
+                //            #pragma omp parallel num_threads(4) if
+                //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+                //        {
+                //# endif
+
+                //# ifdef _OPENMP
+                //            #pragma omp for
+                //# endif
+                for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
                 {
-                    //# ifdef _OPENMP
-                    //            #pragma omp parallel num_threads(4) if
-                    //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-                    //        {
-                    //# endif
-
-                    //# ifdef _OPENMP
-                    //            #pragma omp for
-                    //# endif
-                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] =
-                            ((float) arraystmp[ii]) -
-                            data.image[Average_cam_frames_IDdark].array.F[ii];
-                    }
-                    //# ifdef _OPENMP
-                    //        }
-                    //# endif
+                    data.image[ID_imWFS0].array.F[ii] =
+                        ((float) arraystmp[ii]) -
+                        data.image[Average_cam_frames_IDdark].array.F[ii];
                 }
-                break;
+                //# ifdef _OPENMP
+                //        }
+                //# endif
+            }
+            break;
 
-            case _DATATYPE_FLOAT:
-                printf("================== TEST POINT LINE %d   ID dark = %ld\n",
-                       __LINE__,
-                       Average_cam_frames_IDdark);
-                fflush(stdout);
-                if(Average_cam_frames_IDdark == -1)
+        case _DATATYPE_FLOAT:
+            printf("================== TEST POINT LINE %d   ID dark = %ld\n",
+                   __LINE__,
+                   Average_cam_frames_IDdark);
+            fflush(stdout);
+            if(Average_cam_frames_IDdark == -1)
+            {
+                memcpy(data.image[ID_imWFS0].array.F,
+                       arrayftmp,
+                       sizeof(float) * Average_cam_frames_nelem);
+            }
+            else
+            {
+                //# ifdef _OPENMP
+                //            #pragma omp parallel num_threads(4) if
+                //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
+                //        {
+                //# endif
+
+                //# ifdef _OPENMP
+                //            #pragma omp parallel for
+                //# endif
+                for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
                 {
-                    memcpy(data.image[ID_imWFS0].array.F,
-                           arrayftmp,
-                           sizeof(float) * Average_cam_frames_nelem);
+                    data.image[ID_imWFS0].array.F[ii] =
+                        arrayftmp[ii] -
+                        data.image[Average_cam_frames_IDdark].array.F[ii];
                 }
-                else
-                {
-                    //# ifdef _OPENMP
-                    //            #pragma omp parallel num_threads(4) if
-                    //            (Average_cam_frames_nelem>OMP_NELEMENT_LIMIT)
-                    //        {
-                    //# endif
+                //# ifdef _OPENMP
+                //        }
+                //# endif
+            }
+            break;
 
-                    //# ifdef _OPENMP
-                    //            #pragma omp parallel for
-                    //# endif
-                    for(uint64_t ii = 0; ii < Average_cam_frames_nelem; ii++)
-                    {
-                        data.image[ID_imWFS0].array.F[ii] =
-                            arrayftmp[ii] -
-                            data.image[Average_cam_frames_IDdark].array.F[ii];
-                    }
-                    //# ifdef _OPENMP
-                    //        }
-                    //# endif
-                }
-                break;
-
-            default:
-                printf("================== TEST POINT LINE %d\n", __LINE__);
-                fflush(stdout);
-                printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                       __FILE__,
-                       __LINE__);
-                printf("datatype = %d\n", WFSatype);
-                exit(0);
-                break;
+        default:
+            printf("================== TEST POINT LINE %d\n", __LINE__);
+            fflush(stdout);
+            printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                   __FILE__,
+                   __LINE__);
+            printf("datatype = %d\n", WFSatype);
+            exit(0);
+            break;
         }
 
         printf("================== TEST POINT LINE %d\n", __LINE__);
