@@ -94,7 +94,7 @@ cacao-mkDMpokemodes
 ```
 The following files are written to ./conf/DMmodes/ :
 - DMmask.fits    : DM mask
-- Fmodes.fits    : Fourier modes
+- FpokesC.8.fits : Fourier modes
 - Zmodes.fits    : Zernike modes
 - HpokeC.fits    : Hadamard modes
 - Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
@@ -108,7 +108,7 @@ The following files are written to ./conf/DMmodes/ :
 ```bash
 # Acquire response matrix - Fourier modes
 cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
-cacao-aorun-030-acqlinResp -w Fmodes
+cacao-aorun-030-acqlinResp -w FpokesC.8
 
 # NOTE: Alternate option is Hadamard modes
 # Acquire response matrix - Hadamard modes
@@ -129,8 +129,8 @@ cacao-aorun-026-takeref
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/Fmodes.fits"
-cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/Fmodes.WFSresp.fits"
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/FpokesC.8.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/FpokesC.8.WFSresp.fits"
 cacao-fpsctrl setval compstrCM svdlim 0.2
 ```
 Then run the compstrCM process to compute CM and load it to shared memory :
