@@ -3,6 +3,7 @@
 SCExAO system pyramid WFS.
 Low-resolution WFS mode (120x120)
 
+This is a (nearly) full-featured example for a single input / single output control loop.
 
 
 # Running the example

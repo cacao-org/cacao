@@ -159,13 +159,13 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 #export CACAO_FPSPROC_MVMGPU_ZPO="ON"
 
 # Modal control statistics
-#export CACAO_FPSPROC_MODALCTRL_STATS="ON"
+export CACAO_FPSPROC_MODALCTRL_STATS="ON"
 
 # Reconstruct DM shape from OL mode values
-#export CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM="ON"
+export CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM="ON"
 
 # Reconstruct DM shape from OL mode values
-#export CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM="ON"
+export CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM="ON"
 
 
 # Modal control DM comb
@@ -175,9 +175,12 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 ##export CACAO_FPSPROC_ACQLINCMRM="ON"
 
 # Predictive control
-#export CACAO_PF_NBBLOCK=6
-#export CACAO_FPSPROC_MKPF="ON"
-#export CACAO_FPSPROC_APPLYPF="ON"
+export CACAO_PF_NBBLOCK=6
+export CACAO_FPSPROC_MKPF="ON"
+export CACAO_FPSPROC_APPLYPF="ON"
+
+
+
 
 
 # User-provided additions to cacaovars

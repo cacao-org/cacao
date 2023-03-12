@@ -96,7 +96,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_IMG,
         ".RMmodesDM",
         "input response matrix DM modes",
-        "RMmodesDM.fits",
+        "RMmodesDM",
         CLIARG_VISIBLE_DEFAULT,
         (void **) &RMmodesDM,
         &fpi_RMmodesDM
@@ -106,7 +106,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_IMG,
         ".RMmodesWFS",
         "input response matrix WFS modes",
-        "RMmodesWFS.fits",
+        "RMmodesWFS",
         CLIARG_VISIBLE_DEFAULT,
         (void **) &RMmodesWFS,
         &fpi_RMmodesWFS
