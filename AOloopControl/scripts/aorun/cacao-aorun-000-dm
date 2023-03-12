@@ -33,6 +33,7 @@ echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
 exit
 fi
 
+set +e
 DMrunning=0
 pOK=$(ps -alx| grep DMch2disp-${CACAO_DMINDEX} | grep RUNSTART | wc -l)
 if [ $pOK -gt 0 ]; then
