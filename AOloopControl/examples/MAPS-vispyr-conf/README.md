@@ -173,8 +173,8 @@ cacao-fpsctrl setval mfilt loopON ON
 # Cleanup
 
 ```bash
-cacao-task-manager -C 0 scexao-vispyr-bin2
-rm -rf .vispyr2.cacaotaskmanager-log
+cacao-task-manager -C 0 MAPS-vispyr
+rm -rf ..cacaotaskmanager-log
 ```
 
 
