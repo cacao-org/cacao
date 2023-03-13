@@ -3,30 +3,32 @@
 MMT MAPS project.
 Visible light Pyramid WFS. Slopes input.
 
-cacao-task-manager tasks for this example :
-
-~~~
- 0           INITSETUP             DONE        READY   Initial setup:
- 1     GETSIMCONFFILES             DONE        READY   Get simulation files:
- 2          TESTCONFIG             DONE        READY   Test configuration:
- 3          CACAOSETUP             DONE        READY   Run cacao-setup:
-~~~
-Subsequent tasks can perform specific parts of the AO loop.
-
-
 
 
 # Running the example
 
-:warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
 ## Setting up processes
 
 
 ```bash
 # Deploy configuration :
-# download from source and start conf processes
-cacao-loop-deploy MAPS-vispyr
+# download from source to current directory
+cacao-loop-deploy -c MAPS-vispyr
+
+# OPTIONAL: Change loop number, name, DM index, simulation DM index:
+# CACAO_LOOPNUMBER=7 cacao-loop-deploy -c MAPS-vispyr
+# CACAO_LOOPNUMBER=7 CACAO_DMINDEX="03" cacao-loop-deploy -c MAPS-vispyr
+
+# OPTIONAL: Edit file MAPS-vispyr-conf/cacaovars.bash as needed
+# For example, change loop index, DM index, etc ...
+
+# Run deployment (starts conf processes)
+cacao-loop-deploy -r MAPS-vispyr
+
+# Note: the copy and run steps can be done at once with :
+# cacao-loop-deploy MAPS-vispyr
+
 
 # Go to rootdir, from which user controls the loop
 cd maps-rootdir
@@ -51,6 +53,14 @@ cacao-aorun-002-simwfs start
 ```
 
 
+## Start WFS acquisition
+
+```bash
+# Acquire WFS frames
+cacao-aorun-025-acqWFS -w start
+```
+
+
 
 ## Measure DM to WFS latency
 
@@ -60,12 +70,6 @@ cacao-aorun-002-simwfs start
 cacao-aorun-020-mlat -w
 ```
 
-## Start WFS acquisition
-
-```bash
-# Acquire WFS frames
-cacao-aorun-025-acqWFS start
-```
 
 ## Acquire response matrix
 
@@ -76,13 +80,17 @@ cacao-aorun-025-acqWFS start
 # Create DM poke mode cubes
 cacao-mkDMpokemodes
 ```
-The following files are written to ./conf/RMmodesDM/ :
-- DMmask.fits    : DM mask
-- Fmodes.fits    : Fourier modes
-- Smodes.fits    : Simple zonal modes
-- HpokeC.fits    : Hadamard modes
-- Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
-- Hpixindex.fits : Hadamard pixel index
+The following files are written to ./conf/RMmodesDM/
+| File                 | Contents                                            |
+| -------------------- | --------------------------------------------------- |
+| `DMmask.fits     `   | DM mask                                             |
+| `FpokesC.<CPA>.fits` | Fourier modes (where \<CPA> is an integer)          |
+| `ZpokesC.<NUM>.fits` | Zernike modes (where \<NUM> is the number of modes) |
+| `HpokeC.fits     `   | Hadamard modes                                      |
+| `Hmat.fits       `   | Hadamard matrix (to convert Hadamard-zonal)         |
+| `Hpixindex.fits  `   | Hadamard pixel index                                |
+| `SmodesC.fits    `   | *Simple* (single actuator) pokes                    |
+
 
 
 ### Run acquisition
@@ -90,9 +98,22 @@ The following files are written to ./conf/RMmodesDM/ :
 
 ```bash
 # Acquire response matrix - Hadamard modes
-cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
-cacao-aorun-030-acqlinResp HpokeC
+# 6 cycles - default is 10.
+cacao-aorun-030-acqlinResp -n 6 -w HpokeC
 ```
+
+### Decode Hadamard matrix
+
+```bash
+cacao-aorun-031-RMHdecode
+```
+
+### Make DM and WFS masks
+
+```bash
+cacao-aorun-032-RMmkmask
+```
+
 
 
 ## Compute control matrix (straight)
@@ -101,15 +122,10 @@ cacao-aorun-030-acqlinResp HpokeC
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-mkdir conf/CMmodesDM
-mkdir conf/CMmodesWFS
-cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/HpokeC.fits"
-cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/HpokeC.WFSresp.fits"
-cacao-fpsctrl setval compstrCM CMmodesDM "../conf/CMmodesDM/CMmodesDM.fits"
-cacao-fpsctrl setval compstrCM CMmodesWFS "../conf/CMmodesWFS/CMmodesWFS.fits"
-cacao-fpsctrl setval compstrCM svdlim 0.2
+cacao-fpsctrl setval compstrCM svdlim 0.01
 ```
-Then run the compstrCM process :
+
+Then run the compstrCM process to compute CM and load it to shared memory :
 ```bash
 cacao-aorun-039-compstrCM
 ```
@@ -117,20 +133,15 @@ cacao-aorun-039-compstrCM
 
 ## Running the loop
 
-Load the CM
-```bash
-milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol2_modesWFS
-milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol2_DMmodes
-```
 
-Configuring to CPU mode
+Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 99
 cacao-fpsctrl setval mvalC2dm GPUindex 99
 ```
 
 
-From directory vispyr-rootdir, start 3 processes :
+Start the 3 control loop processes :
 
 ```bash
 # start WFS -> mode coefficient values
@@ -156,6 +167,14 @@ cacao-fpsctrl setval mfilt loopmult 0.98
 # close loop
 cacao-fpsctrl setval mfilt loopON ON
 
+```
+
+
+# Cleanup
+
+```bash
+cacao-task-manager -C 0 scexao-vispyr-bin2
+rm -rf .vispyr2.cacaotaskmanager-log
 ```
 
 

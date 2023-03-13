@@ -446,6 +446,8 @@ static errno_t compute_function()
 
         DEBUG_TRACEPOINT(" ");
 
+
+
         char *ptrv;
         switch(WFSatype)
         {
@@ -475,10 +477,6 @@ static errno_t compute_function()
 
 
 
-
-
-
-
         // ===========================================
         // SUBTRACT DARK -> imWFS0
         // ===========================================
@@ -495,6 +493,8 @@ static errno_t compute_function()
         }
 
         data.image[ID_imWFS0].md[0].write = 1;
+
+
 
         switch(WFSatype)
         {
@@ -569,16 +569,13 @@ static errno_t compute_function()
             break;
         }
 
+
+
         processinfo_update_output_stream(processinfo, ID_imWFS0);
 
 
 
-
-
-
         DEBUG_TRACEPOINT(" ");
-
-
 
 
 
@@ -620,7 +617,6 @@ static errno_t compute_function()
 
 
 
-
             // avoiding division by zero
             //
             double fluxtotpos = *fluxtotal;
@@ -651,8 +647,6 @@ static errno_t compute_function()
 
 
 
-
-
         // ===========================================
         // REFERENCE SUBTRACT -> imWFS2
         // ===========================================
@@ -666,6 +660,7 @@ static errno_t compute_function()
 
             if(IDwfsrefc != -1)
             {
+
                 for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
                     data.image[ID_imWFS2].array.F[ii] =
@@ -673,7 +668,9 @@ static errno_t compute_function()
                         data.image[IDwfsrefc].array.F[ii];
                 }
             }
+
             processinfo_update_output_stream(processinfo, ID_imWFS2);
+
         }
         else
         {
@@ -681,10 +678,9 @@ static errno_t compute_function()
             memcpy(data.image[ID_imWFS2].array.F,
                    data.image[ID_imWFS1].array.F,
                    sizeof(float) * sizeWFS);
+
             processinfo_update_output_stream(processinfo, ID_imWFS2);
         }
-
-
 
 
         // ===========================================
@@ -711,11 +707,19 @@ static errno_t compute_function()
 
 
 
-
-
         // ===========================================
         // UPDATE wfsrefc
         // ===========================================
+
+        printf("IDwfsref = %ld\n", IDwfsref);
+        fflush(stdout);
+
+        printf("IDwfsrefc = %ld\n", IDwfsrefc);
+        fflush(stdout);
+
+        printf("ID_imWFS3 = %ld\n", ID_imWFS3);
+        fflush(stdout);
+
 
         int status_wfsrefc = 0;
         if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
