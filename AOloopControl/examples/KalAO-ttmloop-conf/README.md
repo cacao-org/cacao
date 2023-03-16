@@ -109,7 +109,7 @@ The following files are written to ./conf/DMmodes/ :
 ```bash
 # Acquire response matrix - Simple modes
 cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
-cacao-aorun-030-acqlinResp -w Smodes
+cacao-aorun-030-acqlinResp -w SmodesC
 
 # NOTE: Alternate option is Hadamard modes
 # Acquire response matrix - Hadamard modes
@@ -130,8 +130,8 @@ cacao-aorun-026-takeref
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/Smodes.fits"
-cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/Smodes.WFSresp.fits"
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/SmodesC.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/SmodesC.WFSresp.fits"
 cacao-fpsctrl setval compstrCM svdlim 0.2
 ```
 Then run the compstrCM process to compute CM and load it to shared memory :
