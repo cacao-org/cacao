@@ -1,4 +1,12 @@
-# Hadamard
+'''
+    mkmodes.py
+
+    TODO: Move the main exec from the function lib...
+
+    Usage:
+        mkmodes.py (had|randhad) <outfile.fits> [--mask=<maskfile.fits>]
+'''
+
 # Random-permuted hadamard
 # Zernikes
 # Fourier
@@ -41,7 +49,11 @@ def make_disk(disk_parameters: Tuple[float, float, float],
 
     mask = ((x[:, None] - cx)**2 + (y[None, :] - cy)**2)**.5 < r
 
-    return mask
+    # FIXME
+    # OK so the problem is that to match the CACAO convention
+    # we're gonna need a transpose either here or at file write time
+
+    return mask.T
 
 
 def make_zonal(mask: np.ndarray) -> np.ndarray:
@@ -81,6 +93,8 @@ def make_hadamard(mask: np.ndarray, permuter: np.ndarray = None,
             permuter = np.arange(n_actu)
         else:
             permuter = np.argsort(np.random.rand(n_actu))
+            # WARNING: having 0 in the permuter is an actuator that doens't move at all!
+            # Cuz row / col 0 of Hadamard is piston.
 
     dm_x, dm_y = mask.shape
 
@@ -92,14 +106,16 @@ def make_hadamard(mask: np.ndarray, permuter: np.ndarray = None,
 
     hadamard_matrix = sclinalg.hadamard(next_pow2)
 
-    modal_cube = np.zeros((n_actu, dm_x, dm_y), dtype=np.float32)
-    for ii in range(n_actu):
+    modal_cube = np.zeros((next_pow2, dm_x, dm_y), dtype=np.float32)
+    for ii in range(next_pow2):
         modal_cube[ii, mask] = hadamard_matrix[ii][permuter]
 
     return modal_cube, hadamard_matrix, permuter
 
 
-def make_fourier(cpa_max: int = 8, delta_cpa: float = 0.8):
+def make_fourier(dm_size: Tuple[int, int], dm_radius: float, cpa_max: int = 8,
+                 delta_cpa: float = 0.8,
+                 radius_factor_limit: float = 1.5) -> np.ndarray:
     pass
 
 
@@ -107,7 +123,7 @@ def make_zernike(n: int):
     pass
 
 
-def make_dmkl(mask: np.ndarray, remove_piston: bool = True):
+def make_dmkl(mask: np.ndarray, remove_piston: bool = True) -> np.ndarray:
     '''
     DM KL, or proximity-based MMSE basis, or radial-Fourier basis.
     No real official name. But essentially KLs.
@@ -152,3 +168,34 @@ def make_dmkl(mask: np.ndarray, remove_piston: bool = True):
         - Synth RM onto this basis
         - Rank-trunc-TSVD on this basis. Inversion from masked WFS.
 '''
+
+if __name__ == "__main__":
+
+    import os
+
+    from docopt import docopt
+    args = docopt(__doc__)
+
+    cacao_conf = CacaoConf.from_pwd_tree('.')
+    cacao_conf.ensure_cwd()  # Redundant...
+
+    outfile = args['<outfile.fits>']
+    randomize_had = args['randhad']
+    maskfile = args['--mask']
+
+    assert not '/' in outfile
+    assert outfile.endswith('.fits')
+
+    if maskfile is not None:
+        assert not '/' in maskfile
+        assert maskfile.endswith('.fits')
+
+        mask = fits.getdata(cacao_conf.PWD + '/conf/RMmodesDM/' + maskfile)
+
+    else:
+        mask = make_disk_from_conf(cacao_conf)
+
+    modal_cube, _, _ = make_hadamard(mask, permute_random=randomize_had)
+
+    fits.writeto(cacao_conf.PWD + '/conf/RMmodesDM/' + outfile, modal_cube,
+                 overwrite=True)

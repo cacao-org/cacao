@@ -7,7 +7,7 @@
 import os
 import subprocess
 
-from typing import Dict
+from typing import Dict, Tuple
 
 from dataclasses import dataclass
 
@@ -34,7 +34,8 @@ class CacaoConf:
         found under the 'where' directory.
         '''
 
-        cacaovars_path_expect = where + '/cacaovars.bash'
+        abs_path = os.path.abspath(where)
+        cacaovars_path_expect = abs_path + '/cacaovars.bash'
 
         has_cacaovars = os.path.isfile(cacaovars_path_expect)
         if not has_cacaovars:
@@ -51,16 +52,33 @@ class CacaoConf:
             if split[0].startswith('CACAO_'):
                 env_dict[split[0]] = split[1]
 
-        obj = CacaoConf(PWD=where, LOOPNAME=env_dict['CACAO_LOOPNAME'],
+        obj = CacaoConf(PWD=abs_path, LOOPNAME=env_dict['CACAO_LOOPNAME'],
                         LOOPNUMBER=env_dict['CACAO_LOOPNUMBER'],
                         LOOPROOTDIR=env_dict['CACAO_LOOPROOTDIR'],
                         LOOPRUNDIR=env_dict['CACAO_LOOPRUNDIR'],
-                        DMxsize=env_dict['CACAO_DMxsize'],
-                        DMysize=env_dict['CACAO_DMysize'],
-                        DMSPATIAL=env_dict['CACAO_DMSPATIAL'],
+                        DMxsize=int(env_dict['CACAO_DMxsize']),
+                        DMysize=int(env_dict['CACAO_DMysize']),
+                        DMSPATIAL=bool(int(env_dict['CACAO_DMSPATIAL'])),
                         full_env=env_dict)
 
         return obj
 
     def ensure_cwd(self):
         os.chdir(self.PWD)
+
+    def get_dm_pup_params(self) -> Tuple[float, float, float]:
+        if 'CACAO_DM_beam_xcent' in self.full_env:
+            assert 'CACAO_DM_beam_ycent' in self.full_env
+            assert 'CACAO_DM_beam_rad' in self.full_env
+
+            return (float(self.full_env['CACAO_DM_beam_xcent']),
+                    float(self.full_env['CACAO_DM_beam_ycent']),
+                    float(self.full_env['CACAO_DM_beam_rad']))
+
+        else:
+            print('Using defaults in get_dm_pup_params')
+            # Per cacao-mkDMpokemodes... but this needs a 0.5 offset.
+            return (self.DMxsize / 2., self.DMysize / 2., self.DMxsize * 0.45)
+
+    def get_dm_size(self) -> Tuple[int, int]:
+        return (self.DMxsize, self.DMysize)
