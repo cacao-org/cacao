@@ -174,7 +174,7 @@ cacao-fpsctrl setval mfilt loopON ON
 
 ```bash
 cacao-task-manager -C 0 MAPS-vispyr
-rm -rf ..cacaotaskmanager-log
+rm -rf .maps.cacaotaskmanager-log
 ```
 
 
