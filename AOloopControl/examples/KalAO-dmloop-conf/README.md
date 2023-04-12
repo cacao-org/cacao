@@ -167,10 +167,10 @@ Closing the loop and setting loop parameters with mfilt:
 
 ```bash
 # Set loop gain
-cacao-fpsctrl setval mfilt loopgain 0.1
+cacao-fpsctrl setval mfilt loopgain 0.95
 
 # Set loop mult
-cacao-fpsctrl setval mfilt loopmult 0.98
+cacao-fpsctrl setval mfilt loopmult 0.9
 
 # close loop
 cacao-fpsctrl setval mfilt loopON ON
