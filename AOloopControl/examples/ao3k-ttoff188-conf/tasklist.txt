@@ -1,0 +1,13 @@
+# Task list for cacao
+# Each task is identified by a code
+# This file is read by cacaotask
+# Each code must correspond to an executable cacaotask-<code> in the PATH
+#
+# Optional comments/description follow the code
+# Add "#" to task to exclude
+#
+
+INITSETUP       Initial setup
+GETSIMCONFFILES Get simulation files
+TESTCONFIG      Test configuration
+CACAOSETUP      Run cacao-setup

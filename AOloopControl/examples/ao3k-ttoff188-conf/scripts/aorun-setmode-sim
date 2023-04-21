@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop execution script"
+
+MSextdescr="AO loop script"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+source milk-argparse
+
+
+
+
+
+errexit=0
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
+#checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_ACQLINZRM}
+#checkFPSON CACAO_FPSPROC_ACQLINLORM ${CACAO_FPSPROC_ACQLINLORM}
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+errexit=1
+fi
+
+
+if [ $errexit = 1 ]; then
+exit
+fi
+
+# Stream linking
+
+# WFS
+echo "Linking WFS"
+
+ln -sf ${MILK_SHM_DIR}/${CACAO_WFSSTREAMSIM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
+
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.insname aol${CACAO_LOOPNUMBER}_wfsim"
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.WFSnormfloor 0.01"
+sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
+
+# DM
+echo "Linking DM"
+
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
+
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
+
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp04.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP0.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp05.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP1.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp06.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP2.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp07.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP3.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp08.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP4.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp09.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP5.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP6.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp11.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP7.im.shm
+
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
+
+ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
