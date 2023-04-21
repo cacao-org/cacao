@@ -59,6 +59,40 @@ def decode_pokes_to_zonal_fitsio(
     fits.writeto(file_out_zresp, zonal_resp_matrix, overwrite=True)
 
 
+def project_zonal_on_modal(
+    modes: np.ndarray,
+    resp_matrix: np.ndarray,
+):
+    # Either ndim == 2 and it's actuator maps
+    # Or ndim = 2 and it's modal coefficients
+    # resp_matrix should have flattened actuators as first axis and pixels as second and third.
+
+    assert modes.ndim in [2,3]
+    assert resp_matrix.ndim == 3
+    
+    if modes.ndim == 3:
+        modes_flat = modes.reshape(modes.shape[0], modes.shape[1]*modes.shape[2])
+    else:
+        modes_flat = modes
+        
+    
+    n_act, n_px1, n_px2 = resp_matrix.shape
+    respm_flat = resp_matrix.reshape(n_act, n_px1 * n_px2)
+                               
+    n_modes = modes_flat.shape[0]
+    
+    assert resp_matrix.shape[0] == modes_flat.shape[1]
+    
+    modal_respm_flat = modes_flat @ respm_flat
+    
+    # De flatten the pixel axis:
+    modal_respm = modal_respm_flat.reshape(n_modes, n_px1, n_px2)
+    
+    return modal_respm
+    
+        
+    
+
 def decode_pokes_to_zonal(
         poke_modes: np.ndarray,
         resp_matrix: np.ndarray,

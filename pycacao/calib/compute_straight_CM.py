@@ -16,6 +16,8 @@ from astropy.io import fits
         CMmodesWFS.fits
 '''
 
+'''
+# Summary of what the function needs to do
 MDM = fits.getdata('./conf/RMmodesDM/RMmodesDM.fits')
 MDM.shape
 
@@ -34,6 +36,7 @@ CMWFSsq = CMWFS.reshape(2606, 120, 120)
 
 CMDM = v.T @ MDMf
 CMDMsq = CMDM.reshape(2606, 50, 50)
+'''
 
 
 def straight_CM_fitsio():
@@ -46,6 +49,8 @@ def straight_CM(modes_DM: np.ndarray, modes_WFS: np.ndarray, svd_lim: float):
         modes_DM: modal resp matrix, assuming 3D [n_modes * wfs_i * wfs_j]
 
         svd_lim: float
+        
+        TODO incomplete
     '''
 
     assert modes_DM.ndim == 3, "modes_DM, ndim = 3 [n_modes * dm_i * dm_j]"
