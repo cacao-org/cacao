@@ -423,6 +423,8 @@ function fpssetparamconf {
 
     rm fpssetup.setval.combined.conf
     sed "s/LOOPNUMBER/${LOOPNUMBER}/g" ${CURRDIR}/${fpsSETPARAMCONFfile} | sed "s/DMINDEX/${CACAO_DMINDEX}/g" > fpssetuptmp.tmp
+    sed -i "s/DMSIMINDEX/${CACAO_DMSIMINDEX}/g" fpssetuptmp.tmp
+
     cat ${CURRDIR}/fpssetup.setval.conf fpssetuptmp.tmp > fpssetup.setval.combined.conf
     #rm fpssetuptmp.tmp
     rm ${CURRDIR}/fpssetup.setval.conf
