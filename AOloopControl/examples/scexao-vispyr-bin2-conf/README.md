@@ -140,9 +140,11 @@ cacao-aorun-033-RM-mksynthetic -c 25
 ## Compute control matrix (straight)
 
 Compute control modes, in both WFS and DM spaces.
+Set GPU device (if GPU available).
 
 ```bash
 cacao-fpsctrl setval compstrCM svdlim 0.01
+cacao-fpsctrl setval compstrCM GPUdevice 0
 ```
 Then run the compstrCM process to compute CM and load it to shared memory :
 ```bash

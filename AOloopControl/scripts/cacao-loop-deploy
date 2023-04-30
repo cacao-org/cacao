@@ -15,6 +15,11 @@ conflist=$( ls $MILK_ROOT/plugins/cacao-src/AOloopControl/examples | grep "\-con
 
 MSextdescr="Configuration is loaded from cacao source code
 
+
+Import configuration from source code (-c) and run it (-r).
+
+Calls cacao-task-manager to run the configuration.
+
 Env variables (optional) as cacaovars modifiers :
 	CACAO_LOOPNUMBER   [integer] loop number
 	CACAO_LOOPNAME     [string]  loop name
