@@ -1,9 +1,8 @@
 # Overview
 
-SCExAO system pyramid WFS.
-Low-resolution WFS mode (120x120)
+NIR PyWFS 160x160 onto bimorph 188.
 
-This is a (nearly) full-featured example for a single input / single output control loop.
+TO BE AMENDED.
 
 
 # Running the example
@@ -124,25 +123,13 @@ cacao-aorun-030-acqlinResp -n 20 -w HpokeC
 cacao-aorun-031-RMHdecode
 ```
 
-### Make DM and WFS masks
-
-```bash
-cacao-aorun-032-RMmkmask
-```
-
-### Create synthetic (Fourier) response matrix
-
-```bash
-cacao-aorun-033-RM-mksynthetic -c 25
-```
-
 
 ## Compute control matrix (straight)
 
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-cacao-fpsctrl setval compstrCM svdlim 0.01
+cacao-fpsctrl setval compstrCM svdlim 0.001
 ```
 Then run the compstrCM process to compute CM and load it to shared memory :
 ```bash
@@ -152,12 +139,6 @@ cacao-aorun-039-compstrCM
 
 
 ## Running the loop
-
-Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
-```bash
-cacao-fpsctrl setval wfs2cmodeval GPUindex 0
-cacao-fpsctrl setval mvalC2dm GPUindex 0
-```
 
 
 Start the 3 control loop processes :
@@ -187,14 +168,6 @@ cacao-fpsctrl setval mfilt loopmult 0.99
 cacao-fpsctrl setval mfilt loopON ON
 
 ```
-
-# Cleanup
-
-```bash
-cacao-task-manager -C 0 scexao-vispyr-bin2
-rm -rf .vispyr2.cacaotaskmanager-log
-```
-
 
 
 THE END
