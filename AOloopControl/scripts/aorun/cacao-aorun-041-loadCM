@@ -4,26 +4,58 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Select control matrix and load it"
 
-MSextdescr="AO loop script"
+MSextdescr="Select control matrix and load it
+With optional tag, .<tag> is appended to all filenames
+"
 source milk-script-std-config
 source cacao-check-cacaovars
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+
+MSopt+=( "t:tag:setfiletag:tag[string]:Set file tag, empty by default" )
+filetag=""
+function setfiletag()
+{
+	filetag=".$1"
+}
+
+
 source milk-argparse
 
-echo "Loading file conf/CMmodesWFS/CMmodesWFS.fits"
-if [ -f "conf/CMmodesWFS/CMmodesWFS.fits" ]
+
+# construct filenames
+RMDMfname="conf/CMmodesWFS/RMmodesDM${filetag}.fits"
+RMWFSfname="conf/CMmodesWFS/RMmodesWFS${filetag}.fits"
+CMDMfname="conf/CMmodesDM/CMmodesDM${filetag}.fits"
+CMWFSfname="conf/CMmodesWFS/CMmodesWFS${filetag}.fits"
+
+checkFile ${RMDMfname}
+checkFile ${RMWFSfname}
+checkFile ${CMDMfname}
+checkFile ${CMWFSfname}
+
+
+
+
+echo "Loading file ${CMDMfname}"
+if [ -f "${CMDMfname}" ]
 then
-     milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol${CACAO_LOOPNUMBER}_modesWFS
+     milk-FITS2shm "${CMDMfname}" aol${CACAO_LOOPNUMBER}_modesWFS
 else
-     echo "Failed to find."
+     echo "Failed to find ${CMDMfname}."
 fi
 
 
-echo "Loading file conf/CMmodesDM/CMmodesDM.fits"
-if [ -f "conf/CMmodesDM/CMmodesDM.fits" ]
+echo "Loading file ${CMWFSfname}"
+if [ -f "${CMWFSfname}" ]
 then
-     milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes
+     milk-FITS2shm "${CMWFSfname}" aol${CACAO_LOOPNUMBER}_DMmodes
 else
-     echo "Failed to find."
+     echo "Failed to find ${CMWFSfname}."
 fi
+
+
