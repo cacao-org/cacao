@@ -18,44 +18,100 @@ source cacao-check-cacaovars
 
 MSopt+=( "t:tag:setfiletag:tag[string]:Set file tag, empty by default" )
 filetag=""
+UpdateFiles=0 # 1 if using tag
 function setfiletag()
 {
 	filetag=".$1"
+     UpdateFiles=1
 }
 
 
 source milk-argparse
 
 
+
 # construct filenames
-RMDMfname="conf/CMmodesWFS/RMmodesDM${filetag}.fits"
-RMWFSfname="conf/CMmodesWFS/RMmodesWFS${filetag}.fits"
+RMDMfname0="conf/RMmodesDM/RMmodesDM.fits"
+RMWFSfname0="conf/RMmodesWFS/RMmodesWFS.fits"
+CMDMfname0="conf/CMmodesDM/CMmodesDM.fits"
+CMWFSfname0="conf/CMmodesWFS/CMmodesWFS.fits"
+
+RMDMfname="conf/RMmodesDM/RMmodesDM${filetag}.fits"
+RMWFSfname="conf/RMmodesWFS/RMmodesWFS${filetag}.fits"
 CMDMfname="conf/CMmodesDM/CMmodesDM${filetag}.fits"
 CMWFSfname="conf/CMmodesWFS/CMmodesWFS${filetag}.fits"
+
+
+EXITSTATUS=0
 
 checkFile ${RMDMfname}
 checkFile ${RMWFSfname}
 checkFile ${CMDMfname}
 checkFile ${CMWFSfname}
 
-
-
-
-echo "Loading file ${CMDMfname}"
-if [ -f "${CMDMfname}" ]
-then
-     milk-FITS2shm "${CMDMfname}" aol${CACAO_LOOPNUMBER}_modesWFS
-else
-     echo "Failed to find ${CMDMfname}."
+if [ ${EXITSTATUS} = 1 ]; then
+echo "missing file - cannot proceed"
+exit
 fi
 
 
-echo "Loading file ${CMWFSfname}"
-if [ -f "${CMWFSfname}" ]
+
+
+# Checking FPS and turning off runproc
+
+
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
+if [ ${FPScheckOK} == "OK" ]; then
+sendFPScmd "runstop mvalC2dm-${CACAO_LOOPNUMBER}"
+fi
+
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
+if [ ${FPScheckOK} == "OK" ]; then
+sendFPScmd "runstop mfilt-${CACAO_LOOPNUMBER}"
+fi
+
+
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
+if [ ${FPScheckOK} == "OK" ]; then
+sendFPScmd "runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
+fi
+
+
+
+
+
+
+if [ ${UpdateFiles} = 1 ]; then
+echo "Updating files"
+
+ln -sf ${PWD}/${RMDMfname} ${RMDMfname0}
+ln -sf ${PWD}/${RMWFSfname} ${RMWFSfname0}
+ln -sf ${PWD}/${CMDMfname} ${CMDMfname0}
+ln -sf ${PWD}/${CMWFSfname} ${CMWFSfname0}
+
+fi
+
+
+
+
+echo "Loading file ${CMWFSfname0}"
+if [ -f "${CMWFSfname0}" ]
 then
-     milk-FITS2shm "${CMWFSfname}" aol${CACAO_LOOPNUMBER}_DMmodes
+     milk-FITS2shm "${CMWFSfname0}" aol${CACAO_LOOPNUMBER}_modesWFS
 else
-     echo "Failed to find ${CMWFSfname}."
+     echo "Failed to find ${CMWFSfname0}."
+fi
+
+
+echo "Loading file ${CMDMfname0}"
+if [ -f "${CMDMfname0}" ]
+then
+     milk-FITS2shm "${CMDMfname0}" aol${CACAO_LOOPNUMBER}_DMmodes
+else
+     echo "Failed to find ${CMDMfname0}."
 fi
 
 
