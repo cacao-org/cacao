@@ -7,6 +7,10 @@ Visible light Pyramid WFS. Slopes input.
 
 # Running the example
 
+Notes:
+- Use commands milk-streamCTRL, milk-fpsCTRL and milk-procCTRL to track status
+- Run each command with -h option to get help and more details
+
 
 ## Setting up processes
 
@@ -47,8 +51,12 @@ cd maps-rootdir
 # Run simulation DM
 cacao-aorun-001-dmsim start
 
-# Start simulation processes
-# (skip if in hardware mode)
+# Start simulation processes (skip if in hardware mode) :
+# - starts  process simmvmgpu
+# - starts process DMstreamDelay
+# First, select GPU (99=CPU)
+cacao-fpsctrl setval simmvmgpu GPUindex 99
+# then, run the process
 cacao-aorun-002-simwfs start
 ```
 
@@ -64,11 +72,24 @@ cacao-aorun-025-acqWFS -w start
 
 ## Measure DM to WFS latency
 
+FOR SIMULATOR ONLY: adjust simulator frequency to computing hardware capabilities :
+
+```bash
+# Set simulator speed
+cacao-fpsctrl setval simmvmgpu procinfo.triggerdelay 0.01
+```
 
 ```bash
 # Measure latency
 cacao-aorun-020-mlat -w
 ```
+
+Check latency file. If using gnuplot with loop number 2 :
+```bash
+plot "maps-rundir/fps.mlat-2.datadir/hardwlatency.dat" u 2:3
+```
+Check that the latency curve is clean and the latency reported matches the curve peak.
+
 
 
 ## Acquire response matrix
@@ -102,18 +123,27 @@ The following files are written to ./conf/RMmodesDM/
 cacao-aorun-030-acqlinResp -n 6 -w HpokeC
 ```
 
+This could take a while. Check status on milk-procCTRL.
+To inspect results, display file conf/RMmodesWFS/HpokeC.WFSresp.fits.
+
 ### Decode Hadamard matrix
 
 ```bash
 cacao-aorun-031-RMHdecode
 ```
+To inspect results, display file conf/RMmodesWFS/zrespM-H.fits.
+This should visually look like a zonal response matrix.
 
 ### Make DM and WFS masks
 
 ```bash
 cacao-aorun-032-RMmkmask
 ```
+Check results:
+- conf/dmmask.fits
+- conf/wfsmask.fits
 
+If needed, rerun command with non-default parameters (see -h for options).
 
 
 ## Compute control matrix (straight)
@@ -129,7 +159,11 @@ Then run the compstrCM process to compute CM and load it to shared memory :
 ```bash
 cacao-aorun-039-compstrCM
 ```
+Inspect result:
+- CMmodesRM/CMmodesRM.fits
+- CMmodesWFS/CMmodesWFS.fits
 
+Check number of modes controlled.
 
 ## Running the loop
 
@@ -171,6 +205,8 @@ cacao-fpsctrl setval mfilt loopON ON
 
 
 # Cleanup
+
+From main directory (upstream of rootdir) :
 
 ```bash
 cacao-task-manager -C 0 MAPS-vispyr
