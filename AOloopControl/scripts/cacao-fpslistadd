@@ -296,6 +296,7 @@ if [ "${CACAO_FPSPROC_ACQUWFS}" = "ON" ]; then
 
         addfpscmdheader
         addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
+        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_wfsim"
 
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
