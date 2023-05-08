@@ -148,7 +148,6 @@ If needed, rerun command with non-default parameters (see -h for options).
 
 ## Compute control matrix (straight)
 
-
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
@@ -202,6 +201,19 @@ cacao-fpsctrl setval mfilt loopmult 0.98
 cacao-fpsctrl setval mfilt loopON ON
 
 ```
+
+
+
+## Testing the loop (selfRM)
+
+
+```bash
+# Set max number of modes above nbmodes
+cacao-fpsctrl setval mfilt selfRM.NBmode 1000
+cacao-fpsctrl setval mfilt selfRM.enable ON
+```
+
+Check result: maps-rundir/selfRM.fits
 
 
 # Cleanup
