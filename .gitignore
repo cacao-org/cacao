@@ -4,3 +4,6 @@ __pycache__
 
 
 # respM*.fits
+AOloopControl/examples/ao3k-nirpyr188-conf/simLHS/respM*.fits
+
+.gitignore
