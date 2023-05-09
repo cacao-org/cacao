@@ -144,7 +144,7 @@ Check results:
 - conf/wfsmask.fits
 
 If needed, rerun command with non-default parameters (see -h for options).
-
+Note: we are not going to apply the masks in this example, so OK if not net properly. The masks are informative here, allowing us to view which DM actuators and WFS pixels have the best response.
 
 ## Compute control matrix (straight)
 
@@ -159,10 +159,10 @@ Then run the compstrCM process to compute CM and load it to shared memory :
 cacao-aorun-039-compstrCM
 ```
 Inspect result:
-- CMmodesRM/CMmodesRM.fits
+- CMmodesDM/CMmodesDM.fits
 - CMmodesWFS/CMmodesWFS.fits
 
-Check number of modes controlled.
+Check especially the number of modes controlled.
 
 ## Running the loop
 
