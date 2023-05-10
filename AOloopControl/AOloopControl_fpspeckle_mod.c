@@ -326,7 +326,7 @@ errno_t AOloopControl_DMmodulateAB(const char *IDprobeA_name,
         // write time in log
         t      = time(NULL);
         uttime = gmtime(&t);
-        clock_gettime(CLOCK_REALTIME, thetime);
+        clock_gettime(CLOCK_MILK, thetime);
 
         if(sprintf(timestr,
                    "%02d %02d %02d.%09ld",

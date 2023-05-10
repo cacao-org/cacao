@@ -295,7 +295,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
     // waiting for dark-subtracted image
     AOconf[loop].AOtiminginfo.status = 19; //  19: WAITING FOR IMAGE
-    clock_gettime(CLOCK_REALTIME, &tnow);
+    clock_gettime(CLOCK_MILK, &tnow);
     tdiffv = timespec_diff_double(
                  data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
                  tnow);
@@ -308,7 +308,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
     // pixel 1 is time from beginning of loop to status 01
     // pixel 2 is time from beginning of loop to status 02
 
-    clock_gettime(CLOCK_REALTIME,
+    clock_gettime(CLOCK_MILK,
                   &functionTestTimer04); // TEST timing in function
 
     // Read WFS image
@@ -321,7 +321,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
     fflush(stdout);
 #endif
 
-    clock_gettime(CLOCK_REALTIME,
+    clock_gettime(CLOCK_MILK,
                   &functionTestTimerStart); // TEST timing in function
 
     slice = aoloopcontrol_var.PIXSTREAM_SLICE;
@@ -336,7 +336,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
     //    aoloopcontrol_var.PIXSTREAM_SLICE); fflush(stdout);
 
     AOconf[loop].AOtiminginfo.status = 4; // 4: REMOVING REF
-    clock_gettime(CLOCK_REALTIME, &tnow);
+    clock_gettime(CLOCK_MILK, &tnow);
     tdiffv = timespec_diff_double(
                  data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
                  tnow);
@@ -451,7 +451,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
         AOconf[loop].AOtiminginfo.status =
             5; // 5 MULTIPLYING BY CONTROL MATRIX -> MODE VALUES
-        clock_gettime(CLOCK_REALTIME, &tnow);
+        clock_gettime(CLOCK_MILK, &tnow);
         tdiffv = timespec_diff_double(
                      data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
                      tnow);
@@ -463,7 +463,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
             printf("COMPUTING MAPPING ARRAYS .... \n");
             fflush(stdout);
 
-            clock_gettime(CLOCK_REALTIME, &t1);
+            clock_gettime(CLOCK_MILK, &t1);
 
             //
             // There is one mapping array per WFS slice
@@ -601,7 +601,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 free(sizearray);
             }
 
-            clock_gettime(CLOCK_REALTIME, &t2);
+            clock_gettime(CLOCK_MILK, &t2);
             tdiffv = timespec_diff_double(t1, t2);
             printf("\n");
             printf("TIME TO COMPUTE MAPPING ARRAYS = %f sec\n", tdiffv);
@@ -819,7 +819,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 initWFSref_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
 
                 AOconf[loop].AOtiminginfo.status = 6; // 6 execute
-                clock_gettime(CLOCK_REALTIME, &tnow);
+                clock_gettime(CLOCK_MILK, &tnow);
                 tdiffv = timespec_diff_double(
                              data.image[aoloopcontrol_var.aoconfID_looptiming]
                              .md[0]
@@ -882,7 +882,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
                  AOconf[loop].AOcompute.GPU0, aoloopcontrol_var.GPUset0, 0,
                  AOconf[loop].AOcompute.GPUusesem, 1, loop);
                               AOconf[loop].AOtiminginfo.status = 6;
-                              clock_gettime(CLOCK_REALTIME, &tnow);
+                              clock_gettime(CLOCK_MILK, &tnow);
                               tdiffv =
                  timespec_diff_double(data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
                  tnow);
@@ -1110,7 +1110,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 .initcontrMcact_GPU[aoloopcontrol_var.PIXSTREAM_SLICE] = 1;
 
                 AOconf[loop].AOtiminginfo.status = 6; // 6 execute
-                clock_gettime(CLOCK_REALTIME, &tnow);
+                clock_gettime(CLOCK_MILK, &tnow);
                 tdiffv = timespec_diff_double(
                              data.image[aoloopcontrol_var.aoconfID_looptiming]
                              .md[0]
@@ -1177,7 +1177,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
         }
 
         AOconf[loop].AOtiminginfo.status = 11; // 11 MULTIPLYING BY GAINS
-        clock_gettime(CLOCK_REALTIME, &tnow);
+        clock_gettime(CLOCK_MILK, &tnow);
         tdiffv = timespec_diff_double(
                      data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
                      tnow);
@@ -1186,7 +1186,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
         if(AOconf[loop].aorun.CMMODE == 0)
         {
 
-            clock_gettime(CLOCK_REALTIME,
+            clock_gettime(CLOCK_MILK,
                           &functionTestTimer00); // TEST timing in function
 
             AOconf[loop].AOpmodecoeffs.RMSmodes = 0;
@@ -1206,7 +1206,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
 
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 1;
 
-            clock_gettime(CLOCK_REALTIME,
+            clock_gettime(CLOCK_MILK,
                           &functionTestTimer01); // TEST timing in function
 
             // TEST TIMING -> COMMENT THIS SECTION
@@ -1279,7 +1279,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
                 //     data.image[aoloopcontrol_var.aoconfID_DMmode_GAIN].array.F[k];
             }
 
-            clock_gettime(CLOCK_REALTIME,
+            clock_gettime(CLOCK_MILK,
                           &functionTestTimer02); // TEST timing in function
 
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].cnt0++;
@@ -1291,7 +1291,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
             data.image[aoloopcontrol_var.aoconfID_cmd_modes].md[0].write = 0;
         }
 
-        clock_gettime(CLOCK_REALTIME,
+        clock_gettime(CLOCK_MILK,
                       &functionTestTimer03); // TEST timing in function
     }
     else
@@ -1310,7 +1310,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
         }
 
         AOconf[loop].AOtiminginfo.status = 11;
-        clock_gettime(CLOCK_REALTIME, &tnow);
+        clock_gettime(CLOCK_MILK, &tnow);
         tdiffv = timespec_diff_double(
                      data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
                      tnow);
@@ -1395,7 +1395,7 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
     // DETECT AND REPORT TIMING ANOMALY
     // TEST
 
-    clock_gettime(CLOCK_REALTIME,
+    clock_gettime(CLOCK_MILK,
                   &functionTestTimerEnd); // TEST timing in function
     tdiffv = timespec_diff_double(functionTestTimerStart, functionTestTimerEnd);
     tdiffv01 = tdiffv;

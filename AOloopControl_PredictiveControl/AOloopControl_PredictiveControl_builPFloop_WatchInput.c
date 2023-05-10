@@ -336,7 +336,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
         {
             t      = time(NULL);
             uttime = gmtime(&t);
-            clock_gettime(CLOCK_REALTIME, &timenow);
+            clock_gettime(CLOCK_MILK, &timenow);
             printf(
                 "%02d:%02d:%02ld.%09ld  NEW TELEMETRY BUFFER AVAILABLE [%ld]\n",
                 uttime->tm_hour,

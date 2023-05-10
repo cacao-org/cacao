@@ -947,15 +947,15 @@ static errno_t compute_function()
 
                     struct timespec t0;
                     struct timespec t1;
-                    clock_gettime(CLOCK_REALTIME, &t0);
-                    clock_gettime(CLOCK_REALTIME, &t1);
+                    clock_gettime(CLOCK_MILK, &t0);
+                    clock_gettime(CLOCK_MILK, &t1);
                     uint64_t PFcntOK = PFcnt + *PF_NBblock;
                     while(
                         (imgPF.md->cnt0 < PFcntOK) &&
                         (timespec_diff_double(t0, t1) < 1.0e-6 * (*PF_maxwaitus)))
                     {
                         // busy waiting
-                        clock_gettime(CLOCK_REALTIME, &t1);
+                        clock_gettime(CLOCK_MILK, &t1);
                     }
 
                     for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -1197,7 +1197,7 @@ static errno_t compute_function()
                 // testing
                 save_fits(imgselfRM.name, "selfRM.fits");
 
-                 processinfo_WriteMessage(processinfo, "selfRM done");
+                processinfo_WriteMessage(processinfo, "selfRM done");
             }
         }
 

@@ -120,7 +120,7 @@ errno_t set_DM_modes(long loop)
             1,
             loop);
         AOconf[loop].AOtiminginfo.status = 12;
-        clock_gettime(CLOCK_REALTIME, &tnow);
+        clock_gettime(CLOCK_MILK, &tnow);
         tdiffv = timespec_diff_double(
                      data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
                      tnow);
@@ -393,7 +393,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
             }
 
         AOconf[loop].AOtiminginfo.statusM = 10;
-        clock_gettime(CLOCK_REALTIME, &tnow);
+        clock_gettime(CLOCK_MILK, &tnow);
         tdiffv = timespec_diff_double(
                      data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
                      tnow);
@@ -428,7 +428,7 @@ errno_t AOloopControl_GPUmodecoeffs2dm_filt_loop(const int GPUMATMULTCONFindex,
 
         //		if(GPUMATMULTCONFindex==0)
         AOconf[loop].AOtiminginfo.statusM = 20;
-        clock_gettime(CLOCK_REALTIME, &tnow);
+        clock_gettime(CLOCK_MILK, &tnow);
         tdiffv = timespec_diff_double(
                      data.image[aoloopcontrol_var.aoconfID_looptiming].md[0].atime,
                      tnow);

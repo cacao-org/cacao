@@ -574,7 +574,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     printf("COMPUTING COMBINED CONTROL MATRIX .... \n");
     fflush(stdout);
 
-    clock_gettime(CLOCK_REALTIME, &t1);
+    clock_gettime(CLOCK_MILK, &t1);
 
     // initialize size of arrays
     IDwfsmask         = image_ID(IDwfsmask_name);
@@ -811,7 +811,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     free(matrix_Mc);
     free(matrix_DMmodes);
 
-    clock_gettime(CLOCK_REALTIME, &t2);
+    clock_gettime(CLOCK_MILK, &t2);
     tdiffv = timespec_diff_double(t1, t2);
     printf("\n");
     printf("TIME TO COMPUTE MATRIX = %f sec\n", tdiffv);

@@ -879,7 +879,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
     dmCcnt   = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0;
 
     loopcnt = AOconf[LOOPNUMBER].aorun.cnt;
-    clock_gettime(CLOCK_REALTIME, &t1);
+    clock_gettime(CLOCK_MILK, &t1);
     for(k = 0; k < NBsample; k++)
     {
         int stM;
@@ -919,7 +919,7 @@ errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample)
         data.image[aoloopcontrol_var.aoconfID_wfsim].md[0].cnt0 - wfsimcnt;
     dmCcnt = data.image[aoloopcontrol_var.aoconfID_dmC].md[0].cnt0 - dmCcnt;
 
-    clock_gettime(CLOCK_REALTIME, &t2);
+    clock_gettime(CLOCK_MILK, &t2);
     tdiffv = timespec_diff_double(t1, t2);
     printf("\n");
     loopiterus = 1.0e6 * tdiffv / loopcnt;

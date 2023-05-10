@@ -1111,11 +1111,11 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
              FrameRateWait);
     processinfo_WriteMessage(processinfo, msgstring);
 
-    clock_gettime(CLOCK_REALTIME, &tnow);
+    clock_gettime(CLOCK_MILK, &tnow);
     tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntstart   = data.image[IDwfs].md[0].cnt0;
     usleep((long)(1000000 * FrameRateWait));
-    clock_gettime(CLOCK_REALTIME, &tnow);
+    clock_gettime(CLOCK_MILK, &tnow);
     tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntend   = data.image[IDwfs].md[0].cnt0;
     *wfsdt      = (tdouble_end - tdouble_start) / (wfscntend - wfscntstart);
@@ -1174,7 +1174,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
       }
     */
 
-    clock_gettime(CLOCK_REALTIME, &tnow);
+    clock_gettime(CLOCK_MILK, &tnow);
     tdouble_start  = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntstart    = data.image[IDwfs].md[0].cnt0;
     wfsframeoffset = (long)(0.1 * wfs_NBframesmax);
@@ -1276,7 +1276,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
         }
 
         dt = 0.0;
-        clock_gettime(CLOCK_REALTIME, &tstart);
+        clock_gettime(CLOCK_MILK, &tstart);
         tstartdouble = 1.0 * tstart.tv_sec + 1.0e-9 * tstart.tv_nsec;
         //    tlastdouble = tstartdouble;
 
@@ -1389,7 +1389,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 memcpy(ptr, ptr0, sizeof(short) * wfssize);
             }
 
-            clock_gettime(CLOCK_REALTIME, &tarray[wfsframe]);
+            clock_gettime(CLOCK_MILK, &tarray[wfsframe]);
 
             tdouble = 1.0 * tarray[wfsframe].tv_sec +
                       1.0e-9 * tarray[wfsframe].tv_nsec;
@@ -1411,7 +1411,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
                 dmstate = 1;
                 copy_image_ID("_testdm1", dmname, 1);
 
-                clock_gettime(CLOCK_REALTIME, &tnow);
+                clock_gettime(CLOCK_MILK, &tnow);
                 tdouble   = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
                 dt        = tdouble - tstartdouble;
                 *dtoffset = dt; // time at which DM command is sent
@@ -1568,7 +1568,7 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency_RUN()
     }
     fclose(fphwlat);
 
-    clock_gettime(CLOCK_REALTIME, &tnow);
+    clock_gettime(CLOCK_MILK, &tnow);
     tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
     wfscntend   = data.image[IDwfs].md[0].cnt0;
 

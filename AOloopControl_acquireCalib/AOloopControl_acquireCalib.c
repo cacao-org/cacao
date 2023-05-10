@@ -1513,7 +1513,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
         //        data.image[ID_dmRM].md[0].write = 0;
         // AOconf[loop].aorun.DMupdatecnt ++;
 
-        clock_gettime(CLOCK_REALTIME, &poke_ts);
+        clock_gettime(CLOCK_MILK, &poke_ts);
         pokeTime_sec[pokecnt]   = (long) poke_ts.tv_sec;
         pokeTime_nsec[pokecnt]  = (long) poke_ts.tv_nsec;
         pokeTime_index[pokecnt] = PokeIndex1Mapped;
@@ -1606,7 +1606,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
 
                 // AOconf[loop].aorun.DMupdatecnt ++;
 
-                clock_gettime(CLOCK_REALTIME, &poke_ts);
+                clock_gettime(CLOCK_MILK, &poke_ts);
                 pokeTime_sec[pokecnt]   = (long) poke_ts.tv_sec;
                 pokeTime_nsec[pokecnt]  = (long) poke_ts.tv_nsec;
                 pokeTime_index[pokecnt] = PokeIndex1Mapped;
@@ -1690,7 +1690,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
 
                     // AOconf[loop].aorun.DMupdatecnt ++;
 
-                    clock_gettime(CLOCK_REALTIME, &poke_ts);
+                    clock_gettime(CLOCK_MILK, &poke_ts);
                     pokeTime_sec[pokecnt]   = (long) poke_ts.tv_sec;
                     pokeTime_nsec[pokecnt]  = (long) poke_ts.tv_nsec;
                     pokeTime_index[pokecnt] = PokeIndex1Mapped;
@@ -1733,7 +1733,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(
 
         // AOconf[loop].aorun.DMupdatecnt ++;
 
-        clock_gettime(CLOCK_REALTIME, &poke_ts);
+        clock_gettime(CLOCK_MILK, &poke_ts);
         pokeTime_sec[pokecnt]   = (long) poke_ts.tv_sec;
         pokeTime_nsec[pokecnt]  = (long) poke_ts.tv_nsec;
         pokeTime_index[pokecnt] = -1;
@@ -1992,7 +1992,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
     uint64_t FPFLAG;
 
     struct timespec tt0;                 // TEST
-    clock_gettime(CLOCK_REALTIME, &tt0); // TEST
+    clock_gettime(CLOCK_MILK, &tt0); // TEST
 
     long AOloopindex_default[4] = {0, 0, 10, 0};
     long fpi_AOloopindex        = 0;
@@ -2317,7 +2317,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                                  &fpi_LOmaxCPA);
 
     struct timespec tt1;                 // TEST
-    clock_gettime(CLOCK_REALTIME, &tt1); // TEST
+    clock_gettime(CLOCK_MILK, &tt1); // TEST
 
     // External scripts (post)
     long fpi_exec_post_RMdecode = 0;
@@ -2361,7 +2361,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
                                  &fpi_exec_post_mkLODMmodes);
 
     struct timespec tt2;
-    clock_gettime(CLOCK_REALTIME, &tt2); // TEST
+    clock_gettime(CLOCK_MILK, &tt2); // TEST
 
     long fpi_FPS_mlat = 0;
     function_parameter_add_entry(&fps,
@@ -2396,7 +2396,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
     */
 
     struct timespec tt3;                 // TEST
-    clock_gettime(CLOCK_REALTIME, &tt3); // TEST
+    clock_gettime(CLOCK_MILK, &tt3); // TEST
 
     {
         struct timespec tdiff;

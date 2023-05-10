@@ -308,10 +308,10 @@ imageID AOloopControl_perfTest_TestDMmodeResp(const char *DMmodes_name,
         float  coscoeff, sincoeff;
         float  PSDamp, PSDpha;
 
-        clock_gettime(CLOCK_REALTIME, &tstart);
+        clock_gettime(CLOCK_MILK, &tstart);
         while((runtime < avetime) && (k < kmax))
         {
-            clock_gettime(CLOCK_REALTIME, &tnow);
+            clock_gettime(CLOCK_MILK, &tnow);
             runtime = timespec_diff_double(tstart, tnow);
             pha     = 2.0 * M_PI * runtime * f;
             coeff   = ampl * cos(pha);

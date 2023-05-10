@@ -427,7 +427,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
 
     if(mode == 0)
     {
-        clock_gettime(CLOCK_REALTIME, &dmturbconf[DMindex].tstart);
+        clock_gettime(CLOCK_MILK, &dmturbconf[DMindex].tstart);
         dmturbconf[DMindex].tend = dmturbconf[DMindex].tstart;
     }
 
@@ -525,7 +525,7 @@ int AOloopControl_DM_dmturb(long        DMindex,
             // usleep(dmturbconf[DMindex].tint);
 
             tlast = dmturbconf[DMindex].tend;
-            clock_gettime(CLOCK_REALTIME, &dmturbconf[DMindex].tend);
+            clock_gettime(CLOCK_MILK, &dmturbconf[DMindex].tend);
             tdiff =
                 time_diff(dmturbconf[DMindex].tstart, dmturbconf[DMindex].tend);
             tdiff1  = time_diff(tlast, dmturbconf[DMindex].tend);

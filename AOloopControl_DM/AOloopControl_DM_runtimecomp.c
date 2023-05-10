@@ -1084,7 +1084,7 @@ int AOloopControl_DM_CombineChannels_RUN()
             nanosleep(&tim, NULL);
         }
 
-        if(clock_gettime(CLOCK_REALTIME, &semwaitts) == -1)
+        if(clock_gettime(CLOCK_MILK, &semwaitts) == -1)
         {
             perror("clock_gettime");
             exit(EXIT_FAILURE);
@@ -1163,7 +1163,7 @@ int AOloopControl_DM_CombineChannels_RUN()
 
         if(DMupdate == 1)
         {
-            clock_gettime(CLOCK_REALTIME, &ttrig);
+            clock_gettime(CLOCK_MILK, &ttrig);
             DEBUG_TRACEPOINT(" ");
 
             dmdispcombconf[0].status = 3;
@@ -1349,7 +1349,7 @@ int AOloopControl_DM_CombineChannels_RUN()
 
             dmdispcombconf[DMindex].status = 7;
 
-            clock_gettime(CLOCK_REALTIME, &t1);
+            clock_gettime(CLOCK_MILK, &t1);
             if(dmdispcombconf[DMindex].voltmode == 1)
             {
                 DEBUG_TRACEPOINT(" ");
@@ -1370,7 +1370,7 @@ int AOloopControl_DM_CombineChannels_RUN()
             //      processinfo->loopcnt = dmdispcombconf[DMindex].updatecnt;
             //  }
 
-            clock_gettime(CLOCK_REALTIME, &tnow);
+            clock_gettime(CLOCK_MILK, &tnow);
             tdiff  = time_diff(ttrig, tnow);
             tdiffv = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
             dmdispcombconf[DMindex].tdelay = tdiffv;
@@ -1883,7 +1883,7 @@ data.image[dmdispcombconf[DMindex].IDdisp].name, 1); exit(0);
         if(DMtwaitus>0)
             usleep(DMtwaitus);
 
-        if (clock_gettime(CLOCK_REALTIME, &semwaitts) == -1) {
+        if (clock_gettime(CLOCK_MILK, &semwaitts) == -1) {
             perror("clock_gettime");
             exit(EXIT_FAILURE);
         }
@@ -1928,7 +1928,7 @@ data.image[dmdispcombconf[DMindex].dmdispID[dmdispcombconf[DMindex].TrigChan]].m
 
         if(DMupdate==1)
         {
-            clock_gettime(CLOCK_REALTIME, &ttrig);
+            clock_gettime(CLOCK_MILK, &ttrig);
 
             dmdispcombconf[0].status = 3;
             cnt++;
@@ -2040,7 +2040,7 @@ sizeof(float)*sizexywfsref);
             dmdispcombconf[DMindex].status = 7;
 
 
-            clock_gettime(CLOCK_REALTIME, &t1);
+            clock_gettime(CLOCK_MILK, &t1);
             if(dmdispcombconf[DMindex].voltmode==1)
                 AOloopControl_DM_disp2V(DMindex);
 
@@ -2054,7 +2054,7 @@ sizeof(float)*sizexywfsref);
             if(data.processinfo==1)
                 processinfo->loopcnt = dmdispcombconf[DMindex].updatecnt;
 
-            clock_gettime(CLOCK_REALTIME, &tnow);
+            clock_gettime(CLOCK_MILK, &tnow);
             tdiff = time_diff(ttrig, tnow);
             tdiffv = 1.0*tdiff.tv_sec + 1.0e-9*tdiff.tv_nsec;
             dmdispcombconf[DMindex].tdelay = tdiffv;
@@ -2077,7 +2077,7 @@ sizeof(float)*sizexywfsref);
                 char timestring[200];
 
 
-                clock_gettime(CLOCK_REALTIME, &tstop);
+                clock_gettime(CLOCK_MILK, &tstop);
                 tstoptm = gmtime(&tstop.tv_sec);
                 sprintf(timestring, "%02d:%02d:%02d.%03d", tstoptm->tm_hour,
 tstoptm->tm_min, tstoptm->tm_sec, (int) (0.000001*tstop.tv_nsec));

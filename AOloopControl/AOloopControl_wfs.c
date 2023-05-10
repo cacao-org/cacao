@@ -186,7 +186,7 @@ errno_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name,
                data.image[IDwfszp].name);
         fflush(stdout);
 
-        clock_gettime(CLOCK_REALTIME, &t1);
+        clock_gettime(CLOCK_MILK, &t1);
 
         {
             uint32_t act;
@@ -203,7 +203,7 @@ errno_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name,
                 }
         }
 
-        clock_gettime(CLOCK_REALTIME, &t2);
+        clock_gettime(CLOCK_MILK, &t2);
         tdiffv = timespec_diff_double(t1, t2);
 
         printf(" [ %10.3f ms]\n", 1e3 * tdiffv);
@@ -341,7 +341,7 @@ AOloopControl_WFSzeropoint_sum_update_loop(__attribute__((unused)) long loopnb,
     cntsumold = 0;
     for(;;)
     {
-        if(clock_gettime(CLOCK_REALTIME, &semwaitts) == -1)
+        if(clock_gettime(CLOCK_MILK, &semwaitts) == -1)
         {
             perror("clock_gettime");
             exit(EXIT_FAILURE);

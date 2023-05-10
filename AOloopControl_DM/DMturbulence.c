@@ -80,7 +80,8 @@ static long      fpi_compTurbCube;
 
 
 
-static CLICMDARGDEF farg[] = {
+static CLICMDARGDEF farg[] =
+{
     {
         CLIARG_STREAM,
         ".dmstream",
@@ -440,7 +441,7 @@ static errno_t compute_function()
 
 
     // temporary DM array
-    float *turbimarray = (float*) malloc(sizeof(float)*xsize*ysize);
+    float *turbimarray = (float *) malloc(sizeof(float) * xsize * ysize);
 
     imageID IDts0;
     load_fits("../conf/turbseed0.fits", "tseed0", 1, &IDts0);
@@ -466,15 +467,15 @@ static errno_t compute_function()
 
     struct timespec tstart;
     struct timespec tnow;
-    clock_gettime(CLOCK_REALTIME, &tstart);
+    clock_gettime(CLOCK_MILK, &tstart);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
 
-        clock_gettime(CLOCK_REALTIME, &tnow);
+        clock_gettime(CLOCK_MILK, &tnow);
         long tdiffsec = tnow.tv_sec - tstart.tv_sec;
         long tdiffnsec = tnow.tv_nsec - tstart.tv_nsec;
-        double tdiff = 1.0*tdiffsec + 1.0e-9*tdiffnsec;
+        double tdiff = 1.0 * tdiffsec + 1.0e-9 * tdiffnsec;
 
         phystimeprev = phystime;
         phystime = tdiff;
@@ -486,20 +487,20 @@ static errno_t compute_function()
 
         double seedscreensizem = (*turbseedpixscale) * Sxsize;
 
-        while ( x0m < 0)
+        while(x0m < 0)
         {
             x0m += seedscreensizem;
         }
-        while ( x0m > seedscreensizem)
+        while(x0m > seedscreensizem)
         {
             x0m -= seedscreensizem;
         }
 
-        while ( y0m < 0)
+        while(y0m < 0)
         {
             y0m += seedscreensizem;
         }
-        while ( y0m > seedscreensizem)
+        while(y0m > seedscreensizem)
         {
             y0m -= seedscreensizem;
         }
@@ -508,61 +509,62 @@ static errno_t compute_function()
 
 
         double total = 0.0;
-        for(uint32_t ii=0; ii<xsize; ii++)
+        for(uint32_t ii = 0; ii < xsize; ii++)
         {
-            double xm = x0m + (*DMpixscale)*ii;
+            double xm = x0m + (*DMpixscale) * ii;
             double xpix = xm / (*turbseedpixscale);
 
             uint32_t xpix0 = (uint32_t) xpix;
-            double xfrac = xpix-xpix0;
+            double xfrac = xpix - xpix0;
 
             xpix0 = xpix0 % (*turbseedsize);
-            uint32_t xpix1 = xpix0+1;
+            uint32_t xpix1 = xpix0 + 1;
             xpix1 = xpix1 % Sxsize;
 
 
-            for(uint32_t jj=0; jj<ysize; jj++)
+            for(uint32_t jj = 0; jj < ysize; jj++)
             {
-                double ym = y0m + (*DMpixscale)*jj;
+                double ym = y0m + (*DMpixscale) * jj;
                 double ypix = ym / (*turbseedpixscale);
 
                 uint32_t ypix0 = (uint32_t) ypix;
-                double yfrac = ypix-ypix0;
+                double yfrac = ypix - ypix0;
 
                 ypix0 = ypix0 % (*turbseedsize);
-                uint32_t ypix1 = ypix0+1;
+                uint32_t ypix1 = ypix0 + 1;
                 ypix1 = ypix1 % Sysize;
 
-                double v00 = data.image[IDts0].array.F[ypix0*Sxsize + xpix0];
-                double v10 = data.image[IDts0].array.F[ypix0*Sxsize + xpix1];
-                double v01 = data.image[IDts0].array.F[ypix1*Sxsize + xpix0];
-                double v11 = data.image[IDts0].array.F[ypix1*Sxsize + xpix1];
+                double v00 = data.image[IDts0].array.F[ypix0 * Sxsize + xpix0];
+                double v10 = data.image[IDts0].array.F[ypix0 * Sxsize + xpix1];
+                double v01 = data.image[IDts0].array.F[ypix1 * Sxsize + xpix0];
+                double v11 = data.image[IDts0].array.F[ypix1 * Sxsize + xpix1];
 
                 // bilinear interpolation
-                float val = v00*(1.0-xfrac)*(1.0-yfrac) + v10*xfrac*(1.0-yfrac) + v01*(1.0-xfrac)*yfrac + v11*xfrac*yfrac;
+                float val = v00 * (1.0 - xfrac) * (1.0 - yfrac) + v10 * xfrac *
+                (1.0 - yfrac) + v01 * (1.0 - xfrac) * yfrac + v11 * xfrac * yfrac;
                 val *= amplcoeff;
-                turbimarray[jj*xsize+ii] = val;
+                turbimarray[jj * xsize + ii] = val;
                 total += val;
             }
         }
         double total2 = 0.0;
-        for(uint64_t ii=0; ii<xsize*ysize; ii++)
+        for(uint64_t ii = 0; ii < xsize *ysize; ii++)
         {
-            turbimarray[ii] -= total/(xsize*ysize);
-            total2 += turbimarray[ii]*turbimarray[ii];
+            turbimarray[ii] -= total / (xsize * ysize);
+            total2 += turbimarray[ii] * turbimarray[ii];
         }
-        double RMSval = sqrt(total2/(xsize*ysize));
+        double RMSval = sqrt(total2 / (xsize * ysize));
 
-        processinfo_WriteMessage_fmt(processinfo, "pht %.3lf s (+ %.0f us) RMS %.3f", phystime, 1e6*dt, RMSval);
+        processinfo_WriteMessage_fmt(processinfo, "pht %.3lf s (+ %.0f us) RMS %.3f", phystime, 1e6 * dt, RMSval);
 
         // tweak amplcoeff to match desired RMS
         // large discrepancy lead ot large correction
         //
         double coeffstep = (*turbampl) / RMSval;
         double logdiff = log10(coeffstep);
-        double logdiff3abs = pow(fabs(logdiff),3.0);
-        double amplloopgain = 1.0e-4 + logdiff3abs/(logdiff3abs+1.0);
-        amplcoeff *= pow(10.0, amplloopgain*logdiff);
+        double logdiff3abs = pow(fabs(logdiff), 3.0);
+        double amplloopgain = 1.0e-4 + logdiff3abs / (logdiff3abs + 1.0);
+        amplcoeff *= pow(10.0, amplloopgain * logdiff);
 
         printf("RMS= %6.3f / %6.3f  logdiff = %6.3f  factor = %6.3f\n", RMSval, (*turbampl), logdiff, pow(10.0, logdiff));
 
@@ -571,7 +573,7 @@ static errno_t compute_function()
 
 
         imgDM.md->write = 1;
-        memcpy(imgDM.im->array.F, turbimarray, sizeof(float)*xsize*ysize);
+        memcpy(imgDM.im->array.F, turbimarray, sizeof(float)*xsize * ysize);
         processinfo_update_output_stream(processinfo, imgDM.ID);
 
     }

@@ -815,7 +815,7 @@ static errno_t Measure_Linear_Response_Modal(
             //printf("%5lu  waiting for frame\n", pokeframe);
 
             ImageStreamIO_semwait(imgout.im, semindexout);
-            clock_gettime(CLOCK_REALTIME, &pkinfarray[pokeframe].tstart);
+            clock_gettime(CLOCK_MILK, &pkinfarray[pokeframe].tstart);
 
 
 
@@ -844,7 +844,7 @@ static errno_t Measure_Linear_Response_Modal(
                    sizeof(float) * sizexyin);
             imgin.md->cnt1 = pkinfarray[pokeframe].PokeIndexCTRL_Mapped;
             processinfo_update_output_stream(processinfo, imgin.ID);
-            clock_gettime(CLOCK_REALTIME, &pkinfarray[pokeframe].tpoke);
+            clock_gettime(CLOCK_MILK, &pkinfarray[pokeframe].tpoke);
 
 
             // Collect signal
@@ -1031,14 +1031,14 @@ static errno_t Measure_Linear_Response_Modal(
             char tmpoutfname[STRINGMAXLEN_FULLFILENAME];
             WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp_raw.fits", outdir);
 
-/*            for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
-            {
-                for(uint64_t ii = 0; ii < sizexyout; ii++)
-                {
-                    imgoutC2.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * iter * ampl;
-                }
-            }
-*/
+            /*            for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
+                        {
+                            for(uint64_t ii = 0; ii < sizexyout; ii++)
+                            {
+                                imgoutC2.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * iter * ampl;
+                            }
+                        }
+            */
             save_fits(imgoutC2.name, tmpoutfname);
 
 
@@ -1052,7 +1052,8 @@ static errno_t Measure_Linear_Response_Modal(
                 {
                     float posval = imgoutC2.im->array.F[(mode * 2) * sizexyout + ii];
                     float negval = imgoutC2.im->array.F[(mode * 2 + 1) * sizexyout + ii];
-                    imgmoderespC.im->array.F[ mode * sizexyout + ii ] = (posval - negval) / 2 / (timing_NBave * iter * ampl);
+                    imgmoderespC.im->array.F[ mode * sizexyout + ii ] = (posval - negval) / 2 /
+                    (timing_NBave * iter * ampl);
 
                 }
 
