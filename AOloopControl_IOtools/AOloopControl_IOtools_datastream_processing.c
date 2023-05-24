@@ -207,7 +207,6 @@ errno_t AOloopControl_IOtools_AveStream(const char *IDname,
                     0,
                     0,
                     &IDout_ave);
-    COREMOD_MEMORY_image_set_createsem(IDname_out_ave, 10);
 
     create_image_ID(IDname_out_AC,
                     2,
@@ -217,7 +216,6 @@ errno_t AOloopControl_IOtools_AveStream(const char *IDname,
                     0,
                     0,
                     &IDout_AC);
-    COREMOD_MEMORY_image_set_createsem(IDname_out_ave, 10);
 
     create_image_ID(IDname_out_RMS,
                     2,
@@ -227,7 +225,6 @@ errno_t AOloopControl_IOtools_AveStream(const char *IDname,
                     0,
                     0,
                     &IDout_RMS);
-    COREMOD_MEMORY_image_set_createsem(IDname_out_RMS, 10);
 
     free(sizearray);
 
@@ -346,7 +343,6 @@ errno_t AOloopControl_IOtools_imAlignStream(const char *IDname,
     sizearray[0] = xsize;
     sizearray[1] = ysize;
     create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDout);
-    COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
     free(sizearray);
 
     for(;;)
@@ -546,7 +542,6 @@ imageID AOloopControl_IOtools_frameDelay(const char *IDin_name,
     sizearray[0] = xsize;
     sizearray[1] = ysize;
     create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDout);
-    COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
     free(sizearray);
 
     framesize = sizeof(float) * xsize * ysize;

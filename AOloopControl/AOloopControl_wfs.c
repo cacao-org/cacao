@@ -109,12 +109,6 @@ errno_t AOloopControl_WFSzpupdate_loop(const char *IDzpdm_name,
 
     IDzpdm = image_ID(IDzpdm_name);
 
-    if(data.image[IDzpdm].md[0].sem <
-            2) // if semaphore #1 does not exist, create it
-    {
-        COREMOD_MEMORY_image_set_createsem(IDzpdm_name, 2);
-    }
-
     IDzrespM = image_ID(IDzrespM_name);
     IDwfszp  = image_ID(IDwfszp_name);
 
@@ -321,7 +315,6 @@ AOloopControl_WFSzeropoint_sum_update_loop(__attribute__((unused)) long loopnb,
                 wfsxsize,
                 wfsysize,
                 0.0);
-        COREMOD_MEMORY_image_set_createsem(imname, 10);
         IDwfszparray[ch] = image_ID(imname);
     }
     // extra special zp channel
@@ -335,7 +328,6 @@ AOloopControl_WFSzeropoint_sum_update_loop(__attribute__((unused)) long loopnb,
             wfsxsize,
             wfsysize,
             0.0);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     IDwfszparray[ch] = image_ID(imname);
 
     cntsumold = 0;
@@ -505,7 +497,6 @@ imageID AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)
     }
 
     create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDout);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
 
     if(sprintf(imname, "aol%ld_wfsres_ave", loop) < 1)
     {
@@ -513,7 +504,6 @@ imageID AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)
     }
 
     create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDoutave);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     for(ii = 0; ii < wfsxysize; ii++)
     {
         data.image[IDoutave].array.F[ii] = 0.0;
@@ -525,7 +515,6 @@ imageID AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)
     }
 
     create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDoutm);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
 
     if(sprintf(imname, "aol%ld_wfsresm_ave", loop) < 1)
     {
@@ -533,7 +522,6 @@ imageID AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)
     }
 
     create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDoutmave);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     for(ii = 0; ii < wfsxysize; ii++)
     {
         data.image[IDoutave].array.F[ii] = 0.0;
@@ -545,7 +533,6 @@ imageID AOloopControl_computeWFSresidualimage(long loop, char *IDalpha_name)
     }
 
     create_image_ID(imname, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDoutrms);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     for(ii = 0; ii < wfsxysize; ii++)
     {
         data.image[IDoutrms].array.F[ii] = 0.0;

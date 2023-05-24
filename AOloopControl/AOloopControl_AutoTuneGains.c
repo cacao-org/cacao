@@ -230,7 +230,6 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
                     0,
                     0,
                     &IDmodeWFSnoise);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     free(sizearray);
 
     // blocks
@@ -249,7 +248,6 @@ errno_t AOloopControl_AutoTuneGains(long        loop,
     sizearray[0] = NBmodes;
     sizearray[1] = 1;
     create_image_ID(IDout_name, 2, sizearray, _DATATYPE_FLOAT, 1, 0, 0, &IDout);
-    COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
     free(sizearray);
 
     // last open loop move values

@@ -883,8 +883,6 @@ int AOloopControl_DM_CombineChannels_RUN()
         sizexywfsref = dmdispcombconf[DMindex].xsizewfsref *
                        dmdispcombconf[DMindex].ysizewfsref;
 
-        COREMOD_MEMORY_image_set_createsem(wfsref_out, 10);
-
         printf("done\n\n");
         fflush(stdout);
     }
@@ -907,8 +905,6 @@ int AOloopControl_DM_CombineChannels_RUN()
         create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 1, 10, 0, &chID);
         data.image[chID].md[0].ownerPID      = getpid();
         dmdispcombconf[DMindex].dmdispID[ch] = chID;
-
-        COREMOD_MEMORY_image_set_createsem(name, 10);
         dmdispptr_array[ch] =
             data.image[dmdispcombconf[DMindex].dmdispID[ch]].array.F;
     }
@@ -923,7 +919,6 @@ int AOloopControl_DM_CombineChannels_RUN()
                     0,
                     &(dmdispcombconf[DMindex].IDdisp));
     data.image[dmdispcombconf[DMindex].IDdisp].md[0].ownerPID = getpid();
-    COREMOD_MEMORY_image_set_createsem(name, 10);
 
     sprintf(name, "dm%02lddispt", DMindex);
     create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 0, 0, 0, &IDdispt);
@@ -1012,8 +1007,6 @@ int AOloopControl_DM_CombineChannels_RUN()
             }
             data.image[dmdispcombconf[DMindex].IDvolt].md[0].ownerPID =
                 getpid();
-            COREMOD_MEMORY_image_set_createsem(dmdispcombconf[DMindex].voltname,
-                                               10);
         }
         else
         {
@@ -1029,7 +1022,6 @@ int AOloopControl_DM_CombineChannels_RUN()
     dmdispcombconf[0].status = 1;
 
     sprintf(name, "dm%02lddisp", DMindex);
-    COREMOD_MEMORY_image_set_createsem(name, 10);
 
     if(data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem < 2)
     {
@@ -1760,8 +1752,6 @@ dmdispcombconf[DMindex].xsizewfsref, dmdispcombconf[DMindex].ysizewfsref);
         sizexywfsref =
 dmdispcombconf[DMindex].xsizewfsref*dmdispcombconf[DMindex].ysizewfsref;
 
-        COREMOD_MEMORY_image_set_createsem(wfsref_out, 10);
-
         printf("done\n\n");
         fflush(stdout);
     }
@@ -1776,7 +1766,7 @@ dmdispcombconf[DMindex].stroke100*dmdispcombconf[DMindex].MAXVOLT/100.0*dmdispco
         sprintf(name, "dm%02lddisp%02ld", DMindex, ch);
         printf("Channel %ld \n", ch);
         dmdispcombconf[DMindex].dmdispID[ch] = create_image_ID(name, naxis,
-size, _DATATYPE_FLOAT, 1, 10); COREMOD_MEMORY_image_set_createsem(name, 10);
+size, _DATATYPE_FLOAT, 1, 10);
         dmdispptr_array[ch] =
 data.image[dmdispcombconf[DMindex].dmdispID[ch]].array.F;
     }
@@ -1784,7 +1774,7 @@ data.image[dmdispcombconf[DMindex].dmdispID[ch]].array.F;
 
     sprintf(name, "dm%02lddisp", DMindex);
     dmdispcombconf[DMindex].IDdisp = create_image_ID(name, naxis, size,
-_DATATYPE_FLOAT, 1, 10); COREMOD_MEMORY_image_set_createsem(name, 10);
+_DATATYPE_FLOAT, 1, 10);
 
     sprintf(name, "dm%02lddispt", DMindex);
     IDdispt = create_image_ID(name, naxis, size, _DATATYPE_FLOAT, 0, 0);
@@ -1822,8 +1812,7 @@ create_image_ID(dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_FLOAT,
             if(dmdispcombconf[DMindex].volttype==2)
                 dmdispcombconf[DMindex].IDvolt =
 create_image_ID(dmdispcombconf[DMindex].voltname, naxis, size, _DATATYPE_UINT16,
-1, 10); COREMOD_MEMORY_image_set_createsem(dmdispcombconf[DMindex].voltname,
-10);
+1, 10);
         }
         else
             dmdispcombconf[DMindex].IDvolt =
@@ -1836,7 +1825,6 @@ image_ID(dmdispcombconf[DMindex].voltname);
     dmdispcombconf[0].status = 1;
 
     sprintf(name, "dm%02lddisp", DMindex);
-    COREMOD_MEMORY_image_set_createsem(name, 10);
 
     if(data.image[dmdispcombconf[DMindex].IDdisp].md[0].sem<2)
     {

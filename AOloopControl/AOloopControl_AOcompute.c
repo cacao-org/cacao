@@ -597,7 +597,6 @@ errno_t __attribute__((hot)) AOcompute(long loop, int normalize)
                                 0,
                                 0,
                                 &(aoloopcontrol_var.aoconfID_meas_act));
-                COREMOD_MEMORY_image_set_createsem(imname, 10);
                 free(sizearray);
             }
 

@@ -596,7 +596,6 @@ errno_t AOloopControl_loadconfigure(long loop, int mode, int level)
                 0.0);
     fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_imWFS0);
 
-    COREMOD_MEMORY_image_set_createsem(name, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_imWFS0, name);
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_imWFS0] = 1;
 
@@ -609,7 +608,6 @@ errno_t AOloopControl_loadconfigure(long loop, int mode, int level)
     aoloopcontrol_var.aoconfID_imWFS0tot =
         AOloopControl_IOtools_2Dloadcreate_shmim(name, " ", 1, 1, 0.0);
     fprintf(fplog, " ID = %ld\n", aoloopcontrol_var.aoconfID_imWFS0tot);
-    COREMOD_MEMORY_image_set_createsem(name, 10);
 
     if(sprintf(name, "aol%ld_imWFS1", loop) < 1)
     {

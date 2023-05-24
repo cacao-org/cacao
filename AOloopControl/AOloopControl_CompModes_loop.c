@@ -131,7 +131,6 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
                     0,
                     0,
                     &ID_coeff);
-    COREMOD_MEMORY_image_set_createsem(ID_coeff_name, 10);
     data.image[ID_coeff].md[0].cnt0 = 0;
 
     create_image_ID("coefftmp",
@@ -142,7 +141,6 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
                     0,
                     0,
                     &ID_coefft);
-    COREMOD_MEMORY_image_set_createsem("coefftmp", 10);
 
     create_image_ID("coeff0",
                     2,
@@ -153,7 +151,6 @@ errno_t AOloopControl_CompModes_loop(const char *ID_CM_name,
                     0,
                     &IDcoeff0);
     create_2Dimage_ID("wfsim_n", wfsxsize, wfsysize, &ID_WFSim_n);
-    COREMOD_MEMORY_image_set_createsem("wfsim_n", 10);
 
     ID_WFSim    = image_ID(ID_WFSim_name);
     ID_WFSimtot = image_ID(ID_WFSimtot_name);

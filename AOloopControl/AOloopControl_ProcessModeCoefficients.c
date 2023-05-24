@@ -395,7 +395,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         PRINT_ERROR("sprintf wrote <1 char");
     }
     create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0, &IDout);
-    COREMOD_MEMORY_image_set_createsem(imname, 20);
 
     // setup RTstreamLOG modeval_ol
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_ol, imname);
@@ -407,7 +406,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         PRINT_ERROR("sprintf wrote <1 char");
     }
     create_image_ID(imname, 2, sizeout, _DATATYPE_UINT16, 1, 0, 0, &IDblknb);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
 
     // load/create aol_modeval_dm_corr (current modal DM correction)
     if(sprintf(imname, "aol%ld_modeval_dm_corr", loop) < 1)
@@ -422,7 +420,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDmodevalDMcorr);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_corr, imname);
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_dm_corr] = 1;
 
@@ -440,7 +437,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDmodevalDMnow);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm_now, imname);
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_dm_now] = 1;
 
@@ -457,7 +453,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDmodevalDMnowfilt);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop,
                                     RTSLOGindex_modeval_dm_now_filt,
                                     imname);
@@ -470,7 +465,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
         PRINT_ERROR("sprintf wrote <1 char");
     }
     create_image_ID(imname, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0, &IDmodevalDM);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modeval_dm, imname);
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modeval_dm] = 1;
 
@@ -488,7 +482,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDmodevalPFsync);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPFsync, imname);
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modevalPFsync] = 1;
 
@@ -506,7 +499,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDmodevalPFres);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     AOloopControl_RTstreamLOG_setup(loop, RTSLOGindex_modevalPFres, imname);
     aoloopcontrol_var.RTSLOGarrayInitFlag[RTSLOGindex_modevalPFres] = 1;
 
@@ -523,7 +515,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDmodeWFSnoise);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
 
     //
     // load/create aol_mode_ARPFgain (mixing ratio between non-predictive and
@@ -546,7 +537,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDmodeARPFgain);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
     // initialize the gain to zero for all modes
     for(uint32_t m = 0; m < NBmodes; m++)
     {
@@ -568,7 +558,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                         0,
                         0,
                         &(aoloopcontrol_var.aoconfID_modeARPFgainAuto));
-        COREMOD_MEMORY_image_set_createsem(imname, 10);
         // initialize the gain to zero for all modes
         for(uint32_t m = 0; m < NBmodes; m++)
         {
@@ -593,7 +582,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDmodevalDM_C);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
 
     // modal prediction, circular buffer
     sizeout[1] = modeval_bsize;
@@ -610,7 +598,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDmodevalPF_C);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
 
     // auto limit tuning
     sizeout[0] = AOconf[loop].AOpmodecoeffs.DMmodesNBblock;
@@ -628,7 +615,6 @@ imageID __attribute__((hot)) AOloopControl_ProcessModeCoefficients(long loop)
                     0,
                     0,
                     &IDatlimbcoeff);
-    COREMOD_MEMORY_image_set_createsem(imname, 10);
 
     free(sizeout);
 

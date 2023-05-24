@@ -565,7 +565,6 @@ errno_t FPAOloopControl_loadconfigure(long                        loop,
                 FPAOconf[loop].sizexWFS,
                 FPAOconf[loop].sizeyWFS,
                 0.0);
-    COREMOD_MEMORY_image_set_createsem(name, 10);
 
     sprintf(name, "FPaol%ld_imWFS1", loop);
     FPaoconfID_imWFS1 =
@@ -574,7 +573,6 @@ errno_t FPAOloopControl_loadconfigure(long                        loop,
                 FPAOconf[loop].sizexWFS,
                 FPAOconf[loop].sizeyWFS,
                 0.0);
-    COREMOD_MEMORY_image_set_createsem(name, 10);
 
     list_image_ID();
 

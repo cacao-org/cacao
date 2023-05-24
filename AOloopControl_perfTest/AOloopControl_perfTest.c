@@ -1754,7 +1754,6 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
     sizeout[0] = NBmodes;
     sizeout[1] = 1;
     create_image_ID(IDout_name, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0, &IDout);
-    COREMOD_MEMORY_image_set_createsem(IDout_name, 10);
 
     printf("%ld modes\n", NBmodes);
 
@@ -1810,7 +1809,6 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
     }
 
     create_image_ID(fname, 2, sizeout, _DATATYPE_FLOAT, 1, 0, 0, &IDblockRMS);
-    COREMOD_MEMORY_image_set_createsem(fname, 10);
 
     if(snprintf(fname, stringmaxlen, "aol%ld_blockRMS_ave", loop) < 1)
     {
@@ -1825,7 +1823,6 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
                     0,
                     0,
                     &IDblockRMS_ave);
-    COREMOD_MEMORY_image_set_createsem(fname, 10);
 
     cnt = 0;
     for(;;)
