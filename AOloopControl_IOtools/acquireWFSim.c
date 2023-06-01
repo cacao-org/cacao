@@ -439,9 +439,6 @@ static errno_t compute_function()
             stream_connect_create_2Df32(wfszposname, sizexWFS, sizeyWFS);
     }
 
-
-
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
         // ===========================================
@@ -460,7 +457,6 @@ static errno_t compute_function()
         }*/
 
         DEBUG_TRACEPOINT(" ");
-
 
 
         char *ptrv;
@@ -491,7 +487,6 @@ static errno_t compute_function()
         }
 
 
-
         // ===================================================
         // SUBTRACT WFSDARK AND MULTIPLY BY WFSMULT-> imWFS0
         // ===================================================
@@ -520,8 +515,6 @@ static errno_t compute_function()
 
         data.image[ID_imWFS0].md[0].write = 1;
 
-
-
         switch(WFSatype)
         {
         case _DATATYPE_UINT16:
@@ -546,7 +539,6 @@ static errno_t compute_function()
             break;
 
         case _DATATYPE_INT16:
-
             if(status_darksub == 0)
             {
                 // no dark subtraction, convert data to float
@@ -597,12 +589,14 @@ static errno_t compute_function()
 
         if(status_darksub == 1)
         {
-             for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
-             {
-                data.image[ID_imWFS0].array.F[ii] *= data.image[IDwfsmult].array.F[ii];
-             }
+            if(IDwfsmult != -1)
+            {
+                for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+                {
+                    data.image[ID_imWFS0].array.F[ii] *= data.image[IDwfsmult].array.F[ii];
+                }
+            }
         }
-
 
         processinfo_update_output_stream(processinfo, ID_imWFS0);
 
@@ -744,15 +738,15 @@ static errno_t compute_function()
         // UPDATE wfsrefc
         // ===========================================
 
-        printf("IDwfsref = %ld\n", IDwfsref);
-        fflush(stdout);
+        /*        printf("IDwfsref = %ld\n", IDwfsref);
+                fflush(stdout);
 
-        printf("IDwfsrefc = %ld\n", IDwfsrefc);
-        fflush(stdout);
+                printf("IDwfsrefc = %ld\n", IDwfsrefc);
+                fflush(stdout);
 
-        printf("ID_imWFS3 = %ld\n", ID_imWFS3);
-        fflush(stdout);
-
+                printf("ID_imWFS3 = %ld\n", ID_imWFS3);
+                fflush(stdout);
+        */
 
         int status_wfsrefc = 0;
         if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
@@ -795,6 +789,7 @@ static errno_t compute_function()
         );
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
