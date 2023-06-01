@@ -25,6 +25,10 @@ cacao-loop-deploy -c scexao-vispyr-bin2
 # OPTIONAL: Edit file scexao-vispyr-bin2-conf/cacaovars.bash as needed
 # For example, change loop index, DM index, etc ...
 
+# OPTIONAL: Clean previous deployment :
+# rm -rf .vispyr2.cacaotaskmanager-log
+
+
 # Run deployment (starts conf processes)
 cacao-loop-deploy -r scexao-vispyr-bin2
 
