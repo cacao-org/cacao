@@ -396,7 +396,10 @@ static errno_t compute_function()
 
         processinfo_WriteMessage(processinfo, "create CM WFS");
 
-        IMGID imgCMWFSall = makeIMGID_3D("CMmodesWFSall", imgRMWFS.md->size[0], imgRMWFS.md->size[1], imgRMDM.md->size[2]);
+        IMGID imgCMWFSall = makeIMGID_3D("CMmodesWFSall",
+                                         imgRMWFS.md->size[0],
+                                         imgRMWFS.md->size[1],
+                                         imgRMDM.md->size[2]);
         createimagefromIMGID(&imgCMWFSall);
 
         clock_gettime(CLOCK_MILK, &t5);
@@ -602,10 +605,16 @@ static errno_t compute_function()
         processinfo_WriteMessage(processinfo, "create CMWFS and CMDM");
 
 
-        IMGID imgCMWFS = makeIMGID_3D("CMmodesWFS", imgRMWFS.md->size[0], imgRMWFS.md->size[1], ecnt);
+        IMGID imgCMWFS = makeIMGID_3D("CMmodesWFS",
+                                      imgRMWFS.md->size[0],
+                                      imgRMWFS.md->size[1],
+                                      ecnt);
         createimagefromIMGID(&imgCMWFS);
 
-        IMGID imgCMDM = makeIMGID_3D("CMmodesDM", imgRMDM.md->size[0], imgRMDM.md->size[1], ecnt);
+        IMGID imgCMDM = makeIMGID_3D("CMmodesDM",
+                                     imgRMDM.md->size[0],
+                                     imgRMDM.md->size[1],
+                                     ecnt);
         createimagefromIMGID(&imgCMDM);
 
 
