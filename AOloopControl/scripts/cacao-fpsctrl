@@ -8,6 +8,10 @@ MSdescr="cacao control"
 
 MSextdescr="cacao control
 interface to fpsCTRL
+
+Examples:
+cacao-fpsctrl setval mfilt loopON ON
+cacao-fpsctrl runstop mfilt 0
 "
 
 source milk-script-std-config
@@ -30,8 +34,17 @@ fpsname="${inputMSargARRAY[1]}"
 key="${inputMSargARRAY[2]}"
 val="${inputMSargARRAY[3]}"
 
+
+fpsfullname="$fpsname"
 if [ ${append_loopnumber} == "1" ]; then
-    sendFPScmd "${fpscmd} ${fpsname}-${CACAO_LOOPNUMBER}.${key} ${val}"
-else
-    sendFPScmd "${fpscmd} ${fpsname}.${key} ${val}"
+fpsfullname="${fpsname}-${CACAO_LOOPNUMBER}"
 fi
+
+
+if [ ${fpscmd} == "setval" ]; then
+sendFPScmd "${fpscmd} ${fpsfullname}.${key} ${val}"
+else
+sendFPScmd "${fpscmd} ${fpsfullname}"
+fi
+
+
