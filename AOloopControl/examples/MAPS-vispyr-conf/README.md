@@ -27,6 +27,9 @@ cacao-loop-deploy -c MAPS-vispyr
 # OPTIONAL: Edit file MAPS-vispyr-conf/cacaovars.bash as needed
 # For example, change loop index, DM index, etc ...
 
+# OPTIONAL: Clean previous deployment :
+# rm -rf .maps.cacaotaskmanager-log
+
 # Run deployment (starts conf processes)
 cacao-loop-deploy -r MAPS-vispyr
 
@@ -81,6 +84,7 @@ cacao-fpsctrl setval simmvmgpu procinfo.triggerdelay 0.01
 
 ```bash
 # Measure latency
+# option -w is to wait for completion
 cacao-aorun-020-mlat -w
 ```
 
@@ -137,7 +141,7 @@ This should visually look like a zonal response matrix.
 ### Make DM and WFS masks
 
 ```bash
-cacao-aorun-032-RMmkmask
+cacao-aorun-032-RMmkmask -dmc0 0.0 -dmc1 0.0
 ```
 Check results:
 - conf/dmmask.fits
@@ -159,10 +163,11 @@ Then run the compstrCM process to compute CM and load it to shared memory :
 cacao-aorun-039-compstrCM
 ```
 Inspect result:
-- CMmodesDM/CMmodesDM.fits
-- CMmodesWFS/CMmodesWFS.fits
+- conf/CMmodesDM/CMmodesDM.fits
+- conf/CMmodesWFS/CMmodesWFS.fits
 
 Check especially the number of modes controlled.
+With svdlim=0.01, there should be 158 control modes.
 
 ## Running the loop
 
@@ -172,6 +177,7 @@ Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) M
 cacao-fpsctrl setval wfs2cmodeval GPUindex 99
 cacao-fpsctrl setval mvalC2dm GPUindex 99
 ```
+
 
 
 Start the 3 control loop processes :
@@ -209,7 +215,11 @@ cacao-fpsctrl setval mfilt loopON ON
 
 ```bash
 # Set max number of modes above nbmodes
+
+cacao-fpsctrl runstop mfilt 0 0
+cacao-fpsctrl setval mfilt selfRM.zsize 20
 cacao-fpsctrl setval mfilt selfRM.NBmode 1000
+cacao-fpsctrl runstart mfilt 0 0
 cacao-fpsctrl setval mfilt selfRM.enable ON
 ```
 
