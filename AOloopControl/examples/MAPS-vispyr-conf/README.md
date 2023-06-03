@@ -116,7 +116,7 @@ The following files are written to ./conf/RMmodesDM/
 | `Hpixindex.fits  `   | Hadamard pixel index                                |
 | `SmodesC.fits    `   | *Simple* (single actuator) pokes                    |
 
-
+Note: With a 1D DM representation, FpokesC and ZpokesC are meaningless.
 
 ### Run acquisition
 
@@ -137,6 +137,35 @@ cacao-aorun-031-RMHdecode
 ```
 To inspect results, display file conf/RMmodesWFS/zrespM-H.fits.
 This should visually look like a zonal response matrix.
+
+
+
+### Alternative: Import arbitrary RM
+
+Instead of acquiring a RM with the above method (Hadamard + decode), an arbitrary RM can be imported and projected to the zonal space.
+
+```bash
+cacao
+# load custom RM files
+loadfits "customRMmodesDM.fits" RMmodesDM
+loadfits "customRMmodesWFS.fits" RMmodesWFS
+# convert to zonal representation
+# last argument is SVD limit - may require tuning
+cacaocc.RM2zonal RMmodesDM RMmodesWFS RMmodesDMz RMmodesWFSz 0.01
+# save results
+saveFITS RMmodesDMz "conf/RMmodesDM/RMmodesDMz.fits"
+saveFITS RMmodesDMz "conf/RMmodesWFS/RMmodesWFSz.fits"
+exitCLI
+```
+
+To adopt this matrix :
+```bash
+ln -sf ${PWD}/conf/RMmodesDM/RMmodesDMz.fits ./conf/RMmodesDM/RMmodesDM.fits
+ln -sf ${PWD}/conf/RMmodesWFS/RMmodesWFSz.fits ./conf/RMmodesWFS/RMmodesWFS.fits
+```
+
+
+
 
 ### Make DM and WFS masks
 
@@ -167,7 +196,7 @@ cacao-aorun-033-RM-mksynthetic -c 7
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-cacao-fpsctrl setval compstrCM svdlim 0.01
+cacao-fpsctrl setval compstrCM svdlim 0.001
 ```
 
 Then run the compstrCM process to compute CM and load it to shared memory :
@@ -179,7 +208,7 @@ Inspect result:
 - conf/CMmodesWFS/CMmodesWFS.fits
 
 Check especially the number of modes controlled.
-With svdlim=0.01, there should be 158 control modes.
+With svdlim=0.001, there should be 189 control modes.
 
 ## Running the loop
 
