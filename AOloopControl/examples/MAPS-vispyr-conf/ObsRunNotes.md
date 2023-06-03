@@ -20,14 +20,21 @@ How to check a specific stream?
 ## CACAO: Set up at start of night
 
 make a new working directory
-`mkdir work-2023-06-##'
-`cd work-2023-06-##`
+<br> `mkdir work-2023-06-##`
+<br> `cd work-2023-06-##`
 
 download from source to current directory
-`cacao-loop-deploy -c MAPS-vispyr`
+<br>`cacao-loop-deploy -c MAPS-vispyr`
 
 run deployment
-`cacao-loop-deploy -r MAPS-vispyr`
+<br>`cacao-loop-deploy -r MAPS-vispyr`
+
+go to the root directory
+<br> `cd maps-rootdir`
+
+connect to hardware
+<br> `./scripts/aorun-setmode-hardw`
+
 
 ## CHAI: Setting up 
 (not a part  of this package, MAPs specific)
@@ -46,22 +53,15 @@ rtimview viswfs_slopes &
 rtimview viswfs_pupils &
 ```
 
-
 ## CACAO
 
 ### Connecting stream readers
 
-go to the root directory
-`cd maps-rootdir`
-
-connect to hardware
-`./scripts/aorun-setmode-hardw`
-
 Start hardware DM
-`cacao-aorun-000-dm start`
+<br> `cacao-aorun-000-dm start`
 
 Start WFS fram aquisition
-`cacao-aorun-025-acqWFS -w start`
+<br> `cacao-aorun-025-acqWFS -w start`
 
 ### DM to WFS latency
 
@@ -72,7 +72,7 @@ cacao-aorun-020-mlat -w
 ```
 
 Running from fpsCTRL:
-shift + R `mlat`
+<br>    shift + R `mlat`
 
 Viewing latency:
 ``` bash
@@ -110,7 +110,9 @@ Check results:
 - conf/wfsmask.fits
 
 How to do this in fpsCTRL:
- - shift + R 
+ - shift + R `measlinreps-2`
+ - edit `measlinreps -> inmodes` to change poke matrix
+ - `measlinresp ->ampl -> 200` for most recent MAPs params
 
 #### Compute control matrix
 
