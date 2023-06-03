@@ -4,9 +4,14 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Compute control matrix"
 
-MSextdescr="AO loop script"
+MSextdescr="Compute control matrix by SVD
+
+Reads input from fps
+Write output to ../conf/CMmodesDM/CMmodesDM.fits and ../conf/CMmodesWFS/CMmodesWFS.fits
+Loads output control matrix (CM) into streams aolX_modesWFS and aolX_DMmodes
+"
 source milk-script-std-config
 source cacao-check-cacaovars
 source milk-argparse
