@@ -35,7 +35,7 @@ static CLICMDARGDEF farg[] =
         &fpi_inWF2D
     },
     {
-        CLIARG_IMG,
+        CLIARG_STR,
         ".mapfile",
         "mapping file, can be read from mapcoord2D.txt",
         "mapfile",
@@ -44,7 +44,7 @@ static CLICMDARGDEF farg[] =
         &fpi_map2D
     },
     {
-        CLIARG_IMG,
+        CLIARG_STR,
         ".outWF1D",
         "output WF 1D",
         "outWF1D",
@@ -67,8 +67,8 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_inWF2D].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_map2D].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED;
+        //data.fpsptr->parray[fpi_map2D].fpflag |=
+        //    FPFLAG_STREAM_RUN_REQUIRED;
     }
 
     return RETURN_SUCCESS;
@@ -210,49 +210,61 @@ static errno_t compute_function()
     float radf   = 0.25*(wfxsize+wfysize);
 
 
+    // Build mapping
+    //
+    long *iiact = (long*) malloc(sizeof(long)*mapsize);
+    long *jjact = (long*) malloc(sizeof(long)*mapsize);
+
+    for(uint32_t act=0; act < mapsize; act++)
+    {
+        // actuator coordinates
+        // relative to beam center, radius = 1
+        //
+        float xact = imgmap2D.im->array.F[act*2];
+        float yact = imgmap2D.im->array.F[act*2+1];
+
+        iiact[act] = (long) (xcentf + radf*xact);
+        jjact[act] = (long) (ycentf + radf*yact);
+
+        if(iiact[act] < 0)
+        {
+            iiact[act] = 0;
+        }
+        if(iiact[act] > wfxsize-1)
+        {
+            iiact[act] = wfxsize-1;
+        }
+
+        if(jjact[act] < 0)
+        {
+            jjact[act] = 0;
+        }
+        if(jjact[act] > wfysize-1)
+        {
+            jjact[act] = wfysize-1;
+        }
+    }
+
+
+
+
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
         for(uint32_t slice=0; slice < NBslice; slice++)
         {
-            printf(".");
-            fflush(stdout);
-
             for(uint32_t act=0; act < mapsize; act++)
             {
-                // actuator coordinates
-                // relative to beam center, radius = 1
-                //
-                float xact = imgmap2D.im->array.F[act*2];
-                float yact = imgmap2D.im->array.F[act*2+1];
-
-                long iiact = (long) (xcentf + radf*xact);
-                long jjact = (long) (ycentf + radf*yact);
-
-                if(iiact < 0)
-                {
-                    iiact = 0;
-                }
-                if(iiact > wfxsize-1)
-                {
-                    iiact = wfxsize-1;
-                }
-
-                if(jjact < 0)
-                {
-                    jjact = 0;
-                }
-                if(jjact > wfysize-1)
-                {
-                    jjact = wfysize-1;
-                }
-
                 imgoutWF1D.im->array.F[slice*mapsize + act] =
-                    imgWF2D.im->array.F[slice*mapsize + jjact*wfxsize + iiact];
+                    imgWF2D.im->array.F[slice*wfsize + jjact[act]*wfxsize + iiact[act]];
             }
         }
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
+
+    free(iiact);
+    free(jjact);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
