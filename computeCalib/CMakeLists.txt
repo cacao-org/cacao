@@ -3,6 +3,7 @@ project(lib_${LIBNAME}_project)
 
 # list source files (.c) other than modulename.c
 set(SOURCEFILES
+	actmap_sample2D.c
 	AOloopControl_computeCalib_CM.c
 	AOloopControl_computeCalib_dm.c
 	computeHadamard.c
