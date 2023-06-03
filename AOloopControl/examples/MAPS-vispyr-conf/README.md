@@ -155,6 +155,8 @@ Note: we are not going to apply the masks in this example, so OK if not net prop
 
 ### Create synthetic (Fourier) response matrix
 
+A synthetic RM allows for modes to be weighted by spatial frequency prior to computing the CM. Doing so will ensure that the resulting CM is approximately ordered by spatial frequency.
+
 ```bash
 cacao-aorun-033-RM-mksynthetic -c 7
 ```
