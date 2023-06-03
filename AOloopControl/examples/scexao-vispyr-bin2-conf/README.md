@@ -63,10 +63,10 @@ cacao-aorun-002-simwfs -w start
 ## Measure WFS dark
 
 
+Takes dark, stores it into aolX_wfsdarkraw, with aolX_wfsdark pointing to it.
 ```bash
 cacao-aorun-005-takedark -n 2000
 ```
-
 
 
 ## Start WFS acquisition
@@ -121,18 +121,30 @@ The following files are written to ./conf/RMmodesDM/
 # 6 cycles - default is 10.
 cacao-aorun-030-acqlinResp -n 6 -w HpokeC
 ```
+This could take a while. Check status on milk-procCTRL.
+To inspect results, display file conf/RMmodesWFS/HpokeC.WFSresp.fits.
 
 ### Decode Hadamard matrix
 
 ```bash
 cacao-aorun-031-RMHdecode
 ```
+To inspect results, display file conf/RMmodesWFS/zrespM-H.fits.
+This should visually look like a zonal response matrix.
+
 
 ### Make DM and WFS masks
 
 ```bash
 cacao-aorun-032-RMmkmask
 ```
+Check results:
+- conf/dmmask.fits
+- conf/wfsmask.fits
+
+If needed, rerun command with non-default parameters (see -h for options).
+Note: we are not going to apply the masks in this example, so OK if not net properly. The masks are informative here, allowing us to view which DM actuators and WFS pixels have the best response.
+
 
 ### Create synthetic (Fourier) response matrix
 
@@ -194,7 +206,27 @@ cacao-fpsctrl setval mfilt loopON ON
 
 ```
 
+
+## Testing the loop (selfRM)
+
+
+```bash
+# Set max number of modes above nbmodes
+
+cacao-fpsctrl runstop mfilt 0 0
+cacao-fpsctrl setval mfilt selfRM.zsize 20
+cacao-fpsctrl setval mfilt selfRM.NBmode 1000
+cacao-fpsctrl runstart mfilt 0 0
+cacao-fpsctrl setval mfilt selfRM.enable ON
+```
+
+Check result: maps-rundir/selfRM.fits
+
+
+
 # Cleanup
+
+From main directory (upstream of rootdir) :
 
 ```bash
 cacao-task-manager -C 0 scexao-vispyr-bin2

@@ -2,7 +2,7 @@
 
 MSdescr="Archive AO calibration"
 
-MSextdescr="Copy current filesystem calibration to AOcalibs/<calibname>/ directory
+MSextdescr="Copy current filesystem calibration to ../CACAO_LOOPNAME-AOcalibs/<calibname>/ directory
 To be executed from loop rootdir"
 
 source milk-script-std-config
@@ -14,19 +14,18 @@ RequiredPipes=()
 RequiredFiles=()
 
 
-RequiredDirs=(AOcalibs)
-RequiredDirs+=(${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir)
-RequiredDirs+=(${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir)
-RequiredDirs+=(${CACAO_LOOPRUNDIR}/fps.acqlin_loRM-${CACAO_LOOPNUMBER}.datadir)
+RequiredDirs=(conf)
 
-MSarg+=( "calibname:string:calibration name" )
 
-MSopt+=( "t:timestamp:settimestamp::append timestamp to name" )
-addtimestamp="0"
-function settimestamp() {
-        echo "Append timestamp to name"
-        addtimestamp="1"
-}
+
+#MSarg+=( "calibname:string:calibration name" )
+
+#MSopt+=( "t:timestamp:settimestamp::append timestamp to name" )
+#addtimestamp="0"
+#function settimestamp() {
+#        echo "Append timestamp to name"
+#        addtimestamp="1"
+#}
 
 
 
@@ -40,8 +39,8 @@ set -u
 
 
 
-calib="${inputMSargARRAY[0]}"
-echo "Calibration : ${calib}"
+#calib="${inputMSargARRAY[0]}"
+#echo "Calibration : ${calib}"
 
 
 
@@ -50,16 +49,38 @@ echo "Calibration : ${calib}"
 # Arguments:
 # Calib name
 
+DATESTRING="$(date -u +%Y-%m-%dT%H:%M:%S)"
 
-ARCHDIR="AOcalibs/$1"
+ARCHDIR="../${CACAO_LOOPNAME}-calibs/${DATESTRING}/"
 
-if [ "${addtimestamp}" = "1" ]; then
-ARCHDIR=${ARCHDIR}_$(date -u +%Y-%m-%dT%H:%M:%S)
-fi
+#if [ "${addtimestamp}" = "1" ]; then
+#ARCHDIR=${ARCHDIR}_$(date -u +%Y-%m-%dT%H:%M:%S)
+#fi
 
 
 mkdir -p ${ARCHDIR}
 
+echo "Saving to DIRECTORY ${ARCHDIR}"
+
+
+
+CONFDIR="conf"
+
+for f in $CONFDIR
+do
+    if [ -d "$f" ]
+    then
+        for ff in $f/*
+        do      
+            echo "Processing $ff"
+        done
+    else
+        echo "Processing file $f"
+    fi
+done
+
+
+exit
 
 cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodesWFS1all.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS.fits
 cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes.fits
