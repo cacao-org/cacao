@@ -150,6 +150,16 @@ Check results:
 If needed, rerun command with non-default parameters (see -h for options).
 Note: we are not going to apply the masks in this example, so OK if not net properly. The masks are informative here, allowing us to view which DM actuators and WFS pixels have the best response.
 
+
+
+
+### Create synthetic (Fourier) response matrix
+
+```bash
+cacao-aorun-033-RM-mksynthetic -c 7
+```
+
+
 ## Compute control matrix (straight)
 
 Compute control modes, in both WFS and DM spaces.
