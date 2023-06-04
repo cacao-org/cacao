@@ -45,9 +45,14 @@ fifoname="$MILK_SHM_DIR/milkCLIfifo.${pname}.${ttystring}"
 SF="$MILK_SHM_DIR/milkCLIstartup.${pname}.${ttystring}"
 echo "readshmim aol${CACAO_LOOPNUMBER}_modevalWFS" > $SF
 echo "readshmim aol${CACAO_LOOPNUMBER}_modevalDM" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_modevalOL" >> $SF
 echo "readshmim aol${CACAO_LOOPNUMBER}_mgain" >> $SF
 echo "readshmim aol${CACAO_LOOPNUMBER}_mmult" >> $SF
 echo "readshmim aol${CACAO_LOOPNUMBER}_mlimit" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_modevalWFS_buff" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_modevalDM_buff" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_modevalOL_buff" >> $SF
+echo "listim" >> $SF
 echo "cacao.modalstatsTUI ${CACAO_LOOPNUMBER}" >> $SF
 echo "exitCLI" >> $SF
 
