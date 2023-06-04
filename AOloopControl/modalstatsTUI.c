@@ -261,7 +261,8 @@ errno_t AOloopControl_modalstatsTUI(
         double valcnt = 0.0;
         for(uint64_t ii=0; ii<imgDMmodes.md->size[0]*imgDMmodes.md->size[1]; ii++)
         {
-            val += imgDMmodes.im->array.F[ii]* imgDMmodes.im->array.F[ii];
+            val += imgDMmodes.im->array.F[mi*imgDMmodes.md->size[0]*imgDMmodes.md->size[1] + ii]
+                   * imgDMmodes.im->array.F[mi*imgDMmodes.md->size[0]*imgDMmodes.md->size[1] + ii];
             valcnt += 1.0;
         }
         DMmodenorm[mi] = sqrt(val/valcnt);
