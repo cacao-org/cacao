@@ -332,7 +332,7 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-        TUI_printfw("MODE   [ gain  mult  lim ]       WFS        DM          OL");
+        TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |          OL        |");
         TUI_newline();
 
         long buffWFSindex = imgmodevalWFSbuff.md->cnt0;
@@ -435,16 +435,16 @@ errno_t AOloopControl_modalstatsTUI(
             {
                 screenprint_setbold();
             }
-            TUI_printfw("%4ld [%5.3f %5.3f %4ld]   %+4ld | %+4ld | %+4ld  WFS %+4ld %4ld  DM %+4ld %4ld  OL %+4ld %4ld  ",
+            TUI_printfw("%4ld [%5.3f %5.3f %5ld]   %+5ld %+5ld %+5ld | %+5ld %5ld %+5ld | %5ld %+5ld %5ld  |",
                         mi,
                         imgmgain.im->array.F[mi],
                         imgmmult.im->array.F[mi],
                         (long) (mstatstruct.pscale*imgmlimit.im->array.F[mi]),
                         (long) (mstatstruct.pscale*imgmodevalWFS.im->array.F[mi]),
-                        (long) (mstatstruct.pscale*imgmodevalDM.im->array.F[mi]),
-                        (long) (mstatstruct.pscale*imgmodevalOL.im->array.F[mi]),
                         (long) (mstatstruct.pscale*WFSave[mi]), (long) (mstatstruct.pscale*WFSrms[mi]),
+                        (long) (mstatstruct.pscale*imgmodevalDM.im->array.F[mi]),
                         (long) (mstatstruct.pscale*DMave[mi]), (long) (mstatstruct.pscale*DMrms[mi]),
+                        (long) (mstatstruct.pscale*imgmodevalOL.im->array.F[mi]),
                         (long) (mstatstruct.pscale*OLave[mi]), (long) (mstatstruct.pscale*OLrms[mi])
                        );
 
