@@ -432,7 +432,7 @@ errno_t AOloopControl_modalstatsTUI(
             {
                 screenprint_setbold();
             }
-            TUI_printfw("%4ld [%5.3f %5.3f %4f]   %+4f | %+4f | %+4f  WFS %+4f %4f  DM %+4f %4f  OL %+4f %4f",
+            TUI_printfw("%4ld [%5.3f %5.3f %4f]   %+4f | %+4f | %+4f  WFS %+4f %4f  DM %+4f %4f  OL %+4f %4f  ",
                         mi,
                         imgmgain.im->array.F[mi],
                         imgmmult.im->array.F[mi],
@@ -449,7 +449,7 @@ errno_t AOloopControl_modalstatsTUI(
             float DMoverOL  = DMrms[mi]  / OLrms[mi];
 
             int color = 0;
-            if(WFSoverOL < 1.0)
+            if(WFSoverOL < 0.9)
             {
                 color = 2;
             }
@@ -460,6 +460,21 @@ errno_t AOloopControl_modalstatsTUI(
             screenprint_setcolor(color);
             TUI_printfw("%5.3f", WFSoverOL);
             screenprint_unsetcolor(color);
+
+            color = 0;
+            if(DMoverOL > 0.5)
+            {
+                color = 2;
+            }
+            if(DMoverOL > 1.0)
+            {
+                color = 4;
+            }
+            screenprint_setcolor(color);
+            TUI_printfw("%5.3f", DMoverOL);
+            screenprint_unsetcolor(color);
+
+
 
             /*
                         screenprint_setcolor(0);
