@@ -174,6 +174,12 @@ errno_t AOloopControl_modalstatsTUI(
     int loopOK = 1;
     long loopcnt = 0;
 
+    // min / max of mode index to be displayed
+    int mirange = (wrow-5);
+    int mimin = 0;
+    int mimax = mirange;
+    long mioffset = 0;
+
     while(loopOK == 1)
     {
 
@@ -198,10 +204,11 @@ errno_t AOloopControl_modalstatsTUI(
 
         TUI_printfw(" PRESS x to exit");
         TUI_newline();
-        TUI_printfw("Loop %ld  -  Mode %5ld / %5ld - loopcnt %ld",
+        TUI_printfw("Loop %ld  -  Mode %5ld / %5ld [%5ld-%5ld] - loopcnt %ld",
                     loopindex,
                     mstatstruct.modeindex,
                     mstatstruct.NBmode,
+                    mimin, mimax,
                     loopcnt
                    );
         TUI_newline();
@@ -209,28 +216,95 @@ errno_t AOloopControl_modalstatsTUI(
 
         long mi = mstatstruct.modeindex;
 
-        TUI_printfw("MODE   WFS   DM   LIM  OL");
-        TUI_newline();
-        TUI_printfw("%4ld  %12f  %12f  %12f",
-                    mstatstruct.modeindex,
-                    imgmodevalWFS.im->array.F[mi],
-                    imgmodevalDM.im->array.F[mi],
-                    imgmlimit.im->array.F[mi]
-                   );
 
-        TUI_newline();
+        // update mimin and mimax
 
 
+        if(mimax>mstatstruct.NBmode)
+        {
+            mimax = mstatstruct.NBmode;
+        }
+
+        if(mstatstruct.modeindex > mimax-10)
+        {
+            // if within 10 lines of bottom
+            mioffset ++;
+            mimin = mioffset;
+            mimax = mioffset + mirange;
+            if(mimax > mstatstruct.NBmode)
+            {
+                mioffset --;
+                mimin = mioffset;
+                mimax = mioffset + mirange;
+            }
+        }
+
+        if(mimax>mstatstruct.NBmode)
+        {
+            mimax = mstatstruct.NBmode;
+        }
+
+        if(mstatstruct.modeindex < mimin+10)
+        {
+            // if within 10 lines of top
+            mioffset --;
+            mimin = mioffset;
+            mimax = mioffset + mirange;
+            if(mimin < 0)
+            {
+                mioffset = 0;
+                mimin = 0;
+                mimax = mimin + mirange;
+            }
+        }
 
 
-        screenprint_setcolor(9);
-        TUI_printfw("============ SCREENS");
+        /*        while(mstatstruct.modeindex > mimax-10)
+                {
+                    mioffset++;
+                    mimin = mioffset;
+                    mimax = mioffset + (wrow-5);
+                    if(mimax>mstatstruct.NBmode)
+                    {
+                        mimax = mstatstruct.NBmode;
+                        break;
+                    }
+                }
+        */
+
+
+
+        TUI_printfw("MODE   [ gain  mult  lim ]       WFS        DM          OL");
         TUI_newline();
-        TUI_printfw("============ SCREENS");
-        TUI_newline();
-        TUI_printfw("============ SCREENS");
-        TUI_newline();
-        screenprint_unsetcolor(9);
+
+
+
+        for(mi=mimin; mi<mimax; mi++)
+        {
+            if(mi == mstatstruct.modeindex)
+            {
+                screenprint_setbold();
+            }
+            TUI_printfw("%4ld [%5.3f %5.3f %8f]   %8f | %8f | %8f",
+                        mi,
+                        imgmgain.im->array.F[mi],
+                        imgmmult.im->array.F[mi],
+                        imgmlimit.im->array.F[mi],
+                        imgmodevalWFS.im->array.F[mi],
+                        imgmodevalDM.im->array.F[mi],
+                        0.0
+                       );
+            TUI_newline();
+            if(mi == mstatstruct.modeindex)
+            {
+                screenprint_unsetbold();
+            }
+        }
+
+
+
+        //screenprint_setcolor(9);
+        //screenprint_unsetcolor(9);
 
 
         TUI_ncurses_refresh();
