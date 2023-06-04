@@ -461,6 +461,8 @@ errno_t AOloopControl_modalstatsTUI(
             TUI_printfw("%5.3f", WFSoverOL);
             screenprint_unsetcolor(color);
 
+            TUI_printfw("  ");
+
             color = 0;
             if(DMoverOL > 0.5)
             {
