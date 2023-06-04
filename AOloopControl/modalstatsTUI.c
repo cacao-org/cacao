@@ -21,6 +21,8 @@ typedef struct
 {
     long modeindex;
     long NBmode;
+    long pscaleindex;
+    float pscale;
 } MODALSTATSTRUCT;
 
 
@@ -74,6 +76,16 @@ static int modalstats_TUI_process_user_key(
         }
         break;
 
+    case '+':
+        mstatstruct->pscaleindex++;
+        mstatstruct->pscale = pow(10.0, mstatstruct->pscaleindex);
+        break;
+
+    case '-':
+        mstatstruct->pscaleindex--;
+        mstatstruct->pscale = pow(10.0, mstatstruct->pscaleindex);
+        break;
+
     }
 
     DEBUG_TRACE_FEXIT();
@@ -96,6 +108,8 @@ errno_t AOloopControl_modalstatsTUI(
 
     MODALSTATSTRUCT mstatstruct;
     mstatstruct.modeindex = 0;
+    mstatstruct.pscaleindex = 0;
+    mstatstruct.pscale = 1.0;
 
 
     // Connect to streams
@@ -268,6 +282,7 @@ errno_t AOloopControl_modalstatsTUI(
                     loopcnt
                    );
         TUI_newline();
+        TUI_printfw("scale = %f", mstatstruct.pscale);
         TUI_newline();
 
         long mi = mstatstruct.modeindex;
@@ -414,35 +429,23 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-
-
-        TUI_printfw("buffers   WFS %5ld %5ld   DM %5ld %5ld   OL %5ld %5ld",
-                    buffWFSindex, buffWFSindex0,
-                    buffDMindex, buffDMindex0,
-                    buffOLindex, buffOLindex0
-                   );
-        TUI_newline();
-
-
-
-
         for(mi=mimin; mi<mimax; mi++)
         {
             if(mi == mstatstruct.modeindex)
             {
                 screenprint_setbold();
             }
-            TUI_printfw("%4ld [%5.3f %5.3f %4f]   %+4f | %+4f | %+4f  WFS %+4f %4f  DM %+4f %4f  OL %+4f %4f  ",
+            TUI_printfw("%4ld [%5.3f %5.3f %4ld]   %+4ld | %+4ld | %+4ld  WFS %+4ld %4ld  DM %+4ld %4ld  OL %+4ld %4ld  ",
                         mi,
                         imgmgain.im->array.F[mi],
                         imgmmult.im->array.F[mi],
-                        imgmlimit.im->array.F[mi],
-                        imgmodevalWFS.im->array.F[mi],
-                        imgmodevalDM.im->array.F[mi],
-                        imgmodevalOL.im->array.F[mi],
-                        WFSave[mi], WFSrms[mi],
-                        DMave[mi], DMrms[mi],
-                        OLave[mi], OLrms[mi]
+                        (long) (mstatstruct.pscale*imgmlimit.im->array.F[mi]),
+                        (long) (mstatstruct.pscale*imgmodevalWFS.im->array.F[mi]),
+                        (long) (mstatstruct.pscale*imgmodevalDM.im->array.F[mi]),
+                        (long) (mstatstruct.pscale*imgmodevalOL.im->array.F[mi]),
+                        (long) (mstatstruct.pscale*WFSave[mi]), (long) (mstatstruct.pscale*WFSrms[mi]),
+                        (long) (mstatstruct.pscale*DMave[mi]), (long) (mstatstruct.pscale*DMrms[mi]),
+                        (long) (mstatstruct.pscale*OLave[mi]), (long) (mstatstruct.pscale*OLrms[mi])
                        );
 
             float WFSoverOL = WFSrms[mi] / OLrms[mi];
