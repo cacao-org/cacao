@@ -335,7 +335,7 @@ errno_t AOloopControl_modalstatsTUI(
             }
             for(uint32_t tstep=0; tstep<buffsize; tstep++)
             {
-                for(uint32_t mi=0; mi<mstatstruct.NBmode; mi++)
+                for(uint32_t mi=mimin; mi<mimax; mi++)
                 {
                     long index2 = imgmodevalWFSbuff.md->cnt1 * buffsize * mstatstruct.NBmode;
                     long index = index2 + tstep*mstatstruct.NBmode + mi;
@@ -444,6 +444,65 @@ errno_t AOloopControl_modalstatsTUI(
                         DMave[mi], DMrms[mi],
                         OLave[mi], OLrms[mi]
                        );
+
+            float WFSoverOL = WFSrms[mi] / OLrms[mi];
+            float DMoverOL  = DMrms[mi]  / OLrms[mi];
+
+            int color = 0;
+            if(WFSoverOL < 1.0)
+            {
+                color = 2;
+            }
+            if(WFSoverOL > 1.0)
+            {
+                color = 4;
+            }
+            screenprint_setcolor(color);
+            TUI_printfw("%5.3f", WFSoverOL);
+            screenprint_unsetcolor(color);
+
+            /*
+                        screenprint_setcolor(0);
+                        TUI_printfw("0");
+                        screenprint_unsetcolor(0);
+
+                        screenprint_setcolor(1);
+                        TUI_printfw("1");
+                        screenprint_unsetcolor(1);
+
+                        screenprint_setcolor(2);
+                        TUI_printfw("2");
+                        screenprint_unsetcolor(2);
+
+                        screenprint_setcolor(3);
+                        TUI_printfw("3");
+                        screenprint_unsetcolor(3);
+
+                        screenprint_setcolor(4);
+                        TUI_printfw("4");
+                        screenprint_unsetcolor(4);
+
+                        screenprint_setcolor(5);
+                        TUI_printfw("5");
+                        screenprint_unsetcolor(5);
+
+                        screenprint_setcolor(6);
+                        TUI_printfw("6");
+                        screenprint_unsetcolor(6);
+
+                        screenprint_setcolor(7);
+                        TUI_printfw("7");
+                        screenprint_unsetcolor(7);
+
+                        screenprint_setcolor(8);
+                        TUI_printfw("8");
+                        screenprint_unsetcolor(8);
+
+                        screenprint_setcolor(9);
+                        TUI_printfw("9");
+                        screenprint_unsetcolor(9);
+            */
+
             TUI_newline();
             if(mi == mstatstruct.modeindex)
             {
