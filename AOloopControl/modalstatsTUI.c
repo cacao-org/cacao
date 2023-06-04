@@ -95,6 +95,38 @@ static int modalstats_TUI_process_user_key(
 
 
 
+inline static void printfixedlen(
+    float val,
+    MODALSTATSTRUCT *mstatstruct
+)
+{
+    long tmpl =  (long) (mstatstruct->pscale*val);
+    if(tmpl < 10000)
+    {
+        TUI_printfw("%+5ld", tmpl);
+    }
+    else
+    {
+        TUI_printfw("+++++");
+    }
+}
+
+
+inline static void printfixedlen_unsigned(
+    float val,
+    MODALSTATSTRUCT *mstatstruct
+)
+{
+    long tmpl =  (long) (mstatstruct->pscale*val);
+    if(tmpl < 100000)
+    {
+        TUI_printfw("%5ld", tmpl);
+    }
+    else
+    {
+        TUI_printfw("+++++");
+    }
+}
 
 
 
@@ -435,18 +467,39 @@ errno_t AOloopControl_modalstatsTUI(
             {
                 screenprint_setbold();
             }
-            TUI_printfw("%4ld [%5.3f %5.3f %5ld]   %+5ld %+5ld %+5ld | %+5ld %5ld %+5ld | %5ld %+5ld %5ld  |",
+
+            TUI_printfw("%4ld [%5.3f %5.3f ",
                         mi,
                         imgmgain.im->array.F[mi],
-                        imgmmult.im->array.F[mi],
-                        (long) (mstatstruct.pscale*imgmlimit.im->array.F[mi]),
-                        (long) (mstatstruct.pscale*imgmodevalWFS.im->array.F[mi]),
-                        (long) (mstatstruct.pscale*WFSave[mi]), (long) (mstatstruct.pscale*WFSrms[mi]),
-                        (long) (mstatstruct.pscale*imgmodevalDM.im->array.F[mi]),
-                        (long) (mstatstruct.pscale*DMave[mi]), (long) (mstatstruct.pscale*DMrms[mi]),
-                        (long) (mstatstruct.pscale*imgmodevalOL.im->array.F[mi]),
-                        (long) (mstatstruct.pscale*OLave[mi]), (long) (mstatstruct.pscale*OLrms[mi])
+                        imgmmult.im->array.F[mi]
                        );
+
+            printfixedlen_unsigned(imgmlimit.im->array.F[mi], &mstatstruct);
+            TUI_printfw("]   ");
+
+
+            printfixedlen(imgmodevalWFS.im->array.F[mi], &mstatstruct);
+            TUI_printfw(" ");
+            printfixedlen(WFSave[mi], &mstatstruct);
+            TUI_printfw(" ");
+            printfixedlen_unsigned(WFSrms[mi], &mstatstruct);
+            TUI_printfw(" | ");
+
+            printfixedlen(imgmodevalDM.im->array.F[mi], &mstatstruct);
+            TUI_printfw(" ");
+            printfixedlen(DMave[mi], &mstatstruct);
+            TUI_printfw(" ");
+            printfixedlen_unsigned(DMrms[mi], &mstatstruct);
+            TUI_printfw(" | ");
+
+            printfixedlen(imgmodevalOL.im->array.F[mi], &mstatstruct);
+            TUI_printfw(" ");
+            printfixedlen(OLave[mi], &mstatstruct);
+            TUI_printfw(" ");
+            printfixedlen_unsigned(OLrms[mi], &mstatstruct);
+            TUI_printfw(" | ");
+
+
 
             float WFSoverOL = WFSrms[mi] / OLrms[mi];
             float DMoverOL  = DMrms[mi]  / OLrms[mi];
