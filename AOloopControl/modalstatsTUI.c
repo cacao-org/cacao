@@ -148,6 +148,19 @@ errno_t AOloopControl_modalstatsTUI(
     //
     uint32_t NBmode = 1;
 
+
+
+    IMGID imgDMmodes;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%d_DMmodes", loopindex);
+        imgDMmodes = mkIMGID_from_name(name);
+        resolveIMGID(&imgDMmodes, ERRMODE_ABORT);
+        NBmode = imgDMmodes.md->size[2];
+    }
+    mstatstruct.NBmode = NBmode;
+
+
     IMGID imgmodevalWFS;
     {
         char name[STRINGMAXLEN_STREAMNAME];
@@ -156,7 +169,7 @@ errno_t AOloopControl_modalstatsTUI(
         resolveIMGID(&imgmodevalWFS, ERRMODE_ABORT);
         NBmode = imgmodevalWFS.md->size[0];
     }
-    mstatstruct.NBmode = NBmode;
+//    mstatstruct.NBmode = NBmode;
 
 
     IMGID imgmodevalDM;
@@ -240,7 +253,19 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-
+    // Compute DMmodes norm
+    double *DMmodenorm = (double*) malloc(sizeof(double)*NBmode);
+    for(uint32_t mi=0; mi<NBmode; mi++)
+    {
+        double val = 0.0;
+        double valcnt = 0.0;
+        for(uint64_t ii=0; ii<imgDMmodes.md->size[0]*imgDMmodes.md->size[1]; ii++)
+        {
+            val += imgDMmodes.im->array.F[ii]* imgDMmodes.im->array.F[ii];
+            valcnt += 1.0;
+        }
+        DMmodenorm[mi] = sqrt(val/valcnt);
+    }
 
 
 
@@ -364,7 +389,7 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-        TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |          OL        |");
+        TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |          OL       |");
         TUI_newline();
 
         long buffWFSindex = imgmodevalWFSbuff.md->cnt0;
@@ -474,29 +499,29 @@ errno_t AOloopControl_modalstatsTUI(
                         imgmmult.im->array.F[mi]
                        );
 
-            printfixedlen_unsigned(imgmlimit.im->array.F[mi], &mstatstruct);
+            printfixedlen_unsigned(imgmlimit.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw("]   ");
 
 
-            printfixedlen(imgmodevalWFS.im->array.F[mi], &mstatstruct);
+            printfixedlen(imgmodevalWFS.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" ");
-            printfixedlen(WFSave[mi], &mstatstruct);
+            printfixedlen(WFSave[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" ");
-            printfixedlen_unsigned(WFSrms[mi], &mstatstruct);
+            printfixedlen_unsigned(WFSrms[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" | ");
 
-            printfixedlen(imgmodevalDM.im->array.F[mi], &mstatstruct);
+            printfixedlen(imgmodevalDM.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" ");
-            printfixedlen(DMave[mi], &mstatstruct);
+            printfixedlen(DMave[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" ");
-            printfixedlen_unsigned(DMrms[mi], &mstatstruct);
+            printfixedlen_unsigned(DMrms[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" | ");
 
-            printfixedlen(imgmodevalOL.im->array.F[mi], &mstatstruct);
+            printfixedlen(imgmodevalOL.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" ");
-            printfixedlen(OLave[mi], &mstatstruct);
+            printfixedlen(OLave[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" ");
-            printfixedlen_unsigned(OLrms[mi], &mstatstruct);
+            printfixedlen_unsigned(OLrms[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" | ");
 
 
@@ -601,6 +626,8 @@ errno_t AOloopControl_modalstatsTUI(
     free(DMrms);
     free(OLave);
     free(OLrms);
+
+    free(DMmodenorm);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
