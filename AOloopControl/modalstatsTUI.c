@@ -328,7 +328,7 @@ errno_t AOloopControl_modalstatsTUI(
 
         if(buffWFSindex != buffWFSindex0)
         {
-            for(int32_t mi=0; mi<mstatstruct.NBmode; mi++)
+            for(int32_t mi=mimin; mi<mimax; mi++)
             {
                 WFSave[mi] = 0.0;
                 WFSrms[mi] = 0.0;
@@ -345,7 +345,7 @@ errno_t AOloopControl_modalstatsTUI(
                 }
             }
 
-            for(int32_t mi=0; mi<mstatstruct.NBmode; mi++)
+            for(int32_t mi=mimin; mi<mimax; mi++)
             {
                 WFSave[mi] /= buffsize;
                 WFSrms[mi] = sqrt( WFSrms[mi]/buffsize - WFSave[mi]*WFSave[mi] );
@@ -357,14 +357,14 @@ errno_t AOloopControl_modalstatsTUI(
 
         if(buffDMindex != buffDMindex0)
         {
-            for(int32_t mi=0; mi<mstatstruct.NBmode; mi++)
+            for(int32_t mi=mimin; mi<mimax; mi++)
             {
                 DMave[mi] = 0.0;
                 DMrms[mi] = 0.0;
             }
             for(uint32_t tstep=0; tstep<buffsize; tstep++)
             {
-                for(uint32_t mi=0; mi<mstatstruct.NBmode; mi++)
+                for(uint32_t mi=mimin; mi<mimax; mi++)
                 {
                     long index2 = imgmodevalDMbuff.md->cnt1 * buffsize * mstatstruct.NBmode;
                     long index = index2 + tstep*mstatstruct.NBmode + mi;
@@ -374,7 +374,7 @@ errno_t AOloopControl_modalstatsTUI(
                 }
             }
 
-            for(int32_t mi=0; mi<mstatstruct.NBmode; mi++)
+            for(int32_t mi=mimin; mi<mimax; mi++)
             {
                 DMave[mi] /= buffsize;
                 DMrms[mi] = sqrt( DMrms[mi]/buffsize - DMave[mi]*DMave[mi] );
@@ -386,14 +386,14 @@ errno_t AOloopControl_modalstatsTUI(
 
         if(buffOLindex != buffOLindex0)
         {
-            for(int32_t mi=0; mi<mstatstruct.NBmode; mi++)
+            for(int32_t mi=mimin; mi<mimax; mi++)
             {
                 OLave[mi] = 0.0;
                 OLrms[mi] = 0.0;
             }
             for(uint32_t tstep=0; tstep<buffsize; tstep++)
             {
-                for(uint32_t mi=0; mi<mstatstruct.NBmode; mi++)
+                for(uint32_t mi=mimin; mi<mimax; mi++)
                 {
                     long index2 = imgmodevalOLbuff.md->cnt1 * buffsize * mstatstruct.NBmode;
                     long index = index2 + tstep*mstatstruct.NBmode + mi;
@@ -403,7 +403,7 @@ errno_t AOloopControl_modalstatsTUI(
                 }
             }
 
-            for(int32_t mi=0; mi<mstatstruct.NBmode; mi++)
+            for(int32_t mi=mimin; mi<mimax; mi++)
             {
                 OLave[mi] /= buffsize;
                 OLrms[mi] = sqrt( OLrms[mi]/buffsize - OLave[mi]*OLave[mi] );
@@ -432,7 +432,7 @@ errno_t AOloopControl_modalstatsTUI(
             {
                 screenprint_setbold();
             }
-            TUI_printfw("%4ld [%5.3f %5.3f %8f]   %+6f | %+6f | %+6f  WFS %+6f %6f  DM %+6f %6f  OL %+6f %6f",
+            TUI_printfw("%4ld [%5.3f %5.3f %4f]   %+4f | %+4f | %+4f  WFS %+4f %4f  DM %+4f %4f  OL %+4f %4f",
                         mi,
                         imgmgain.im->array.F[mi],
                         imgmmult.im->array.F[mi],
