@@ -101,7 +101,7 @@ inline static void printfixedlen(
 )
 {
     long tmpl =  (long) (mstatstruct->pscale*val);
-    if(tmpl < 10000)
+    if(abs(tmpl) < 10000)
     {
         TUI_printfw("%+5ld", tmpl);
     }
