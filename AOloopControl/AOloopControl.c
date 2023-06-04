@@ -103,7 +103,7 @@
 
 #include "modalfilter.h"
 #include "modalCTRL_stats.h"
-
+#include "modalstatsTUI.h"
 
 #ifdef HAVE_CUDA
 #include "cudacomp/cudacomp.h"
@@ -1146,6 +1146,23 @@ errno_t AOloopControl_setparam_cli()
     }
 }
 
+
+
+errno_t AOloopControl_modalstatsTUI_cli()
+{
+    if(CLI_checkarg(1, CLIARG_INT64) == 0)
+    {
+        AOloopControl_modalstatsTUI(data.cmdargtoken[1].val.numl);
+        return CLICMD_SUCCESS;
+    }
+    else
+    {
+        return CLICMD_INVALID_ARG;
+    }
+}
+
+
+
 /* ===============================================================================================
  */
 /* ===============================================================================================
@@ -1898,6 +1915,17 @@ static errno_t init_module_CLI()
 
     CLIADDCMD_AOloopControl__modalfilter();
     CLIADDCMD_AOloopControl__modalCTRL_stats();
+
+    RegisterCLIcommand(
+        "modalstatsTUI",
+        __FILE__,
+        AOloopControl_modalstatsTUI_cli,
+        "AO loop modal stats TUI",
+        "<loopindex>",
+        "aomodalstatsTIU 2",
+        "AOloopControl_modalstatsTUI(int loopindex)");
+
+
 
     // add atexit functions here
     // atexit((void*) myfunc); atexit = starts a function once the program exits

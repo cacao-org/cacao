@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+
+MSdescr="AO modal stats TUI"
+
+MSextdescr="Displays modal stats
+"
+
+source milk-script-std-config
+
+# check and load cacaovars
+source cacao-check-cacaovars
+RequiredCommands=( cacao )
+RequiredPipes=()
+RequiredFiles=()
+RequiredDirs=()
+
+#MSarg+=( "calibname:string:calibration name" )
+
+#MSopt+=( "w:wfsdiag:setwfsdiag::use WFS-diagonalized modes" )
+#WFSdiag="0"
+#function setwfsdiag() {
+#	echo "Using WFS-diagonalized modes"
+#	WFSdiag="1"
+#}
+
+
+source milk-argparse
+
+set +u
+if [ "${EXITSTATUS}" = "1" ]; then
+exit
+fi
+set -u
+
+
+
+#calib="${inputMSargARRAY[0]}"
+#echo "Calibration : ${calib}"
+
+
+ttystring=$( tty | tr -d \/ )
+pname="modalstatsTUI"
+fifoname="$MILK_SHM_DIR/milkCLIfifo.${pname}.${ttystring}"
+SF="$MILK_SHM_DIR/milkCLIstartup.${pname}.${ttystring}"
+echo "readshmim aol${CACAO_LOOPNUMBER}_modevalWFS" > $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_modevalDM" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mgain" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mmult" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mlimit" >> $SF
+echo "cacao.modalstatsTUI ${CACAO_LOOPNUMBER}" >> $SF
+echo "exitCLI" >> $SF
+
+MILK_QUIET=1 cacao -n ${pname} -f ${fifoname} -s $SF
+

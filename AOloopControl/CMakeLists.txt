@@ -41,6 +41,8 @@ add_library(${LIBNAME} SHARED ${SRCNAME}.c
 	modalfilter.h
 	modalCTRL_stats.c
 	modalCTRL_stats.h
+	modalstatsTUI.c
+	modalstatsTUI.h
 )
 
 
@@ -93,6 +95,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao.tmux
 	scripts/cacao-fpsarchive
 	scripts/cacao-fpslistadd
+	scripts/cacao-modalstatsTUI
 	scripts/cacao-setDMnolink
 	scripts/cacao_simLHS
 	scripts/cacao-takedark
