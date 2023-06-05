@@ -4,10 +4,17 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Measure hardware latency"
 
 
-MSextdescr="AO loop script"
+MSextdescr="Measures hardware latency between input and output streams
+
+Pokes input stream, listens to ouput stream
+Requires acquWFS process to run
+
+Writes output to env variables CACAO_WFSFRATE and CACAO_LATENCYFR
+"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 

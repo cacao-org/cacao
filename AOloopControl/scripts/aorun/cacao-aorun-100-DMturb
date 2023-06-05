@@ -4,9 +4,9 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Inject turbulence on DM"
 
-MSextdescr="AO loop script"
+MSextdescr="Inject turbulence on DM channel 10"
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -24,7 +24,7 @@ fi
 
 # Checking FPS
 FPScheckOK="OK"
-checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
+checkFPSON CACAO_FPSPROC_DMATMTURB ${CACAO_FPSPROC_DMATMTURB}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
@@ -32,24 +32,31 @@ exit
 fi
 
 
+TURBFILE="conf/turbseed0.fits"
 
+if [ -f ${TURBFILE} ]; then
+echo "Found file ${TURBFILE}"
+else
+echo "Creating file ${TURBFILE}"
+sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.comp ON"
+echo "Waiting for file ${TURBFILE}"
+until [ -f ${TURBFILE} ]
+do
+     sleep 0.1
+done
+fi
 
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
-
-sendFPScmd "setval mfilt-${CACAO_LOOPNUMBER}.AOloopindex ${CACAO_LOOPNUMBER}"
-sendFPScmd "setval mfilt-${CACAO_LOOPNUMBER}.comp.latencyfr ${CACAO_LATENCYFR}"
-sendFPScmd "setval mfilt-${CACAO_LOOPNUMBER}.comp.OLmodes ON"
-sendFPScmd "setval mfilt-${CACAO_LOOPNUMBER}.comp.tbuff ON"
-sendFPScmd "confwupdate mfilt-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart mfilt-${CACAO_LOOPNUMBER}"
-
+sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.dmstream aol${CACAO_LOOPNUMBER}_dmturb"
+sendFPScmd "confwupdate DMatmturb-${CACAO_DMINDEX}"
+sendFPScmd "runstart DMatmturb-${CACAO_DMINDEX}"
 fi
 
 
 if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
-sendFPScmd "runstop mfilt-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstop DMatmturb-${CACAO_DMINDEX}"
 fi
 
 

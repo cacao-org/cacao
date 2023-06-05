@@ -107,7 +107,9 @@ inline static void printfixedlen(
     }
     else
     {
+        screenprint_setcolor(3);
         TUI_printfw("+++++");
+        screenprint_unsetcolor(3);
     }
 }
 
@@ -118,13 +120,15 @@ inline static void printfixedlen_unsigned(
 )
 {
     long tmpl =  (long) (mstatstruct->pscale*val);
-    if(tmpl < 100000)
+    if( (tmpl < 100000) && (tmpl > -100000) )
     {
         TUI_printfw("%5ld", tmpl);
     }
     else
     {
+        screenprint_setcolor(3);
         TUI_printfw("+++++");
+        screenprint_unsetcolor(3);
     }
 }
 

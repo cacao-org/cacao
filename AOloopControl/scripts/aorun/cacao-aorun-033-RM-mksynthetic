@@ -210,3 +210,5 @@ echo "ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.f
 rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
 ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 echo "ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
+
+
