@@ -47,8 +47,10 @@ mkdir -p conf/CMmodesDM/
 mkdir -p conf/CMmodesWFS/
 sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesDM ../conf/CMmodesDM/CMmodesDM.fits"
 sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesWFS ../conf/CMmodesWFS/CMmodesWFS.fits"
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.dmmask ../conf/dmmask.fits"
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.wfsmask ../conf/wfsmask.fits"
 
-
+# erase output
 rm -f conf/CMmodesWFS/CMmodesWFS.fits
 rm -f conf/CMmodesDM/CMmodesDM.fits
 
