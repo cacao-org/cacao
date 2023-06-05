@@ -207,8 +207,9 @@ cacao-fpsctrl setval mfilt loopON ON
 ```
 
 
-## Testing the loop (selfRM)
+## Testing the loop
 
+### SelfRM
 
 ```bash
 # Set max number of modes above nbmodes
@@ -222,6 +223,20 @@ cacao-fpsctrl setval mfilt selfRM.enable ON
 
 Check result: maps-rundir/selfRM.fits
 
+### Turbulence
+
+```bash
+cacao-aorun-100-DMturb start
+cacao-aorun-100-DMturb off
+cacao-aorun-100-DMturb on
+cacao-aorun-100-DMturb stop
+```
+
+### Monitoring
+
+```bash
+cacao-modalstatsTUI
+```
 
 
 # Cleanup

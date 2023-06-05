@@ -6,7 +6,8 @@
 # script 1-line description
 MSdescr="Inject turbulence on DM"
 
-MSextdescr="Inject turbulence on DM channel 10"
+MSextdescr="Inject turbulence on DM channel 10
+Commands: start, stop, on, off"
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -38,7 +39,7 @@ if [ -f ${TURBFILE} ]; then
 echo "Found file ${TURBFILE}"
 else
 echo "Creating file ${TURBFILE}"
-sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.comp ON"
+sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbseed.comp ON"
 echo "Waiting for file ${TURBFILE}"
 until [ -f ${TURBFILE} ]
 do
@@ -51,14 +52,27 @@ ACTIONOK=1
 sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.dmstream aol${CACAO_LOOPNUMBER}_dmturb"
 sendFPScmd "confwupdate DMatmturb-${CACAO_DMINDEX}"
 sendFPScmd "runstart DMatmturb-${CACAO_DMINDEX}"
+sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbON ON"
 fi
 
 
 if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
+sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbON OFF"
+sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbZERO ON"
 sendFPScmd "runstop DMatmturb-${CACAO_DMINDEX}"
 fi
 
+if [ ${ACTION} == "on" ]; then
+ACTIONOK=1
+sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbON ON"
+fi
+
+if [ ${ACTION} == "off" ]; then
+ACTIONOK=1
+sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbON OFF"
+sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbZERO ON"
+fi
 
 
 
