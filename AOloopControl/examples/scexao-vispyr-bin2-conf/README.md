@@ -239,6 +239,14 @@ cacao-modalstatsTUI
 ```
 
 
+## Predictive Control
+
+Start process mctrlstats to split telemetry into blocks.
+Start mkPFXX-Y processes.
+Start applyPFXX-Y processes.
+
+
+
 # Cleanup
 
 From main directory (upstream of rootdir) :
