@@ -74,6 +74,12 @@ static long  fpi_RMmodesDMfname;
 static char *RMmodesWFSfname;
 static long  fpi_RMmodesWFSfname;
 
+static char *DMmaskfname;
+static long  fpi_DMmaskfname;
+
+static char *WFSmaskfname;
+static long  fpi_WFSmaskfname;
+
 static char *CMmodesDMfname;
 static long  fpi_CMmodesDMfname;
 
@@ -110,6 +116,26 @@ static CLICMDARGDEF farg[] =
         CLIARG_VISIBLE_DEFAULT,
         (void **) &RMmodesWFSfname,
         &fpi_RMmodesWFSfname
+    },
+    {
+        // input RM : DM mask
+        CLIARG_FILENAME,
+        ".dmmask",
+        "DM mask for normalization",
+        "dmmask.fits",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &DMmaskfname,
+        &fpi_DMmaskfname
+    },
+    {
+        // input RM : WFS mask
+        CLIARG_FILENAME,
+        ".wfsmask",
+        "WFS mask for normalization",
+        "wfsmask.fits",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &WFSmaskfname,
+        &fpi_WFSmaskfname
     },
     {
         // output CM : DM modes
@@ -168,6 +194,12 @@ static errno_t customCONFsetup()
 
         data.fpsptr->parray[fpi_RMmodesWFSfname].fpflag |=
             FPFLAG_FILE_RUN_REQUIRED;
+
+        data.fpsptr->parray[fpi_DMmaskfname].fpflag |=
+            FPFLAG_FILE_RUN_REQUIRED;
+
+        data.fpsptr->parray[fpi_WFSmaskfname].fpflag |=
+            FPFLAG_FILE_RUN_REQUIRED;
     }
 
     return RETURN_SUCCESS;
@@ -222,6 +254,13 @@ static errno_t compute_function()
 
     load_fits(RMmodesWFSfname, "RMmodesWFS", LOADFITS_ERRMODE_WARNING, &ID);
     IMGID imgRMWFS = makesetIMGID("RMmodesWFS", ID);
+
+
+    load_fits(DMmaskfname, "DMmask", LOADFITS_ERRMODE_WARNING, &ID);
+    IMGID imgDMmask = makesetIMGID("DMmask", ID);
+
+    load_fits(WFSmaskfname, "WFSmask", LOADFITS_ERRMODE_WARNING, &ID);
+    IMGID imgWFSmask = makesetIMGID("WFSmask", ID);
 
 
     struct timespec t0, t1, t2, t3, t4, t5, t6, t7, t8, t9;
@@ -566,15 +605,45 @@ static errno_t compute_function()
             FILE *fp = fopen("mkmodestmp/mode_norm.txt", "w");
             for(int mi = 0; mi < nbmode; mi++)
             {
-                char *ptr;
+                //char *ptr;
 
-                ptr = (void *) imgCMDMall.im->array.F;
-                ptr += sizeof(float) * mi * nbact;
-                n2cmDM[mi] = cblas_snrm2(nbact, (float *) ptr, 1);
+                {
+                    double DMnorm = 0.0;
+                    double DMnormcnt = 0.0;
+                    uint64_t iioffset = mi*imgCMDMall.md->size[0]*imgCMDMall.md->size[1];
+                    for(uint64_t ii=0; ii<imgCMDMall.md->size[0]*imgCMDMall.md->size[1]; ii++)
+                    {
+                        double val = imgCMDMall.im->array.F[iioffset + ii];
+                        double valm = imgDMmask.im->array.F[ii];
+                        DMnorm += val*val*valm;
+                        DMnormcnt += valm;
+                    }
+                    n2cmDM[mi] = sqrt( DMnorm/DMnormcnt);
+                }
 
-                ptr = (void *) imgCMWFSall.im->array.F;
-                ptr += sizeof(float) * mi * nbwfspix;
-                n2cmWFS[mi] = cblas_snrm2(nbwfspix, (float *) ptr, 1);
+                {
+                    double WFSnorm = 0.0;
+                    double WFSnormcnt = 0.0;
+                    uint64_t iioffset = mi*imgCMWFSall.md->size[0]*imgCMWFSall.md->size[1];
+                    for(uint64_t ii=0; ii<imgCMWFSall.md->size[0]*imgCMWFSall.md->size[1]; ii++)
+                    {
+                        double val = imgCMWFSall.im->array.F[ii];
+                        double valm = imgWFSmask.im->array.F[ii];
+                        WFSnorm += val*val*valm;
+                        WFSnormcnt += valm;
+                    }
+                    n2cmWFS[mi] = sqrt( WFSnorm/WFSnormcnt);
+                }
+
+
+
+                //ptr = (void *) imgCMDMall.im->array.F;
+                //ptr += sizeof(float) * mi * nbact;
+                //n2cmDM[mi] = cblas_snrm2(nbact, (float *) ptr, 1);
+
+                //ptr = (void *) imgCMWFSall.im->array.F;
+                //ptr += sizeof(float) * mi * nbwfspix;
+                //n2cmWFS[mi] = cblas_snrm2(nbwfspix, (float *) ptr, 1);
 
                 fprintf(fp, "%4d    %20g    %20g   %20g\n", mi, n2cmDM[mi], n2cmWFS[mi],
                         imgeval.im->array.F[mi]);
@@ -627,18 +696,18 @@ static errno_t compute_function()
             //
             int mi = nbmode - 1 - CMmode;
 
-            // copy and normalize by norm2 WFS
+            // copy and normalize by norm2 DM
 
             for(int ii = 0; ii < nbwfspix; ii++)
             {
                 imgCMWFS.im->array.F[CMmode * nbwfspix + ii] = imgCMWFSall.im->array.F[mi *
-                        nbwfspix + ii] / n2cmWFS[mi];
+                        nbwfspix + ii] / n2cmDM[mi];
             }
 
             for(int ii = 0; ii < nbact; ii++)
             {
                 imgCMDM.im->array.F[CMmode * nbact + ii] = imgCMDMall.im->array.F[mi * nbact +
-                        ii] / n2cmWFS[mi];
+                        ii] / n2cmDM[mi];
             }
 
         }
