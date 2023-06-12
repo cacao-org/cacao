@@ -63,9 +63,7 @@
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
 #include "computeCalib/computeCalib.h"
 
-#ifdef HAVE_CUDA
-#include "cudacomp/cudacomp.h"
-#endif
+#include "linalgebra/linalgebra.h"
 
 
 extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
@@ -797,7 +795,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 #ifdef HAVE_CUDA
     if(GPUmode)
     {
-        CUDACOMP_magma_compute_SVDpseudoInverse("respM",
+        LINALGEBRA_magma_compute_SVDpseudoInverse("respM",
                                                 cm_name,
                                                 SVDlim,
                                                 100000,

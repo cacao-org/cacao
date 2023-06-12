@@ -247,20 +247,41 @@ static errno_t compute_function()
     list_image_ID();
 
 
-    imageID ID;
+    // input
+    //
 
-    load_fits(RMmodesDMfname, "RMmodesDM", LOADFITS_ERRMODE_WARNING, &ID);
-    IMGID imgRMDM = makesetIMGID("RMmodesDM", ID);
+    IMGID imgRMDM;
+    {
+        imageID ID;
+        load_fits(RMmodesDMfname, "RMmodesDM", LOADFITS_ERRMODE_WARNING, &ID);
+        imgRMDM = makesetIMGID("RMmodesDM", ID);
+    }
 
-    load_fits(RMmodesWFSfname, "RMmodesWFS", LOADFITS_ERRMODE_WARNING, &ID);
-    IMGID imgRMWFS = makesetIMGID("RMmodesWFS", ID);
+
+    IMGID imgRMWFS;
+    {
+        imageID ID;
+        load_fits(RMmodesWFSfname, "RMmodesWFS", LOADFITS_ERRMODE_WARNING, &ID);
+        imgRMWFS = makesetIMGID("RMmodesWFS", ID);
+    }
 
 
-    load_fits(DMmaskfname, "DMmask", LOADFITS_ERRMODE_WARNING, &ID);
-    IMGID imgDMmask = makesetIMGID("DMmask", ID);
+    // masks are used for normalization of output
+    //
+    IMGID imgDMmask;
+    {
+        imageID ID;
+        load_fits(DMmaskfname, "DMmask", LOADFITS_ERRMODE_WARNING, &ID);
+        imgDMmask = makesetIMGID("DMmask", ID);
+    }
 
-    load_fits(WFSmaskfname, "WFSmask", LOADFITS_ERRMODE_WARNING, &ID);
-    IMGID imgWFSmask = makesetIMGID("WFSmask", ID);
+
+    IMGID imgWFSmask;
+    {
+        imageID ID;
+        load_fits(WFSmaskfname, "WFSmask", LOADFITS_ERRMODE_WARNING, &ID);
+        imgWFSmask = makesetIMGID("WFSmask", ID);
+    }
 
 
     struct timespec t0, t1, t2, t3, t4, t5, t6, t7, t8, t9;
@@ -291,11 +312,6 @@ static errno_t compute_function()
 #endif
 
 
-
-
-
-        ID = image_ID("VTmat");
-        //IMGID imgVT = makesetIMGID("VTmat", ID);
 
         printf("Number of modes    : %d\n", imgRMDM.md->size[2]);
         printf("Number of DM act   : %d x %d\n", imgRMDM.md->size[0], imgRMDM.md->size[1]);

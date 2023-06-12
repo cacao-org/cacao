@@ -27,9 +27,9 @@
 #include "COREMOD_tools/COREMOD_tools.h"
 #include "info/info.h"
 
-#ifdef HAVE_CUDA
-#include "cudacomp/cudacomp.h"
-#endif
+
+#include "linalgebra/linalgebra.h"
+
 
 #ifdef _OPENMP
 #include <omp.h>

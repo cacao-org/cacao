@@ -34,9 +34,8 @@
 
 #include <ncurses.h>
 
-#ifdef HAVE_CUDA
-#include "cudacomp/cudacomp.h"
-#endif
+#include "linalgebra/linalgebra.h"
+
 
 #ifdef _OPENMP
 #include <omp.h>

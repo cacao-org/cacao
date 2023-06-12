@@ -25,7 +25,7 @@
 #include "info/info.h"
 
 #ifdef HAVE_CUDA
-#include "cudacomp/cudacomp.h"
+#include "linalgebra/linalgebra.h"
 #endif
 
 #ifdef _OPENMP

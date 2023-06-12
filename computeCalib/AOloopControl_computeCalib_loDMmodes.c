@@ -69,9 +69,9 @@
 #include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 
 */
-#ifdef HAVE_CUDA
-#include "cudacomp/cudacomp.h"
-#endif
+
+#include "linalgebra/linalgebra.h"
+
 
 /* ===============================================================================================
  */
