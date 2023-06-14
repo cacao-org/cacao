@@ -19,6 +19,7 @@ MSextdescr="Configuration is loaded from cacao source code
 Import configuration from source code (-c) and run it (-r).
 
 Calls cacao-task-manager to run the configuration.
+-c will create empty rootdir folder where user can put custom conf files.
 
 Env variables (optional) as cacaovars modifiers :
 	CACAO_LOOPNUMBER   [integer] loop number
@@ -161,8 +162,8 @@ fi
 set -u
 
 
-
-
+# create rootdir folder
+mkdir -p ${CACAO_LOOPROOTDIR}
 
 
 
