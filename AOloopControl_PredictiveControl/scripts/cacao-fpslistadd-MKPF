@@ -36,7 +36,7 @@ then
 	echolog "Process ${fpsname} already registered - skipping"
 else
 	echolog "Adding process ${fpsname}"
-	echo "+milklinARfilterPred;milkcudacomp" >> fpslist.txt
+	echo "+milklinARfilterPred;milklinalgebra" >> fpslist.txt
 	echo "${fpsname}           larpf.mkPF     ${fpsarg0}" >> fpslist.txt
 
 	addfpscmdheader

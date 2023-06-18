@@ -58,9 +58,7 @@
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
 #include "computeCalib/computeCalib.h"
 
-#ifdef HAVE_CUDA
-#include "cudacomp/cudacomp.h"
-#endif
+
 
 extern long LOOPNUMBER; // current loop index
 

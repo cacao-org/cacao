@@ -930,7 +930,6 @@ static errno_t compute_function()
                         (1.0 - latfrac) * mvalDMbuff[DMtstep1 * NBmode + mi];
 
                     float tmpmWFSval = imgin.im->array.F[mi];
-                    ;
 
                     imgOLmval.im->array.F[mi] = tmpmWFSval - tmpmDMval;
                 }

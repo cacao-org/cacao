@@ -44,11 +44,7 @@
 #include <pthread.h>
 #endif
 
-/*
-#ifdef HAVE_CUDA
-#include "cudacomp/cudacomp.h"
-#endif
-*/
+
 
 // CPU mode: Use MKL if available
 // Otherwise use openBLAS
