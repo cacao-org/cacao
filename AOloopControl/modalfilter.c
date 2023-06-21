@@ -56,6 +56,11 @@ static long   fpi_looplimit;
 static int64_t *compOL;
 static long     fpi_compOL;
 
+// amplitude correction factor on WFS signal
+static float    *psol_WFSfact;
+static long     fpi_psol_WFSfact;
+
+
 // Latency between DM and WFS
 static float *latencyfr;
 static long   fpi_latencyfr;
@@ -141,8 +146,25 @@ static long      fpi_selfRMnbiter;
 // time to settle after poke
 static uint32_t *selfRMnbsettlestep;
 static long      fpi_selfRMnbsettlestep;
-;
 
+
+
+
+
+static uint64_t *testOL;
+static long      fpi_testOL;
+
+static uint32_t *testOLmode;
+static long      fpi_testOLmode;
+
+static float *testOLampl;
+static long      fpi_testOLampl;
+
+static uint32_t *testOLnbsample;
+static long      fpi_testOLnbsample;
+
+static uint32_t *testOLcnt;
+static long      fpi_testOLcnt;
 
 
 
@@ -238,6 +260,15 @@ static CLICMDARGDEF farg[] =
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compOL,
         &fpi_compOL
+    },
+    {
+        CLIARG_FLOAT32,
+        ".comp.WFSfact",
+        "amplitude correction factor on WFS",
+        "0.893",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &psol_WFSfact,
+        &fpi_psol_WFSfact
     },
     {
         CLIARG_FLOAT32,
@@ -413,6 +444,51 @@ static CLICMDARGDEF farg[] =
         CLIARG_HIDDEN_DEFAULT,
         (void **) &selfRMnbsettlestep,
         &fpi_selfRMnbsettlestep
+    },
+    {
+        CLIARG_ONOFF,
+        ".testOL.enable",
+        "OL reconstruction test ON/OFF",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &testOL,
+        &fpi_testOL
+    },
+    {
+        CLIARG_UINT32,
+        ".testOL.mode",
+        "mode index",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &testOLmode,
+        &fpi_testOLmode
+    },
+    {
+        CLIARG_FLOAT32,
+        ".testOL.ampl",
+        "amplitude",
+        "0.01",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &testOLampl,
+        &fpi_testOLampl
+    },
+    {
+        CLIARG_UINT32,
+        ".testOL.nbsample",
+        "number of samples",
+        "1000",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &testOLnbsample,
+        &fpi_testOLnbsample
+    },
+    {
+        CLIARG_UINT32,
+        ".testOL.cnt",
+        "samples count",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &testOLcnt,
+        &fpi_testOLcnt
     }
 };
 
@@ -439,6 +515,7 @@ static errno_t customCONFsetup()
 
         data.fpsptr->parray[fpi_comptbuff].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_compOL].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_psol_WFSfact].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_latencyfr].fpflag |= FPFLAG_WRITERUN;
 
         data.fpsptr->parray[fpi_auxDMmvalenable].fpflag |= FPFLAG_WRITERUN;
@@ -458,6 +535,11 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_selfRMnbsettlestep].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_selfRMpokeampl].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_selfRMnbiter].fpflag |= FPFLAG_WRITERUN;
+
+        data.fpsptr->parray[fpi_testOL].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_testOLampl].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_testOLmode].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_testOLnbsample].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -540,10 +622,10 @@ static errno_t compute_function()
 
     // connect to input mode values array and get number of modes
     //
-    IMGID imgin = mkIMGID_from_name(inmval);
-    resolveIMGID(&imgin, ERRMODE_ABORT);
-    printf("%u modes\n", imgin.md->size[0]);
-    uint32_t NBmode = imgin.md->size[0];
+    IMGID imginWFS = mkIMGID_from_name(inmval);
+    resolveIMGID(&imginWFS, ERRMODE_ABORT);
+    printf("%u modes\n", imginWFS.md->size[0]);
+    uint32_t NBmode = imginWFS.md->size[0];
 
 
     int selfRM_NBmode = (*selfRMnbmode);
@@ -600,6 +682,7 @@ static errno_t compute_function()
     int    NB_DMtstep = 10; // history buffer size
     int    DMtstep    = 0;  // current index
     float *mvalDMbuff = (float *) malloc(sizeof(float) * NBmode * NB_DMtstep);
+    float *mvalDMOL = (float*) malloc(sizeof(float)*NBmode);
 
     IMGID imgOLmval;
     {
@@ -635,6 +718,7 @@ static errno_t compute_function()
 
 
     // connect/create output mode coeffs
+    //
     IMGID imgout = stream_connect_create_2Df32(outmval, NBmode, 1);
     for(uint32_t mi = 0; mi < NBmode; mi++)
     {
@@ -771,6 +855,11 @@ static errno_t compute_function()
     }
 
 
+    // initialization for testOL
+    *testOLcnt = 0;
+    FILE *testOLfp;
+
+
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
@@ -840,7 +929,7 @@ static errno_t compute_function()
             {
 
                 // grab input value from WFS
-                mvalWFS = imgin.im->array.F[mi];
+                mvalWFS = imginWFS.im->array.F[mi];
 
                 // offset from mval to zero point
                 // this is the input zero point
@@ -894,11 +983,11 @@ static errno_t compute_function()
             //
             if((*compOL) == 1)
             {
-                // write to DM history
+                // write to DM command history
                 //
                 for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    mvalDMbuff[DMtstep * NBmode + mi] = mvaloutapply[mi];
+                    mvalDMbuff[DMtstep * NBmode + mi] = mvalDMc[mi];
                 }
 
 
@@ -928,10 +1017,11 @@ static errno_t compute_function()
                     float tmpmDMval = latfrac * mvalDMbuff[DMtstep0 * NBmode + mi];
                     tmpmDMval +=
                         (1.0 - latfrac) * mvalDMbuff[DMtstep1 * NBmode + mi];
+                    mvalDMOL[mi] = tmpmDMval;
 
-                    float tmpmWFSval = imgin.im->array.F[mi];
+                    float tmpmWFSval = imginWFS.im->array.F[mi];
 
-                    imgOLmval.im->array.F[mi] = tmpmWFSval - tmpmDMval;
+                    imgOLmval.im->array.F[mi] = (*psol_WFSfact)*tmpmWFSval - mvalDMOL[mi];
                 }
 
                 uint64_t PFcnt = imgPF.md->cnt0;
@@ -968,6 +1058,58 @@ static errno_t compute_function()
                            mvaloutapply,
                            sizeof(float) * NBmode);
                     processinfo_update_output_stream(processinfo, imgout.ID);
+                }
+
+
+
+
+                // OL reconstruction test
+                //
+                if(*testOL == 1)
+                {
+                    processinfo_WriteMessage_fmt(processinfo, "testOL ON %u", *testOLcnt);
+
+                    if(*testOLcnt == 0)
+                    {
+                        // initialization
+                        testOLfp = fopen("testOL.log", "w");
+
+
+                        data.fpsptr->parray[fpi_testOLampl].fpflag &= ~FPFLAG_WRITERUN;
+                        data.fpsptr->parray[fpi_testOLmode].fpflag &= ~FPFLAG_WRITERUN;
+                        data.fpsptr->parray[fpi_testOLnbsample].fpflag &= ~FPFLAG_WRITERUN;
+                    }
+
+                    float x = 1.0*(*testOLcnt)/(*testOLnbsample);
+                    float freqfact = 0.01 + 1.99*x;
+                    imgauxmDM.im->array.F[*testOLmode] =
+                        (*testOLampl) * sin( 1.0*(*testOLcnt)/M_PI/2 * freqfact);
+
+
+                    fprintf(testOLfp, "%5u  %g %g %g %g\n",
+                            *testOLcnt,                                 // frame counter
+                            imgauxmDM.im->array.F[*testOLmode],         // probe applied
+                            -mvalDMOL[*testOLmode],                      // DM applied, time corrected
+                            (*psol_WFSfact) * imginWFS.im->array.F[*testOLmode],          // WFS signal
+                            imgOLmval.im->array.F[*testOLmode]          // pseudo OL reconstruction
+                           );
+
+                    (*testOLcnt) ++;
+                    if(*testOLcnt == *testOLnbsample)
+                    {
+                        // end of test
+                        *testOL = 0;
+                        data.fpsptr->parray[fpi_testOL].fpflag &= ~FPFLAG_ONOFF;
+                        *testOLcnt = 0;
+                        fclose(testOLfp);
+                        imgauxmDM.im->array.F[*testOLmode] = 0.0;
+
+                        data.fpsptr->parray[fpi_testOLampl].fpflag |= FPFLAG_WRITERUN;
+                        data.fpsptr->parray[fpi_testOLmode].fpflag |= FPFLAG_WRITERUN;
+                        data.fpsptr->parray[fpi_testOLnbsample].fpflag |= FPFLAG_WRITERUN;
+
+                        processinfo_WriteMessage(processinfo, "testOL done");
+                    }
                 }
             }
 
@@ -1011,7 +1153,7 @@ static errno_t compute_function()
                 for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
                     imgtbuff_mvalWFS.im->array.F[kkoffset + mi] =
-                        imgin.im->array.F[mi];
+                        imginWFS.im->array.F[mi];
                     imgtbuff_mvalOL.im->array.F[kkoffset + mi] =
                         imgOLmval.im->array.F[mi];
                 }
@@ -1075,8 +1217,8 @@ static errno_t compute_function()
 
             nanosleep(&twait, NULL);
 
-            memcpy(imgin.im->array.F, imgout.im->array.F, sizeof(float) * NBmode);
-            processinfo_update_output_stream(processinfo, imgin.ID);
+            memcpy(imginWFS.im->array.F, imgout.im->array.F, sizeof(float) * NBmode);
+            processinfo_update_output_stream(processinfo, imginWFS.ID);
         }
 
 
@@ -1150,7 +1292,7 @@ static errno_t compute_function()
                     pindex += NBmode * pkmode;
                     pindex += mi;
                     imgselfRM.im->array.F[pindex] +=
-                        0.5 * signmult * selfRMpokesign * imgin.im->array.F[mi] /
+                        0.5 * signmult * selfRMpokesign * imginWFS.im->array.F[mi] /
                         (*selfRMpokeampl) / (*selfRMnbiter);
                 }
             }
@@ -1210,6 +1352,7 @@ static errno_t compute_function()
     free(mvaloutapply);
     free(mvalDMc);
     free(mvalDMbuff);
+    free(mvalDMOL);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;

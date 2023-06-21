@@ -55,6 +55,8 @@ static long      fpi_compstatswrite;
 
 
 
+
+
 static CLICMDARGDEF farg[] = {{
         CLIARG_UINT64,
         ".AOloopindex",
@@ -187,7 +189,6 @@ static CLICMDARGDEF farg[] = {{
         (void **) &block5NBsample,
         &fpi_block5NBsample
     },
-
     {
         CLIARG_ONOFF,
         ".comp.statswrite",
@@ -411,7 +412,6 @@ static errno_t compute_function()
     long   *block_cnt       = (long *) malloc(sizeof(long) * mblksizemax);
 
 
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
     // block masks
@@ -514,7 +514,9 @@ static errno_t compute_function()
                     mvalWFS_rms2[mi] += tmpv * tmpv;
                 }
             }
+
             // linear noise derivation
+            //
             for(uint32_t sample = 1; sample < NBsample - 1; sample++)
             {
                 for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -533,7 +535,9 @@ static errno_t compute_function()
                     mvalWFS_mrms2[mi] += tmpv * tmpv;
                 }
             }
+
             // linear noise derivation
+            //
             for(uint32_t sample = 1; sample < NBsample - 2; sample++)
             {
                 for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -556,6 +560,7 @@ static errno_t compute_function()
                     mvalWFS_mqrms2[mi] += tmpv * tmpv;
                 }
             }
+
 
 
 
