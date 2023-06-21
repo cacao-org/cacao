@@ -898,7 +898,7 @@ static errno_t compute_function()
                 //
                 for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    mvalDMbuff[DMtstep * NBmode + mi] = mvalDMc[mi];
+                    mvalDMbuff[DMtstep * NBmode + mi] = mvaloutapply[mi];
                 }
 
 
