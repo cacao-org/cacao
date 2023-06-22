@@ -242,11 +242,11 @@ errno_t AOloopControl_perfTest_printloopstatus(
         AOconf[loop].AOtiminginfo.hardwlatency_frame,
         AOconf[loop].AOtiminginfo.complatency_frame,
         AOconf[loop].AOtiminginfo.wfsmextrlatency_frame);
-    printw("loop iteration CNT : %lld   ", AOconf[loop].aorun.cnt);
+    printw("loop iteration CNT : %lu   ", AOconf[loop].aorun.cnt);
     printw("\n");
 
     printw(
-        "=========== %6ld modes, %3ld blocks ================|------------ "
+        "=========== %6u modes, %3u blocks ================|------------ "
         "Telemetry [nm] ----------------|    |    "
         " LIMITS         |",
         AOconf[loop].AOpmodecoeffs.NBDMmodes,
@@ -280,10 +280,10 @@ errno_t AOloopControl_perfTest_printloopstatus(
         }
 
         attron(A_BOLD);
-        printw("%3ld", k);
+        printw("%3d", k);
         attroff(A_BOLD);
 
-        printw("    %4ld [ %4ld - %4ld ]   %5.3f  %7.5f  %5.3f",
+        printw("    %4u [ %4ld - %4u ]   %5.3f  %7.5f  %5.3f",
                AOconf[loop].AOpmodecoeffs.NBmodes_block[k],
                kmin,
                AOconf[loop].AOpmodecoeffs.indexmaxMB[k] - 1,
@@ -316,7 +316,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
             attron(A_BOLD | COLOR_PAIR(2));
         }
 
-        printw("| %2ld | %9.3f  %6.2f\% |",
+        printw("| %2d | %9.3f  %6.2f%% |",
                k,
                AOconf[loop].AOpmodecoeffs.blockave_limFrac[k],
                100.0 * AOconf[loop].AOpmodecoeffs.blockave_limFrac[k] /
@@ -420,7 +420,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
 
     printw("\n");
 
-    printw(" ALL   %4ld                                        ",
+    printw(" ALL   %4u                                        ",
            AOconf[loop].AOpmodecoeffs.NBDMmodes);
     printw("  |  %8.2f  %8.2f  ->  %8.2f",
            1000.0 * AOconf[loop].AOpmodecoeffs.ALLave_Crms,
@@ -433,7 +433,7 @@ errno_t AOloopControl_perfTest_printloopstatus(
            AOconf[loop].AOpmodecoeffs.ALLave_OLrms);
     attroff(A_BOLD);
 
-    printw("| %2ld | %9.3f  %6.2f\% |\n",
+    printw("| %2d | %9.3f  %6.2f%% |\n",
            0,
            AOconf[loop].AOpmodecoeffs.ALLave_limFrac,
            100.0 * AOconf[loop].AOpmodecoeffs.ALLave_limFrac /

@@ -187,7 +187,7 @@ static errno_t compute_function()
     }
     uint32_t mapsize = imgmap2D.md->size[0];
     // mapsizedim should be 2: x and y coord
-    uint32_t mapsizedim = imgmap2D.md->size[1];
+    // uint32_t mapsizedim = imgmap2D.md->size[1];
     printf("mapsize = %u\n", mapsize);
 
 

@@ -10,40 +10,9 @@
 
 #define _GNU_SOURCE
 
-// uncomment for test print statements to stdout
-//#define _PRINT_TEST
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/*                                        HEADER FILES */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 
 #include <math.h>
-/*
-#include <malloc.h>
-#include <pthread.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-#include <time.h>
-
-
-#include <gsl/gsl_blas.h>
-#include <gsl/gsl_eigen.h>
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_matrix.h>
-
-
-#include <fitsio.h>
-*/
 
 #include "CommandLineInterface/CLIcore.h"
 
@@ -54,34 +23,15 @@
 #include "ZernikePolyn/ZernikePolyn.h"
 #include "image_filter/image_filter.h"
 #include "linopt_imtools/linopt_imtools.h"
-/*
-#include "00CORE/00CORE.h"
 
-#include "COREMOD_tools/COREMOD_tools.h"
-#include "ZernikePolyn/ZernikePolyn.h"
-#include "image_filter/image_filter.h"
-#include "info/info.h"
-#include "statistic/statistic.h"
+#include "ZernikePolyn/zernike_value.h"
 
-#include "AOloopControl/AOloopControl.h"
-#include "AOloopControl_IOtools/AOloopControl_IOtools.h"
-#include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
-#include "AOloopControl_computeCalib/AOloopControl_computeCalib.h"
 
-*/
 
 #include "linalgebra/linalgebra.h"
 
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/*                                      DEFINES, MACROS */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
+
 
 #define MAX_MBLOCK 20
 

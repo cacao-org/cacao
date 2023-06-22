@@ -149,20 +149,20 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
         attron(A_BOLD);
         print_header(" PRESS ANY KEY TO STOP MONITOR ", '-');
         attroff(A_BOLD);
-        printw("monitor sample %ld\n", mcnt);
+        printw("monitor sample %lld\n", mcnt);
         printw("\n");
 
         printw(
-            "=========== DM %d "
+            "=========== DM %ld "
             "==============================================\n",
             DMindex);
         printw("\n");
         printw("ON                = %10d\n", dmdispcombconf[DMindex].ON);
-        printw("size              = %ld x %ld = %ld\n",
+        printw("size              = %u x %u = %ld\n",
                dmdispcombconf[DMindex].xsize,
                dmdispcombconf[DMindex].ysize,
                dmdispcombconf[DMindex].xysize);
-        printw("NBchannel         = %10d      Number of DM channels\n",
+        printw("NBchannel         = %10ld      Number of DM channels\n",
                dmdispcombconf[DMindex].NBchannel);
         printw("\n");
 
@@ -243,7 +243,7 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
 
         for(ch = 0; ch < dmdispcombconf[DMindex].NBchannel; ch++)
         {
-            printw(" CHANNEL %2d  gain = %10.3f   dm%02lddisp%02ld   %10ld\n",
+            printw(" CHANNEL %2d  gain = %10.3f   dm%02lddisp%02d   %10ld\n",
                    ch,
                    dmdispcombconf[DMindex].dmdispgain[ch],
                    DMindex,
@@ -305,7 +305,7 @@ int AOloopControl_DM_dmdispcombstatus(long DMindex)
         printw("\n");
 
         printw("status            = %10d\n", dmdispcombconf[DMindex].status);
-        printw("moninterval       = %10d us\n",
+        printw("moninterval       = %10ld us\n",
                dmdispcombconf[DMindex].moninterval);
         printw("\n");
 
