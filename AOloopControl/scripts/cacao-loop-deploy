@@ -162,8 +162,6 @@ fi
 set -u
 
 
-# create rootdir folder
-mkdir -p ${CACAO_LOOPROOTDIR}
 
 
 

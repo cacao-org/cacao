@@ -26,7 +26,9 @@ fi
 # copy test configuration files to work directory
 cp ${CONFDIR}/cacaovars.bash ${CACAO_LOOPROOTDIR}/cacaovars.${CACAO_LOOPNAME}.bash
 cp ${CONFDIR}/cacao-fpslistadd-* ${CACAO_LOOPROOTDIR}/
+cp ${CONFDIR}/fpstmuxenv ${CACAO_LOOPROOTDIR}/
 cp -rf ${CONFDIR}/data ${CACAO_LOOPROOTDIR}/
+
 
 cp ${CONFDIR}/fpssetup.setval.conf ${CACAO_LOOPROOTDIR}/fpssetup.setval.${CACAO_LOOPNAME}.conf
 
