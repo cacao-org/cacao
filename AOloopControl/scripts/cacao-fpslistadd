@@ -796,6 +796,8 @@ if [ "${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}" = "ON" ]; then
 
         # is using imWFS2 as input, no need to subtract reference
         addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+        
+        addfpscmd "setval ${fpsfname}.option.sname_refout NULL"
 
         addfpscmd "setval ${fpsfname}.outinit ON"
 
@@ -982,6 +984,7 @@ if [ "${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}" = "ON" ]; then
 
 
         addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+        addfpscmd "setval ${fpsfname}.option.sname_refout NULL"
 
         addfpscmd "setval ${fpsfname}.outinit OFF"
 
