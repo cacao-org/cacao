@@ -310,14 +310,14 @@ static errno_t compute_function()
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS3);
 
 
-        /*
-        IMGID imgwfsref;
+
         {
+            //IMGID imgwfsref;
             char wfsrefname[STRINGMAXLEN_STREAMNAME];
             WRITE_IMAGENAME(wfsrefname, "aol%u_wfsref", *AOloopindex);
-            imgwfsref = stream_connect_create_2Df32(wfsrefname, sizexWFS, sizeyWFS);
+            stream_connect_create_2Df32(wfsrefname, sizexWFS, sizeyWFS);
         }
-        */
+
 
         WRITE_IMAGENAME(name, "aol%u_wfsrefc", *AOloopindex);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &IDwfsrefc);
@@ -512,7 +512,7 @@ static errno_t compute_function()
             //if(IDwfsmult != -1)
             //{
             //    status_wfsmult = 1;
-           // }
+            // }
         }
 
         data.image[ID_imWFS0].md[0].write = 1;
@@ -624,8 +624,8 @@ static errno_t compute_function()
 
             // Compute image total
             double imtotal = 0.0;
-            uint64_t nelem = data.image[ID_imWFS0].md[0].size[0] *
-                             data.image[ID_imWFS0].md[0].size[1];
+            uint64_t nelem = data.image[ID_imWFS0].md->size[0] *
+                             data.image[ID_imWFS0].md->size[1];
 
             if(IDwfsmask != -1)
             {
@@ -644,6 +644,7 @@ static errno_t compute_function()
             }
             *fluxtotal = imtotal;
 
+            printf("imtotal = %f\n", imtotal);
 
 
             // avoiding division by zero
