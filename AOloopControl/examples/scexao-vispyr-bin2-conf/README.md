@@ -22,6 +22,10 @@ cacao-loop-deploy -c scexao-vispyr-bin2
 # CACAO_LOOPNUMBER=7 cacao-loop-deploy -c scexao-vispyr-bin2
 # CACAO_LOOPNUMBER=7 CACAO_DMINDEX="03" cacao-loop-deploy -c scexao-vispyr-bin2
 
+# OPTIONAL:
+# Edit file scexao-vispyr-bin2-conf/fpstmuxenv to modify local environment for processes
+
+
 # OPTIONAL: Edit file scexao-vispyr-bin2-conf/cacaovars.bash as needed
 # For example, change loop index, DM index, etc ...
 
@@ -76,11 +80,14 @@ cacao-aorun-005-takedark -n 2000
 cacao-aorun-025-acqWFS -w start
 ```
 
+The acqWFS process performs flux normalization, and at this point assumes all WFS pixels are active (wfsmask set to 1). The mask will be updated later.
+
 ```bash
 # Acquire WFS reference
 cacao-aorun-026-takeref -n 2000
 ```
 
+The reference is acquired here and immediately applied through the acquWFS process.
 
 ## Measure DM to WFS latency
 
@@ -212,16 +219,16 @@ cacao-fpsctrl setval mfilt loopON ON
 ### SelfRM
 
 ```bash
-# Set max number of modes above nbmodes
+# Set max number of modes above nbmodes to measure all modes
 
 cacao-fpsctrl runstop mfilt 0 0
 cacao-fpsctrl setval mfilt selfRM.zsize 20
-cacao-fpsctrl setval mfilt selfRM.NBmode 1000
+cacao-fpsctrl setval mfilt selfRM.NBmode 2000
 cacao-fpsctrl runstart mfilt 0 0
 cacao-fpsctrl setval mfilt selfRM.enable ON
 ```
 
-Check result: maps-rundir/selfRM.fits
+Check result: vispyr2-rundir/selfRM.fits
 
 ### Turbulence
 
@@ -241,7 +248,19 @@ cacao-modalstatsTUI
 
 ## Predictive Control
 
+### Pseudo-OL reconstruction
+
+
+
+### Modal control blocks
+
 Start process mctrlstats to split telemetry into blocks.
+
+```bash
+cacao-aorun-120-mstat
+```
+
+
 Start mkPFXX-Y processes.
 Start applyPFXX-Y processes.
 

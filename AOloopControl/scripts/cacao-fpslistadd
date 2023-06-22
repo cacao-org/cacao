@@ -816,42 +816,6 @@ fi
 
 
 
-if [ "${CACAO_FPSPROC_MODALFILTERING}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MODALFILTERING"
-    # ======================================================================
-    # ========== Modal control filtering ===================================
-    # ======================================================================
-
-    # FPS name
-    fpsname="mfilt"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}         cacao.modalfilter       ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalWFS"
-
-        addfpscmd "setval ${fpsfname}.inmval aol${CACAO_LOOPNUMBER}_modevalWFS"
-        addfpscmd "setval ${fpsfname}.outmval aol${CACAO_LOOPNUMBER}_modevalDM"
-
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_MODALFILTERING"
-fi
-
-
 
 
 
@@ -907,42 +871,6 @@ if [ "${CACAO_FPSPROC_MVMGPU_ZPO}" = "ON" ]; then
 else
     echolog "OFF CACAO_FPSPROC_MVM_ZPO"
 fi
-
-
-
-
-
-if [ "${CACAO_FPSPROC_MODALCTRL_STATS}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MODALCTRL_STATS"
-    # ======================================================================
-    # ========== Modal control stats =======================================
-    # ======================================================================
-
-    # FPS name
-    fpsname="mctrlstats"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}         cacao.modalCTRLstats       ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_buff"
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_MODALCTRL_STATS"
-fi
-
 
 
 
