@@ -492,6 +492,8 @@ static errno_t Measure_Linear_Response_Modal(
     char       *outdir
 )
 {
+    DEBUG_TRACE_FSTART();
+
     // Save all intermediate results
     int SAVE_RMACQU_ALL = 1;
 
@@ -602,7 +604,7 @@ static errno_t Measure_Linear_Response_Modal(
 
     for(int pokemode = 0; pokemode < NBmode2; pokemode++)
     {
-        for(int aveindex = 0; aveindex < timing_NBave + timing_NBexcl; aveindex++)
+        for(uint32_t aveindex = 0; aveindex < timing_NBave + timing_NBexcl; aveindex++)
         {
             int pokeCTRLindex = pokemode * (timing_NBave + timing_NBexcl) + aveindex;
             int pokeMEASindex = pokeCTRLindex + RMdelayfr;
@@ -1077,7 +1079,7 @@ static errno_t Measure_Linear_Response_Modal(
 
     free(pkinfarray);
 
-
+    DEBUG_TRACE_FEXIT();
 
     return EXIT_SUCCESS;
 }
