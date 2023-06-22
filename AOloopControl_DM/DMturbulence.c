@@ -36,8 +36,8 @@ static long  fpi_DMpixscale;
 
 
 // turbulence 3D cube
-static char *turbfname;
-static long  fpi_turbfname;
+//static char *turbfname;
+//static long  fpi_turbfname;
 
 
 // Wind speed [m/s]
@@ -56,8 +56,8 @@ static long   fpi_turbampl;
 
 
 // number of time samples in turbulence cube
-static uint32_t *NBsamples;
-static long      fpi_NBsamples;
+//static uint32_t *NBsamples;
+//static long      fpi_NBsamples;
 
 
 
@@ -86,8 +86,8 @@ static long   fpi_turbseedouterscale;
 
 
 // Compute turb cube
-static uint64_t *compTurbCube;
-static long      fpi_compTurbCube;
+//static uint64_t *compTurbCube;
+//static long      fpi_compTurbCube;
 
 
 
@@ -419,11 +419,11 @@ static errno_t customCONFcheck()
 
 
 
-        if(data.fpsptr->parray[fpi_compTurbCube].fpflag & FPFLAG_ONOFF)
+     /*   if(data.fpsptr->parray[fpi_compTurbCube].fpflag & FPFLAG_ONOFF)
         {
             printf("RECOMPUTING DM TURB CUBE\n");
             data.fpsptr->parray[fpi_compTurbCube].fpflag &= ~FPFLAG_ONOFF;
-        }
+        }*/
 
 
     }

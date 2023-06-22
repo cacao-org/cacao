@@ -1982,7 +1982,7 @@ errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF()
 
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
-    FPS2PROCINFOMAP fps2procinfo;
+    //FPS2PROCINFOMAP fps2procinfo;
     fps_add_processinfo_entries(&fps);
 
     // =========================================

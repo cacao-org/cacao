@@ -834,9 +834,9 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
         uint32_t DMxysize = DMxsize * DMysize;
         create_3Dimage_ID("DMmodes", DMxsize, DMysize, DMxysize, &ID_DMmodes);
         list_image_ID();
-        for(int kk = 0; kk < DMxysize; kk++)
+        for(uint32_t kk = 0; kk < DMxysize; kk++)
         {
-            for(int ii = 0; ii < DMxysize; ii++)
+            for(uint32_t ii = 0; ii < DMxysize; ii++)
             {
                 data.image[ID_DMmodes].array.F[kk * DMxysize + ii] =
                     data.image[ID_VTmat].array.F[ii * DMxysize + kk];
@@ -862,10 +862,10 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
         for(int mi = 0; mi < mimax; mi++)
         {
             printf("Mode %5d / %5d\n", mi, DMxysize);
-            for(int ii = 0; ii < WFSxysize; ii++)
+            for(uint32_t ii = 0; ii < WFSxysize; ii++)
             {
                 data.image[ID_WFSmodes].array.F[mi * WFSxysize + ii] = 0.0;
-                for(int jj = 0; jj < DMxysize; jj++)
+                for(uint32_t jj = 0; jj < DMxysize; jj++)
                 {
                     data.image[ID_WFSmodes].array.F[mi * WFSxysize + ii] +=
                         data.image[ID_DMmodes].array.F[mi * DMxysize + jj]

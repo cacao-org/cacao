@@ -412,7 +412,7 @@ errno_t AOloopControl_modalstatsTUI(
             }
             for(uint32_t tstep=0; tstep<buffsize; tstep++)
             {
-                for(uint32_t mi=mimin; mi<mimax; mi++)
+                for(int mi=mimin; mi<mimax; mi++)
                 {
                     long index2 = imgmodevalWFSbuff.md->cnt1 * buffsize * mstatstruct.NBmode;
                     long index = index2 + tstep*mstatstruct.NBmode + mi;
@@ -441,7 +441,7 @@ errno_t AOloopControl_modalstatsTUI(
             }
             for(uint32_t tstep=0; tstep<buffsize; tstep++)
             {
-                for(uint32_t mi=mimin; mi<mimax; mi++)
+                for(int mi=mimin; mi<mimax; mi++)
                 {
                     long index2 = imgmodevalDMbuff.md->cnt1 * buffsize * mstatstruct.NBmode;
                     long index = index2 + tstep*mstatstruct.NBmode + mi;
@@ -470,7 +470,7 @@ errno_t AOloopControl_modalstatsTUI(
             }
             for(uint32_t tstep=0; tstep<buffsize; tstep++)
             {
-                for(uint32_t mi=mimin; mi<mimax; mi++)
+                for(int mi=mimin; mi<mimax; mi++)
                 {
                     long index2 = imgmodevalOLbuff.md->cnt1 * buffsize * mstatstruct.NBmode;
                     long index = index2 + tstep*mstatstruct.NBmode + mi;

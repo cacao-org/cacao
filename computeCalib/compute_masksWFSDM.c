@@ -254,7 +254,7 @@ static errno_t compute_function()
 
         printf("Preparing DM map ... ");
         fflush(stdout);
-        for(int poke = 0; poke < NBpoke; poke++)
+        for(uint32_t poke = 0; poke < NBpoke; poke++)
         {
             double rms = 0.0;
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
@@ -272,7 +272,7 @@ static errno_t compute_function()
         for(uint64_t ii = 0; ii < sizeWFS; ii++)
         {
             double rms = 0.0;
-            for(int poke = 0; poke < NBpoke; poke++)
+            for(uint32_t poke = 0; poke < NBpoke; poke++)
             {
                 double tmpv = data.image[IDzrm].array.F[poke * sizeWFS + ii];
                 rms += tmpv * tmpv;
@@ -302,7 +302,7 @@ static errno_t compute_function()
         }
         double lim = (*dmmaskcoeff1) * img_percentile("_tmpdmmap", (*dmmaskperc1));
 
-        for(int poke = 0; poke < NBpoke; poke++)
+        for(uint32_t poke = 0; poke < NBpoke; poke++)
         {
             if(data.image[IDtmp].array.F[poke] < lim)
             {

@@ -257,7 +257,7 @@ int AOloopControl_DM_CombineChannels_FPCONF()
     // ===========================
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
-    FPS2PROCINFOMAP fps2procinfo;
+    //FPS2PROCINFOMAP fps2procinfo;
     fps_add_processinfo_entries(&fps);
 
     long DMindex = data.cmdargtoken[2].val.numl;

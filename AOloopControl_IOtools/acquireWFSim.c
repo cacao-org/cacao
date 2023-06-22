@@ -310,12 +310,14 @@ static errno_t compute_function()
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &ID_imWFS3);
 
 
+        /*
         IMGID imgwfsref;
         {
             char wfsrefname[STRINGMAXLEN_STREAMNAME];
             WRITE_IMAGENAME(wfsrefname, "aol%u_wfsref", *AOloopindex);
             imgwfsref = stream_connect_create_2Df32(wfsrefname, sizexWFS, sizeyWFS);
         }
+        */
 
         WRITE_IMAGENAME(name, "aol%u_wfsrefc", *AOloopindex);
         create_image_ID(name, 2, naxes, _DATATYPE_FLOAT, 1, 0, 0, &IDwfsrefc);
@@ -497,7 +499,7 @@ static errno_t compute_function()
 
 
         // check if wfsmult to be applied
-        int status_wfsmult = 0;
+        //int status_wfsmult = 0;
 
         if(data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF)
         {
@@ -507,10 +509,10 @@ static errno_t compute_function()
                 status_darksub = 1;
             }
 
-            if(IDwfsmult != -1)
-            {
-                status_wfsmult = 1;
-            }
+            //if(IDwfsmult != -1)
+            //{
+            //    status_wfsmult = 1;
+           // }
         }
 
         data.image[ID_imWFS0].md[0].write = 1;

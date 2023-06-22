@@ -629,7 +629,7 @@ static errno_t compute_function()
 
 
     int selfRM_NBmode = (*selfRMnbmode);
-    if(selfRM_NBmode > NBmode)
+    if(selfRM_NBmode > (int) NBmode)
     {
         selfRM_NBmode = NBmode;
     }
@@ -1316,7 +1316,7 @@ static errno_t compute_function()
             }
 
 
-            if(selfRM_pokemode == selfRM_NBmode)
+            if((int) selfRM_pokemode == selfRM_NBmode)
             {
                 selfRMpokeparity = 1 - selfRMpokeparity;
                 selfRM_pokemode  = 0;
