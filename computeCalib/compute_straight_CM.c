@@ -639,7 +639,7 @@ static errno_t compute_function()
                     uint64_t iioffset = mi*imgCMWFSall.md->size[0]*imgCMWFSall.md->size[1];
                     for(uint64_t ii=0; ii<imgCMWFSall.md->size[0]*imgCMWFSall.md->size[1]; ii++)
                     {
-                        double val = imgCMWFSall.im->array.F[mi+ii];
+                        double val = imgCMWFSall.im->array.F[iioffset+ii];
                         double valm = imgWFSmask.im->array.F[ii];
                         WFSnorm += val*val*valm;
                         WFSnormcnt += valm;
