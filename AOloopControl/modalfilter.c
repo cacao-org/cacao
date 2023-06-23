@@ -62,8 +62,13 @@ static long     fpi_psol_WFSfact;
 
 
 // Latency between DM and WFS
-static float *latencyfr;
-static long   fpi_latencyfr;
+static float *latencyhardwfr;
+static long   fpi_latencyhardwfr;
+
+// software latency (usually around 1.5 frame)
+// 1 frame + compute time
+static float *latencysoftwfr;
+static long   fpi_latencysoftwfr;
 
 
 // Shared memory telemetry buffers
@@ -153,6 +158,10 @@ static long      fpi_selfRMnbsettlestep;
 
 static uint64_t *testOL;
 static long      fpi_testOL;
+
+static float *testOLupdategain;
+static long      fpi_testOLupdategain;
+
 
 static uint32_t *testOLmode;
 static long      fpi_testOLmode;
@@ -272,12 +281,21 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_FLOAT32,
-        ".comp.latencyfr",
-        "DM to WFS latency [frame]",
+        ".comp.latencyhardwfr",
+        "hardware DM to WFS latency [frame]",
         "1.7",
         CLIARG_HIDDEN_DEFAULT,
-        (void **) &latencyfr,
-        &fpi_latencyfr
+        (void **) &latencyhardwfr,
+        &fpi_latencyhardwfr
+    },
+    {
+        CLIARG_FLOAT32,
+        ".comp.latencysoftwfr",
+        "software latency [frame]",
+        "1.5",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &latencysoftwfr,
+        &fpi_latencysoftwfr
     },
     {
         CLIARG_ONOFF,
@@ -455,6 +473,15 @@ static CLICMDARGDEF farg[] =
         &fpi_testOL
     },
     {
+        CLIARG_FLOAT32,
+        ".testOL.updategain",
+        "update gain (0=check only)",
+        "0.1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &testOLupdategain,
+        &fpi_testOLupdategain
+    },
+    {
         CLIARG_UINT32,
         ".testOL.mode",
         "mode index",
@@ -516,7 +543,8 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_comptbuff].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_compOL].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_psol_WFSfact].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_latencyfr].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_latencyhardwfr].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_latencysoftwfr].fpflag |= FPFLAG_WRITERUN;
 
         data.fpsptr->parray[fpi_auxDMmvalenable].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_auxDMmvalmixfact].fpflag |= FPFLAG_WRITERUN;
@@ -537,6 +565,7 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_selfRMnbiter].fpflag |= FPFLAG_WRITERUN;
 
         data.fpsptr->parray[fpi_testOL].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_testOLupdategain].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_testOLampl].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_testOLmode].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_testOLnbsample].fpflag |= FPFLAG_WRITERUN;
@@ -997,8 +1026,10 @@ static errno_t compute_function()
                     DMtstep = 0;
                 }
 
-                int   latint  = (int)(*latencyfr);
-                float latfrac = (*latencyfr) - latint;
+                float latencytotalfr = (*latencyhardwfr) + (*latencysoftwfr);
+
+                int   latint  = (int) latencytotalfr;
+                float latfrac = latencytotalfr - latint;
 
                 int DMtstep1 = DMtstep - latint;
                 int DMtstep0 = DMtstep1 - 1;
@@ -1064,15 +1095,23 @@ static errno_t compute_function()
 
 
                 // OL reconstruction test
+                // to be run with low gain and small ampl, and then check with higher gain
                 //
                 if(*testOL == 1)
                 {
                     processinfo_WriteMessage_fmt(processinfo, "testOL ON %u", *testOLcnt);
 
+                    float *psOL_probe;
+                    float *psOL_estimate;
+
                     if(*testOLcnt == 0)
                     {
                         // initialization
                         testOLfp = fopen("testOL.log", "w");
+
+                        psOL_probe = (float*) malloc(sizeof(float)*(*testOLnbsample));
+                        psOL_estimate = (float*) malloc(sizeof(float)*(*testOLnbsample));
+
 
 
                         data.fpsptr->parray[fpi_testOLampl].fpflag &= ~FPFLAG_WRITERUN;
@@ -1084,6 +1123,9 @@ static errno_t compute_function()
                     float freqfact = 0.01 + 1.99*x;
                     imgauxmDM.im->array.F[*testOLmode] =
                         (*testOLampl) * sin( 1.0*(*testOLcnt)/M_PI/2 * freqfact);
+
+                    psOL_probe[*testOLcnt] = imgauxmDM.im->array.F[*testOLmode];
+                    psOL_estimate[*testOLcnt] = imgOLmval.im->array.F[*testOLmode];
 
 
                     fprintf(testOLfp, "%5u  %g %g %g %g\n",
@@ -1097,7 +1139,9 @@ static errno_t compute_function()
                     (*testOLcnt) ++;
                     if(*testOLcnt == *testOLnbsample)
                     {
-                        // end of test
+                        // end of acquisition
+                        /// wrap up and process
+                        //
                         *testOL = 0;
                         data.fpsptr->parray[fpi_testOL].fpflag &= ~FPFLAG_ONOFF;
                         *testOLcnt = 0;
@@ -1107,6 +1151,60 @@ static errno_t compute_function()
                         data.fpsptr->parray[fpi_testOLampl].fpflag |= FPFLAG_WRITERUN;
                         data.fpsptr->parray[fpi_testOLmode].fpflag |= FPFLAG_WRITERUN;
                         data.fpsptr->parray[fpi_testOLnbsample].fpflag |= FPFLAG_WRITERUN;
+
+
+
+
+                        // process output - compute residual and optimize delay
+                        //
+                        float latencytotalfr = (*latencyhardwfr) + (*latencysoftwfr);
+                        float latencyoptimal = latencytotalfr;
+                        float WFSfactoptimal = (*psol_WFSfact);
+                        float optval = __FLT32_MAX__;
+                        float psOLdelay_fr_min = 0.5*latencytotalfr;
+                        float psOLdelay_fr_max = 1.5*latencytotalfr;
+                        for(float psOLdelay_fr=psOLdelay_fr_min; psOLdelay_fr < psOLdelay_fr_max; psOLdelay_fr += 0.01)
+                        {
+                            for(float WFSfactval = 0.9*WFSfactoptimal; WFSfactval < 1.1*WFSfactoptimal; WFSfactval += 0.01)
+                            {
+                                double psOLresidual = 0.0;
+                                for(long ii=0; ii < (*testOLnbsample); ii++)
+                                {
+                                    float tframeOL = 1.0*ii + psOLdelay_fr;
+                                    long jj0 = (long) tframeOL;
+                                    float jjfrac = tframeOL - jj0;
+                                    long jj1 = jj0+1;
+                                    if(jj1 < (*testOLnbsample))
+                                    {
+                                        double OLval = (1.0-jjfrac)*psOL_estimate[jj0] + jjfrac*psOL_estimate[jj1];
+                                        double resval = OLval*WFSfactval - psOL_probe[ii];
+                                        psOLresidual += resval*resval;
+                                    }
+                                }
+                                if( psOLresidual < optval)
+                                {
+                                    optval = psOLresidual;
+                                    latencyoptimal = psOLdelay_fr;
+                                    WFSfactoptimal = WFSfactval;
+                                }
+                                //printf("DELAY %8f   RESIDUAL  = %g\n", psOLdelay_fr, psOLresidual);
+                            }
+                        }
+
+
+                        printf("OPTIMAL LATENCY = %f fr ->  latencysoft = %f fr\n",
+                               latencyoptimal, latencyoptimal - (*latencyhardwfr));
+                        printf("OPTIMAL WFSfact = %f\n", WFSfactoptimal);
+
+
+                        // update
+                        float g0 = 1.0 - (*testOLupdategain);
+                        float g1 = (*testOLupdategain);
+                        (*latencysoftwfr) = g0*(*latencysoftwfr) + g1*(latencyoptimal - (*latencyhardwfr));
+                        (*psol_WFSfact) = g0*(*psol_WFSfact) + g1*WFSfactoptimal;
+
+                        free(psOL_probe);
+                        free(psOL_estimate);
 
                         processinfo_WriteMessage(processinfo, "testOL done");
                     }

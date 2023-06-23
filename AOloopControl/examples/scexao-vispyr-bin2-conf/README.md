@@ -250,6 +250,25 @@ cacao-modalstatsTUI
 
 ### Pseudo-OL reconstruction
 
+OPTIONAL: Tune software latency and WFS factor to ensure exact pseudoOL reconstruction.
+
+```bash
+cacao-fpsctrl setval mfilt auxDMmval.enable ON
+cacao-fpsctrl setval mfilt auxDMmval.mixfact 1.0
+cacao-fpsctrl setval mfilt auxDMmval.modulate OFF
+
+# repeat multiple times to converge to correct parameters
+cacao-fpsctrl setval mfilt testOL.enable ON
+```
+
+Check that probe and psOL reconstruction overlap and have same amplitude:
+```bash
+gnuplot
+plot "vispyr2-rundir/testOL.log" u 1:2 w l, "vispyr2-rundir/testOL.log" u ($1-2.9):5
+quit
+```
+The x-offset is the total latency (hardw+softw).
+
 
 
 ### Modal control blocks
@@ -257,7 +276,7 @@ cacao-modalstatsTUI
 Start process mctrlstats to split telemetry into blocks.
 
 ```bash
-cacao-aorun-120-mstat
+cacao-aorun-120-mstat start
 ```
 
 
