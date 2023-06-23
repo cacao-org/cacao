@@ -30,6 +30,7 @@ if [ "${CACAO_FPSPROC_MODALCTRL_STATS}" = "ON" ]; then
 
         addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
         addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+        addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 100"
         addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_buff"
     fi
 else
