@@ -1206,6 +1206,24 @@ static errno_t compute_function()
                         free(psOL_probe);
                         free(psOL_estimate);
 
+
+                        // write results as env variables
+                        {
+                            // file will be sourced by cacao-check-cacaovars
+                            //
+                            char ffname[STRINGMAXLEN_FULLFILENAME];
+                            WRITE_FULLFILENAME(ffname, "%s/cacaovars.bash", data.fpsptr->md->datadir);
+
+                            printf("SAVING TO %s\n", ffname);
+
+                            FILE *fpout;
+                            fpout = fopen(ffname, "w");
+                            fprintf(fpout, "export CACAO_PSOL_WFSFACT=%.3f\n", (*latencysoftwfr));
+                            fprintf(fpout, "export CACAO_LATENCYSOFTWFR=%.3f\n", (*latencysoftwfr));
+                            fprintf(fpout, "export CACAO_LATENCYFR=%.3f\n", (*latencysoftwfr)+(*latencyhardwfr) );
+                            fclose(fpout);
+                        }
+
                         processinfo_WriteMessage(processinfo, "testOL done");
                     }
                 }

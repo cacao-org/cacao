@@ -279,10 +279,15 @@ Start process mctrlstats to split telemetry into blocks.
 cacao-aorun-120-mstat start
 ```
 
-
 Start mkPFXX-Y processes.
-Start applyPFXX-Y processes.
+```bash
+cacao-aorun-130-mkPF 0 start
+```
 
+Start applyPFXX-Y processes.
+```bash
+cacao-aorun-140-applyPF 0 start
+```
 
 
 # Cleanup

@@ -12,7 +12,7 @@ MSextdescr="Measures hardware latency between input and output streams
 Pokes input stream, listens to ouput stream
 Requires acquWFS process to run
 
-Writes output to env variables CACAO_WFSFRATE and CACAO_LATENCYFR
+Writes output to env variables CACAO_WFSFRATE and CACAO_LATENCYHARDWFR
 "
 
 source milk-script-std-config

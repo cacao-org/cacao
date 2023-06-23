@@ -13,7 +13,7 @@ else
 if [ "${CACAO_FPSPROC_MKPF}" = "ON" ]; then
 
 
-for (( blki=0; blki<$CACAO_PF_NBBLOCK; blki++ ))
+for (( blki=0; blki<${CACAO_PF_NBBLOCK}; blki++ ))
 do
 BLKindex=$( printf %02d $blki )
 

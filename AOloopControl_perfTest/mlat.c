@@ -808,6 +808,8 @@ static errno_t compute_function()
 
             // write results as env variables
             {
+                // file will be sourced by cacao-check-cacaovars
+                //
                 char ffname[STRINGMAXLEN_FULLFILENAME];
                 WRITE_FULLFILENAME(ffname, "%s/cacaovars.bash", data.fpsptr->md->datadir);
 
@@ -816,7 +818,7 @@ static errno_t compute_function()
                 FILE *fpout;
                 fpout = fopen(ffname, "w");
                 fprintf(fpout, "export CACAO_WFSFRATE=%.3f\n", *framerateHz);
-                fprintf(fpout, "export CACAO_LATENCYFR=%.3f\n", *latencyfr);
+                fprintf(fpout, "export CACAO_LATENCYHARDWFR=%.3f\n", *latencyfr);
                 fclose(fpout);
             }
 
