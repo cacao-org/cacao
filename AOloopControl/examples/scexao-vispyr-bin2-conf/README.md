@@ -10,7 +10,7 @@ This is a (nearly) full-featured example for a single input / single output cont
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
-## Setting up processes
+## 1. Setting up processes
 
 
 ```bash
@@ -48,7 +48,7 @@ cd vispyr2-rootdir
 # (alternatively, run ./scripts/aorun-setmode-hardw to connect to hardware)
 ```
 
-## Run DM and WFS simulators
+## 2. Run DM and WFS simulators
 
 ```bash
 # Run hardware DM (optional if running in simulation mode)
@@ -64,7 +64,7 @@ cacao-aorun-002-simwfs -w start
 
 
 
-## Measure WFS dark
+## 3. Measure WFS dark
 
 
 Takes dark, stores it into aolX_wfsdarkraw, with aolX_wfsdark pointing to it.
@@ -73,7 +73,7 @@ cacao-aorun-005-takedark -n 2000
 ```
 
 
-## Start WFS acquisition
+## 4. Start WFS acquisition
 
 ```bash
 # Acquire WFS frames
@@ -89,7 +89,7 @@ cacao-aorun-026-takeref -n 2000
 
 The reference is acquired here and immediately applied through the acquWFS process.
 
-## Measure DM to WFS latency
+## 5. Measure DM to WFS latency
 
 ```bash
 # Measure latency
@@ -98,10 +98,10 @@ cacao-aorun-020-mlat -w
 
 
 
-## Acquire response matrix
+## 6. Acquire Calibration
 
 
-### Prepare DM poke modes
+### 6.1. Prepare DM poke modes
 
 ```bash
 # Create DM poke mode cubes
@@ -120,7 +120,7 @@ The following files are written to ./conf/RMmodesDM/
 
 
 
-### Run acquisition
+### 6.2. Run acquisition
 
 
 ```bash
@@ -140,7 +140,7 @@ To inspect results, display file conf/RMmodesWFS/zrespM-H.fits.
 This should visually look like a zonal response matrix.
 
 
-### Make DM and WFS masks
+### 6.3. Make DM and WFS masks
 
 ```bash
 cacao-aorun-032-RMmkmask
@@ -153,14 +153,14 @@ If needed, rerun command with non-default parameters (see -h for options).
 Note: we are not going to apply the masks in this example, so OK if not net properly. The masks are informative here, allowing us to view which DM actuators and WFS pixels have the best response.
 
 
-### Create synthetic (Fourier) response matrix
+### 6.4. Create synthetic (Fourier) response matrix
 
 ```bash
 cacao-aorun-033-RM-mksynthetic -c 25
 ```
 
 
-## Compute control matrix (straight)
+## 7. Compute control matrix (straight)
 
 Compute control modes, in both WFS and DM spaces.
 Set GPU device (if GPU available).
@@ -176,7 +176,7 @@ cacao-aorun-039-compstrCM
 
 
 
-## Running the loop
+## 8. Running the loop
 
 Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
 ```bash
@@ -214,9 +214,9 @@ cacao-fpsctrl setval mfilt loopON ON
 ```
 
 
-## Testing the loop
+## 9. Testing the loop
 
-### SelfRM
+### 9.1. SelfRM
 
 ```bash
 # Set max number of modes above nbmodes to measure all modes
@@ -230,7 +230,7 @@ cacao-fpsctrl setval mfilt selfRM.enable ON
 
 Check result: vispyr2-rundir/selfRM.fits
 
-### Turbulence
+### 9.2. Turbulence
 
 ```bash
 cacao-aorun-100-DMturb start
@@ -239,16 +239,16 @@ cacao-aorun-100-DMturb on
 cacao-aorun-100-DMturb stop
 ```
 
-### Monitoring
+### 9.3. Monitoring
 
 ```bash
 cacao-modalstatsTUI
 ```
 
 
-## Predictive Control
+## 10. Predictive Control
 
-### Pseudo-OL reconstruction
+### 10.1. Pseudo-OL reconstruction
 
 OPTIONAL: Tune software latency and WFS factor to ensure exact pseudoOL reconstruction.
 
@@ -257,21 +257,26 @@ cacao-fpsctrl setval mfilt auxDMmval.enable ON
 cacao-fpsctrl setval mfilt auxDMmval.mixfact 1.0
 cacao-fpsctrl setval mfilt auxDMmval.modulate OFF
 
+cacao-fpsctrl setval mfilt loopgain 0.03
+cacao-fpsctrl setval mfilt loopmult 0.999
+
+cacao-aorun-080-testOL -w 1.0
+
 # repeat multiple times to converge to correct parameters
-cacao-fpsctrl setval mfilt testOL.enable ON
+cacao-aorun-080-testOL -w 0.1
 ```
 
 Check that probe and psOL reconstruction overlap and have same amplitude:
 ```bash
 gnuplot
-plot "vispyr2-rundir/testOL.log" u 1:2 w l, "vispyr2-rundir/testOL.log" u ($1-2.9):5
+plot [0:] "vispyr2-rundir/testOL.log" u 1:2 w l title "probe", "vispyr2-rundir/testOL.log" u ($1):5 title "psOL", "vispyr2-rundir/testOL.log" u ($1):3 title "DM"
 quit
 ```
 The x-offset is the total latency (hardw+softw).
 
 
 
-### Modal control blocks
+### 10.2. Modal control blocks
 
 Start process mctrlstats to split telemetry into blocks.
 
@@ -282,11 +287,13 @@ cacao-aorun-120-mstat start
 Start mkPFXX-Y processes.
 ```bash
 cacao-aorun-130-mkPF 0 start
+cacao-aorun-130-mkPF 1 start
 ```
 
 Start applyPFXX-Y processes.
 ```bash
 cacao-aorun-140-applyPF 0 start
+cacao-aorun-140-applyPF 1 start
 ```
 
 
