@@ -933,6 +933,10 @@ static errno_t compute_function()
     long cntsumref    = 0;
     long cntsumrefzpo = 0;
 
+
+    uint64_t zpochecksum = 0;
+    uint64_t zpochecksum0 = 0;
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
     {
@@ -941,21 +945,39 @@ static errno_t compute_function()
         int zpoval;
         int fpi_zpoch;
 
+        zpoffset_channel[0]  = *zpoffsetch00;
+        zpoffset_channel[1]  = *zpoffsetch01;
+        zpoffset_channel[2]  = *zpoffsetch02;
+        zpoffset_channel[3]  = *zpoffsetch03;
+        zpoffset_channel[4]  = *zpoffsetch04;
+        zpoffset_channel[5]  = *zpoffsetch05;
+        zpoffset_channel[6]  = *zpoffsetch06;
+        zpoffset_channel[7]  = *zpoffsetch07;
+        zpoffset_channel[8]  = *zpoffsetch08;
+        zpoffset_channel[9]  = *zpoffsetch09;
+        zpoffset_channel[10] = *zpoffsetch10;
+        zpoffset_channel[11] = *zpoffsetch11;
+
+
+        // check if the list of zpo channel has changed
+        zpochecksum = 0;
         for(int ch = 0; ch < NB_ZEROPOINT_CH_MAX; ++ch)
         {
-            fpi_zpoch = zpo_chan_fpi_map[ch];
-            zpoval = zpoffset_channel[ch];
-            if(data.fpsptr->parray[fpi_zpoch].fpflag & FPFLAG_ONOFF)
+            if( zpoffset_channel[ch] )
             {
-                zpoffset_channel[ch] = 1;
-                zpooffsetchange += 1 - zpoval;
-            }
-            else
-            {
-                zpoffset_channel[ch] = 0;
-                zpooffsetchange += zpoval;
+                zpochecksum += 1 << ch;
             }
         }
+        if( zpochecksum != zpochecksum0 )
+        {
+            zpooffsetchange = 1;
+            //printf("CHANGE TO ZPO\n");
+        }
+        zpochecksum0 = zpochecksum;
+
+        //printf("zpochecksum = %lu\n", zpochecksum);
+
+
 
         // Check if DM needs updating
         // DMupdate toggles to 1 if DM must be updated
@@ -968,17 +990,22 @@ static errno_t compute_function()
             long cnt0sum    = 0;
             long cnt0sumzpo = 0;
 
+
+            //printf("zpoffsetenable  = %lu   %lu\n", *zpoffsetenable, *zpoffsetch11);
+
             if(*astrogrid == 1)
             {
                 // exclude astrogridchan
                 for(uint32_t ch = 0; ch < *NBchannel; ch++)
                 {
+                    //printf("[astrogridON] ZPO ch %u = %d \n", ch, zpoffset_channel[ch]);
                     if(ch != *astrogridchan)
                     {
                         cnt0sum += imgch[ch].md->cnt0;
 
                         if((*zpoffsetenable == 1) && (zpoffset_channel[ch] == 1))
                         {
+//                            printf("[astrogrid ON] adding channel %u\n", ch);
                             cnt0sumzpo += imgch[ch].md->cnt0;
                         }
                     }
@@ -994,6 +1021,7 @@ static errno_t compute_function()
                         printf(" %d", zpoffset_channel[ch]);
                     }*/
 
+                    //printf("ZPO ch %u = %d \n", ch, zpoffset_channel[ch]);
                     if((*zpoffsetenable == 1) && (zpoffset_channel[ch] == 1))
                     {
                         cnt0sumzpo += imgch[ch].md->cnt0;
@@ -1011,6 +1039,8 @@ static errno_t compute_function()
                 cntsumref = cnt0sum;
                 DMupdate  = 1;
             }
+
+            processinfo_WriteMessage_fmt(processinfo, "cnt0sumzpo = %ld", cnt0sumzpo);
             if(cnt0sumzpo != cntsumrefzpo)
             {
                 //printf("cnt0sumzpo = %ld\n", cnt0sumzpo);
