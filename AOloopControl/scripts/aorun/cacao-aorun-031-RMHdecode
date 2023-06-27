@@ -43,3 +43,6 @@ EOF
 # Override measlinresp symlinking
 ln -sf ${PWD}/conf/RMmodesDM/zpokeC-H.fits ./conf/RMmodesDM/RMmodesDM.fits
 ln -sf ${PWD}/conf/RMmodesWFS/zrespM-H.fits ./conf/RMmodesWFS/RMmodesWFS.fits
+
+# load zresp to shared memory
+milk-FITS2shm "conf/RMmodesWFS/zrespM-H.fits" aol${CACAO_LOOPNUMBER}_zrespM

@@ -174,6 +174,9 @@ Then run the compstrCM process to compute CM and load it to shared memory :
 cacao-aorun-039-compstrCM
 ```
 
+Check results:
+- conf/CMmodesDM/CMmodessDM.fits
+- conf/CMmodesWFS/CMmodesWFS.fits
 
 
 ## 8. Running the loop

@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+if [ -z ${FPSLISTADDSCRIPT+x} ]; then
+	echo "Not a standalone script, must be run within cacao-fpslistadd script"
+else
+
+
+if [ "${CACAO_FPSPROC_MVMGPU_ZPO}" = "ON" ]; then
+    echolog "ON  CACAO_FPSPROC_MVM_ZPO"
+    # ======================================================================
+    # ========== MVM-compute DM command from control modes =================
+    # ======================================================================
+
+    # FPS name
+    fpsname="zpo"
+    fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+    # FPS full name
+    fpsfname="${fpsname}-${fpsarg0}"
+
+    if grep -q "${fpsname}" fpslist.txt
+    then
+        echolog "Process ${fpsname} already registered - skipping"
+    else
+        echolog "Adding process ${fpsname}"
+        echo "+milklinalgebra" >> fpslist.txt
+        echo "${fpsname}         cuda.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
+
+        addfpscmdheader
+
+        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_dmzpo"
+
+        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_dmzpo"
+        addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_zrespM"
+        addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_wfszpo"
+        addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
+
+
+        addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+
+        addfpscmd "setval ${fpsfname}.outinit OFF"
+
+        addfpscmd "setval ${fpsfname}.GPUindex 0"
+
+        addfpscmd "setval ${fpsfname}.option.axmode 1"
+        addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
+        addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+        addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
+
+        addfpscmd "setval ${fpsfname}.option.twait 0"
+
+    fi
+else
+    echolog "OFF CACAO_FPSPROC_MVM_ZPO"
+fi
+
+
+
+
+fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+

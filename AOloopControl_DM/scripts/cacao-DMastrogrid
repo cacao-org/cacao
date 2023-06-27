@@ -19,17 +19,6 @@ RequiredCommands+=(cacao-astrogrid-mkgrid)
 
 
 MSarg+=( "action:string:action (start/stop/check)" )
-source milk-argparse
-
-
-
-
-ACTION="${inputMSargARRAY[0]}"
-
-
-echo "CACAO_DMINDEX = ${CACAO_DMINDEX}"
-echo "CACAO_LOOPNAME = ${CACAO_LOOPNAME}"
-echo "fpsCTRLfifo = ${fpsCTRLfifo}"
 
 
 MSopt+=( "a:amplitude:set_amplitude:val[float]:amplitude [um] (default=0.05)" )
@@ -58,6 +47,19 @@ function set_pattern() {
 
 
 
+source milk-argparse
+
+
+
+
+ACTION="${inputMSargARRAY[0]}"
+
+
+echo "CACAO_DMINDEX = ${CACAO_DMINDEX}"
+echo "CACAO_LOOPNAME = ${CACAO_LOOPNAME}"
+echo "fpsCTRLfifo = ${fpsCTRLfifo}"
+
+
 
 
 
@@ -81,7 +83,6 @@ fi
 
 
 
-
 if [ ${ACTION} = "stop" ]; then
 
 echo "stop"
@@ -93,16 +94,10 @@ ACTIONOK=1
 fi
 
 
-
-
 if [ ${ACTION} = "check" ]; then
 	echo "check"
 	ACTIONOK=1
 fi
-
-
-
-
 
 
 
