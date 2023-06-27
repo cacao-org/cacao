@@ -554,6 +554,8 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_enablePF].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_PF_NBblock].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_PF_maxwaitus].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_PFmixcoeff].fpflag |= FPFLAG_WRITERUN;
+
 
         data.fpsptr->parray[fpi_autoloopenable].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_autoloopsleep].fpflag |= FPFLAG_WRITERUN;
@@ -1003,6 +1005,8 @@ static errno_t compute_function()
 
             if(*enablePF == 0)
             {
+                // if not running PF, apply modes to output
+                //
                 memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
                 processinfo_update_output_stream(processinfo, imgout.ID);
             }
@@ -1218,7 +1222,12 @@ static errno_t compute_function()
 
                             FILE *fpout;
                             fpout = fopen(ffname, "w");
-                            fprintf(fpout, "export CACAO_PSOL_WFSFACT=%.3f\n", (*latencysoftwfr));
+
+                            char timestring[TIMESTRINGLEN];
+                            mkUTtimestring_microsec_now(timestring);
+                            fprintf(fpout, "# %s\n", timestring);
+
+                            fprintf(fpout, "export CACAO_PSOL_WFSFACT=%.3f\n", (*psol_WFSfact));
                             fprintf(fpout, "export CACAO_LATENCYSOFTWFR=%.3f\n", (*latencysoftwfr));
                             fprintf(fpout, "export CACAO_LATENCYFR=%.3f\n", (*latencysoftwfr)+(*latencyhardwfr) );
                             fclose(fpout);

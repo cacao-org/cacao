@@ -644,7 +644,7 @@ static errno_t compute_function()
             }
             *fluxtotal = imtotal;
 
-            printf("imtotal = %f\n", imtotal);
+            //printf("imtotal = %f\n", imtotal);
 
 
             // avoiding division by zero

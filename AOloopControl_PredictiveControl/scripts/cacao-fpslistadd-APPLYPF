@@ -45,7 +45,7 @@ else
 	addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL"
 	addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
-
+	addfpscmd "setval ${fpsfname}.outPFstat aol${CACAO_LOOPNUMBER}_outPFstat"
 	addfpscmd "setval ${fpsfname}.indata aol${CACAO_LOOPNUMBER}_modevalOL"
 	addfpscmd "setval ${fpsfname}.inmask aol${CACAO_LOOPNUMBER}_blkmask${BLKindex}"
 	addfpscmd "setval ${fpsfname}.PFmat aol${CACAO_LOOPNUMBER}_outPF_blk${BLKindex}"

@@ -394,7 +394,7 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-        TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |          OL       |");
+        TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |          OL       | WFS/OL  DM/OL");
         TUI_newline();
 
         long buffWFSindex = imgmodevalWFSbuff.md->cnt0;
@@ -402,7 +402,8 @@ errno_t AOloopControl_modalstatsTUI(
         long buffOLindex = imgmodevalOLbuff.md->cnt0;
 
 
-
+        // WFS stats
+        //
         if(buffWFSindex != buffWFSindex0)
         {
             for(int32_t mi=mimin; mi<mimax; mi++)
@@ -432,6 +433,8 @@ errno_t AOloopControl_modalstatsTUI(
         }
 
 
+        // DM stats
+        //
         if(buffDMindex != buffDMindex0)
         {
             for(int32_t mi=mimin; mi<mimax; mi++)
@@ -461,6 +464,8 @@ errno_t AOloopControl_modalstatsTUI(
         }
 
 
+        // OL stats
+        //
         if(buffOLindex != buffOLindex0)
         {
             for(int32_t mi=mimin; mi<mimax; mi++)
@@ -544,7 +549,7 @@ errno_t AOloopControl_modalstatsTUI(
                 color = 4;
             }
             screenprint_setcolor(color);
-            TUI_printfw("%5.3f", WFSoverOL);
+            TUI_printfw("%6.4f", WFSoverOL);
             screenprint_unsetcolor(color);
 
             TUI_printfw("  ");
@@ -559,7 +564,7 @@ errno_t AOloopControl_modalstatsTUI(
                 color = 4;
             }
             screenprint_setcolor(color);
-            TUI_printfw("%5.3f", DMoverOL);
+            TUI_printfw("%6.4f", DMoverOL);
             screenprint_unsetcolor(color);
 
 

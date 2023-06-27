@@ -61,10 +61,6 @@ fi
 
 
 
-# ======================================================================
-# mlat
-# ======================================================================
-
 sendFPScmd "setval mlat-${CACAO_LOOPNUMBER}.wfsstream aol${CACAO_LOOPNUMBER}_imWFS2"
 sendFPScmd "confwupdate mlat-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart mlat-${CACAO_LOOPNUMBER}"

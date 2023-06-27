@@ -49,7 +49,7 @@ fi
 
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
-sendFPScmd "setval ${fpsname}-${CACAO_LOOPNUMBER}.PFlatency ${LATENCYFR}"
+sendFPScmd "setval ${fpsname}-${CACAO_LOOPNUMBER}.PFlatency ${CACAO_LATENCYFR}"
 sendFPScmd "confwupdate ${fpsname}-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart ${fpsname}-${CACAO_LOOPNUMBER}"
 
