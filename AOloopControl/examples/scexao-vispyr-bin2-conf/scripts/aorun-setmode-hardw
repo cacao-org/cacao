@@ -4,9 +4,9 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="cacao hardware configuration"
 
-MSextdescr="AO loop script"
+MSextdescr="cacao hardware configuration"
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -21,10 +21,12 @@ errexit=0
 # Checking required FPS
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
+checkFPSON CACAO_FPSPROC_COMPFCM ${CACAO_FPSPROC_COMPFCM}
 checkFPSON CACAO_FPSPROC_MEASURELINRESP ${CACAO_FPSPROC_MEASURELINRESP}
 checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
 checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
 checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
+checkFPSON CACAO_FPSPROC_MVMGPU_ZPO ${CACAO_FPSPROC_MVMGPU_ZPO}
 
 
 
@@ -39,6 +41,9 @@ exit
 fi
 
 
+sendFPScmd "setval acquWFS-0.WFSnormfloor 0.1"
+
+
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.AveMode 1"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode ON"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.volttype 2"
@@ -48,7 +53,12 @@ sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.7"
 sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.maxvolt 150.0"
 sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
 
+
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.ampl 0.03"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBave 5"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBinnerCycle 10"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 20"
 
 
 sendFPScmd "setval wfs2cmodeval-${CACAO_LOOPNUMBER}.GPUindex 1"
