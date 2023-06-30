@@ -7,8 +7,10 @@
 MSdescr="Set modal gains"
 
 MSextdescr="Set modal gains
-
 "
+
+
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -31,6 +33,9 @@ function set_mgainTT() {
 source milk-argparse
 
 
+
+
+
 # Checking stream
 streamcheckOK="OK"
 checkstream aol${CACAO_LOOPNUMBER}_mgainfact
@@ -50,7 +55,8 @@ echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
 exit
 fi
 
-echo "COMMAND $0"
+
+
 
 mgainalpha="${inputMSargARRAY[0]}"
 
