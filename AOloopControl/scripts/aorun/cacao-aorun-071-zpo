@@ -42,7 +42,7 @@ ACTIONOK=1
 
 # load zresp to shared memory
 milk-FITS2shm "conf/RMmodesWFS/zrespM-H.fits" aol${CACAO_LOOPNUMBER}_zrespM
-
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.zpoffset.enable ON"
 sendFPScmd "confwupdate zpo-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart zpo-${CACAO_LOOPNUMBER}"
 
@@ -51,6 +51,7 @@ fi
 
 if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
+sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.zpoffset.enable OFF"
 sendFPScmd "runstop zpo-${CACAO_LOOPNUMBER}"
 fi
 
