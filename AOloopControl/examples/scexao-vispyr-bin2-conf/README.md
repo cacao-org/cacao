@@ -181,6 +181,8 @@ Check results:
 
 ## 8. Running the loop
 
+### 8.1. Core processes
+
 Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 0
@@ -208,6 +210,9 @@ Closing the loop and setting loop parameters with mfilt:
 # Set loop gain
 cacao-fpsctrl setval mfilt loopgain 0.1
 
+# set modal gains
+cacao-aorun-061-setmgains 0.8 -f 0.05 -t 1.2
+
 # Set loop mult
 cacao-fpsctrl setval mfilt loopmult 0.98
 
@@ -215,6 +220,14 @@ cacao-fpsctrl setval mfilt loopmult 0.98
 cacao-fpsctrl setval mfilt loopON ON
 
 ```
+
+### 8.2. Zero Point Offsetting
+
+```bash
+cacao-aorun-071-zpo start
+```
+
+Select DM channels to be included in zpo.
 
 
 ## 9. Testing the loop
