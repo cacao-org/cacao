@@ -80,7 +80,8 @@ else
 	echo ""
 fi
 
-tail -f -n0 fpsCTRL.log  | grep --line-buffered -v "DEBUG" | tee -a ${LOGFILEEXT} | sed \
+tail -f -n0 fpsCTRL.log  | grep --line-buffered -v "DEBUG" | tee -a ${LOGFILEEXT} \
+| grep --line-buffered -v "STATUS" | sed \
     -e 's/\(CMDOK\)/\x1B[32m\1\x1B[0m/' \
     -e 's/\(ALIVE\)/\x1B[1;92m\1\x1B[0m/' \
     -e 's/\(STOPPED\)/\x1B[1;93m\1\x1B[0m/' \
