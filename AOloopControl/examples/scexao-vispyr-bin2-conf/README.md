@@ -8,12 +8,16 @@ This is a (nearly) full-featured example for a single input / single output cont
 
 ## Logging
 
-Logs appear in directory 'logdir-CACAO_LOOPNAME' one directory upstream of ROOTDIR. The directory can be created ahead of time and symlinked to logging location.
+Logs appear in directory 'logdir-CACAO_LOOPNAME' one directory upstream of LOOPROOTDIR. The directory can be created ahead of time and symlinked to logging location.
 
-A local (non-persistent) log, including DEBUG entries, is in CACAO_ROOTDIR/fpsCTRL.log. In logging mode, this log is filtered (DEBUG statements removed) and written to the log directory. Logging is OFF by default. To start logging, run from ROOTDIR, anytime after cacao-setup :
+A local (non-persistent) log, including DEBUG entries, is in CACAO_LOOPROOTDIR/fpsCTRL.log. This file is always present, and resides in ramdisk for speed.
+
+In logging mode, this log is filtered (DEBUG statements removed) and written to the log directory. Logging is OFF by default. To start logging, run from LOOPROOTDIR, anytime after cacao-setup :
 ```bash
-cacao-fpsctrl-log
+cacao-fpsctrl-log -r
 ```
+The r option rebuilds the log from the start of the UT day. Run without r option to only log from the current time, or if restarting the log.
+
 Connect to the tmux session fpsCTRLlog-cacao-CACAO_LOOPNAME to view the real-time log.
 
 

@@ -16,10 +16,19 @@ This script should be restated at each start of observation
 source milk-script-std-config
 source cacao-check-cacaovars
 
+
+
+LogRebuild=0
+MSopt+=( "r:rebuild:set_rebuild::rebuild log from start of UT day" )
+function set_rebuild() {
+	LogRebuild=1
+}
+
 source milk-argparse
 
-# logdir can be symlink (usually to current day log folder)
 
+
+# logdir can be symlink (usually to current day log folder)
 datestr="$(date -u +'%Y%m%d')"
 
 # default log directory is upstream of ROOTDIR so it persists
@@ -30,18 +39,23 @@ mkdir -p ${LOGDIR}
 LOGFILEEXT="${LOGDIR}/fpsctrl.${CACAO_LOOPNAME}.log"
 
 
-# flush output file
-if [ -f ${LOGFILEEXT} ]; then
-rm ${LOGFILEEXT}
+if [ ${LogRebuild} = 1 ]; then
+
+	# flush output file
+	if [ -f ${LOGFILEEXT} ]; then
+		rm ${LOGFILEEXT}
+	fi
+
+	# unix time at start of day (UTC)
+	# we only copy to current day
+	#
+	utimedaystart=$(date -d "$(date -u +'%Y-%m-%d UTC')" +"%s")
+
+	# write previous entries
+	awk '{if ($2>'$utimedaystart') print $0}' fpsCTRL.log | grep -v "DEBUG" >> ${LOGFILEEXT}
 fi
 
-# unix time at start of day (UTC)
-# we only copy to current day
-#
-utimedaystart=$(date -d "$(date -u +'%Y-%m-%d UTC')" +"%s")
 
-# write previous entries
-awk '{if ($2>'$utimedaystart') print $0}' fpsCTRL.log | grep -v "DEBUG" >> ${LOGFILEEXT}
 
 tail -f -n0 fpsCTRL.log  | grep --line-buffered -v "DEBUG" | tee -a ${LOGFILEEXT} | sed \
     -e 's/\(CMDOK\)/\x1B[32m\1\x1B[0m/' \

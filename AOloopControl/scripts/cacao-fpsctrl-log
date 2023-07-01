@@ -12,9 +12,15 @@ MSextdescr="Runs cacao-fpsctrl-log in tmux session
 source milk-script-std-config
 source cacao-check-cacaovars
 
+
+LogRebuild=0
+MSopt+=( "r:rebuild:set_rebuild::rebuild log from start of UT day" )
+function set_rebuild() {
+	LogRebuild=1
+}
+
 source milk-argparse
 
-# logdir can be symlink (usually to current day log folder)
 
 tmuxname="fpsCTRLlog-cacao-${CACAO_LOOPNAME}"
 
@@ -32,10 +38,16 @@ if [ $? = 0 ]; then
 fi
 set -o errexit
 
+
+
 tmux new-session -d -s ${tmuxname}
 tmux send-keys -t ${tmuxname} "bash" C-m
 
-tmux send-keys -t ${tmuxname} "cacao-fpsctrl-logprocess" C-m
 
+if [ ${LogRebuild} = 1 ]; then
+	tmux send-keys -t ${tmuxname} "cacao-fpsctrl-logprocess -r" C-m
+else
+	tmux send-keys -t ${tmuxname} "cacao-fpsctrl-logprocess" C-m
+fi
 
 

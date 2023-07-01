@@ -23,6 +23,11 @@ else
     cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
 fi
 
+# create local symlink to fast fpsCTRL log
+touch ${MILK_SHM_DIR}/fpsCTRL-${CACAO_LOOPNAME}.log
+ln -sf ${MILK_SHM_DIR}/fpsCTRL-${CACAO_LOOPNAME}.log ${CACAO_LOOPROOTDIR}/fpsCTRL.log
+
+
 # copy test configuration files to work directory
 cp ${CONFDIR}/cacaovars.bash ${CACAO_LOOPROOTDIR}/cacaovars.${CACAO_LOOPNAME}.bash
 cp ${CONFDIR}/cacao-fpslistadd-* ${CACAO_LOOPROOTDIR}/
