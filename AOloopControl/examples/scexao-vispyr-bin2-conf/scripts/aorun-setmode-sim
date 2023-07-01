@@ -42,19 +42,6 @@ sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 
 
 
-#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.normalize ON"
-#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.LOmaxCPA 3.0"
-#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.timing.NBcycle 4"
-#sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
-#sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
-
-#sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBcycle 20"
-#sendFPScmd "setval acqlin_loRM-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
-#sendFPScmd "confwupdate acqlin_loRM-${CACAO_LOOPNUMBER}"
-
-#sendFPScmd "setval compfCM-0.SVDlim 0.01"
-#sendFPScmd "confwupdate compfCM-0"
-
 
 
 # stream linking
