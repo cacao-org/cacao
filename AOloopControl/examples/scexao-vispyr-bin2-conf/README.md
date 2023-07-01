@@ -8,17 +8,27 @@ This is a (nearly) full-featured example for a single input / single output cont
 
 ## Logging
 
-Logs appear in directory 'logdir-CACAO_LOOPNAME' one directory upstream of LOOPROOTDIR. The directory can be created ahead of time and symlinked to logging location.
+There are two types of logs:
+- message (ASCII) logs recording events and settings
+- data logs recording images and streams
 
-A local (non-persistent) log, including DEBUG entries, is in CACAO_LOOPROOTDIR/fpsCTRL.log. This file is always present, and resides in ramdisk for speed.
+### Message (ASCII) logs
 
-In logging mode, this log is filtered (DEBUG statements removed) and written to the log directory. Logging is OFF by default. To start logging, run from LOOPROOTDIR, anytime after cacao-setup :
+All ASCII logs appear in directory 'logdir-CACAO_LOOPNAME' one directory upstream of LOOPROOTDIR. The directory can be created ahead of time and symlinked to the main logging location.
+
+A local (non-persistent) log, including DEBUG entries, is in MILK_SHM_DIR/fpsCTRL-CACAO_LOOPNAME.log, symlinked to CACAO_LOOPROOTDIR/fpsCTRL.log. This file is always present, and resides in ramdisk for speed.
+
+In logging mode, the ramdisk log is filtered (DEBUG statements removed) and written to the log directory. Logging is OFF by default. To start logging, run from LOOPROOTDIR, anytime after cacao-setup :
 ```bash
 cacao-fpsctrl-log -r
 ```
-The r option rebuilds the log from the start of the UT day. Run without r option to only log from the current time, or if restarting the log.
+The r option rebuilds the log from the start of the UT day. Run without r option to only log from the current time, or if restarting the log. Connect to the tmux session fpsCTRLlog-cacao-CACAO_LOOPNAME to view the real-time log status and messages.
 
-Connect to the tmux session fpsCTRLlog-cacao-CACAO_LOOPNAME to view the real-time log.
+Typing "L" in a fpsCTRL TUI will write the current value of all entries to the log. This is automatically done each time the log is (re)started so that the status of each variable can be tracked unambiguously through the log time span, and then at regular interval (can be set with -w option).
+
+### Data (stream) logs
+
+
 
 
 

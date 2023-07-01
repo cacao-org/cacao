@@ -57,8 +57,34 @@ fi
 
 
 
+tail -n 100 fpsCTRL.log  | grep --line-buffered -v "DEBUG" | sed \
+    -e 's/\(CMDOK\)/\x1B[32m\1\x1B[0m/' \
+    -e 's/\(ALIVE\)/\x1B[1;92m\1\x1B[0m/' \
+    -e 's/\(STOPPED\)/\x1B[1;93m\1\x1B[0m/' \
+    -e 's/\(CRASHED\)/\x1B[0;101m\1\x1B[0m/' \
+    -e 's/\(ONOFF ON\)/\x1B[1;92m\1\x1B[0m/' \
+    -e 's/\(ONOFF OFF\)/\x1B[1;93m\1\x1B[0m/' \
+    -e 's/\(ERROR\)/\x1B[0;101m\1\x1B[0m/' \
+    -e 's/\(CMDFAIL\)/\x1B[0;101m\1\x1B[0m/' \
+    -e 's/\(FPSCTRL\)/\x1B[1\;33m\1\x1B[0m/' \
+    -e 's/\(SETVAL\)/\x1B[1;96m\1\x1B[0m/'
+
+if [ ${LogRebuild} = 1 ]; then
+	nbloglines=$(wc -l ${LOGFILEEXT})
+	echo ""
+	echo ">>>>>>>>>>> LOGGED ${nbloglines} LINES AHEAD OF THIS POINT <<<<<<<<<<<"
+	echo ""
+else
+	echo ""
+	echo ">>>>>>>>>>> START LOGGING FROM THIS POINT <<<<<<<<<<<"
+	echo ""
+fi
+
 tail -f -n0 fpsCTRL.log  | grep --line-buffered -v "DEBUG" | tee -a ${LOGFILEEXT} | sed \
     -e 's/\(CMDOK\)/\x1B[32m\1\x1B[0m/' \
+    -e 's/\(ALIVE\)/\x1B[1;92m\1\x1B[0m/' \
+    -e 's/\(STOPPED\)/\x1B[1;93m\1\x1B[0m/' \
+    -e 's/\(CRASHED\)/\x1B[0;101m\1\x1B[0m/' \
     -e 's/\(ONOFF ON\)/\x1B[1;92m\1\x1B[0m/' \
     -e 's/\(ONOFF OFF\)/\x1B[1;93m\1\x1B[0m/' \
     -e 's/\(ERROR\)/\x1B[0;101m\1\x1B[0m/' \
