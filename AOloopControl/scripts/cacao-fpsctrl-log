@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="cacao fpsCTRL log (re)start"
+
+MSextdescr="Runs cacao-fpsctrl-log in tmux session
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+source milk-argparse
+
+# logdir can be symlink (usually to current day log folder)
+
+tmuxname="fpsCTRLlog-cacao-${CACAO_LOOPNAME}"
+
+
+# check if tmux session exists
+#
+set +o errexit
+tmux has-session -t ${tmuxname} 2>/dev/null
+if [ $? = 0 ]; then
+	# found
+	tmux send-keys -t ${tmuxname} C-c
+	tmux send-keys -t ${tmuxname} "exit" C-m
+	sleep 0.5
+	tmux kill-session -t ${tmuxname} > /dev/null
+fi
+set -o errexit
+
+tmux new-session -d -s ${tmuxname}
+tmux send-keys -t ${tmuxname} "bash" C-m
+
+tmux send-keys -t ${tmuxname} "cacao-fpsctrl-logprocess" C-m
+
+
+

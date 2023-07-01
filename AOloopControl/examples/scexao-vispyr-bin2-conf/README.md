@@ -6,6 +6,18 @@ Low-resolution WFS mode (120x120)
 This is a (nearly) full-featured example for a single input / single output control loop.
 
 
+## Logging
+
+Logs appear in directory 'logdir-CACAO_LOOPNAME' one directory upstream of ROOTDIR. The directory can be created ahead of time and symlinked to logging location.
+
+A local (non-persistent) log, including DEBUG entries, is in CACAO_ROOTDIR/fpsCTRL.log. In logging mode, this log is filtered (DEBUG statements removed) and written to the log directory. Logging is OFF by default. To start logging, run from ROOTDIR, anytime after cacao-setup :
+```bash
+cacao-fpsctrl-log
+```
+Connect to the tmux session fpsCTRLlog-cacao-CACAO_LOOPNAME to view the real-time log.
+
+
+
 # Running the example
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
@@ -35,6 +47,9 @@ cacao-loop-deploy -c scexao-vispyr-bin2
 
 # Run deployment (starts conf processes)
 cacao-loop-deploy -r scexao-vispyr-bin2
+
+
+
 
 # Note: the copy and run steps can be done at once with :
 # cacao-loop-deploy scexao-vispyr-bin2

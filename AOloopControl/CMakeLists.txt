@@ -83,6 +83,9 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao
 	scripts/cacao-check-cacaovars
 	scripts/cacao-fpsctrl
+	scripts/cacao-fpsctrl-log
+	scripts/cacao-fpsctrl-logprocess
+	scripts/cacao-fpsctrl-TUI
 	scripts/cacao-RMdecode
 	scripts/cacao-mkDMWFSmasks
 	scripts/cacao-mkDMslaveActprox

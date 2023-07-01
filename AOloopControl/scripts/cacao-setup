@@ -899,7 +899,7 @@ if [ "$UPDATEMODE" = "0" ]; then
     tmux send-keys -t ${fpsCTRLtmuxname} "TMUX=" C-m  &>> ${LOGFILENAME}
     rm -f ${fpsCTRLfifo} &> /dev/null # remove old fifo
     tmux send-keys -t ${fpsCTRLtmuxname} "source ../fpstmuxenv" C-m  &>> ${LOGFILENAME}
-    tmux send-keys -t ${fpsCTRLtmuxname} "milk-fpsCTRL -s -f ${fpsCTRLfifo}" C-m  &>> ${LOGFILENAME}
+    tmux send-keys -t ${fpsCTRLtmuxname} "MILK_FPS_LOGFILE=\"../fpsCTRL.log\" milk-fpsCTRL -s -f ${fpsCTRLfifo}" C-m  &>> ${LOGFILENAME}
 else
 	echo "Updating milk-fpsCTRL from tmux session ${fpsCTRLtmuxname}"
     tmux send-keys -t ${fpsCTRLtmuxname} "s"  &>> ${LOGFILENAME}
