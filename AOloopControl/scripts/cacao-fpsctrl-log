@@ -19,6 +19,12 @@ function set_rebuild() {
 	LogRebuild=1
 }
 
+twait="120"
+MSopt+=( "w:twait:set_twait:seconds[float]:time interval between status polls" )
+function set_twait() {
+	twait="$1"
+}
+
 source milk-argparse
 
 
@@ -31,6 +37,7 @@ set +o errexit
 tmux has-session -t ${tmuxname} 2>/dev/null
 if [ $? = 0 ]; then
 	# found
+	tmux send-keys -t ${tmuxname} "fg" C-m
 	tmux send-keys -t ${tmuxname} C-c
 	tmux send-keys -t ${tmuxname} "exit" C-m
 	sleep 0.5
@@ -45,9 +52,40 @@ tmux send-keys -t ${tmuxname} "bash" C-m
 
 
 if [ ${LogRebuild} = 1 ]; then
-	tmux send-keys -t ${tmuxname} "cacao-fpsctrl-logprocess -r" C-m
+	tmux send-keys -t ${tmuxname} "cacao-fpsctrl-logprocess -r &" C-m
 else
-	tmux send-keys -t ${tmuxname} "cacao-fpsctrl-logprocess" C-m
+	tmux send-keys -t ${tmuxname} "cacao-fpsctrl-logprocess &" C-m
 fi
+
+
+# Log current status every twait
+
+echo ""
+echo "Log processing running in tmux session ${tmuxname}"
+echo "Polling full status every ${twait} sec"
+echo "Type CTRL+C to stop polling"
+echo ""
+
+
+function cleanexit
+{
+	echo "Clean exit"
+	echo "Stopping log process in tmux ${tmuxname}"
+	tmux send-keys -t ${tmuxname} "fg" C-m
+	tmux send-keys -t ${tmuxname} C-c	
+	exit
+}
+
+trap cleanexit EXIT
+
+while [ 1 ]; do
+	sleep 0.5
+	tmuxfpsname="${CACAO_LOOPNAME}_fpsCTRL"
+	tmux send-keys -t ${tmuxfpsname} "l"
+	sleep 1
+	tmux send-keys -t ${tmuxfpsname} "L"
+
+	sleep ${twait}
+done
 
 
