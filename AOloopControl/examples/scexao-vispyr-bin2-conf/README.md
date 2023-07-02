@@ -14,19 +14,25 @@ There are two types of logs:
 
 ## Message (ASCII) logs
 
-All ASCII logs appear in directory 'logdir-CACAO_LOOPNAME' one directory upstream of LOOPROOTDIR. The directory can be created ahead of time as a symlink to the main logging location.
+All ASCII logs appear in directory 'logdir-CACAO_LOOPNAME' one directory upstream of CACAO_LOOPROOTDIR. The directory can be created ahead of time as a symlink to the main logging location. Files are organized in UT date subdirectories.
 
-### Automatic fpsCTRL logging
+### fpsCTRL logging
 
-A fpsCTRL-generate local (non-persistent) log, including DEBUG entries, is in MILK_SHM_DIR/fpsCTRL-CACAO_LOOPNAME.log, symlinked to CACAO_LOOPROOTDIR/fpsCTRL.log. This file is always present, and resides in ramdisk for speed.
+fpsCTRL output is logged in 'logdir-CACAO_LOOPNAME/DATEUT/fpsctrl.CACAO_LOOPNAME.log'
 
-In logging mode, the ramdisk log is filtered (DEBUG statements removed) and written to the log directory. Logging is OFF by default. To start logging, run from LOOPROOTDIR, anytime after cacao-setup :
+A fpsCTRL-generated local (non-persistent) log, including DEBUG entries, is in MILK_SHM_DIR/fpsCTRL-CACAO_LOOPNAME.log, symlinked to CACAO_LOOPROOTDIR/fpsCTRL.log. This file is always present, and resides in ramdisk. With logging enabled, this ramdisk log is filtered (DEBUG statements removed) and written to the log directory. Logging is OFF by default. To start logging, run from CACAO_LOOPROOTDIR, anytime after cacao-setup :
 ```bash
 cacao-fpsctrl-log -r
 ```
 The r option rebuilds the log from the start of the UT day. Run without r option to only log from the current time, or if restarting the log. Connect to the tmux session fpsCTRLlog-cacao-CACAO_LOOPNAME to view the real-time log status and messages.
 
 Typing "L" in a fpsCTRL TUI will write the current value of all entries to the log. This is automatically done each time the log is (re)started so that the status of each variable can be tracked unambiguously through the log time span, and then at regular interval (can be set with -w option).
+
+:warning: This log needs to be restarted at the beginning of each UT day.
+
+### cacao logging
+
+cacao functions and key operations are logged in 'logdir-CACAO_LOOPNAME/DATEUT/cacao.CACAO_LOOPNAME.log'
 
 
 ## Data (stream) logs
