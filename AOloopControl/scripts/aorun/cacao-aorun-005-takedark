@@ -62,6 +62,8 @@ sleep 1
 
 mkdir -p conf
 
+datestring="$(date -u +'%Y-%m-%dT%H:%M:%S.%NZ')"
+
 cacaomsglog "START acquisition"
 MILK_QUIET=1 milk << EOF
 readshmim aol${CACAO_LOOPNUMBER}_wfsim
@@ -70,15 +72,22 @@ streamave ..triggersname aol${CACAO_LOOPNUMBER}_wfsim
 streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
 streamave aol${CACAO_LOOPNUMBER}_wfsim imdark ${NBframe}
-saveFITS imdark "conf/aol${CACAO_LOOPNUMBER}_wfsdarkraw.fits"
+saveFITS imdark "conf/wfsdarkraw.${datestring}.fits"
 cpsh imdark aol${CACAO_LOOPNUMBER}_wfsdarkraw
 listim
 exitCLI
 EOF
 cacaomsglog "STOP acquisition"
+cacaomsglog "SAVING wfsdarkraw as wfsdarkraw.${datestring}.fits"
+
+
+LOGDIR="logdir/$(date -u %Y%m%d)/aol_${CACAO_LOOPNAME}/wfsdarkraw/"
+mkdir -p ${LOGDIR}
+mv wfsdarkraw.${datestring}.fits ${LOGDIR}/
 
 
 # by default, link dark to raw dark (may be overridden if mapping)
+cacaomsglog "SETTING wfsdark as wfsdarkraw.${datestring}.fits"
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm
 ln -s ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdarkraw.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm 

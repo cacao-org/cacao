@@ -57,7 +57,7 @@ fi
 
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
-
+cacaomsglog "START"
 # ======================================================================
 # Starting DM hardware delay simulator
 # ======================================================================
@@ -130,6 +130,7 @@ fi # end of if [ ${ACTION} == "start" ]
 
 if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
+cacaomsglog "STOP"
 sendFPScmd "runstop wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstop simmvmgpu-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstop DMstreamDelay-${CACAO_DMSIMINDEX}"
@@ -143,4 +144,4 @@ echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined
 fi
 
 
-
+cacaomsglog "EXIT"

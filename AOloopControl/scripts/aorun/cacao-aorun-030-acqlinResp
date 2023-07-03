@@ -53,6 +53,7 @@ checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_MEASURELINRESP}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+cacaomsglog "ERROR FPScheck"
 errexit=1
 fi
 
@@ -65,6 +66,7 @@ checkstream aol${CACAO_LOOPNUMBER}_imWFS2
 
 if [ ${streamcheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+cacaomsglog "ERROR streamcheck"
 errexit=1
 fi
 
@@ -93,7 +95,7 @@ sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.autoTiming ON"
 
 sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
-
+cacaomsglog "START"
 
 pwd
 rm -f ./conf/RMmodesDM/RMmodesDM.fits
@@ -111,3 +113,4 @@ while [ $pOK -gt 0 ]; do
 done
 fi
 
+cacaomsglog "EXIT"

@@ -37,6 +37,7 @@ checkFPSON CACAO_FPSPROC_MLAT ${CACAO_FPSPROC_MLAT}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+cacaomsglog "ERROR FPScheck"
 errexit=1
 fi
 
@@ -47,6 +48,7 @@ checkstream aol${CACAO_LOOPNUMBER}_wfsim
 
 if [ ${streamcheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+cacaomsglog "ERROR streamcheck"
 errexit=1
 fi
 
@@ -57,7 +59,7 @@ fi
 
 
 
-
+cacaomsglog "START"
 
 
 
@@ -73,3 +75,5 @@ while [ $pOK -gt 0 ]; do
 	pOK=$(ps -alx| grep mlat-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l)
 done
 fi
+
+cacaomsglog "EXIT"

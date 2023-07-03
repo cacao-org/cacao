@@ -16,7 +16,7 @@ source milk-script-std-config
 source cacao-check-cacaovars
 source milk-argparse
 
-
+cacaomsglog "START"
 
 
 errexit=0
@@ -74,3 +74,5 @@ do
      sleep 0.1
 done
 milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes
+
+cacaomsglog "END"

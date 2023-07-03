@@ -51,6 +51,7 @@ function setalpha()
 source milk-argparse
 
 
+cacaomsglog "START"
 
 echo "DM size  : $CACAO_DMxsize x $CACAO_DMysize"
 
@@ -98,9 +99,13 @@ fi
 
 
 echo "using DMx0 = ${DMx0}"
-echo "using DMy0 = ${DMy0}"
-echo "using DMr0 = ${DMr0}"
+cacaomsglog "using DMx0 = ${DMx0}"
 
+echo "using DMy0 = ${DMy0}"
+cacaomsglog "using DMy0 = ${DMy0}"
+
+echo "using DMr0 = ${DMr0}"
+cacaomsglog "using DMr0 = ${DMr0}"
 
 
 
@@ -211,4 +216,4 @@ rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
 ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 echo "ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
 
-
+cacaomsglog "END"
