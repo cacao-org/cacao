@@ -14,33 +14,42 @@ There are two types of logs:
 
 ## Message (ASCII) logs
 
-All ASCII logs appear in directory 'logdir-CACAO_LOOPNAME' one directory upstream of CACAO_LOOPROOTDIR. The directory can be created ahead of time as a symlink to the main logging location. Files are organized in UT date subdirectories.
+All ASCII logs appear in directory `logdir-$CACAO_LOOPNAME` one directory upstream of `$CACAO_LOOPROOTDIR`. The directory can be created ahead of time as a symlink to the main logging location. Files are organized in UT date subdirectories.
 
-For convenience, this directory is symlinked to `logdir` within CACAO_LOOPROOTDIR.
+For convenience, this directory is symlinked to `logdir` within `$CACAO_LOOPROOTDIR`.
 
 ### fpsCTRL logging
 
-fpsCTRL output is logged in 'logdir-$CACAO_LOOPNAME/YYYYMMDD/fpsctrl.$CACAO_LOOPNAME.log'
+fpsCTRL output is logged in `logdir-$CACAO_LOOPNAME/YYYYMMDD/fpsctrl.$CACAO_LOOPNAME.log`
 
-A fpsCTRL-generated local (non-persistent) log, including DEBUG entries, is in $MILK_SHM_DIR/fpsCTRL-$CACAO_LOOPNAME.log, symlinked to $CACAO_LOOPROOTDIR/fpsCTRL.log. This file is always present, and resides in ramdisk. With logging enabled, this ramdisk log is filtered (DEBUG statements removed) and written to the log directory. Logging is OFF by default. To start logging, run from $CACAO_LOOPROOTDIR, anytime after cacao-setup :
+A fpsCTRL-generated local (non-persistent) log, including DEBUG entries, is in `$MILK_SHM_DIR/fpsCTRL-$CACAO_LOOPNAME.log`, symlinked to `$CACAO_LOOPROOTDIR/fpsCTRL.log`. This file is always present, and resides in ramdisk. With logging enabled, this ramdisk log is filtered (DEBUG statements removed) and written to the log directory. Logging is OFF by default. To start logging, run from `$CACAO_LOOPROOTDIR`, anytime after `cacao-setup` :
 ```bash
 cacao-fpsctrl-log -r
 ```
-The r option rebuilds the log from the start of the UT day. Run without r option to only log from the current time, or if restarting the log. Connect to the tmux session fpsCTRLlog-cacao-$CACAO_LOOPNAME to view the real-time log status and messages.
+The `-r` option rebuilds the log from the start of the UT day. Run without `-r` option to only log from the current time, or if restarting the log. Connect to the tmux session `fpsCTRLlog-cacao-$CACAO_LOOPNAME` to view the real-time log status and messages.
 
-Typing "L" in a fpsCTRL TUI will write the current value of all entries to the log. This is automatically done each time the log is (re)started so that the status of each variable can be tracked unambiguously through the log time span, and then at regular interval (can be set with -w option).
+Typing `L` in a fpsCTRL TUI will write the current value of all entries to the log. This is automatically done each time the log is (re)started so that the status of each variable can be tracked unambiguously through the log time span, and then at regular interval (can be set with `-w` option).
 
 :warning: This log needs to be restarted at the beginning of each UT day.
 
-### cacao logging
+### cacao logging (automatic)
 
-cacao functions and key operations are logged in 'logdir-$CACAO_LOOPNAME/DATEUT/cacao.$CACAO_LOOPNAME.log'
+cacao functions and key operations are logged in `logdir-$CACAO_LOOPNAME/DATEUT/cacao.$CACAO_LOOPNAME.log`
 
-Log entries are added by cacao scripts, and can also be added by running the 'cacao-log' command with CACAO_LOOPROOTDIR. The syntax (not strictly enforced) is:
+Log entries are added by cacao scripts, and can also be added by running the `cacao-log` command within `$CACAO_LOOPROOTDIR`. The syntax (not strictly enforced) is:
 ```bash
-cacao-log source KEYW1 ... KEYWN message to be logged
+cacao-log KEYW1 ... KEYWN message to be logged
 ```
-Where 'source' is the scipt name, and the number of keywords can be 0(none) or more. If entering cacao-log entries outside of a script, the source field will be set to 'user'.
+Where the number of keywords can be 0(none) or more. If entering `cacao-log` entries outside of a script.
+
+### cacao logging (interactive)
+
+A CLI for logging can be stated with pre-populated keyword(s) :
+```bash
+cacao-log -i -k "WEATHER SEEING"
+```
+Multiple such CLIs may be started for quick logging. Keywords can be added and removed to the keyword list with `+ kywname` and `- keywname`.
+
 
 
 ## Data (stream) logs

@@ -4,16 +4,29 @@
 function printHELP {
 	echo "Stand-alone light logging script"
 	echo "Optimized for speed and minumal dpendencies"
+	echo "Options:"
+	echo "  -i  interactive, starts CLI"
+	echo ""
+	echo "In interactive more, type \"+ keywname\" to add a keyword with name keywname"
+	echo "Same command with - to remode the keyword"
 	echo ""
 }
 
 
-while getopts :h FLAG; do
+LOOPMODE=0
+KEYWSTRING=""
+while getopts :hik: FLAG; do
     case $FLAG in
         h)  #show help
             printHELP
             exit
             ;;
+        i)
+			LOOPMODE="1"
+			;;
+        k)
+			KEYWSTRING=$OPTARG
+			;;
         \?) #unrecognized option - show help
             echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
             printHELP
@@ -23,12 +36,40 @@ done
 shift $((OPTIND-1))
 
 
-
+if [ "$LOOPMODE" = "0" ]; then
 if [ "$#" = 0 ]; then
     echo "$(tput setaf 1)$(tput bold) Nothing to log (1+ arguments required, $# entered) $(tput sgr0)"
     echo ""
     exit
 fi
+fi
+
+
+remove_keyword() (
+  set -f
+  IFS=' '
+
+  s=${KEYWSTRING}
+  w=$1
+
+  set -- ${KEYWSTRING}
+  for arg do
+    shift
+    [ "$arg" = "$w" ] && continue
+    set -- "$@" "$arg"
+  done
+
+#	KEYWSTRING="$*"
+  printf '%s' "$*"
+#  printf '%s\n' "${KEYWSTRING}"
+)
+
+#remove_word "$FOO" "$WORDTOREMOVE"
+
+
+
+
+
 
 
 if [ -z ${CACAO_LOOPNAME+x} ]; then 
@@ -56,4 +97,25 @@ CACAO_MSGLOGFILE="${CACAO_MSGLOGDIR}/cacao.${CACAO_LOOPNAME}.log"
 
 #echo "logging to $CACAO_MSGLOGFILE"
 
-echo "$(date -u +'%Y-%m-%dT%T.%9N %s.%N') user $@" >> ${CACAO_MSGLOGFILE}
+if [ "$LOOPMODE" = "0" ]; then
+	echo "$(date -u +'%Y-%m-%dT%T.%9N %s.%N') user $@" >> ${CACAO_MSGLOGFILE}
+else
+	while [ 1 ]; do
+
+		printf "\x1B[0;105m [${KEYWSTRING}] \x1B[0m"
+		read -p " log >  " LOGTEXT
+		firstword=${LOGTEXT%% *}
+		kwname=$(echo $LOGTEXT | awk '{print $2}')
+		if [ "${firstword}" = "-" ]; then
+			KEYWSTRING="$(remove_keyword ${kwname})"
+		elif [ "${firstword}" = "+" ]; then
+			KEYWSTRING="${KEYWSTRING} ${kwname}"
+		else
+			if [ "$KEYWSTRING" = "" ]; then
+			echo "$(date -u +'%Y-%m-%dT%T.%9N %s.%N') user ${LOGTEXT}" >> ${CACAO_MSGLOGFILE}
+			else
+			echo "$(date -u +'%Y-%m-%dT%T.%9N %s.%N') user ${KEYWSTRING} ${LOGTEXT}" >> ${CACAO_MSGLOGFILE}
+			fi
+		fi
+	done	
+fi
