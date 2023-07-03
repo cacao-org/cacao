@@ -106,6 +106,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao_simLHS
 	scripts/cacao-takedark
 	scripts/cacao-task-manager
+	scripts/cacao-log
 	scripts/cacao-loop-deploy
 	scripts/cacaotask-check
 	scripts/cacaotask-INITSETUP

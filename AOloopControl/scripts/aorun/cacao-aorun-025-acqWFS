@@ -26,6 +26,9 @@ function set_WaitForCompletion() {
 
 
 source milk-argparse
+
+
+
 ACTION="${inputMSargARRAY[0]}"
 
 
@@ -46,6 +49,7 @@ checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+cacaomsglog "ERROR FPScheck"
 errexit=1
 fi
 
@@ -56,6 +60,7 @@ checkstream aol${CACAO_LOOPNUMBER}_wfsim
 
 if [ ${streamcheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+cacaomsglog "ERROR streamcheck"
 errexit=1
 fi
 
@@ -75,20 +80,26 @@ fi
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
 
+cacaomsglog "START"
+
 if [ "$CACAO_WFSSTREAM_PROCESSED" = "ON" ]; then
 echo "Processed WFS stream -> no scaling"
+cacaomsglog "INFO CACAO_WFSSTREAM_PROCESSED ON"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize OFF"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub OFF"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
 else
+cacaomsglog "INFO CACAO_WFSSTREAM_PROCESSED OFF"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize ON"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub ON"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
 fi
 
+cacaomsglog "confwupdate"
 sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
+cacaomsglog "runstart"
 sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
 
 
@@ -109,7 +120,7 @@ fi
 
 if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
-
+cacaomsglog "STOP"
 sendFPScmd "runstop acquWFS-${CACAO_LOOPNUMBER}"
 
 fi

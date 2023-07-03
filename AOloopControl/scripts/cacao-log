@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+
+function printHELP {
+	echo "Stand-alone light logging script"
+	echo "Optimized for speed and minumal dpendencies"
+	echo ""
+}
+
+
+while getopts :h FLAG; do
+    case $FLAG in
+        h)  #show help
+            printHELP
+            exit
+            ;;
+        \?) #unrecognized option - show help
+            echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
+            printHELP
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+
+
+if [ "$#" = 0 ]; then
+    echo "$(tput setaf 1)$(tput bold) Nothing to log (1+ arguments required, $# entered) $(tput sgr0)"
+    echo ""
+    exit
+fi
+
+
+if [ -z ${CACAO_LOOPNAME+x} ]; then 
+	# CACAO_LOOPNAME is unset
+	# echo "Reading LOOPNAME from file"
+	if [ -f "LOOPNAME" ]; then
+		CACAO_LOOPNAME=$(<LOOPNAME)
+		# echo "LOOPNAME = ${CACAO_LOOPNAME}"
+	else
+		echo "no file LOOPNAME - can't log"
+		echo "make sure you run cacao-log from a CACAO_LOOPROOTDIR directory"
+	exit
+	fi
+fi
+
+# logdir can be symlink (usually to current day log folder)
+datestr="$(date -u +'%Y%m%d')"
+
+# default log directory is upstream of CACAO_LOOPROOTDIR so it persists
+#
+CACAO_MSGLOGDIR="../logdir-${CACAO_LOOPNAME}/${datestr}"
+mkdir -p ${CACAO_MSGLOGDIR}
+
+CACAO_MSGLOGFILE="${CACAO_MSGLOGDIR}/cacao.${CACAO_LOOPNAME}.log"
+
+#echo "logging to $CACAO_MSGLOGFILE"
+
+echo "$(date -u +'%Y-%m-%dT%T.%9N %s.%N') user $@" >> ${CACAO_MSGLOGFILE}

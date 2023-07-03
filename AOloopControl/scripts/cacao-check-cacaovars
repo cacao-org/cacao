@@ -147,6 +147,18 @@ RequiredCommands=( tmux milk )
 RequiredPipes=( ${fpsCTRLfifo} )
 RequiredDirs=()
 
+# SET LOG DIRECTORIES
+datestr="$(date -u +'%Y%m%d')"
+# default log directory is upstream of CACAO_LOOPROOTDIR so it persists
+#
+CACAO_LOGDIR="../logdir-${CACAO_LOOPNAME}/${datestr}"
+mkdir -p ${CACAO_LOGDIR}
+CACAO_MSGLOGFILE="${CACAO_LOGDIR}/cacao.${CACAO_LOOPNAME}.log"
+
+function cacaomsglog {
+	echo "$(date -u +'%Y-%m-%dT%T.%9N %s.%N') $(basename $0) $1" >> ${CACAO_MSGLOGFILE}
+}
+
 
 # source all datadir cacaovars
 for f in */*.datadir/cacaovars.bash; do

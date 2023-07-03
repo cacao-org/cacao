@@ -30,6 +30,7 @@ echo "FPScheckOK = ${FPScheckOK}"
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+cacaomsglog "ERROR FPScheck"
 exit
 fi
 
@@ -38,6 +39,7 @@ fi
 
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
+cacaomsglog "START"
 # ======================================================================
 # Starting DM combination process
 # ======================================================================
@@ -63,6 +65,7 @@ fi
 
 if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
+cacaomsglog "STOP"
 sendFPScmd "runstop DMch2disp-${CACAO_DMSIMINDEX}"
 fi
 
@@ -72,3 +75,5 @@ fi
 if [ ${ACTIONOK} == 0 ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
 fi
+
+cacaomsglog "END"
