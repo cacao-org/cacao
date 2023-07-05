@@ -78,12 +78,16 @@ listim
 exitCLI
 EOF
 cacaomsglog "STOP acquisition"
-cacaomsglog "SAVING wfsdarkraw as wfsdarkraw.${datestring}.fits"
+cacaomsglog "SAVED wfsdarkraw as conf/wfsdarkraw.${datestring}.fits"
 
 
-LOGDIR="logdir/$(date -u %Y%m%d)/aol_${CACAO_LOOPNAME}/wfsdarkraw/"
+cacaomsglog "SAVING to logdir"
+LOGDIR="logdir/$(date -u +'%Y%m%d')/aol_${CACAO_LOOPNAME}/wfsdarkraw/"
+daystring="$(date -u +'%Y%m%d')"
 mkdir -p ${LOGDIR}
-mv wfsdarkraw.${datestring}.fits ${LOGDIR}/
+cacaomsglog "cp conf/wfsdarkraw.${datestring}.fits ${LOGDIR}/"
+cp conf/wfsdarkraw.${datestring}.fits ${LOGDIR}/
+
 
 
 # by default, link dark to raw dark (may be overridden if mapping)
