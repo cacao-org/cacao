@@ -23,9 +23,17 @@ else
     cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
 fi
 
+
+# LOGGING
+
 # create local symlink to fast fpsCTRL log
 touch ${MILK_SHM_DIR}/fpsCTRL-${CACAO_LOOPNAME}.log
 ln -sf ${MILK_SHM_DIR}/fpsCTRL-${CACAO_LOOPNAME}.log ${CACAO_LOOPROOTDIR}/fpsCTRL.log
+
+# create log directory upstream of CACAO_LOOPROOTDIR
+mkdir -p logdir-${CACAO_LOOPNAME}
+# symlink it
+ln -sf $(pwd)/logdir-${CACAO_LOOPNAME} ${CACAO_LOOPROOTDIR}/logdir
 
 
 # copy test configuration files to work directory

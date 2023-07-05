@@ -806,12 +806,13 @@ echo "${CACAO_LOOPNUMBER}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNUMBER
 echo "source ../cacaovars.*" > ${CACAO_LOOPRUNDIR}/fpstmuxenv
 
 
-# create symlink to data storage
-if [ ! -d ${CACAO_LOOPDATALOGDIR} ]; then
-    echo "  ${CACAO_LOOPDATALOGDIR}"
-    mkdir -p ${CACAO_LOOPDATALOGDIR}
-fi
-ln -s ${CACAO_LOOPDATALOGDIR} ${CACAO_LOOPROOTDIR}/aoldatadir
+# create symlink to logging directory
+
+#if [ ! -d ${CACAO_LOOPDATALOGDIR} ]; then
+#    echo "  ${CACAO_LOOPDATALOGDIR}"
+#    mkdir -p ${CACAO_LOOPDATALOGDIR}
+#fi
+#ln -s ${CACAO_LOOPDATALOGDIR} ${CACAO_LOOPROOTDIR}/aoldatadir
 
 
 
