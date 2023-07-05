@@ -167,3 +167,10 @@ for f in */*.datadir/cacaovars.bash; do
 		source ${f}
 	fi
 done;
+
+# update system cacaoloop record
+#
+CACAOLOOPRECORD="${MILK_SHM_DIR}/cacaoloop-${CACAO_LOOPNUMBER}"
+mkdir -p ${CACAOLOOPRECORD}
+echo "$0" > ${CACAOLOOPRECORD}/access-script
+

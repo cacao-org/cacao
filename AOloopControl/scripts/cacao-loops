@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="list cacao loops on system"
+
+MSextdescr="List cacao loops
+
+This script can run from anywhere on system
+"
+
+source milk-script-std-config
+
+
+source milk-argparse
+
+echo ""
+echo "cacao loops on system :"
+echo ""
+
+for LOOP in {1..100}
+do
+	loopdir=${MILK_SHM_DIR}/cacaoloop-${LOOP}
+	#echo "loopdir = ${loopfile}"
+	if [ -d "${loopdir}" ]; then
+		
+		if [ -f "$loopdir/loopname" ]; then
+			loopname=$( cat $loopdir/loopname )
+		else
+			loopname="undef"
+		fi
+
+		if [ -f "$loopdir/looprootdir" ]; then
+			rootdir=$( cat $loopdir/looprootdir )
+		else
+			rootdir="undef"
+		fi
+
+		if [ -f "$loopdir/access-script" ]; then
+			accessscript=$( cat $loopdir/access-script )
+			accesstime=$(stat -c %y "$loopdir/access-script" )
+		else
+			accessscript="undef"
+			accesstime="N/A"
+		fi
+
+		if [ -f "$loopdir/dmindex" ]; then
+			loopdm=$( cat $loopdir/dmindex )
+		else
+			loopdm="-1"
+		fi
+
+		if [ -f "$loopdir/dmxsize" ]; then
+			dmxsize=$( cat $loopdir/dmxsize )
+		else
+			dmxsize="-1"
+		fi
+
+		if [ -f "$loopdir/dmysize" ]; then
+			dmysize=$( cat $loopdir/dmysize )
+		else
+			dmysize="-1"
+		fi
+		
+		printf "LOOP %2d using DM %02d ( %d x %d )  NAME: %s\n" ${LOOP} ${loopdm} ${dmxsize} ${dmysize} "${loopname}"
+		printf "rootdir     : ${rootdir}\n"
+		printf "Last access script : ${accessscript}\n"
+		printf "Last access time   : $accesstime\n"
+		echo ""
+	fi
+   
+done
+

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+CMDLIST=$(compgen -c "cacao-" | sort -u )
+
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+for cmd in $CMDLIST; do
+
+	helpline=$( $cmd -hs | head -n 1 )
+
+	printf "${GREEN}%32s${NC} %s\n" "$cmd" "$helpline"
+
+done

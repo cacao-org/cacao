@@ -82,11 +82,13 @@ install(TARGETS ${LIBNAME} DESTINATION lib)
 install(PROGRAMS scripts/cacao-setup
 	scripts/cacao
 	scripts/cacao-check-cacaovars
+	scripts/cacao-commands
 	scripts/cacao-fpsctrl
 	scripts/cacao-fpsctrl-log
 	scripts/cacao-fpsctrl-logprocess
 	scripts/cacao-fpsctrl-TUI
 	scripts/cacao-RMdecode
+	scripts/cacao-loops
 	scripts/cacao-mkDMWFSmasks
 	scripts/cacao-mkDMslaveActprox
 	scripts/cacao-mkLODMmodes

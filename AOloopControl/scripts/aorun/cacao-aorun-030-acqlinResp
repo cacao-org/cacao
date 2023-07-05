@@ -4,7 +4,7 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="cacao script: measure WFS response to DM modes"
+MSdescr="Measure WFS response to DM modes"
 
 MSextdescr="
 Input DM modes in:

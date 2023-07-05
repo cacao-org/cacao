@@ -984,6 +984,17 @@ echo "To enter control screen: tmux a -t ${CACAO_LOOPNAME}_fpsCTRL"
 echo ""
 echo ""
 
+# update system cacaoloop record
+#
+CACAOLOOPRECORD="${MILK_SHM_DIR}/cacaoloop-${CACAO_LOOPNUMBER}"
+mkdir -p ${CACAOLOOPRECORD}
+echo "$0" > ${CACAOLOOPRECORD}/access-script
+echo "${CACAO_LOOPNAME}" > ${CACAOLOOPRECORD}/loopname
+echo "${CACAO_LOOPROOTDIR_FULLPATH}" > ${CACAOLOOPRECORD}/looprootdir
+echo "${CACAO_DMxsize}" > ${CACAOLOOPRECORD}/dmxsize
+echo "${CACAO_DMysize}" > ${CACAOLOOPRECORD}/dmysize
+echo "${CACAO_DMINDEX}" > ${CACAOLOOPRECORD}/dmindex
+echo "${CACAO_WFSSTREAM}" > ${CACAOLOOPRECORD}/wfsim
 
 
 # finished - get back to current directory

@@ -5,12 +5,16 @@
 
 # script 1-line description
 MSdescr="Take WFS camera dark frame"
+
+
 # Extended description
 MSextdescr="Reads from aolX_wfsim stream
 Averages a number of frames
 Saes into stream aolX_wfsdarkraw
 Make aolX_wfsdark sym link pointer to aolX_wfsdarkraw
 Saves dark as conf/aolX_wfsdarkraw.fits"
+
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
