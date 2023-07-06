@@ -4,9 +4,11 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="cacao hardware configuration"
+MSdescr="set hardware configuration"
 
-MSextdescr="cacao hardware configuration"
+MSextdescr="Hardware mode
+"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -21,11 +23,9 @@ errexit=0
 # Checking required FPS
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
-checkFPSON CACAO_FPSPROC_MEASURELINRESP ${CACAO_FPSPROC_MEASURELINRESP}
 checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
 checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
 checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
-checkFPSON CACAO_FPSPROC_MVMGPU_ZPO ${CACAO_FPSPROC_MVMGPU_ZPO}
 
 
 
@@ -100,3 +100,11 @@ ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${CACA
 ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmturb.im.shm
 
 ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
+
+
+# update system cacaoloop record
+#
+CACAOLOOPRECORD="${MILK_SHM_DIR}/cacaoloop-${CACAO_LOOPNUMBER}"
+mkdir -p ${CACAOLOOPRECORD}
+echo "${CACAO_DMINDEX}" > ${CACAOLOOPRECORD}/dmindex
+echo "${CACAO_WFSSTREAM}" > ${CACAOLOOPRECORD}/wfsim

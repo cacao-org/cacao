@@ -4,9 +4,11 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="set simulator configuration"
 
-MSextdescr="AO loop script"
+MSextdescr="Simulation mode
+"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -18,7 +20,7 @@ source milk-argparse
 
 errexit=0
 
-# Checking FPS
+# Checking required FPS
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
 #checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_ACQLINZRM}
@@ -76,3 +78,11 @@ ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${C
 ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmturb.im.shm
 
 ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
+
+
+# update system cacaoloop record
+#
+CACAOLOOPRECORD="${MILK_SHM_DIR}/cacaoloop-${CACAO_LOOPNUMBER}"
+mkdir -p ${CACAOLOOPRECORD}
+echo "${CACAO_DMSIMINDEX}" > ${CACAOLOOPRECORD}/dmindex
+echo "${CACAO_WFSSTREAMSIM}" > ${CACAOLOOPRECORD}/wfsim
