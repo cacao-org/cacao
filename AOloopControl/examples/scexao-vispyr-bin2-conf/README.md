@@ -55,18 +55,20 @@ cd vispyr2-rootdir
 
 ### Logging and fpsCTRL start
 
-Start automatic fpsCTRL logging
+Deploy logging processes and terminals :
 ```bash
-cacao-fpsctrl-log -r
+cacao-log-setup
 ```
-Check output on tmux session:
+
+The command is equivalent to running in seprate windows :
 ```bash
+# Start automatic fpsCTRL logging
+cacao-fpsctrl-log -r &
+
+# Check output on tmux session
 tmux a -t fpsCTRLlog-cacao-vispyr2
-```
 
-Start interactive logging terminal:
-
-```bash
+# Start interactive logging terminal
 cacao-log -k "OPNOTES" -i
 ```
 

@@ -4,9 +4,10 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Compute Fourier-based control modes"
 
-MSextdescr="AO loop script"
+MSextdescr="Fourier- based CM"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 source milk-argparse

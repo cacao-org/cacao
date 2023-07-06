@@ -90,7 +90,6 @@ sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.streamout aol${CACAO_LOOPNUMB
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.inmodes ../conf/RMmodesDM/${DMmodeCname}.fits"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.outmodes ../conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits"
 
-sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.autoTiming ON"
 
 
 sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"

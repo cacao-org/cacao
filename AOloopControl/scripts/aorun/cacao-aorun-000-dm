@@ -4,14 +4,29 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Deformable mirror (DM) control"
+
+
 # Extended description
-MSextdescr="AO loop script"
+MSextdescr="DM control
+
+Creates multiple DM control channels.
+Re-computes sums of DM channels whenever needed.
+
+DM channels (by default 12) are dm${DMindex}disp<channel>
+"
+
+
 source milk-script-std-config
+
 source cacao-check-cacaovars
 
 MSarg+=( "action:string:action (start/stop/check)" )
+
+
 source milk-argparse
+
+
 ACTION="${inputMSargARRAY[0]}"
 
 
@@ -47,6 +62,8 @@ fi
 
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
+cacaomsglog "START"
+
 # ======================================================================
 # Starting DM combination process
 # ======================================================================
@@ -67,13 +84,14 @@ do
 done
 milk-shmim-zero aol${CACAO_LOOPNUMBER}_dmC
 else
-echo "DM already running -> nothing to do"
+cacaomsglog "DM already running -> nothing to do"
 fi
 fi
 
 
 if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
+cacaomsglog "STOP"
 sendFPScmd "runstop DMch2disp-${CACAO_DMINDEX}"
 fi
 
@@ -82,4 +100,9 @@ fi
 
 if [ ${ACTIONOK} == 0 ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+cacaomsglog "ERROR action undefined"
 fi
+
+
+cacaomsglog "END"
+

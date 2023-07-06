@@ -87,28 +87,26 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-fpsctrl-log
 	scripts/cacao-fpsctrl-logprocess
 	scripts/cacao-fpsctrl-TUI
-	scripts/cacao-RMdecode
+#	scripts/cacao-RMdecode
 	scripts/cacao-loops
-	scripts/cacao-mkDMWFSmasks
-	scripts/cacao-mkDMslaveActprox
-	scripts/cacao-mkLODMmodes
+#	scripts/cacao-mkLODMmodes
 	scripts/cacao-NULL
 	scripts/cacao-calib-archive
 	scripts/cacao-calib-apply
 	scripts/cacao-calib-archivecurrent
 	scripts/cacao-exec
 	scripts/cacao.tmux
-	scripts/cacao-fpsarchive
 	scripts/cacao-fpslistadd
 	scripts/cacao-fpslistadd-MODALCTRL_STATS
 	scripts/cacao-fpslistadd-MODALFILTERING
 	scripts/cacao-fpslistadd-MVMGPU_ZPO
 	scripts/cacao-modalstatsTUI
-	scripts/cacao-setDMnolink
+#	scripts/cacao-setDMnolink
 	scripts/cacao_simLHS
 	scripts/cacao-takedark
 	scripts/cacao-task-manager
 	scripts/cacao-log
+	scripts/cacao-log-setup
 	scripts/cacao-loop-deploy
 	scripts/cacaotask-check
 	scripts/cacaotask-INITSETUP
@@ -129,7 +127,6 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-031-RMHdecode
 	scripts/aorun/cacao-aorun-032-RMmkmask
 	scripts/aorun/cacao-aorun-033-RM-mksynthetic
-	scripts/aorun/cacao-aorun-035-acqloRM
 	scripts/aorun/cacao-aorun-039-compstrCM
 	scripts/aorun/cacao-aorun-040-compfCM
 	scripts/aorun/cacao-aorun-041-loadCM

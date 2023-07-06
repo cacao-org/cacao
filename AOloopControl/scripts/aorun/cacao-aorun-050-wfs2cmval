@@ -4,9 +4,11 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="WFS to mode values"
 
-MSextdescr="AO loop script"
+MSextdescr="WFS to mode values
+"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -29,6 +31,7 @@ checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+cacaomsglog "ERROR failed FPS check"
 exit
 fi
 
@@ -36,6 +39,7 @@ fi
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
 
+cacaomsglog "START"
 sendFPScmd "confwupdate wfs2cmodeval-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart wfs2cmodeval-${CACAO_LOOPNUMBER}"
 
@@ -45,11 +49,16 @@ fi
 
 if [ ${ACTION} == "stop" ]; then
 ACTIONOK=1
+
+cacaomsglog "STOP"
 sendFPScmd "runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
 fi
 
 
 
 if [ ${ACTIONOK} == 0 ]; then
+cacaomsglog "ERROR undefined action"
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
 fi
+
+cacaomsglog "END"

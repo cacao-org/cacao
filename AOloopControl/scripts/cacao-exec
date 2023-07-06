@@ -1,12 +1,16 @@
 #!/bin/bash
 
+if [ "$1" = "-hs" ]; then
+	printf "Run command inside cacao CLI"
+	exit
+fi
 
 # number of arguments to script
 NBARGS=1
 
 # ======================= PROCESS NAME =================================
 pname=`echo "$0" | sed "s/\.\///g"`
-echo "pname = $pname"
+#echo "pname = $pname"
 
 
 function printHELP {

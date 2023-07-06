@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 echo "Checking for cacaovars"
 
 # ensure there is a single cacaovar file
@@ -10,7 +11,7 @@ for f in cacaovars.*.bash; do
 		((fnb=fnb+1))
 		filename="$f"
 	fi
-done;
+done
 
 errstatus="0"
 
@@ -21,11 +22,12 @@ if [ ${fnb} == 1 ]; then
 else
 	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Found ${fnb} cacaovar file(s). Need 1 cacaovar file to proceed"
 	errstatus="1"
-fi;
+fi
 
 
-
-
+# Are we in help mode ?
+# don't check compliance if help mode
+if [ "${MILKSCRIPTMODE}" != "help" ]; then
 
 
 if [ -z ${CACAO_LOOPNAME+x} ]; then
@@ -173,4 +175,7 @@ done;
 CACAOLOOPRECORD="${MILK_SHM_DIR}/cacaoloop-${CACAO_LOOPNUMBER}"
 mkdir -p ${CACAOLOOPRECORD}
 echo "$0" > ${CACAOLOOPRECORD}/access-script
+
+fi
+
 

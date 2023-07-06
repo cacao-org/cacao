@@ -9,6 +9,39 @@
 # - fpssetup.setval files created
 
 
+function printHELP 
+{
+	echo "Add FPS entries to fpslist file"
+	echo ""
+	echo "Runs from CACAO_LOOPROOTDIR"
+	echo ""
+	echo "For each FPS-enabled process:"
+	echo " - entry is added to fpslist.txt file"
+	echo " - fpssetup.setval files created"
+}
+
+
+MILKSCRIPTMODE=""
+if [ "$#" -ge 1 ]; then
+
+	# Print one line help and exit
+	if [ "$1" = "-hs" ]; then
+		printf "%s\n" "Add FPS entries to fpslist file"
+	exit
+	fi
+
+	if [ "$1" = "-h" ]; then
+		MILKSCRIPTMODE="help"
+		printHELP
+		exit
+	fi
+	
+fi
+
+
+
+
+
 touch fpslist.txt
 
 # communicate to subscripts they are being sourced from the main script
@@ -360,7 +393,6 @@ if [ "${CACAO_FPSPROC_ACQLINZRM}" = "ON" ]; then
         # default startup values
         addfpscmd "setval ${fpsfname}.normalize ON"
         addfpscmd "setval ${fpsfname}.Hpoke ON"
-        addfpscmd "setval ${fpsfname}.autoTiming ON"
         addfpscmd "setval ${fpsfname}.compDMmask ON"
         addfpscmd "setval ${fpsfname}.compMpoke ON"
 

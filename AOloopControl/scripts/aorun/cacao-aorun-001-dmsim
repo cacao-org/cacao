@@ -4,9 +4,14 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Simulation DM"
+
 # Extended description
-MSextdescr="AO loop script"
+MSextdescr="Simulation DM
+
+Starts DM control for simulated DM
+"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
