@@ -16,7 +16,7 @@ FILE_Hmat="conf/RMmodesDM/Hmat.fits"
 FILE_HpokeC="conf/RMmodesDM/HpokeC.fits"
 FILE_HrespC="conf/RMmodesWFS/HpokeC.WFSresp.fits"
 
-RequiredFiles=( $FILE_Hipixindex $FILE_Hmat $FILE_HpokeC $FILE_HrespC )
+RequiredFiles=( ${FILE_Hipixindex} ${FILE_Hmat} ${FILE_HpokeC} ${FILE_HrespC} )
 
 
 # SCRIPT OPTIONS
