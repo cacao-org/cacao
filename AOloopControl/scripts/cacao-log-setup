@@ -20,6 +20,15 @@ RequiredDirs=()
 source milk-argparse
 
 
+# log directory
+mkdir -p ../logdir-${LOOPNAME}
+mkdir -p ../logdir-${LOOPNAME}/$(date -u +'%Y%m%d')
+
+# make local dir pointing to upstream log
+rm -rf logdir
+ln -sf $(pwd)/../logdir-${LOOPNAME}/$(date -u +'%Y%m%d') logdir
+
+
 
 tmuxname="cacaolog-${CACAO_LOOPNAME}"
 # kill session if it does not exist
