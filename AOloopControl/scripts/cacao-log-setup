@@ -63,4 +63,5 @@ if [ ! -f ${logfname} ]; then
 	echo "Creating file ${logfname}"
 	touch ${logfname}
 fi
-xterm -geometry 160x20 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-output (CTRL+C to exit)" -e "tail -f ${logfname}; sleep 1" &
+echo "Message log : ${logfname}"
+xterm -geometry 160x20 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-output (CTRL+C to exit)" -e "sleep 1; tail -f ${logfname}; sleep 1" &
