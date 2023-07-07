@@ -42,7 +42,7 @@ xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false
 xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-input (CTRL+C to exit)" -e "cacao-log -k \"WEATHER\" -i; sleep 1" &
 
 
-logdname="logdir/$(date -u +\"%Y%m%d\")"
+logdname="logdir/$(date -u +'%Y%m%d')"
 echo "LOG DIRNAME = ${logdname}"
 mkdir -p ${logdname}
 logfname="${logdname}/cacao.${CACAO_LOOPNAME}.log"
