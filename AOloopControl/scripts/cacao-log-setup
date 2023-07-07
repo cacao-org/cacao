@@ -20,10 +20,15 @@ RequiredDirs=()
 source milk-argparse
 
 tmuxname="cacaolog-${CACAO_LOOPNAME}"
+
+# kill session if it does not exist
+set +e
 tmux send-keys -t ${tmuxname} C-c
 tmux send-keys -t ${tmuxname} "exit" C-m
 tmux kill-session -t ${tmuxname}
 sleep 1
+set -e
+
 tmux new-session -d -s ${tmuxname}
 tmux send-keys -t ${tmuxname} "cacao-fpsctrl-log -r" C-m
 sleep 1

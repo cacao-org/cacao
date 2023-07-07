@@ -99,7 +99,7 @@ function set_fpsset {
 }
 
 UPDATEMODE="0"
-MSopt+=( "u:update:set_updatemode::update more: do not quit/restart processes" )
+MSopt+=( "u:update:set_updatemode::update mode, do not quit/restart processes" )
 function set_updatemode {
 	UPDATEMODE="1"
 }
