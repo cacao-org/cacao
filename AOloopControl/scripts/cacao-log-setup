@@ -43,6 +43,7 @@ xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false
 
 
 logdname="logdir/$(date -u +\"%Y%m%d\")"
+echo "LOG DIRNAME = ${logdname}"
 mkdir -p ${logdname}
 logfname="${logdname}/cacao.${CACAO_LOOPNAME}.log"
 if [ ! -f ${logfname} ]; then
