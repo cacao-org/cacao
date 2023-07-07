@@ -35,7 +35,7 @@ sleep 1
 
 
 # start windows
-xterm -geometry 160x40 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "fpsCTRLlog-${CACAO_LOOPNAME} (CTRL+B D to exit)" -e "tmux a -t fpsCTRLlog-cacao-${CACAO_LOOPNAME}; sleep 1" &
+xterm -geometry 160x40 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "fpsCTRLlog-${CACAO_LOOPNAME} (CTRL+B D to exit)" -e "tmux a -t fpsCTRLlog-cacao-${CACAO_LOOPNAME}; sleep 10" &
 
 xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-input (CTRL+C to exit)" -e "cacao-log -k \"OPNOTES\" -i; sleep 1" &
 
@@ -48,4 +48,4 @@ logfname="${logdname}/cacao.${CACAO_LOOPNAME}.log"
 if [ ! -f ${logfname} ]; then
 	touch ${logfname}
 fi
-xterm -geometry 160x20 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-output (CTRL+C to exit)" -e "tail -f ${logfname}; sleep 1" &
+xterm -geometry 160x20 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-output (CTRL+C to exit)" -e "tail -f ${logfname}; sleep 10" &
