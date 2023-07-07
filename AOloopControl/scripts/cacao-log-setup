@@ -26,6 +26,7 @@ mkdir -p ../logdir-${CACAO_LOOPNAME}/$(date -u +'%Y%m%d')
 
 # make local dir pointing to upstream log
 rm -rf logdir
+echo "ln -sf $(pwd)/../logdir-${CACAO_LOOPNAME}/$(date -u +'%Y%m%d') logdir"
 ln -sf $(pwd)/../logdir-${CACAO_LOOPNAME}/$(date -u +'%Y%m%d') logdir
 
 
