@@ -21,12 +21,12 @@ source milk-argparse
 
 
 # log directory
-mkdir -p ../logdir-${LOOPNAME}
-mkdir -p ../logdir-${LOOPNAME}/$(date -u +'%Y%m%d')
+mkdir -p ../logdir-${CACAO_LOOPNAME}
+mkdir -p ../logdir-${CACAO_LOOPNAME}/$(date -u +'%Y%m%d')
 
 # make local dir pointing to upstream log
 rm -rf logdir
-ln -sf $(pwd)/../logdir-${LOOPNAME}/$(date -u +'%Y%m%d') logdir
+ln -sf $(pwd)/../logdir-${CACAO_LOOPNAME}/$(date -u +'%Y%m%d') logdir
 
 
 
