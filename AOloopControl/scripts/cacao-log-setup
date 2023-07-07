@@ -41,4 +41,9 @@ xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false
 
 xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-input (CTRL+C to exit)" -e "cacao-log -k \"WEATHER\" -i; sleep 1" &
 
-xterm -geometry 160x20 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-output (CTRL+C to exit)" -e "tail -f logdir/$(date -u +\"%Y%m%d\")/cacao.vispyr2.log; sleep 1" &
+
+logfname="logdir/$(date -u +\"%Y%m%d\")/cacao.${CACAO_LOOPNAME}.log"
+if [ ! -f ${logfname} ]; then
+	touch ${logfname}
+fi
+xterm -geometry 160x20 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-output (CTRL+C to exit)" -e "tail -f ${logfname}; sleep 1" &
