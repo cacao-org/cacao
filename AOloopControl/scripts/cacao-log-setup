@@ -19,8 +19,9 @@ RequiredDirs=()
 
 source milk-argparse
 
-tmuxname="cacaolog-${CACAO_LOOPNAME}"
 
+
+tmuxname="cacaolog-${CACAO_LOOPNAME}"
 # kill session if it does not exist
 set +e
 tmux send-keys -t ${tmuxname} C-c
@@ -34,13 +35,15 @@ tmux send-keys -t ${tmuxname} "cacao-fpsctrl-log -r" C-m
 sleep 1
 
 
+
+
 # start windows
 echo "Connecting to tmux session fpsCTRLlog-cacao-${CACAO_LOOPNAME}"
-xterm -geometry 160x40 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "fpsCTRLlog-${CACAO_LOOPNAME} (CTRL+B D to exit)" -e "tmux a -t fpsCTRLlog-cacao-${CACAO_LOOPNAME}; sleep 10" &
+xterm -geometry 160x40 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "fpsCTRLlog-${CACAO_LOOPNAME} (CTRL+B D to exit)" -e "tmux ls; tmux ls| grep fpsCTRLlog-cacao-${CACAO_LOOPNAME}; sleep 10" &
 
 xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-input (CTRL+C to exit)" -e "cacao-log -k \"OPNOTES\" -i; sleep 1" &
 
-xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-input (CTRL+C to exit)" -e "cacao-log -k \"WEATHER\" -i; sleep 1" &
+xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Weatherlog-${CACAO_LOOPNAME}-input (CTRL+C to exit)" -e "cacao-log -k \"WEATHER\" -i; sleep 1" &
 
 
 logdname="logdir/$(date -u +'%Y%m%d')"
