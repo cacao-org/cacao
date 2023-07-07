@@ -63,9 +63,9 @@ fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
 #
 cat <<EOT >>  ${CLEANSCRIPT}
 
-rm ${CACAO_LOOPROOTDIR}/cacaovars.${CACAO_LOOPNAME}.bash
-rm ${CACAO_LOOPROOTDIR}/fpssetup.setval.${CACAO_LOOPNAME}.conf
-rm ${CACAO_LOOPROOTDIR}/aorun-*
+rm -f ${CACAO_LOOPROOTDIR}/cacaovars.${CACAO_LOOPNAME}.bash
+rm -f ${CACAO_LOOPROOTDIR}/fpssetup.setval.${CACAO_LOOPNAME}.conf
+rm -f ${CACAO_LOOPROOTDIR}/aorun-*
 
 echo "Waiting for tmux session ${fpsCTRLtmuxname} to termninate"
 

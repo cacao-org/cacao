@@ -1,45 +1,52 @@
 #!/usr/bin/env bash
 
 if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	echo "Not a standalone script, must be run within cacao-fpslistadd script"
+	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: DM atmospheric turbulence"
 else
 
-if [ "${CACAO_FPSPROC_DMATMTURB}" = "ON" ]; then
+	if [ ! -z "${CACAO_FPSPROC_DMATMTURB+x}" ]; then
+		echo "CACAO_FPSPROC_DMATMTURB set to ${CACAO_FPSPROC_DMATMTURB}"
 
-	echolog "ON  CACAO_FPSPROC_DMATMTURB"
-	# ==============================================================================
-	# ========== DM Atmospheric Turbulence simulator ===============================
-	# ==============================================================================
+		if [ "${CACAO_FPSPROC_DMATMTURB}" = "ON" ]; then
+			echolog "ON  CACAO_FPSPROC_DMATMTURB"
+			# ==============================================================================
+			# ========== DM Atmospheric Turbulence simulator ===============================
+			# ==============================================================================
 
-	# FPS name
-	fpsname="DMatmturb"
-	fpsarg0="${CACAO_DMINDEX}"
-	DMTURBCHAN="10"
+			# FPS name
+			fpsname="DMatmturb"
+			fpsarg0="${CACAO_DMINDEX}"
+			DMTURBCHAN="10"
 
-	# FPS full name
-	fpsfname="${fpsname}-${fpsarg0}"
+			# FPS full name
+			fpsfname="${fpsname}-${fpsarg0}"
 
-	if grep -q "${fpsname}" fpslist.txt
-	then
-		echolog "Process ${fpsname} already registered - skipping"
+			if grep -q "${fpsname}" fpslist.txt
+			then
+				echolog "Process ${fpsname} already registered - skipping"
+			else
+				echolog "Adding process ${fpsname}"
+				echo "${fpsname}           cacaodm.dmturb     ${fpsarg0}" >> fpslist.txt
+
+				addfpscmdheader
+				addfpscmd "setval ${fpsfname}.dmstream dm${CACAO_DMINDEX}disp${DMTURBCHAN}"
+				addfpscmd "setval ${fpsfname}.turbfname atmturbC.fits"
+				# infinite loop
+				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+				addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+				addfpscmd "setval ${fpsfname}.procinfo.triggersname NULL"
+				addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.0001" # 100us
+				addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 1" # 1s
+			fi
+
+		else
+			echolog "OFF CACAO_FPSPROC_DMATMTURB"
+		fi # end of if [ "${CACAO_FPSPROC_DMATMTURB}" = "ON" ]
+
 	else
-		echolog "Adding process ${fpsname}"
-		echo "${fpsname}           cacaodm.dmturb     ${fpsarg0}" >> fpslist.txt
-
-		addfpscmdheader
-		addfpscmd "setval ${fpsfname}.dmstream dm${CACAO_DMINDEX}disp${DMTURBCHAN}"
-		addfpscmd "setval ${fpsfname}.turbfname atmturbC.fits"
-		# infinite loop
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname NULL"
-        addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.0001" # 100us
-        addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 1" # 1s
+		echo "CACAO_FPSPROC_DMATMTURB unset"
 	fi
 
-else
-	echolog "OFF CACAO_FPSPROC_DMATMTURB"
-fi # end of if [ "${CACAO_FPSPROC_DMATMTURB}" = "ON" ]
 
 fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
 

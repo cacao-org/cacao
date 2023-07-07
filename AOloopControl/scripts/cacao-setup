@@ -2,8 +2,131 @@
 
 # Setup script
 
-# number of arguments to script
-NBARGS=1
+MSdescr="cacao loop setup"
+
+source milk-script-std-config
+
+
+MSextdescr="
+Initial setup for cacao instance
+Creates work directory, install scripts and start conf processes in tmux sessions.
+Each cacao loop has a unique ASCII name, referred to as <loopname> in this manual.
+
+Main steps performed by cacao-setup:
+
+  - Reads cacaovars from file cacaovars.<loopname>.bash
+  - Calls cacao-fpslistadd: create fpslist.txt (list of FPSs) and fps.conf/fpssetup.confstart.<fpsname>.conf files
+  - Create work directory, move fpslist.txt and fps.conf dir within it
+  - From within work directory :
+  	- Call milk-fpsinit to setup FPSs
+  	- Start milk-fpsCTRL process in tmux session named <loopname>_fpsCTRL
+  	- For each FPS :
+  		- start conf process
+  		- Send fpssetup tasks from fps.conf directory to milk-fpsCTRL scheduler
+      - Send optional $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0) tasks to milk-fpsCTRL scheduler
+
+
+
+$(tput bold) SUMMARY: HOW TO SETUP AND START CACAO SESSION ? $(tput sgr0)
+
+[STEP 1] Set essential environment variables
+         Create file $(tput bold)$(tput setaf 2) cacaovars.<loopname>.bash$(tput sgr0)
+         The cacaovars file sets environment variables that define key parameters for the AO loop,
+         and which processes should be deployed.
+         Run cacao-setup with -e option to create example cacavars file.
+
+[STEP 2] OPTIONAL: Write function custom parameter values in file $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0)
+         syntax: \"setval <paramfullname> <value>\"
+
+[STEP 3] OPTIONAL: Test setup
+         $(tput bold)$(tput setaf 5)\$ cacao-setup -t <loopname>$(tput sgr0)
+
+[STEP 4] Run setup
+         $(tput bold)$(tput setaf 5)\$ cacao-setup <loopname>$(tput sgr0)
+
+
+
+$(tput bold) ADDING FPS-ENABLED PROCESSES (OPTIONAL) $(tput sgr0)
+  Function parameter structures (FPSs) hold values of parameters for frequently used functions.
+  A common interface and fifo allows for the parameters to be set or read.
+  The user may provide an executable script to add custom FPS-enabled processes that may run, named:
+    ./<loopname>.fpslistadd.bash
+  The script will add entries to fpslist.txt and issue fps commands.
+
+
+$(tput bold) OPTIONAL PARAMETERS $(tput sgr0)
+  Optional parameters can be set after the initial setup
+  They can be provided in user-provided configuration file $pname.conf (relative to current directory)
+  Alternate configuration file specified by -c option
+
+
+"
+
+
+
+# prerequisites
+#
+RequiredCommands=( tmux milk-fpsinit milk-fpsCTRL milk-streamlink milk-FITS2shm milk-fpsmkcmd cacao-fpslistadd )
+RequiredFiles=( )
+RequiredDirs=( )
+
+
+
+
+MSarg+=( "confname:string:configuration name" )
+
+
+# SCRIPT OPTIONS
+
+MSopt+=( "e:example:cacaoCreateExampe_cacaovars::create example cacaovars file and exit" )
+
+TESTMODE="0"
+MSopt+=( "t:test:set_testmode::test mode, print parameters and exit (do not start processes)" )
+function set_testmode {
+	TESTMODE="1"
+}
+
+CLEAR="0"
+MSopt+=( "C:clear:set_clear::clear all memory/files and exit" )
+function set_clear {
+	CLEAR="1"
+}
+
+FPSSETPARAMCONF="0"
+MSopt+=( "r:runfpsset:set_fpsset::run fps setval updates and exit" )
+function set_fpsset {
+	FPSSETPARAMCONF="1"
+}
+
+UPDATEMODE="0"
+MSopt+=( "u:update:set_updatemode::update more: do not quit/restart processes" )
+function set_updatemode {
+	UPDATEMODE="1"
+}
+
+
+LISTPROCESSES="0"
+MSopt+=( "l:list:set_listproc::list processes" )
+function set_listproc {
+	LISTPROCESSES="1"
+}
+
+
+echo ">>>>>>>>>> COMMAND : $@"
+source milk-argparse
+
+
+LOOPNAME="${inputMSargARRAY[0]}"
+
+
+checkFile cacaovars.${LOOPNAME}.bash
+
+
+
+
+
+
+
 
 
 #
@@ -11,7 +134,7 @@ NBARGS=1
 LOGFILEDIR="$PWD/log"
 mkdir -p $LOGFILEDIR
 LOGFILENAME="${LOGFILEDIR}/$(basename $0).log"
-rm ${LOGFILENAME} 2> /dev/null
+rm -f ${LOGFILENAME} 2> /dev/null
 
 
 # suppress milk startup messages
@@ -31,7 +154,6 @@ pnameFull=`echo "$0" | sed "s/\.\///g"`
 
 pname=$( basename ${pnameFull} )
 
-SRCDIR="${CACAO_ROOT}"
 CURRDIR="$(pwd)"
 
 
@@ -41,122 +163,7 @@ SETTINGOK="1"  # switches to 0 if settings not OK
 
 
 
-USAGESTRING="$(basename $0) [-htCpr] <loopname>"
 
-
-function printHELP {
-    echo "------------------------------------------------------------------------"
-    echo "$(tput bold) $pname : cacao setup $(tput sgr0)"
-    echo "source : $0"
-    echo "------------------------------------------------------------------------"
-    echo "  Initial setup for cacao instance"
-    echo "  Creates work directory, install scripts and start conf processes in tmux sessions"
-    echo "  Each cacao loop has a unique ASCII name, referred to as <loopname> in this manual."
-    echo ""
-    echo "Main steps performed by cacao-setup:"
-    echo "  - Reads cacaovars from file cacaovars.<loopname>.bash"
-    echo "  - Calls cacao-fpslistadd: create fpslist.txt (list of FPSs) and fps.conf/fpssetup.confstart.<fpsname>.conf files"
-    echo "  - Create work directory, move fpslist.txt and fps.conf dir within it"
-    echo "  - From within work directory :"
-    echo "  	- Call milk-fpsinit to setup FPSs"
-    echo "  	- Start milk-fpsCTRL process in tmux session named <loopname>_fpsCTRL"
-    echo "  	- For each FPS :"
-    echo "  		- start conf process"
-    echo "  		- Send fpssetup tasks from fps.conf directory to milk-fpsCTRL scheduler"
-    echo "      - Send optional $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0) tasks to milk-fpsCTRL scheduler"
-    echo ""
-    echo ""
-    echo ""
-    echo "$(tput bold) SUMMARY: HOW TO SETUP AND START CACAO SESSION ? $(tput sgr0)"
-    echo ""
-    echo "[STEP 1] Set essential environment variables"
-    echo "         Create file $(tput bold)$(tput setaf 2) cacaovars.<loopname>.bash$(tput sgr0)"
-    echo "         The cacaovars file sets environment variables that define key parameters for the AO loop,"
-    echo "         and which processes should be deployed."
-    echo "         Run cacao-setup with -e option to create example cacavars file."
-    echo ""
-    echo "[STEP 2] OPTIONAL: Write function custom parameter values in file $(tput bold)$(tput setaf 2)fpssetup.setval.<loopname>.conf$(tput sgr0)"
-    echo "         syntax: \"setval <paramfullname> <value>\""
-    echo ""
-    echo "[STEP 3] OPTIONAL: Test setup"
-    echo "         $(tput bold)$(tput setaf 5)\$ cacao-setup -t <loopname>$(tput sgr0)"
-    echo ""
-    echo "[STEP 4] Run setup"
-    echo "         $(tput bold)$(tput setaf 5)\$ cacao-setup <loopname>$(tput sgr0)"
-    echo ""
-    echo ""
-    echo ""
-    echo "$(tput bold) ADDING FPS-ENABLED PROCESSES (OPTIONAL) $(tput sgr0)"
-    echo "  Function parameter structures (FPSs) hold values of parameters for frequently used functions."
-    echo "  A common interface and fifo allows for the parameters to be set or read."
-    echo "  The user may provide an executable script to add custom FPS-enabled processes that may run, named:"
-    echo "    ./<loopname>.fpslistadd.bash"
-    echo "  The script will add entries to fpslist.txt and issue fps commands."
-    echo ""
-    echo ""
-    echo "$(tput bold) OPTIONAL PARAMETERS $(tput sgr0)"
-    echo "  Optional parameters can be set after the initial setup"
-    echo "  They can be provided in user-provided configuration file $pname.conf (relative to current directory)"
-    echo "  Alternate configuration file specified by -c option"
-    echo ""
-    echo ""
-    echo " $(tput bold)USAGE:$(tput sgr0)"
-    echo "     $USAGESTRING"
-    echo ""
-    echo ""
-    echo " $(tput bold)OPTIONS:$(tput sgr0)"
-    echo "     $(tput bold)-h$(tput sgr0)            (h)elp and exit"
-    echo "     $(tput bold)-C$(tput sgr0)            (C)lear all memory/files and exit"
-    echo "     $(tput bold)-t$(tput sgr0)            (t)est: print parameters and exit (do not start processes)"
-    echo "     $(tput bold)-u$(tput sgr0)            (u)pdate more: do not quit/restart processes"
-    echo "     $(tput bold)-e$(tput sgr0)            Create (e)xample cacaovars file and exit"
-    echo "     $(tput bold)-r$(tput sgr0)            (r)un fps setval updates and exit"
-    echo "     $(tput bold)-l$(tput sgr0)            (l)ist processes"
-    echo ""
-    echo "------------------------------------------------------------------------"
-}
-
-printHELP1 ()
-{
-    printf "%20s       CACAO setup script\n" "$0"
-}
-
-
-
-
-
-EXITSTATUS=0
-
-
-function checkFile {
-    if [ -f $1 ]; then
-        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
-    else
-        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found"
-        EXITSTATUS=1
-    fi
-}
-
-
-function checkPipe {
-    if [ -p $1 ]; then
-        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Pipe $(tput bold)$1$(tput sgr0) found"
-    else
-        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Pipe $(tput bold)$1$(tput sgr0) not found"
-        EXITSTATUS=1
-    fi
-}
-
-
-
-function checkFileCreate {
-    if [ -f $1 ]; then
-        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] File $(tput bold)$1$(tput sgr0) found"
-    else
-        echo "[$(tput setaf 3)$(tput bold)  INFO  $(tput sgr0)] File $(tput bold)$1$(tput sgr0) not found: Creating"
-        touch $1
-    fi
-}
 
 function checkFileInfoOptional {
     if [ -f $1 ]; then
@@ -169,33 +176,11 @@ function checkFileInfoOptional {
 
 
 
-function checkDir {
-    if [ -d $1 ]; then
-        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) found"
-    else
-        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Directory $(tput bold)$1$(tput sgr0) not found"
-        EXITSTATUS=1
-    fi
-}
-
-
-function cmdexists(){
-    command -v "$1" >/dev/null 2>&1
-}
-
-
-function checkCommand {
-    if cmdexists $1; then
-        echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) found"
-    else
-        echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Command $(tput bold)$1$(tput sgr0) not installed.  Aborting."
-        EXITSTATUS=1;
-    fi
-}
 
 
 
 
+echo "LOOPNAME = $LOOPNAME"
 
 
 function cacaoCreateExampe_cacaovars {
@@ -253,6 +238,7 @@ function cacaoCreateExampe_cacaovars {
     echo "# AO run loop" >> ${EXAMPLEFILENAME}
     echo "export CACAO_FPSPROC_AOLOOP_RUN=\"ON\"" >> ${EXAMPLEFILENAME}
     echo "" >> ${EXAMPLEFILENAME}
+    exit
 }
 
 
@@ -421,13 +407,13 @@ function fpssetparamconf {
     checkPipe ${fpsCTRLfifo}
     echo "SETTING PARAMETERS -> ${fpsCTRLfifo}"
 
-    rm fpssetup.setval.combined.conf
+    rm -f fpssetup.setval.combined.conf
     sed "s/LOOPNUMBER/${LOOPNUMBER}/g" ${CURRDIR}/${fpsSETPARAMCONFfile} | sed "s/DMINDEX/${CACAO_DMINDEX}/g" > fpssetuptmp.tmp
     sed -i "s/DMSIMINDEX/${CACAO_DMSIMINDEX}/g" fpssetuptmp.tmp
 
     cat ${CURRDIR}/fpssetup.setval.conf fpssetuptmp.tmp > fpssetup.setval.combined.conf
     #rm fpssetuptmp.tmp
-    rm ${CURRDIR}/fpssetup.setval.conf
+    rm -f ${CURRDIR}/fpssetup.setval.conf
 
     while IFS='' read -r line || [[ -n "$line" ]]; do
         echolog "$line"
@@ -440,119 +426,16 @@ function fpssetparamconf {
 
 
 
-# ================= OPTIONS =============================
-# Transform long options to short ones
-singlelinehelp=0
-for arg in "$@"; do
-    shift
-    case "$arg" in
-        "--help") set -- "$@" "-h" ;;
-        "--help1")
-            set -- "$@" "-h"
-            singlelinehelp=1;
-            ;;
-        *)        set -- "$@" "$arg"
-    esac
-done
-
-
-CLEAR="0"
-TESTMODE="0"
-FPSSETPARAMCONF="0"
-UPDATEMODE="0"
-LISTPROCESSES="0"
-
-while getopts :heCtrul FLAG; do
-    case $FLAG in
-        h)  #show help
-            if [ "$singlelinehelp" -eq "0" ]; then
-                printHELP
-            else
-                printHELP1
-            fi
-            exit
-            ;;
-        e) # create example
-            cacaoCreateExampe_cacaovars
-            exit
-            ;;
-        t) # test mode
-            TESTMODE="1"
-            ;;
-        C) # clear
-            CLEAR="1"
-            ;;
-        r) # just run fps params setup
-            FPSSETPARAMCONF="1"
-            ;;
-        u)
-            UPDATEMODE="1"
-            ;;
-        l)
-            LISTPROCESSES="1"
-            ;;
-        \?) #unrecognized option - show help
-            echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-            printHELP
-            ;;
-    esac
-done
-shift $((OPTIND-1))
 
 
 
 
-if [ "$#" -ne $NBARGS ]; then
-    echo "$(tput setaf 1)$(tput bold) Illegal number of parameters ($NBARGS params required, $# entered) $(tput sgr0)"
-    echo "Usage :"
-    echo "  $USAGESTRING"
-    echo ""
-    exit
-fi
-
-LOOPNAME="$1"
-
-
-
-
-
-
-
-# ======================= CHECK REQUIRED FILES =================================
-echo ""
-
-checkCommand tmux
-
-checkCommand milk-fpsinit
-checkCommand milk-fpsCTRL
-checkCommand milk-streamlink
-checkCommand milk-FITS2shm
-checkCommand milk-fpsmkcmd
-
-checkCommand cacao-fpslistadd
-
-#if [ "${TTYMODE}" = "1" ]; then
-#	checkTTY ${DEVTTY}
-#	checkCommand ttyecho
-#fi
-
-
-
-
-checkFile cacaovars.${LOOPNAME}.bash
-
-
-if [ ${EXITSTATUS} -eq 1 ]; then
-    echo "$(tput setaf 1)$(tput bold) -> EXITING $(tput sgr0)"
-    exit ${EXITSTATUS}
-else
-    echo ""
-fi
 
 
 
 
 export CACAO_LOOPNAME="$LOOPNAME"
+
 echolog "START $(basename $0)"
 
 
@@ -668,12 +551,6 @@ echo ""
 
 if [[ ! -z "${CACAO_LOOPNAME}" ]]; then
     checkFileInfoOptional ${CACAO_LOOPNAME}.fpslistadd.bash
-    #if [ -f "${CACAO_LOOPNAME}.fpslistadd.bash" ]; then
-    #echo "Using custom fpslistadd file: ${CACAO_LOOPNAME}.fpslistadd.bash"
-    #else
-    #echo "Using template fpslistadd script: $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash"
-    #cp $CACAO_ROOT/src/AOloopControl/scripts/cacao-fpslistadd.bash ${CACAO_LOOPNAME}.fpslistadd.bash
-    #fi
 fi
 
 
@@ -726,6 +603,10 @@ mkdir -p ${LOGFILEDIR}
 
 
 
+
+
+
+
 # ======================= SCRIPT CODE STARTS HERE =================================
 
 echolog "START $(basename $0)"
@@ -733,7 +614,6 @@ echolog "CACAO_LOOPROOTDIR       : ${CACAO_LOOPROOTDIR}"
 echolog "CACAO_LOOPRUNDIR        : ${CACAO_LOOPRUNDIR}"
 echolog "CACAO_LOOPNAME          : ${CACAO_LOOPNAME}"
 echolog "LOOPNUMBER              : ${LOOPNUMBER}"
-echolog "CACAO_ROOT              : ${CACAO_ROOT}"
 
 # full path
 CACAO_LOOPROOTDIR_FULLPATH=$( pwd )
@@ -816,6 +696,7 @@ echo "source ../cacaovars.*" > ${CACAO_LOOPRUNDIR}/fpstmuxenv
 
 
 
+
 # ===========================================================================
 #  CREATE fpslist.txt
 #  create local fpslist.txt (to be moved to work directory)
@@ -823,18 +704,21 @@ echo "source ../cacaovars.*" > ${CACAO_LOOPRUNDIR}/fpstmuxenv
 
 
 if [ "$UPDATEMODE" = "0" ]; then
-    rm fpslist.txt &>> ${LOGFILENAME}
+    rm -f fpslist.txt &>> ${LOGFILENAME}
     echo "Creating fpslist.txt in directory $( pwd )"
     touch fpslist.txt
 
     FPSCONFFILE="fpssetup.setval.conf"
-    rm ${FPSCONFFILE} &>> ${LOGFILENAME}
+    rm -f ${FPSCONFFILE} &>> ${LOGFILENAME}
     touch ${FPSCONFFILE} &>> ${LOGFILENAME}
 
     echo "# File generated by $0" >> ${FPSCONFFILE}
     echo "# Do not edit" >> ${FPSCONFFILE}
     echo "" >> ${FPSCONFFILE}
 fi
+
+
+
 
 
 
@@ -850,14 +734,17 @@ fi
 
 ## Run script to insert additional FPS-compatible processes that may be used
 
-
 # cacao-provided default script
 # writes in fpslist.txt and fps.conf/fpssetup.confstart.<fpsname>.conf
 source cacao-fpslistadd
-# &>> ${LOGFILENAME}
 
+
+
+# &>> ${LOGFILENAME}
 # optional additional custom script
-./${CACAO_LOOPNAME}.fpslistadd &>> ${LOGFILENAME}
+if [ -f "${CACAO_LOOPNAME}.fpslistadd" ]; then
+	./${CACAO_LOOPNAME}.fpslistadd &>> ${LOGFILENAME}
+fi
 
 
 
@@ -889,11 +776,14 @@ milk-fpsinit -e cacao -C
 
 
 
+
 # start fpsCTRL and conf processes
 
 if [ "$UPDATEMODE" = "0" ]; then
 	echo "Running milk-fpsCTRL from tmux session ${fpsCTRLtmuxname}"
+    set +e # don't error is session already exists
     tmux new-session -d -s ${fpsCTRLtmuxname}
+    set -e
     # in case previous instance is running, exit from it
     tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m  &>> ${LOGFILENAME}
     # ensures that tmux sessions can be created from fpsCTRL
@@ -909,7 +799,6 @@ fi
 
 
 
-
 # give time to fpsCTRL to create fifo
 echo "waiting for fifo \"${fpsCTRLfifo}\" ..."
 until [ -p "${fpsCTRLfifo}" ]
@@ -920,6 +809,8 @@ done
 echo "found fifo -> continuing"
 
 
+
+
 if [ "$UPDATEMODE" = "0" ]; then
     # build sym link to output log
     echo "fifo ${fpsCTRLfifo} <-  logsymlink ${MILK_SHM_DIR}/fpslog.${CACAO_LOOPNAME}"
@@ -927,6 +818,8 @@ if [ "$UPDATEMODE" = "0" ]; then
     echo "tmux ${fpsCTRLtmuxname} <- \"s\""
     tmux send-keys -t ${fpsCTRLtmuxname} "s" C-m &>> ${LOGFILENAME}
 fi
+
+
 
 
 
@@ -942,6 +835,7 @@ allFPScmd confstart
 
 
 
+
 # ===================================================================================
 # ========= INIT SETTINGS IMPORTED FROM CONF FILE ===================================
 # ===================================================================================
@@ -951,7 +845,6 @@ if [ "$UPDATEMODE" = "0" ]; then
 fi
 
 
-
 # ===================================================================================
 # Startup sequence: establish links
 # ===================================================================================
@@ -959,12 +852,12 @@ echolog "    Establish links ..."
 if [ "$UPDATEMODE" = "0" ]; then
     # link DM index to loop number
     echolog "    linking DM ..."
-    cacao-setDMnolink &>> ${LOGFILENAME}
+    cacao-setDMnolink # &>> ${LOGFILENAME}
 
     # link WFS
     echolog "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
     echolog "    linking WFS ..."
-    milk-streamlink -p aol${LOOPNUMBER}_ wfsim &>> ${LOGFILENAME}
+    milk-streamlink -p aol${LOOPNUMBER}_ wfsim # &>> ${LOGFILENAME}
 fi
 
 
@@ -1000,4 +893,6 @@ echo "${CACAO_WFSSTREAM}" > ${CACAOLOOPRECORD}/wfsim
 # finished - get back to current directory
 cd ${CURRDIR}
 
-echolog "END $(basename $0)"
+
+
+echolog "Reached end of script $(basename $0)"

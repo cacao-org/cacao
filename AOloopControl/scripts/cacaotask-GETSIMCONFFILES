@@ -31,8 +31,8 @@ gunzip ${CACAO_LOOPROOTDIR}/simLHS/*.fits.gz
 
 cat <<EOT >>  ${CLEANSCRIPT}
 
-rm ${CACAO_LOOPROOTDIR}/simLHS/*
-rmdir ${CACAO_LOOPROOTDIR}/simLHS
+rm -f ${CACAO_LOOPROOTDIR}/simLHS/*
+rmdir -f ${CACAO_LOOPROOTDIR}/simLHS
 
 EOT
 

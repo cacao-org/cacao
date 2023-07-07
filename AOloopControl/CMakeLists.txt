@@ -87,9 +87,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-fpsctrl-log
 	scripts/cacao-fpsctrl-logprocess
 	scripts/cacao-fpsctrl-TUI
-#	scripts/cacao-RMdecode
 	scripts/cacao-loops
-#	scripts/cacao-mkLODMmodes
 	scripts/cacao-NULL
 	scripts/cacao-calib-archive
 	scripts/cacao-calib-apply
@@ -101,13 +99,13 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-fpslistadd-MODALFILTERING
 	scripts/cacao-fpslistadd-MVMGPU_ZPO
 	scripts/cacao-modalstatsTUI
-#	scripts/cacao-setDMnolink
 	scripts/cacao_simLHS
 	scripts/cacao-takedark
 	scripts/cacao-task-manager
 	scripts/cacao-log
 	scripts/cacao-log-setup
 	scripts/cacao-loop-deploy
+	scripts/cacao-setDMnolink
 	scripts/cacaotask-check
 	scripts/cacaotask-INITSETUP
 	scripts/cacaotask-GETSIMCONFFILES

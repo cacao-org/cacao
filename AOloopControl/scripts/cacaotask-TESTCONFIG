@@ -28,7 +28,7 @@ fi
 cat <<EOT >>  ${CLEANSCRIPT}
 
 rm -f ${CACAO_LOOPROOTDIR}/log/*.log
-rmdir ${CACAO_LOOPROOTDIR}/log
+rmdir -f ${CACAO_LOOPROOTDIR}/log
 
 cd ${CURRENTDIR}
 
