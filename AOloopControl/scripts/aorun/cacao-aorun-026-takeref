@@ -26,9 +26,9 @@ streamcheckOK="OK"
 checkstream aol${CACAO_LOOPNUMBER}_imWFS2
 
 if [ ${streamcheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
-cacaomsglog "ERROR streamcheck"
-exit
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+	cacaomsglog "ERROR streamcheck"
+	exit 1
 fi
 
 cacaomsglog "NBframe ${NBframe}"
@@ -48,4 +48,4 @@ listim
 exitCLI
 EOF
 
-cacaomsglog "EXIT"
+cacaomsglog "END"

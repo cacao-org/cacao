@@ -49,8 +49,8 @@ checkFile ${CMDMfname0}
 checkFile ${CMWFSfname0}
 
 if [ ${EXITSTATUS} = 1 ]; then
-echo "missing file - cannot proceed"
-exit
+	echo "missing file - cannot proceed"
+	exit 1
 fi
 
 
@@ -61,3 +61,4 @@ cp ${CMDMfname0} ${CMDMfname}
 cp ${CMWFSfname0} ${CMWFSfname}
 
 
+cacaomsglog "END"

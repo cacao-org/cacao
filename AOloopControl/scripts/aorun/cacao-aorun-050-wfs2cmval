@@ -21,7 +21,7 @@ ACTION="${inputMSargARRAY[0]}"
 ACTIONOK=0
 
 if [ ${ACTION} == "check" ]; then
-ACTIONOK=1
+	ACTIONOK=1
 fi
 
 
@@ -30,35 +30,34 @@ FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-cacaomsglog "ERROR failed FPS check"
-exit
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR failed FPS check"
+	exit 1
 fi
 
 
 if [ ${ACTION} == "start" ]; then
-ACTIONOK=1
+	ACTIONOK=1
 
-cacaomsglog "START"
-sendFPScmd "confwupdate wfs2cmodeval-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart wfs2cmodeval-${CACAO_LOOPNUMBER}"
-
+	cacaomsglog "START"
+	sendFPScmd "confwupdate wfs2cmodeval-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstart wfs2cmodeval-${CACAO_LOOPNUMBER}"
 fi
 
 
 
 if [ ${ACTION} == "stop" ]; then
-ACTIONOK=1
-
-cacaomsglog "STOP"
-sendFPScmd "runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
+	ACTIONOK=1
+	cacaomsglog "STOP"
+	sendFPScmd "runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
 fi
 
 
 
 if [ ${ACTIONOK} == 0 ]; then
-cacaomsglog "ERROR undefined action"
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	cacaomsglog "ERROR undefined action"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	exit 1
 fi
 
 cacaomsglog "END"

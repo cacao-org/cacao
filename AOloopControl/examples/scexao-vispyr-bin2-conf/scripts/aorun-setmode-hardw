@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # This script uses milk-argparse
-# See template milk-scriptexample in module milk_module_example for template and instructions
+# See milk-scriptexample for template and instructions
 
 # script 1-line description
 MSdescr="set hardware configuration"
@@ -12,13 +12,11 @@ MSextdescr="Hardware mode
 source milk-script-std-config
 source cacao-check-cacaovars
 
+RequiredCommands=( cacao-setDMnolink )
+
 source milk-argparse
 
 
-
-
-
-errexit=0
 
 # Checking required FPS
 FPScheckOK="OK"
@@ -26,85 +24,69 @@ checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
 checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
 checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
 checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
-
-
+checkFPSON CACAO_FPSPROC_MEASURELINRESP ${CACAO_FPSPROC_MEASURELINRESP}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck"
+	exit 1
 fi
 
 
-if [ $errexit = 1 ]; then
-exit
-fi
 
-
-sendFPScmd "setval acquWFS-0.WFSnormfloor 0.1"
-
-
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.AveMode 1"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltmode ON"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.volttype 2"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.stroke100 1.0"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.voltname dmvolt"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.DClevel 0.7"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.option.maxvolt 150.0"
-sendFPScmd "confwupdate DMch2disp-${CACAO_DMINDEX}"
 
 
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.ampl 0.03"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBave 5"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBinnerCycle 10"
-sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 20"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 80"
 
 
 sendFPScmd "setval wfs2cmodeval-${CACAO_LOOPNUMBER}.GPUindex 1"
 sendFPScmd "confwupdate wfs2cmodeval-${CACAO_LOOPNUMBER}"
 
-sendFPScmd "setval mvalC2dm-${CACAO_LOOPNUMBER}.GPUindex 3"
+sendFPScmd "setval mvalC2dm-${CACAO_LOOPNUMBER}.GPUindex 1"
 sendFPScmd "confwupdate mvalC2dm-${CACAO_LOOPNUMBER}"
 
 
-# stream linking
+
 
 # WFS
 echo "Linking WFS"
 
 ln -sf ${MILK_SHM_DIR}/${CACAO_WFSSTREAM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
 
-
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.insname aol${CACAO_LOOPNUMBER}_wfsim"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.WFSnormfloor 0.1"
 sendFPScmd "confwupdate acquWFS-${CACAO_LOOPNUMBER}"
 
 # DM
+
+echo "Switching to hardware DM"
+DMINDEX="${CACAO_DMINDEX}"
+echo "${DMINDEX}" > DMINDEX
+
 echo "Linking DM"
+cacao-setDMnolink
 
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
+sendFPScmd "setval DMch2disp-${DMINDEX}.AveMode 1"
+sendFPScmd "setval DMch2disp-${DMINDEX}.option.voltmode ON"
+sendFPScmd "setval DMch2disp-${DMINDEX}.option.volttype 2"
+sendFPScmd "setval DMch2disp-${DMINDEX}.option.stroke100 1.0"
+sendFPScmd "setval DMch2disp-${DMINDEX}.option.voltname dmvolt"
+sendFPScmd "setval DMch2disp-${DMINDEX}.option.DClevel 0.7"
+sendFPScmd "setval DMch2disp-${DMINDEX}.option.maxvolt 150.0"
+sendFPScmd "confwupdate DMch2disp-${DMINDEX}"
 
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
-
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp04.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP0.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp05.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP1.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp06.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP2.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp07.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP3.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp08.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP4.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp09.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP5.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP6.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp11.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP7.im.shm
-
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
-
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmturb.im.shm
-
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
 
 
 # update system cacaoloop record
 #
 CACAOLOOPRECORD="${MILK_SHM_DIR}/cacaoloop-${CACAO_LOOPNUMBER}"
 mkdir -p ${CACAOLOOPRECORD}
-echo "${CACAO_DMINDEX}" > ${CACAOLOOPRECORD}/dmindex
+echo "${DMINDEX}" > ${CACAOLOOPRECORD}/dmindex
 echo "${CACAO_WFSSTREAM}" > ${CACAOLOOPRECORD}/wfsim
+
+
+cacaomsglog "END"

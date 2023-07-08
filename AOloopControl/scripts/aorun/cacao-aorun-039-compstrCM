@@ -32,7 +32,7 @@ fi
 
 
 if [ $errexit = 1 ]; then
-exit
+exit 1
 fi
 
 

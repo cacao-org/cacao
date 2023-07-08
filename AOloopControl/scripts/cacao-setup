@@ -238,7 +238,7 @@ function cacaoCreateExampe_cacaovars {
     echo "# AO run loop" >> ${EXAMPLEFILENAME}
     echo "export CACAO_FPSPROC_AOLOOP_RUN=\"ON\"" >> ${EXAMPLEFILENAME}
     echo "" >> ${EXAMPLEFILENAME}
-    exit
+    exit 0
 }
 
 
@@ -376,13 +376,13 @@ function cacaosetupCLEAR
 
     #milk-rmshmim aol${LOOPNUMBER}_dmC,aol${LOOPNUMBER}_dmRM,aol${LOOPNUMBER}_dmO,aol${LOOPNUMBER}_dmdisp,aol${LOOPNUMBER}_wfsim &>> ${LOGFILENAME}
 
-    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmC.im.shm &>> ${LOGFILENAME}
-    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmRM.im.shm &>> ${LOGFILENAME}
-    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmO.im.shm &>> ${LOGFILENAME}
-    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmdisp.im.shm &>> ${LOGFILENAME}
-    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmZP*.im.shm &>> ${LOGFILENAME}
-    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmzpo.im.shm &>> ${LOGFILENAME}
-    rm ${MILK_SHM_DIR}/aol${LOOPNUMBER}_wfsim.im.shm &>> ${LOGFILENAME}
+    rm -f ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmC.im.shm &>> ${LOGFILENAME}
+    rm -f ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmRM.im.shm &>> ${LOGFILENAME}
+    rm -f ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmO.im.shm &>> ${LOGFILENAME}
+    rm -f ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmdisp.im.shm &>> ${LOGFILENAME}
+    rm -f ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmZP*.im.shm &>> ${LOGFILENAME}
+    rm -f ${MILK_SHM_DIR}/aol${LOOPNUMBER}_dmzpo.im.shm &>> ${LOGFILENAME}
+    rm -f ${MILK_SHM_DIR}/aol${LOOPNUMBER}_wfsim.im.shm &>> ${LOGFILENAME}
 
 
     # remove fpsCTRL log and its sym link
@@ -637,7 +637,7 @@ if [ "$LISTPROCESSES" = "1" ]; then
     echolog "starting cacaosetupLISTprocesses"
     cacaosetupLISTprocesses
     echolog "END $(basename $0)"
-    exit
+    exit 0
 fi
 
 
@@ -647,7 +647,7 @@ if [ "$CLEAR" = "1" ]; then
     echolog "starting cacaosetupCLEAR"
     cacaosetupCLEAR
     echolog "END $(basename $0)"
-    exit
+    exit 0
 fi
 
 
@@ -656,7 +656,7 @@ fi
 if [ "$FPSSETPARAMCONF" = "1" ]; then
     echolog "starting fpssetparamconf"
     fpssetparamconf &>> ${LOGFILENAME}
-    exit
+    exit 0
 fi
 
 
@@ -678,6 +678,10 @@ mkdir -p ${CACAO_LOOPRUNDIR}/
 
 echo "${CACAO_LOOPNAME}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNAME
 echo "${CACAO_LOOPNUMBER}" > ${CACAO_LOOPROOTDIR_FULLPATH}/LOOPNUMBER
+
+# Can be changed when switching to simulation mode
+echo "${CACAO_DMINDEX}" > ${CACAO_LOOPROOTDIR_FULLPATH}/DMINDEX
+
 
 
 # create default fpstmuxenv file, sourced by all tmux sessions
@@ -781,9 +785,7 @@ milk-fpsinit -e cacao -C
 
 if [ "$UPDATEMODE" = "0" ]; then
 	echo "Running milk-fpsCTRL from tmux session ${fpsCTRLtmuxname}"
-    set +e # don't error is session already exists
-    tmux new-session -d -s ${fpsCTRLtmuxname}
-    set -e
+    tmux new-session -d -s ${fpsCTRLtmuxname} || :
     # in case previous instance is running, exit from it
     tmux send-keys -t ${fpsCTRLtmuxname} "x" C-m  &>> ${LOGFILENAME}
     # ensures that tmux sessions can be created from fpsCTRL
@@ -852,12 +854,13 @@ echolog "    Establish links ..."
 if [ "$UPDATEMODE" = "0" ]; then
     # link DM index to loop number
     echolog "    linking DM ..."
-    cacao-setDMnolink # &>> ${LOGFILENAME}
-
+    cd ${CACAO_LOOPROOTDIR_FULLPATH}
+    cacao-setDMnolink
     # link WFS
-    echolog "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
-    echolog "    linking WFS ..."
-    milk-streamlink -p aol${LOOPNUMBER}_ wfsim # &>> ${LOGFILENAME}
+    ln -sf ${MILK_SHM_DIR}/${CACAO_WFSSTREAM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
+    #echolog "${CACAO_WFSSTREAM}" > ./conf/streamlink.wfsim.name.txt
+    #echolog "    linking WFS ..."
+    #milk-streamlink -p aol${LOOPNUMBER}_ wfsim # &>> ${LOGFILENAME}
 fi
 
 

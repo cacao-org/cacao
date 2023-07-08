@@ -2,7 +2,7 @@
 
 if [ "$1" = "-hs" ]; then
 	echo "List cacao commands on system"
-	exit
+	exit 1
 fi
 
 
@@ -15,12 +15,7 @@ echo "LIST OF CACAO COMMANDS :"
 
 for cmd in $CMDLIST; do
 
-	#starttime=`date +%s.%N`
 	helpline=$( $cmd -hs | head -n 1 )
-	#endtime=`date +%s.%N`
-
-	#runtime=$( echo "$endtime - $starttime" | bc -l )
-
 	printf "	${GREEN}%-32s${NC}  %s\n" "$cmd" "$helpline"
 
 done

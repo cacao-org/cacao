@@ -6,6 +6,7 @@ source cacaotask-check # check environment
 # PERFORM ACTIONS FOR THIS TASK
 # ======================================================================
 cacaotask_RETURNCODE=${CACAOTASK_RUN_SUCCESS}
+pwd
 cd ${CACAO_LOOPROOTDIR}
 cacao-setup ${CACAO_LOOPNAME}
 
@@ -17,6 +18,8 @@ cacao-setup ${CACAO_LOOPNAME}
 # \${VAR} will not be resolved, and will appear as ${VAR} in the destination
 
 cat <<EOT >>  ${CLEANSCRIPT}
+#!/usr/bin/env bash
+source milk-script-std-config
 
 cd ${CACAO_LOOPROOTDIR}
 cacao-setup -C ${CACAO_LOOPNAME}

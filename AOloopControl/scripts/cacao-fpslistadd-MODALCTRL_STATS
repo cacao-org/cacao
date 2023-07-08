@@ -5,8 +5,8 @@ if [ -z ${FPSLISTADDSCRIPT+x} ]; then
 else
 
 
-	if [ ! -z "${CACAO_FPSPROC_MAPWFS+x}" ]; then
-		echo "CACAO_FPSPROC_MAPWFS set to ${CACAO_FPSPROC_MAPWFS}"
+	if [ ! -z "${CACAO_FPSPROC_MODALCTRL_STATS+x}" ]; then
+		echo "CACAO_FPSPROC_MODALCTRL_STATS set to ${CACAO_FPSPROC_MODALCTRL_STATS}"
 
 		if [ "${CACAO_FPSPROC_MODALCTRL_STATS}" = "ON" ]; then
 			echolog "ON  CACAO_FPSPROC_MODALCTRL_STATS"
@@ -42,7 +42,7 @@ else
 		fi
 
 	else
-		echo "CACAO_FPSPROC_MAPWFS unset"
+		echo "CACAO_FPSPROC_MODALCTRL_STATS unset"
 	fi
 
 

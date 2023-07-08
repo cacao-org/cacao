@@ -52,9 +52,10 @@ checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
 checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_MEASURELINRESP}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-cacaomsglog "ERROR FPScheck"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck"
+	errexit=1
+	exit 1
 fi
 
 
@@ -65,14 +66,15 @@ checkstream aol${CACAO_LOOPNUMBER}_imWFS1
 checkstream aol${CACAO_LOOPNUMBER}_imWFS2
 
 if [ ${streamcheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
-cacaomsglog "ERROR streamcheck"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+	cacaomsglog "ERROR streamcheck"
+	errexit=1
+	exit 1
 fi
 
 
 if [ $errexit = 1 ]; then
-exit
+	exit 1
 fi
 
 
@@ -96,7 +98,7 @@ sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
 cacaomsglog "START"
 
-pwd
+
 rm -f ./conf/RMmodesDM/RMmodesDM.fits
 ln -s $(pwd)/conf/RMmodesDM/${DMmodeCname}.fits ./conf/RMmodesDM/RMmodesDM.fits
 
@@ -108,8 +110,8 @@ echo "Waiting for completion ..."
 pOK=1
 while [ $pOK -gt 0 ]; do
 	sleep 0.2
-	pOK=$(ps -alx| grep measlinresp-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l)
+	pOK=$(ps -alx| grep measlinresp-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l) || :
 done
 fi
 
-cacaomsglog "EXIT"
+cacaomsglog "END"

@@ -8,74 +8,94 @@ MSdescr="Inject turbulence on DM"
 
 MSextdescr="Inject turbulence on DM channel 10
 Commands: start, stop, on, off"
+
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
+RequiredFiles=(DMINDEX)
 
 MSarg+=( "action:string:action (start/stop/check)" )
 source milk-argparse
 ACTION="${inputMSargARRAY[0]}"
 
 
+if [ -f DMINDEX ]; then
+    DMINDEX=$( head -1 DMINDEX )
+else
+	cacaomsglog "Error: no DMINDEX file. Are we running this from the correct directory ?"
+    exit 1
+fi
+
+
+
 ACTIONOK=0
 
 if [ ${ACTION} == "check" ]; then
-ACTIONOK=1
+	ACTIONOK=1
 fi
 
 # Checking FPS
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_DMATMTURB ${CACAO_FPSPROC_DMATMTURB}
 
+
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-exit
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck"
+	exit 1
 fi
 
 
 TURBFILE="conf/turbseed0.fits"
 
 if [ -f ${TURBFILE} ]; then
-echo "Found file ${TURBFILE}"
+	cacaomsglog "Found file ${TURBFILE}"
 else
-echo "Creating file ${TURBFILE}"
-sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbseed.comp ON"
-echo "Waiting for file ${TURBFILE}"
-until [ -f ${TURBFILE} ]
-do
-     sleep 0.1
-done
+	cacaomsglog "Creating file ${TURBFILE}"
+	sendFPScmd "setval DMatmturb-${DMINDEX}.turbseed.comp ON"
+	echo "Waiting for file ${TURBFILE}"
+	until [ -f ${TURBFILE} ]
+	do
+		sleep 0.1
+	done
 fi
 
 if [ ${ACTION} == "start" ]; then
-ACTIONOK=1
-sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.dmstream aol${CACAO_LOOPNUMBER}_dmturb"
-sendFPScmd "confwupdate DMatmturb-${CACAO_DMINDEX}"
-sendFPScmd "runstart DMatmturb-${CACAO_DMINDEX}"
-sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbON ON"
+	ACTIONOK=1
+	cacaomsglog "START"
+	sendFPScmd "setval DMatmturb-${DMINDEX}.dmstream aol${CACAO_LOOPNUMBER}_dmturb"
+	sendFPScmd "confwupdate DMatmturb-${DMINDEX}"
+	sendFPScmd "runstart DMatmturb-${DMINDEX}"
+	sendFPScmd "setval DMatmturb-${DMINDEX}.turbON ON"
 fi
 
 
 if [ ${ACTION} == "stop" ]; then
-ACTIONOK=1
-sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbON OFF"
-sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbZERO ON"
-sendFPScmd "runstop DMatmturb-${CACAO_DMINDEX}"
+	ACTIONOK=1
+	cacaomsglog "STOP"
+	sendFPScmd "setval DMatmturb-${DMINDEX}.turbON OFF"
+	sendFPScmd "setval DMatmturb-${DMINDEX}.turbZERO ON"
+	sendFPScmd "runstop DMatmturb-${DMINDEX}"
 fi
 
 if [ ${ACTION} == "on" ]; then
-ACTIONOK=1
-sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbON ON"
+	ACTIONOK=1
+	cacaomsglog "ON"
+	sendFPScmd "setval DMatmturb-${DMINDEX}.turbON ON"
 fi
 
 if [ ${ACTION} == "off" ]; then
-ACTIONOK=1
-sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbON OFF"
-sendFPScmd "setval DMatmturb-${CACAO_DMINDEX}.turbZERO ON"
+	ACTIONOK=1
+	cacaomsglog "OFF"
+	sendFPScmd "setval DMatmturb-${DMINDEX}.turbON OFF"
+	sendFPScmd "setval DMatmturb-${DMINDEX}.turbZERO ON"
 fi
 
 
 
 if [ ${ACTIONOK} == 0 ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	cacaomsglog "ERROR ACTION undefined"
+	exit 1
 fi

@@ -27,13 +27,13 @@ if [ "$#" -ge 1 ]; then
 	# Print one line help and exit
 	if [ "$1" = "-hs" ]; then
 		printf "%s\n" "Add FPS entries to fpslist file"
-	exit
+	exit 0
 	fi
 
 	if [ "$1" = "-h" ]; then
 		MILKSCRIPTMODE="help"
 		printHELP
-		exit
+		exit 0
 	fi
 	
 fi

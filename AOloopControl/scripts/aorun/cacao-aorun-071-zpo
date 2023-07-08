@@ -7,19 +7,21 @@
 MSdescr="Zero Point Offset (zpo) MVM"
 
 MSextdescr="convert dmzpo to wfszpo"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
 
 MSarg+=( "action:string:action (start/stop/check)" )
 source milk-argparse
+
 ACTION="${inputMSargARRAY[0]}"
 
 
 ACTIONOK=0
 
 if [ ${ACTION} == "check" ]; then
-ACTIONOK=1
+	ACTIONOK=1
 fi
 
 # Checking FPS
@@ -28,36 +30,32 @@ checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
 checkFPSON CACAO_FPSPROC_MVMGPU_ZPO ${CACAO_FPSPROC_MVMGPU_ZPO}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-exit
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	exit 1
 fi
 
 
 
 
 if [ ${ACTION} == "start" ]; then
-ACTIONOK=1
+	ACTIONOK=1
 
-# ${CACAO_DMINDEX}
-
-# load zresp to shared memory
-milk-FITS2shm "conf/RMmodesWFS/zrespM-H.fits" aol${CACAO_LOOPNUMBER}_zrespM
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.zpoffset.enable ON"
-sendFPScmd "confwupdate zpo-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart zpo-${CACAO_LOOPNUMBER}"
-
+	# load zresp to shared memory
+	milk-FITS2shm "conf/RMmodesWFS/zrespM-H.fits" aol${CACAO_LOOPNUMBER}_zrespM
+	sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.zpoffset.enable ON"
+	sendFPScmd "confwupdate zpo-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstart zpo-${CACAO_LOOPNUMBER}"
 fi
 
 
 if [ ${ACTION} == "stop" ]; then
-ACTIONOK=1
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.zpoffset.enable OFF"
-sendFPScmd "runstop zpo-${CACAO_LOOPNUMBER}"
+	ACTIONOK=1
+	sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.zpoffset.enable OFF"
+	sendFPScmd "runstop zpo-${CACAO_LOOPNUMBER}"
 fi
 
 
-
-
 if [ ${ACTIONOK} == 0 ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	exit 1
 fi

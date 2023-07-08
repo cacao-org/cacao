@@ -3,7 +3,17 @@
 
 MSdescr="launch cacao logging"
 
-MSextdescr="launch cacao logging"
+MSextdescr="launch cacao logging
+
+Launch at beginning of each UT day.
+
+Creates log directory ../logdir-${CACAO_LOOPNAME} if it does not exist.
+Note that the directory may be created as a symlink to system log directory prior to running this command.
+
+Starts FPS log process within a tmux session 
+
+Starts cacao log -> 
+"
 
 
 source milk-script-std-config

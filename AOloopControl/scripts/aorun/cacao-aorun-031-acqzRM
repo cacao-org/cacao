@@ -4,9 +4,10 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Acquire zonal response matrix"
 
-MSextdescr="AO loop script"
+MSextdescr="Acquire zonal response matrix"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -22,7 +23,7 @@ ACTIONOK=0
 
 
 if [ ${ACTION} == "check" ]; then
-ACTIONOK=1
+	ACTIONOK=1
 fi
 
 
@@ -34,8 +35,9 @@ checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
 checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_ACQLINZRM}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	errexit=1
+	exit 1
 fi
 
 
@@ -46,13 +48,14 @@ checkstream aol${CACAO_LOOPNUMBER}_imWFS1
 checkstream aol${CACAO_LOOPNUMBER}_imWFS2
 
 if [ ${streamcheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+	errexit=1
+	exit 1
 fi
 
 
 if [ $errexit = 1 ]; then
-exit
+	exit 1
 fi
 
 
@@ -63,16 +66,15 @@ fi
 
 
 if [ ${ACTION} == "start" ]; then
-ACTIONOK=1
+	ACTIONOK=1
 
-# ======================================================================
-# acquWFS
-# ======================================================================
-sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.AOloopindex ${CACAO_LOOPNUMBER}"
+	# ======================================================================
+	# acquWFS
+	# ======================================================================
+	sendFPScmd "setval acqlin_zRM-${CACAO_LOOPNUMBER}.AOloopindex ${CACAO_LOOPNUMBER}"
 
-sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart acqlin_zRM-${CACAO_LOOPNUMBER}"
-
+	sendFPScmd "confwupdate acqlin_zRM-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstart acqlin_zRM-${CACAO_LOOPNUMBER}"
 fi
 
 
@@ -81,5 +83,6 @@ fi
 
 
 if [ ${ACTIONOK} == 0 ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	exit 1
 fi

@@ -29,7 +29,7 @@ source milk-argparse
 
 set +u
 if [ "${EXITSTATUS}" = "1" ]; then
-exit
+exit 1
 fi
 set -u
 

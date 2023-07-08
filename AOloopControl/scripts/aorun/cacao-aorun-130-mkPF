@@ -17,6 +17,8 @@ source cacao-check-cacaovars
 
 MSarg+=( "block:integer:mode block index" )
 MSarg+=( "action:string:action (start/stop/check)" )
+
+
 source milk-argparse
 
 MBLOCK="${inputMSargARRAY[0]}"
@@ -31,7 +33,7 @@ fpsname="mkPF${BLKindex}"
 ACTIONOK=0
 
 if [ ${ACTION} == "check" ]; then
-ACTIONOK=1
+	ACTIONOK=1
 fi
 
 # Checking FPS
@@ -40,30 +42,37 @@ checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
 checkFPSON CACAO_FPSPROC_MKPF ${CACAO_FPSPROC_MKPF}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-exit
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck"
+	exit 1
 fi
 
 
 
 
 if [ ${ACTION} == "start" ]; then
-ACTIONOK=1
-sendFPScmd "setval ${fpsname}-${CACAO_LOOPNUMBER}.PFlatency ${CACAO_LATENCYFR}"
-sendFPScmd "confwupdate ${fpsname}-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart ${fpsname}-${CACAO_LOOPNUMBER}"
-
+	ACTIONOK=1
+	cacaomsglog "START"
+	sendFPScmd "setval ${fpsname}-${CACAO_LOOPNUMBER}.PFlatency ${CACAO_LATENCYFR}"
+	sendFPScmd "confwupdate ${fpsname}-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstart ${fpsname}-${CACAO_LOOPNUMBER}"
 fi
 
 
 if [ ${ACTION} == "stop" ]; then
-ACTIONOK=1
-sendFPScmd "runstop ${fpsname}-${CACAO_LOOPNUMBER}"
+	ACTIONOK=1
+	cacaomsglog "STOP"
+	sendFPScmd "runstop ${fpsname}-${CACAO_LOOPNUMBER}"
 fi
 
 
 
 
 if [ ${ACTIONOK} == 0 ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	cacaomsglog "ERROR ACTION undefined"
+	exit 1
 fi
+
+
+cacaomsglog "END"

@@ -15,28 +15,16 @@ RequiredPipes=()
 RequiredFiles=()
 RequiredDirs=()
 
-#MSarg+=( "calibname:string:calibration name" )
-
-#MSopt+=( "w:wfsdiag:setwfsdiag::use WFS-diagonalized modes" )
-#WFSdiag="0"
-#function setwfsdiag() {
-#	echo "Using WFS-diagonalized modes"
-#	WFSdiag="1"
-#}
 
 
 source milk-argparse
 
 set +u
 if [ "${EXITSTATUS}" = "1" ]; then
-exit
+	exit 1
 fi
 set -u
 
-
-
-#calib="${inputMSargARRAY[0]}"
-#echo "Calibration : ${calib}"
 
 
 ttystring=$( tty | tr -d \/ )

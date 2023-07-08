@@ -48,4 +48,4 @@ ln -sf ${PWD}/conf/RMmodesWFS/zrespM-H.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 # load zresp to shared memory
 milk-FITS2shm "conf/RMmodesWFS/zrespM-H.fits" aol${CACAO_LOOPNUMBER}_zrespM
 
-cacaomsglog "EXIT"
+cacaomsglog "END"

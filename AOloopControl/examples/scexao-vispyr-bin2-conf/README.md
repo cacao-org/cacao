@@ -240,8 +240,10 @@ Closing the loop and setting loop parameters with mfilt:
 # Set loop gain
 cacao-fpsctrl setval mfilt loopgain 0.1
 
-# set modal gains
+# set modal gains, mults and limits
 cacao-aorun-061-setmgains 0.8 -f 0.05 -t 1.2
+cacao-aorun-062-setmgmults 0.05 -f 0.9 -t 1.0
+cacao-aorun-063-setmlimits 0.8 -f 0.05 -t 1.0
 
 # Set loop mult
 cacao-fpsctrl setval mfilt loopmult 0.98
@@ -250,6 +252,23 @@ cacao-fpsctrl setval mfilt loopmult 0.98
 cacao-fpsctrl setval mfilt loopON ON
 
 ```
+
+Misc tools:
+
+```bash
+# Astrogrid control
+cacao-DMastrogrid start
+cacao-DMastrogrid stop
+
+# Set WFS reference to flat illumination over wfsmask
+cacao-wfsref-setflat
+
+
+```
+
+
+
+
 
 ### 8.2. Zero Point Offsetting
 

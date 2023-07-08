@@ -34,9 +34,9 @@ streamcheckOK="OK"
 checkstream aol${CACAO_LOOPNUMBER}_wfsim
 
 if [ ${streamcheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
-cacaomsglog "ERROR streamcheck"
-exit
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+	cacaomsglog "ERROR streamcheck"
+	exit 1
 fi
 
 cacaomsglog "NBframe ${NBframe}"
@@ -49,14 +49,14 @@ cacaomsglog "NBframe ${NBframe}"
 
 set +u
 if [ -z ${CACAO_FPSPROC_WFSCAMSIM+x} ]; then
-echo "CACAO_FPSPROC_WFSCAMSIM does not exist"
+	echo "CACAO_FPSPROC_WFSCAMSIM does not exist"
 else
 
 if [ $CACAO_FPSPROC_WFSCAMSIM = "ON" ]; then
-echo "CACAO_FPSPROC_WFSCAMSIM set -> simulator"
-sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal 0.0"
+	echo "CACAO_FPSPROC_WFSCAMSIM set -> simulator"
+	sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal 0.0"
 else
-echo "CACAO_FPSPROC_WFSCAMSIM not set -> no simulator"
+	echo "CACAO_FPSPROC_WFSCAMSIM not set -> no simulator"
 fi
 
 fi
@@ -107,16 +107,14 @@ ln -s ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdarkraw.im.shm ${MILK_SHM_DIR}/a
 set +u
 
 if [ -z ${CACAO_FPSPROC_WFSCAMSIM+x} ]; then
-echo "CACAO_FPSPROC_WFSCAMSIM does not exist"
+	echo "CACAO_FPSPROC_WFSCAMSIM does not exist"
 else
-
-if [ $CACAO_FPSPROC_WFSCAMSIM = "ON" ]; then
-FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
-sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"
-else
-echo "CACAO_FPSPROC_WFSCAMSIM not set -> no simulator"
-fi
-
+	if [ $CACAO_FPSPROC_WFSCAMSIM = "ON" ]; then
+		FLUX=${CACAO_FPS_wfscamsim_fluxtotal:-100000}
+		sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.fluxtotal ${FLUX}"
+	else
+		echo "CACAO_FPSPROC_WFSCAMSIM not set -> no simulator"
+	fi
 fi
 
 set -u

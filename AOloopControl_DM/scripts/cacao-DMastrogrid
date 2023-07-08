@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 
 # This script uses milk-argparse
-# See template milk-scriptexample in module milk_module_example for template and instructions
+# See template milk-scriptexample
 
+ASTROGRIDCHANNEL="09"
 
-# script 1-line description
 MSdescr="Run DM astrogrid"
-# Extended description
 MSextdescr="DM grid pattern modulation for astrometry and photometric calibration"
 
 
 source milk-script-std-config
-
 source cacao-check-cacaovars
 
 
-RequiredCommands+=( cacao-astrogrid-mkgrid )
-
+RequiredCommands+=( cacao-astrogrid-mkgrid milk-shmim-zero )
+RequiredFiles=(DMINDEX)
 
 MSarg+=( "action:string:action (start/stop/check)" )
 
@@ -27,17 +25,22 @@ function set_amplitude() {
 	amplitude=$1
 }
 
+
 MSopt+=( "n:nbframe:set_nbframe:nbfr[int]:switch pattern every n AO frames (default=2)" )
 nbframe=2
 function set_nbframe() {
 	nbframe=$1
 }
 
+
+
 MSopt+=( "b:binfact:set_binfact:binfact[int]:bin factor (default=2)" )
 binfact=2
 function set_binfact() {
 	binfact=$1
 }
+
+
 
 MSopt+=( "p:pattern:set_pattern:pattern[int]:pattern (default=0)" )
 pattern=0
@@ -49,17 +52,26 @@ function set_pattern() {
 
 source milk-argparse
 
-
-
-
 ACTION="${inputMSargARRAY[0]}"
 
 
-echo "CACAO_DMINDEX = ${CACAO_DMINDEX}"
+
+if [ -f DMINDEX ]; then
+    DMINDEX=$( head -1 DMINDEX )
+else
+	cacaomsglog "Error: no DMINDEX file. Are we running this from the correct directory ?"
+    exit 1
+fi
+
+echo "DMINDEX = ${DMINDEX}"
 echo "CACAO_LOOPNAME = ${CACAO_LOOPNAME}"
 echo "fpsCTRLfifo = ${fpsCTRLfifo}"
 
 
+cacaomsglog "amplitude ${amplitude}"
+cacaomsglog "nbframe ${nbframe}"
+cacaomsglog "binfact ${binfact}"
+cacaomsglog "pattern ${pattern}"
 
 
 
@@ -67,31 +79,29 @@ echo "$amplitude $nbframe $binfact"
 
 ACTIONOK=0
 
+
+
+
 if [ ${ACTION} = "start" ]; then
-
-echo "start"
-# create XY astrogrid pattern
-cacao-astrogrid-mkgrid -b${binfact} ${pattern}
-
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.nbframe ${nbframe}"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.delay 0"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mult ${amplitude}"
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mode ON"
-
-ACTIONOK=1
-
+	cacaomsglog "START"
+	# create XY astrogrid pattern
+	cacao-astrogrid-mkgrid -b${binfact} ${pattern}
+	sendFPScmd "setval DMch2disp-${DMINDEX}.astrogrid.chan ${ASTROGRIDCHANNEL}"
+	sendFPScmd "setval DMch2disp-${DMINDEX}.astrogrid.sname aol${CACAO_LOOPNUMBER}_DMastrogrid"
+	sendFPScmd "setval DMch2disp-${DMINDEX}.astrogrid.nbframe ${nbframe}"
+	sendFPScmd "setval DMch2disp-${DMINDEX}.astrogrid.delay 0"
+	sendFPScmd "setval DMch2disp-${DMINDEX}.astrogrid.mult ${amplitude}"
+	sendFPScmd "setval DMch2disp-${DMINDEX}.astrogrid.mode ON"
+	ACTIONOK=1
 fi
 
 
 
 if [ ${ACTION} = "stop" ]; then
-
-echo "stop"
-
-sendFPScmd "setval DMch2disp-${CACAO_DMINDEX}.astrogrid.mode OFF"
-
-ACTIONOK=1
-
+	cacaomsglog "STOP"
+	sendFPScmd "setval DMch2disp-${DMINDEX}.astrogrid.mode OFF"
+	milk-shmim-zero dm${DMINDEX}disp${ASTROGRIDCHANNEL}
+	ACTIONOK=1
 fi
 
 
@@ -103,6 +113,10 @@ fi
 
 
 if [ ${ACTIONOK} == 0 ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	cacaomsglog "ERROR ACTION undefined"
+	exit 1
 fi
 
+
+cacaomsglog "END"

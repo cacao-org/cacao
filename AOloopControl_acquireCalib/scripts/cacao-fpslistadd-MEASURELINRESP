@@ -27,7 +27,7 @@ else
 
 				addfpscmdheader
 			
-				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax_10"
+				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax 10"
 				addfpscmd "setval ${fpsfname}.streamin aol${CACAO_LOOPNUMBER}_dmRM"
 				addfpscmd "setval ${fpsfname}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
 			fi

@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-cacao-DMastrogrid stop
-
-# log information
-dologext "cacao-DMastrogrid stop" &
-
-scxkw-setter set X_GRDST OFF 1

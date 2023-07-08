@@ -11,6 +11,8 @@ MSextdescr="reads from aolX_wfsim
 Subtract dark      -> aolX_imWFS0
 Normalizes flux    -> aolX_imWFS1
 Subtract reference -> aolX_imWFS2"
+
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -38,7 +40,7 @@ ACTIONOK=0
 
 
 if [ ${ACTION} == "check" ]; then
-ACTIONOK=1
+	ACTIONOK=1
 fi
 
 errexit=0
@@ -48,9 +50,9 @@ FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-cacaomsglog "ERROR FPScheck"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck"
+	errexit=1
 fi
 
 
@@ -59,14 +61,14 @@ streamcheckOK="OK"
 checkstream aol${CACAO_LOOPNUMBER}_wfsim
 
 if [ ${streamcheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
-cacaomsglog "ERROR streamcheck"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+	cacaomsglog "ERROR streamcheck"
+	errexit=1
 fi
 
 
 if [ $errexit = 1 ]; then
-exit
+	exit 1
 fi
 
 
@@ -83,18 +85,18 @@ ACTIONOK=1
 cacaomsglog "START"
 
 if [ "$CACAO_WFSSTREAM_PROCESSED" = "ON" ]; then
-echo "Processed WFS stream -> no scaling"
-cacaomsglog "INFO CACAO_WFSSTREAM_PROCESSED ON"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize OFF"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub OFF"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
+	echo "Processed WFS stream -> no scaling"
+	cacaomsglog "INFO CACAO_WFSSTREAM_PROCESSED ON"
+	sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize OFF"
+	sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub OFF"
+	sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
+	sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
 else
-cacaomsglog "INFO CACAO_WFSSTREAM_PROCESSED OFF"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize ON"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub ON"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
-sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
+	cacaomsglog "INFO CACAO_WFSSTREAM_PROCESSED OFF"
+	sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSnormalize ON"
+	sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefsub ON"
+	sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSsigav ON"
+	sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc ON"
 fi
 
 cacaomsglog "confwupdate"
@@ -104,14 +106,13 @@ sendFPScmd "runstart acquWFS-${CACAO_LOOPNUMBER}"
 
 
 if [ $WaitForCompletion == "1" ]; then
-sname="aol${CACAO_LOOPNUMBER}_imWFS2"
-echo "Waiting for stream ${sname}"
-until [ -f "${MILK_SHM_DIR}/${sname}.im.shm" ]
-do
-     sleep 0.1
-done
-fi
-
+	sname="aol${CACAO_LOOPNUMBER}_imWFS2"
+	echo "Waiting for stream ${sname}"
+	until [ -f "${MILK_SHM_DIR}/${sname}.im.shm" ]
+		do
+			sleep 0.1
+		done
+	fi
 fi
 
 
@@ -119,15 +120,15 @@ fi
 
 
 if [ ${ACTION} == "stop" ]; then
-ACTIONOK=1
-cacaomsglog "STOP"
-sendFPScmd "runstop acquWFS-${CACAO_LOOPNUMBER}"
-
+	ACTIONOK=1
+	cacaomsglog "STOP"
+	sendFPScmd "runstop acquWFS-${CACAO_LOOPNUMBER}"
 fi
 
 
 
 
 if [ ${ACTIONOK} == 0 ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	exit 1
 fi

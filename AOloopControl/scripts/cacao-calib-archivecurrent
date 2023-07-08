@@ -9,6 +9,8 @@ source milk-script-std-config
 
 # check and load cacaovars
 source cacao-check-cacaovars
+
+
 RequiredCommands=(milk)
 RequiredPipes=()
 RequiredFiles=()
@@ -21,7 +23,7 @@ source milk-argparse
 
 set +u
 if [ "${EXITSTATUS}" = "1" ]; then
-exit
+	exit 1
 fi
 set -u
 
@@ -81,3 +83,5 @@ EOF
 
 
 echo "$(date -u --iso-8601=seconds) ARCHCURRENT ${calib}" >> AOcalibs/AOcalib-${CACAO_LOOPNUMBER}-log.txt
+
+cacaomsglog "END"

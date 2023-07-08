@@ -9,7 +9,6 @@ MSdescr="Expand modal values to DM map"
 MSextdescr="Modal values to DM map"
 
 source milk-script-std-config
-
 source cacao-check-cacaovars
 
 MSarg+=( "action:string:action (start/stop/check)" )
@@ -32,34 +31,34 @@ FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-cacaomsglog "ERROR FPScheck failed"
-exit
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck failed"
+	exit 1
 fi
 
 
 
 
 if [ ${ACTION} == "start" ]; then
-ACTIONOK=1
-cacaomsglog "START"
-sendFPScmd "confwupdate mvalC2dm-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart mvalC2dm-${CACAO_LOOPNUMBER}"
-
+	ACTIONOK=1
+	cacaomsglog "START"
+	sendFPScmd "confwupdate mvalC2dm-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstart mvalC2dm-${CACAO_LOOPNUMBER}"
 fi
 
 
 
 if [ ${ACTION} == "stop" ]; then
-ACTIONOK=1
-cacaomsglog "STOP"
-sendFPScmd "runstop mvalC2dm-${CACAO_LOOPNUMBER}"
+	ACTIONOK=1
+	cacaomsglog "STOP"
+	sendFPScmd "runstop mvalC2dm-${CACAO_LOOPNUMBER}"
 fi
 
 
 
 if [ ${ACTIONOK} == 0 ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	exit 1
 fi
 
 cacaomsglog "END"

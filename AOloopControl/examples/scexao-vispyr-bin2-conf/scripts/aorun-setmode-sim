@@ -12,77 +12,79 @@ MSextdescr="Simulation mode
 source milk-script-std-config
 source cacao-check-cacaovars
 
+RequiredCommands=( cacao-setDMnolink )
+
+
 source milk-argparse
 
 
 
 
 
-errexit=0
 
 # Checking required FPS
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
-#checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_ACQLINZRM}
-#checkFPSON CACAO_FPSPROC_ACQLINLORM ${CACAO_FPSPROC_ACQLINLORM}
+checkFPSON CACAO_FPSPROC_WFSCAMSIM ${CACAO_FPSPROC_WFSCAMSIM}
+checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
+checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
+checkFPSON CACAO_FPSPROC_MEASURELINRESP ${CACAO_FPSPROC_MEASURELINRESP}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-errexit=1
-fi
-
-
-if [ $errexit = 1 ]; then
-exit
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck"
+	exit 1
 fi
 
 
 
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.ampl 0.03"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBave 5"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBinnerCycle 10"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 20"
 
-sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.compphnoise OFF"
-sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 
 
+sendFPScmd "setval wfs2cmodeval-${CACAO_LOOPNUMBER}.GPUindex 0"
+sendFPScmd "confwupdate wfs2cmodeval-${CACAO_LOOPNUMBER}"
+
+sendFPScmd "setval mvalC2dm-${CACAO_LOOPNUMBER}.GPUindex 0"
+sendFPScmd "confwupdate mvalC2dm-${CACAO_LOOPNUMBER}"
 
 
-
-# stream linking
 
 # WFS
 echo "Linking WFS"
 
 ln -sf ${MILK_SHM_DIR}/${CACAO_WFSSTREAMSIM}.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsim.im.shm
 
+sendFPScmd "setval wfscamsim-${CACAO_LOOPNUMBER}.compphnoise OFF"
+sendFPScmd "confwupdate wfscamsim-${CACAO_LOOPNUMBER}"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.insname aol${CACAO_LOOPNUMBER}_wfsim"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.WFSnormfloor 0.01"
 
 
+
 # DM
+echo "Switching to simulation DM"
+DMINDEX="${CACAO_DMSIMINDEX}"
+echo "${DMINDEX}" > DMINDEX
+
 echo "Linking DM"
+cacao-setDMnolink
 
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
 
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
 
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp04.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP0.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp05.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP1.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp06.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP2.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp07.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP3.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp08.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP4.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp09.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP5.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP6.im.shm
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp11.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmZP7.im.shm
 
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmRM.im.shm
-
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp10.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmturb.im.shm
-
-ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
 
 
 # update system cacaoloop record
 #
 CACAOLOOPRECORD="${MILK_SHM_DIR}/cacaoloop-${CACAO_LOOPNUMBER}"
 mkdir -p ${CACAOLOOPRECORD}
-echo "${CACAO_DMSIMINDEX}" > ${CACAOLOOPRECORD}/dmindex
+echo "${DMINDEX}" > ${CACAOLOOPRECORD}/dmindex
 echo "${CACAO_WFSSTREAMSIM}" > ${CACAOLOOPRECORD}/wfsim
+
+
+cacaomsglog "END"

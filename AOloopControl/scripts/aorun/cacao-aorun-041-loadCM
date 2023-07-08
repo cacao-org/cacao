@@ -50,8 +50,8 @@ checkFile ${CMDMfname}
 checkFile ${CMWFSfname}
 
 if [ ${EXITSTATUS} = 1 ]; then
-echo "missing file - cannot proceed"
-exit
+	echo "missing file - cannot proceed"
+	exit 1
 fi
 
 
@@ -63,20 +63,20 @@ fi
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
 if [ ${FPScheckOK} == "OK" ]; then
-sendFPScmd "runstop mvalC2dm-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstop mvalC2dm-${CACAO_LOOPNUMBER}"
 fi
 
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
 if [ ${FPScheckOK} == "OK" ]; then
-sendFPScmd "runstop mfilt-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstop mfilt-${CACAO_LOOPNUMBER}"
 fi
 
 
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
 if [ ${FPScheckOK} == "OK" ]; then
-sendFPScmd "runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
 fi
 
 
@@ -85,12 +85,12 @@ fi
 
 
 if [ ${UpdateFiles} = 1 ]; then
-echo "Updating files"
+	echo "Updating files"
 
-ln -sf ${PWD}/${RMDMfname} ${RMDMfname0}
-ln -sf ${PWD}/${RMWFSfname} ${RMWFSfname0}
-ln -sf ${PWD}/${CMDMfname} ${CMDMfname0}
-ln -sf ${PWD}/${CMWFSfname} ${CMWFSfname0}
+	ln -sf ${PWD}/${RMDMfname} ${RMDMfname0}
+	ln -sf ${PWD}/${RMWFSfname} ${RMWFSfname0}
+	ln -sf ${PWD}/${CMDMfname} ${CMDMfname0}
+	ln -sf ${PWD}/${CMWFSfname} ${CMWFSfname0}
 
 fi
 

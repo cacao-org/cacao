@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+
+AMPLITUDE="0.025"
+NBFRAME="2"
+BINFACT="2"
+PATTERN="0"
+
+source milk-script-std-config
+
+RequiredCommands+=( cacao-DMastrogrid scxkw-setter scxkw-getsetpm )
+
+MSarg+=( "action:string:action (start/stop/check)" )
+
+MSopt+=( "a:amplitude:set_amplitude:val[float]:amplitude [um] (default=${AMPLITUDE})" )
+function set_amplitude() {
+	AMPLITUDE=$1
+}
+
+MSopt+=( "n:nbframe:set_nbframe:nbfr[int]:switch pattern every n AO frames (default=${NBFRAME})" )
+function set_nbframe() {
+	NBFRAME=$1
+}
+
+MSopt+=( "b:binfact:set_binfact:binfact[int]:bin factor (default=${BINFACT})" )
+function set_binfact() {
+	BINFACT=$1
+}
+
+
+MSopt+=( "p:pattern:set_pattern:pattern[int]:pattern (default=${PATTERN})" )
+function set_pattern() {
+	PATTERN=$1
+}
+
+
+
+source milk-argparse
+
+ACTION="${inputMSargARRAY[0]}"
+
+
+
+# requires dc ?
+
+
+ 
+if [ ${ACTION} = "start" ]; then
+	cacao-DMastrogrid -a ${AMPLITUDE} -n ${NBFRAME} -b ${BINFACT} -p ${PATTERN} start
+
+	scxkw-setter set X_GRDST XYdiag 0
+	scxkw-setter set X_GRDAMP $ampl
+	scxkw-setter set X_GRDSEP 15.5
+
+	loopfrq=$( scxkw-getsetpm X_PYWFRQ )
+	agfrq=$(( $loopfrq / $AGNBAVE))
+
+	echo "loopfrq = $loopfrq"
+	echo "AGNBAVE = $AGNBAVE"
+	echo "X_GRDMOD = ${agfrq}"
+
+	scxkw-setter set X_GRDMOD $agfrq
+fi
+
+
+if [ ${ACTION} = "stop" ]; then
+	cacao-DMastrogrid stop
+	scxkw-setter set X_GRDST OFF 1
+fi

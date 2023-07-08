@@ -32,7 +32,7 @@ RequiredDirs=(conf)
 source milk-argparse
 set +u
 if [ "${EXITSTATUS}" = "1" ]; then
-exit
+exit 1
 fi
 set -u
 
@@ -80,7 +80,7 @@ do
 done
 
 
-exit
+exit 0
 
 cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodesWFS1all.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS.fits
 cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes.fits
