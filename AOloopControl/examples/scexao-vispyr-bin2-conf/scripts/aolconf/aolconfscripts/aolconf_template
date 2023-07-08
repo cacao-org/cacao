@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+

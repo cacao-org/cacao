@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# create XY astrogrid pattern
+cacao-astrogrid-mkgrid 5
+
+
+fifoname="/milk/shm/vispyr2_fpsCTRL.fifo"
+
+echo "setval DMch2disp-00.astrogrid.nbframe 1" >> ${fifoname}
+echo "setval DMch2disp-00.astrogrid.delay 0" >> ${fifoname}
+echo "setval DMch2disp-00.astrogrid.mult $1" >> ${fifoname}
+echo "setval DMch2disp-00.astrogrid.mode ON" >> ${fifoname}
+
+
+# log information
+dologext "ASTROGID ON  amp = $1 um  speed = 1x  15.5 l/d diag" &
+
+scxkw-setter set X_GRDST XYdiag0 0
+scxkw-setter set X_GRDAMP $1
+scxkw-setter set X_GRDSEP 15.5
+scxkw-setter set X_GRDMOD 2000
+

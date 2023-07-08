@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+AGNBAVE=${2:-2}
+
+# create XY astrogrid pattern
+cacao-astrogrid-mkgrid -b3 0
+
+
+
+fifoname="/milk/shm/vispyr2_fpsCTRL.fifo"
+
+echo "setval DMch2disp-00.astrogrid.nbframe ${AGNBAVE}" >> ${fifoname}
+echo "setval DMch2disp-00.astrogrid.delay 0" >> ${fifoname}
+echo "setval DMch2disp-00.astrogrid.mult 0.050" >> ${fifoname}
+echo "setval DMch2disp-00.astrogrid.mode ON" >> ${fifoname}
+
+
+# log information
+dologext "ASTROGID ON  amp = 0.050 um  nbframe = ${AGNBAVE}  11 l/d diag" &
+
+
+scxkw-setter set X_GRDST XYdiag 0
+scxkw-setter set X_GRDAMP 0.050
+scxkw-setter set X_GRDSEP 11
+
+loopfrq=$( scxkw-getsetpm X_PYWFRQ )
+agfrq=$(( $loopfrq / $AGNBAVE))
+
+echo "loopfrq = $loopfrq"
+echo "AGNBAVE = $AGNBAVE"
+
+echo "X_GRDMOD = ${agfrq}"
+
+scxkw-setter set X_GRDMOD $agfrq

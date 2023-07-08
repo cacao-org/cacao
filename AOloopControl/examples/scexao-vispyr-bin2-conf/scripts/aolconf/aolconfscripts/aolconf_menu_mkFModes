@@ -1,0 +1,70 @@
+#!/bin/bash
+
+
+if [ ! -v aolconfFLAG ]; then
+echo "ERROR: This script should be called from aolconf main script"
+exit
+fi
+
+
+
+
+
+
+# =====================================================
+# ======== Make Modal Modes  ========================
+# =====================================================
+
+if [ $state = "menu_mkFModes" ]; then
+stateok=1
+#echo "entering menu_mkFmodes"
+
+menuname=" CONFIGURATION - Make Fourier based Modes (mode = $mkModesMODE)"
+rm tmp/*.fits
+menuitems=()
+menuitems+=( "00.2" "0.2 CPA (Tip/Tilt only)" )
+menuitems+=( "00.3" "0.3 CPA (Tip/Tilt + Focus)" )
+menuitems+=( "00.5" "0.5 CPA (Tip/Tilt + Focus + AST)" )
+for i in `seq 20 40 240 `;
+        do
+str0=$( echo $i|awk '{printf("%04.1f", $1*0.1)}')
+str1=$( echo $i|awk '{printf("%4.1f CPA", $1*0.1)}')
+menuitems+=( "$str0" "$str1" )
+done 
+
+cpamaxdefault="00.2"
+if [ -z "$cpamax" ]; then cpamax=${cpamaxdefault}; else echo "cpamax is set to '$cpamax'"; fi
+
+
+
+dialog --title "AO loop configuration" \
+--ok-label "Select" \
+--cancel-label "Main" \
+--help-button --help-label "Exit" \
+--default-item ${cpamax} \
+--menu "$menuname" \
+ 50 80 100 "${menuitems[@]}"  2> $tempfile
+cpamax=$( head -1 $tempfile)
+retval=$?
+
+
+case $retval in
+   0) state="menucontrolmatrix"
+
+echo "cpamax = $tempfile"
+echo "CPAmax = $cpamax"
+
+file="./conf/param_cpamax.txt"
+echo "$cpamax" > $file
+
+;; # button 1:
+   1) state="menutop";;  
+   2) state="menuexit";; 
+   255) state="menuexit";;
+esac
+
+fi
+
+
+
+
