@@ -17,7 +17,12 @@ function set_printpath()
 	PRINTPATH="1"
 }
 
-
+PRINTDATE="0"
+MSopt+=( "d:date:set_printdate::Print command date" )
+function set_printdate()
+{
+	PRINTDATE="1"
+}
 
 source milk-argparse
 
@@ -33,6 +38,10 @@ for cmd in $CMDLIST; do
 	if [ "${PRINTPATH}" = "1" ]; then
 		pathstring="$(which ${cmd})"
 		printf "	${GREEN}%-32s${NC}  %s\n" "$cmd" "${pathstring}"
+	elif [ "${PRINTDATE}" = "1" ]; then
+		filename="$(which ${cmd})"
+		datestring="$(date -r $filename '+%Y-%m-%dT%H:%M:%SZ')"
+		CMDLISTOUT+="$(printf "%s  %s;" "${datestring}" "$cmd")"
 	else
 		helpline=$( $cmd -hs | head -n 1 )
 		printf "	${GREEN}%-32s${NC}  %s\n" "$cmd" "$helpline"
@@ -41,3 +50,14 @@ for cmd in $CMDLIST; do
 done
 
 
+if [ "${PRINTDATE}" = "1" ]; then
+	IFS=';' read -r -a array <<< "${CMDLISTOUT//[$'\t\r\n']}"; unset IFS
+	IFS=$'\n' sortedarray=($(sort <<<"${array[*]}")); unset IFS	
+	for element in "${sortedarray[@]//[$'\t\r\n']}"
+	do
+		cmdstr=$(echo $element | awk '{ print $2}')
+		datestr=$(echo $element | awk '{ print $1}')
+		helpline=$( $cmdstr -hs | head -n 1 )
+		printf " %s ${GREEN}%-32s${NC}  %s\n" "$datestr" "$cmdstr" "$helpline"
+	done
+fi
