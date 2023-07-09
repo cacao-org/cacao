@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
 
-echo "Checking for cacaovars"
+MSdescr="Checking for cacaovars"
+
+MSextdescr="Checking for cacaovars"
+
+source milk-script-std-config
+
+source milk-argparse
+
 
 # ensure there is a single cacaovar file
 fnb=0

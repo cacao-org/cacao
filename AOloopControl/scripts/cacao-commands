@@ -1,9 +1,25 @@
 #!/usr/bin/env bash
 
-if [ "$1" = "-hs" ]; then
-	echo "List cacao commands on system"
-	exit 1
-fi
+MSdescr="list cacao- scripts"
+
+MSextdescr="List cacao scripts
+
+Scan system for cacao- commands
+
+"
+
+source milk-script-std-config
+
+PRINTPATH="0"
+MSopt+=( "p:path:set_printpath::Print command path" )
+function set_printpath()
+{
+	PRINTPATH="1"
+}
+
+
+
+source milk-argparse
 
 
 CMDLIST=$(compgen -c "cacao-" | sort -u )
@@ -14,9 +30,13 @@ NC='\033[0m' # No Color
 echo "LIST OF CACAO COMMANDS :"
 
 for cmd in $CMDLIST; do
-
-	helpline=$( $cmd -hs | head -n 1 )
-	printf "	${GREEN}%-32s${NC}  %s\n" "$cmd" "$helpline"
+	if [ "${PRINTPATH}" = "1" ]; then
+		pathstring="$(which ${cmd})"
+		printf "	${GREEN}%-32s${NC}  %s\n" "$cmd" "${pathstring}"
+	else
+		helpline=$( $cmd -hs | head -n 1 )
+		printf "	${GREEN}%-32s${NC}  %s\n" "$cmd" "$helpline"
+	fi
 
 done
 
