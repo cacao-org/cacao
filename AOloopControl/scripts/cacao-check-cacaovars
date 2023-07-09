@@ -5,9 +5,12 @@ MSdescr="Checking for cacaovars"
 
 MSextdescr="Checking for cacaovars"
 
-source milk-script-std-config
-
-source milk-argparse
+# do not source if called as subscript
+#
+if [ -z ${MILK_SCRIPT_STD_CONFIG_SOURCED+x} ]; then
+	source milk-script-std-config
+	source milk-argparse
+fi
 
 
 # ensure there is a single cacaovar file
