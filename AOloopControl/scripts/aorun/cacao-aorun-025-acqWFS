@@ -12,27 +12,10 @@ Subtract dark      -> aolX_imWFS0
 Normalizes flux    -> aolX_imWFS1
 Subtract reference -> aolX_imWFS2"
 
-if [ -z ${MILK_SCRIPT_STD_CONFIG_SOURCED+x} ]; then
-	echo "$0 MILK_SCRIPT_STD_CONFIG_SOURCED unset"
-else
-	echo "$0 MILK_SCRIPT_STD_CONFIG_SOURCED set"
-fi
 
 source milk-script-std-config
 
-if [ -z ${MILK_SCRIPT_STD_CONFIG_SOURCED+x} ]; then
-	echo "$0 MILK_SCRIPT_STD_CONFIG_SOURCED unset"
-else
-	echo "$0 MILK_SCRIPT_STD_CONFIG_SOURCED set"
-fi
-
 source cacao-check-cacaovars
-
-if [ -z ${MILK_SCRIPT_STD_CONFIG_SOURCED+x} ]; then
-	echo "$0 MILK_SCRIPT_STD_CONFIG_SOURCED unset"
-else
-	echo "$0 MILK_SCRIPT_STD_CONFIG_SOURCED set"
-fi
 
 
 MSarg+=( "action:string:action (start/check)" )
