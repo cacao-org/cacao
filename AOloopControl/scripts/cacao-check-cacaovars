@@ -8,6 +8,7 @@ MSextdescr="Checking for cacaovars"
 # do not source if called as subscript
 #
 if [ -z ${MILK_SCRIPT_STD_CONFIG_SOURCED+x} ]; then
+	echo "variable MILK_SCRIPT_STD_CONFIG_SOURCED unset -> sourcing milk header scripts"
 	source milk-script-std-config
 	source milk-argparse
 else
