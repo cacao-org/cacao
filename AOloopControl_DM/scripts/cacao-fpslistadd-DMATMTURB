@@ -15,7 +15,7 @@ else
 
 			# FPS name
 			fpsname="DMatmturb"
-			fpsarg0="${CACAO_DMINDEX}"
+			fpsarg0="${CACAO_LOOPNUMBER}"
 			DMTURBCHAN="10"
 
 			# FPS full name

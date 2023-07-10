@@ -53,7 +53,7 @@ if [ -f ${TURBFILE} ]; then
 	cacaomsglog "Found file ${TURBFILE}"
 else
 	cacaomsglog "Creating file ${TURBFILE}"
-	sendFPScmd "setval DMatmturb-${DMINDEX}.turbseed.comp ON"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbseed.comp ON"
 	echo "Waiting for file ${TURBFILE}"
 	until [ -f ${TURBFILE} ]
 	do
@@ -64,32 +64,32 @@ fi
 if [ ${ACTION} == "start" ]; then
 	ACTIONOK=1
 	cacaomsglog "START"
-	sendFPScmd "setval DMatmturb-${DMINDEX}.dmstream aol${CACAO_LOOPNUMBER}_dmturb"
-	sendFPScmd "confwupdate DMatmturb-${DMINDEX}"
-	sendFPScmd "runstart DMatmturb-${DMINDEX}"
-	sendFPScmd "setval DMatmturb-${DMINDEX}.turbON ON"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.dmstream aol${CACAO_LOOPNUMBER}_dmturb"
+	sendFPScmd "confwupdate DMatmturb-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstart DMatmturb-${CACAO_LOOPNUMBER}"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbON ON"
 fi
 
 
 if [ ${ACTION} == "stop" ]; then
 	ACTIONOK=1
 	cacaomsglog "STOP"
-	sendFPScmd "setval DMatmturb-${DMINDEX}.turbON OFF"
-	sendFPScmd "setval DMatmturb-${DMINDEX}.turbZERO ON"
-	sendFPScmd "runstop DMatmturb-${DMINDEX}"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbON OFF"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbZERO ON"
+	sendFPScmd "runstop DMatmturb-${CACAO_LOOPNUMBER}"
 fi
 
 if [ ${ACTION} == "on" ]; then
 	ACTIONOK=1
 	cacaomsglog "ON"
-	sendFPScmd "setval DMatmturb-${DMINDEX}.turbON ON"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbON ON"
 fi
 
 if [ ${ACTION} == "off" ]; then
 	ACTIONOK=1
 	cacaomsglog "OFF"
-	sendFPScmd "setval DMatmturb-${DMINDEX}.turbON OFF"
-	sendFPScmd "setval DMatmturb-${DMINDEX}.turbZERO ON"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbON OFF"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbZERO ON"
 fi
 
 

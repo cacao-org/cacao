@@ -40,7 +40,7 @@ sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.ampl 0.03"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBave 5"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBexcl 1"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.NBinnerCycle 10"
-sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 80"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 40"
 
 
 sendFPScmd "setval wfs2cmodeval-${CACAO_LOOPNUMBER}.GPUindex 1"
@@ -50,6 +50,7 @@ sendFPScmd "setval mvalC2dm-${CACAO_LOOPNUMBER}.GPUindex 1"
 sendFPScmd "confwupdate mvalC2dm-${CACAO_LOOPNUMBER}"
 
 
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.svdlim 0.01"
 
 
 # WFS
