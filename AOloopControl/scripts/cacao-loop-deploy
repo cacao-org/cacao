@@ -94,8 +94,8 @@ if [ ${CPCONF} == "ON" ]; then
 
 if [[ -d "$confsrcdir" ]]
 then
-	echo "Running : rsync -au --progress ${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf ."
-	rsync -au --progress ${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf .
+	echo "Running : rsync -a --progress ${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf ."
+	rsync -a --progress ${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf .
 else
 	echo "ERROR: Cannot find directory ${confsrcdir}"
 	exit 1

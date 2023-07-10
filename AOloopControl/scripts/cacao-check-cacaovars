@@ -10,6 +10,8 @@ MSextdescr="Checking for cacaovars"
 if [ -z ${MILK_SCRIPT_STD_CONFIG_SOURCED+x} ]; then
 	source milk-script-std-config
 	source milk-argparse
+else
+	echo "cacao-check-cacaovars SKIPPING milk-script-std-config and milk-argparse"
 fi
 
 
