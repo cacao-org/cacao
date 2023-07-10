@@ -35,7 +35,11 @@ class CacaoConf:
         '''
 
         abs_path = os.path.abspath(where)
-        cacaovars_path_expect = abs_path + '/cacaovars.bash'
+        cacaovars_loopname_file = abs_path + '/LOOPNAME'
+        with open(cacaovars_loopname_file, 'r') as f:
+            CACAO_LOOPNAME = f.read().strip()
+
+        cacaovars_path_expect = abs_path + f'/cacaovars.{CACAO_LOOPNAME}.bash'
 
         has_cacaovars = os.path.isfile(cacaovars_path_expect)
         if not has_cacaovars:
