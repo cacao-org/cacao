@@ -100,8 +100,11 @@ cacaomsglog "wfsc1 = ${WFSmaskRMc1}"
 
 cacaomsglog "START"
 
+
+#loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
+
 cacao << EOF
-loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
+loadfits "conf/shmim.zrespM.fits" zrespM
 
 cacaocc.compmasksWFSDM .dmmask.perc0 ${DMmaskRMp0}
 cacaocc.compmasksWFSDM .dmmask.coeff0 ${DMmaskRMc0}
@@ -121,5 +124,22 @@ saveFITS wfsmask "conf/wfsmask.fits"
 listim
 exitCLI
 EOF
+
+# LOGGING
+# see cacaofuncs-log for conventions
+#
+source cacaofuncs-log
+
+cacao-calib-logFITSfile dmmap
+cacao-calib-loadFITSfile dmmap ${LOGFILEOUT}
+
+cacao-calib-logFITSfile dmmask
+cacao-calib-loadFITSfile dmmask ${LOGFILEOUT}
+
+cacao-calib-logFITSfile wfsmap
+cacao-calib-loadFITSfile wfsmap ${LOGFILEOUT}
+
+cacao-calib-logFITSfile wfsmask
+cacao-calib-loadFITSfile wfsmask ${LOGFILEOUT}
 
 cacaomsglog "END"

@@ -57,7 +57,7 @@ cd vispyr2-rootdir
 
 Deploy logging processes and terminals :
 ```bash
-cacao-log-setup
+cacao-log-setup start
 ```
 
 The command is equivalent to running in seprate windows :
@@ -234,6 +234,11 @@ cacao-aorun-070-cmval2dm start
 
 ```
 
+
+python -m pycacao.calib.mkmodes randhad HpokeCrand.fits (edited) 
+python -m pycacao.calib.rmdecode
+
+
 Closing the loop and setting loop parameters with mfilt:
 
 ```bash
@@ -262,11 +267,12 @@ cacao-DMastrogrid stop
 
 # Set WFS reference to flat illumination over wfsmask
 cacao-wfsref-setflat
-
-
 ```
 
+scexao-specific tools
+```bash
 
+```
 
 
 
@@ -367,6 +373,7 @@ cacao-aorun-140-applyPF 1 start
 From main directory (upstream of rootdir) :
 
 ```bash
+cacao-msglogCTRL stop
 cacao-task-manager -C 0 scexao-vispyr-bin2
 rm -rf .vispyr2.cacaotaskmanager-log
 ```

@@ -20,6 +20,7 @@ source cacao-check-cacaovars
 
 
 
+
 NBframe="1000"
 MSopt+=( "n:nbframe:set_NBframe:nbframe[long]:set number of frames" )
 function set_NBframe() {
@@ -45,7 +46,6 @@ cacaomsglog "NBframe ${NBframe}"
 # ======================================================================
 # Turning source off
 # ======================================================================
-
 
 set +u
 if [ -z ${CACAO_FPSPROC_WFSCAMSIM+x} ]; then
@@ -76,29 +76,26 @@ streamave ..triggersname aol${CACAO_LOOPNUMBER}_wfsim
 streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
 streamave aol${CACAO_LOOPNUMBER}_wfsim imdark ${NBframe}
-saveFITS imdark "conf/wfsdarkraw.${datestring}.fits"
-cpsh imdark aol${CACAO_LOOPNUMBER}_wfsdarkraw
+saveFITS imdark "conf/wfsdarkraw.fits"
 listim
 exitCLI
 EOF
 cacaomsglog "STOP acquisition"
-cacaomsglog "SAVED wfsdarkraw as conf/wfsdarkraw.${datestring}.fits"
+cacaomsglog "SAVED wfsdarkraw as conf/wfsdarkraw.fits"
 
 
-cacaomsglog "SAVING to logdir"
-LOGDIR="logdir/$(date -u +'%Y%m%d')/aol_${CACAO_LOOPNAME}/wfsdarkraw/"
-daystring="$(date -u +'%Y%m%d')"
-mkdir -p ${LOGDIR}
-cacaomsglog "cp conf/wfsdarkraw.${datestring}.fits ${LOGDIR}/"
-cp conf/wfsdarkraw.${datestring}.fits ${LOGDIR}/
+# LOGGING
+# see cacaofuncs-log for conventions
+#
+source cacaofuncs-log
+
+cacao-calib-logFITSfile wfsdarkraw
+
+# Load to shmim
+cacao-calib-loadFITSfile wfsdarkraw ${LOGFILEOUT}
+cacao-calib-loadFITSfile wfsdark ${LOGFILEOUT}
 
 
-
-# by default, link dark to raw dark (may be overridden if mapping)
-cacaomsglog "SETTING wfsdark as wfsdarkraw.${datestring}.fits"
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm
-ln -s ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdarkraw.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm 
 
 # ======================================================================
 # Turning source on

@@ -28,22 +28,24 @@ function set_twait() {
 source milk-argparse
 
 
-tmuxname="fpsCTRLlog-cacao-${CACAO_LOOPNAME}"
+tmuxname="fpsCTRLlog-out-${CACAO_LOOPNAME}"
 
 
 # check if tmux session exists
 #
-set +o errexit
-tmux has-session -t ${tmuxname} 2>/dev/null
-if [ $? = 0 ]; then
+set +o pipefail
+{ tmux has-session -t ${tmuxname} 2>/dev/null; retstatus=$?; } || :
+set -o pipefail
+echo "retstatus = $retstatus"
+if [ "${retstatus}" = "0" ]; then
 	# found
+	echo "FOUND SESSION  ${tmuxname} : kill it"
 	tmux send-keys -t ${tmuxname} "fg" C-m
 	tmux send-keys -t ${tmuxname} C-c
 	tmux send-keys -t ${tmuxname} "exit" C-m
 	sleep 0.5
-	tmux kill-session -t ${tmuxname} > /dev/null
+	tmux kill-session -t ${tmuxname} > /dev/null || :
 fi
-set -o errexit
 
 
 

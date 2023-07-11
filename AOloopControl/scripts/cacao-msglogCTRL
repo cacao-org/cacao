@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+
+
+MSdescr="launch cacao message logging"
+
+MSextdescr="launch cacao message logging
+
+Launch at beginning of each UT day.
+
+Creates log directory ../logdir-${CACAO_LOOPNAME} if it does not exist.
+Note that the directory may be created as a symlink to system log directory prior to running this command.
+Starts FPS log process within a tmux session 
+
+MESSAGE LOG fpsCTRL.log
+	Automatic log of milk-fpsCTRL commands and status
+	ALWAYS written by milk-fpsCTRL instance that controls the loop
+	and any cacao-fpsctrl-TUI screen
+
+MESSAGE LOG fpsctrl.CACAO_LOOPNAME.log
+	Extracted from today's fpsCTRL.log
+	Includes status polling
+	Written by script cacao-fpsctrl-log running within tmux session fpsCTRLlog-proc-CACAO_LOOPNAME
+	OUTPUT in tmux session fpsCTRLlog-out-CACAO_LOOPNAME
+	
+MESSAGE LOG cacao.CACAO_LOOPNAME.log
+	High level log from cacao scripts and msglogCLI instances
+
+
+ACTIONS:
+	start : start log processes
+	stop  : stop log processes
+	terms : launch terminals for log control and monitoring
+"
+
+
+source milk-script-std-config
+
+# check and load cacaovars
+source cacao-check-cacaovars
+
+
+
+MSarg+=( "action:string:action (start/stop/terms)" )
+
+
+RequiredCommands=( cacao tmux )
+RequiredPipes=()
+RequiredFiles=()
+RequiredDirs=()
+
+source milk-argparse
+
+ACTION="${inputMSargARRAY[0]}"
+ACTIONOK=0
+
+
+
+
+if [ ${ACTION} == "start" ]; then
+	ACTIONOK=1
+	cacaomsglog "START"
+
+	# create upstream log directory
+	mkdir -p ../logdir-${CACAO_LOOPNAME}
+	mkdir -p ../logdir-${CACAO_LOOPNAME}/$(date -u +'%Y%m%d')
+
+	# make local dir pointing to upstream log
+	rm -rf logdir
+	echo "ln -sf $(pwd)/../logdir-${CACAO_LOOPNAME}/$(date -u +'%Y%m%d') logdir"
+	ln -sf $(pwd)/../logdir-${CACAO_LOOPNAME}/$(date -u +'%Y%m%d') logdir
+
+	tmuxname="fpsCTRLlog-proc-${CACAO_LOOPNAME}"
+	# kill session if it does not exist
+	tmux send-keys -t ${tmuxname} C-c 2>/dev/null || :
+	tmux send-keys -t ${tmuxname} "exit" C-m 2>/dev/null || :
+	tmux kill-session -t ${tmuxname} 2>/dev/null || :
+	sleep 1
+
+	tmux new-session -d -s ${tmuxname}
+	tmux send-keys -t ${tmuxname} "cacao-fpsctrl-log -r" C-m
+	sleep 1
+fi
+
+
+
+
+if [ ${ACTION} == "stop" ]; then
+	ACTIONOK=1
+	cacaomsglog "STOP"
+	
+	tmuxname="fpsCTRLlog-proc-${CACAO_LOOPNAME}"
+	tmux send-keys -t ${tmuxname} C-c 2>/dev/null || :
+	tmux send-keys -t ${tmuxname} "exit" C-m 2>/dev/null || :
+	tmux kill-session -t ${tmuxname} 2>/dev/null || :
+	
+	sleep 1
+	
+	tmuxname="fpsCTRLlog-out-${CACAO_LOOPNAME}"
+	tmux send-keys -t ${tmuxname} C-c 2>/dev/null || :
+	tmux send-keys -t ${tmuxname} "exit" C-m 2>/dev/null || :
+	tmux kill-session -t ${tmuxname} 2>/dev/null || :	
+fi
+
+
+
+if [ ${ACTION} == "terms" ]; then
+	ACTIONOK=1
+	cacaomsglog "TERMS"
+	# start windows
+	echo "Connecting to tmux session fpsCTRLlog-out-${CACAO_LOOPNAME}"
+	xterm -geometry 160x40 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "fpsCTRLlog-${CACAO_LOOPNAME} (CTRL+B D to exit)" -e "tmux ls| grep fpsCTRLlog-out-${CACAO_LOOPNAME}; sleep 1; tmux a -t fpsCTRLlog-out-${CACAO_LOOPNAME}; sleep 1" &
+
+	xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-input (CTRL+C to exit)" -e "cacao-msglogCLI -k \"OPNOTES\" -i; sleep 1" &
+
+	xterm -geometry 80x10 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Weatherlog-${CACAO_LOOPNAME}-input (CTRL+C to exit)" -e "cacao-msglogCLI -k \"WEATHER\" -i; sleep 1" &
+
+	logdname="logdir"
+	echo "LOG DIRNAME = ${logdname}"
+	mkdir -p ${logdname}
+	logfname="${logdname}/cacao.${CACAO_LOOPNAME}.log"
+	if [ ! -f ${logfname} ]; then
+		echo "Creating file ${logfname}"
+		touch ${logfname}
+	fi
+	echo "Message log : ${logfname}"
+	xterm -geometry 160x20 -fg white -bg black -xrm 'XTerm.vt100.allowTitleOps: false' -T "Operatorlog-${CACAO_LOOPNAME}-output (CTRL+C to exit)" -e "sleep 1; tail -f ${logfname}; sleep 1" &
+fi
+
+
+
+
+if [ ${ACTIONOK} == 0 ]; then
+	cacaomsglog "ERROR undefined action"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	exit 1
+fi
+
+cacaomsglog "END"
+
+
+
+
+
+
+
+
+
+

@@ -66,6 +66,7 @@ do
      sleep 0.1
 done
 milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol${CACAO_LOOPNUMBER}_modesWFS
+cp $(pwd)/conf/CMmodesWFS/CMmodesWFS.fits ./conf/CMmodesWFS.fits
 
 
 echo "Waiting for file conf/CMmodesDM/CMmodesDM.fits"
@@ -74,5 +75,17 @@ do
      sleep 0.1
 done
 milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes
+cp $(pwd)/conf/CMmodesDM/CMmodesDM.fits ./conf/CMmodesDM.fits
+
+
+# LOGGING
+# see cacaofuncs-log for conventions
+#
+source cacaofuncs-log
+cacao-calib-logFITSfile CMmodesDM
+cacao-calib-logFITSfile CMmodesWFS
+
+
+
 
 cacaomsglog "END"

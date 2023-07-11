@@ -65,7 +65,7 @@ fi
 
 
 
-cacaomsglog "APPLYING MODAL LIMITS : galpha ${mgainalpha}  floor ${mlimitfloor}  TT ${mlimitTT}"
+cacaomsglog "APPLYING MODAL LIMITS : galpha ${mlimitalpha}  floor ${mlimitfloor}  TT ${mlimitTT}"
 
 MILK_QUIET=1 milk << EOF
 mload milkinfo

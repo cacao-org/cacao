@@ -81,6 +81,7 @@ install(TARGETS ${LIBNAME} DESTINATION lib)
 
 install(PROGRAMS scripts/cacao-setup
 	scripts/cacao
+	scripts/cacaofuncs-log
 	scripts/cacao-check-cacaovars
 	scripts/cacao-commands
 	scripts/cacao-fpsctrl
@@ -101,8 +102,8 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-modalstatsTUI
 	scripts/cacao-takedark
 	scripts/cacao-task-manager
-	scripts/cacao-log
-	scripts/cacao-log-setup
+	scripts/cacao-msglogCLI
+	scripts/cacao-msglogCTRL
 	scripts/cacao-loop-deploy
 	scripts/cacao-setDMnolink
 	scripts/cacao-wfsref-setflat

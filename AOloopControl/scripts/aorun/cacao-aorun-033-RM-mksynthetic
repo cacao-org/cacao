@@ -134,8 +134,8 @@ lintools.mkFouriermodes .fpowerlaw_minf 1.0
 lintools.mkFouriermodes .fpowerlaw_maxf 100.0
 lintools.mkFouriermodes ?
 lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
-merge3d zerc Fmodes synRMmodesDM
-saveFITS synRMmodesDM "conf/RMmodesDM/synRMmodesDM0.fits"
+merge3d zerc Fmodes RMsyn_modesDM
+saveFITS RMsyn_modesDM "conf/RMmodesDM/RMsyn_modesDM0.fits"
 exitCLI
 EOF
 
@@ -156,40 +156,40 @@ milk-all << EOF
 mload cacaocomputeCalib
 radext=${DMr0}*${radmaskfact}
 imgen.mkdisk dmmaskext ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} radext
-loadfits "conf/RMmodesDM/synRMmodesDM0.fits" synRMmodesDM
+loadfits "conf/RMmodesDM/RMsyn_modesDM0.fits" RMsyn_modesDM
 loadfits "conf/dmmask-syn.fits" dmmask
-cacaocc.maskextrapolate synRMmodesDM dmmask dmmaskext synRMmodesDMm
+cacaocc.maskextrapolate RMsyn_modesDM dmmask dmmaskext RMsyn_modesDMm
 
-#synRMmodesDMm=synRMmodesDM*dmmask
-saveFITS synRMmodesDMm "conf/RMmodesDM/synRMmodesDM2D.fits"
+#RMsyn_modesDMm=RMsyn_modesDM*dmmask
+saveFITS RMsyn_modesDMm "conf/RMmodesDM/RMsyn_modesDM2D.fits"
 listim
 exitCLI
 EOF
 
 
-echo "OUTPUT : conf/RMmodesDM/synRMmodesDM.fits"
+echo "OUTPUT : conf/RMmodesDM/RMsyn_modesDM.fits"
 
 
 if [ $CACAO_DMysize -eq 1 ]; then
-# Project 2D modes to 1D actuators
+	# Project 2D modes to 1D actuators
 
-# link to 2D pos file
-ln -sf $(pwd)/data/act2Dpos.txt mapcoord2D.txt
+	# link to 2D pos file
+	ln -sf $(pwd)/data/act2Dpos.txt mapcoord2D.txt
 cacao << EOF
-loadfits "conf/RMmodesDM/synRMmodesDM2D.fits" synRMmodesDM2D
-cacaocc.sample2DWF synRMmodesDM2D map2D synRMmodesDM1D
+loadfits "conf/RMmodesDM/RMsyn_modesDM2D.fits" RMsyn_modesDM2D
+cacaocc.sample2DWF RMsyn_modesDM2D map2D RMsyn_modesDM1D
 listim
-saveFITS synRMmodesDM1D "conf/RMmodesDM/synRMmodesDM1D.fits"
+saveFITS RMsyn_modesDM1D "conf/RMmodesDM/RMsyn_modesDM1D.fits"
 exitCLI
 EOF
 
-ln -sf $(pwd)/conf/RMmodesDM/synRMmodesDM1D.fits conf/RMmodesDM/synRMmodesDM.fits
-
+	ln -sf $(pwd)/conf/RMmodesDM/RMsyn_modesDM1D.fits conf/RMmodesDM/RMsyn_modesDM.fits
 else
-
-ln -sf $(pwd)/conf/RMmodesDM/synRMmodesDM2D.fits conf/RMmodesDM/synRMmodesDM.fits
-
+	ln -sf $(pwd)/conf/RMmodesDM/RMsyn_modesDM2D.fits conf/RMmodesDM/RMsyn_modesDM.fits
 fi
+
+cp $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMsyn_modesDM.fits
+
 
 
 
@@ -199,21 +199,38 @@ fi
 
 cacao << EOF
 loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
-loadfits "conf/RMmodesDM/synRMmodesDM.fits" dmC
+loadfits "conf/RMmodesDM/RMsyn_modesDM.fits" dmC
 cacaocc.generateRMWFS zrespM dmC wfsC
-saveFITS wfsC "conf/RMmodesWFS/synRMmodesWFS.fits"
+saveFITS wfsC "conf/RMmodesWFS/RMsyn_modesWFS.fits"
 listim
 exitCLI
 EOF
 
+cp $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMsyn_modesWFS.fits
+
+
+
+# set default to syn files
 
 rm -f ./conf/RMmodesDM/RMmodesDM.fits
-ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.fits
-echo "ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.fits"
-
+ln -s $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMmodesDM/RMsyn_modesDM.fits
+echo "ln -s $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMmodesDM/RMmodesDM.fits"
+cacaomsglog "USING RMsyn_modesDM as RMmodesDM"
 
 rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
-ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits
-echo "ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
+ln -s $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMmodesWFS/RMsyn_modesWFS.fits
+echo "ln -s $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
+cacaomsglog "USING RMsyn_modesWFS as RMmodesWFS"
+
+
+
+# LOGGING
+# see cacaofuncs-log for conventions
+#
+source cacaofuncs-log
+cacao-calib-logFITSfile RMsyn_modesDM
+cacao-calib-logFITSfile RMsyn_modesWFS
+
+
 
 cacaomsglog "END"

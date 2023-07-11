@@ -101,9 +101,10 @@ cacaomsglog "START"
 
 rm -f ./conf/RMmodesDM/RMmodesDM.fits
 ln -s $(pwd)/conf/RMmodesDM/${DMmodeCname}.fits ./conf/RMmodesDM/RMmodesDM.fits
+cp $(pwd)/conf/RMmodesDM/${DMmodeCname}.fits ./conf/RMmeas_modesDM.fits
+
 
 rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
-ln -s $(pwd)/conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 
 if [ $WaitForCompletion == "1" ]; then
 echo "Waiting for completion ..."
@@ -113,5 +114,17 @@ while [ $pOK -gt 0 ]; do
 	pOK=$(ps -alx| grep measlinresp-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l) || :
 done
 fi
+
+ln -s $(pwd)/conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./conf/RMmodesWFS/RMmodesWFS.fits
+cp $(pwd)/conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./conf/RMmeas_modesWFS.fits
+
+
+# LOGGING
+# see cacaofuncs-log for conventions
+#
+source cacaofuncs-log
+cacao-calib-logFITSfile RMmeas_modesDM
+cacao-calib-logFITSfile RMmeas_modesWFS
+
 
 cacaomsglog "END"
