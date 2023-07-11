@@ -42,6 +42,8 @@ fi
 # Compute straight CM
 # ======================================================================
 
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 1"
+
 # set ouput files
 mkdir -p conf/CMmodesDM/
 mkdir -p conf/CMmodesWFS/
