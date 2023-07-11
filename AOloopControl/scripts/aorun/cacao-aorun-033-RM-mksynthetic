@@ -204,12 +204,12 @@ cp $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMsyn_modesWFS.fits
 
 # set default to syn files
 
-rm -f ./conf/RMmodesDM/RMsyn_modesDM.fits
+rm -f ./conf/RMmodesDM/RMmodesDM.fits
 ln -s $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMmodesDM/RMmodesDM.fits
 echo "ln -s $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMmodesDM/RMmodesDM.fits"
 cacaomsglog "USING RMsyn_modesDM as RMmodesDM"
 
-rm -f ./conf/RMmodesWFS/RMsyn_modesWFS.fits
+rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
 ln -s $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 echo "ln -s $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
 cacaomsglog "USING RMsyn_modesWFS as RMmodesWFS"
