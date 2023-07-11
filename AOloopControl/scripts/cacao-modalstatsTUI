@@ -38,9 +38,13 @@ echo "readshmim aol${CACAO_LOOPNUMBER}_modevalOL" >> $SF
 echo "readshmim aol${CACAO_LOOPNUMBER}_mgain" >> $SF
 echo "readshmim aol${CACAO_LOOPNUMBER}_mmult" >> $SF
 echo "readshmim aol${CACAO_LOOPNUMBER}_mlimit" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_modevalWFS_buff" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_modevalDM_buff" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_modevalOL_buff" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mlimitcntfrac" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mvalWFSave" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mvalWFSrms" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mvalDMave" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mvalDMrms" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mvalOLave" >> $SF
+echo "readshmim aol${CACAO_LOOPNUMBER}_mvalOLrms" >> $SF
 echo "listim" >> $SF
 echo "cacao.modalstatsTUI ${CACAO_LOOPNUMBER}" >> $SF
 echo "exitCLI" >> $SF

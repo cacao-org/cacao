@@ -156,8 +156,8 @@ The following files are written to ./conf/RMmodesDM/
 
 ```bash
 # Acquire response matrix - Hadamard modes
-# 6 cycles - default is 10.
-cacao-aorun-030-acqlinResp -n 6 -w HpokeC
+# 4 cycles - default is 10.
+cacao-aorun-030-acqlinResp -n 4 -w HpokeC
 ```
 This could take a while. Check status on milk-procCTRL.
 To inspect results, display file conf/RMmodesWFS/HpokeC.WFSresp.fits.
@@ -187,7 +187,7 @@ Note: we are not going to apply the masks in this example, so OK if not net prop
 ### 6.4. Create synthetic (Fourier) response matrix
 
 ```bash
-cacao-aorun-033-RM-mksynthetic -c 25
+cacao-aorun-033-RM-mksynthetic -c 25 -a 2.0
 ```
 
 
@@ -197,7 +197,7 @@ Compute control modes, in both WFS and DM spaces.
 Set GPU device (if GPU available).
 
 ```bash
-cacao-fpsctrl setval compstrCM svdlim 0.01
+cacao-fpsctrl setval compstrCM svdlim 0.002
 cacao-fpsctrl setval compstrCM GPUdevice 0
 ```
 Then run the compstrCM process to compute CM and load it to shared memory :

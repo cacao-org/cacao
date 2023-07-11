@@ -134,6 +134,9 @@ inline static void printfixedlen_unsigned(
 
 
 
+
+
+
 errno_t AOloopControl_modalstatsTUI(
     int loopindex
 )
@@ -218,42 +221,76 @@ errno_t AOloopControl_modalstatsTUI(
     }
 
 
-
-    // Telemetry buffers
-
-    long buffsize = 0;
-    IMGID imgmodevalWFSbuff;
+    // ========================= MODAL LIMIT COUNTER ==================
+    IMGID imgmlimitcntfrac;
     {
         char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_modevalWFS_buff", loopindex);
-        imgmodevalWFSbuff = mkIMGID_from_name(name);
-        resolveIMGID(&imgmodevalWFSbuff, ERRMODE_ABORT);
-        buffsize = imgmodevalWFSbuff.md->size[1];
+        WRITE_IMAGENAME(name, "aol%d_mlimitcntfrac", loopindex);
+        imgmlimitcntfrac = mkIMGID_from_name(name);
+        resolveIMGID(&imgmlimitcntfrac, ERRMODE_ABORT);
     }
+
+
+    // ========================= MODAL STATS ==================
+    // accumulated and reported for each log buffer duration
+    //
+
+    IMGID imgmvalDMave;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%d_mvalDMave", loopindex);
+        imgmvalDMave = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+    IMGID imgmvalDMrms;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%d_mvalDMrms", loopindex);
+        imgmvalDMrms = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+    IMGID imgmvalWFSave;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%d_mvalWFSave", loopindex);
+        imgmvalWFSave = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+    IMGID imgmvalWFSrms;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%d_mvalWFSrms", loopindex);
+        imgmvalWFSrms = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+    IMGID imgmvalOLave;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%d_mvalOLave", loopindex);
+        imgmvalOLave = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+    IMGID imgmvalOLrms;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%d_mvalOLrms", loopindex);
+        imgmvalOLrms = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+
+
+
+
+
     double *WFSave = (double*) malloc(sizeof(double)*mstatstruct.NBmode);
     double *WFSrms = (double*) malloc(sizeof(double)*mstatstruct.NBmode);
 
-
-    IMGID imgmodevalDMbuff;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_modevalDM_buff", loopindex);
-        imgmodevalDMbuff = mkIMGID_from_name(name);
-        resolveIMGID(&imgmodevalDMbuff, ERRMODE_ABORT);
-    }
     double *DMave = (double*) malloc(sizeof(double)*mstatstruct.NBmode);
     double *DMrms = (double*) malloc(sizeof(double)*mstatstruct.NBmode);
 
-
-    IMGID imgmodevalOLbuff;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_modevalOL_buff", loopindex);
-        imgmodevalOLbuff = mkIMGID_from_name(name);
-        resolveIMGID(&imgmodevalOLbuff, ERRMODE_ABORT);
-    }
     double *OLave = (double*) malloc(sizeof(double)*mstatstruct.NBmode);
     double *OLrms = (double*) malloc(sizeof(double)*mstatstruct.NBmode);
+
+
+
+
 
 
 
@@ -276,7 +313,7 @@ errno_t AOloopControl_modalstatsTUI(
 
     // catch signals (CTRL-C etc)
     //
-    set_signal_catch();
+    //set_signal_catch();
 
 
 
@@ -332,26 +369,10 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-
-
-        TUI_printfw(" PRESS x to exit");
-        TUI_newline();
-        TUI_printfw("Loop %ld  -  Mode %5ld / %5ld [%5ld-%5ld] - loopcnt %ld",
-                    loopindex,
-                    mstatstruct.modeindex,
-                    mstatstruct.NBmode,
-                    mimin, mimax,
-                    loopcnt
-                   );
-        TUI_newline();
-        TUI_printfw("scale = %f", mstatstruct.pscale);
-        TUI_newline();
-
         long mi = mstatstruct.modeindex;
 
 
         // update mimin and mimax
-
 
         if(mimax>mstatstruct.NBmode)
         {
@@ -391,108 +412,71 @@ errno_t AOloopControl_modalstatsTUI(
             }
         }
 
+        if(mimax>mstatstruct.NBmode)
+        {
+            mimax = mstatstruct.NBmode;
+        }
 
 
 
-        TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |          OL       | WFS/OL  DM/OL");
+
+        TUI_printfw(" PRESS x to exit");
+        TUI_newline();
+        TUI_printfw("Loop %ld  -  Mode %5ld / %5ld [%5ld-%5ld] - loopcnt %ld",
+                    loopindex,
+                    mstatstruct.modeindex,
+                    mstatstruct.NBmode,
+                    mimin, mimax,
+                    loopcnt
+                   );
+        TUI_newline();
+        TUI_printfw("scale = %f", mstatstruct.pscale);
         TUI_newline();
 
-        long buffWFSindex = imgmodevalWFSbuff.md->cnt0;
-        long buffDMindex = imgmodevalDMbuff.md->cnt0;
-        long buffOLindex = imgmodevalOLbuff.md->cnt0;
 
 
-        // WFS stats
-        //
-        if(buffWFSindex != buffWFSindex0)
+
+
+        TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |          OL       | LIMTRUC WFS/OL  DM/OL");
+        TUI_newline();
+
+        /*  long buffWFSindex = imgmodevalWFSbuff.md->cnt0;
+          long buffDMindex = imgmodevalDMbuff.md->cnt0;
+          long buffOLindex = imgmodevalOLbuff.md->cnt0;*/
+
+
+        long buffindex0 = -1;
+        long buffindex = imgmvalOLrms.md->cnt0;
+
+
+        if(buffindex != buffindex0)
         {
             for(int32_t mi=mimin; mi<mimax; mi++)
             {
-                WFSave[mi] = 0.0;
-                WFSrms[mi] = 0.0;
-            }
-            for(uint32_t tstep=0; tstep<buffsize; tstep++)
-            {
-                for(int mi=mimin; mi<mimax; mi++)
-                {
-                    long index2 = imgmodevalWFSbuff.md->cnt1 * buffsize * mstatstruct.NBmode;
-                    long index = index2 + tstep*mstatstruct.NBmode + mi;
-                    float val = imgmodevalWFSbuff.im->array.F[index];
-                    WFSave[mi] += val;
-                    WFSrms[mi] += val*val;
-                }
+                WFSave[mi] = imgmvalWFSave.im->array.F[mi];
+                WFSrms[mi] = imgmvalWFSrms.im->array.F[mi];
+                // remove DC from rms
+                WFSrms[mi] = sqrt ( WFSrms[mi]*WFSrms[mi] - WFSave[mi]*WFSave[mi]);
+
+                DMave[mi] = imgmvalDMave.im->array.F[mi];
+                DMrms[mi] = imgmvalDMrms.im->array.F[mi];
+                // remove DC from rms
+                DMrms[mi] = sqrt ( DMrms[mi]*DMrms[mi] - DMave[mi]*DMave[mi]);
+
+                OLave[mi] = imgmvalOLave.im->array.F[mi];
+                OLrms[mi] = imgmvalOLrms.im->array.F[mi];
+                // remove DC from rms
+                OLrms[mi] = sqrt ( OLrms[mi]*OLrms[mi] - OLave[mi]*OLave[mi]);
             }
 
-            for(int32_t mi=mimin; mi<mimax; mi++)
-            {
-                WFSave[mi] /= buffsize;
-                WFSrms[mi] = sqrt( WFSrms[mi]/buffsize - WFSave[mi]*WFSave[mi] );
-            }
 
-            buffWFSindex0 = buffWFSindex;
+            buffindex0 = buffindex;
         }
 
 
-        // DM stats
-        //
-        if(buffDMindex != buffDMindex0)
-        {
-            for(int32_t mi=mimin; mi<mimax; mi++)
-            {
-                DMave[mi] = 0.0;
-                DMrms[mi] = 0.0;
-            }
-            for(uint32_t tstep=0; tstep<buffsize; tstep++)
-            {
-                for(int mi=mimin; mi<mimax; mi++)
-                {
-                    long index2 = imgmodevalDMbuff.md->cnt1 * buffsize * mstatstruct.NBmode;
-                    long index = index2 + tstep*mstatstruct.NBmode + mi;
-                    float val = imgmodevalDMbuff.im->array.F[index];
-                    DMave[mi] += val;
-                    DMrms[mi] += val*val;
-                }
-            }
-
-            for(int32_t mi=mimin; mi<mimax; mi++)
-            {
-                DMave[mi] /= buffsize;
-                DMrms[mi] = sqrt( DMrms[mi]/buffsize - DMave[mi]*DMave[mi] );
-            }
-
-            buffDMindex0 = buffDMindex;
-        }
 
 
-        // OL stats
-        //
-        if(buffOLindex != buffOLindex0)
-        {
-            for(int32_t mi=mimin; mi<mimax; mi++)
-            {
-                OLave[mi] = 0.0;
-                OLrms[mi] = 0.0;
-            }
-            for(uint32_t tstep=0; tstep<buffsize; tstep++)
-            {
-                for(int mi=mimin; mi<mimax; mi++)
-                {
-                    long index2 = imgmodevalOLbuff.md->cnt1 * buffsize * mstatstruct.NBmode;
-                    long index = index2 + tstep*mstatstruct.NBmode + mi;
-                    float val = imgmodevalOLbuff.im->array.F[index];
-                    OLave[mi] += val;
-                    OLrms[mi] += val*val;
-                }
-            }
 
-            for(int32_t mi=mimin; mi<mimax; mi++)
-            {
-                OLave[mi] /= buffsize;
-                OLrms[mi] = sqrt( OLrms[mi]/buffsize - OLave[mi]*OLave[mi] );
-            }
-
-            buffOLindex0 = buffOLindex;
-        }
 
 
 
@@ -513,27 +497,83 @@ errno_t AOloopControl_modalstatsTUI(
             TUI_printfw("]   ");
 
 
+
+
             printfixedlen(imgmodevalWFS.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" ");
-            printfixedlen(WFSave[mi]*DMmodenorm[mi], &mstatstruct);
+
+            {
+                int color = 0;
+
+                if(WFSave[mi] > WFSrms[mi])
+                {
+                    color = 3;
+                }
+                screenprint_setcolor(color);
+                printfixedlen(WFSave[mi]*DMmodenorm[mi], &mstatstruct);
+                screenprint_unsetcolor(color);
+            }
+
             TUI_printfw(" ");
             printfixedlen_unsigned(WFSrms[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" | ");
 
+
+
             printfixedlen(imgmodevalDM.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" ");
-            printfixedlen(DMave[mi]*DMmodenorm[mi], &mstatstruct);
+            {
+                int color = 0;
+
+                if(DMave[mi] > DMrms[mi])
+                {
+                    color = 3;
+                }
+                screenprint_setcolor(color);
+                printfixedlen(DMave[mi]*DMmodenorm[mi], &mstatstruct);
+                screenprint_unsetcolor(color);
+            }
             TUI_printfw(" ");
             printfixedlen_unsigned(DMrms[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" | ");
 
             printfixedlen(imgmodevalOL.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" ");
-            printfixedlen(OLave[mi]*DMmodenorm[mi], &mstatstruct);
+            {
+                int color = 0;
+
+                if(OLave[mi] > OLrms[mi])
+                {
+                    color = 3;
+                }
+                screenprint_setcolor(color);
+                printfixedlen(OLave[mi]*DMmodenorm[mi], &mstatstruct);
+                screenprint_unsetcolor(color);
+            }
             TUI_printfw(" ");
             printfixedlen_unsigned(OLrms[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" | ");
 
+
+
+            // fraction of commands truncated by modal limit
+            {
+                float truncfract = imgmlimitcntfrac.im->array.F[mi];
+
+                int color = 0;
+                if(truncfract > 0.01)
+                {
+                    color = 3; // ORANGE
+                }
+                if(truncfract > 0.1)
+                {
+                    color = 4;  // RED
+                }
+                screenprint_setcolor(color);
+                TUI_printfw("%6.4f", truncfract);
+                screenprint_unsetcolor(color);
+                TUI_printfw("  ");
+            }
 
 
             float WFSoverOL = WFSrms[mi] / OLrms[mi];
@@ -542,11 +582,11 @@ errno_t AOloopControl_modalstatsTUI(
             int color = 0;
             if(WFSoverOL < 0.9)
             {
-                color = 2;
+                color = 2; // GREEN
             }
             if(WFSoverOL > 1.0)
             {
-                color = 4;
+                color = 4; // RED
             }
             screenprint_setcolor(color);
             TUI_printfw("%6.4f", WFSoverOL);

@@ -52,6 +52,11 @@ static long   fpi_looplimit;
 
 
 
+
+
+
+
+
 // Compute open loop modes
 static int64_t *compOL;
 static long     fpi_compOL;
@@ -76,6 +81,25 @@ static int64_t *comptbuff;
 static long     fpi_comptbuff;
 
 static uint32_t *tbuffsize;
+
+
+// autoset modal limits
+
+// toggle ON / OFF
+static uint64_t *autolim;
+static long      fpi_autolim;
+
+// gain on sigma probing
+static float *autolimprobegain;
+static long   fpi_autolimprobegain;
+
+// sigma-clipping factor
+static float *autolimsigmafact;
+static long   fpi_autolimsigmafact;
+
+
+
+
 
 
 
@@ -305,6 +329,33 @@ static CLICMDARGDEF farg[] =
         CLIARG_HIDDEN_DEFAULT,
         (void **) &comptbuff,
         &fpi_comptbuff
+    },
+    {
+        CLIARG_ONOFF,
+        ".comp.autolim",
+        "automatic modal limits",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &autolim,
+        &fpi_autolim
+    },
+    {
+        CLIARG_FLOAT32,
+        ".comp.autolimprobegain",
+        "sigma measurement gain",
+        "0.1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &autolimprobegain,
+        &fpi_autolimprobegain
+    },
+    {
+        CLIARG_FLOAT32,
+        ".comp.autolimsigmafact",
+        "autolimit sigma clipping factor",
+        "2.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &autolimsigmafact,
+        &fpi_autolimsigmafact
     },
     {
         CLIARG_UINT32,
@@ -545,6 +596,10 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_psol_WFSfact].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_latencyhardwfr].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_latencysoftwfr].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_autolim].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_autolimprobegain].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_autolimsigmafact].fpflag |= FPFLAG_WRITERUN;
+
 
         data.fpsptr->parray[fpi_auxDMmvalenable].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_auxDMmvalmixfact].fpflag |= FPFLAG_WRITERUN;
@@ -704,6 +759,9 @@ static errno_t compute_function()
     float *mvalout = (float *) malloc(sizeof(float) * NBmode);
     // output (applied, includes selfRM poke)
     float *mvaloutapply = (float *) malloc(sizeof(float) * NBmode);
+
+
+
 
 
 
@@ -886,6 +944,85 @@ static errno_t compute_function()
     }
 
 
+    // ========================= MODAL LIMIT COUNTER ==================
+    long * mlimitcntarray = (long*) malloc(sizeof(long)*NBmode);
+    long modal_limit_counter = 0;
+    for(uint32_t mi = 0; mi < NBmode; mi++)
+    {
+        mlimitcntarray[mi] = 0;
+    }
+
+    IMGID imgmlimitcntfrac;
+    {
+        char imgmlimitcntfracname[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(imgmlimitcntfracname, "aol%lu_mlimitcntfrac", *AOloopindex);
+        imgmlimitcntfrac = stream_connect_create_2Df32(imgmlimitcntfracname, NBmode, 1);
+    }
+
+
+
+
+    // ========================= STATS ==================
+    // accumulated and reported for each log buffer duration
+    //
+    double * mvalDMave = (double*) malloc(sizeof(double)*NBmode);
+    double * mvalDMrms = (double*) malloc(sizeof(double)*NBmode);
+    double * mvalWFSave = (double*) malloc(sizeof(double)*NBmode);
+    double * mvalWFSrms = (double*) malloc(sizeof(double)*NBmode);
+    double * mvalOLave = (double*) malloc(sizeof(double)*NBmode);
+    double * mvalOLrms = (double*) malloc(sizeof(double)*NBmode);
+
+    IMGID imgmvalDMave;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mvalDMave", *AOloopindex);
+        imgmvalDMave = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+    IMGID imgmvalDMrms;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mvalDMrms", *AOloopindex);
+        imgmvalDMrms = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+    IMGID imgmvalWFSave;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mvalWFSave", *AOloopindex);
+        imgmvalWFSave = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+    IMGID imgmvalWFSrms;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mvalWFSrms", *AOloopindex);
+        imgmvalWFSrms = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+    IMGID imgmvalOLave;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mvalOLave", *AOloopindex);
+        imgmvalOLave = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+    IMGID imgmvalOLrms;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mvalOLrms", *AOloopindex);
+        imgmvalOLrms = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+
+
+    double * autolimDMsigma = (double*) malloc(sizeof(double)*NBmode);
+
+
+
+
+
+
+
+
+
     // initialization for testOL
     *testOLcnt = 0;
     FILE *testOLfp;
@@ -981,10 +1118,12 @@ static errno_t compute_function()
                 if(mvalDMc[mi] > limit)
                 {
                     mvalDMc[mi] = limit;
+                    mlimitcntarray[mi] ++;
                 }
                 if(mvalDMc[mi] < -limit)
                 {
                     mvalDMc[mi] = -limit;
+                    mlimitcntarray[mi] ++;
                 }
 
 
@@ -1000,6 +1139,8 @@ static errno_t compute_function()
                 }
                 mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
             }
+            // increment modal limit step counter
+            modal_limit_counter ++;
 
 
 
@@ -1268,6 +1409,10 @@ static errno_t compute_function()
             processinfo_update_output_stream(processinfo, imgmlimit.ID);
 
 
+
+
+
+
             // Fill telemetry buffers
             //
             if((*comptbuff) == 1)
@@ -1300,6 +1445,17 @@ static errno_t compute_function()
                     }
                 }
 
+                for(uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    mvalDMave[mi] += mvalout[mi];
+                    mvalDMrms[mi] += mvalout[mi]*mvalout[mi];
+
+                    mvalWFSave[mi] += imginWFS.im->array.F[mi];
+                    mvalWFSrms[mi] += imginWFS.im->array.F[mi]*imginWFS.im->array.F[mi];
+
+                    mvalOLave[mi] += imgOLmval.im->array.F[mi];
+                    mvalOLrms[mi] += imgOLmval.im->array.F[mi]*imgOLmval.im->array.F[mi];
+                }
 
                 tbuffindex++;
                 if(tbuffindex == (*tbuffsize))
@@ -1323,6 +1479,100 @@ static errno_t compute_function()
                     {
                         tbuffslice = 0;
                     }
+
+
+
+                    // Measure fraction of commands truncated by limit
+                    //
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        imgmlimitcntfrac.im->array.F[mi] = (1.0*mlimitcntarray[mi]) / modal_limit_counter;
+                        mlimitcntarray[mi] = 0;
+                    }
+                    processinfo_update_output_stream(processinfo, imgmlimitcntfrac.ID);
+
+
+
+                    // Update buffer stats
+
+                    // DM buffer stats
+
+
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        imgmvalDMave.im->array.F[mi] = mvalDMave[mi] / modal_limit_counter;
+                        mvalDMave[mi] = 0;
+                    }
+                    processinfo_update_output_stream(processinfo, imgmvalDMave.ID);
+
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        imgmvalDMrms.im->array.F[mi] = sqrt ( mvalDMrms[mi] / modal_limit_counter );
+                        mvalDMrms[mi] = 0;
+                    }
+                    processinfo_update_output_stream(processinfo, imgmvalDMrms.ID);
+
+
+                    // WFS buffer stats
+
+
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        imgmvalWFSave.im->array.F[mi] = mvalWFSave[mi] / modal_limit_counter;
+                        mvalWFSave[mi] = 0;
+                    }
+                    processinfo_update_output_stream(processinfo, imgmvalWFSave.ID);
+
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        imgmvalWFSrms.im->array.F[mi] = sqrt ( mvalWFSrms[mi] / modal_limit_counter );
+                        mvalWFSrms[mi] = 0;
+                    }
+                    processinfo_update_output_stream(processinfo, imgmvalWFSrms.ID);
+
+
+
+                    // OL buffer stats
+
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        imgmvalOLave.im->array.F[mi] = mvalOLave[mi] / modal_limit_counter;
+                        mvalOLave[mi] = 0;
+                    }
+                    processinfo_update_output_stream(processinfo, imgmvalOLave.ID);
+
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        imgmvalOLrms.im->array.F[mi] = sqrt ( mvalOLrms[mi] / modal_limit_counter );
+                        mvalOLrms[mi] = 0;
+                    }
+                    processinfo_update_output_stream(processinfo, imgmvalOLrms.ID);
+
+
+                    modal_limit_counter = 0;
+
+
+
+
+
+                    if((*autolim) == 1)
+                    {
+                        // autolimit
+
+                        for(uint32_t mi = 0; mi < NBmode; mi++)
+                        {
+
+                            autolimDMsigma[mi] = (1.0 - (*autolimprobegain))* autolimDMsigma[mi]
+                                                 + (*autolimprobegain)*imgmvalDMrms.im->array.F[mi];
+
+                            float cliplim = (*autolimsigmafact) * autolimDMsigma[mi];
+
+
+                            imgmlimitfact.im->array.F[mi] = cliplim / (*looplimit);
+                        }
+                    }
+
+
                 }
             }
         }
@@ -1478,6 +1728,17 @@ static errno_t compute_function()
     free(mvalDMc);
     free(mvalDMbuff);
     free(mvalDMOL);
+
+    free(mlimitcntarray);
+
+    free(mvalDMave);
+    free(mvalDMrms);
+    free(mvalWFSave);
+    free(mvalWFSrms);
+    free(mvalOLave);
+    free(mvalOLrms);
+
+    free(autolimDMsigma);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
