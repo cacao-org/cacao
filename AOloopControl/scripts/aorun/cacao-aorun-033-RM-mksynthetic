@@ -22,14 +22,6 @@ function setCPAmax()
 	CPAmax=$1
 }
 
-
-MSopt+=( "c:CPAmax:setCPAmax:cpamax[float]:Set maximum cycles per aperture (CPA) [8]" )
-CPAmax="8"
-function setCPAmax()
-{
-	CPAmax=$1
-}
-
 MSopt+=( "z:NBzer:setNBzer:NBzer[int]:Set number of Zernike polynomials [5]" )
 NBzer=5
 function setNBzer()
@@ -107,7 +99,7 @@ cacaomsglog "using DMy0 = ${DMy0}"
 echo "using DMr0 = ${DMr0}"
 cacaomsglog "using DMr0 = ${DMr0}"
 
-
+cacaomsglog "using alpha = ${alpha}"
 
 
 
@@ -212,12 +204,12 @@ cp $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMsyn_modesWFS.fits
 
 # set default to syn files
 
-rm -f ./conf/RMmodesDM/RMmodesDM.fits
+rm -f ./conf/RMmodesDM/RMsyn_modesDM.fits
 ln -s $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMmodesDM/RMsyn_modesDM.fits
 echo "ln -s $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMmodesDM/RMmodesDM.fits"
 cacaomsglog "USING RMsyn_modesDM as RMmodesDM"
 
-rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
+rm -f ./conf/RMmodesWFS/RMsyn_modesWFS.fits
 ln -s $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMmodesWFS/RMsyn_modesWFS.fits
 echo "ln -s $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
 cacaomsglog "USING RMsyn_modesWFS as RMmodesWFS"

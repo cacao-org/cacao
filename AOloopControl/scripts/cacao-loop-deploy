@@ -164,8 +164,6 @@ set -u
 
 
 
-
-
 if [ ${RUNCONF} == "ON" ]; then
 
 

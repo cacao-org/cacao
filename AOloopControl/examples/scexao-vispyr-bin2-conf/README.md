@@ -57,7 +57,8 @@ cd vispyr2-rootdir
 
 Deploy logging processes and terminals :
 ```bash
-cacao-log-setup start
+cacao-msglogCTRL start
+cacao-msglogCTRL terms
 ```
 
 The command is equivalent to running in seprate windows :
