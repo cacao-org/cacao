@@ -202,7 +202,7 @@ cp $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMsyn_modesWFS.fits
 
 
 
-# set default to syn files
+echo "Set default to syn files"
 
 rm -f ./conf/RMmodesDM/RMmodesDM.fits
 ln -s $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMmodesDM/RMmodesDM.fits
