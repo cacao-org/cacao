@@ -198,6 +198,8 @@ listim
 exitCLI
 EOF
 
+exit 0
+
 cp $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMsyn_modesWFS.fits
 
 
