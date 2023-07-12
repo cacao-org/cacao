@@ -905,15 +905,32 @@ static errno_t compute_function()
 
 
 
+    // connect/create output offload mode coeffs to DM
+    //
+    IMGID imgmvaloffloadDM;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mvaloffloadDM", *AOloopindex);
+        imgmvaloffloadDM = stream_connect_create_2Df32(name, NBmode, 1);
+        for(uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgmvaloffloadDM.im->array.F[mi] = 0.0;
+        }
+    }
+
+
+
+
+
 
     // ========================= MODAL GAIN ===========================
     printf("Setting up modal gain\n");
 
     IMGID imgmgain;
     {
-        char mgainname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mgainname, "aol%lu_mgain", *AOloopindex);
-        imgmgain = stream_connect_create_2Df32(mgainname, NBmode, 1);
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mgain", *AOloopindex);
+        imgmgain = stream_connect_create_2Df32(name, NBmode, 1);
     }
     list_image_ID();
     printf(" mgain ID = %ld\n", imgmgain.ID);
@@ -924,9 +941,9 @@ static errno_t compute_function()
     // allows for single-parameter gain tuning
     IMGID imgmgainfact;
     {
-        char mgainfactname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mgainfactname, "aol%lu_mgainfact", *AOloopindex);
-        imgmgainfact = stream_connect_create_2Df32(mgainfactname, NBmode, 1);
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mgainfact", *AOloopindex);
+        imgmgainfact = stream_connect_create_2Df32(name, NBmode, 1);
         printf("%s  ID = %ld\n", imgmgainfact.name, imgmgainfact.ID);
         list_image_ID();
         for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -936,15 +953,50 @@ static errno_t compute_function()
     }
 
 
+    IMGID imgoffloadmgain;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_offloadmgain", *AOloopindex);
+        imgoffloadmgain = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+    list_image_ID();
+    printf(" offloadmgain ID = %ld\n", imgoffloadmgain.ID);
+    fflush(stdout);
+
+    // offload modal gains factors
+    // to be multiplied by overal gain to become offloadmgain
+    // allows for single-parameter gain tuning
+    IMGID imgoffloadmgainfact;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_offloadmgainfact", *AOloopindex);
+        imgoffloadmgainfact = stream_connect_create_2Df32(name, NBmode, 1);
+        printf("%s  ID = %ld\n", imgoffloadmgainfact.name, imgoffloadmgainfact.ID);
+        list_image_ID();
+        for(uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgoffloadmgainfact.im->array.F[mi] = 1.0;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
     // ========================= MODAL MULT ==========================
     printf("Setting up modal mult\n");
 
     IMGID imgmmult;
     {
-        char mmultname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mmultname, "aol%lu_mmult", *AOloopindex);
-        imgmmult = stream_connect_create_2Df32(mmultname, NBmode, 1);
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mmult", *AOloopindex);
+        imgmmult = stream_connect_create_2Df32(name, NBmode, 1);
     }
 
     // modal multiiplicative factors
@@ -952,9 +1004,9 @@ static errno_t compute_function()
     // allows for single-parameter mult tuning
     IMGID imgmmultfact;
     {
-        char mmultfactname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mmultfactname, "aol%lu_mmultfact", *AOloopindex);
-        imgmmultfact = stream_connect_create_2Df32(mmultfactname, NBmode, 1);
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mmultfact", *AOloopindex);
+        imgmmultfact = stream_connect_create_2Df32(name, NBmode, 1);
         for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmmultfact.im->array.F[mi] = 1.0;
@@ -962,14 +1014,38 @@ static errno_t compute_function()
     }
 
 
+    IMGID imgoffloadmmult;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_offloadmmult", *AOloopindex);
+        imgoffloadmmult = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+    // offload modal multiiplicative factors
+    // to be multiplied by overal mult to become offloadmmult
+    // allows for single-parameter offloadmult tuning
+    IMGID imgoffloadmmultfact;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_offloadmmultfact", *AOloopindex);
+        imgoffloadmmultfact = stream_connect_create_2Df32(name, NBmode, 1);
+        for(uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgoffloadmmultfact.im->array.F[mi] = 1.0;
+        }
+    }
+
+
+
+
     // ========================= MODAL ZEROPOINT ==========================
     printf("Setting up modal zero point\n");
 
     IMGID imgmzeropoint;
     {
-        char mzeropointname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mzeropointname, "aol%lu_mzeropoint", *AOloopindex);
-        imgmzeropoint = stream_connect_create_2Df32(mzeropointname, NBmode, 1);
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mzeropoint", *AOloopindex);
+        imgmzeropoint = stream_connect_create_2Df32(name, NBmode, 1);
         for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmzeropoint.im->array.F[mi] = 0.0;
@@ -983,9 +1059,9 @@ static errno_t compute_function()
 
     IMGID imgmlimit;
     {
-        char mlimitname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mlimitname, "aol%lu_mlimit", *AOloopindex);
-        imgmlimit = stream_connect_create_2Df32(mlimitname, NBmode, 1);
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mlimit", *AOloopindex);
+        imgmlimit = stream_connect_create_2Df32(name, NBmode, 1);
     }
 
     // modal multiiplicative factors
@@ -993,14 +1069,39 @@ static errno_t compute_function()
     // allows for single-parameter mult tuning
     IMGID imgmlimitfact;
     {
-        char mlimitfactname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(mlimitfactname, "aol%lu_mlimitfact", *AOloopindex);
-        imgmlimitfact = stream_connect_create_2Df32(mlimitfactname, NBmode, 1);
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mlimitfact", *AOloopindex);
+        imgmlimitfact = stream_connect_create_2Df32(name, NBmode, 1);
         for(uint32_t mi = 0; mi < NBmode; mi++)
         {
             imgmlimitfact.im->array.F[mi] = 1.0;
         }
     }
+
+
+    IMGID imgoffloadmlimit;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_offloadmlimit", *AOloopindex);
+        imgoffloadmlimit = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+    // modal multiiplicative factors
+    // to be multiplied by overal mult to become mmult
+    // allows for single-parameter mult tuning
+    IMGID imgoffloadmlimitfact;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_offloadmlimitfact", *AOloopindex);
+        imgoffloadmlimitfact = stream_connect_create_2Df32(name, NBmode, 1);
+        for(uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgoffloadmlimitfact.im->array.F[mi] = 1.0;
+        }
+    }
+
+
+
 
 
     // ========================= MODAL LIMIT COUNTER ==================
@@ -1013,9 +1114,9 @@ static errno_t compute_function()
 
     IMGID imgmlimitcntfrac;
     {
-        char imgmlimitcntfracname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(imgmlimitcntfracname, "aol%lu_mlimitcntfrac", *AOloopindex);
-        imgmlimitcntfrac = stream_connect_create_2Df32(imgmlimitcntfracname, NBmode, 1);
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mlimitcntfrac", *AOloopindex);
+        imgmlimitcntfrac = stream_connect_create_2Df32(name, NBmode, 1);
     }
 
 
@@ -1212,6 +1313,43 @@ static errno_t compute_function()
             }
 
 
+
+
+
+            // OFFLOAD LOOP
+            //
+            if((*offload) == 1)
+            {
+                for(uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    float val = imgmvaloffloadDM.im->array.F[mi];
+                    val += imgoffloadmgain.im->array.F[mi] * imgout.im->array.F[mi];
+                    val *= imgoffloadmmult.im->array.F[mi];
+                    // apply LIMIT
+                    limit = imgoffloadmlimit.im->array.F[mi];
+                    if(val > limit)
+                    {
+                        val = limit;
+                    }
+                    if(val < -limit)
+                    {
+                       val = -limit;
+                    }
+                    imgmvaloffloadDM.im->array.F[mi] = val;
+
+                }
+                processinfo_update_output_stream(processinfo, imgmvaloffloadDM.ID);
+            }
+
+
+
+
+
+
+
+
+
+
             // Compute pseudo open-loop mode coefficients
             //
             if((*compOL) == 1)
@@ -1264,6 +1402,10 @@ static errno_t compute_function()
                 processinfo_update_output_stream(processinfo, imgOLmval.ID);
 
 
+
+
+
+
                 if(*enablePF == 1)
                 {
                     // wait for PF blocks to complete
@@ -1294,6 +1436,8 @@ static errno_t compute_function()
                            sizeof(float) * NBmode);
                     processinfo_update_output_stream(processinfo, imgout.ID);
                 }
+
+
 
 
 
@@ -1466,6 +1610,31 @@ static errno_t compute_function()
                     imgmlimitfact.im->array.F[mi] * (*looplimit);
             }
             processinfo_update_output_stream(processinfo, imgmlimit.ID);
+
+
+
+            for(uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                imgoffloadmgain.im->array.F[mi] =
+                    imgoffloadmgainfact.im->array.F[mi] * (*offloadloopgain);
+            }
+            processinfo_update_output_stream(processinfo, imgoffloadmgain.ID);
+
+
+            for(uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                imgoffloadmmult.im->array.F[mi] =
+                    imgoffloadmmultfact.im->array.F[mi] * (*offloadloopmult);
+            }
+            processinfo_update_output_stream(processinfo, imgoffloadmmult.ID);
+
+
+            for(uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                imgoffloadmlimit.im->array.F[mi] =
+                    imgoffloadmlimitfact.im->array.F[mi] * (*offloadlooplimit);
+            }
+            processinfo_update_output_stream(processinfo, imgoffloadmlimit.ID);
 
 
 

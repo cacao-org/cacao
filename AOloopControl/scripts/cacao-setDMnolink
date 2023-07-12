@@ -24,6 +24,7 @@ fi
 
 
 ln -sf ${MILK_SHM_DIR}/dm${DMINDEX}disp03.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmC.im.shm
+ln -sf ${MILK_SHM_DIR}/dm${DMINDEX}disp07.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmoffloadC.im.shm
 
 ln -sf ${MILK_SHM_DIR}/dm${DMINDEX}disp00.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmO.im.shm
 

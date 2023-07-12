@@ -33,7 +33,7 @@ else
 
 				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
 				addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-				addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevaloffloadDM"
+				addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_mvaloffloadDM"
 
 				addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_modevaloffloadDM"
 				addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_DMmodes"
