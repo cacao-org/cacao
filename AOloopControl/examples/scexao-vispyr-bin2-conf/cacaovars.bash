@@ -116,7 +116,9 @@ export CACAO_FPSPROC_MODALFILTERING="ON"
 #
 export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 
-
+# Compute DM command from control mode offload values
+#
+export CACAO_FPSPROC_MVMGPU_CMODEVALOFFLOAD2DM="ON"
 
 
 # Zero Point Offset from DM to WFS

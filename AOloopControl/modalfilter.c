@@ -201,6 +201,24 @@ static long      fpi_testOLcnt;
 
 
 
+// offload modal output
+//
+static uint64_t *offload;
+static long      fpi_offload;
+
+static float *offloadloopgain;
+static long   fpi_offloadloopgain;
+
+static float *offloadloopmult;
+static long   fpi_offloadloopmult;
+
+static float *offloadlooplimit;
+static long   fpi_offloadlooplimit;
+
+
+
+
+
 static CLICMDARGDEF farg[] =
 {
     {
@@ -567,6 +585,42 @@ static CLICMDARGDEF farg[] =
         CLIARG_HIDDEN_DEFAULT,
         (void **) &testOLcnt,
         &fpi_testOLcnt
+    },
+    {
+        CLIARG_ONOFF,
+        ".offload.enable",
+        "offload output ON/OFF",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &offload,
+        &fpi_offload
+    },
+    {
+        CLIARG_FLOAT32,
+        ".offload.loopgain",
+        "offload loop gain",
+        "0.01",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &offloadloopgain,
+        &fpi_offloadloopgain
+    },
+    {
+        CLIARG_FLOAT32,
+        ".offload.loopmult",
+        "offload loop mult",
+        "0.95",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &offloadloopmult,
+        &fpi_offloadloopmult
+    },
+    {
+        CLIARG_FLOAT32,
+        ".offload.looplimit",
+        "offload loop limit",
+        "1.0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &offloadlooplimit,
+        &fpi_offloadlooplimit
     }
 };
 
@@ -626,6 +680,11 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_testOLampl].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_testOLmode].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_testOLnbsample].fpflag |= FPFLAG_WRITERUN;
+
+        data.fpsptr->parray[fpi_offload].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_offloadloopgain].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_offloadloopmult].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_offloadlooplimit].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;

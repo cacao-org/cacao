@@ -96,6 +96,8 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-exec
 	scripts/cacao.tmux
 	scripts/cacao-fpslistadd
+	scripts/cacao-fpslistadd-MVMGPU_CMODEVAL2DM
+	scripts/cacao-fpslistadd-MVMGPU_CMODEVALOFFLOAD2DM
 	scripts/cacao-fpslistadd-MODALCTRL_STATS
 	scripts/cacao-fpslistadd-MODALFILTERING
 	scripts/cacao-fpslistadd-MVMGPU_ZPO
