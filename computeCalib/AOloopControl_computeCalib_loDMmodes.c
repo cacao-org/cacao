@@ -167,6 +167,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
 
     linopt_imtools_makeCPAmodes("CPAmodes",
                                 msizex,
+                                0.0,
+                                1.5*CPAmax,
                                 CPAmax,
                                 deltaCPA,
                                 0.5 * msizex,
