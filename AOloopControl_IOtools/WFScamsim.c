@@ -299,6 +299,10 @@ static errno_t compute_function()
             {
                 wfsoutimg.im->array.UI16[ii] = 0;
             }
+            else if (tmpval > 65535)
+            {
+                wfsoutimg.im->array.UI16[ii] = 65535;
+            }
             else
             {
                 wfsoutimg.im->array.UI16[ii] = (uint16_t) tmpval;
