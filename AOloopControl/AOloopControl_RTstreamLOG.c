@@ -1958,11 +1958,11 @@ int AOloopControl_RTstreamLOG_saveloop(int loop, char *dirname)
                                 fflush(stdout);
                             }
 
-                            iret_savefits[rtlindex] =
+/*                            iret_savefits[rtlindex] =
                                 pthread_create(&thread_savefits[rtlindex],
                                                NULL,
-                                               save_fits_function,
-                                               &savethreadmsg_array[rtlindex]);
+                                               save_telemetry_fits_function,
+                                               &savethreadmsg_array[rtlindex]);*/
                             AOconf[loop].RTSLOGarray[rtlindex].tActive = 1;
                             NBthreads++;
 
