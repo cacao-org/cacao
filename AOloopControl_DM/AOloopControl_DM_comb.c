@@ -942,8 +942,8 @@ static errno_t compute_function()
     {
 
         int zpooffsetchange = 0;
-        int zpoval;
-        int fpi_zpoch;
+        //int zpoval;
+        //int fpi_zpoch;
 
         zpoffset_channel[0]  = *zpoffsetch00;
         zpoffset_channel[1]  = *zpoffsetch01;
