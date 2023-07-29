@@ -2735,7 +2735,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
     long            NBdatFiles;
 
     FILE *fp;
-    char  fname[STRINGMAXLEN_FILENAME];
+    char  fname[STRINGMAXLEN_FULLFILENAME];
     // long cnt;
     double valf1, valf2;
     long   vald1, vald2, vald3, vald4;
@@ -2909,11 +2909,10 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                         //
 
                         // Does timing file exist ?
-                        snprintf(fname,
-                                 stringmaxlen,
-                                 "%s/%s.timing",
-                                 datadirstream,
-                                 tmpstring);
+                        WRITE_FULLFILENAME(fname,
+                                           "%s/%s.timing",
+                                           datadirstream,
+                                           tmpstring);
                         if((fp = fopen(fname, "r")) == NULL)
                         {
                             char fnamein[stringmaxlen];
