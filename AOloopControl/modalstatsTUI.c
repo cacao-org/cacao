@@ -344,10 +344,7 @@ errno_t AOloopControl_modalstatsTUI(
     int mimax = mirange;
     long mioffset = 0;
 
-    // buffer indices (old)
-    long buffWFSindex0 = 0;
-    long buffDMindex0 = 0;
-    long buffOLindex0 = 0;
+
 
     while(loopOK == 1)
     {
