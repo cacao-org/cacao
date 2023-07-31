@@ -10,10 +10,7 @@ set(SOURCEFILES
     ${SRCNAME}.h
     acquireWFSim.c
     findspots.c
-    AOloopControl_IOtools_camerainput.c
     AOloopControl_IOtools_datastream_processing.c
-    AOloopControl_IOtools_load_image_sharedmem.c
-    AOloopControl_IOtools_RTLOGsave.c
     WFScamsim.c
     WFSmap.c
 )

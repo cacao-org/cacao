@@ -12,14 +12,6 @@ project(lib_${LIBNAME}_project)
 
 add_library(${LIBNAME} SHARED ${SRCNAME}.c
 	${SRCNAME}.h
-	AOloopControl_CompModes_loop.c
-	AOloopControl_ProcessModeCoefficients.c
-	AOloopControl_ProcessModeCoefficients.h
-	AOloopControl_fpspeckle_mod.c
-	AOloopControl_loop_ctr.c
-	AOloopControl_loop_param.c
-	AOloopControl_process_files.c
-	AOloopControl_RTstreamLOG.c
 	modalfilter.c
 	modalfilter.h
 	modalCTRL_stats.c
