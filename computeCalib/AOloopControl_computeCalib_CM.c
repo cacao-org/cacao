@@ -65,8 +65,8 @@
 
 extern long LOOPNUMBER; // current loop index
 
-extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
-extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
+//extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
+//extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 // static long aoconfID_imWFS2_active[100];
 
@@ -82,7 +82,7 @@ extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
  *
  *
  */
-
+/*
 imageID AOloopControl_computeCalib_compute_ControlMatrix(
     long                         loop,
     __attribute__((unused)) long NB_MODE_REMOVED,
@@ -94,8 +94,8 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     float                        eigenvlim)
 {
     FILE                      *fp;
-    gsl_matrix                *matrix_D;  /* this is the response matrix */
-    gsl_matrix                *matrix_Ds; /* this is the pseudo inverse of D */
+    gsl_matrix                *matrix_D;  // this is the response matrix 
+    gsl_matrix                *matrix_Ds; // this is the pseudo inverse of D 
     gsl_matrix                *matrix_Dtra;
     gsl_matrix                *matrix_DtraD;
     gsl_matrix                *matrix_DtraDinv;
@@ -164,8 +164,8 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
         }
     }
 
-    /** in this procedure, m=number of actuators/modes, n=number of WFS elements
-    */
+    // in this procedure, m=number of actuators/modes, n=number of WFS elements
+    
     //  long m = smao[0].NBmode;
     // long n = smao[0].NBwfselem;
 
@@ -220,7 +220,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
         }
     }
 
-    /* write matrix_D */
+    // write matrix_D 
     for(uint32_t k = 0; k < m; k++)
     {
         for(uint64_t ii = 0; ii < n; ii++)
@@ -232,7 +232,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
                            CPAcoeff[k]);
         }
     }
-    /* compute DtraD */
+    // compute DtraD 
     gsl_blas_dgemm(CblasTrans,
                    CblasNoTrans,
                    1.0,
@@ -241,9 +241,9 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
                    0.0,
                    matrix_DtraD);
 
-    /* compute the inverse of DtraD */
+    // compute the inverse of DtraD 
 
-    /* first, compute the eigenvalues and eigenvectors */
+    // first, compute the eigenvalues and eigenvectors 
     w           = gsl_eigen_symmv_alloc(m);
     matrix_save = gsl_matrix_alloc(m, m);
     gsl_matrix_memcpy(matrix_save, matrix_DtraD);
@@ -283,7 +283,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
         }
     }
 
-    /** Write rotation matrix to go from DM modes to eigenmodes */
+    // Write rotation matrix to go from DM modes to eigenmodes 
     arraysizetmp[0] = m;
     arraysizetmp[1] = m;
 
@@ -443,7 +443,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
                 }
             }
 
-        /* third, compute the "inverse" of DtraD */
+        // third, compute the "inverse" of DtraD 
         gsl_blas_dgemm(CblasNoTrans,
                        CblasNoTrans,
                        1.0,
@@ -466,7 +466,7 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
                        0.0,
                        matrix_Ds);
 
-        /* write result */
+        // write result 
         printf("write result to ID %ld   [%lu %u]\n", ID_Cmatrix, n, m);
         fflush(stdout);
 
@@ -534,13 +534,13 @@ imageID AOloopControl_computeCalib_compute_ControlMatrix(
     free(CPAcoeff);
 
     return ID_Cmatrix;
-}
+}*/
 
 //
 // computes combined control matrix
 //
 //
-
+/*
 errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     const char *IDcmat_name,
     const char *IDmodes_name,
@@ -731,13 +731,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
             PRINT_ERROR("sprintf wrote <1 char");
         }
 
-        /* CAN CRASH
-              sizearray = (long*) malloc(sizeof(long)*2);
-              sizearray[0] =  sizeWFS_active[slice];
-              sizearray[1] =  1;
-              aoconfID_imWFS2_active[slice] = create_image_ID(imname, 2,
-         sizearray, FLOAT, 1, 0); free(sizearray);
-        */
+
     }
 
     aoloopcontrol_var.DM_active_map = (int *) malloc(sizeof(int) * sizeDM);
@@ -758,14 +752,7 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
     //   aoconfID_meas_act_active = create_2Dimage_ID("meas_act_active",
     //   sizeDM_active, 1);
 
-    /* CAN CRASH
-      sizearray = (long*) malloc(sizeof(long)*2);
-      sizearray[0] = sizeDM_active;
-      sizearray[1] = 1;
-      sprintf(name, "aol%ld_meas_act_active", LOOPNUMBER);
-      aoconfID_meas_act_active = create_image_ID(name, 2, sizearray, FLOAT, 1,
-     0); free(sizearray);
-    */
+
 
     // reduce matrix size to active elements
     for(uint32_t slice = 0;
@@ -817,7 +804,13 @@ errno_t AOloopControl_computeCalib_compute_CombinedControlMatrix(
 
     return RETURN_SUCCESS;
 }
+*/
 
+
+
+
+
+/*
 imageID AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
 {
     imageID ID = -1;
@@ -899,3 +892,4 @@ imageID AOloopControl_computeCalib_loadCM(long loop, const char *CMfname)
 
     return ID;
 }
+*/

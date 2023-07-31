@@ -79,8 +79,8 @@
 // extern long aoloopcontrol_var.aoconfID_looptiming;         // declared in
 // AOloopControl.c
 
-extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
-extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
+//extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
+//extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 // static sem_t AOLCOMPUTE_TOTAL_ASYNC_sem_name;
 
@@ -125,8 +125,8 @@ extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 extern long LOOPNUMBER; // current loop index
 
-extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
-extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
+//extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
+//extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 /* ===============================================================================================
  */

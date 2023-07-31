@@ -41,7 +41,7 @@ errno_t AOloopControl_perfTest_loopMonitor(long loop, double frequ, long nbcol);
 
 errno_t AOloopControl_perfTest_statusStats(int updateconf, long NBsample);
 
-errno_t AOloopControl_perfTest_resetRMSperf();
+
 
 errno_t AOloopControl_perfTest_showparams(long loop);
 

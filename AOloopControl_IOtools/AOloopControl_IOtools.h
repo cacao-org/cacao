@@ -21,16 +21,7 @@ typedef int errno_t;
 /** @brief Initialize module. */
 void __attribute__((constructor)) libinit_AOloopControl_IOtools();
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl_IOtools - 1. CAMERA INPUT
- *  Read camera imates */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
+
 
 errno_t
 AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
@@ -44,27 +35,10 @@ AOloopControl_IOtools_camimage_extract2D_sharedmem_loop(const char *in_name,
 /** @brief compute sum of image pixels */
 // static void *compute_function_imtotal( void *ptr );
 
-/** @brief Subtract dark */
-// static void *compute_function_dark_subtract( void *ptr );
 
-errno_t AOcontrolLoop_IOtools_acquireWFSloop_FPCONF();
-errno_t AOcontrolLoop_IOtools_acquireWFSloop_RUN();
-errno_t AOcontrolLoop_IOtools_acquireWFSloop(long loop);
 
-/** @brief Read image from WFS camera */
-errno_t Read_cam_frame(
-    long loop, int RM, int normalize, int PixelStreamMode, int InitSem);
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl_IOtools - 2. LOAD DATA STREAMS
- *  Load 2D and 3D shared memory images */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
+
 
 /** @brief Load 2D image in shared memory */
 long AOloopControl_IOtools_2Dloadcreate_shmim(const char *name,

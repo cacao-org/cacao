@@ -51,6 +51,7 @@
  */
 
 /** @brief CLI function for AOloopControl_loadconfigure */
+/*
 int_fast8_t AOloopControl_loadconfigure_cli()
 {
     if(CLI_checkarg(1, 2) == 0)
@@ -63,3 +64,4 @@ int_fast8_t AOloopControl_loadconfigure_cli()
         return 1;
     }
 }
+*/

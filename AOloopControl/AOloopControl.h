@@ -12,11 +12,8 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "AOloopControl/AOloopControl_AOcompute.h"
+
 #include "AOloopControl/AOloopControl_ProcessModeCoefficients.h"
-#include "AOloopControl/AOloopControl_aorun.h" // AOLOOPCONF_WFSim
-#include "AOloopControl/AOloopControl_autotune.h"
-#include "AOloopControl/AOloopControl_dm.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
 #ifndef _AOLOOPCONTROL_H
@@ -148,270 +145,17 @@ typedef struct
 
 } RTstreamLOG;
 
-// LOGGING
-//#define RT_LOGsize 30000
 
-// logging
-// static int loadcreateshm_log = 0; // 1 if results should be logged in ASCII
-// file static FILE *loadcreateshm_fplog;
 
-/**
- * Main AOloopControl structure.
- *
- * Holds key parameters for the AO engine as well as higher level variables
- * describing the state of the control loop
- *
- * @ingroup AOloopControl_AOLOOPCONTROL_CONF
- */
-typedef struct
-{
 
-    char name[80]; // AO loop name
 
-    // These structures are always part of AO loop control (not optional)
 
-    // High level AO loop parameters and variables
-    // includes both status and some top level control (gain, mult, max)
-    AOLOOPCONF_aorun aorun; // defined in AOloopControl_aorun.h
 
-    // Wavefront sensor image
-    AOLOOPCONF_WFSim WFSim; // defined in AOloopControl_aorun.h
 
-    // AO loop timing parameters
-    AOloopTimingInfo AOtiminginfo; // defined in AOloopControl_aorun.h
 
-    // Computation parameters
-    AOLOOPCONF_AOcompute AOcompute; // defined in AOloopControl_AOcompute.h
 
-    // DM control
-    AOLOOPCONF_DMctrl DMctrl; // defined in AOloopControl_dm.h
 
-    // Modal control
-    AOLOOPCONF_ProcessModeCoefficients
-    AOpmodecoeffs; // defined in AOloopControl_ProcessModeCoefficients.h
 
-    // Automatic loop tuning (experimental)
-    AOLOOPCONF_AutoTune AOAutoTune; // defined in AOloopControl_autotune.h
-
-    // Realtime logging
-    long        RTLOGsize; // Number of samples per shared memory stream
-    RTstreamLOG RTSLOGarray[MAX_NUMBER_RTLOGSTREAM];
-
-} AOLOOPCONTROL_CONF;
-
-typedef struct
-{
-    /* ===============================================================================================
-    */
-    /*                    aoconfID are global variables for convenience */
-    /*  These variables are LOCAL to each process, and not shared between
-    * processes                    */
-    /*  aoconfID can be used in other modules as well (with extern) */
-    /* ===============================================================================================
-    */
-
-    long LOOPNUMBER; // = 0; // current loop index
-
-    // TIMING
-    // struct timespec tnow; //static
-    // struct timespec tdiff; //static
-    // double tdiffv; //static
-
-    // int initWFSref_GPU[100];// = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    int initcontrMcact_GPU
-    [100]; // = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    // used in AOloopControl_loop_param.c
-    //  static
-
-    float GPU_alpha;
-    float GPU_beta;
-
-    int AOloopcontrol_meminit;
-    // local copies to avoid reset to zero by other process
-    int init_RM_local;  /**< Response Matrix loaded */
-    int init_CM_local;  /**< Control Matrix loaded */
-    int init_CMc_local; /**< Combined control matrix computed */
-
-    int COMPUTE_PIXELSTREAMING; // static. multiple pixel groups
-    int PIXSTREAM_NBSLICES;     // number of image slices (= pixel groups)
-    int PIXSTREAM_SLICE;        // slice index 0 = all pixels
-
-    // Logging REAL TIME data (internal logging)
-    // (note: non real time streams are logged externally)
-    //
-    // To optimize logging speed, each stream can be logged in a 3D data cube
-    // within the function where it is created. 3rd axis is time A timing array is
-    // also created.
-    //
-    // List of REAL TIME streams logged with the internal process
-    //
-    //
-    // wfsim              logged in function  ??
-    // modeval_ol         logged in function AOloopControl_ProcessModeCoefficients
-    //
-
-    //
-    // Shared between REAL TIME STREAMS:
-    //
-    // streamLOG_buff                   which buffer to use (0 or 1)   -> in
-    // AOLOOPCONTROL_CONF (needs to be shared and visible) streamLOG_frame frame
-    // index within buffer      -> in AOLOOPCONTROL_CONF (needs to be shared and
-    // visible) streamLOG_saveToggle             1 to force a save now          ->
-    // in AOLOOPCONTROL_CONF (needs to be shared and visible)
-    //
-    //
-    // For each REAL TIME stream <sname> :
-    //
-    // aoconfLOG_<sname>_databuffID0	    logging data buffer 0 ID
-    // aoconfLOG_<sname>_databuffID1	    logging data buffer 1 ID
-    // aoconfLOG_<sname>_infobuff0          logging info buffer 0
-    // aoconfLOG_<sname>_infobuff1          logging info buffer 1
-    // aoconfLOG_<sname>_databuffID         active data buffer ID
-    // aoconfLOG_<sname>_infobuff           active info buffer pointer
-    //
-    // streamLOG_<sname>_ON  - NEEDS TO BE SET UP AT STARTUP           -> in
-    // AOLOOPCONTROL_CONF (needs to be shared and visible)
-    //		0 : No logging, no writing into 3D cube
-    //		1 : Create 3D cube and write into it
-    // streamLOG_<sname>_save           1 if saved to disk             -> in
-    // AOLOOPCONTROL_CONF (needs to be shared and visible)
-
-    // Hardware connections
-
-    // WFS image
-    long    aoconfID_wfsim; // identifier to stream
-    uint8_t WFSatype;
-
-    /*LOG
-
-      long aoconfLOG_wfsim_buffID0;        // buffer 0
-      long aoconfLOG_wfsim_buffID1;        // buffer 1
-      long aoconfLOG_wfsim_timerbuffID0;   // timer buffer 0
-      long aoconfLOG_wfsim_timerbuffID1;   // timer buffer 1
-      long aoconfLOG_wfsim_buffID;         // active buffer ID
-      long aoconfLOG_wfsim_timerbuffID;    // active timer buffer ID
-    */
-
-    long aoconfID_dmC;
-    long aoconfID_dmRM;
-
-    long aoconfID_wfsdark;
-
-    long aoconfID_imWFS0; // identifier to stream
-
-    long aoconfID_imWFS0tot;
-
-    long aoconfID_imWFS1;
-
-    long aoconfID_imWFS2;
-
-    long aoconfID_imWFSlinlimit; // WFS linearity limit
-
-    long      aoconfID_wfsref0;
-    long      aoconfID_wfsref;
-    long long aoconfcnt0_wfsref_current;
-
-    long aoconfID_DMmodes;
-    long aoconfID_dmdisp; // to notify DMcomb that DM maps should be summed
-
-    // Control Modes
-    long aoconfID_cmd_modes;
-    long aoconfID_meas_modes; // measured
-    long aoconfID_RMS_modes;
-    long aoconfID_AVE_modes;
-    long aoconfID_modeARPFgainAuto;
-    long aoconfID_modevalPF;
-
-    // mode gains, multf, limit are set in 3 tiers
-    // global gain
-    // block gain
-    // individual gains
-
-    // blocks
-    long aoconfID_gainb;  // block modal gains
-    long aoconfID_multfb; // block modal gains
-    long aoconfID_limitb; // block modal gains
-
-    // individual modesaol0PFb1comp:
-    long aoconfID_DMmode_GAIN;
-    long aoconfID_LIMIT_modes;
-    long aoconfID_MULTF_modes;
-
-    long aoconfID_cmd_modesRM;
-
-    long aoconfID_wfsmask;
-    long aoconfID_dmmask;
-
-    // long aoconfID_respM;//  = -1; static
-    // only in loadconfigure.c
-
-    long aoconfID_contrM; //   pixels -> modes
-
-    // long long aoconfcnt0_contrM_current;//  = -1; static
-
-    long aoconfID_contrMc; // combined control matrix: pixels -> DM actuators
-    long aoconfID_meas_act;
-    long aoconfID_contrMcact[100];
-
-    // static
-    //  pixel streaming
-    long aoconfID_pixstream_wfspixindex; // index of WFS pixels
-
-    // timing
-    long
-    aoconfID_looptiming; // control loop timing data. Pixel values correspond
-    // to time offset
-    // currently has 20 timing slots
-    // beginning of iteration is defined when entering "wait for image"
-    // md[0].atime.ts is absolute time at beginning of iteration
-    //
-    // pixel 0 is dt since last iteration
-    //
-    // pixel 1 is time from beginning of loop to status 01
-    // pixel 2 is time from beginning of loop to status 02
-    // ...
-    long AOcontrolNBtimers;
-
-    long aoconfIDlogdata;
-    // long aoconfIDlog0;//  = -1; static
-    // long aoconfIDlog1;//  = -1; static
-    //  those two last don't exist in any functions
-
-    int *WFS_active_map; // used to map WFS pixels into active array
-    int *DM_active_map;  // used to map DM actuators into active array
-    long aoconfID_meas_act_active;
-    // long aoconfID_imWFS2_active[100]; wfs_dm.c & computeCalib.c
-
-    float normfloorcoeff; //  = 1.0; static
-
-    // long wfsrefcnt0;//  = -1; static
-    // long contrMcactcnt0[100];// static = { -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    // -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};; both in
-    // wfs_dm.c
-
-    // variables used by functions
-
-    // int GPUcntMax;//  = 100; static initmem.c
-    int *GPUset0; // static
-    int *GPUset1; // static
-
-    // Realtime logging, local init flag
-    // will be equal to 1 only if the current process "owns" the realtime logging
-    int RTSLOGarrayInitFlag[MAX_NUMBER_RTLOGSTREAM];
-
-} AOloopControl_var;
 
 void __attribute__((constructor)) libinit_AOloopControl();
 
@@ -483,10 +227,9 @@ errno_t AOloopControl_WFSzeropoint_sum_update_loop(long        loopnb,
         const char *IDwfsref0_name,
         const char *IDwfsref_name);
 
-/** @brief Main loop function */
-int     AOloopControl_aorun_RUN();
-int     AOloopControl_aorun_FPCONF();
-errno_t AOloopControl_aorun();
+
+
+
 
 /** @brief CPU based matrix-vector multiplication - when no GPU */
 errno_t ControlMatrixMultiply(
@@ -546,50 +289,11 @@ long AOloopControl_dm2dm_offload(const char *streamin,
                                  float       offcoeff,
                                  float       multcoeff);
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl - 3.   LOOP CONTROL INTERFACE - AOloopControl_loop_ctr.c
- *  Set parameters */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 
-/** @brief Set loop number. Ex : for the Pyramid WFS, loop number = 0  */
-errno_t AOloopControl_setLoopNumber(long loop);
 
-/** @brief Set one function for many parameters  */
-errno_t AOloopControl_setparam(long loop, const char *key, double value);
 
-/* ===============================================================================================
- */
-/** @name AOloopControl - 3.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP
- * ON/OFF START/STOP/STEP/RESET Set parameters - AOloopControl_loop_onoff.c*/
-/* ===============================================================================================
- */
 
-/** @brief Close AO loop : AO on */
-errno_t AOloopControl_loopon();
 
-/** @brief  Open AO loop : AO off  */
-errno_t AOloopControl_loopoff();
-
-/** @brief Close AO loop : AO on */
-errno_t AOloopControl_loopWFScompon();
-
-/** @brief  Open AO loop : AO off  */
-errno_t AOloopControl_loopWFScompoff();
-
-/** @brief Kill AO loop : finish the process of the run */
-errno_t AOloopControl_loopkill();
-
-/** @brief Close loop for finite number of steps */
-errno_t AOloopControl_loopstep(long loop, long NBstep);
-
-/** @brief Reset the AO loop */
-errno_t AOloopControl_loopreset();
 
 /* ===============================================================================================
  */
@@ -604,53 +308,8 @@ errno_t AOloopControl_logon();
 /** @brief Log off AO interface */
 errno_t AOloopControl_logoff();
 
-/* ============================================================================================================
- */
-/** @name AOloopControl - 3.3. LOOP CONTROL INTERFACE - PRIMARY AND FILTERED DM
- * WRITE - AOloopControl_dmwrite.c */
-/* ============================================================================================================
- */
 
-/** @brief Writing on DM, unfiltered actuators (primary) : on */
-errno_t AOloopControl_DMprimaryWrite_on();
 
-/** @brief Writing on DM, unfiltered actuators (primary) : off */
-errno_t AOloopControl_DMprimaryWrite_off();
-
-/** @brief Writing on DM, after filtering : on */
-errno_t AOloopControl_DMfilteredWrite_on();
-
-/** @brief Writing on DM, after filtering : off */
-errno_t AOloopControl_DMfilteredWrite_off();
-
-/* ======================================================================================================
- */
-/** @name AOloopControl - 3.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING -
- * AOloopControl_autotune.c */
-/* ======================================================================================================
- */
-
-/** @brief Set limit auto tune : on */
-errno_t AOloopControl_AUTOTUNE_LIMITS_on();
-
-/** @brief Set limit auto tune : off */
-errno_t AOloopControl_AUTOTUNE_LIMITS_off();
-
-/** @brief Options auto tune limit
- * The limit is fixed at the beginning.
- * When the fraction of mode values higher than the current limit times mcoeff
- * is larger than perc (percentile); then the limit increases by delta.
- * Otherwise, it decreases by delta.
- */
-errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta(float AUTOTUNE_LIMITS_delta);
-errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc(float AUTOTUNE_LIMITS_perc);
-errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float AUTOTUNE_LIMITS_mcoeff);
-
-/** @brief Set gain auto tune : on */
-errno_t AOloopControl_AUTOTUNE_GAINS_on();
-
-/** @brief Set gain auto tune : off */
-errno_t AOloopControl_AUTOTUNE_GAINS_off();
 
 /* ========================================================================================================
  */
@@ -812,24 +471,6 @@ int AOloopControl_RTstreamLOG_set_saveOFF(int loop, int rtlindex);
 int AOloopControl_RTstreamLOG_set_ON(int loop, int rtlindex);
 int AOloopControl_RTstreamLOG_set_OFF(int loop, int rtlindex);
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl - 7. OBSOLETE ? */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 
-// "old" blocks (somewhat obsolete)
-errno_t AOloopControl_setgainrange(long m0, long m1, float gainval);
-errno_t AOloopControl_setlimitrange(long m0, long m1, float limval);
-errno_t AOloopControl_setmultfrange(long m0, long m1, float multfval);
-errno_t AOloopControl_setgainblock(long mb, float gainval);
-errno_t AOloopControl_setlimitblock(long mb, float limitval);
-errno_t AOloopControl_setmultfblock(long mb, float multfval);
-
-errno_t AOloopControl_AutoTune();
 
 #endif

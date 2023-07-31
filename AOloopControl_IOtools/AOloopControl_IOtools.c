@@ -121,8 +121,8 @@
 
 extern long LOOPNUMBER; // current loop index
 
-extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
-extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
+//extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
+//extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 /* ================================================================== */
 /* ================================================================== */
@@ -141,40 +141,6 @@ INIT_MODULE_LIB(AOloopControl_IOtools)
 /* ================================================================== */
 /* ================================================================== */
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl_IOtools - 1. CAMERA INPUT
- *  Read camera imates */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-
-errno_t AOloopControl_IOtools_acquireWFSloop_cli()
-{
-    // Try FPS implementation
-
-    // Set data.fpsname, providing default value as first arg, and set
-    // data.FPS_CMDCODE value. Default FPS name will be used if CLI process has
-    // NOT been named. See code in function_parameter.c for detailed rules.
-
-    function_parameter_getFPSargs_from_CLIfunc("acquWFS");
-
-    if(data.FPS_CMDCODE != 0)  // use FPS implementation
-    {
-        // set pointers to CONF and RUN functions
-        data.FPS_CONFfunc = AOcontrolLoop_IOtools_acquireWFSloop_FPCONF;
-        data.FPS_RUNfunc  = AOcontrolLoop_IOtools_acquireWFSloop_RUN;
-        function_parameter_execFPScmd();
-        return RETURN_SUCCESS;
-    }
-    else
-    {
-        return RETURN_FAILURE;
-    }
-}
 
 /** @brief CLI function for AOloopControl_camimage_extract2D_sharedmem_loop */
 errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli()
@@ -200,29 +166,6 @@ errno_t AOloopControl_IOtools_camimage_extract2D_sharedmem_loop_cli()
     }
 }
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl_IOtools - 2. LOAD DATA STREAMS
- *  Load 2D and 3D shared memory images */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-
-// No command line hooks to functions in this section
-
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl_IOtools - 3. DATA STREAMS PROCESSING
- *  Data streams real-time processing */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 
 /** @brief CLI function for AOloopControl_AveStream */
 errno_t AOloopControl_IOtools_AveStream_cli()
@@ -307,33 +250,8 @@ errno_t AOloopControl_IOtools_stream3Dto2D_cli()
     }
 }
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl_IOtools - 4. SAVE REAL-TIME TELEMETRY BUFFER
- *  Save to disk telemetry packaged in alternate buffers */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 
-/** @brief Save telemetry */
-errno_t AOloopControl_IOtools_RTLOGsave_cli()
-{
-    if(CLI_checkarg(1, 2) + CLI_checkarg(2, 5) + CLI_checkarg(3, 5) == 0)
-    {
-        AOloopControl_IOtools_RTLOGsave(data.cmdargtoken[1].val.numl,
-                                        data.cmdargtoken[2].val.string,
-                                        data.cmdargtoken[3].val.string);
 
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
 
 /* ===============================================================================================
  */
@@ -360,13 +278,7 @@ static errno_t init_module_CLI()
     /* ===============================================================================================
     */
 
-    RegisterCLIcommand("aolacquireWFSloop",
-                       __FILE__,
-                       AOloopControl_IOtools_acquireWFSloop_cli,
-                       "acquire WFS loop",
-                       "<loopindex>",
-                       "aolacquireWFSloop 2",
-                       "int AOloopControl_IOtools_acquireWFSloop(long loop)");
+
 
     RegisterCLIcommand(
         "cropshim",
@@ -434,25 +346,9 @@ static errno_t init_module_CLI()
         "long AOloopControl_IOtools_stream3Dto2D(const char *in_name, const "
         "char *out_name, int NBcols, int insem)");
 
-    /* ===============================================================================================
-    */
-    /* ===============================================================================================
-    */
-    /** @name AOloopControl_IOtools - 4. SAVE REAL-TIME TELEMETRY BUFFER
-    *  Save to disk telemetry packaged in alternate buffers */
-    /* ===============================================================================================
-    */
-    /* ===============================================================================================
-    */
 
-    RegisterCLIcommand("aolrtlogbuffsave",
-                       __FILE__,
-                       AOloopControl_IOtools_RTLOGsave_cli,
-                       "log realtime buffer stream",
-                       "<loopnumber> <streamname> <dirname>",
-                       "aolrtlogbuffsave modeval \"/media/data/\"",
-                       "int_fast8_t AOloopControl_IOtools_RTLOGsave(long loop, "
-                       "const char *streamname, const char *dirname)");
+
+
 
     CLIADDCMD_AOloopControl_IOtools__acquireWFSim();
     CLIADDCMD_AOloopControl_IOtools__WFScamsim();

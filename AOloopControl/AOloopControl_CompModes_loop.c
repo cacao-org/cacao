@@ -41,6 +41,10 @@
 
 // static int AOlooploadconf_init = 0;
 
+
+
+
+/*
 extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 extern AOloopControl_var   aoloopcontrol_var;
 
@@ -243,3 +247,4 @@ AOloopControl_CompModes_loop(__attribute__((unused)) const char *ID_CM_name,
     return RETURN_SUCCESS;
 }
 #endif
+*/

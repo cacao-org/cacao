@@ -135,8 +135,8 @@ typedef struct
 
 extern long LOOPNUMBER; // current loop index
 
-extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
-extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
+//extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
+//extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 /* ================================================================== */
 /* ================================================================== */
@@ -166,7 +166,7 @@ INIT_MODULE_LIB(AOloopControl_perfTest)
  */
 
 /** @brief CLI function for AOcontrolLoop_TestDMSpeed */
-errno_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
+/*errno_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
 {
     if(0 + CLI_checkarg(1, 4) + CLI_checkarg(2, 2) + CLI_checkarg(3, 2) +
             CLI_checkarg(4, 1) ==
@@ -183,7 +183,7 @@ errno_t AOcontrolLoop_perfTest_TestDMSpeed_cli()
     {
         return CLICMD_INVALID_ARG;
     }
-}
+}*/
 
 errno_t AOcontrolLoop_perfTest_TestSystemLatency_cli()
 {
@@ -510,14 +510,14 @@ static errno_t init_module_CLI()
     /* ===============================================================================================
     */
 
-    RegisterCLIcommand("aoldmtestsp",
+/*    RegisterCLIcommand("aoldmtestsp",
                        __FILE__,
                        AOcontrolLoop_perfTest_TestDMSpeed_cli,
                        "test DM speed by sending circular tip-tilt",
                        "<dmname> <delay us [long]> <NB pts> <ampl>",
                        "aoldmtestsp dmdisp2 100 20 0.1",
                        "long AOcontrolLoop_perfTest_TestDMSpeed(char *dmname, "
-                       "long delayus, long NBpts, float ampl)");
+                       "long delayus, long NBpts, float ampl)");*/
 
     RegisterCLIcommand("aoltestlat",
                        __FILE__,
@@ -563,13 +563,6 @@ static errno_t init_module_CLI()
                        "*IDout_name, char *IDoutrms_name, char "
                        "*IDoutmeas_name, char *IDoutmeasrms_name)");
 
-    RegisterCLIcommand("aolresetrms",
-                       __FILE__,
-                       AOloopControl_perfTest_resetRMSperf,
-                       "reset RMS performance monitor",
-                       "no arg",
-                       "aolresetrms",
-                       "int AOloopControl_perfTest_resetRMSperf()");
 
     RegisterCLIcommand("aolinjectmode",
                        __FILE__,
@@ -1716,8 +1709,12 @@ errno_t AOcontrolLoop_perfTest_TestSystemLatency(const char *dmname,
     return RETURN_SUCCESS;
 }
 
+
+
 // waits on semaphore 3
 
+
+/*/
 imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
 {
     int stringmaxlen = 200;
@@ -1881,8 +1878,11 @@ imageID AOloopControl_perfTest_blockstats(long loop, const char *IDout_name)
     free(indexarray);
 
     return (IDout);
-}
+}*/
 
+
+
+/*
 errno_t AOloopControl_perfTest_InjectMode(long index, float ampl)
 {
     // int stringmaxlen = 200;
@@ -1946,11 +1946,14 @@ errno_t AOloopControl_perfTest_InjectMode(long index, float ampl)
 
     return RETURN_SUCCESS;
 }
+*/
+
+
 
 //
 // measure response matrix sensitivity
 //
-errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
+/*errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
         const char *IDdmmask_name,
         const char *IDwfsref_name,
         const char *IDwfsresp_name,
@@ -2145,11 +2148,12 @@ errno_t AOloopControl_perfTest_AnalyzeRM_sensitivity(const char *IDdmmodes_name,
     save_fits("WFSmodesXP", "WFSmodesXP.fits");
 
     return RETURN_SUCCESS;
-}
+}*/
 
 //
 // create dynamic test sequence
 //
+/*
 imageID AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out,
         long        NBpt,
         long        NBmodes,
@@ -2208,7 +2212,12 @@ imageID AOloopControl_perfTest_mkTestDynamicModeSeq(const char *IDname_out,
     }
 
     return (IDout);
-}
+}*/
+
+
+
+
+
 
 //
 // analysis of timing data

@@ -20,11 +20,15 @@
 #include <string.h>
 
 // defined in AOloopControl.c
-extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
+//extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 
 // defined in AOloopControl.c
-extern AOloopControl_var aoloopcontrol_var;
+//extern AOloopControl_var aoloopcontrol_var;
 
+
+
+
+/*
 errno_t AOloopControl_logprocess_modeval(const char *IDname)
 {
     imageID ID;
@@ -124,9 +128,9 @@ errno_t AOloopControl_logprocess_modeval(const char *IDname)
     fclose(fp);
 
     return RETURN_SUCCESS;
-}
+}*/
 
-errno_t AOloopControl_TweakRM(char                         *ZRMinname,
+/*errno_t AOloopControl_TweakRM(char                         *ZRMinname,
                               char                         *DMinCname,
                               char                         *WFSinCname,
                               char                         *DMmaskname,
@@ -204,3 +208,4 @@ errno_t AOloopControl_TweakRM(char                         *ZRMinname,
 
     return RETURN_SUCCESS;
 }
+*/

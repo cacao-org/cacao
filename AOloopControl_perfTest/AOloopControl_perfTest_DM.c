@@ -74,8 +74,12 @@ static struct timespec tnow;
 
 extern long LOOPNUMBER; // current loop index
 
-extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
-extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
+//extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
+//extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
+
+
+
+
 
 errno_t AOcontrolLoop_perfTest_TestDMSpeed(const char *dmname,
         long        delayus,

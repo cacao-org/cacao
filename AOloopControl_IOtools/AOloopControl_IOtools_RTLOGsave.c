@@ -17,9 +17,10 @@
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "statistic/statistic.h"
 
-extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
+// extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
 
-errno_t AOloopControl_IOtools_RTLOGsave(long        loop,
+
+/*errno_t AOloopControl_IOtools_RTLOGsave(long        loop,
                                         const char *streamname,
                                         __attribute__((unused))
                                         const char *dirname)
@@ -54,15 +55,7 @@ errno_t AOloopControl_IOtools_RTLOGsave(long        loop,
 
     list_image_ID();
 
-    /*    cnt0_old = data.image[IDinb0].md[0].cnt0;
-      cnt1_old = data.image[IDinb1].md[0].cnt0;
-
-      xsize = data.image[IDinb0].md[0].size[0];
-      ysize = data.image[IDinb0].md[0].size[1];
-      xysize = xsize*ysize;
-      zsize = data.image[IDinb0].md[0].size[2];
-      atype = data.image[IDinb0].md[0].atype;
-    */
 
     return RETURN_SUCCESS;
 }
+*/

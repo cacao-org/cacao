@@ -14,8 +14,8 @@
 
 #include "AOloopControl.h"
 
-extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
-extern AOloopControl_var   aoloopcontrol_var;
+//extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
+//extern AOloopControl_var   aoloopcontrol_var;
 
 /* ===============================================================================================
  */
@@ -27,13 +27,13 @@ extern AOloopControl_var   aoloopcontrol_var;
  */
 /* ===============================================================================================
  */
-
+/*
 errno_t AOloopControl_setLoopNumber(long loop)
 {
     printf("LOOPNUMBER = %ld\n", loop);
     aoloopcontrol_var.LOOPNUMBER = loop;
 
-    /** append process name with loop number */
+
 
     return RETURN_SUCCESS;
 }
@@ -59,3 +59,4 @@ errno_t AOloopControl_setparam(__attribute__((unused)) long   loop,
 
     return RETURN_SUCCESS;
 }
+*/

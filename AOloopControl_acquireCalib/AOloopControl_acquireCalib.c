@@ -108,8 +108,8 @@ extern int  AOloopcontrol_meminit; // declared in AOloopControl_compTools.c
 /* ===============================================================================================
  */
 
-extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
-extern AOloopControl_var   aoloopcontrol_var;
+//extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
+//extern AOloopControl_var   aoloopcontrol_var;
 
 /* ================================================================== */
 /* ================================================================== */
@@ -3591,7 +3591,7 @@ errno_t AOloopControl_acquireCalib_Measure_WFS_linResponse(
  * AOinitMode = 0:  create AO shared mem struct
  * AOinitMode = 1:  connect only to AO shared mem struct
  *  */
-
+/*
 imageID AOloopControl_acquireCalib_Measure_zonalRM(long        loop,
         double      ampl,
         long        delayfr,
@@ -4371,11 +4371,18 @@ imageID AOloopControl_acquireCalib_Measure_zonalRM(long        loop,
 
     return ID_WFSmap;
 }
+*/
+
+
+
+
+
+
 
 /** measures response matrix AND reference */
 // scan delay up to fDelay
 
-errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long     loop,
+/*errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long     loop,
         uint32_t NbAve,
         float    amp,
         long     nbloop,
@@ -4944,6 +4951,12 @@ errno_t AOloopControl_acquireCalib_Measure_Resp_Matrix(long     loop,
 
     return (0);
 }
+*/
+
+
+
+
+
 
 //
 // Measure fast Modal response matrix

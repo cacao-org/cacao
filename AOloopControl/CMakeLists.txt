@@ -12,31 +12,14 @@ project(lib_${LIBNAME}_project)
 
 add_library(${LIBNAME} SHARED ${SRCNAME}.c
 	${SRCNAME}.h
-	AOloopControl_AOcompute.c
-	AOloopControl_AOcompute.h
-	AOloopControl_aorun.c
-	AOloopControl_aorun.h
-	AOloopControl_arpf_onoff.c
-	AOloopControl_autotune.c
-	AOloopControl_autotune.h
-	AOloopControl_AutoTuneGains.c
 	AOloopControl_CompModes_loop.c
 	AOloopControl_ProcessModeCoefficients.c
 	AOloopControl_ProcessModeCoefficients.h
-	AOloopControl_dm.c
-	AOloopControl_dmwrite.c
 	AOloopControl_fpspeckle_mod.c
-	AOloopControl_initmem.c
-	AOloopControl_loadconfigure.c
 	AOloopControl_loop_ctr.c
-	AOloopControl_loop_onoff.c
 	AOloopControl_loop_param.c
 	AOloopControl_process_files.c
-	AOloopControl_read_param.c
 	AOloopControl_RTstreamLOG.c
-	AOloopControl_sig2Modecoeff.c
-	AOloopControl_time_param.c
-	AOloopControl_wfs.c
 	modalfilter.c
 	modalfilter.h
 	modalCTRL_stats.c

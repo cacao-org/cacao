@@ -8,38 +8,6 @@
  *
  * ## Main files
  *
- * AOloopControl_initmem.c                   Initialize memory
- * AOloopControl_loadconfigure.c             Load and save configuration
- * AOloopControl_aorun.c                     Main level loop function, calls
- * AOcompute AOloopControl_AOcompute.c                 AO Compute function, WFS
- * to DM commands AOloopControl_wfs.c                       Read WFS data, low
- * level processing of WFS data AOloopControl_dm.c Deformable mirror control,
- * write modes to DM AOloopControl_dmwrite.c                   Turn DM write
- * on/off AOloopControl_loop_ctr.c                  Loop control user interface
- * AOloopControl_loop_onoff.c                Turn loop on/off, pause, step
- * AOloopControl_param.c                     Set parameters
- * AOloopControl_read_param.c                Read parameters
- * AOloopControl_ProcessModeCoefficients.c   Modal control
- * AOloopControl_CompModes_loop.c            Compute modes (loop)
- *
- *
- * ## I/O, telemetry
- *
- * AOloopControl_RTstreamLOG.c               Log real-time telemetry
- *
- *
- * ## Performance tuning / optimization
- *
- * AOloopControl_arpf_onoff.c                Autoregressive predictive control
- * On/Off AOloopControl_predfilter_onoff.c          Turn predictive control
- * on/off AOloopControl_autotune.c                  Automatic loop tuning
- * (mostly gain values) AOloopControl_process_files.c             --
- * EXPERIMENTAL -- RM optimization from telemetry
- *
- *
- * AOloopControl_time_param.c                ??
- * AOloopControl_sig2Modecoeff.c             ??
- * AOloopControl_fpspeckle_mod.c             Speckle modulation (experimental)
  *
  *
  * @see
@@ -217,9 +185,9 @@ long LOOPNUMBER = 0;        // current loop index
 
 // static int AOlooploadconf_init = 0;
 
-AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
+//AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 
-AOloopControl_var aoloopcontrol_var;
+//AOloopControl_var aoloopcontrol_var;
 
 /* ================================================================== */
 /* ================================================================== */
@@ -232,122 +200,9 @@ AOloopControl_var aoloopcontrol_var;
 //
 INIT_MODULE_LIB(AOloopControl)
 
-/* ================================================================== */
-/* ================================================================== */
-/*            COMMAND LINE INTERFACE (CLI) FUNCTIONS                  */
-/* ================================================================== */
-/* ================================================================== */
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl - 1. INITIALIZATION, configurations
- *  Allocate memory, import/export configurations */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 
-/** @brief CLI function for AOloopControl_loadconfigure */
 
-errno_t AOloopControl_loadconfigure_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) == 0)
-    {
-        AOloopControl_loadconfigure(data.cmdargtoken[1].val.numl, 1, 10);
-        return 0;
-    }
-    else
-    {
-        return 1;
-    }
-}
-
-/** @brief CLI function for AOloopControl_stream3Dto2D */
-/*errno_t AOloopControl_stream3Dto2D_cli() {
-    if(CLI_checkarg(1,4)+CLI_checkarg(2,3)+CLI_checkarg(3,2)+CLI_checkarg(4,2)==0)
-{ AOloopControl_stream3Dto2D(data.cmdargtoken[1].val.string,
-data.cmdargtoken[2].val.string, data.cmdargtoken[3].val.numl,
-data.cmdargtoken[4].val.numl); return 0;
-    }
-    else return 1;
-}*/
-
-/** @brief CLI function for AOloopControl_aorun*/
-errno_t AOloopControl_aorun_cli()
-{
-    function_parameter_getFPSargs_from_CLIfunc("aorun");
-
-    if(data.FPS_CMDCODE != 0)  // use FPS implementation
-    {
-        // set pointers to CONF and RUN functions
-        data.FPS_CONFfunc = AOloopControl_aorun_FPCONF;
-        data.FPS_RUNfunc  = AOloopControl_aorun_RUN;
-        function_parameter_execFPScmd();
-        return RETURN_SUCCESS;
-    }
-
-    // call non FPS implementation - all parameters specified at function launch
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_IMG) +
-            CLI_checkarg(2, CLIARG_FLOAT64) ==
-            0)
-    {
-        AOloopControl_aorun(data.cmdargtoken[1].val.string,
-                            data.cmdargtoken[3].val.numf);
-        return RETURN_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl - 6. REAL TIME COMPUTING ROUTINES
- *  calls CPU and GPU processing */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-
-/** @brief CLI function for AOloopControl_AOcompute_GUI */
-errno_t AOloopControl_AOcompute_GUI_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_FLOAT64) ==
-            0)
-    {
-        AOloopControl_AOcompute_GUI(data.cmdargtoken[1].val.numl,
-                                    data.cmdargtoken[2].val.numf);
-
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_aorun_GUI */
-errno_t AOloopControl_aorun_GUI_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_FLOAT64) ==
-            0)
-    {
-        AOloopControl_aorun_GUI(data.cmdargtoken[1].val.numl,
-                                data.cmdargtoken[2].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
 
 /** @brief CLI function for AOloopControl_WFSzpupdate_loop */
 errno_t AOloopControl_WFSzpupdate_loop_cli()
@@ -467,26 +322,6 @@ errno_t AOloopControl_ProcessModeCoefficients_cli()
     }
 }
 
-/** @brief CLI function for AOloopControl_AutoTuneGains */
-errno_t AOloopControl_AutoTuneGains_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_STR_NOT_IMG) +
-            CLI_checkarg(3, CLIARG_FLOAT64) + CLI_checkarg(4, CLIARG_INT64) ==
-            0)
-    {
-        AOloopControl_AutoTuneGains(data.cmdargtoken[1].val.numl,
-                                    data.cmdargtoken[2].val.string,
-                                    data.cmdargtoken[3].val.numf,
-                                    data.cmdargtoken[4].val.numl);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
 /** @brief CLI function for AOloopControl_dm2dm_offload */
 errno_t AOloopControl_dm2dm_offload_cli()
 {
@@ -528,441 +363,7 @@ errno_t AOloopControl_sig2Modecoeff_cli()
     }
 }
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl - 8.   LOOP CONTROL INTERFACE */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 
-/** @brief CLI function for AOloopControl_setLoopNumber */
-errno_t AOloopControl_setLoopNumber_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) == 0)
-    {
-        AOloopControl_setLoopNumber(data.cmdargtoken[1].val.numl);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/* ===============================================================================================
- */
-/** @name AOloopControl - 8.1. LOOP CONTROL INTERFACE - MAIN CONTROL : LOOP
- * ON/OFF START/STOP/STEP/RESET */
-/* ===============================================================================================
- */
-
-/* ===============================================================================================
- */
-/** @name AOloopControl - 8.2. LOOP CONTROL INTERFACE - DATA LOGGING */
-/* ===============================================================================================
- */
-
-/* ===============================================================================================
- */
-/** @name AOloopControl - 8.3. LOOP CONTROL INTERFACE - PRIMARY DM WRITE */
-/* ===============================================================================================
- */
-
-/* ===============================================================================================
- */
-/** @name AOloopControl - 8.4. LOOP CONTROL INTERFACE - INTEGRATOR AUTO TUNING
- */
-/* ===============================================================================================
- */
-
-/* ===============================================================================================
- */
-/** @name AOloopControl - 8.5. LOOP CONTROL INTERFACE - PREDICTIVE FILTER ON/OFF
- */
-/* ===============================================================================================
- */
-
-/* ===============================================================================================
- */
-/** @name AOloopControl - 8.6. LOOP CONTROL INTERFACE - TIMING PARAMETERS */
-/* ===============================================================================================
- */
-
-/* ===============================================================================================
- */
-/** @name AOloopControl - 8.7. LOOP CONTROL INTERFACE - CONTROL LOOP PARAMETERS
- */
-/* ===============================================================================================
- */
-
-/** @brief CLI function for AOloopControl_set_modeblock_gain */
-errno_t AOloopControl_set_modeblock_gain_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_FLOAT64) + CLI_checkarg(3, CLIARG_INT64) ==
-            0)
-    {
-        AOloopControl_set_modeblock_gain(LOOPNUMBER,
-                                         data.cmdargtoken[1].val.numl,
-                                         data.cmdargtoken[2].val.numf,
-                                         data.cmdargtoken[3].val.numl);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_loopstep */
-errno_t AOloopControl_loopstep_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) == 0)
-    {
-        AOloopControl_loopstep(LOOPNUMBER, data.cmdargtoken[1].val.numl);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_set_loopfrequ */
-errno_t AOloopControl_set_loopfrequ_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_set_loopfrequ(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_set_hardwlatency_frame */
-errno_t AOloopControl_set_hardwlatency_frame_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_set_hardwlatency_frame(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_set_complatency_frame */
-errno_t AOloopControl_set_complatency_frame_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_set_complatency_frame(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_set_wfsmextrlatency_frame */
-errno_t AOloopControl_set_wfsmextrlatency_frame_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_set_wfsmextrlatency_frame(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_delta */
-errno_t AOloopControl_set_AUTOTUNE_LIMITS_delta_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_set_AUTOTUNE_LIMITS_delta(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_perc */
-errno_t AOloopControl_set_AUTOTUNE_LIMITS_perc_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_set_AUTOTUNE_LIMITS_perc(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_set_AUTOTUNE_LIMITS_mcoeff */
-errno_t AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setgain */
-errno_t AOloopControl_setgain_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_setgain(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setARPFgain */
-errno_t AOloopControl_setARPFgain_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_setARPFgain(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setARPFgain */
-errno_t AOloopControl_setARPFgainAutoMin_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_setARPFgainAutoMin(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setARPFgain */
-errno_t AOloopControl_setARPFgainAutoMax_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_setARPFgainAutoMax(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setWFSnormfloor */
-errno_t AOloopControl_setWFSnormfloor_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_setWFSnormfloor(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setmaxlimit */
-errno_t AOloopControl_setmaxlimit_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_setmaxlimit(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setmult */
-errno_t AOloopControl_setmult_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_setmult(data.cmdargtoken[1].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setframesAve */
-/*errno_t AOloopControl_setframesAve_cli() {
-    if(CLI_checkarg(1,2)==0) {
-        AOloopControl_setframesAve(data.cmdargtoken[1].val.numl);
-        return 0;
-    }
-    else return 1;
-}
-*
-*/
-
-extern AOLOOPCONTROL_CONF *AOconf; // declared in AOloopControl.c
-
-/** @brief CLI function for AOloopControl_setgainrange */
-errno_t AOloopControl_setgainrange_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_INT64) + CLI_checkarg(3, CLIARG_FLOAT64) ==
-            0)
-    {
-        AOloopControl_setgainrange(data.cmdargtoken[1].val.numl,
-                                   data.cmdargtoken[2].val.numl,
-                                   data.cmdargtoken[3].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setlimitrange */
-errno_t AOloopControl_setlimitrange_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_INT64) + CLI_checkarg(3, CLIARG_FLOAT64) ==
-            0)
-    {
-        AOloopControl_setlimitrange(data.cmdargtoken[1].val.numl,
-                                    data.cmdargtoken[2].val.numl,
-                                    data.cmdargtoken[3].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setmultfrange */
-errno_t AOloopControl_setmultfrange_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_INT64) + CLI_checkarg(3, CLIARG_FLOAT64) ==
-            0)
-    {
-        AOloopControl_setmultfrange(data.cmdargtoken[1].val.numl,
-                                    data.cmdargtoken[2].val.numl,
-                                    data.cmdargtoken[3].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setgainblock */
-errno_t AOloopControl_setgainblock_cli()
-{
-    if(CLI_checkarg(1, CLIARG_INT64) + CLI_checkarg(2, CLIARG_FLOAT64) == 0)
-    {
-        AOloopControl_setgainblock(data.cmdargtoken[1].val.numl,
-                                   data.cmdargtoken[2].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setlimitblock */
-errno_t AOloopControl_setlimitblock_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_FLOAT64) ==
-            0)
-    {
-        AOloopControl_setlimitblock(data.cmdargtoken[1].val.numl,
-                                    data.cmdargtoken[2].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_setmultfblock */
-errno_t AOloopControl_setmultfblock_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_FLOAT64) ==
-            0)
-    {
-        AOloopControl_setmultfblock(data.cmdargtoken[1].val.numl,
-                                    data.cmdargtoken[2].val.numf);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
-
-/** @brief CLI function for AOloopControl_scanGainBlock */
-errno_t AOloopControl_scanGainBlock_cli()
-{
-    if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_INT64) +
-            CLI_checkarg(2, CLIARG_INT64) + CLI_checkarg(3, CLIARG_FLOAT64) +
-            CLI_checkarg(4, CLIARG_FLOAT64) + CLI_checkarg(5, CLIARG_INT64) ==
-            0)
-    {
-        AOloopControl_scanGainBlock(data.cmdargtoken[1].val.numl,
-                                    data.cmdargtoken[2].val.numl,
-                                    data.cmdargtoken[3].val.numf,
-                                    data.cmdargtoken[4].val.numf,
-                                    data.cmdargtoken[5].val.numl);
-        return CLICMD_SUCCESS;
-    }
-    else
-    {
-        return CLICMD_INVALID_ARG;
-    }
-}
 
 /* ===============================================================================================
  */
@@ -1126,7 +527,7 @@ errno_t AOloopControl_RTstreamLOG_set_OFF_cli()
 }
 
 // OBSOLETE ??
-
+/*
 errno_t AOloopControl_setparam_cli()
 {
     if(DISABLE_CLI_AOloopControl + CLI_checkarg(1, CLIARG_STR_NOT_IMG) +
@@ -1144,7 +545,7 @@ errno_t AOloopControl_setparam_cli()
         return CLICMD_INVALID_ARG;
     }
 }
-
+*/
 
 
 errno_t AOloopControl_modalstatsTUI_cli()
@@ -1237,74 +638,10 @@ static errno_t init_module_CLI()
         LOOPNUMBER = 0;
     }
 
-    aoloopcontrol_var.AOloopcontrol_meminit = 0;
-    aoloopcontrol_var.init_RM_local         = 0;
-    aoloopcontrol_var.init_CM_local         = 0;
-    aoloopcontrol_var.init_CMc_local        = 0;
+\
 
-    aoloopcontrol_var.GPU_alpha = 0.0;
-    aoloopcontrol_var.GPU_beta  = 0.0;
 
-    aoloopcontrol_var.COMPUTE_PIXELSTREAMING    = 0;
-    aoloopcontrol_var.PIXSTREAM_NBSLICES        = 1;
-    aoloopcontrol_var.aoconfID_wfsim            = -1;
-    aoloopcontrol_var.aoconfID_dmC              = -1;
-    aoloopcontrol_var.aoconfID_dmRM             = -1;
-    aoloopcontrol_var.aoconfID_wfsdark          = -1;
-    aoloopcontrol_var.aoconfID_imWFS0           = -1;
-    aoloopcontrol_var.aoconfID_imWFS0tot        = -1;
-    aoloopcontrol_var.aoconfID_imWFS1           = -1;
-    aoloopcontrol_var.aoconfID_imWFS2           = -1;
-    aoloopcontrol_var.aoconfID_imWFSlinlimit    = -1;
-    aoloopcontrol_var.aoconfID_wfsref0          = -1;
-    aoloopcontrol_var.aoconfID_wfsref           = -1;
-    aoloopcontrol_var.aoconfcnt0_wfsref_current = -1;
-    aoloopcontrol_var.aoconfID_DMmodes          = -1;
-    aoloopcontrol_var.aoconfID_dmdisp           = -1;
-    aoloopcontrol_var.aoconfID_cmd_modes        = -1;
-    aoloopcontrol_var.aoconfID_meas_modes       = -1;
-    aoloopcontrol_var.aoconfID_RMS_modes        = -1;
-    aoloopcontrol_var.aoconfID_AVE_modes        = -1;
-    aoloopcontrol_var.aoconfID_modeARPFgainAuto = -1;
-    aoloopcontrol_var.aoconfID_modevalPF        = -1;
-    aoloopcontrol_var.aoconfID_gainb            = -1;
-    aoloopcontrol_var.aoconfID_multfb           = -1;
-    aoloopcontrol_var.aoconfID_limitb           = -1;
-    aoloopcontrol_var.aoconfID_DMmode_GAIN      = -1;
-    aoloopcontrol_var.aoconfID_LIMIT_modes      = -1;
-    aoloopcontrol_var.aoconfID_MULTF_modes      = -1;
-    aoloopcontrol_var.aoconfID_cmd_modesRM      = -1;
-    aoloopcontrol_var.aoconfID_wfsmask          = -1;
-    aoloopcontrol_var.aoconfID_dmmask           = -1;
-    aoloopcontrol_var.aoconfID_contrM           = -1;
-    aoloopcontrol_var.aoconfID_contrMc          = -1;
-    aoloopcontrol_var.aoconfID_meas_act         = -1;
 
-    int i;
-    for(i = 0; i < 100; i++)
-    {
-        aoloopcontrol_var.aoconfID_contrMcact[i] = -1;
-        aoloopcontrol_var.initcontrMcact_GPU[i]  = -1;
-    }
-
-    aoloopcontrol_var.aoconfID_looptiming = -1;
-    aoloopcontrol_var.AOcontrolNBtimers   = 35;
-
-    aoloopcontrol_var.aoconfIDlogdata          = -1;
-    aoloopcontrol_var.aoconfID_meas_act_active = -1;
-
-    for(i = 0; i < MAX_NUMBER_RTLOGSTREAM; i++)
-    {
-        aoloopcontrol_var.RTSLOGarrayInitFlag[i] = 0;
-    }
-
-    RegisterCLIcommand("aolloadconf",
-                       __FILE__,
-                       AOloopControl_loadconfigure_cli,
-                       "load AO loop configuration",
-                       "<loop #>",
-                       "AOlooploadconf 1",
-                       "int AOloopControl_loadconfigure(long loopnb, 1, 10)");
 
     /* ===============================================================================================
     */
@@ -1323,41 +660,7 @@ static errno_t init_module_CLI()
     /* ===============================================================================================
     */
 
-    RegisterCLIcommand("aolrun",
-                       __FILE__,
-                       AOloopControl_aorun_cli, // Run AO loop
-                       "run AO loop",
-                       "no arg",
-                       "aolrun",
-                       "int AOloopControl_aorun()");
 
-    RegisterCLIcommand(
-        "aolcompGUI",
-        __FILE__,
-        AOloopControl_AOcompute_GUI_cli, // AOcompute GUI
-        "AOcompute GUI",
-        "<loop> <frequ [Hz]>",
-        "aolcompGUI 0 20",
-        "int AOloopControl_AOcompute_GUI(long loop, double frequ)");
-
-    RegisterCLIcommand("aolrunGUI",
-                       __FILE__,
-                       AOloopControl_aorun_GUI_cli, // AOcompute GUI
-                       "aorun GUI",
-                       "<loop> <frequ [Hz]>",
-                       "aolrunGUI 0 20",
-                       "int AOloopControl_aorun_GUI(long loop, double frequ)");
-
-    RegisterCLIcommand(
-        "aolzpwfsloop",
-        __FILE__,
-        AOloopControl_WFSzpupdate_loop_cli, // WFS zero point offset loop
-        "WFS zero point offset loop",
-        "<dm offset [shared mem]> <zonal resp M [shared mem]> <nominal WFS "
-        "reference>  <modified WFS reference>",
-        "aolzpwfsloop dmZP zrespM wfszp",
-        "int AOloopControl_WFSzpupdate_loop(char *IDzpdm_name, char "
-        "*IDzrespM_name, char *IDwfszp_name)");
 
     RegisterCLIcommand(
         "aolzpwfscloop",
@@ -1410,218 +713,11 @@ static errno_t init_module_CLI()
         "*IDwfsref_name, char *WFSmodes_name, "
         "char *outname)"); // convert signals to mode coeffs
 
-    RegisterCLIcommand(
-        "aolnb",
-        __FILE__,
-        AOloopControl_setLoopNumber_cli,
-        "set AO loop #",
-        "<loop nb>",
-        "AOloopnb 0",
-        "int AOloopControl_setLoopNumber(long loop)"); // set AO loop
 
-    RegisterCLIcommand("aolsetgain",
-                       __FILE__,
-                       AOloopControl_setgain_cli,
-                       "set gain",
-                       "<gain value>",
-                       "aolsetgain 0.1",
-                       "int AOloopControl_setgain(float gain)");
 
-    RegisterCLIcommand("aolsetARPFgain",
-                       __FILE__,
-                       AOloopControl_setARPFgain_cli,
-                       "set auto-regressive predictive filter gain",
-                       "<gain value>",
-                       "aolsetARPFgain 0.1",
-                       "int AOloopControl_setARPFgain(float gain)");
 
-    RegisterCLIcommand("aolsetARPFgainAmin",
-                       __FILE__,
-                       AOloopControl_setARPFgainAutoMin_cli,
-                       "set ARPF gain min",
-                       "<gain value>",
-                       "aolsetARPFgainAmin 0.1",
-                       "int AOloopControl_setARPFgainAutoMin(float val)");
 
-    RegisterCLIcommand("aolsetARPFgainAmax",
-                       __FILE__,
-                       AOloopControl_setARPFgainAutoMax_cli,
-                       "set ARPF gain max",
-                       "<gain value>",
-                       "aolsetARPFgainAmax 9.0",
-                       "int AOloopControl_setARPFgainAutoMax(float val)");
 
-    RegisterCLIcommand("aolkill",
-                       __FILE__,
-                       AOloopControl_loopkill,
-                       "kill AO loop",
-                       "no arg",
-                       "aolkill",
-                       "int AOloopControl_setLoopNumber()");
-
-    RegisterCLIcommand("aolon",
-                       __FILE__,
-                       AOloopControl_loopon,
-                       "turn loop on",
-                       "no arg",
-                       "aolon",
-                       "int AOloopControl_loopon()");
-
-    RegisterCLIcommand("aoloff",
-                       __FILE__,
-                       AOloopControl_loopoff,
-                       "turn loop off",
-                       "no arg",
-                       "aoloff",
-                       "int AOloopControl_loopoff()");
-
-    RegisterCLIcommand("aolWFScompon",
-                       __FILE__,
-                       AOloopControl_loopWFScompon,
-                       "turn loop WFScomp on",
-                       "no arg",
-                       "aolWFScompon",
-                       "int AOloopControl_loopWFScompon()");
-
-    RegisterCLIcommand("aolWFScompoff",
-                       __FILE__,
-                       AOloopControl_loopWFScompoff,
-                       "turn loop WFScomp off",
-                       "no arg",
-                       "aolWFScompoff",
-                       "int AOloopControl_loopWFScompoff()");
-
-    RegisterCLIcommand("aolstep",
-                       __FILE__,
-                       AOloopControl_loopstep_cli,
-                       "turn loop on for N steps",
-                       "<nbstep>",
-                       "aolstep",
-                       "int AOloopControl_loopstep(long loop, long NBstep)");
-
-    RegisterCLIcommand("aolreset",
-                       __FILE__,
-                       AOloopControl_loopreset,
-                       "reset loop, and turn it off",
-                       "no arg",
-                       "aolreset",
-                       "int AOloopControl_loopreset()");
-
-    RegisterCLIcommand("aolsetmbgain",
-                       __FILE__,
-                       AOloopControl_set_modeblock_gain_cli,
-                       "set modal block gain",
-                       "<loop #> <gain> <compute sum flag>",
-                       "aolsetmbgain 2 0.2 1",
-                       "int AOloopControl_set_modeblock_gain(long loop, long "
-                       "blocknb, float gain, int add)");
-
-    RegisterCLIcommand("aolDMprimWon",
-                       __FILE__,
-                       AOloopControl_DMprimaryWrite_on,
-                       "turn DM primary write on",
-                       "no arg",
-                       "aolDMprimWon",
-                       "int AOloopControl_DMprimaryWrite_on()");
-
-    RegisterCLIcommand("aolDMprimWoff",
-                       __FILE__,
-                       AOloopControl_DMprimaryWrite_off,
-                       "turn DM primary write off",
-                       "no arg",
-                       "aolDMprimWoff",
-                       "int AOloopControl_DMprimaryWrite_off()");
-
-    RegisterCLIcommand("aolDMfiltWon",
-                       __FILE__,
-                       AOloopControl_DMfilteredWrite_on,
-                       "turn DM filtered write on",
-                       "no arg",
-                       "aolDMfiltWon",
-                       "int AOloopControl_DMfilteredWrite_on()");
-
-    RegisterCLIcommand("aolDMfiltWoff",
-                       __FILE__,
-                       AOloopControl_DMfilteredWrite_off,
-                       "turn DM filtered write off",
-                       "no arg",
-                       "aolDMfiltWoff",
-                       "int AOloopControl_DMfilteredWrite_off()");
-
-    RegisterCLIcommand("aolAUTOTUNELIMon",
-                       __FILE__,
-                       AOloopControl_AUTOTUNE_LIMITS_on,
-                       "turn auto-tuning modal limits on",
-                       "no arg",
-                       "aolAUTOTUNELIMon",
-                       "int AOloopControl_AUTOTUNE_LIMITS_on()");
-
-    RegisterCLIcommand("aolAUTOTUNELIMoff",
-                       __FILE__,
-                       AOloopControl_AUTOTUNE_LIMITS_off,
-                       "turn auto-tuning modal limits off",
-                       "no arg",
-                       "aolAUTOTUNELIMoff",
-                       "int AOloopControl_AUTOTUNE_LIMITS_off()");
-
-    RegisterCLIcommand("aolsetATlimd",
-                       __FILE__,
-                       AOloopControl_set_AUTOTUNE_LIMITS_delta_cli,
-                       "set auto-tuning modal limits delta",
-                       "<delta value [um]>",
-                       "aolsetATlimd 0.0001",
-                       "int AOloopControl_set_AUTOTUNE_LIMITS_delta(float "
-                       "AUTOTUNE_LIMITS_delta)");
-
-    RegisterCLIcommand("aolsetATlimp",
-                       __FILE__,
-                       AOloopControl_set_AUTOTUNE_LIMITS_perc_cli,
-                       "set auto-tuning modal limits percentile",
-                       "<percentile value [percent]>",
-                       "aolsetATlimp 1.0",
-                       "int AOloopControl_set_AUTOTUNE_LIMITS_perc(float "
-                       "AUTOTUNE_LIMITS_perc)");
-
-    RegisterCLIcommand("aolsetATlimm",
-                       __FILE__,
-                       AOloopControl_set_AUTOTUNE_LIMITS_mcoeff_cli,
-                       "set auto-tuning modal limits multiplicative coeff",
-                       "<multiplicative coeff [float]>",
-                       "aolsetATlimm 1.5",
-                       "int AOloopControl_set_AUTOTUNE_LIMITS_mcoeff(float "
-                       "AUTOTUNE_LIMITS_mcoeff)");
-
-    RegisterCLIcommand("aolAUTOTUNEGAINon",
-                       __FILE__,
-                       AOloopControl_AUTOTUNE_GAINS_on,
-                       "turn auto-tuning modal gains on",
-                       "no arg",
-                       "aolAUTOTUNEGAINon",
-                       "int AOloopControl_AUTOTUNE_GAINS_on()");
-
-    RegisterCLIcommand("aolAUTOTUNEGAINoff",
-                       __FILE__,
-                       AOloopControl_AUTOTUNE_GAINS_off,
-                       "turn auto-tuning modal gains off",
-                       "no arg",
-                       "aolAUTOTUNEGAINoff",
-                       "int AOloopControl_AUTOTUNE_GAINS_off()");
-
-    RegisterCLIcommand("aolARPFon",
-                       __FILE__,
-                       AOloopControl_ARPFon,
-                       "turn auto-regressive predictive filter on",
-                       "no arg",
-                       "aolARPFon",
-                       "int AOloopControl_ARPFon()");
-
-    RegisterCLIcommand("aolARPFoff",
-                       __FILE__,
-                       AOloopControl_ARPFoff,
-                       "turn auto-regressive predictive filter off",
-                       "no arg",
-                       "aolARPFoff",
-                       "int AOloopControl_ARPFoff()");
 
     /* ===============================================================================================
     */
@@ -1633,64 +729,6 @@ static errno_t init_module_CLI()
     /* ===============================================================================================
     */
 
-    RegisterCLIcommand("aolsetloopfrequ",
-                       __FILE__,
-                       AOloopControl_set_loopfrequ_cli,
-                       "set loop frequency",
-                       "<loop frequ [Hz]>",
-                       "aolsetloopfrequ 2000",
-                       "int AOloopControl_set_loopfrequ(float loopfrequ)");
-
-    RegisterCLIcommand(
-        "aolsethlat",
-        __FILE__,
-        AOloopControl_set_hardwlatency_frame_cli,
-        "set hardware latency",
-        "<hardware latency [frame]>",
-        "aolsethlat 2.7",
-        "int AOloopControl_set_hardwlatency_frame(float hardwlatency_frame)");
-
-    RegisterCLIcommand(
-        "aolsetclat",
-        __FILE__,
-        AOloopControl_set_complatency_frame_cli,
-        "set computation latency",
-        "<computation latency [frame]>",
-        "aolsetclat 0.6",
-        "int AOloopControl_set_complatency_frame(float complatency_frame)");
-
-    RegisterCLIcommand("aolsetwlat",
-                       __FILE__,
-                       AOloopControl_set_wfsmextrlatency_frame_cli,
-                       "set WFS mode extraction latency",
-                       "<latency [frame]>",
-                       "aolsetwlat 0.8",
-                       "int AOloopControl_set_wfsmextrlatency_frame(float "
-                       "wfsmextrlatency_frame)");
-
-    RegisterCLIcommand("aolsetwfsnormf",
-                       __FILE__,
-                       AOloopControl_setWFSnormfloor_cli,
-                       "set WFS normalization floor",
-                       "<floor value (total flux)>",
-                       "aolsetwfsnormf 10000.0",
-                       "int AOloopControl_setWFSnormfloor(float WFSnormfloor)");
-
-    RegisterCLIcommand("aolsetmaxlim",
-                       __FILE__,
-                       AOloopControl_setmaxlimit_cli,
-                       "set max limit for AO mode correction",
-                       "<limit value>",
-                       "aolsetmaxlim 0.01",
-                       "int AOloopControl_setmaxlimit(float maxlimit)");
-
-    RegisterCLIcommand("aolsetmult",
-                       __FILE__,
-                       AOloopControl_setmult_cli,
-                       "set mult coeff for AO mode correction",
-                       "<mult value>",
-                       "aolsetmult 0.98",
-                       "int AOloopControl_setmult(float multcoeff)");
 
     RegisterCLIcommand(
         "aollogprocmodeval",
@@ -1701,7 +739,7 @@ static errno_t init_module_CLI()
         "aollogprocmodeval imc",
         "int AOloopControl_logprocess_modeval(const char *IDname);");
 
-    RegisterCLIcommand(
+/*    RegisterCLIcommand(
         "aolsetgainr",
         __FILE__,
         AOloopControl_setgainrange_cli,
@@ -1709,8 +747,8 @@ static errno_t init_module_CLI()
         "<modemin [long]> <modemax [long]> <gainval>",
         "aolsetgainr 20 30 0.2",
         "int AOloopControl_setgainrange(long m0, long m1, float gainval)");
-
-    RegisterCLIcommand(
+*/
+/*    RegisterCLIcommand(
         "aolsetlimitr",
         __FILE__,
         AOloopControl_setlimitrange_cli,
@@ -1718,8 +756,9 @@ static errno_t init_module_CLI()
         "<modemin [long]> <modemax [long]> <limval>",
         "aolsetlimitr 20 30 0.02",
         "int AOloopControl_setlimitrange(long m0, long m1, float gainval)");
+*/
 
-    RegisterCLIcommand(
+/*    RegisterCLIcommand(
         "aolsetmultfr",
         __FILE__,
         AOloopControl_setmultfrange_cli,
@@ -1782,16 +821,8 @@ static errno_t init_module_CLI()
                        "aolcompolm 2",
                        "long AOloopControl_ProcessModeCoefficients(long loop)");
 
-    RegisterCLIcommand("aolautotunegains",
-                       __FILE__,
-                       AOloopControl_AutoTuneGains_cli,
-                       "compute optimal gains",
-                       "<loop #> <gain stream> <gaincoeff> <NBsamples>",
-                       "aolautotunegains 0 autogain 0.1 20000",
-                       "long AOloopControl_AutoTuneGains(long loop, const char "
-                       "*IDout_name, float GainCoeff, long NBsamples)");
-
-    RegisterCLIcommand(
+*/
+/*    RegisterCLIcommand(
         "aoldm2dmoffload",
         __FILE__,
         AOloopControl_dm2dm_offload_cli,
@@ -1801,16 +832,10 @@ static errno_t init_module_CLI()
         "long AOloopControl_dm2dm_offload(const char *streamin, const char "
         "*streamout, float twait, "
         "float offcoeff, float multcoeff)");
+*/
 
-    RegisterCLIcommand("aolautotune",
-                       __FILE__,
-                       AOloopControl_AutoTune,
-                       "auto tuning of loop parameters",
-                       "no arg",
-                       "aolautotune",
-                       "errno_t AOloopControl_AutoTune()");
 
-    RegisterCLIcommand(
+/*    RegisterCLIcommand(
         "aolset",
         __FILE__,
         AOloopControl_setparam_cli,
@@ -1818,7 +843,7 @@ static errno_t init_module_CLI()
         "<parameter> <value>",
         "aolset",
         "int AOloopControl_setparam(long loop, const char *key, double value)");
-
+*/
     RegisterCLIcommand(
         "aoldmmodAB",
         __FILE__,
@@ -1915,7 +940,7 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl__modalfilter();
     CLIADDCMD_AOloopControl__modalCTRL_stats();
 
-    RegisterCLIcommand(
+/*    RegisterCLIcommand(
         "modalstatsTUI",
         __FILE__,
         AOloopControl_modalstatsTUI_cli,
@@ -1923,7 +948,7 @@ static errno_t init_module_CLI()
         "<loopindex>",
         "aomodalstatsTIU 2",
         "AOloopControl_modalstatsTUI(int loopindex)");
-
+*/
 
 
     // add atexit functions here
@@ -1933,8 +958,15 @@ static errno_t init_module_CLI()
     return RETURN_SUCCESS;
 }
 
+
+
+
+
+
 /*-------------------------------------------------------------------------------*/
 
+
+/*
 errno_t AOloopControl_setgainrange(long m0, long m1, float gainval)
 {
 
@@ -2033,7 +1065,10 @@ errno_t AOloopControl_setmultfrange(long m0, long m1, float multfval)
 
     return RETURN_SUCCESS;
 }
+*/
 
+
+/*
 errno_t AOloopControl_setgainblock(long mb, float gainval)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
@@ -2111,84 +1146,5 @@ errno_t AOloopControl_setmultfblock(long mb, float multfval)
 
     return RETURN_SUCCESS;
 }
+*/
 
-errno_t AOloopControl_AutoTune()
-{
-    long  NBstep = 10000;
-    char  name[200];
-    float bestgain = 0.0;
-    float val;
-
-    if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
-    {
-        AOloopControl_InitializeMemory(1);
-    }
-
-    if(aoloopcontrol_var.aoconfID_cmd_modes == -1)
-    {
-        if(sprintf(name, "aol%ld_DMmode_cmd", LOOPNUMBER) < 1)
-        {
-            PRINT_ERROR("sprintf wrote <1 char");
-        }
-
-        aoloopcontrol_var.aoconfID_cmd_modes = read_sharedmem_image(name);
-    }
-
-    // initialize
-    for(unsigned long block = 0;
-            block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock;
-            block++)
-    {
-        AOloopControl_setgainblock(block, 0.0);
-        AOloopControl_setlimitblock(block, 0.1);
-        AOloopControl_setmultfblock(block, 0.8);
-    }
-
-    for(unsigned long block = 0;
-            block < AOconf[LOOPNUMBER].AOpmodecoeffs.DMmodesNBblock;
-            block++)
-    {
-        float gainStart = 0.0;
-        float gainEnd   = 1.0;
-        int   gOK       = 1;
-        float gain;
-        float bestval = 10000000.0;
-
-        // tune block gain
-        gain = gainStart;
-        while((gOK == 1) && (gain < gainEnd))
-        {
-            for(unsigned long k = 0;
-                    k < AOconf[LOOPNUMBER].AOpmodecoeffs.NBDMmodes;
-                    k++)
-            {
-                data.image[aoloopcontrol_var.aoconfID_cmd_modes].array.F[k] =
-                    0.0;
-            }
-
-            gain += 0.01;
-            gain *= 1.1;
-
-            AOloopControl_setgainblock(block, gain);
-            AOloopControl_loopstep(LOOPNUMBER, NBstep);
-            val = sqrt(AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumul /
-                       AOconf[LOOPNUMBER].AOpmodecoeffs.RMSmodesCumulcnt);
-            printf("%6.4f  %10.8lf\n", gain, val);
-
-            if(val < bestval)
-            {
-                bestval  = val;
-                bestgain = gain;
-            }
-            else
-            {
-                gOK = 0;
-            }
-        }
-        printf("BLOCK %ld  : BEST GAIN = %f\n", block, bestgain);
-
-        AOloopControl_setgainblock(block, bestgain);
-    }
-
-    return RETURN_SUCCESS;
-}

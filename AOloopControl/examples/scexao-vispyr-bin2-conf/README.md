@@ -248,7 +248,7 @@ cacao-fpsctrl setval mfilt loopgain 0.1
 
 # set modal gains, mults and limits
 cacao-aorun-061-setmgains 0.8 -f 0.05 -t 1.2
-cacao-aorun-062-setmgmults 0.05 -f 0.9 -t 1.0
+cacao-aorun-062-setmmults 0.05 -f 0.9 -t 1.0
 cacao-aorun-063-setmlimits 0.8 -f 0.05 -t 1.0
 
 # Set loop mult

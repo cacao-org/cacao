@@ -21,11 +21,13 @@
 #include "COREMOD_memory/COREMOD_memory.h"
 
 // defined in AOloopControl.c
-extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
+//extern AOLOOPCONTROL_CONF *AOconf; // configuration - this can be an array
 
 // defined in AOloopControl.c
-extern AOloopControl_var aoloopcontrol_var;
+//extern AOloopControl_var aoloopcontrol_var;
 
+
+/*
 errno_t AOloopControl_setgain(float gain)
 {
     if(aoloopcontrol_var.AOloopcontrol_meminit == 0)
@@ -120,7 +122,10 @@ errno_t AOloopControl_setmult(float multcoeff)
 
     return RETURN_SUCCESS;
 }
+*/
 
+
+/*
 errno_t
 AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
 {
@@ -132,12 +137,6 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
            AOconf[loop].AOpmodecoeffs.DMmodesNBblock);
     fflush(stdout);
 
-    /*if(AOconf[loop].CMMODE==0)
-    {
-      printf("Command has no effect: modeblock gain not compatible with CMMODE =
-    0\n"); fflush(stdout);
-    }
-    else*/
 
     if(AOconf[loop].AOpmodecoeffs.DMmodesNBblock < 2)
     {
@@ -327,7 +326,12 @@ AOloopControl_set_modeblock_gain(long loop, long blocknb, float gain, int add)
 
     return RETURN_SUCCESS;
 }
+*/
 
+
+
+
+/*
 errno_t AOloopControl_scanGainBlock(
     long NBblock, long NBstep, float gainStart, float gainEnd, long NBgain)
 {
@@ -393,3 +397,4 @@ errno_t AOloopControl_scanGainBlock(
 
     return RETURN_SUCCESS;
 }
+*/
