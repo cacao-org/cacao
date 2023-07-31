@@ -520,6 +520,26 @@ static errno_t customCONFsetup()
 
 
 
+// create simple poke matrix
+static imageID mkSimpleZpokeM(uint32_t dmxsize,
+        uint32_t dmysize,
+        char    *IDout_name)
+{
+    imageID  IDout;
+    uint64_t dmxysize;
+
+    dmxysize = dmxsize * dmysize;
+
+    create_3Dimage_ID(IDout_name, dmxsize, dmysize, dmxysize, &IDout);
+
+    for(uint64_t kk = 0; kk < dmxysize; kk++)
+    {
+        data.image[IDout].array.F[kk * dmxysize + kk] = 1.0;
+    }
+
+    return IDout;
+}
+
 
 
 
@@ -782,9 +802,9 @@ static errno_t customCONFcheck()
                         // simple poke matrix
                         //
 
-                        AOloopControl_compTools_mkSimpleZpokeM(DMxsize,
-                                                               DMysize,
-                                                               "Spoke");
+                        mkSimpleZpokeM(DMxsize,
+                                       DMysize,
+                                       "Spoke");
                         fps_write_RUNoutput_image(data.fpsptr, "Spoke", "Spoke");
 
                         {
