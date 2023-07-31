@@ -2,7 +2,6 @@ set(PROJECTNAME "cacao")
 
 # list source files (.c) other than modulename.c
 set(SOURCEFILES
-	AOloopControl_perfTest_DM.c
 	AOloopControl_perfTest_LinSim.c
 	compRMsensitivity.c
 	mlat.c
