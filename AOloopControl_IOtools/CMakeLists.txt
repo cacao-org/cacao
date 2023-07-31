@@ -10,7 +10,6 @@ set(SOURCEFILES
     ${SRCNAME}.h
     acquireWFSim.c
     findspots.c
-    AOloopControl_IOtools_datastream_processing.c
     WFScamsim.c
     WFSmap.c
 )

@@ -13,24 +13,18 @@
 /** @brief Initialize module. */
 void __attribute__((constructor)) libinit_AOloopControl_acquireCalib();
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl_acquireCalib - 1. ACQUIRING CALIBRATION
- *  Measure system response */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 
+
+
+
+/*
 imageID
 AOloopControl_acquireCalib_mkRandomLinPokeSequence(char *IDmodeC_name, // input
         long  NBpokemap,    // input
         char *IDpokemapC_name,
         char *IDpokeC_name);
 
-/** @brief Acquire WFS response to a series of DM pattern */
+// @brief Acquire WFS response to a series of DM pattern 
 imageID AOloopControl_acquireCalib_Measure_WFSrespC(long        loop,
         long        delayfr,
         long        delayRM1us,
@@ -44,7 +38,7 @@ imageID AOloopControl_acquireCalib_Measure_WFSrespC(long        loop,
         uint32_t    SequInitMode,
         const char *outdir);
 
-/** @brief Measure linear response to set of DM modes/patterns */
+// @brief Measure linear response to set of DM modes/patterns 
 errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_FPCONF();
 errno_t AOcontrolLoop_acquireCalib_Measure_WFS_linResponse_RUN();
 
@@ -105,5 +99,7 @@ long AOloopControl_acquireCalib_RMseries_deinterlace(int   NBRM,
         char *IDout_name,
         int   dmode,
         int   NBtstep);
+*/
+
 
 #endif
