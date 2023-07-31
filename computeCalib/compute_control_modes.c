@@ -12,8 +12,6 @@
 #include "linopt_imtools/linopt_imtools.h"
 
 
-
-#include "mkmodes.h"
 #include "modes_spatial_extrapolate.h"
 
 
