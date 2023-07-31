@@ -278,6 +278,239 @@ static CLICMDDATA CLIcmddata =
 
 
 
+
+
+
+
+
+
+static errno_t mk_ZernikeFourier_modal_basis(uint32_t msizex,
+                                      uint32_t msizey,
+                                      float    CPAmax,
+                                      float    deltaCPA,
+                                      double   xc,
+                                      double   yc,
+                                      double   r0,
+                                      double   r1,
+                                      IMGID   *imgZFmodes)
+{
+    DEBUG_TRACE_FSTART();
+
+    // Zernike modes
+    long   zindex[10];
+    double zcpa[10];
+    /// assigning CPA for each Zernike (somewhat arbitrary... used to sort
+    /// modes in CPA)
+
+    zindex[0] = 1; // tip
+    zcpa[0]   = 0.0;
+
+    zindex[1] = 2; // tilt
+    zcpa[1]   = 0.0;
+
+    zindex[2] = 4; // focus
+    zcpa[2]   = 0.25;
+
+    zindex[3] = 3; // astig
+    zcpa[3]   = 0.4;
+
+    zindex[4] = 5; // astig
+    zcpa[4]   = 0.4;
+
+    zindex[5] = 7; // coma
+    zcpa[5]   = 0.6;
+
+    zindex[6] = 8; // coma
+    zcpa[6]   = 0.6;
+
+    zindex[7] = 6; // trefoil
+    zcpa[7]   = 1.0;
+
+    zindex[8] = 9; // trefoil
+    zcpa[8]   = 1.0;
+
+    zindex[9] = 12;
+    zcpa[9]   = 1.5;
+
+    // Number of Zernike modes
+    //
+    int NBZ = 0;
+    for(uint32_t m = 0; m < 10; m++)
+    {
+        if(zcpa[m] < CPAmax)
+        {
+            NBZ++;
+        }
+    }
+
+
+    // Here we create simple Fourier modes
+    linopt_imtools_makeCPAmodes("CPAmodes",
+                                msizex,
+                                CPAmax,
+                                deltaCPA,
+                                0.5 * msizex,
+                                1.2,
+                                0,
+                                NULL);
+    imageID ID0 = image_ID("CPAmodes");
+
+    imageID IDfreq = image_ID("cpamodesfreq");
+
+    printf("  %u %u %ld\n",
+           msizex,
+           msizey,
+           (long)(data.image[ID0].md[0].size[2] - 1));
+
+
+    imgZFmodes->naxis   = 3;
+    imgZFmodes->size[0] = msizex;
+    imgZFmodes->size[1] = msizey;
+    imgZFmodes->size[2] = data.image[ID0].md[0].size[2] - 1 + NBZ;
+    createimagefromIMGID(imgZFmodes);
+
+    imageID IDmfcpa;
+    create_2Dimage_ID("modesfreqcpa",
+                      data.image[ID0].md[0].size[2] - 1 + NBZ,
+                      1,
+                      &IDmfcpa);
+
+    zernike_init();
+
+    // First NBZ modes are Zernike modes
+    //
+    for(uint32_t k = 0; k < NBZ; k++)
+    {
+        data.image[IDmfcpa].array.F[k] = zcpa[k];
+        for(uint32_t ii = 0; ii < msizex; ii++)
+            for(uint32_t jj = 0; jj < msizey; jj++)
+            {
+                double x = 1.0 * ii - xc;
+                double y = 1.0 * jj - yc;
+                double r = sqrt(x * x + y * y) / r1;
+                double PA  = atan2(y, x);
+
+                imgZFmodes->im->array
+                .F[k * msizex * msizey + jj * msizex + ii] =
+                    Zernike_value(zindex[k], r, PA);
+            }
+    }
+
+
+    // Copy Fourier modes into basis
+    //
+    for(uint32_t k = 0; k < data.image[ID0].md[0].size[2] - 1; k++)
+    {
+        data.image[IDmfcpa].array.F[k + NBZ] =
+            data.image[IDfreq].array.F[k + 1];
+        for(uint64_t ii = 0; ii < msizex * msizey; ii++)
+        {
+            imgZFmodes->im->array.F[(k + NBZ) * msizex * msizey + ii] =
+                data.image[ID0].array.F[(k + 1) * msizex * msizey + ii];
+        }
+    }
+
+    DEBUG_TRACE_FEXIT();
+    return RETURN_SUCCESS;
+}
+
+
+
+
+
+
+
+
+
+
+
+static errno_t modes_mask_normalize(IMGID imgmodeC, IMGID imgmask)
+{
+    DEBUG_TRACE_FSTART();
+
+    FILE *fp = fopen("rmscomp.dat", "w");
+
+    uint32_t sizex  = imgmodeC.size[0];
+    uint32_t sizey  = imgmodeC.size[1];
+    uint64_t sizexy = (uint64_t) sizex * sizey;
+
+    for(uint32_t k = 0; k < imgmodeC.size[2]; k++)
+    {
+        // set RMS = 1 over mask
+        double rms     = 0.0;
+        double totmask = 0.0;
+        for(uint64_t ii = 0; ii < sizexy; ii++)
+        {
+            // data.image[ID].array.F[k*msizex*msizey+ii] -= offset/totm;
+            rms += imgmodeC.im->array.F[ii] * imgmodeC.im->array.F[ii] *
+                   imgmask.im->array.F[ii];
+            totmask += imgmask.im->array.F[ii];
+        }
+        rms = sqrt(rms / totmask);
+        printf("[%5d] Mode %u   RMS = %lf\n", __LINE__, k, rms);
+
+        fprintf(fp, "%5u  %g ", k, rms);
+
+
+        // Compute total of image over mask -> totvm
+        double totvm = 0.0;
+        for(uint64_t ii = 0; ii < sizexy; ii++)
+        {
+            totvm +=
+                imgmodeC.im->array.F[k * sizexy + ii] * imgmask.im->array.F[ii];
+        }
+
+        // compute DC offset in mode
+        double offset = totvm / totmask;
+
+        // remove DM offset
+        for(uint64_t ii = 0; ii < sizexy; ii++)
+        {
+            imgmodeC.im->array.F[k * sizexy + ii] -= offset;
+        }
+
+        offset = 0.0;
+        for(uint64_t ii = 0; ii < sizexy; ii++)
+        {
+            offset +=
+                imgmodeC.im->array.F[k * sizexy + ii] * imgmask.im->array.F[ii];
+        }
+
+        // set RMS = 1 over mask
+        rms = 0.0;
+        for(uint64_t ii = 0; ii < sizexy; ii++)
+        {
+            imgmodeC.im->array.F[k * sizexy + ii] -= offset / totmask;
+            rms += imgmodeC.im->array.F[k * sizexy + ii] *
+                   imgmodeC.im->array.F[k * sizexy + ii] *
+                   imgmask.im->array.F[ii];
+        }
+        rms = sqrt(rms / totmask);
+        printf("\r Mode %u   RMS = %lf   ", k, rms);
+        fprintf(fp, " %g\n", rms);
+
+        for(uint64_t ii = 0; ii < sizexy; ii++)
+        {
+            imgmodeC.im->array.F[k * sizexy + ii] /= rms;
+        }
+    }
+    fclose(fp);
+    printf("\n");
+
+    DEBUG_TRACE_FEXIT();
+    return RETURN_SUCCESS;
+}
+
+
+
+
+
+
+
+
+
+
+
 static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
