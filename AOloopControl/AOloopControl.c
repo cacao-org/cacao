@@ -37,8 +37,6 @@
 
 
 
-#include <time.h>
-
 #include "CommandLineInterface/CLIcore.h"
 
 
@@ -46,12 +44,6 @@
 #include "modalCTRL_stats.h"
 #include "modalstatsTUI.h"
 
-
-
-
-
-#define likely(x)   __builtin_expect(!!(x), 1)
-#define unlikely(x) __builtin_expect(!!(x), 0)
 
 
 
