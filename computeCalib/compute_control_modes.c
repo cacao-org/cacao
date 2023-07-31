@@ -11,6 +11,8 @@
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "linopt_imtools/linopt_imtools.h"
 
+#include "ZernikePolyn/zernike_value.h"
+
 
 #include "modes_spatial_extrapolate.h"
 
@@ -347,6 +349,8 @@ static errno_t mk_ZernikeFourier_modal_basis(uint32_t msizex,
     // Here we create simple Fourier modes
     linopt_imtools_makeCPAmodes("CPAmodes",
                                 msizex,
+                                0,
+                                CPAmax,
                                 CPAmax,
                                 deltaCPA,
                                 0.5 * msizex,
