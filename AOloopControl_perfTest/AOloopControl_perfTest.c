@@ -80,10 +80,6 @@
 
 
 
-// TIMING
-static struct timespec tnow;
-// static struct timespec tdiff;
-
 typedef struct
 {
     char   name[500];
