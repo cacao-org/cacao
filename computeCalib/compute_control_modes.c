@@ -285,18 +285,34 @@ static CLICMDDATA CLIcmddata =
 
 
 
-
-static errno_t mk_ZernikeFourier_modal_basis(uint32_t msizex,
-                                      uint32_t msizey,
-                                      float    CPAmax,
-                                      float    deltaCPA,
-                                      double   xc,
-                                      double   yc,
-                                      double   r0,
-                                      double   r1,
-                                      IMGID   *imgZFmodes)
+/**
+ * @brief Create mode basis consisting of Zernike + Fourier modes
+ *
+ * @param msizex      x size of output array
+ * @param msizey      y size of output array
+ * @param CPAmax      maximum cycles per apeture
+ * @param deltaCPA    increment
+ * @param xc          beam center in array
+ * @param yc          beam center in array
+ * @param r0          central aperture radius
+ * @param r1          outer radius
+ * @param imgZFmodes  output image
+ * @return errno_t
+ */
+static errno_t mk_ZernikeFourier_modal_basis(
+    uint32_t msizex,
+    uint32_t msizey,
+    float    CPAmax,
+    float    deltaCPA,
+    double   xc,
+    double   yc,
+    double   r0,
+    double   r1,
+    IMGID   *imgZFmodes)
 {
     DEBUG_TRACE_FSTART();
+
+    (void) r0; // use of r0 to be implemented
 
     // Zernike modes
     long   zindex[10];
@@ -383,7 +399,7 @@ static errno_t mk_ZernikeFourier_modal_basis(uint32_t msizex,
 
     // First NBZ modes are Zernike modes
     //
-    for(uint32_t k = 0; k < NBZ; k++)
+    for(int k = 0; k < NBZ; k++)
     {
         data.image[IDmfcpa].array.F[k] = zcpa[k];
         for(uint32_t ii = 0; ii < msizex; ii++)
