@@ -25,7 +25,7 @@ else
 			else
 				echolog "Adding process ${fpsname}"
 				echo "+milklinalgebra" >> fpslist.txt
-				echo "${fpsname}         cuda.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
+				echo "${fpsname}         linalg.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
 
 				addfpscmdheader
 
