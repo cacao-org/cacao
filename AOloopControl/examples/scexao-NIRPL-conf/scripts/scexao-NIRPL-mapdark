@@ -24,7 +24,7 @@ loadfits "conf/aol${CACAO_LOOPNUMBER}_wfsdarkraw.fits" darkraw
 loadfits "conf/spotmap.fits" spotmap
 cacaoio.mapWFS darkraw spotmap darkm
 saveFITS darkm "conf/aol${CACAO_LOOPNUMBER}_wfsdark.fits"
-cpsh darkm aol${CACAO_LOOPNUMBER}_wfsdark
+imcpshm darkm aol${CACAO_LOOPNUMBER}_wfsdark
 exitCLI
 EOF
 

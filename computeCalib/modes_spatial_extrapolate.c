@@ -88,7 +88,7 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
         }
     }
 
-    delete_image(imgpixmdist, ERRMODE_WARN);
+    delete_image(&imgpixmdist, ERRMODE_WARN);
 
 
     DEBUG_TRACE_FEXIT();

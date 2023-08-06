@@ -318,7 +318,7 @@ readshmim aol${LOOPNUMBER}_mode_ARPFgain
 loadfits outmask0.fits outmask
 im1=1-outmask
 im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
-cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+imcpshm im2 aol${LOOPNUMBER}_mode_ARPFgain
 exitCLI
 EOF
 	
@@ -360,7 +360,7 @@ readshmim aol${LOOPNUMBER}_mode_ARPFgain
 loadfits outmask1.fits outmask
 im1=1-outmask
 im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
-cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+imcpshm im2 aol${LOOPNUMBER}_mode_ARPFgain
 exitCLI
 EOF
 	
@@ -402,7 +402,7 @@ readshmim aol${LOOPNUMBER}_mode_ARPFgain
 loadfits outmask2.fits outmask
 im1=1-outmask
 im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
-cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+imcpshm im2 aol${LOOPNUMBER}_mode_ARPFgain
 exitCLI
 EOF
 	
@@ -445,7 +445,7 @@ readshmim aol${LOOPNUMBER}_mode_ARPFgain
 loadfits outmask3.fits outmask
 im1=1-outmask
 im2=im1*aol${LOOPNUMBER}_mode_ARPFgain
-cpsh im2 aol${LOOPNUMBER}_mode_ARPFgain
+imcpshm im2 aol${LOOPNUMBER}_mode_ARPFgain
 exitCLI
 EOF
 	

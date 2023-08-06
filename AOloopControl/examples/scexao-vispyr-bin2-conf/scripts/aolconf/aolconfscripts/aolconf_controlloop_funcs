@@ -37,7 +37,7 @@ echo "readshmim aol${LOOPNUMBER}_wfsresm_ave" >> $scriptfile
 echo "imzero aol${LOOPNUMBER}_wfsresm_ave" >> $scriptfile
 echo "readshmim aol${LOOPNUMBER}_wfsref0" >> $scriptfile
 echo "readshmim aol${LOOPNUMBER}_wfsref" >> $scriptfile
-echo "cpsh aol${LOOPNUMBER}_wfsref0 aol${LOOPNUMBER}_wfsref" >> $scriptfile
+echo "imcpshm aol${LOOPNUMBER}_wfsref0 aol${LOOPNUMBER}_wfsref" >> $scriptfile
 echo "exitCLI" >> $scriptfile
 echo "EOF" >> $scriptfile
 
@@ -580,7 +580,7 @@ echo "readshmim aol${LOOPNUMBER}_wfsresm_ave" >> $scriptfile
 echo "imzero aol${LOOPNUMBER}_wfsresm_ave" >> $scriptfile
 echo "readshmim aol${LOOPNUMBER}_wfsref0" >> $scriptfile
 echo "readshmim aol${LOOPNUMBER}_wfsref" >> $scriptfile
-echo "cpsh aol${LOOPNUMBER}_wfsref0 aol${LOOPNUMBER}_wfsref" >> $scriptfile
+echo "imcpshm aol${LOOPNUMBER}_wfsref0 aol${LOOPNUMBER}_wfsref" >> $scriptfile
 echo "exitCLI" >> $scriptfile
 echo "EOF" >> $scriptfile
 

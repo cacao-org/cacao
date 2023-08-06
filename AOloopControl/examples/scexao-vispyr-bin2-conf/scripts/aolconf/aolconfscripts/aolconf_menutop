@@ -487,7 +487,7 @@ rm respM_LOmodes.fits
 $execname << EOF
 loadfits "../AOloop${dmolinknb}/mkmodestmp/fmodes0all.fits[*,*,1:$DMxsize]" im
 savefits im "!./conf/param_dm2dmM.fits" 
-cpsh im aol${dmolinknb}_modes0_$DMxsize
+imcpshm im aol${dmolinknb}_modes0_$DMxsize
 quit
 EOF
 dm2dmM="aol${dmolinknb}_modes0_$DMxsize"
@@ -506,7 +506,7 @@ milkStreamLink -p aol${LOOPNUMBER}_  dm2dmO
 $execname << EOF
 loadfits "../AOloop${dmolinknb}/mkmodestmp/fmodesWFS00all.fits[*,*,1:$DMxsize]" im
 savefits im "!./conf/param_dmwrefRM.fits" 
-cpsh im aol${dmolinknb}_modesWFS0_$DMxsize
+imcpshm im aol${dmolinknb}_modesWFS0_$DMxsize
 quit
 EOF
 dmwrefRM="aol${dmolinknb}_modesWFS0_$DMxsize"

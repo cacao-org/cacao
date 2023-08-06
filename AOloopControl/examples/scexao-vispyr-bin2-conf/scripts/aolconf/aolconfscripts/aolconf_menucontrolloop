@@ -13,16 +13,6 @@ fi
 
 
 
-
-
-
-
-
-
-
-
-
-
 # =====================================================
 # ======== CONTROL AO LOOP ============================
 # =====================================================
@@ -1566,7 +1556,7 @@ readshmim aol${LOOPNUMBER}_wfsref0
 im=aol${LOOPNUMBER}_wfsmask/itot(aol${LOOPNUMBER}_wfsmask)
 imd=im-aol${LOOPNUMBER}_wfsref0
 readshmim aol${LOOPNUMBER}_wfszpo_00
-cpsh imd aol${LOOPNUMBER}_wfszpo_00
+imcpshm imd aol${LOOPNUMBER}_wfszpo_00
 exitCLI
 EOF
 ;;
@@ -1580,8 +1570,8 @@ imzero aol${LOOPNUMBER}_wfszpo_00
 #readshmim aol0_wfsref0
 #readshmim aol0_wfsref00
 #readshmim aol0_wfsref
-#cpsh aol0_wfsref0 aol0_wfsref
-#cpsh aol0_wfsref0 aol0_wfsref00
+#imcpshm aol0_wfsref0 aol0_wfsref
+#imcpshm aol0_wfsref0 aol0_wfsref00
 exitCLI
 EOF
 ;;
@@ -1730,7 +1720,7 @@ menucontrolloop_default="wzpoinit"
 ./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_DMmode_LIMIT
 im=1.0+0*aol${LOOPNUMBER}_DMmode_LIMIT
-cpsh im aol${LOOPNUMBER}_DMmode_LIMIT
+imcpshm im aol${LOOPNUMBER}_DMmode_LIMIT
 exit
 EOF
 	;;
@@ -1739,7 +1729,7 @@ EOF
 ./AOloopControl << EOF
 readshmim aol${LOOPNUMBER}_DMmode_GAIN
 im=1.0+0*aol${LOOPNUMBER}_DMmode_GAIN
-cpsh im aol${LOOPNUMBER}_DMmode_GAIN
+imcpshm im aol${LOOPNUMBER}_DMmode_GAIN
 exit
 EOF
 	;;

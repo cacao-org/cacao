@@ -63,10 +63,10 @@ echo 1 > $MILK_SHM_DIR/aol${CACAO_LOOPNUMBER}_calib_wfsdiag.txt
 MILK_QUIET=1 milk << EOF
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS_WFSdiag.fits" aolmWFS
-cpsh aolmWFS aol${CACAO_LOOPNUMBER}_modesWFS
+imcpshm aolmWFS aol${CACAO_LOOPNUMBER}_modesWFS
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes_WFSdiag.fits" aolmDM
-cpsh aolmDM  aol${CACAO_LOOPNUMBER}_DMmodes
+imcpshm aolmDM  aol${CACAO_LOOPNUMBER}_DMmodes
 
 exitCLI
 EOF
@@ -80,10 +80,10 @@ echo 0 > $MILK_SHM_DIR/aol${CACAO_LOOPNUMBER}_calib_wfsdiag.txt
 MILK_QUIET=1 milk << EOF
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS.fits" aolmWFS
-cpsh aolmWFS aol${CACAO_LOOPNUMBER}_modesWFS
+imcpshm aolmWFS aol${CACAO_LOOPNUMBER}_modesWFS
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes.fits" aolmDM
-cpsh aolmDM  aol${CACAO_LOOPNUMBER}_DMmodes
+imcpshm aolmDM  aol${CACAO_LOOPNUMBER}_DMmodes
 
 exitCLI
 EOF
@@ -95,29 +95,29 @@ fi
 MILK_QUIET=1 milk <<EOF
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsref.fits" aolwfsref
-cpsh aolwfsref aol${CACAO_LOOPNUMBER}_wfsref
+imcpshm aolwfsref aol${CACAO_LOOPNUMBER}_wfsref
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmask.fits" aolwfsmask
-cpsh aolwfsmask aol${CACAO_LOOPNUMBER}_wfsmask
+imcpshm aolwfsmask aol${CACAO_LOOPNUMBER}_wfsmask
 
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmap.fits" aolwfsmap
-cpsh aolwfsmap aol${CACAO_LOOPNUMBER}_wfsmap
+imcpshm aolwfsmap aol${CACAO_LOOPNUMBER}_wfsmap
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmmask.fits" aoldmmask
-cpsh aoldmmask aol${CACAO_LOOPNUMBER}_dmmask
+imcpshm aoldmmask aol${CACAO_LOOPNUMBER}_dmmask
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmslaved.fits" aoldmslaved
-cpsh aoldmslaved aol${CACAO_LOOPNUMBER}_dmslaved
+imcpshm aoldmslaved aol${CACAO_LOOPNUMBER}_dmslaved
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_zrespM.fits" aolzrespM
-cpsh aolzrespM aol${CACAO_LOOPNUMBER}_zrespM
+imcpshm aolzrespM aol${CACAO_LOOPNUMBER}_zrespM
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LOrespM.fits" aolLOrespM
-cpsh aolLOrespM aol${CACAO_LOOPNUMBER}_LOrespM
+imcpshm aolLOrespM aol${CACAO_LOOPNUMBER}_LOrespM
 
 loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LODMmodes.fits" aolLODMmodes
-cpsh aolLODMmodes aol${CACAO_LOOPNUMBER}_LODMmodes
+imcpshm aolLODMmodes aol${CACAO_LOOPNUMBER}_LODMmodes
 
 exitCLI
 EOF

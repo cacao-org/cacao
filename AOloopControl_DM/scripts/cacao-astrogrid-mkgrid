@@ -90,6 +90,6 @@ cacaodm.mk3Ddmgrid im 50 50 ${pattern} ${binfact}
 saveFITS im "AOcalibs/astrogrid.fits"
 listim
 readshmim DMastrogrid
-cpsh im aol${AOLOOPNUMBER}_DMastrogrid
+imcpshm im aol${AOLOOPNUMBER}_DMastrogrid
 exitCLI
 EOF

@@ -275,7 +275,7 @@ if [ ! -f "$stepFile" ]; then
     pwd
     cacao << EOF
 loadfits "fps.compsCM-${CACAO_LOOPNUMBER}.datadir/sCMat00.fits" im
-cpsh im cmat
+imcpshm im cmat
 listim
 exitCLI
 EOF

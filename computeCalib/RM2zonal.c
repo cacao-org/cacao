@@ -440,7 +440,7 @@ static errno_t compute_function()
             free(e);
             free(t);
 
-            delete_image(imgATA, DELETE_IMAGE_ERRMODE_EXIT);
+            delete_image(&imgATA, DELETE_IMAGE_ERRMODE_EXIT);
             // this is matV
             //save_fits("mV", "mV.fits");
         }
@@ -577,7 +577,7 @@ static errno_t compute_function()
                         Ndim, Mdim, Ndim, 1.0, imgmV.im->array.F, Ndim, imgmUT.im->array.F, Ndim, 0.0,
                         imgmAinv.im->array.F, Ndim);
 
-            delete_image(imgmUT, DELETE_IMAGE_ERRMODE_EXIT);
+            delete_image(&imgmUT, DELETE_IMAGE_ERRMODE_EXIT);
         }
         else
         {
@@ -612,14 +612,14 @@ static errno_t compute_function()
                         Mdim, Ndim, Ndim, 1.0, imgmUi.im->array.F, Mdim, imgmV.im->array.F, Ndim, 0.0,
                         imgmAinv.im->array.F, Mdim);
 
-            delete_image(imgmUi, DELETE_IMAGE_ERRMODE_EXIT);
+            delete_image(&imgmUi, DELETE_IMAGE_ERRMODE_EXIT);
         }
 
         printf("Kept %u / %u modes\n", modecnt, nbmode);
 
-        delete_image(imgmV, DELETE_IMAGE_ERRMODE_EXIT);
-        delete_image(imgmU, DELETE_IMAGE_ERRMODE_EXIT);
-        delete_image(imgeval, DELETE_IMAGE_ERRMODE_EXIT);
+        delete_image(&imgmV, DELETE_IMAGE_ERRMODE_EXIT);
+        delete_image(&imgmU, DELETE_IMAGE_ERRMODE_EXIT);
+        delete_image(&imgeval, DELETE_IMAGE_ERRMODE_EXIT);
 
 
         /*
@@ -685,7 +685,7 @@ static errno_t compute_function()
 
         */
 
-        delete_image(imgmAinv, DELETE_IMAGE_ERRMODE_EXIT);
+        delete_image(&imgmAinv, DELETE_IMAGE_ERRMODE_EXIT);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
