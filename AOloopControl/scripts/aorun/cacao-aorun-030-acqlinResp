@@ -27,11 +27,11 @@ function set_NBloop() {
 	NBloop="$1"
 }
 
-WaitForCompletion=0
-MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
-function set_WaitForCompletion() {
-	WaitForCompletion=1
-}
+#WaitForCompletion=0
+#MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
+#function set_WaitForCompletion() {
+#	WaitForCompletion=1
+#}
 
 
 source milk-argparse
@@ -106,14 +106,14 @@ cp $(pwd)/conf/RMmodesDM/${DMmodeCname}.fits ./conf/RMmeas_modesDM.fits
 
 rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
 
-if [ $WaitForCompletion == "1" ]; then
+#if [ $WaitForCompletion == "1" ]; then
 echo "Waiting for completion ..."
 pOK=1
 while [ $pOK -gt 0 ]; do
 	sleep 0.2
 	pOK=$(ps -alx| grep measlinresp-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l) || :
 done
-fi
+#fi
 
 ln -s $(pwd)/conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 cp $(pwd)/conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./conf/RMmeas_modesWFS.fits
