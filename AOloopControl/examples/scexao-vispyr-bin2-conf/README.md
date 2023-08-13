@@ -157,7 +157,7 @@ The following files are written to ./conf/RMmodesDM/
 ```bash
 # Acquire response matrix - Hadamard modes
 # 4 cycles - default is 10.
-cacao-aorun-030-acqlinResp -n 4 -w HpokeC
+cacao-aorun-030-acqlinResp -n 4 HpokeC
 ```
 This could take a while. Check status on milk-procCTRL.
 To inspect results, display file conf/RMmodesWFS/HpokeC.WFSresp.fits.

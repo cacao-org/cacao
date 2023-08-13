@@ -127,7 +127,7 @@ lintools.mkFouriermodes .fpowerlaw_maxf 100.0
 lintools.mkFouriermodes ?
 lintools.mkFouriermodes .CPAmin 0.0
 lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
-merge3d zerc Fmodes RMsyn_modesDM
+immerge zerc Fmodes RMsyn_modesDM 2
 saveFITS RMsyn_modesDM "conf/RMmodesDM/RMsyn_modesDM0.fits"
 exitCLI
 EOF
