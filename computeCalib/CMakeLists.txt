@@ -44,8 +44,10 @@ set(LINKLIBS
 	CLIcore
 	milkinfo
 	cacaoAOloopControl
-	lapacke
 )
+if(NOT MKL_FOUND)
+  list(APPEND LINKLIBS lapacke)
+endif()
 
 
 
