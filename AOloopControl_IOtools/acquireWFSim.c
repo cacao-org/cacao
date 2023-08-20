@@ -184,7 +184,7 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF,
         ".comp.WFSrefsub",
-        "subtract WFS reference aol0_wfsref -> imWFS2",
+        "subtract WFS reference aolX_wfsrefc -> imWFS2",
         "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSrefsub,
@@ -212,7 +212,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_STREAM,
         ".wfszpo",
         "Wavefront sensor zero point offset",
-        "aol9_wfszpo",
+        "aolX_wfszpo",
         CLIARG_VISIBLE_DEFAULT,
         (void **) &wfszposname,
         &fpi_wfszposname
@@ -342,9 +342,9 @@ static errno_t compute_function()
     }
 
     // initialize camera averaging arrays if not already done
-    float          * __restrict arrayftmp;
-    unsigned short * __restrict arrayutmp;
-    signed short   * __restrict arraystmp;
+    float           *__restrict arrayftmp;
+    unsigned short *__restrict arrayutmp;
+    signed short    *__restrict arraystmp;
     if(WFSatype == _DATATYPE_FLOAT)
     {
         arrayftmp = (float *) malloc(sizeof(float) * sizeWFS);
@@ -428,28 +428,28 @@ static errno_t compute_function()
         char *ptrv;
         switch(WFSatype)
         {
-        case _DATATYPE_FLOAT:
-            ptrv = (char *) imgwfsim.im->array.F;
-            ptrv += sizeof(float) * slice * sizeWFS;
-            memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
-            break;
+            case _DATATYPE_FLOAT:
+                ptrv = (char *) imgwfsim.im->array.F;
+                ptrv += sizeof(float) * slice * sizeWFS;
+                memcpy(arrayftmp, ptrv, sizeof(float) * sizeWFS);
+                break;
 
-        case _DATATYPE_UINT16:
-            ptrv = (char *) imgwfsim.im->array.UI16;
-            ptrv += sizeof(unsigned short) * slice * sizeWFS;
-            memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
-            break;
+            case _DATATYPE_UINT16:
+                ptrv = (char *) imgwfsim.im->array.UI16;
+                ptrv += sizeof(unsigned short) * slice * sizeWFS;
+                memcpy(arrayutmp, ptrv, sizeof(unsigned short) * sizeWFS);
+                break;
 
-        case _DATATYPE_INT16:
-            ptrv = (char *) imgwfsim.im->array.SI16;
-            ptrv += sizeof(signed short) * slice * sizeWFS;
-            memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
-            break;
+            case _DATATYPE_INT16:
+                ptrv = (char *) imgwfsim.im->array.SI16;
+                ptrv += sizeof(signed short) * slice * sizeWFS;
+                memcpy(arraystmp, ptrv, sizeof(signed short) * sizeWFS);
+                break;
 
-        default:
-            PRINT_ERROR("DATA TYPE NOT SUPPORTED");
-            abort();
-            break;
+            default:
+                PRINT_ERROR("DATA TYPE NOT SUPPORTED");
+                abort();
+                break;
         }
 
 
@@ -483,74 +483,74 @@ static errno_t compute_function()
 
         switch(WFSatype)
         {
-        case _DATATYPE_UINT16:
-            if(status_darksub == 0)
-            {
-                // no dark subtraction, convert data to float
-                for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+            case _DATATYPE_UINT16:
+                if(status_darksub == 0)
                 {
-                    imgimWFS0.im->array.F[ii] = ((float) arrayutmp[ii]);
+                    // no dark subtraction, convert data to float
+                    for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        imgimWFS0.im->array.F[ii] = ((float) arrayutmp[ii]);
+                    }
                 }
-            }
-            else
-            {
-                // dark subtraction
-                for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+                else
                 {
-                    imgimWFS0.im->array.F[ii] =
-                        ((float) arrayutmp[ii]) -
-                        imgwfsdark.im->array.F[ii];
+                    // dark subtraction
+                    for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        imgimWFS0.im->array.F[ii] =
+                            ((float) arrayutmp[ii]) -
+                            imgwfsdark.im->array.F[ii];
+                    }
                 }
-            }
-            break;
+                break;
 
-        case _DATATYPE_INT16:
-            if(status_darksub == 0)
-            {
-                // no dark subtraction, convert data to float
-                for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+            case _DATATYPE_INT16:
+                if(status_darksub == 0)
                 {
-                    imgimWFS0.im->array.F[ii] = ((float) arraystmp[ii]);
+                    // no dark subtraction, convert data to float
+                    for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        imgimWFS0.im->array.F[ii] = ((float) arraystmp[ii]);
+                    }
                 }
-            }
-            else
-            {
-                // dark subtraction
-                for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+                else
                 {
-                    imgimWFS0.im->array.F[ii] =
-                        ((float) arraystmp[ii]) -
-                        imgwfsdark.im->array.F[ii];
+                    // dark subtraction
+                    for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        imgimWFS0.im->array.F[ii] =
+                            ((float) arraystmp[ii]) -
+                            imgwfsdark.im->array.F[ii];
+                    }
                 }
-            }
-            break;
+                break;
 
-        case _DATATYPE_FLOAT:
-            if(status_darksub == 0)
-            {
-                // no dark subtraction, copy data to imWFS0
-                memcpy(imgimWFS0.im->array.F,
-                       arrayftmp,
-                       sizeof(float) * sizeWFS);
-            }
-            else
-            {
-                // dark subtraction
-                for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+            case _DATATYPE_FLOAT:
+                if(status_darksub == 0)
                 {
-                    imgimWFS0.im->array.F[ii] =
-                        arrayftmp[ii] - imgwfsdark.im->array.F[ii];
+                    // no dark subtraction, copy data to imWFS0
+                    memcpy(imgimWFS0.im->array.F,
+                           arrayftmp,
+                           sizeof(float) * sizeWFS);
                 }
-            }
-            break;
+                else
+                {
+                    // dark subtraction
+                    for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+                    {
+                        imgimWFS0.im->array.F[ii] =
+                            arrayftmp[ii] - imgwfsdark.im->array.F[ii];
+                    }
+                }
+                break;
 
-        default:
-            printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                   __FILE__,
-                   __LINE__);
-            printf("datatype = %d\n", WFSatype);
-            exit(0);
-            break;
+            default:
+                printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                       __FILE__,
+                       __LINE__);
+                printf("datatype = %d\n", WFSatype);
+                exit(0);
+                break;
         }
 
         if(status_darksub == 1)
