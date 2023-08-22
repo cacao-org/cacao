@@ -1267,11 +1267,8 @@ static errno_t compute_function()
                 dmval *= imgmgain.im->array.F[mi];
 
 
-                // this is the goal position
-                mvalDMc[mi] += dmval;
-
-                // multiply goal position by MULT
-                mvalDMc[mi] *= imgmmult.im->array.F[mi];
+                //add the new delta command to the integrated command with leak: this is the goal position
+                mvalDMc[mi] = dmval + mvalDMc[mi]*imgmmult.im->array.F[mi];
 
                 // apply LIMIT
                 limit = imgmlimit.im->array.F[mi];
