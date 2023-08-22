@@ -206,7 +206,7 @@ cacao-aorun-039-compstrCM
 ```
 
 Check results:
-- conf/CMmodesDM/CMmodessDM.fits
+- conf/CMmodesDM/CMmodesDM.fits
 - conf/CMmodesWFS/CMmodesWFS.fits
 
 
