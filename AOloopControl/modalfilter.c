@@ -1266,7 +1266,6 @@ static errno_t compute_function()
                 // multiply by GAIN
                 dmval *= imgmgain.im->array.F[mi];
 
-
                 //add the new delta command to the integrated command with leak: this is the goal position
                 mvalDMc[mi] = dmval + mvalDMc[mi]*imgmmult.im->array.F[mi];
 
