@@ -312,6 +312,13 @@ static errno_t compute_function()
 
         DEBUG_TRACEPOINT(" ");
 
+        struct timespec ts;
+        if(clock_gettime(CLOCK_ISIO, &ts) == -1)
+        {
+            perror("clock_gettime");
+            exit(EXIT_FAILURE);
+        }
+        wfsoutimg.im->md->atime = ts;
 
         processinfo_update_output_stream(processinfo, wfsoutimg.ID);
     }
