@@ -235,11 +235,6 @@ cacao-aorun-070-cmval2dm start
 
 ```
 
-
-python -m pycacao.calib.mkmodes randhad HpokeCrand.fits (edited) 
-python -m pycacao.calib.rmdecode
-
-
 Closing the loop and setting loop parameters with mfilt:
 
 ```bash
