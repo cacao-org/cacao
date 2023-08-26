@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
+if [ -z ${MSdescr+x} ]; then
+# do not source if subscript
+	MSdescr="Checking for cacaovars"
+	MSextdescr="Checking for cacaovars"
+fi
 
-MSdescr="Checking for cacaovars"
-
-MSextdescr="Checking for cacaovars
-"
-
-# do not source if called as subscript
+# not sourced if called as subscript
 #
 if [ -z ${MILK_SCRIPT_STD_CONFIG_SOURCED+x} ]; then
 	source milk-script-std-config
@@ -31,7 +31,7 @@ if [ ${fnb} == 1 ]; then
 	echo "[$(tput setaf 2)$(tput bold)   OK   $(tput sgr0)] Found cavaovar file $filename"
 	source cacaovars.*.bash
 else
-	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Found ${fnb} cacaovar file(s). Need 1 cacaovar file to proceed"
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] Found ${fnb} cacaovar.*.bash file(s). Need 1 cacaovar file to proceed"
 	errstatus="1"
 fi
 
