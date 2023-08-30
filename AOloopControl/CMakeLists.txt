@@ -81,6 +81,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-task-manager
 	scripts/cacao-msglogCLI
 	scripts/cacao-msglogCTRL
+	scripts/cacao-logstreamsFITS
 	scripts/cacao-loop-deploy
 	scripts/cacao-setDMnolink
 	scripts/cacao-wfsref-setflat
