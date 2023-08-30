@@ -3,6 +3,9 @@
 # This script uses milk-argparse
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
+LOGCSET="aollog"
+LOGDATADIR="logdatadir"
+
 # script 1-line description
 MSdescr="Setup logging of AO streams to filesystem"
 
@@ -19,31 +22,52 @@ Actions:
 source milk-script-std-config
 source cacao-check-cacaovars
 
+RequiredDirs+=( "$LOGDATADIR" )
 
-MSarg+=( "action:string:action (start/stop/check)" )
+MSarg+=( "action:string:action (check/pstart/on/off)" )
 source milk-argparse
 ACTION="${inputMSargARRAY[0]}"
 
 
 ACTIONOK=0
 
+
+
+
+
+# default stream array
+#
+streamarray=("wfsim" "dmC" "modevalWFS")
+
+
+echo ""
+echo "STREAMS TO BE LOGGED :"
+streamcheckOK="OK"
+for stream in ${streamarray[@]}; do
+  sname="aol${CACAO_LOOPNUMBER}_$stream"
+  echo "     $sname"
+  checkstream ${sname}
+done
+echo ""
+
+if [ ${streamcheckOK} == "FAIL" ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+	errexit=1
+	exit 1
+fi
+
 if [ ${ACTION} == "check" ]; then
 	ACTIONOK=1
 fi
 
-streamarray=("wfsim" "dmC")
 
-
-for stream in ${streamarray[@]}; do
-  echo $stream
-done
 
 
 if [ ${ACTION} == "pstart" ]; then
   ACTIONOK=1
   cacaomsglog "START"
   for stream in ${streamarray[@]}; do
-    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream pstart
+    milk-streamFITSlog -cset ${LOGCSET} -d ${LOGDATADIR} aol${CACAO_LOOPNUMBER}_$stream pstart
   done
 fi
 
