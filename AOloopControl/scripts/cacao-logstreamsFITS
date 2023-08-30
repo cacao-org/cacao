@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="Setup logging of AO streams to filesystem"
+
+MSextdescr="Manages logging for AO streams:
+aolX_wfsim
+
+Actions:
+	check    check requirements, do not run anything
+	pstart   start log processes
+	on       start logging
+	off      stop logging
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+MSarg+=( "action:string:action (start/stop/check)" )
+source milk-argparse
+ACTION="${inputMSargARRAY[0]}"
+
+
+ACTIONOK=0
+
+if [ ${ACTION} == "check" ]; then
+	ACTIONOK=1
+fi
+
+streamarray=("wfsim" "dmC")
+
+
+for stream in ${streamarray[@]}; do
+  echo $stream
+done
+
+
+if [ ${ACTION} == "pstart" ]; then
+  ACTIONOK=1
+  cacaomsglog "START"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream pstart
+  done
+fi
+
+
+if [ ${ACTION} == "on" ]; then
+	ACTIONOK=1
+	cacaomsglog "ON"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream on
+  done
+fi
+
+if [ ${ACTION} == "off" ]; then
+	ACTIONOK=1
+	cacaomsglog "OFF"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream off
+  done
+fi
+
+
+
+if [ ${ACTIONOK} == 0 ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	cacaomsglog "ERROR ACTION undefined"
+fi
+
+cacaomsglog "END"
