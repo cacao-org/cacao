@@ -37,7 +37,7 @@ ACTIONOK=0
 
 # default stream array
 #
-streamarray=("wfsim" "dmC" "modevalWFS")
+streamarray=("wfsim" "dmC" "modevalWFS" "modevalDM" )
 
 
 echo ""
@@ -45,7 +45,6 @@ echo "STREAMS TO BE LOGGED :"
 streamcheckOK="OK"
 for stream in ${streamarray[@]}; do
   sname="aol${CACAO_LOOPNUMBER}_$stream"
-  echo "     $sname"
   checkstream ${sname}
 done
 echo ""
