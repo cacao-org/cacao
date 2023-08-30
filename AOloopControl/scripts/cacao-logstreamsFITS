@@ -3,7 +3,7 @@
 # This script uses milk-argparse
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
-LOGCSET="aollog"
+LOGCSET="aol0log"
 LOGDATADIR="logdatadir"
 
 # script 1-line description
