@@ -35,7 +35,7 @@ ACTIONOK=0
 
 
 
-
+echo ""
 LOGDEST=$( readlink ${LOGDATADIR})
 echo "LOGGING DESTINATION: $LOGDEST"
 
@@ -71,7 +71,7 @@ if [ ${ACTION} == "pstart" ]; then
   ACTIONOK=1
   cacaomsglog "START"
   for stream in ${streamarray[@]}; do
-    milk-streamFITSlog -cset ${LOGCSET} -d ${LOGDATADIR} aol${CACAO_LOOPNUMBER}_$stream pstart
+    milk-streamFITSlog -cset ${LOGCSET} -d ${LOGDEST} aol${CACAO_LOOPNUMBER}_$stream pstart
   done
 fi
 
