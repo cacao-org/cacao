@@ -15,8 +15,10 @@ aolX_wfsim
 Actions:
 	check    check requirements, do not run anything
 	pstart   start log processes
+	pstop    stop log processes
 	on       start logging
 	off      stop logging
+	kill     kill processes
 "
 
 source milk-script-std-config
@@ -33,6 +35,9 @@ ACTIONOK=0
 
 
 
+
+LOGDEST=$( readlink ${LOGDATADIR})
+echo "LOGGING DESTINATION: $LOGDEST"
 
 
 # default stream array
@@ -71,6 +76,15 @@ if [ ${ACTION} == "pstart" ]; then
 fi
 
 
+if [ ${ACTION} == "pstop" ]; then
+	ACTIONOK=1
+	cacaomsglog "STOP"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream pstop
+  done
+fi
+
+
 if [ ${ACTION} == "on" ]; then
 	ACTIONOK=1
 	cacaomsglog "ON"
@@ -86,6 +100,15 @@ if [ ${ACTION} == "off" ]; then
     milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream off
   done
 fi
+
+if [ ${ACTION} == "kill" ]; then
+	ACTIONOK=1
+	cacaomsglog "KILL"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream kill
+  done
+fi
+
 
 
 
