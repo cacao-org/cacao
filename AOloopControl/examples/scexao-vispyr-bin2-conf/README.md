@@ -254,21 +254,6 @@ cacao-fpsctrl setval mfilt loopON ON
 
 ```
 
-Misc tools:
-
-```bash
-# Astrogrid control
-cacao-DMastrogrid start
-cacao-DMastrogrid stop
-
-# Set WFS reference to flat illumination over wfsmask
-cacao-wfsref-setflat
-```
-
-scexao-specific tools
-```bash
-
-```
 
 ### 8.2. Forcing zero average correction
 
@@ -315,6 +300,36 @@ cacao-aorun-071-zpo start
 Select DM channels to be included in zpo.
 
 
+
+
+### 8.4. Astrogrid
+
+Example commands:
+```bash
+
+# astrogrid with default parameters (50nm ampl, nbframe 2, bin 2, pattern XYgrid)
+./scripts/scexao-astrogrid-on
+
+# amplitude 25nm
+./scripts/scexao-astrogrid-on 0.025
+
+# amplitude 25nm, nbframe 2 (default=2), binfact 3 (default=2)
+./scripts/scexao-astrogrid-on 0.025 2 3
+
+# turn off astrogrid
+./scripts/scexao-astrogrid-off
+```
+
+Low-level interface (does not update Redis database):
+
+```bash
+# Astrogrid control
+cacao-DMastrogrid start
+cacao-DMastrogrid stop
+
+# Set WFS reference to flat illumination over wfsmask
+cacao-wfsref-setflat
+```
 
 
 
