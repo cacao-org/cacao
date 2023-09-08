@@ -216,8 +216,8 @@ Check results:
 
 Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
 ```bash
-cacao-fpsctrl setval wfs2cmodeval GPUindex 0
-cacao-fpsctrl setval mvalC2dm GPUindex 0
+cacao-fpsctrl setval wfs2cmodeval GPUindex 1
+cacao-fpsctrl setval mvalC2dm GPUindex 2
 ```
 
 
@@ -257,8 +257,8 @@ cacao-fpsctrl setval mfilt loopON ON
 
 ### 8.2. Forcing zero average correction
 
-Focring the average correction to be zero is useful to remove artefacts such as 
-strong correction at the edges of the beam due to slight misalignment between 
+Focring the average correction to be zero is useful to remove artefacts such as
+strong correction at the edges of the beam due to slight misalignment between
 calibration and operation, or to adapt to straylight (for example moonlight) when
 observing a faint target.
 
