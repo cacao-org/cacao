@@ -33,8 +33,8 @@ export CACAO_LOOPROOTDIR="${CACAO_LOOPNAME}-rootdir"
 export CACAO_LOOPRUNDIR="${CACAO_LOOPNAME}-rundir"
 
 # input WFS stream
-export CACAO_WFSSTREAM="glint"     # Hardware stream, connected to physical camera
-export CACAO_WFSSTREAMSIM="glintsim"
+export CACAO_WFSSTREAM="apapane_windowed"     # Hardware stream, connected to physical camera. currently configured to accept a custom shm that is (presumably) a windowed version of apapane
+export CACAO_WFSSTREAMSIM="apapanesim"
 
 # Specify that WFS stream is not raw image, but processed WFS signal
 # If set to ON, this turns off intensity scaling
