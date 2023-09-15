@@ -472,11 +472,6 @@ static errno_t compute_function()
             {
                 status_darksub = 1;
             }
-
-            //if(IDwfsmult != -1)
-            //{
-            //    status_wfsmult = 1;
-            // }
         }
 
         imgimWFS0.md->write = 1;
