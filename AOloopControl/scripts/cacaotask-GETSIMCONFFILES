@@ -10,8 +10,7 @@ mkdir -p ${CACAO_LOOPROOTDIR}/simLHS
 cd $CONFDIR/simLHS/
 
 shopt -s nullglob
-FLIST=($(ls *.get.bash))
-for gfile in "${FLIST[@]}"
+for gfile in *.get.bash
 do
 	echo ">>> sourcing $gfile"
     source $gfile
