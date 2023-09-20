@@ -37,7 +37,8 @@ static CLICMDARGDEF farg[] =
 };
 #include <stdio.h>
 #include <sys/select.h>
-int is_ready(int fd) {
+int is_ready(int fd)
+{
     fd_set fdset;
     struct timeval timeout;
     int ret;
@@ -45,7 +46,7 @@ int is_ready(int fd) {
     FD_SET(fd, &fdset);
     timeout.tv_sec = 0;
     timeout.tv_usec = 1;
-    return select(fd+1, &fdset, NULL, NULL, &timeout) == 1 ? 1 : 0;
+    return select(fd + 1, &fdset, NULL, NULL, &timeout) == 1 ? 1 : 0;
 }
 
 // Optional custom configuration setup.
@@ -89,29 +90,12 @@ static errno_t apd_safety_execute(int lowfs_howfs)
         printf("Oh no APD emergency shutdown crapped!!!; can't create socket\n");
         return RETURN_FAILURE;
     }
-    /*
-    int t = 1;
-    if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &t, sizeof(int)) < 0)
-    {
-        printf("setsockopt(SO_REUSEADDR) failed");
-        return RETURN_FAILURE;
-    }
-    */
 
     struct sockaddr_in server_addr;
     // Expecting elsewhere to manage SSH tunnels from localhost:18816/8 -> OBCP:10.0.0.6:18818
-    if(lowfs_howfs)
-    {
-        server_addr.sin_family = AF_INET;
-        server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-        server_addr.sin_port = htons(18816);
-    }
-    else
-    {
-        server_addr.sin_family = AF_INET;
-        server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-        server_addr.sin_port = htons(18818);
-    }
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    server_addr.sin_port = lowfs_howfs ? htons(18816) : htons(18818);
 
     if(connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
     {
@@ -251,7 +235,10 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
-    IMGID apd_mat_in = stream_connect(apd_mat_name);
+    // Since it's a fps PARAM_IMG, it's expected to be already loaded.
+    IMGID apd_mat_in = mkIMGID_from_name(apd_mat_name);
+    resolveIMGID(&apd_mat_in, ERRMODE_ABORT);
+
     float apd_integrator[NUM_APD_HOWFS];
     memset(apd_integrator, 0, NUM_APD_HOWFS * sizeof(float));
 
