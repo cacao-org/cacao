@@ -34,13 +34,20 @@ static CLICMDARGDEF farg[] =
         (void **) &apd_mat_name,
         &fpi_wfsinsname
     }
+
+    // TODO time-downsample factor for LOWFS.
 };
+
+/*
+Temp utility to detect what causes STDIN to become closed
+(see example at bottom of file)
+when exiting because of APD safety.
+*/
 #include <stdio.h>
 #include <sys/select.h>
 int is_ready(int fd) {
     fd_set fdset;
     struct timeval timeout;
-    int ret;
     FD_ZERO(&fdset);
     FD_SET(fd, &fdset);
     timeout.tv_sec = 0;
@@ -209,7 +216,7 @@ struct __attribute__((__packed__)) LOWFS_INFO_STRUCT
 };
 
 static errno_t compute_lowfs_info(struct LOWFS_INFO_STRUCT *lowfs_struct,
-                                  uint16_t *lowfs_apd)
+                                  int16_t *lowfs_apd)
 {
 
     int subap_total = 0;
