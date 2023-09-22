@@ -18,14 +18,14 @@ RequiredDirs=(conf)
 
 
 
-#MSarg+=( "calibname:string:calibration name" )
+MSarg+=( "calibname:string:calibration name" )
+MSopt+=( "u:update:setupdate::update existing, do not append timestamp" )
 
-#MSopt+=( "t:timestamp:settimestamp::append timestamp to name" )
-#addtimestamp="0"
-#function settimestamp() {
-#        echo "Append timestamp to name"
-#        addtimestamp="1"
-#}
+update="0"
+function setupdate() {
+        echo "Updating, not apppending timestamp"
+        update="1"
+}
 
 
 
@@ -39,23 +39,26 @@ set -u
 
 
 
-#calib="${inputMSargARRAY[0]}"
-#echo "Calibration : ${calib}"
+calib="${inputMSargARRAY[0]}"
+echo "Calibration : ${calib}"
 
 
 
 
+DATESTRING="$(date -u --iso-8601=seconds)"
 
-# Arguments:
-# Calib name
+#The purpose of appending a timestamp is to make a unique directory name.  The pretty version is written inside the directory.
+TIMESTAMP="$(date -u +%Y%m%d_%H%M%S -d ${DATESTRING})"
 
-DATESTRING="$(date -u +%Y-%m-%dT%H:%M:%S)"
 
-ARCHDIR="../${CACAO_LOOPNAME}-calibs/${DATESTRING}/"
+#Append the date/time if not turned off
+if [ "${update}" = "0" ]; then
+    calib=${calib}_${TIMESTAMP}
+fi
 
-#if [ "${addtimestamp}" = "1" ]; then
-#ARCHDIR=${ARCHDIR}_$(date -u +%Y-%m-%dT%H:%M:%S)
-#fi
+#Directory name
+BASEARCHDIR="../${CACAO_LOOPNAME}-calibs/"
+ARCHDIR="${BASEARCHDIR}${calib}/"
 
 
 mkdir -p ${ARCHDIR}
@@ -72,50 +75,24 @@ do
     then
         for ff in $f/*
         do      
-            echo "Processing $ff"
+            #if this is a broken symlink, ignore it
+            if [ -L $ff ] && [ ! -e $ff ] 
+            then
+                continue
+            fi
+
+	        cp -L -r $ff ${ARCHDIR}"$(basename $ff)"
         done
     else
-        echo "Processing file $f"
+        cp -L -r $ff ${ARCHDIR}
     fi
 done
-
-
-exit 0
-
-cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodesWFS1all.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS.fits
-cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodes2ball.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes.fits
-
-# modes including WFS-space diagonalization
-cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodesWFSall.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS_WFSdiag.fits
-cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/mkmodestmp/fmodesall.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes_WFSdiag.fits
-
-# copy the block structure files
-cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/param_NBmodeblocks.txt ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_NBmodeblocks.txt
-cp ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/param_NBmodes.txt ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_NBmodes.txt
-
-# and copy the block files for future reference
-for f in $(ls ${CACAO_LOOPRUNDIR}/fps.compfCM-${CACAO_LOOPNUMBER}.datadir/block*.txt) ; do
-   cp $f ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_$(basename $f)
-done
-
-
-
-cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/wfsref_mn.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsref.fits
-cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/wfsmask_mkm.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmask.fits
-cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/wfsmap.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmap.fits
-cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/dmmask_mkm.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmmask.fits
-cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/dmslaved.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmslaved.fits
-cp ${CACAO_LOOPRUNDIR}/fps.acqlin_zRM-${CACAO_LOOPNUMBER}.datadir/zrespM.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_zrespM.fits
-
-
-cp ${CACAO_LOOPRUNDIR}/fps.acqlin_loRM-${CACAO_LOOPNUMBER}.datadir/respM.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LOrespM.fits
-cp ${CACAO_LOOPRUNDIR}/fps.acqlin_loRM-${CACAO_LOOPNUMBER}.datadir/RMpokeCube.fits ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LODMmodes.fits
 
 
 # write out complete path so someone following a symlink can easily track where we are
 echo $(pwd)/${ARCHDIR} > ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_calib_dir.txt
 
 # append timestamp
-echo $(date -u --iso-8601=seconds) >> ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_calib_archived.txt
+echo ${DATESTRING} >> ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_calib_archived.txt
 
-echo "$(date -u --iso-8601=seconds) ARCHIVE ${calib}" >> AOcalibs/AOcalib-${CACAO_LOOPNUMBER}-log.txt
+echo "${DATESTRING} ARCHIVED ${calib}" >> ${BASEARCHDIR}/aol${CACAO_LOOPNUMBER}_archive-log.txt
