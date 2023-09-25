@@ -124,7 +124,7 @@ Note: With a 1D DM representation, FpokesC and ZpokesC are meaningless.
 ```bash
 # Acquire response matrix - Hadamard modes
 # 6 cycles - default is 10.
-cacao-aorun-030-acqlinResp -n 6 -w HpokeC
+cacao-aorun-030-acqlinResp -n 6 HpokeC
 ```
 
 This could take a while. Check status on milk-procCTRL.

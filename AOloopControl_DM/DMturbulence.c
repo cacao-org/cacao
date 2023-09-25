@@ -331,7 +331,13 @@ static errno_t make_seed_turbulence_screen(
     arith_image_div("tmpg", "tmpd1", "tmpamp");
     delete_image_ID("tmpg", DELETE_IMAGE_ERRMODE_WARNING);
     delete_image_ID("tmpd1", DELETE_IMAGE_ERRMODE_WARNING);
-    arith_set_pixel("tmpamp", 0.0, size / 2, size / 2);
+
+    {
+        IMGID imgtmpamp = mkIMGID_from_name("tmpamp");
+        resolveIMGID(&imgtmpamp, ERRMODE_ABORT);
+        image_set_2Dpix(imgtmpamp, 0.0, size / 2, size / 2);
+    }
+
     mk_complex_from_amph("tmpamp", "tmppha1", "tmpc", 0);
     delete_image_ID("tmpamp", DELETE_IMAGE_ERRMODE_WARNING);
     delete_image_ID("tmppha1", DELETE_IMAGE_ERRMODE_WARNING);
@@ -419,11 +425,11 @@ static errno_t customCONFcheck()
 
 
 
-     /*   if(data.fpsptr->parray[fpi_compTurbCube].fpflag & FPFLAG_ONOFF)
-        {
-            printf("RECOMPUTING DM TURB CUBE\n");
-            data.fpsptr->parray[fpi_compTurbCube].fpflag &= ~FPFLAG_ONOFF;
-        }*/
+        /*   if(data.fpsptr->parray[fpi_compTurbCube].fpflag & FPFLAG_ONOFF)
+           {
+               printf("RECOMPUTING DM TURB CUBE\n");
+               data.fpsptr->parray[fpi_compTurbCube].fpflag &= ~FPFLAG_ONOFF;
+           }*/
 
 
     }

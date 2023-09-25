@@ -216,8 +216,8 @@ Check results:
 
 Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
 ```bash
-cacao-fpsctrl setval wfs2cmodeval GPUindex 0
-cacao-fpsctrl setval mvalC2dm GPUindex 0
+cacao-fpsctrl setval wfs2cmodeval GPUindex 1
+cacao-fpsctrl setval mvalC2dm GPUindex 2
 ```
 
 
@@ -254,7 +254,73 @@ cacao-fpsctrl setval mfilt loopON ON
 
 ```
 
-Misc tools:
+
+### 8.2. Forcing zero average correction
+
+Focring the average correction to be zero is useful to remove artefacts such as
+strong correction at the edges of the beam due to slight misalignment between
+calibration and operation, or to adapt to straylight (for example moonlight) when
+observing a faint target.
+
+This is done from the acquWFS process, as follows:
+```bash
+cacao-fpsctrl setval acquWFS WFStaveragegain 0.01
+cacao-fpsctrl setval acquWFS WFStaveragemult 0.999
+cacao-fpsctrl setval acquWFS WFSrefcmult 0.0
+cacao-fpsctrl setval acquWFS WFSrefcgain 0.01
+cacao-fpsctrl setval acquWFS comp.WFSrefc ON
+```
+These settings will time-average imWFS2 to imWFS3, and drive wfsrefc to imWFS3.
+
+Note that this mode and the zero-point offsetting described in the following section
+are mutually exclusive.
+
+
+To sart/stop this reference update, run :
+```bash
+cacao-fpsctrl setval acquWFS comp.WFSrefc ON
+cacao-fpsctrl setval acquWFS comp.WFSrefc OFF
+```
+
+To revert to the wfsref reference:
+```bash
+cacao-fpsctrl setval acquWFS WFSrefcmult 1.0
+cacao-fpsctrl setval acquWFS WFSrefcgain 0.0
+cacao-fpsctrl setval acquWFS comp.WFSrefc ON
+```
+
+
+
+### 8.3. Zero Point Offsetting
+
+```bash
+cacao-aorun-071-zpo start
+```
+
+Select DM channels to be included in zpo.
+
+
+
+
+### 8.4. Astrogrid
+
+Example commands:
+```bash
+
+# astrogrid with default parameters (50nm ampl, nbframe 2, bin 2, pattern XYgrid)
+./scripts/scexao-astrogrid-on
+
+# amplitude 25nm
+./scripts/scexao-astrogrid-on 0.025
+
+# amplitude 25nm, nbframe 2 (default=2), binfact 3 (default=2)
+./scripts/scexao-astrogrid-on 0.025 2 3
+
+# turn off astrogrid
+./scripts/scexao-astrogrid-off
+```
+
+Low-level interface (does not update Redis database):
 
 ```bash
 # Astrogrid control
@@ -265,20 +331,12 @@ cacao-DMastrogrid stop
 cacao-wfsref-setflat
 ```
 
-scexao-specific tools
-```bash
-
-```
 
 
 
-### 8.2. Zero Point Offsetting
 
-```bash
-cacao-aorun-071-zpo start
-```
 
-Select DM channels to be included in zpo.
+
 
 
 ## 9. Testing the loop
@@ -364,7 +422,22 @@ cacao-aorun-140-applyPF 1 start
 ```
 
 
-# Cleanup
+
+
+# 11. Logging streams to disk
+
+To setup processes for logging AO telemetry streams:
+```bash
+cacao-logstreamsFITS pstart
+```
+
+To start/stop logging:
+```bash
+cacao-logstreamsFITS on
+cacao-logstreamsFITS off
+```
+
+# 12. Cleanup
 
 From main directory (upstream of rootdir) :
 
@@ -373,10 +446,6 @@ cacao-msglogCTRL stop
 cacao-task-manager -C 0 scexao-vispyr-bin2
 rm -rf .vispyr2.cacaotaskmanager-log
 ```
-
-
-
-# Logging streams to disk
 
 
 

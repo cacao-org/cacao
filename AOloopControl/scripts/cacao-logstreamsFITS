@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+LOGCSET="aol0log"
+LOGDATADIR="logdatadir"
+
+# script 1-line description
+MSdescr="Setup logging of AO streams to filesystem"
+
+MSextdescr="Manages logging for AO streams:
+aolX_wfsim
+
+Actions:
+	check    check requirements, do not run anything
+	pstart   start log processes
+	pstop    stop log processes
+	on       start logging
+	off      stop logging
+	kill     kill processes
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+RequiredDirs+=( "$LOGDATADIR" )
+
+MSarg+=( "action:string:action (check/pstart/on/off)" )
+source milk-argparse
+ACTION="${inputMSargARRAY[0]}"
+
+
+ACTIONOK=0
+
+
+
+echo ""
+LOGDEST=$( readlink ${LOGDATADIR})
+echo "LOGGING DESTINATION: $LOGDEST"
+
+
+# default stream array
+#
+streamarray=("wfsim" "dmC" "modevalWFS" "modevalDM" )
+
+
+echo ""
+echo "STREAMS TO BE LOGGED :"
+streamcheckOK="OK"
+for stream in ${streamarray[@]}; do
+  sname="aol${CACAO_LOOPNUMBER}_$stream"
+  checkstream ${sname}
+done
+echo ""
+
+if [ ${streamcheckOK} == "FAIL" ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+	errexit=1
+	exit 1
+fi
+
+if [ ${ACTION} == "check" ]; then
+	ACTIONOK=1
+fi
+
+
+
+
+if [ ${ACTION} == "pstart" ]; then
+  ACTIONOK=1
+  cacaomsglog "START"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog -cset ${LOGCSET} -d ${LOGDEST} aol${CACAO_LOOPNUMBER}_$stream pstart
+  done
+fi
+
+
+if [ ${ACTION} == "pstop" ]; then
+	ACTIONOK=1
+	cacaomsglog "STOP"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream pstop
+  done
+fi
+
+
+if [ ${ACTION} == "on" ]; then
+	ACTIONOK=1
+	cacaomsglog "ON"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream on
+  done
+fi
+
+if [ ${ACTION} == "off" ]; then
+	ACTIONOK=1
+	cacaomsglog "OFF"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream off
+  done
+fi
+
+if [ ${ACTION} == "kill" ]; then
+	ACTIONOK=1
+	cacaomsglog "KILL"
+  for stream in ${streamarray[@]}; do
+    milk-streamFITSlog aol${CACAO_LOOPNUMBER}_$stream kill
+  done
+fi
+
+
+
+
+if [ ${ACTIONOK} == 0 ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	cacaomsglog "ERROR ACTION undefined"
+fi
+
+cacaomsglog "END"

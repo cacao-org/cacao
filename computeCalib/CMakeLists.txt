@@ -46,7 +46,7 @@ set(LINKLIBS
 	cacaoAOloopControl
 )
 
-if((NOT MKL_FOUND) AND (NOT OPENBLAS_FOUND))
+if(NOT MKL_FOUND)
   list(APPEND LINKLIBS lapacke)
 endif()
 
