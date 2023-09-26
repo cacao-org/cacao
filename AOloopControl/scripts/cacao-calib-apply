@@ -13,16 +13,8 @@ source cacao-check-cacaovars
 RequiredCommands=(milk)
 RequiredPipes=()
 RequiredFiles=()
-RequiredDirs=(AOcalibs)
 
 MSarg+=( "calibname:string:calibration name" )
-
-MSopt+=( "w:wfsdiag:setwfsdiag::use WFS-diagonalized modes" )
-WFSdiag="0"
-function setwfsdiag() {
-	echo "Using WFS-diagonalized modes"
-	WFSdiag="1"
-}
 
 
 source milk-argparse
@@ -38,95 +30,38 @@ set -u
 calib="${inputMSargARRAY[0]}"
 echo "Calibration : ${calib}"
 
+#Directory name
+BASEARCHDIR="../${CACAO_LOOPNAME}-calibs/"
+ARCHDIR="${BASEARCHDIR}${calib}/"
 
-
-
-
-
-# Arguments:
-# Calib name
-
-
-
-ARCHDIR="AOcalibs/${calib}"
 
 echo "Loop ${CACAO_LOOPNUMBER}: Loading calibration from ${ARCHDIR}"
 
 if [[ -d "${ARCHDIR}" ]]; then
 
-
-if [ "${WFSdiag}" = "1" ]; then
-
-# wfsdiag.txt records which basis was loaded
-echo 1 > $MILK_SHM_DIR/aol${CACAO_LOOPNUMBER}_calib_wfsdiag.txt
-
-MILK_QUIET=1 milk << EOF
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS_WFSdiag.fits" aolmWFS
-imcpshm aolmWFS aol${CACAO_LOOPNUMBER}_modesWFS
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes_WFSdiag.fits" aolmDM
-imcpshm aolmDM  aol${CACAO_LOOPNUMBER}_DMmodes
-
-exitCLI
-EOF
-
-else
+# Load CM to shared memory
+milk-FITS2shm "${ARCHDIR}/CMmodesWFS/CMmodesWFS.fits" aol${CACAO_LOOPNUMBER}_modesWFS
+milk-FITS2shm "${ARCHDIR}/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes
 
 
-# wfsdiag.txt records which basis was loaded
-echo 0 > $MILK_SHM_DIR/aol${CACAO_LOOPNUMBER}_calib_wfsdiag.txt
+milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsref.fits" aol${CACAO_LOOPNUMBER}_wfsref
+milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsrefc.fits" aol${CACAO_LOOPNUMBER}_wfsrefc
 
-MILK_QUIET=1 milk << EOF
+milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsmask.fits" aol${CACAO_LOOPNUMBER}_wfsmask
+milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsmap.fits" aol${CACAO_LOOPNUMBER}_wfsmap
 
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS.fits" aolmWFS
-imcpshm aolmWFS aol${CACAO_LOOPNUMBER}_modesWFS
+milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_dmmask.fits" aol${CACAO_LOOPNUMBER}_dmmask
+milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_dmmap.fits" aol${CACAO_LOOPNUMBER}_dmmap
 
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes.fits" aolmDM
-imcpshm aolmDM  aol${CACAO_LOOPNUMBER}_DMmodes
-
-exitCLI
-EOF
-
-fi
-
-
-
-MILK_QUIET=1 milk <<EOF
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsref.fits" aolwfsref
-imcpshm aolwfsref aol${CACAO_LOOPNUMBER}_wfsref
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmask.fits" aolwfsmask
-imcpshm aolwfsmask aol${CACAO_LOOPNUMBER}_wfsmask
-
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmap.fits" aolwfsmap
-imcpshm aolwfsmap aol${CACAO_LOOPNUMBER}_wfsmap
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmmask.fits" aoldmmask
-imcpshm aoldmmask aol${CACAO_LOOPNUMBER}_dmmask
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmslaved.fits" aoldmslaved
-imcpshm aoldmslaved aol${CACAO_LOOPNUMBER}_dmslaved
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_zrespM.fits" aolzrespM
-imcpshm aolzrespM aol${CACAO_LOOPNUMBER}_zrespM
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LOrespM.fits" aolLOrespM
-imcpshm aolLOrespM aol${CACAO_LOOPNUMBER}_LOrespM
-
-loadfits "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LODMmodes.fits" aolLODMmodes
-imcpshm aolLODMmodes aol${CACAO_LOOPNUMBER}_LODMmodes
-
-exitCLI
-EOF
 
 # record this calib as applied
-# TODO: is there a standard logger we should invoke?
-echo $(pwd)/${ARCHDIR} > $MILK_SHM_DIR/aol${CACAO_LOOPNUMBER}_calib_source.txt
-echo $(date -u --iso-8601=seconds) > $MILK_SHM_DIR/aol${CACAO_LOOPNUMBER}_calib_loaded.txt
-echo "$(date -u --iso-8601=seconds) APPLY ${calib}" >> AOcalibs/AOcalib-${CACAO_LOOPNUMBER}-log.txt
+echo $(pwd)/../${ARCHDIR} > $MILK_SHM_DIR/aol${CACAO_LOOPNUMBER}_calib_source.txt
+
+DATESTRING="$(date -u --iso-8601=seconds)"
+
+echo ${DATESTRING} > $MILK_SHM_DIR/aol${CACAO_LOOPNUMBER}_calib_loaded.txt
+
+echo "${DATESTRING} APPLY ${calib}" >> ${BASEARCHDIR}/aol${CACAO_LOOPNUMBER}_archive-log.txt
 
 
 else
