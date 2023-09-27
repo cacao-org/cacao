@@ -7,7 +7,7 @@ act1Dval=$2
 #
 milk << EOF
 readshmim ${act2Dim}
-loadfits mapping.fits mapping
+loadfits "data/mapping.fits" mapping
 # make output shared memory stream
 pixunmap .outim.shared 1
 pixunmap ..procinfo 1
