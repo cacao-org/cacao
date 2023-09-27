@@ -53,6 +53,9 @@ export CACAO_LOOPDATALOGDIR="$(pwd)/datalogdir"
 export CACAO_FPSPROC_DMCH2DISP="ON"
 export CACAO_FPSPROC_DMCH2DISPSIM="ON"
 
+# DM turbulence simulator
+export CACAO_FPSPROC_DMATMTURB="ON"
+
 # Delay stream: emulates time lag in hardware
 # Used to simulate a time lag
 #
