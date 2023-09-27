@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+#Make image for the 2D turbulence map
+milk-all << EOF
+mk2Dim "s>tf32>mapsturb2D" 50 50
+exitCLI
+EOF
+
+
+sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.dmstream mapsturb2D"
+
+
+./scripts/maps-unmapturb
+
