@@ -2,7 +2,9 @@
 This document assumes you already have the loaded directories etc. Your system is already calibrated. You should already have an interaction matrix.
 
 Starting from nothing, in maps-rootdir
-```cacao-setup maps```
+```
+cacao-setup maps
+```
 
 Past that we run, with no calibration/poke:
 
@@ -13,7 +15,9 @@ cacao-025-acqWFS -w start
 ```
 
 Now we are picking a calibration
-``` ls ../maps-calibs ```
+``` 
+ls ../maps-calibs
+ ```
 find the <calib-dir> from that list that you want to use tonight.
 
 ```
@@ -25,6 +29,12 @@ cacao-calib-apply <calib-dir>
 cacao-aorun-050-wfs2cmval start
 cacao-aorun-060-mfilt start
 cacao-aorun-070-cmval2dm start
-``
+```
 
+To start the 2D DM viewing stream:
+``` 
+tmux new -s remap
+./scripts/maps-remapdm10disp 
+ctrl-b d
+```
 
