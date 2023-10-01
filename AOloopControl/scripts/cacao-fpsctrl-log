@@ -6,7 +6,7 @@
 # script 1-line description
 MSdescr="cacao fpsCTRL log (re)start"
 
-MSextdescr="Runs cacao-fpsctrl-log in tmux session
+MSextdescr="Runs cacao-fpsctrl-logprocess in tmux session
 "
 
 source milk-script-std-config
