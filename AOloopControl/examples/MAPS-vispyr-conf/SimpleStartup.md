@@ -10,8 +10,8 @@ Past that we run, with no calibration/poke:
 
 ```
 cacao-aorun-000-dm start
-ls -sf /milk/shm/viswfs_slopes.im.shm /milk/shm/al2_wfsim.im.shm
-cacao-025-acqWFS -w start
+ls -sf /milk/shm/viswfs_slopes.im.shm /milk/shm/aol2_wfsim.im.shm
+cacao-aorun-025-acqWFS -w start
 ```
 
 Now we are picking a calibration
