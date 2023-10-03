@@ -13,6 +13,8 @@ Pokes input stream, listens to ouput stream
 Requires acquWFS process to run
 
 Writes output to env variables CACAO_WFSFRATE and CACAO_LATENCYHARDWFR
+These are written in file <looprundir>/fps.mlat-<loopnumber>.datadir/cacaovars.bash,
+which is sourced by subsequent scripts.
 "
 
 source milk-script-std-config

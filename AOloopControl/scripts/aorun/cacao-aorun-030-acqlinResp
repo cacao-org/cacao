@@ -10,6 +10,9 @@ MSextdescr="
 Input DM modes in:
 <rootdir>/conf/DMmodes/<name>.fits
 
+Sources <looprundir>/fps.mlat-<loopnumber>.datadir/cacaovars.bash
+to get CACAO_WFSFRATE and CACAO_LATENCYHARDWFR
+
 Output WFS response written as:
 <rootdir>/conf/WFSmodes/<name>.WFSresp.fits
 
