@@ -38,7 +38,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_VISIBLE_DEFAULT,
         (void **) &output_shm_name,
         &fpi_outputshmname
-    }
+    },
     {
         CLIARG_ONOFF,
         ".comp.WFSnormalize",
