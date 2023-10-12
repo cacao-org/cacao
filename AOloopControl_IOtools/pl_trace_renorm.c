@@ -17,7 +17,7 @@ static char *output_shm_name; // output shared memory
 static long  fpi_outputshmname;
 
 static int64_t *compWFSnormalize; // spec norm toggle (lifted this from acquireWFSim.c heh)
-static long     fpi_compWFSnormalize;
+static long fpi_compWFSnormalize;
 
 static CLICMDARGDEF farg[] =
 {
