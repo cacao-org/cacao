@@ -103,7 +103,7 @@ static errno_t compute_function()
 
     // This is the while(True) {
     //INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
         // JON YOU GET TO WORK HERE
         if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF) {
