@@ -6,7 +6,7 @@
  *
  */
 
-
+#include <math.h>
 #include "CommandLineInterface/CLIcore.h"
 
 // Local variables pointers
