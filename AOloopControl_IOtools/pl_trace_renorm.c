@@ -101,8 +101,10 @@ static errno_t compute_function()
     {
         // JON YOU GET TO WORK HERE
         if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF) {
+            int j;
             for (j = 0; j < sizeouty; j++){
                 double tot = 0.0;
+                int i;
                 for (i = 0; i < sizeoutx; i++) {
                     tot += wfsin.im->array[i][j];
                 }
