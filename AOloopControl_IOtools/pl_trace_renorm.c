@@ -115,7 +115,7 @@ static errno_t compute_function()
                     tot += wfsin.im->array.F[i*sizeouty+j];
                 }
                 for (i = 0; i < sizeoutx; i++) {
-                    wfsout.im->array.F[i*sizeouty+j] /= tot;
+                    wfsout.im->array.F[i*sizeouty+j] = wfsin.im->array.F[i*sizeouty+j]/tot;
                 }
             }
         }
