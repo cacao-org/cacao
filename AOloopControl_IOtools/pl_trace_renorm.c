@@ -42,7 +42,7 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF,
         ".comp.WFSnormalize",
-        "normalize WFS frames -> imWFS1",
+        "normalize WFS frames",
         "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSnormalize,
@@ -70,6 +70,12 @@ static errno_t customCONFcheck()
 {
     return RETURN_SUCCESS;
 }
+
+static CLICMDDATA CLIcmddata =
+{
+    "spectra_renorm", "normalize spectral traces", CLICMD_FIELDS_DEFAULTS
+};
+
 
 // detailed help
 static errno_t help_function()
