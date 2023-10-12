@@ -96,7 +96,7 @@ static errno_t compute_function()
         stream_connect_create_2D(output_shm_name, sizeoutx, sizeouty, _DATATYPE_FLOAT);
 
     // This is the while(True) {
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+    //INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
     {
         // JON YOU GET TO WORK HERE
@@ -106,10 +106,10 @@ static errno_t compute_function()
                 double tot = 0.0;
                 int i;
                 for (i = 0; i < sizeoutx; i++) {
-                    tot += wfsin.im->array[i][j];
+                    tot += wfsin.im->array.F[i*sizeouty+j];
                 }
                 for (i = 0; i < sizeoutx; i++) {
-                    wfsout.im->array[i][j] /= tot;
+                    wfsout.im->array.F[i*sizeouty+j] /= tot;
                 }
             }
         }
