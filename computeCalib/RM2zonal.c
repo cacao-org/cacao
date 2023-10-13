@@ -44,11 +44,7 @@
 #include <pthread.h>
 #endif
 
-/*
-#ifdef HAVE_CUDA
-#include "cudacomp/cudacomp.h"
-#endif
-*/
+
 
 // CPU mode: Use MKL if available
 // Otherwise use openBLAS
@@ -214,7 +210,7 @@ static errno_t compute_function()
     IMGID imgRMWFS = mkIMGID_from_name(RMmodesWFS);
     resolveIMGID(&imgRMWFS, ERRMODE_ABORT);
 
-    struct timespec t0, t1, t2, t3, t4, t5, t6, t7, t8, t9;
+    struct timespec t0, t1, t2, t3, t4, t5;
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
@@ -255,7 +251,8 @@ static errno_t compute_function()
             printf("Number of modes    : %d\n", imgRMDM.md->size[2]);
             nbmode = imgRMDM.md->size[2];
 
-            printf("Number of DM act   : %d x %d\n", imgRMDM.md->size[0], imgRMDM.md->size[1]);
+            printf("Number of DM act   : %d x %d\n", imgRMDM.md->size[0],
+                   imgRMDM.md->size[1]);
             nbact = imgRMDM.md->size[0] * imgRMDM.md->size[1];
         }
         else
@@ -278,7 +275,7 @@ static errno_t compute_function()
         EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");
 
         printf("=============================\n");
-        printf("GPU device = %d\n", (int) (*GPUdevice));
+        printf("GPU device = %d\n", (int)(*GPUdevice));
         printf("SVD limit  = %f\n", *svdlim);
 
 
@@ -293,7 +290,7 @@ static errno_t compute_function()
         uint32_t Mdim = 0;
         uint32_t Ndim = 0;
 
-        if( nbmode < nbact )
+        if(nbmode < nbact)
         {
             // this is the default
             // notations follow this case
@@ -324,7 +321,7 @@ static errno_t compute_function()
         createimagefromIMGID(&imgeval);
 
 
-        clock_gettime(CLOCK_REALTIME, &t0);
+        clock_gettime(CLOCK_MILK, &t0);
 
 
         {
@@ -336,7 +333,7 @@ static errno_t compute_function()
 
             {
                 int SGEMMcomputed = 0;
-                if( (*GPUdevice >= 0) && (*GPUdevice <= 99))
+                if((*GPUdevice >= 0) && (*GPUdevice <= 99))
                 {
 #ifdef HAVE_CUDA
                     printf("Running SGEMM 1 on GPU device %d\n", *GPUdevice);
@@ -349,7 +346,8 @@ static errno_t compute_function()
 
                     float *d_RMDM;
                     cudaMalloc((void **)&d_RMDM, imgRMDM.md->nelement * sizeof(float));
-                    cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                    cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float),
+                               cudaMemcpyHostToDevice);
 
                     float *d_ATA;
                     cudaMalloc((void **)&d_ATA, imgATA.md->nelement * sizeof(float));
@@ -361,7 +359,7 @@ static errno_t compute_function()
                     // Do the actual multiplication
                     cublasOperation_t OP0 = CUBLAS_OP_T;
                     cublasOperation_t OP1 = CUBLAS_OP_N;
-                    if ( mshape == longaxis_mode )
+                    if(mshape == longaxis_mode)
                     {
                         OP0 = CUBLAS_OP_N;
                         OP1 = CUBLAS_OP_T;
@@ -372,7 +370,8 @@ static errno_t compute_function()
 
                     cublasDestroy(handle);
 
-                    cudaMemcpy(imgATA.im->array.F, d_ATA, imgATA.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
+                    cudaMemcpy(imgATA.im->array.F, d_ATA, imgATA.md->nelement * sizeof(float),
+                               cudaMemcpyDeviceToHost);
 
                     cudaFree(d_RMDM);
                     cudaFree(d_ATA);
@@ -380,7 +379,7 @@ static errno_t compute_function()
                     SGEMMcomputed = 1;
 #endif
                 }
-                if ( SGEMMcomputed == 0)
+                if(SGEMMcomputed == 0)
                 {
                     printf("Running SGEMM 1 on CPU\n");
                     fflush(stdout);
@@ -388,59 +387,60 @@ static errno_t compute_function()
 
                     CBLAS_TRANSPOSE OP0 = CblasTrans;
                     CBLAS_TRANSPOSE OP1 = CblasNoTrans;
-                    if ( mshape == longaxis_mode )
+                    if(mshape == longaxis_mode)
                     {
                         OP0 = CblasNoTrans;
                         OP1 = CblasTrans;
                     }
 
                     cblas_sgemm(CblasColMajor, OP0, OP1,
-                                Ndim, Ndim, Mdim, 1.0, imgRMDM.im->array.F, nbact, imgRMDM.im->array.F, nbact, 0.0, imgATA.im->array.F, Ndim);
+                                Ndim, Ndim, Mdim, 1.0, imgRMDM.im->array.F, nbact, imgRMDM.im->array.F, nbact,
+                                0.0, imgATA.im->array.F, Ndim);
                 }
             }
 
 
 
-            clock_gettime(CLOCK_REALTIME, &t1);
+            clock_gettime(CLOCK_MILK, &t1);
 
 
             //save_fits("ATA", "mATA.fits");
 
 
 
-            float *d = (float*) malloc(sizeof(float)*Ndim);
-            float *e = (float*) malloc(sizeof(float)*Ndim);
-            float *t = (float*) malloc(sizeof(float)*Ndim);
+            float *d = (float *) malloc(sizeof(float) * Ndim);
+            float *e = (float *) malloc(sizeof(float) * Ndim);
+            float *t = (float *) malloc(sizeof(float) * Ndim);
 
 
 #ifdef HAVE_MKL
             mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 #endif
 
-            LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', Ndim, (float*) imgATA.im->array.F, Ndim, d, e, t);
+            LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', Ndim, (float *) imgATA.im->array.F, Ndim, d, e, t);
 
-            clock_gettime(CLOCK_REALTIME, &t2);
+            clock_gettime(CLOCK_MILK, &t2);
 
             // Assemble Q matrix
-            LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', Ndim, imgATA.im->array.F, Ndim, t );
+            LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', Ndim, imgATA.im->array.F, Ndim, t);
 
 
-            clock_gettime(CLOCK_REALTIME, &t3);
+            clock_gettime(CLOCK_MILK, &t3);
 
 
             // compute all eigenvalues and eivenvectors -> imgV
             //
-            memcpy(imgmV.im->array.F, imgATA.im->array.F, sizeof(float)*Ndim*Ndim);
+            memcpy(imgmV.im->array.F, imgATA.im->array.F, sizeof(float)*Ndim * Ndim);
             LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', Ndim, d, e, imgmV.im->array.F, Ndim);
             memcpy(imgeval.im->array.F, d, sizeof(float)*Ndim);
 
-            clock_gettime(CLOCK_REALTIME, &t4);
+            clock_gettime(CLOCK_MILK, &t4);
 
             free(d);
             free(e);
             free(t);
 
-            delete_image(imgATA, DELETE_IMAGE_ERRMODE_EXIT);
+            delete_image(&imgATA, DELETE_IMAGE_ERRMODE_EXIT);
             // this is matV
             //save_fits("mV", "mV.fits");
         }
@@ -454,7 +454,7 @@ static errno_t compute_function()
         IMGID imgmU = makeIMGID_2D("mU", Mdim, Ndim);
         createimagefromIMGID(&imgmU);
 
-        clock_gettime(CLOCK_REALTIME, &t5);
+        clock_gettime(CLOCK_MILK, &t5);
 
         // Compute mU (only non-zero part allocated)
         // Multiply RMmodesDM by Vmat
@@ -462,7 +462,7 @@ static errno_t compute_function()
 
         {
             int SGEMMcomputed = 0;
-            if( (*GPUdevice >= 0) && (*GPUdevice <= 99))
+            if((*GPUdevice >= 0) && (*GPUdevice <= 99))
             {
 #ifdef HAVE_CUDA
                 printf("Running SGEMM 2 on GPU device %d\n", *GPUdevice);
@@ -475,11 +475,13 @@ static errno_t compute_function()
 
                 float *d_RMDM;
                 cudaMalloc((void **)&d_RMDM, imgRMDM.md->nelement * sizeof(float));
-                cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float),
+                           cudaMemcpyHostToDevice);
 
                 float *d_mV;
                 cudaMalloc((void **)&d_mV, imgmV.md->nelement * sizeof(float));
-                cudaMemcpy(d_mV, imgmV.im->array.F, imgmV.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
+                cudaMemcpy(d_mV, imgmV.im->array.F, imgmV.md->nelement * sizeof(float),
+                           cudaMemcpyHostToDevice);
 
                 float *d_mU;
                 cudaMalloc((void **)&d_mU, imgmU.md->nelement * sizeof(float));
@@ -488,7 +490,7 @@ static errno_t compute_function()
                 cublasCreate(&handle);
 
                 cublasOperation_t OP0 = CUBLAS_OP_N;
-                if ( mshape == longaxis_mode )
+                if(mshape == longaxis_mode)
                 {
                     OP0 = CUBLAS_OP_T;
                 }
@@ -497,7 +499,8 @@ static errno_t compute_function()
 
                 cublasDestroy(handle);
 
-                cudaMemcpy(imgmU.im->array.F, d_mU, imgmU.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
+                cudaMemcpy(imgmU.im->array.F, d_mU, imgmU.md->nelement * sizeof(float),
+                           cudaMemcpyDeviceToHost);
 
                 cudaFree(d_RMDM);
                 cudaFree(d_mV);
@@ -507,19 +510,20 @@ static errno_t compute_function()
 #endif
             }
 
-            if ( SGEMMcomputed == 0 )
+            if(SGEMMcomputed == 0)
             {
                 printf("Running SGEMM 2 on CPU\n");
                 fflush(stdout);
 
                 CBLAS_TRANSPOSE OP0 = CblasNoTrans;
-                if ( mshape == longaxis_mode )
+                if(mshape == longaxis_mode)
                 {
                     OP0 = CblasTrans;
                 }
 
-                cblas_sgemm (CblasColMajor, OP0, CblasNoTrans,
-                             Mdim, Ndim, Ndim, 1.0, imgRMDM.im->array.F, nbact, imgmV.im->array.F, Ndim, 0.0, imgmU.im->array.F, Mdim);
+                cblas_sgemm(CblasColMajor, OP0, CblasNoTrans,
+                            Mdim, Ndim, Ndim, 1.0, imgRMDM.im->array.F, nbact, imgmV.im->array.F, Ndim, 0.0,
+                            imgmU.im->array.F, Mdim);
 
             }
         }
@@ -532,11 +536,11 @@ static errno_t compute_function()
         IMGID imgmAinv = makeIMGID_2D("mAinv", nbmode, nbact);
         createimagefromIMGID(&imgmAinv);
 
-        float evalmax = imgeval.im->array.F[Ndim-1];
+        float evalmax = imgeval.im->array.F[Ndim - 1];
         uint32_t modecnt = 0;
 
 
-        if ( mshape == longaxis_act )
+        if(mshape == longaxis_act)
         {
             // Compute pseudo inverse
             // multiply V (=mV) and UT (=Transpose(mU))
@@ -547,7 +551,7 @@ static errno_t compute_function()
             IMGID imgmUT = makeIMGID_2D("mUT", Ndim, Mdim);
             createimagefromIMGID(&imgmUT);
 
-            for(uint32_t ii=0; ii<Ndim; ii++)
+            for(uint32_t ii = 0; ii < Ndim; ii++)
             {
                 float mcolcoeff = 0.0;
                 float evalnorm = imgeval.im->array.F[ii] / evalmax;
@@ -555,23 +559,25 @@ static errno_t compute_function()
 
                 if(evalnorm > *svdlim)
                 {
-                    mcolcoeff = 1.0/imgeval.im->array.F[ii];
+                    mcolcoeff = 1.0 / imgeval.im->array.F[ii];
                     modecnt ++;
                 }
                 //printf("mode %4u  %12f %12f   %12f\n", ii, imgeval.im->array.F[ii], evalnorm, mcolcoeff);
 
 
-                for(uint32_t jj=0; jj<Mdim; jj++)
+                for(uint32_t jj = 0; jj < Mdim; jj++)
                 {
-                    imgmUT.im->array.F[jj*Ndim+ii] = mcolcoeff * imgmU.im->array.F[ii*Mdim+jj];
+                    imgmUT.im->array.F[jj * Ndim + ii] = mcolcoeff * imgmU.im->array.F[ii * Mdim +
+                                                         jj];
                 }
             }
 
 
-            cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
-                         Ndim, Mdim, Ndim, 1.0, imgmV.im->array.F, Ndim, imgmUT.im->array.F, Ndim, 0.0, imgmAinv.im->array.F, Ndim);
+            cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
+                        Ndim, Mdim, Ndim, 1.0, imgmV.im->array.F, Ndim, imgmUT.im->array.F, Ndim, 0.0,
+                        imgmAinv.im->array.F, Ndim);
 
-            delete_image(imgmUT, DELETE_IMAGE_ERRMODE_EXIT);
+            delete_image(&imgmUT, DELETE_IMAGE_ERRMODE_EXIT);
         }
         else
         {
@@ -581,7 +587,7 @@ static errno_t compute_function()
             IMGID imgmUi = makeIMGID_2D("mUi", Mdim, Ndim);
             createimagefromIMGID(&imgmUi);
 
-            for(uint32_t jj=0; jj<Ndim; jj++)
+            for(uint32_t jj = 0; jj < Ndim; jj++)
             {
                 float mcolcoeff = 0.0;
                 float evalnorm = imgeval.im->array.F[jj] / evalmax;
@@ -589,29 +595,31 @@ static errno_t compute_function()
 
                 if(evalnorm > *svdlim)
                 {
-                    mcolcoeff = 1.0/imgeval.im->array.F[jj];
+                    mcolcoeff = 1.0 / imgeval.im->array.F[jj];
                     modecnt ++;
                 }
                 //printf("mode %4u  %12f %12f   %12f\n", jj, imgeval.im->array.F[jj], evalnorm, mcolcoeff);
 
 
-                for(uint32_t ii=0; ii<Mdim; ii++)
+                for(uint32_t ii = 0; ii < Mdim; ii++)
                 {
-                    imgmUi.im->array.F[jj*Mdim+ii] = mcolcoeff * imgmU.im->array.F[jj*Mdim+ii];
+                    imgmUi.im->array.F[jj * Mdim + ii] = mcolcoeff * imgmU.im->array.F[jj * Mdim +
+                                                         ii];
                 }
             }
 
-            cblas_sgemm (CblasColMajor, CblasNoTrans, CblasTrans,
-                         Mdim, Ndim, Ndim, 1.0, imgmUi.im->array.F, Mdim, imgmV.im->array.F, Ndim, 0.0, imgmAinv.im->array.F, Mdim);
+            cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans,
+                        Mdim, Ndim, Ndim, 1.0, imgmUi.im->array.F, Mdim, imgmV.im->array.F, Ndim, 0.0,
+                        imgmAinv.im->array.F, Mdim);
 
-            delete_image(imgmUi, DELETE_IMAGE_ERRMODE_EXIT);
+            delete_image(&imgmUi, DELETE_IMAGE_ERRMODE_EXIT);
         }
 
         printf("Kept %u / %u modes\n", modecnt, nbmode);
 
-        delete_image(imgmV, DELETE_IMAGE_ERRMODE_EXIT);
-        delete_image(imgmU, DELETE_IMAGE_ERRMODE_EXIT);
-        delete_image(imgeval, DELETE_IMAGE_ERRMODE_EXIT);
+        delete_image(&imgmV, DELETE_IMAGE_ERRMODE_EXIT);
+        delete_image(&imgmU, DELETE_IMAGE_ERRMODE_EXIT);
+        delete_image(&imgeval, DELETE_IMAGE_ERRMODE_EXIT);
 
 
         /*
@@ -648,18 +656,18 @@ static errno_t compute_function()
         IMGID imgRMWFSz = makeIMGID_3D(RMmodesWFSz,  imgRMWFS.md->size[0], imgRMWFS.md->size[1], nbact);
         createimagefromIMGID(&imgRMWFSz);
 
-        cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
-                     nbwfspix, nbact, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgmAinv.im->array.F, nbmode, 0.0, imgRMWFSz.im->array.F, nbwfspix);
+        cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
+                    nbwfspix, nbact, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgmAinv.im->array.F, nbmode, 0.0, imgRMWFSz.im->array.F, nbwfspix);
 
 
 
         // multiply RMdm x Ainv -> RMzdm
 
-        IMGID imgRMDMz = makeIMGID_2D(RMmodesDMz,  imgRMDM.md->size[0]*imgRMDM.md->size[1], nbact);
+        IMGID imgRMDMz = makeIMGID_2D(RMmodesDMz,  imgRMDM.md->size[0] * imgRMDM.md->size[1], nbact);
         createimagefromIMGID(&imgRMDMz);
 
-        cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
-                     nbact, nbact, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgmAinv.im->array.F, nbmode, 0.0, imgRMDMz.im->array.F, nbact);
+        cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
+                    nbact, nbact, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgmAinv.im->array.F, nbmode, 0.0, imgRMDMz.im->array.F, nbact);
 
 
 
@@ -677,7 +685,7 @@ static errno_t compute_function()
 
         */
 
-        delete_image(imgmAinv, DELETE_IMAGE_ERRMODE_EXIT);
+        delete_image(&imgmAinv, DELETE_IMAGE_ERRMODE_EXIT);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

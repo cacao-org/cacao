@@ -4,14 +4,17 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="cacao script: measure WFS response to DM modes"
+MSdescr="Measure WFS response to DM modes"
 
 MSextdescr="
 Input DM modes in:
-<rundir>/conf/DMmodes/<name>.fits
+<rootdir>/conf/DMmodes/<name>.fits
+
+Sources <looprundir>/fps.mlat-<loopnumber>.datadir/cacaovars.bash
+to get CACAO_WFSFRATE and CACAO_LATENCYHARDWFR
 
 Output WFS response written as:
-<rundir>/conf/WFSmodes/<name>.WFSresp.fits
+<rootdir>/conf/WFSmodes/<name>.WFSresp.fits
 
 "
 
@@ -27,11 +30,11 @@ function set_NBloop() {
 	NBloop="$1"
 }
 
-WaitForCompletion=0
-MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
-function set_WaitForCompletion() {
-	WaitForCompletion=1
-}
+#WaitForCompletion=0
+#MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
+#function set_WaitForCompletion() {
+#	WaitForCompletion=1
+#}
 
 
 source milk-argparse
@@ -52,8 +55,10 @@ checkFPSON CACAO_FPSPROC_ACQUWFS ${CACAO_FPSPROC_ACQUWFS}
 checkFPSON CACAO_FPSPROC_ACQLINZRM ${CACAO_FPSPROC_MEASURELINRESP}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck"
+	errexit=1
+	exit 1
 fi
 
 
@@ -64,13 +69,15 @@ checkstream aol${CACAO_LOOPNUMBER}_imWFS1
 checkstream aol${CACAO_LOOPNUMBER}_imWFS2
 
 if [ ${streamcheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+	cacaomsglog "ERROR streamcheck"
+	errexit=1
+	exit 1
 fi
 
 
 if [ $errexit = 1 ]; then
-exit
+	exit 1
 fi
 
 
@@ -80,7 +87,7 @@ mkdir -p ./conf/RMmodesWFS/
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.procinfo.loopcntMax ${NBloop}"
 
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.WFSfrequ ${CACAO_WFSFRATE}"
-sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.hardwlatfr ${CACAO_LATENCYFR}"
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.hardwlatfr ${CACAO_LATENCYHARDWFR}"
 
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.streamin aol${CACAO_LOOPNUMBER}_dmRM"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
@@ -88,26 +95,39 @@ sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.streamout aol${CACAO_LOOPNUMB
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.inmodes ../conf/RMmodesDM/${DMmodeCname}.fits"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.outmodes ../conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits"
 
-sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.timing.autoTiming ON"
 
 
 sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"
+cacaomsglog "START"
 
 
-pwd
 rm -f ./conf/RMmodesDM/RMmodesDM.fits
 ln -s $(pwd)/conf/RMmodesDM/${DMmodeCname}.fits ./conf/RMmodesDM/RMmodesDM.fits
+cp $(pwd)/conf/RMmodesDM/${DMmodeCname}.fits ./conf/RMmeas_modesDM.fits
+
 
 rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
-ln -s $(pwd)/conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 
-if [ $WaitForCompletion == "1" ]; then
+
 echo "Waiting for completion ..."
 pOK=1
 while [ $pOK -gt 0 ]; do
 	sleep 0.2
-	pOK=$(ps -alx| grep measlinresp-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l)
+	pOK=$(ps -alx| grep measlinresp-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l) || :
 done
-fi
+#fi
 
+ln -s $(pwd)/conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./conf/RMmodesWFS/RMmodesWFS.fits
+cp $(pwd)/conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./conf/RMmeas_modesWFS.fits
+
+
+# LOGGING
+# see cacaofuncs-log for conventions
+#
+source cacaofuncs-log
+cacao-calib-logFITSfile RMmeas_modesDM
+cacao-calib-logFITSfile RMmeas_modesWFS
+
+
+cacaomsglog "END"

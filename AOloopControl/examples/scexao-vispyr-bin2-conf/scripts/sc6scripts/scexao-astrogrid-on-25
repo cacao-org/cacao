@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+./scexao-astrogrid-on 0.025

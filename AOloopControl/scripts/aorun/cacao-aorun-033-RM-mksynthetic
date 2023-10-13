@@ -4,9 +4,9 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 
-MSdescr="make synthetic RM"
+MSdescr="make synthetic DM modes for RM"
 
-MSextdescr="Assemble a Zernike + Fourier RM from zonal RM"
+MSextdescr="Assemble a Zernike + Fourier DM modes"
 
 source milk-script-std-config
 source cacao-check-cacaovars
@@ -43,6 +43,7 @@ function setalpha()
 source milk-argparse
 
 
+cacaomsglog "START"
 
 echo "DM size  : $CACAO_DMxsize x $CACAO_DMysize"
 
@@ -57,14 +58,49 @@ y0default=$(echo "scale=3; $CACAO_DMysize/2" | bc)
 r0default=$(echo "scale=3; 0.450*$CACAO_DMxsize" | bc)
 
 
+SAMPLING1Dmode=128
 
+# 2D defaults
+DMsizex=${CACAO_DMxsize}
+DMsizey=${CACAO_DMysize}
 DMx0=${CACAO_DM_beam_xcent:-$x0default}
 DMy0=${CACAO_DM_beam_ycent:-$y0default}
 DMr0=${CACAO_DM_beam_rad:-$r0default}
 
+# if DM is 1D
+#
+if [ $CACAO_DMysize -eq 1 ]; then
+echo "Deformable mirror is 1D"
+echo "Using sampling size $SAMPLING1Dmode"
+DMsizex=${SAMPLING1Dmode}
+DMsizey=${SAMPLING1Dmode}
+DMx0=$(( $DMsizex / 2 ))
+DMy0=$(( $DMsizey / 2 ))
+DMr0=$(( $DMsizex / 2 ))
+
+# create DM mask
+milk-all << EOF
+imgen.mkdisk dmmask2D ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0}
+saveFITS dmmask2D "conf/dmmask2D.fits"
+exitCLI
+EOF
+
+
+fi
+
+
+
 echo "using DMx0 = ${DMx0}"
+cacaomsglog "using DMx0 = ${DMx0}"
+
 echo "using DMy0 = ${DMy0}"
+cacaomsglog "using DMy0 = ${DMy0}"
+
 echo "using DMr0 = ${DMr0}"
+cacaomsglog "using DMr0 = ${DMr0}"
+
+cacaomsglog "using alpha = ${alpha}"
+
 
 
 
@@ -81,46 +117,114 @@ radmaskfact="1.1"
 
 milk-all << EOF
 mload cacaocomputeCalib
-radext=${DMr0}*${radmaskfact}
-imgen.mkdisk dmmaskext ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} radext
 zern.mkzerc .TTfactor 8.0
 zern.mkzerc .radmaskfact ${radmaskfact}
-zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
+zern.mkzerc zerc ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
 zercm=zerc*3
 lintools.mkFouriermodes .fpowerlaw -${alpha}
 lintools.mkFouriermodes .fpowerlaw_minf 1.0
 lintools.mkFouriermodes .fpowerlaw_maxf 100.0
 lintools.mkFouriermodes ?
-lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
-merge3d zerc Fmodes synRMmodesDM
+lintools.mkFouriermodes .CPAmin 0.0
+lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
+immerge zerc Fmodes RMsyn_modesDM 2
+saveFITS RMsyn_modesDM "conf/RMmodesDM/RMsyn_modesDM0.fits"
+exitCLI
+EOF
 
-loadfits "conf/dmmask.fits" dmmask
-cacaocc.maskextrapolate synRMmodesDM dmmask dmmaskext synRMmodesDMm
+# mask-extrapolate
 
-#synRMmodesDMm=synRMmodesDM*dmmask
-saveFITS synRMmodesDMm "conf/RMmodesDM/synRMmodesDM.fits"
+if [ $CACAO_DMysize -eq 1 ]; then
+	# 1D case
+	ln -sf $(pwd)/conf/dmmask2D.fits ./conf/dmmask-syn.fits
+else
+	# 2D case
+	ln -sf $(pwd)/conf/dmmask.fits ./conf/dmmask-syn.fits
+fi
+
+
+
+
+milk-all << EOF
+mload cacaocomputeCalib
+radext=${DMr0}*${radmaskfact}
+imgen.mkdisk dmmaskext ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} radext
+loadfits "conf/RMmodesDM/RMsyn_modesDM0.fits" RMsyn_modesDM
+loadfits "conf/dmmask-syn.fits" dmmask
+cacaocc.maskextrapolate RMsyn_modesDM dmmask dmmaskext RMsyn_modesDMm
+
+#RMsyn_modesDMm=RMsyn_modesDM*dmmask
+saveFITS RMsyn_modesDMm "conf/RMmodesDM/RMsyn_modesDM2D.fits"
 listim
 exitCLI
 EOF
 
 
+echo "OUTPUT : conf/RMmodesDM/RMsyn_modesDM.fits"
 
+
+if [ $CACAO_DMysize -eq 1 ]; then
+	# Project 2D modes to 1D actuators
+
+	# link to 2D pos file
+	ln -sf $(pwd)/data/act2Dpos.txt mapcoord2D.txt
+cacao << EOF
+loadfits "conf/RMmodesDM/RMsyn_modesDM2D.fits" RMsyn_modesDM2D
+cacaocc.sample2DWF RMsyn_modesDM2D map2D RMsyn_modesDM1D
+listim
+saveFITS RMsyn_modesDM1D "conf/RMmodesDM/RMsyn_modesDM1D.fits"
+exitCLI
+EOF
+
+	ln -sf $(pwd)/conf/RMmodesDM/RMsyn_modesDM1D.fits conf/RMmodesDM/RMsyn_modesDM.fits
+else
+	ln -sf $(pwd)/conf/RMmodesDM/RMsyn_modesDM2D.fits conf/RMmodesDM/RMsyn_modesDM.fits
+fi
+
+cp $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMsyn_modesDM.fits
+
+
+
+
+
+# Compute WFS response of synthetic modes
+#
 
 cacao << EOF
 loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
-loadfits "conf/RMmodesDM/synRMmodesDM.fits" dmC
+loadfits "conf/RMmodesDM/RMsyn_modesDM.fits" dmC
 cacaocc.generateRMWFS zrespM dmC wfsC
-saveFITS wfsC "conf/RMmodesWFS/synRMmodesWFS.fits"
+saveFITS wfsC "conf/RMmodesWFS/RMsyn_modesWFS.fits"
 listim
 exitCLI
 EOF
 
 
-rm -f ./conf/RMmodesDM/RMmodesDM.fits
-ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.fits
-echo "ln -s $(pwd)/conf/RMmodesDM/synRMmodesDM.fits ./conf/RMmodesDM/RMmodesDM.fits"
+cp $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMsyn_modesWFS.fits
 
+
+
+echo "Set default to syn files"
+
+rm -f ./conf/RMmodesDM/RMmodesDM.fits
+ln -s $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMmodesDM/RMmodesDM.fits
+echo "ln -s $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMmodesDM/RMmodesDM.fits"
+cacaomsglog "USING RMsyn_modesDM as RMmodesDM"
 
 rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
-ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits
-echo "ln -s $(pwd)/conf/RMmodesWFS/synRMmodesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
+ln -s $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits
+echo "ln -s $(pwd)/conf/RMmodesWFS/RMsyn_modesWFS.fits ./conf/RMmodesWFS/RMmodesWFS.fits"
+cacaomsglog "USING RMsyn_modesWFS as RMmodesWFS"
+
+
+
+# LOGGING
+# see cacaofuncs-log for conventions
+#
+source cacaofuncs-log
+cacao-calib-logFITSfile RMsyn_modesDM
+cacao-calib-logFITSfile RMsyn_modesWFS
+
+
+
+cacaomsglog "END"

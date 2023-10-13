@@ -78,9 +78,6 @@ export CACAO_FPS_wfscamsim_fluxtotal="1000000"
 
 
 
-# Turbulence simulator on DM
-#
-#export CACAO_FPSPROC_DMATMTURB="ON"
 
 
 
@@ -97,74 +94,50 @@ export CACAO_FPSPROC_ACQUWFS="ON"
 
 # Acquire linear RM (zonal)
 #
-
-# to be deprecated
-#export CACAO_FPSPROC_ACQLINZRM="ON"
-
-# to be deprecated
-#export CACAO_FPSPROC_ACQWFSLINCALZ="ON"
-
-
 export CACAO_FPSPROC_MEASURELINRESP="ON"
 
 
 
-
-
-
-# Acquire low-order modal RM
-#
-# to be deprecated
-#export CACAO_FPSPROC_ACQLINLORM="ON"
-
-
-# Compute control matrix - Fourier
-#
-# to be deprecated ?
-#export CACAO_FPSPROC_COMPFCM="ON"
-
 # Compute control matrix - straight
 #
-# to be deprecated
-# export CACAO_FPSPROC_COMPSCM="ON"
-
-
 export CACAO_FPSPROC_COMPSTRCM="ON"
 
 
-#export CACAO_FPSPROC_COMPCTRLMODES="ON"
-
-# Extract control modes
-#
-#export CACAO_FPSPROC_MODESEXTRACTWFSGPU="ON"
-
-# Control loop
-#
-#export CACAO_FPSPROC_AOLOOP_RUN="ON"
 
 # Extract control modes from WFS using MVM
 #
 export CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL="ON"
 
 # Modal control filtering
+#
 export CACAO_FPSPROC_MODALFILTERING="ON"
 
 # Compute DM command from control mode values
+#
 export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 
-
+# Compute DM command from control mode offload values
+#
+export CACAO_FPSPROC_MVMGPU_CMODEVALOFFLOAD2DM="ON"
 
 
 # Zero Point Offset from DM to WFS
-#export CACAO_FPSPROC_MVMGPU_ZPO="ON"
+#
+export CACAO_FPSPROC_MVMGPU_ZPO="ON"
+
 
 # Modal control statistics
+#
 export CACAO_FPSPROC_MODALCTRL_STATS="ON"
 
-# Reconstruct DM shape from OL mode values
-export CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM="ON"
 
 # Reconstruct DM shape from OL mode values
+#
+export CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM="ON"
+
+
+# Reconstruct DM shape from OL mode values
+#
 export CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM="ON"
 
 
@@ -175,6 +148,7 @@ export CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM="ON"
 ##export CACAO_FPSPROC_ACQLINCMRM="ON"
 
 # Predictive control
+#
 export CACAO_PF_NBBLOCK=6
 export CACAO_FPSPROC_MKPF="ON"
 export CACAO_FPSPROC_APPLYPF="ON"

@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="cacao fpsCTRL log"
+
+MSextdescr="ASCII log displayed in ncurrent terminal
+log is tee-ed to logdir
+CTRL+C to stop
+
+This script should be restated at each start of observation
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+
+LogRebuild=0
+MSopt+=( "r:rebuild:set_rebuild::rebuild log from start of UT day" )
+function set_rebuild() {
+	LogRebuild=1
+}
+
+source milk-argparse
+
+
+
+# logdir can be symlink (usually to current day log folder)
+datestr="$(date -u +'%Y%m%d')"
+
+# default log directory is upstream of ROOTDIR so it persists
+#
+LOGDIR="../logdir-${CACAO_LOOPNAME}/${datestr}"
+mkdir -p ${LOGDIR}
+
+LOGFILEEXT="${LOGDIR}/fpsctrl.${CACAO_LOOPNAME}.log"
+
+
+if [ ${LogRebuild} = 1 ]; then
+
+	# flush output file
+	if [ -f ${LOGFILEEXT} ]; then
+		rm ${LOGFILEEXT}
+	fi
+
+	# unix time at start of day (UTC)
+	# we only copy to current day
+	#
+	utimedaystart=$(date -d "$(date -u +'%Y-%m-%d UTC')" +"%s")
+
+	# write previous entries
+	awk '{if ($2>'$utimedaystart') print $0}' fpsCTRL.log | grep -v "DEBUG" >> ${LOGFILEEXT}
+fi
+
+
+
+tail -n 100 fpsCTRL.log  | grep --line-buffered -v "DEBUG" | sed \
+    -e 's/\(CMDOK\)/\x1B[32m\1\x1B[0m/' \
+    -e 's/\(ALIVE\)/\x1B[1;92m\1\x1B[0m/' \
+    -e 's/\(STOPPED\)/\x1B[1;93m\1\x1B[0m/' \
+    -e 's/\(CRASHED\)/\x1B[0;101m\1\x1B[0m/' \
+    -e 's/\(ONOFF ON\)/\x1B[1;92m\1\x1B[0m/' \
+    -e 's/\(ONOFF OFF\)/\x1B[1;93m\1\x1B[0m/' \
+    -e 's/\(ERROR\)/\x1B[0;101m\1\x1B[0m/' \
+    -e 's/\(CMDFAIL\)/\x1B[0;101m\1\x1B[0m/' \
+    -e 's/\(FPSCTRL\)/\x1B[1\;33m\1\x1B[0m/' \
+    -e 's/\(SETVAL\)/\x1B[1;96m\1\x1B[0m/'
+
+if [ ${LogRebuild} = 1 ]; then
+	nbloglines=$(wc -l ${LOGFILEEXT})
+	echo ""
+	echo ">>>>>>>>>>> LOGGED ${nbloglines} LINES AHEAD OF THIS POINT <<<<<<<<<<<"
+	echo ""
+else
+	echo ""
+	echo ">>>>>>>>>>> START LOGGING FROM THIS POINT <<<<<<<<<<<"
+	echo ""
+fi
+
+tail -f -n0 fpsCTRL.log  | grep --line-buffered -v "DEBUG" | tee -a ${LOGFILEEXT} \
+| grep --line-buffered -v "STATUS" | sed \
+    -e 's/\(CMDOK\)/\x1B[32m\1\x1B[0m/' \
+    -e 's/\(ALIVE\)/\x1B[1;92m\1\x1B[0m/' \
+    -e 's/\(STOPPED\)/\x1B[1;93m\1\x1B[0m/' \
+    -e 's/\(CRASHED\)/\x1B[0;101m\1\x1B[0m/' \
+    -e 's/\(ONOFF ON\)/\x1B[1;92m\1\x1B[0m/' \
+    -e 's/\(ONOFF OFF\)/\x1B[1;93m\1\x1B[0m/' \
+    -e 's/\(ERROR\)/\x1B[0;101m\1\x1B[0m/' \
+    -e 's/\(CMDFAIL\)/\x1B[0;101m\1\x1B[0m/' \
+    -e 's/\(FPSCTRL\)/\x1B[1\;33m\1\x1B[0m/' \
+    -e 's/\(SETVAL\)/\x1B[1;96m\1\x1B[0m/'
+
+
+

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+act2Dim=$1
+act1Dval=$2
+
+# Remap to 1D, loop
+#
+milk << EOF
+readshmim ${act2Dim}
+loadfits "data/mapping.fits" mapping
+# make output shared memory stream
+pixunmap .outim.shared 1
+pixunmap ..procinfo 1
+
+# trigger on semaphore of stream act2Dim
+pixunmap ..triggermode 3
+pixunmap ..triggersname ${act2Dim}
+
+# run forever, until killed
+pixunmap ..loopcntMax -1
+
+pixunmap ${act2Dim} mapping ${act1Dval}
+exitCLI
+EOF

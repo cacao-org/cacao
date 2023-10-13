@@ -289,8 +289,8 @@ static errno_t compute_function()
     }
 
     // Create DM patterns
-    long IDdm0 = -1;
-    long IDdm1 = -1;
+    imageID IDdm0 = -1;
+    imageID IDdm1 = -1;
     {
         uint32_t dmxsize = imgdm.md->size[0];
         uint32_t dmysize = imgdm.md->size[1];
@@ -346,7 +346,7 @@ static errno_t compute_function()
                      *frameratewait);
             processinfo_WriteMessage(processinfo, msgstring);
 
-            clock_gettime(CLOCK_REALTIME, &tnow);
+            clock_gettime(CLOCK_MILK, &tnow);
             tdouble_start = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
             wfscntstart   = imgwfs.md->cnt0;
 
@@ -364,7 +364,7 @@ static errno_t compute_function()
 
             //        usleep( (long)  (1000000 * (*frameratewait)) );
 
-            clock_gettime(CLOCK_REALTIME, &tnow);
+            clock_gettime(CLOCK_MILK, &tnow);
             tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
             wfscntend   = imgwfs.md->cnt0;
             *wfsdt      = (tdouble_end - tdouble_start) / (wfscntend - wfscntstart);
@@ -432,7 +432,7 @@ static errno_t compute_function()
                 fps_write_RUNoutput_file(data.fpsptr, "hardwlatency", "dat");
 
             struct timespec tnow;
-            clock_gettime(CLOCK_REALTIME, &tnow);
+            clock_gettime(CLOCK_MILK, &tnow);
             tdouble_start       = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
             long wfscntstart    = imgwfs.md->cnt0;
             long wfsframeoffset = (long)(0.1 * (*wfsNBframemax));
@@ -508,7 +508,7 @@ static errno_t compute_function()
                 // Set timer reference point
                 //
                 double dt = 0.0;
-                clock_gettime(CLOCK_REALTIME, &tstart);
+                clock_gettime(CLOCK_MILK, &tstart);
                 tstartdouble = 1.0 * tstart.tv_sec + 1.0e-9 * tstart.tv_nsec;
 
 
@@ -551,7 +551,7 @@ static errno_t compute_function()
                     // Record time
                     // store in dtarray
                     //
-                    clock_gettime(CLOCK_REALTIME, &tarray[wfsframe]);
+                    clock_gettime(CLOCK_MILK, &tarray[wfsframe]);
 
                     double tdouble = 1.0 * tarray[wfsframe].tv_sec +
                                      1.0e-9 * tarray[wfsframe].tv_nsec;
@@ -589,7 +589,7 @@ static errno_t compute_function()
 
                         // Record time at which DM command is sent
                         //
-                        clock_gettime(CLOCK_REALTIME, &tnow);
+                        clock_gettime(CLOCK_MILK, &tnow);
                         tdouble   = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
                         dt        = tdouble - tstartdouble;
                         *dtoffset = dt; // time at which DM command is sent
@@ -735,7 +735,7 @@ static errno_t compute_function()
             }
             fclose(fphwlat);
 
-            clock_gettime(CLOCK_REALTIME, &tnow);
+            clock_gettime(CLOCK_MILK, &tnow);
             tdouble_end    = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
             long wfscntend = imgwfs.md->cnt0;
 
@@ -808,6 +808,8 @@ static errno_t compute_function()
 
             // write results as env variables
             {
+                // file will be sourced by cacao-check-cacaovars
+                //
                 char ffname[STRINGMAXLEN_FULLFILENAME];
                 WRITE_FULLFILENAME(ffname, "%s/cacaovars.bash", data.fpsptr->md->datadir);
 
@@ -816,7 +818,7 @@ static errno_t compute_function()
                 FILE *fpout;
                 fpout = fopen(ffname, "w");
                 fprintf(fpout, "export CACAO_WFSFRATE=%.3f\n", *framerateHz);
-                fprintf(fpout, "export CACAO_LATENCYFR=%.3f\n", *latencyfr);
+                fprintf(fpout, "export CACAO_LATENCYHARDWFR=%.3f\n", *latencyfr);
                 fclose(fpout);
             }
 

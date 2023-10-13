@@ -7,6 +7,8 @@
 MSdescr="WFS remapping"
 # Extended description
 MSextdescr="WFS remapping"
+
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
@@ -20,7 +22,7 @@ checkFPSON CACAO_FPSPROC_MAPWFS ${CACAO_FPSPROC_MAPWFS}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
 echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-exit
+exit 1
 fi
 
 

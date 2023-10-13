@@ -1,39 +1,46 @@
 #!/usr/bin/env bash
 
 if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	echo "Not a standalone script, must be run within cacao-fpslistadd script"
+	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Compute straight control matrix"
 else
 
-if [ "${CACAO_FPSPROC_COMPSTRCM}" = "ON" ]; then
+	if [ ! -z "${CACAO_FPSPROC_COMPSTRCM+x}" ]; then
+		echo "CACAO_FPSPROC_COMPSTRCM set to ${CACAO_FPSPROC_COMPSTRCM}"
+		
+		if [ "${CACAO_FPSPROC_COMPSTRCM}" = "ON" ]; then
 
-echolog "ON  CACAO_FPSPROC_COMPSTRCM"
+			echolog "ON  CACAO_FPSPROC_COMPSTRCM"
 
 
-# FPS name
-fpsname="compstrCM"
-fpsarg0="${CACAO_LOOPNUMBER}"
+			# FPS name
+			fpsname="compstrCM"
+			fpsarg0="${CACAO_LOOPNUMBER}"
 
-# FPS full name
-fpsfname="${fpsname}-${fpsarg0}"
+			# FPS full name
+			fpsfname="${fpsname}-${fpsarg0}"
 
-if grep -q "${fpsname}" fpslist.txt
-then
-    echolog "Process ${fpsname} already registered - skipping"
-else
-    echolog "Adding process ${fpsname}"
-    echo "${fpsname}           cacaocc.compsCM     ${fpsarg0}" >> fpslist.txt
+			if grep -q "${fpsname}" fpslist.txt
+			then
+				echolog "Process ${fpsname} already registered - skipping"
+			else
+				echolog "Adding process ${fpsname}"
+				echo "${fpsname}           cacaocc.compsCM     ${fpsarg0}" >> fpslist.txt
 
-    addfpscmdheader
+				addfpscmdheader
     
-    # default init values
-    addfpscmd "setval ${fpsfname}.procinfo.loopcntMax_10"
-    addfpscmd "setval ${fpsfname}.RMmodesDM ../conf/RMmodesDM/RMmodesDM.fits"
-    addfpscmd "setval ${fpsfname}.RMmodesWFS ../conf/RMmodesWFS/RMmodesWFS.fits"
-    addfpscmd "setval ${fpsfname}.CMmodesDM ../conf/CMmodesDM/CMmodesDM.fits"
-    addfpscmd "setval ${fpsfname}.CMmodesWFS ../conf/CMmodesWFS/CMmodesWFS.fits"
-    addfpscmd "setval ${fpsfname}.svdlim 0.1"
-fi
+				# default init values
+				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax 10"
+				addfpscmd "setval ${fpsfname}.RMmodesDM ../conf/RMmodesDM/RMmodesDM.fits"
+				addfpscmd "setval ${fpsfname}.RMmodesWFS ../conf/RMmodesWFS/RMmodesWFS.fits"
+				addfpscmd "setval ${fpsfname}.CMmodesDM ../conf/CMmodesDM/CMmodesDM.fits"
+				addfpscmd "setval ${fpsfname}.CMmodesWFS ../conf/CMmodesWFS/CMmodesWFS.fits"
+				addfpscmd "setval ${fpsfname}.svdlim 0.1"
+			fi
 
-fi
+		fi
+
+	else
+		echo "CACAO_FPSPROC_COMPSTRCM unset"
+	fi
 
 fi

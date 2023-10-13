@@ -4,9 +4,10 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Compute Fourier-based control modes"
 
-MSextdescr="AO loop script"
+MSextdescr="Fourier- based CM"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 source milk-argparse
@@ -21,13 +22,15 @@ FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_COMPFCM ${CACAO_FPSPROC_COMPFCM}
 
 if [ ${FPScheckOK} == "FAIL" ]; then
-echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-errexit=1
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPS check"
+	errexit=1
+	exit 1
 fi
 
 
 if [ $errexit = 1 ]; then
-exit
+	exit 1
 fi
 
 
@@ -41,3 +44,5 @@ sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.upAlign ON"
 
 sendFPScmd "confwupdate compfCM-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart compfCM-${CACAO_LOOPNUMBER}"
+
+cacaomsglog "END"

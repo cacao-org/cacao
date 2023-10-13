@@ -9,12 +9,6 @@ set(SOURCEFILES
 	${SRCNAME}.c
     ${SRCNAME}.h
     AOloopControl_DM_comb.c
-    AOloopControl_DM_config.c
-    AOloopControl_DM_init.c
-    AOloopControl_DM_runtimecomp.c
-    AOloopControl_DM_toolbox.c
-    AOloopControl_DM_TTcircle_astrogrid.c
-    AOloopControl_DM_turbusimul.c
     DMturbulence.c
     mk3Ddmgrid.c
     pokerndmodes.c

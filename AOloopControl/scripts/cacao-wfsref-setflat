@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+
+MSdescr="Set WFS reference to flat"
+
+MSextdescr="
+This should only apply to WFSs aiming to achieve flat illumination over wfsmask,
+such as the pyramid WFS.
+"
+
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+source milk-argparse
+
+
+
+cacaomsglog "START"
+
+
+sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc OFF"
+sendFPScmd "confupdate acquWFS-${CACAO_LOOPNUMBER}"
+
+milk << EOF
+#readshmim aol${CACAO_LOOPNUMBER}_wfsmask
+loadfits "conf/wfsmask.fits" wfsmask
+wfsm=0+wfsmask
+wfsmn=wfsm/itot(wfsm)
+readshmim aol${CACAO_LOOPNUMBER}_wfsrefc
+imcpshm wfsmn aol${CACAO_LOOPNUMBER}_wfsrefc
+saveFITS wfsmn "wfsmn.fits"
+exitCLI
+EOF
+
+cacaomsglog "END"

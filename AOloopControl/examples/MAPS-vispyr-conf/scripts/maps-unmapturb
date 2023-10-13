@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+./scripts/maps-unmapshmim mapsturb2D dm10disp10
+

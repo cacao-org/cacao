@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+if [ -z ${FPSLISTADDSCRIPT+x} ]; then
+	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Modal filtering"
+else
+
+
+	if [ ! -z "${CACAO_FPSPROC_MVMGPU_CMODEVALOFFLOAD2DM+x}" ]; then
+		echo "CACAO_FPSPROC_MVMGPU_CMODEVALOFFLOAD2DM set to ${CACAO_FPSPROC_MVMGPU_CMODEVALOFFLOAD2DM}"
+		if [ "${CACAO_FPSPROC_MVMGPU_CMODEVALOFFLOAD2DM}" = "ON" ]; then
+			echolog "ON  CACAO_FPSPROC_MVMGPU_CMODEVALOFFLOAD2DM"
+			# ======================================================================
+			# ========== MVM-compute DM command from control modes =================
+			# ======================================================================
+
+			# FPS name
+			fpsname="mvaloffloadC2dm"
+			fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+			# FPS full name
+			fpsfname="${fpsname}-${fpsarg0}"
+
+			if grep -q "${fpsname}" fpslist.txt
+			then
+				echolog "Process ${fpsname} already registered - skipping"
+			else
+				echolog "Adding process ${fpsname}"
+				echo "+milklinalgebra" >> fpslist.txt
+				echo "${fpsname}         linalg.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
+
+				addfpscmdheader
+
+				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+				addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+				addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_mvaloffloadDM"
+
+				addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_mvaloffloadDM"
+				addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_DMmodes"
+				addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_dmoffloadC"
+				addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
+
+
+				addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+				addfpscmd "setval ${fpsfname}.option.sname_refout NULL"
+
+				addfpscmd "setval ${fpsfname}.outinit OFF"
+
+				addfpscmd "setval ${fpsfname}.GPUindex 0"
+
+				addfpscmd "setval ${fpsfname}.option.axmode 1"
+				addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
+				addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+				addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
+
+				addfpscmd "setval ${fpsfname}.option.twait 0"
+			fi
+		else
+			echolog "OFF CACAO_FPSPROC_MVMGPU_CMODEVALOFFLOAD2DM"
+		fi
+
+	fi
+
+
+fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+

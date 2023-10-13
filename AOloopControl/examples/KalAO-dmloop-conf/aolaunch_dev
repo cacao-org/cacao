@@ -255,7 +255,7 @@ pushd ${WORKDIR}/hardware-workdir
 cacao << EOF
 loadfits "flat_dm.fits" dmflat
 readshmim dm${DM_DMINDEX}disp00
-cpsh dmflat dm${DM_DMINDEX}disp00
+imcpshm dmflat dm${DM_DMINDEX}disp00
 exitCLI
 EOF
 
@@ -359,7 +359,7 @@ pushd ${WORKDIR}/${DM_LOOPWORKDIR}
 
 cacao << EOF
 loadfits "fps.compsCM-1.datadir/sCMat00.fits" sCMat00_1
-cpsh sCMat00_1 aol1_CMat
+imcpshm sCMat00_1 aol1_CMat
 exitCLI
 EOF
 

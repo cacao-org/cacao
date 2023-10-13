@@ -1,56 +1,54 @@
 #!/usr/bin/env bash
 
 if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	echo "Compute predictive filter (in module PredictiveControl)"
-	echo "Not a standalone script, must be run within cacao-fpslistadd script"
-	echo "To activate, add in cacaovars:"
-	echo "export CACAO_FPSPROC_MKPF=\"ON\""
-	echo "export CACAO_PF_NBBLOCK=XX # number of prefictive filter blocks"
+	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Make predictive control filter(s)"
 else
 
+	if [ ! -z "${CACAO_FPSPROC_MKPF+x}" ]; then
+		echo "CACAO_FPSPROC_MKPF set to ${CACAO_FPSPROC_MKPF}"
+
+		if [ "${CACAO_FPSPROC_MKPF}" = "ON" ]; then
+
+			for (( blki=0; blki<${CACAO_PF_NBBLOCK}; blki++ ))
+			do
+				BLKindex=$( printf %02d $blki )
 
 
-if [ "${CACAO_FPSPROC_MKPF}" = "ON" ]; then
+				echolog "Build Predictive Filter ${BLKindex}"
+				# ==============================================================================
+				# ========== Build Predictive Filter ${BLKindex} ===============================
+				# ==============================================================================
 
+				# FPS name
+				fpsname="mkPF${BLKindex}"
+				fpsarg0="${CACAO_LOOPNUMBER}"
 
-for (( blki=0; blki<$CACAO_PF_NBBLOCK; blki++ ))
-do
-BLKindex=$( printf %02d $blki )
+				# FPS full name
+				fpsfname="${fpsname}-${fpsarg0}"
 
+				if grep -q "${fpsname}" fpslist.txt
+				then
+					echolog "Process ${fpsname} already registered - skipping"
+				else
+					echolog "Adding process ${fpsname}"
+					echo "+milklinARfilterPred;milklinalgebra" >> fpslist.txt
+					echo "${fpsname}           larpf.mkPF     ${fpsarg0}" >> fpslist.txt
 
-echolog "Build Predictive Filter ${BLKindex}"
-# ==============================================================================
-# ========== Build Predictive Filter ${BLKindex} ===============================
-# ==============================================================================
+					addfpscmdheader
+					addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+					addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
+					addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk${BLKindex}"
+					addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
+					addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk${BLKindex}"
+					addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk${BLKindex}"
+				fi
+			done # end of for blki in {0..${CACAO_PF_NBBLOCK}}
 
-# FPS name
-fpsname="mkPF${BLKindex}"
-fpsarg0="${CACAO_LOOPNUMBER}"
+		fi # end of if [ "${CACAO_FPSPROC_MKPF}" = "ON" ]
 
-# FPS full name
-fpsfname="${fpsname}-${fpsarg0}"
-
-if grep -q "${fpsname}" fpslist.txt
-then
-	echolog "Process ${fpsname} already registered - skipping"
-else
-	echolog "Adding process ${fpsname}"
-	echo "+milklinARfilterPred;milkcudacomp" >> fpslist.txt
-	echo "${fpsname}           larpf.mkPF     ${fpsarg0}" >> fpslist.txt
-
-	addfpscmdheader
-	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-	addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-	addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk${BLKindex}"
-	addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
-
-	addfpscmd "setval ${fpsfname}.inname aol${CACAO_LOOPNUMBER}_modevalOLbuff_blk${BLKindex}"
-	addfpscmd "setval ${fpsfname}.outPFname aol${CACAO_LOOPNUMBER}_outPF_blk${BLKindex}"
-fi
-
-done # end of for blki in {0..${CACAO_PF_NBBLOCK}}
-
-fi # end of if [ "${CACAO_FPSPROC_MKPF}" = "ON" ]
+	else
+		echo "CACAO_FPSPROC_MKPF unset"
+	fi
 
 fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]

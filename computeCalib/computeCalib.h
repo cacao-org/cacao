@@ -15,16 +15,7 @@
 /** @brief Initialize module */
 void __attribute__((constructor)) libinit_AOloopControl_computeCalib();
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/** @name AOloopControl_computeCalib - 1. COMPUTING CALIBRATION
- *  Compute control matrix, modes */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
+
 
 imageID AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name,
         const char *outname);

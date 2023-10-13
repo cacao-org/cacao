@@ -1,36 +1,44 @@
 #!/usr/bin/env bash
 
 if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	echo "Not a standalone script, must be run within cacao-fpslistadd script"
+	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Measure linear response"
 else
 
-if [ "${CACAO_FPSPROC_MEASURELINRESP}" = "ON" ]; then
+	if [ ! -z "${CACAO_FPSPROC_MEASURELINRESP+x}" ]; then
+		echo "CACAO_FPSPROC_MEASURELINRESP set to ${CACAO_FPSPROC_MEASURELINRESP}"
 
-echolog "ON  CACAO_FPSPROC_MEASURELINRESP"
-# ==============================================================================
-# ========== DM Atmospheric Turbulence simulator ===============================
-# ==============================================================================
+		if [ "${CACAO_FPSPROC_MEASURELINRESP}" = "ON" ]; then
 
-# FPS name
-fpsname="measlinresp"
-fpsarg0="${CACAO_LOOPNUMBER}"
+			echolog "ON  CACAO_FPSPROC_MEASURELINRESP"
 
-# FPS full name
-fpsfname="${fpsname}-${fpsarg0}"
+			# FPS name
+			fpsname="measlinresp"
+			fpsarg0="${CACAO_LOOPNUMBER}"
 
-if grep -q "${fpsname}" fpslist.txt
-then
-    echolog "Process ${fpsname} already registered - skipping"
-else
-    echolog "Adding process ${fpsname}"
-    echo "${fpsname}           cacaoac.measlinresp     ${fpsarg0}" >> fpslist.txt
+			# FPS full name
+			fpsfname="${fpsname}-${fpsarg0}"
 
-    addfpscmdheader
-    addfpscmd "setval ${fpsfname}.procinfo.loopcntMax_10"
-    addfpscmd "setval ${fpsfname}.streamin aol${CACAO_LOOPNUMBER}_dmRM"
-    addfpscmd "setval ${fpsfname}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
-fi
+			if grep -q "${fpsname}" fpslist.txt
+			then
+				echolog "Process ${fpsname} already registered - skipping"
+			else
+				echolog "Adding process ${fpsname}"
+				echo "${fpsname}           cacaoac.measlinresp     ${fpsarg0}" >> fpslist.txt
 
-fi
+				addfpscmdheader
+			
+				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax 10"
+				addfpscmd "setval ${fpsfname}.streamin aol${CACAO_LOOPNUMBER}_dmRM"
+				addfpscmd "setval ${fpsfname}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
+			fi
 
-fi
+		else
+			echolog "OFF CACAO_FPSPROC_MEASURELINRESP"
+		fi
+
+	else
+		echo "CACAO_FPSPROC_MEASURELINRESP unset"
+	fi
+
+
+fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+
+echo "sourcing $0"
+
+# Local environment setting for tmux sessions
+

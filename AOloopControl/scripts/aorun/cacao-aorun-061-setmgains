@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See milk-scriptexample for template and instructions
+
+# script 1-line description
+MSdescr="Set modal gains"
+
+MSextdescr="Set modal gains
+A power law gain curve is applied.
+
+"
+
+
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+MSarg+=( "alpha:float:power law" )
+
+mgainfloor="0.01"
+MSopt+=( "f:floor:set_mgainfloor:floor[float]:set modal gain floor" )
+function set_mgainfloor() {
+	mgainfloor="$1"
+}
+
+mgainTT="1.0"
+MSopt+=( "t:mgainTT:set_mgainTT:mgainTT[float]:set modal gain for tip-tilt" )
+function set_mgainTT() {
+	mgainTT="$1"
+}
+
+
+source milk-argparse
+
+mgainalpha="${inputMSargARRAY[0]}"
+
+
+
+# Checking stream
+streamcheckOK="OK"
+checkstream aol${CACAO_LOOPNUMBER}_mgainfact
+
+if [ ${streamcheckOK} == "FAIL" ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] stream check failed"
+	cacaomsglog "ERROR stream check"
+	exit 1
+fi
+
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPS check"
+	exit 1
+fi
+
+
+
+
+
+
+
+cacaomsglog "APPLYING MODAL GAINS : galpha ${mgainalpha}  floor ${mgainfloor}  TT ${mgainTT}"
+
+MILK_QUIET=1 milk << EOF
+mload milkinfo
+mload milkimagegen
+readshmim aol${CACAO_LOOPNUMBER}_mgainfact
+info.imstats aol${CACAO_LOOPNUMBER}_mgainfact
+imgen.mkdist imd imsize0 1 1 1
+imd1=imd/imsize0
+imd2=(1.0-imd1)^${mgainalpha}
+imd3=(1-${mgainfloor})*imd2+${mgainfloor}
+cp imd3 aol${CACAO_LOOPNUMBER}_mgainfact
+setpix aol${CACAO_LOOPNUMBER}_mgainfact ${mgainTT} 0 0
+setpix aol${CACAO_LOOPNUMBER}_mgainfact ${mgainTT} 1 0
+listim
+exitCLI
+EOF
+
+cacaomsglog "END"

@@ -63,13 +63,11 @@
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
 #include "computeCalib/computeCalib.h"
 
-#ifdef HAVE_CUDA
-#include "cudacomp/cudacomp.h"
-#endif
+#include "linalgebra/linalgebra.h"
 
 
-extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
-extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
+//extern AOLOOPCONTROL_CONF *AOconf;            // declared in AOloopControl.c
+//extern AOloopControl_var   aoloopcontrol_var; // declared in AOloopControl.c
 
 // static long aoconfID_imWFS2_active[100];
 
@@ -648,7 +646,7 @@ errno_t AOloopControl_computeCalib_mkCM_FPCONF()
     // ===========================
     FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);
 
-    FPS2PROCINFOMAP fps2procinfo;
+    //FPS2PROCINFOMAP fps2procinfo;
     fps_add_processinfo_entries(&fps);
 
     // ===========================
@@ -797,7 +795,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 #ifdef HAVE_CUDA
     if(GPUmode)
     {
-        CUDACOMP_magma_compute_SVDpseudoInverse("respM",
+        LINALGEBRA_magma_compute_SVDpseudoInverse("respM",
                                                 cm_name,
                                                 SVDlim,
                                                 100000,
@@ -836,9 +834,9 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
         uint32_t DMxysize = DMxsize * DMysize;
         create_3Dimage_ID("DMmodes", DMxsize, DMysize, DMxysize, &ID_DMmodes);
         list_image_ID();
-        for(int kk = 0; kk < DMxysize; kk++)
+        for(uint32_t kk = 0; kk < DMxysize; kk++)
         {
-            for(int ii = 0; ii < DMxysize; ii++)
+            for(uint32_t ii = 0; ii < DMxysize; ii++)
             {
                 data.image[ID_DMmodes].array.F[kk * DMxysize + ii] =
                     data.image[ID_VTmat].array.F[ii * DMxysize + kk];
@@ -864,10 +862,10 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
         for(int mi = 0; mi < mimax; mi++)
         {
             printf("Mode %5d / %5d\n", mi, DMxysize);
-            for(int ii = 0; ii < WFSxysize; ii++)
+            for(uint32_t ii = 0; ii < WFSxysize; ii++)
             {
                 data.image[ID_WFSmodes].array.F[mi * WFSxysize + ii] = 0.0;
-                for(int jj = 0; jj < DMxysize; jj++)
+                for(uint32_t jj = 0; jj < DMxysize; jj++)
                 {
                     data.image[ID_WFSmodes].array.F[mi * WFSxysize + ii] +=
                         data.image[ID_DMmodes].array.F[mi * DMxysize + jj]

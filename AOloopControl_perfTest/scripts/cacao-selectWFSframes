@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-MSdescr="SELECT WFS FRAMES FROM PSF TELEMETRY (LOOP)"
+MSdescr="Select WFS frames from times at which PSF is best"
 
 MSextdescr="Select WFS frames from times at which PSF is best
 Requires synchronized data cubes created by cacao-syncStreams

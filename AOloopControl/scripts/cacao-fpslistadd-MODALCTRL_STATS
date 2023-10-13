@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+if [ -z ${FPSLISTADDSCRIPT+x} ]; then
+	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Modal control stats"
+else
+
+
+	if [ ! -z "${CACAO_FPSPROC_MODALCTRL_STATS+x}" ]; then
+		echo "CACAO_FPSPROC_MODALCTRL_STATS set to ${CACAO_FPSPROC_MODALCTRL_STATS}"
+
+		if [ "${CACAO_FPSPROC_MODALCTRL_STATS}" = "ON" ]; then
+			echolog "ON  CACAO_FPSPROC_MODALCTRL_STATS"
+			# ======================================================================
+			# ========== Modal control stats =======================================
+			# ======================================================================
+
+			# FPS name
+			fpsname="mctrlstats"
+			fpsarg0="${CACAO_LOOPNUMBER}"
+
+
+			# FPS full name
+			fpsfname="${fpsname}-${fpsarg0}"
+
+			if grep -q "${fpsname}" fpslist.txt
+			then
+				echolog "Process ${fpsname} already registered - skipping"
+			else
+				echolog "Adding process ${fpsname}"
+				echo "${fpsname}         cacao.modalCTRLstats       ${fpsarg0}" >> fpslist.txt
+
+				addfpscmdheader
+
+				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+				addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+				addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 100"
+				addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL_buff"
+			fi
+	
+		else
+			echolog "OFF CACAO_FPSPROC_MODALCTRL_STATS"
+		fi
+
+	else
+		echo "CACAO_FPSPROC_MODALCTRL_STATS unset"
+	fi
+
+
+fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+

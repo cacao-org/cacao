@@ -4,14 +4,19 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Compute control matrix"
 
-MSextdescr="AO loop script"
+MSextdescr="Compute control matrix by SVD
+
+Reads input from fps
+Write output to ../conf/CMmodesDM/CMmodesDM.fits and ../conf/CMmodesWFS/CMmodesWFS.fits
+Loads output control matrix (CM) into streams aolX_modesWFS and aolX_DMmodes
+"
 source milk-script-std-config
 source cacao-check-cacaovars
 source milk-argparse
 
-
+cacaomsglog "START"
 
 
 errexit=0
@@ -27,7 +32,7 @@ fi
 
 
 if [ $errexit = 1 ]; then
-exit
+exit 1
 fi
 
 
@@ -37,13 +42,17 @@ fi
 # Compute straight CM
 # ======================================================================
 
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 1"
+
 # set ouput files
 mkdir -p conf/CMmodesDM/
 mkdir -p conf/CMmodesWFS/
 sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesDM ../conf/CMmodesDM/CMmodesDM.fits"
 sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.CMmodesWFS ../conf/CMmodesWFS/CMmodesWFS.fits"
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.dmmask ../conf/dmmask.fits"
+sendFPScmd "setval compstrCM-${CACAO_LOOPNUMBER}.wfsmask ../conf/wfsmask.fits"
 
-
+# erase output
 rm -f conf/CMmodesWFS/CMmodesWFS.fits
 rm -f conf/CMmodesDM/CMmodesDM.fits
 
@@ -59,6 +68,7 @@ do
      sleep 0.1
 done
 milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol${CACAO_LOOPNUMBER}_modesWFS
+cp $(pwd)/conf/CMmodesWFS/CMmodesWFS.fits ./conf/CMmodesWFS.fits
 
 
 echo "Waiting for file conf/CMmodesDM/CMmodesDM.fits"
@@ -67,3 +77,17 @@ do
      sleep 0.1
 done
 milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes
+cp $(pwd)/conf/CMmodesDM/CMmodesDM.fits ./conf/CMmodesDM.fits
+
+
+# LOGGING
+# see cacaofuncs-log for conventions
+#
+source cacaofuncs-log
+cacao-calib-logFITSfile CMmodesDM
+cacao-calib-logFITSfile CMmodesWFS
+
+
+
+
+cacaomsglog "END"

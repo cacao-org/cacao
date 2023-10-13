@@ -25,7 +25,7 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
-
+#include "actmap_sample2D.h"
 #include "compute_control_modes.h"
 #include "compute_masksWFSDM.h"
 #include "compute_straight_CM.h"
@@ -86,6 +86,8 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_computeCalib__maskextrapolate();
 
     CLIADDCMD_AOloopControl_computeCalib__RM2zonal();
+
+    CLIADDCMD_AOloopControl_computeCalib__sample2D();
 
 
     // add atexit functions here

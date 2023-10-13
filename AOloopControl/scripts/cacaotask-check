@@ -27,6 +27,5 @@ function taskerrormsg {
 #echo "cacaotaskENV : ${cacaotaskENV}"
 if [ ! "${cacaotaskENV:-}" = "OK" ]; then
     taskerrormsg
-    echo "Exiting script $0"
     exit ${CACAOTASK_EXITCODE_NOTCACAOTASK}
 fi

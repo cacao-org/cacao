@@ -2,3 +2,5 @@
 
 # This script does nothing
 # It is used to indicate no operation is performed
+
+echo "Empty script - does nothing"

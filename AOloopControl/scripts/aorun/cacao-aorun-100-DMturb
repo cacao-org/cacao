@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="Inject turbulence on DM"
+
+MSextdescr="Inject turbulence on DM channel 10
+Commands: start, stop, on, off"
+
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+RequiredFiles=(DMINDEX)
+
+MSarg+=( "action:string:action (start/stop/check)" )
+source milk-argparse
+ACTION="${inputMSargARRAY[0]}"
+
+
+if [ -f DMINDEX ]; then
+    DMINDEX=$( head -1 DMINDEX )
+else
+	cacaomsglog "Error: no DMINDEX file. Are we running this from the correct directory ?"
+    exit 1
+fi
+
+
+
+ACTIONOK=0
+
+if [ ${ACTION} == "check" ]; then
+	ACTIONOK=1
+fi
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_DMATMTURB ${CACAO_FPSPROC_DMATMTURB}
+
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck"
+	exit 1
+fi
+
+
+TURBFILE="conf/turbseed0.fits"
+
+if [ -f ${TURBFILE} ]; then
+	cacaomsglog "Found file ${TURBFILE}"
+else
+	cacaomsglog "Creating file ${TURBFILE}"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbseed.comp ON"
+	echo "Waiting for file ${TURBFILE}"
+	until [ -f ${TURBFILE} ]
+	do
+		sleep 0.1
+	done
+fi
+
+if [ ${ACTION} == "start" ]; then
+	ACTIONOK=1
+	cacaomsglog "START"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.dmstream aol${CACAO_LOOPNUMBER}_dmturb"
+	sendFPScmd "confwupdate DMatmturb-${CACAO_LOOPNUMBER}"
+	sendFPScmd "runstart DMatmturb-${CACAO_LOOPNUMBER}"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbON ON"
+fi
+
+
+if [ ${ACTION} == "stop" ]; then
+	ACTIONOK=1
+	cacaomsglog "STOP"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbON OFF"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbZERO ON"
+	sendFPScmd "runstop DMatmturb-${CACAO_LOOPNUMBER}"
+fi
+
+if [ ${ACTION} == "on" ]; then
+	ACTIONOK=1
+	cacaomsglog "ON"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbON ON"
+fi
+
+if [ ${ACTION} == "off" ]; then
+	ACTIONOK=1
+	cacaomsglog "OFF"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbON OFF"
+	sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbZERO ON"
+fi
+
+
+
+if [ ${ACTIONOK} == 0 ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] ACTION $ACTION undefined"
+	cacaomsglog "ERROR ACTION undefined"
+	exit 1
+fi

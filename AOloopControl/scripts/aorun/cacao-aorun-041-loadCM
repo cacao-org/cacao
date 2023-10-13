@@ -4,26 +4,114 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="AO loop execution script"
+MSdescr="Select control matrix and load it"
 
-MSextdescr="AO loop script"
+MSextdescr="Select control matrix and load it
+With optional tag, .<tag> is appended to all filenames
+"
 source milk-script-std-config
 source cacao-check-cacaovars
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+
+MSopt+=( "t:tag:setfiletag:tag[string]:Set file tag, empty by default" )
+filetag=""
+UpdateFiles=0 # 1 if using tag
+function setfiletag()
+{
+	filetag=".$1"
+     UpdateFiles=1
+}
+
+
 source milk-argparse
 
-echo "Loading file conf/CMmodesWFS/CMmodesWFS.fits"
-if [ -f "conf/CMmodesWFS/CMmodesWFS.fits" ]
-then
-     milk-FITS2shm "conf/CMmodesWFS/CMmodesWFS.fits" aol${CACAO_LOOPNUMBER}_modesWFS
-else
-     echo "Failed to find."
+
+
+# construct filenames
+RMDMfname0="conf/RMmodesDM/RMmodesDM.fits"
+RMWFSfname0="conf/RMmodesWFS/RMmodesWFS.fits"
+CMDMfname0="conf/CMmodesDM/CMmodesDM.fits"
+CMWFSfname0="conf/CMmodesWFS/CMmodesWFS.fits"
+
+RMDMfname="conf/RMmodesDM/RMmodesDM${filetag}.fits"
+RMWFSfname="conf/RMmodesWFS/RMmodesWFS${filetag}.fits"
+CMDMfname="conf/CMmodesDM/CMmodesDM${filetag}.fits"
+CMWFSfname="conf/CMmodesWFS/CMmodesWFS${filetag}.fits"
+
+
+EXITSTATUS=0
+
+checkFile ${RMDMfname}
+checkFile ${RMWFSfname}
+checkFile ${CMDMfname}
+checkFile ${CMWFSfname}
+
+if [ ${EXITSTATUS} = 1 ]; then
+	echo "missing file - cannot proceed"
+	exit 1
 fi
 
 
-echo "Loading file conf/CMmodesDM/CMmodesDM.fits"
-if [ -f "conf/CMmodesDM/CMmodesDM.fits" ]
-then
-     milk-FITS2shm "conf/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes
-else
-     echo "Failed to find."
+
+
+# Checking FPS and turning off runproc
+
+
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
+if [ ${FPScheckOK} == "OK" ]; then
+	sendFPScmd "runstop mvalC2dm-${CACAO_LOOPNUMBER}"
 fi
+
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
+if [ ${FPScheckOK} == "OK" ]; then
+	sendFPScmd "runstop mfilt-${CACAO_LOOPNUMBER}"
+fi
+
+
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
+if [ ${FPScheckOK} == "OK" ]; then
+	sendFPScmd "runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
+fi
+
+
+
+
+
+
+if [ ${UpdateFiles} = 1 ]; then
+	echo "Updating files"
+
+	ln -sf ${PWD}/${RMDMfname} ${RMDMfname0}
+	ln -sf ${PWD}/${RMWFSfname} ${RMWFSfname0}
+	ln -sf ${PWD}/${CMDMfname} ${CMDMfname0}
+	ln -sf ${PWD}/${CMWFSfname} ${CMWFSfname0}
+
+fi
+
+
+
+
+echo "Loading file ${CMWFSfname0}"
+if [ -f "${CMWFSfname0}" ]
+then
+     milk-FITS2shm "${CMWFSfname0}" aol${CACAO_LOOPNUMBER}_modesWFS
+else
+     echo "Failed to find ${CMWFSfname0}."
+fi
+
+
+echo "Loading file ${CMDMfname0}"
+if [ -f "${CMDMfname0}" ]
+then
+     milk-FITS2shm "${CMDMfname0}" aol${CACAO_LOOPNUMBER}_DMmodes
+else
+     echo "Failed to find ${CMDMfname0}."
+fi
+
+

@@ -16,6 +16,7 @@ else
     cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
 fi
 
+cd ${CURRENTDIR}
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
@@ -26,9 +27,11 @@ fi
 # \${VAR} will not be resolved, and will appear as ${VAR} in the destination
 
 cat <<EOT >>  ${CLEANSCRIPT}
+#!/usr/bin/env bash
+source milk-script-std-config
 
 rm -f ${CACAO_LOOPROOTDIR}/log/*.log
-rmdir ${CACAO_LOOPROOTDIR}/log
+rmdir ${CACAO_LOOPROOTDIR}/log || :
 
 cd ${CURRENTDIR}
 

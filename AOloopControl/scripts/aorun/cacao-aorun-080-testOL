@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="Test pseudo open loop reconstruction"
+
+MSextdescr="Run psOL test
+Tune latency and WFSfact to optimize psOL
+
+Parameter: update gain. 
+0 if no update
+"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+WaitForCompletion=0
+MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
+function set_WaitForCompletion() {
+	WaitForCompletion=1
+}
+
+MSarg+=( "updategain:float:latency and WFSfact update gain" )
+
+
+source milk-argparse
+UPDATEGAIN="${inputMSargARRAY[0]}"
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPS check"
+	exit 1
+fi
+
+
+
+OUTFILE="${CACAO_LOOPRUNDIR}/fps.mfilt-${CACAO_LOOPNUMBER}.datadir/cacaovars.bash"
+
+# Record inodestring
+if [ -f "${OUTFILE}" ]; then
+	string0="$(md5sum ${OUTFILE})"
+else
+	string0="NULL"
+fi
+string1="${string0}"
+
+echo "string = ${string0}"
+
+sendFPScmd "setval mfilt-${CACAO_LOOPNUMBER}.testOL.updategain ${UPDATEGAIN}"
+sendFPScmd "setval mfilt-${CACAO_LOOPNUMBER}.testOL.enable ON"
+
+if [ $WaitForCompletion == "1" ]; then
+	echo "Waiting for completion ..."
+	while [ "${string0}" == "${string1}" ]; do
+		sleep 0.2
+		if [ -f "${OUTFILE}" ]; then
+			string1="$(md5sum ${OUTFILE})"
+		else
+			string1="NULL"
+		fi
+		#echo "(${string0})  <<>> (${string1})"
+		echo -n "."
+	done
+	echo ""
+fi
+
+cacaomsglog "END"

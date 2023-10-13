@@ -492,6 +492,9 @@ static errno_t Measure_Linear_Response_Modal(
     char       *outdir
 )
 {
+    DEBUG_TRACE_FSTART();
+
+
     // Save all intermediate results
     int SAVE_RMACQU_ALL = 1;
 
@@ -514,16 +517,21 @@ static errno_t Measure_Linear_Response_Modal(
 
     long NBmode       = imginmodeC.md->size[2];
 
+    DEBUG_TRACEPOINT("%ld modes", NBmode);
 
     // Current poke info, counters etc
     PokeInfo pkinf;
 
 
-    // duplicaate each mode to positive an negative amplitude
+    DEBUG_TRACEPOINT("duplicaate each mode to positive and negative amplitude");
     //
     long NBmode2 = NBmode * 2;
     IMGID imginmodeC2 = makeIMGID_3D("pokemodeC2", sizexin, sizeyin, NBmode2);
-    imageID IDinmodeC2 = createimagefromIMGID(&imginmodeC2);
+    createimagefromIMGID(&imginmodeC2);
+
+    list_image_ID();
+
+    DEBUG_TRACEPOINT("sizexyin %lu", sizexyin);
 
     for(int mode = 0; mode < NBmode; mode++)
     {
@@ -602,7 +610,7 @@ static errno_t Measure_Linear_Response_Modal(
 
     for(int pokemode = 0; pokemode < NBmode2; pokemode++)
     {
-        for(int aveindex = 0; aveindex < timing_NBave + timing_NBexcl; aveindex++)
+        for(uint32_t aveindex = 0; aveindex < timing_NBave + timing_NBexcl; aveindex++)
         {
             int pokeCTRLindex = pokemode * (timing_NBave + timing_NBexcl) + aveindex;
             int pokeMEASindex = pokeCTRLindex + RMdelayfr;
@@ -630,15 +638,11 @@ static errno_t Measure_Linear_Response_Modal(
     * If timing_NBcycle is set to zero, then the process should run in an infinite loop.
     * The process will then run until receiving SIGINT.
     */
-    uint64_t NBiter = 10000; // runs until SIGINT signal received
-    if(timing_NBcycle < 1)
-    {
-        NBiter = LONG_MAX; // runs until SIGINT signal received
-    }
-    else
-    {
-        NBiter = timing_NBcycle;
-    }
+//    uint64_t NBiter = timing_NBcycle;
+//    if(timing_NBcycle < 1)
+//    {
+//        NBiter = LONG_MAX; // runs until SIGINT signal received
+//    }
 
 
 
@@ -669,7 +673,7 @@ static errno_t Measure_Linear_Response_Modal(
     // Output array is created and initialized to hold the WFS response to each poke mode.
     //
     IMGID imgoutC2 = makeIMGID_3D("tmpmoderespraw", sizexout, sizeyout, NBmode2);
-    imageID IDoutC2 = createimagefromIMGID(&imgoutC2);
+    createimagefromIMGID(&imgoutC2);
 
     for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
     {
@@ -815,7 +819,7 @@ static errno_t Measure_Linear_Response_Modal(
             //printf("%5lu  waiting for frame\n", pokeframe);
 
             ImageStreamIO_semwait(imgout.im, semindexout);
-            clock_gettime(CLOCK_REALTIME, &pkinfarray[pokeframe].tstart);
+            clock_gettime(CLOCK_MILK, &pkinfarray[pokeframe].tstart);
 
 
 
@@ -844,12 +848,12 @@ static errno_t Measure_Linear_Response_Modal(
                    sizeof(float) * sizexyin);
             imgin.md->cnt1 = pkinfarray[pokeframe].PokeIndexCTRL_Mapped;
             processinfo_update_output_stream(processinfo, imgin.ID);
-            clock_gettime(CLOCK_REALTIME, &pkinfarray[pokeframe].tpoke);
+            clock_gettime(CLOCK_MILK, &pkinfarray[pokeframe].tpoke);
 
 
             // Collect signal
             //
-            if((pkinfarray[pokeframe].aveindex < timing_NBave)
+            if((pkinfarray[pokeframe].aveindex < (int) timing_NBave)
                     && (pkinfarray[pokeframe].PokeIndexMEAS_Mapped != -1))
             {
                 {
@@ -974,10 +978,10 @@ static errno_t Measure_Linear_Response_Modal(
             }
 
             FILE *fp = fopen(tmpfname, "w");
-            for(int pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
+            for(uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
             {
                 fprintf(fp,
-                        "%6d %3d    %4d %4d   %4d %4d     %3ld %3u %3u\n",
+                        "%6lu %3d    %4d %4d   %4d %4d     %3ld %3u %3u\n",
                         pokeframe,
                         pkinfarray[pokeframe].aveindex,
                         pkinfarray[pokeframe].PokeIndexMEAS,
@@ -1031,20 +1035,20 @@ static errno_t Measure_Linear_Response_Modal(
             char tmpoutfname[STRINGMAXLEN_FULLFILENAME];
             WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp_raw.fits", outdir);
 
-/*            for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
-            {
-                for(uint64_t ii = 0; ii < sizexyout; ii++)
-                {
-                    imgoutC2.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * iter * ampl;
-                }
-            }
-*/
+            /*            for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
+                        {
+                            for(uint64_t ii = 0; ii < sizexyout; ii++)
+                            {
+                                imgoutC2.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * iter * ampl;
+                            }
+                        }
+            */
             save_fits(imgoutC2.name, tmpoutfname);
 
 
             WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.fits", outdir);
             IMGID imgmoderespC = makeIMGID_3D("moderespC", sizexout, sizeyout, NBmode);
-            imageID IDinmoderespC = createimagefromIMGID(&imgmoderespC);
+            createimagefromIMGID(&imgmoderespC);
 
             for(int mode = 0; mode < NBmode; mode++)
             {
@@ -1052,7 +1056,8 @@ static errno_t Measure_Linear_Response_Modal(
                 {
                     float posval = imgoutC2.im->array.F[(mode * 2) * sizexyout + ii];
                     float negval = imgoutC2.im->array.F[(mode * 2 + 1) * sizexyout + ii];
-                    imgmoderespC.im->array.F[ mode * sizexyout + ii ] = (posval - negval) / 2 / (timing_NBave * iter * ampl);
+                    imgmoderespC.im->array.F[ mode * sizexyout + ii ] = (posval - negval) / 2 /
+                    (timing_NBave * iter * ampl);
 
                 }
 
@@ -1080,7 +1085,7 @@ static errno_t Measure_Linear_Response_Modal(
 
     free(pkinfarray);
 
-
+    DEBUG_TRACE_FEXIT();
 
     return EXIT_SUCCESS;
 }
@@ -1115,6 +1120,8 @@ static errno_t compute_function()
 
 
     // TODO Check that DM size matches poke file
+
+    DEBUG_TRACEPOINT_PRINT("Calling Measure_Linear_Response_Modal");
 
     Measure_Linear_Response_Modal(
         imgin,

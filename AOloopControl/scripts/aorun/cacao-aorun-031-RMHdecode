@@ -16,7 +16,7 @@ FILE_Hmat="conf/RMmodesDM/Hmat.fits"
 FILE_HpokeC="conf/RMmodesDM/HpokeC.fits"
 FILE_HrespC="conf/RMmodesWFS/HpokeC.WFSresp.fits"
 
-RequiredFiles=( $FILE_Hipixindex $FILE_Hmat $FILE_HpokeC $FILE_HrespC )
+RequiredFiles=( ${FILE_Hipixindex} ${FILE_Hmat} ${FILE_HpokeC} ${FILE_HrespC} )
 
 
 # SCRIPT OPTIONS
@@ -27,6 +27,7 @@ RequiredFiles=( $FILE_Hipixindex $FILE_Hmat $FILE_HpokeC $FILE_HrespC )
 
 source milk-argparse
 
+cacaomsglog "START"
 
 cacao << EOF
 loadfits "${FILE_Hipixindex}" pixiind
@@ -42,4 +43,24 @@ EOF
 
 # Override measlinresp symlinking
 ln -sf ${PWD}/conf/RMmodesDM/zpokeC-H.fits ./conf/RMmodesDM/RMmodesDM.fits
+cp $(pwd)/conf/RMmodesDM/RMmodesDM.fits ./conf/RMzrec_modesDM.fits
+
 ln -sf ${PWD}/conf/RMmodesWFS/zrespM-H.fits ./conf/RMmodesWFS/RMmodesWFS.fits
+cp $(pwd)/conf/RMmodesWFS/RMmodesWFS.fits ./conf/RMzrec_modesWFS.fits
+
+# LOGGING
+#
+source cacaofuncs-log
+
+cacao-calib-logFITSfile RMzrec_modesDM
+
+cacao-calib-logFITSfile RMzrec_modesWFS
+# Load to shmim
+cacao-calib-loadFITSfile zrespM ${LOGFILEOUT}
+
+
+
+# load zresp to shared memory
+#milk-FITS2shm "conf/RMmodesWFS/zrespM-H.fits" aol${CACAO_LOOPNUMBER}_zrespM
+
+cacaomsglog "END"

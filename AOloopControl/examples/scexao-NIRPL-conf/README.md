@@ -32,6 +32,7 @@ cd NIRPL-rootdir
 # select simulation mode
 ./scripts/aorun-setmode-sim
 # (alternatively, run ./scripts/aorun-setmode-hardw to connect to hardware)
+# make sure DMch2disp-00 is running and DMch2disp-00.option.volttype.2  = 2, otherwise DM won't work
 ```
 
 
@@ -55,7 +56,7 @@ cacao-aorun-002-simwfs start
 
 Turn off light source, and run:
 ```bash
-cacao-aorun-005-takedark
+cacao-aorun-005-takedark -n 3000
 ```
 Then turn light source back on.
 
@@ -90,39 +91,74 @@ cacao-aorun-025-acqWFS start
 
 ```bash
 # Measure latency
+# first turn off normalization under acquWFS-<LOOP>.comp ; it messes w/ latency measurement becasue the poke changes the total WFS image instensity significantly
 cacao-aorun-020-mlat -w
+# then turn normalization back on
 ```
 
-
-## Acquire response matrix
+## Acquire Calibration
 
 
 ### Prepare DM poke modes
 
-
-We will use Fourier modes, with maximum spatial frequency of 3.0 cycles per aperture (CPA).
-
 ```bash
 # Create DM poke mode cubes
-cacao-mkDMpokemodes -c 3.0
+cacao-mkDMpokemodes -z <NUM> -c <CPA>
 ```
+The following files are written to ./conf/RMmodesDM/
+| File                 | Contents                                            |
+| -------------------- | --------------------------------------------------- |
+| `DMmask.fits     `   | DM mask                                             |
+| `FpokesC.<CPA>.fits` | Fourier modes (where \<CPA> is an integer)          |
+| `ZpokesC.<NUM>.fits` | Zernike modes (where \<NUM> is the number of modes) |
+| `HpokeC.fits     `   | Hadamard modes                                      |
+| `Hmat.fits       `   | Hadamard matrix (to convert Hadamard-zonal)         |
+| `Hpixindex.fits  `   | Hadamard pixel index                                |
+| `SmodesC.fits    `   | *Simple* (single actuator) pokes                    |
 
-The following files are written to ./conf/DMmodes/ :
-- DMmask.fits    : DM mask
-- Fmodes.fits    : Fourier modes
-- Smodes.fits    : Simple zonal modes
-- HpokeC.fits    : Hadamard modes
-- Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
-- Hpixindex.fits : Hadamard pixel index
 
 
 ### Run acquisition
 
 
 ```bash
-# Acquire response matrix - Fourier modes
+# Acquire response matrix - Hadamard modes
+# 4 cycles - default is 10.
+cacao-aorun-030-acqlinResp -n 4 HpokeC
+```
+This could take a while. Check status on milk-procCTRL.
+To inspect results, display file conf/RMmodesWFS/HpokeC.WFSresp.fits.
+
+### Decode Hadamard matrix
+
+```bash
+cacao-aorun-031-RMHdecode
+```
+To inspect results, display file conf/RMmodesWFS/zrespM-H.fits.
+This should visually look like a zonal response matrix.
+
+
+### Make DM and WFS masks
+
+```bash
+cacao-aorun-032-RMmkmask
+```
+Check results:
+- conf/dmmask.fits
+- conf/wfsmask.fits
+
+If needed, rerun command with non-default parameters (see -h for options).
+Note: we are not going to apply the masks in this example, so OK if not net properly. The masks are informative here, allowing us to view which DM actuators and WFS pixels have the best response.
+
+## Acquire response matrix (Zernike)
+
+### Run acquisition
+
+
+```bash
+# Acquire response matrix - Zernike modes
 cacao-fpsctrl setval measlinresp procinfo.loopcntMax 4
-cacao-aorun-030-acqlinResp Fmodes
+cacao-aorun-030-acqlinResp ZpokesC.<NUM>
 ```
 
 
@@ -130,7 +166,7 @@ cacao-aorun-030-acqlinResp Fmodes
 
 ```bash
 # Acquire reference
-cacao-aorun-026-takeref
+cacao-aorun-026-takeref -n 3000
 ```
 
 
@@ -140,9 +176,9 @@ cacao-aorun-026-takeref
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/Fmodes.fits"
-cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/Fmodes.WFSresp.fits"
-cacao-fpsctrl setval compstrCM svdlim 0.2
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/ZpokesC.<NUM>.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/ZpokesC.<NUM>.WFSresp.fits"
+cacao-fpsctrl setval compstrCM svdlim 0.1
 ```
 Then run the compstrCM process to compute CM and load it to shared memory :
 ```bash
@@ -159,7 +195,7 @@ cacao-fpsctrl setval mvalC2dm GPUindex 99
 ```
 
 
-From directory vispyr-rootdir, start 3 processes :
+From directory nirpl-rootdir, start 3 processes :
 
 ```bash
 # start WFS -> mode coefficient values

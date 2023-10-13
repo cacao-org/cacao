@@ -3,11 +3,10 @@ project(lib_${LIBNAME}_project)
 
 # list source files (.c) other than modulename.c
 set(SOURCEFILES
-	AOloopControl_computeCalib_CM.c
+	actmap_sample2D.c
 	AOloopControl_computeCalib_dm.c
 	computeHadamard.c
 	AOloopControl_computeCalib_loDMmodes.c
-	#mkmodes.c
 	AOloopControl_computeCalib_processRM.c
 	compute_straight_CM.c
 	compute_control_modes.c
@@ -45,8 +44,11 @@ set(LINKLIBS
 	CLIcore
 	milkinfo
 	cacaoAOloopControl
-	lapacke
 )
+
+if(NOT MKL_FOUND)
+  list(APPEND LINKLIBS lapacke)
+endif()
 
 
 

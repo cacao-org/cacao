@@ -21,6 +21,8 @@ and copied to shared memory aolX_DMastrogrid
 source milk-script-std-config
 
 
+mkdir -p AOcalibs
+
 RequiredCommands=(milk)
 RequiredFiles=(LOOPNUMBER)
 RequiredDirs=(AOcalibs)
@@ -61,7 +63,7 @@ source milk-argparse
 
 set +u
 if [ "${EXITSTATUS}" = "1" ]; then
-exit
+	exit 1
 fi
 set -u
 
@@ -77,8 +79,10 @@ if [ -f LOOPNUMBER ]; then
     AOLOOPNUMBER=$( head -1 LOOPNUMBER )
 else
 	echo "Error: no LOOPNUMBER file. Are we running this from the correct directory ?"
-    exit
+    exit 1
 fi
+
+
 
 milk << EOF
 mload cacaoAOloopControlDM
@@ -86,6 +90,6 @@ cacaodm.mk3Ddmgrid im 50 50 ${pattern} ${binfact}
 saveFITS im "AOcalibs/astrogrid.fits"
 listim
 readshmim DMastrogrid
-cpsh im aol${AOLOOPNUMBER}_DMastrogrid
+imcpshm im aol${AOLOOPNUMBER}_DMastrogrid
 exitCLI
 EOF

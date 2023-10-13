@@ -203,7 +203,7 @@ static errno_t compute_function()
                         iimin = 0;
                     }
                     int iimax = ii + kradint;
-                    if(iimax > xsize)
+                    if(iimax > (int) xsize)
                     {
                         iimax = xsize;
                     }
@@ -214,7 +214,7 @@ static errno_t compute_function()
                         jjmin = 0;
                     }
                     int jjmax = jj + kradint;
-                    if(jjmax > ysize)
+                    if(jjmax > (int) ysize)
                     {
                         jjmax = ysize;
                     }
@@ -222,9 +222,9 @@ static errno_t compute_function()
                     // find nearest pixels
                     //
                     long npixcnt = 0;
-                    for(uint32_t ii1=iimin; ii1<iimax; ii1++)
+                    for(int ii1=iimin; ii1<iimax; ii1++)
                     {
-                        for(uint32_t jj1=jjmin; jj1<jjmax; jj1++)
+                        for(int jj1=jjmin; jj1<jjmax; jj1++)
                         {
                             float dx = 1.0*ii - ii1;
                             float dy = 1.0*jj - jj1;

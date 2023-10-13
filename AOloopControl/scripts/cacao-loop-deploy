@@ -15,6 +15,12 @@ conflist=$( ls $MILK_ROOT/plugins/cacao-src/AOloopControl/examples | grep "\-con
 
 MSextdescr="Configuration is loaded from cacao source code
 
+
+Import configuration from source code (-c) and run it (-r).
+
+Calls cacao-task-manager to run the configuration.
+-c will create empty rootdir folder where user can put custom conf files.
+
 Env variables (optional) as cacaovars modifiers :
 	CACAO_LOOPNUMBER   [integer] loop number
 	CACAO_LOOPNAME     [string]  loop name
@@ -88,10 +94,11 @@ if [ ${CPCONF} == "ON" ]; then
 
 if [[ -d "$confsrcdir" ]]
 then
-	rsync -au --progress ${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf .
+	echo "Running : rsync -a --progress ${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf ."
+	rsync -a --progress ${MILK_ROOT}/plugins/cacao-src/AOloopControl/examples/${cacaoconfname}-conf .
 else
 	echo "ERROR: Cannot find directory ${confsrcdir}"
-	exit
+	exit 1
 fi
 
 
@@ -157,10 +164,6 @@ set -u
 
 
 
-
-
-
-
 if [ ${RUNCONF} == "ON" ]; then
 
 
@@ -183,6 +186,6 @@ echo "CACAO_LOOPRUNDIR = ${CACAO_LOOPRUNDIR}"
 
 # copy all scripts to rootdir
 mkdir -p ./${CACAO_LOOPROOTDIR}/scripts
-cp ${cacaoconfname}-conf/scripts/* ./${CACAO_LOOPROOTDIR}/scripts/
+cp ${cacaoconfname}-conf/scripts/* ./${CACAO_LOOPROOTDIR}/scripts/ 2>/dev/null || :
 
 fi

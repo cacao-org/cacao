@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+
+MSdescr="CLI for logging cacao messages"
+
+
+MSextdescr="
+Stand-alone light logging script
+Optimized for speed and minumal dpendencies
+
+In interactive more, type \"+ keywname\" to add a keyword with name keywname
+Same command with - to remode the keyword
+"
+
+source milk-script-std-config
+
+RequiredFiles=( LOOPNAME )
+
+
+LOOPMODE="0"
+MSopt+=( "i:interactive:set_loopmode::interactive, starts CLI" )
+function set_loopmode() {
+	LOOPMODE="1"
+}
+
+KEYWSTRING=""
+MSopt+=( "k:keywords:set_kewstring:keywords[string]:adopt keyword string" )
+function set_kewstring() {
+	KEYWSTRING="$1"
+}
+
+# don't parse arguments
+MILK_SCRIPT_ARGPARSE=0
+
+source milk-argparse
+
+
+
+remove_keyword() (
+  set -f
+  IFS=' '
+
+  s=${KEYWSTRING}
+  w=$1
+
+  set -- ${KEYWSTRING}
+  for arg do
+    shift
+    [ "$arg" = "$w" ] && continue
+    set -- "$@" "$arg"
+  done
+  
+  printf '%s' "$*"
+)
+
+
+
+
+
+
+if [ -z ${CACAO_LOOPNAME+x} ]; then 
+	# CACAO_LOOPNAME is unset
+	# echo "Reading LOOPNAME from file"
+	if [ -f "LOOPNAME" ]; then
+		CACAO_LOOPNAME=$(<LOOPNAME)
+	else
+		echo "no file LOOPNAME - can't log"
+		echo "make sure you run cacao-log from a CACAO_LOOPROOTDIR directory"
+	exit 1
+	fi
+fi
+
+# logdir can be symlink (usually to current day log folder)
+datestr="$(date -u +'%Y%m%d')"
+
+# default log directory is upstream of CACAO_LOOPROOTDIR so it persists
+#
+CACAO_MSGLOGDIR="../logdir-${CACAO_LOOPNAME}/${datestr}"
+mkdir -p ${CACAO_MSGLOGDIR}
+
+CACAO_MSGLOGFILE="${CACAO_MSGLOGDIR}/cacao.${CACAO_LOOPNAME}.log"
+
+#echo "logging to $CACAO_MSGLOGFILE"
+
+if [ "$LOOPMODE" = "0" ]; then
+	echo "$(date -u +'%Y-%m-%dT%T.%9N %s.%N') user $@" >> ${CACAO_MSGLOGFILE}
+else
+	echo "Logging to file $(pwd)/${CACAO_MSGLOGFILE}"
+	echo "  use +/- KEYW to add/remove keywords"
+	MSGcnt=0
+	while [ 1 ]; do
+		printf "[%d] \x1B[0;105m [${KEYWSTRING}] \x1B[0m" "${MSGcnt}"
+		read -p " log >  " LOGTEXT
+		firstword=${LOGTEXT%% *}
+		kwname=$(echo $LOGTEXT | awk '{print $2}')
+		if [ "${firstword}" = "-" ]; then
+			KEYWSTRING="$(remove_keyword ${kwname})"
+		elif [ "${firstword}" = "+" ]; then
+			KEYWSTRING="${KEYWSTRING} ${kwname}"
+		else
+			if [ "$KEYWSTRING" = "" ]; then
+			echo "$(date -u +'%Y-%m-%dT%T.%9N %s.%N') user ${LOGTEXT}" >> ${CACAO_MSGLOGFILE}
+			else
+			echo "$(date -u +'%Y-%m-%dT%T.%9N %s.%N') user ${KEYWSTRING} ${LOGTEXT}" >> ${CACAO_MSGLOGFILE}
+			fi			
+		fi
+		((MSGcnt++)) || :
+	done	
+fi

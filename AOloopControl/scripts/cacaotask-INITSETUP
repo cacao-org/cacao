@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 CACAOTASK_SCRIPT_FNAME=$0
+
 source cacaotask-check # check environment
 
 # ======================================================================
@@ -23,17 +24,42 @@ else
     cacaotask_RETURNCODE=${CACAOTASK_RUN_FAIL}
 fi
 
+
+# LOGGING
+
+# create local symlink to fast fpsCTRL log
+touch ${MILK_SHM_DIR}/fpsCTRL-${CACAO_LOOPNAME}.log
+ln -sf ${MILK_SHM_DIR}/fpsCTRL-${CACAO_LOOPNAME}.log ${CACAO_LOOPROOTDIR}/fpsCTRL.log
+
+# create log directory upstream of CACAO_LOOPROOTDIR
+mkdir -p logdir-${CACAO_LOOPNAME}
+# symlink it
+ln -sf $(pwd)/logdir-${CACAO_LOOPNAME} ${CACAO_LOOPROOTDIR}/logdir
+
+
+
 # copy test configuration files to work directory
 cp ${CONFDIR}/cacaovars.bash ${CACAO_LOOPROOTDIR}/cacaovars.${CACAO_LOOPNAME}.bash
-cp ${CONFDIR}/cacao-fpslistadd-* ${CACAO_LOOPROOTDIR}/
+
+cp ${CONFDIR}/cacao-fpslistadd-* ${CACAO_LOOPROOTDIR}/ 2>/dev/null || :
+
+cp ${CONFDIR}/fpstmuxenv ${CACAO_LOOPROOTDIR}/ 2>/dev/null || :
+
+cp -rf ${CONFDIR}/data ${CACAO_LOOPROOTDIR}/ 2>/dev/null || :
+
+
+
 
 cp ${CONFDIR}/fpssetup.setval.conf ${CACAO_LOOPROOTDIR}/fpssetup.setval.${CACAO_LOOPNAME}.conf
 
 # copy all scripts
 
-cp ${CONFDIR}/aorun-* ${CACAO_LOOPROOTDIR}/
+cp ${CONFDIR}/aorun-* ${CACAO_LOOPROOTDIR}/ 2>/dev/null || :
+
 mkdir -p ${CACAO_LOOPROOTDIR}/scripts/
-cp ${CONFDIR}/scripts/* ${CACAO_LOOPROOTDIR}/scripts/
+
+cp ${CONFDIR}/scripts/* ${CACAO_LOOPROOTDIR}/scripts/ 2>/dev/null || :
+
 
 # ======================================================================
 # WRITE CLEANUP SCRIPT FOR THIS TASK
@@ -46,10 +72,12 @@ fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
 # \${VAR} will not be resolved, and will appear as ${VAR} in the destination
 #
 cat <<EOT >>  ${CLEANSCRIPT}
+#!/usr/bin/env bash
+source milk-script-std-config
 
-rm ${CACAO_LOOPROOTDIR}/cacaovars.${CACAO_LOOPNAME}.bash
-rm ${CACAO_LOOPROOTDIR}/fpssetup.setval.${CACAO_LOOPNAME}.conf
-rm ${CACAO_LOOPROOTDIR}/aorun-*
+rm -f ${CACAO_LOOPROOTDIR}/cacaovars.${CACAO_LOOPNAME}.bash
+rm -f ${CACAO_LOOPROOTDIR}/fpssetup.setval.${CACAO_LOOPNAME}.conf
+rm -f ${CACAO_LOOPROOTDIR}/aorun-*
 
 echo "Waiting for tmux session ${fpsCTRLtmuxname} to termninate"
 
@@ -64,7 +92,7 @@ echo ""
 while true; do
     read -p "REMOVING directory ./\${CACAO_LOOPROOTDIR} ? [y/n] " yn
     case \$yn in
-        [Yy]* ) rm -r ./\${CACAO_LOOPROOTDIR}; break;;
+        [Yy]* ) rm -rf ./\${CACAO_LOOPROOTDIR}; break;;
         [Nn]* ) echo "not removing directory"; break;;
         * ) echo "Please answer yes or no.";;
     esac

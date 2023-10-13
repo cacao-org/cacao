@@ -58,15 +58,11 @@ function sendFPScmd {
 }
 
 
-
-
 echo "input frame = ${CACAO_WFSSTREAM}"
-
-
 
 
 sendFPScmd "confwupdate mapWFS-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart mapWFS-${CACAO_LOOPNUMBER}"
 
 
-exit
+

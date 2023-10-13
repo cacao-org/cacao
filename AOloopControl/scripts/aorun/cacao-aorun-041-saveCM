@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="Save RM and CM"
+
+MSextdescr="Save RM and CM
+With optional tag, .<tag> is appended to all filenames
+"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+# SCRIPT OPTIONS
+# syntax: "short:long:functioncall:args[types]:description"
+
+MSopt+=( "t:tag:setfiletag:tag[string]:Set file tag [bak]" )
+filetag="bak"
+UpdateFiles=0 # 1 if using tag
+function setfiletag()
+{
+	filetag=".$1"
+}
+
+
+source milk-argparse
+
+
+
+# construct filenames
+RMDMfname0="conf/RMmodesDM/RMmodesDM.fits"
+RMWFSfname0="conf/RMmodesWFS/RMmodesWFS.fits"
+CMDMfname0="conf/CMmodesDM/CMmodesDM.fits"
+CMWFSfname0="conf/CMmodesWFS/CMmodesWFS.fits"
+
+RMDMfname="conf/RMmodesDM/RMmodesDM${filetag}.fits"
+RMWFSfname="conf/RMmodesWFS/RMmodesWFS${filetag}.fits"
+CMDMfname="conf/CMmodesDM/CMmodesDM${filetag}.fits"
+CMWFSfname="conf/CMmodesWFS/CMmodesWFS${filetag}.fits"
+
+
+EXITSTATUS=0
+
+checkFile ${RMDMfname0}
+checkFile ${RMWFSfname0}
+checkFile ${CMDMfname0}
+checkFile ${CMWFSfname0}
+
+if [ ${EXITSTATUS} = 1 ]; then
+	echo "missing file - cannot proceed"
+	exit 1
+fi
+
+
+
+cp ${RMDMfname0} ${RMDMfname}
+cp ${RMWFSfname0} ${RMWFSfname}
+cp ${CMDMfname0} ${CMDMfname}
+cp ${CMWFSfname0} ${CMWFSfname}
+
+
+cacaomsglog "END"

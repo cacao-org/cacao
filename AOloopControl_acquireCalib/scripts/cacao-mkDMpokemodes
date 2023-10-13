@@ -36,13 +36,21 @@ source milk-argparse
 
 
 echo "DM size  : $CACAO_DMxsize x $CACAO_DMysize"
-
+echo "DM spatial : $CACAO_DMSPATIAL"
+if [ "$CACAO_DMSPATIAL" == "0" ]; then
+	# This is not a spatial DM, make a very large radius so that
+	# All actuators are considered regardless
+	# Note: we expect CACAO_DMxsize = n_actuators and CACAO_DMysize=1
+	CACAO_DM_beam_rad=$CACAO_DMxsize
+	echo "CACAO_DM_beam_rad: ${CACAO_DM_beam_rad}"
+fi
 
 DMMODEDIR="conf/RMmodesDM"
 mkdir -p ${DMMODEDIR}
 
 
-
+# These 2 are not the buffer center and need a 0.5 offset...
+# (although that depends on the implementation of imgen.mkdisk)
 x0default=$(echo "scale=3; $CACAO_DMxsize/2" | bc)
 y0default=$(echo "scale=3; $CACAO_DMysize/2" | bc)
 r0default=$(echo "scale=3; 0.450*$CACAO_DMxsize" | bc)

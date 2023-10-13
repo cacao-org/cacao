@@ -16,6 +16,8 @@ echo "runstart streamDelay-01" >> ${MILK_SHM_DIR}/${CACAO_LOOPNAME}_fpsCTRL.fifo
 # \${VAR} will not be resolved, and will appear as ${VAR} in the destination
 
 cat <<EOT >>  ${CLEANSCRIPT}
+#!/usr/bin/env bash
+source milk-script-std-config
 
 echo "runstop streamDelay-01" >> ${MILK_SHM_DIR}/${CACAO_LOOPNAME}_fpsCTRL.fifo
 milk-shmimpurge

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="AO loop control TUI"
+
+MSextdescr="Interface to function parameter structures (FPSs) for the AO loop
+Starts a milk-fpsCTRL instance for the loop
+
+Must be run from rootdir"
+
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+source milk-argparse
+
+MILK_FPS_LOGFILE="fpsCTRL.log" FPS_FILTSTRING_KEYWORD="aol${CACAO_LOOPNUMBER}" milk-fpsCTRL
+

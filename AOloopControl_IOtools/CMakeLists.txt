@@ -9,11 +9,8 @@ set(SOURCEFILES
 	${SRCNAME}.c
     ${SRCNAME}.h
     acquireWFSim.c
+    ao188_preprocessor.c
     findspots.c
-    AOloopControl_IOtools_camerainput.c
-    AOloopControl_IOtools_datastream_processing.c
-    AOloopControl_IOtools_load_image_sharedmem.c
-    AOloopControl_IOtools_RTLOGsave.c
     WFScamsim.c
     WFSmap.c
 )
@@ -21,6 +18,7 @@ set(SOURCEFILES
 set(INCLUDEFILES
 	${SRCNAME}.h
     acquireWFSim.h
+    ao188_preprocessor.h
     findspots.h
     AOloopControl_IOtools.h
     WFScamsim.h
@@ -64,26 +62,3 @@ install(TARGETS ${LIBNAME} DESTINATION lib)
 install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 
 install(PROGRAMS ${SCRIPTS} DESTINATION bin)
-
-
-
-
-
-
-
-
-
-#project(lib_${LIBNAME}_project)
-
-#add_library(${LIBNAME} SHARED ${SRCNAME}.c
-#${SRCNAME}.h
-#AOloopControl_IOtools_camerainput.c
-#AOloopControl_IOtools_datastream_processing.c
-#AOloopControl_IOtools_load_image_sharedmem.c
-#AOloopControl_IOtools_RTLOGsave.c
-#)
-
-#target_link_libraries(${LIBNAME} PUBLIC CLIcore milkinfo cacaoAOloopControl)
-
-#install(TARGETS ${LIBNAME} DESTINATION lib)
-#install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})
