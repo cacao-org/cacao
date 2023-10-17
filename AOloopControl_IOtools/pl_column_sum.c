@@ -92,12 +92,13 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
         // JON YOU GET TO WORK HERE
-        int i;
+        uint32_t i;
         for (i = 0; i < sizeoutx; i++){
             float tot = 0.0;
-            int j;
+            uint32_t j;
             for (j = 0; j < sizeouty; j++) {
-                tot += wfsin.im->array.F[i*sizeouty+j];
+                uint64_t pixindex = i * sizeouty + j;
+                tot += wfsin.im->array.F[pixindex];
             }
             wfsout.im->array.F[i] = tot;
         }
