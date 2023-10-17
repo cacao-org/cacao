@@ -90,7 +90,7 @@ static errno_t compute_function()
 
     // This is the while(True) {
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
     {
         // JON YOU GET TO WORK HERE
         uint32_t i;
