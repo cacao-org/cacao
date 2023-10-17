@@ -94,7 +94,7 @@ static errno_t compute_function()
         // JON YOU GET TO WORK HERE
         int i;
         for (i = 0; i < sizeoutx; i++){
-            double tot = 0.0;
+            float tot = 0.0;
             int j;
             for (j = 0; j < sizeouty; j++) {
                 tot += wfsin.im->array.F[i*sizeouty+j];
