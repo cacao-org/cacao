@@ -8,6 +8,7 @@
 
 #include <math.h>
 #include "CommandLineInterface/CLIcore.h"
+#include "COREMOD_tools/COREMOD_tools.h"
 
 // Local variables pointers
 static char *input_shm_name; // input shared memory
