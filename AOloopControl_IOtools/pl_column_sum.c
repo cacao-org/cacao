@@ -83,7 +83,6 @@ static errno_t compute_function()
     uint32_t sizeouty = wfsin.size[1];
 
     // Create output
-    // trying to copy shape of wfsin. Assume a structure 3 rows x N columns, N goes along wavelength
     IMGID wfsout;
     wfsout =
         stream_connect_create_2D(output_shm_name, sizeoutx,1, _DATATYPE_FLOAT);
@@ -97,7 +96,7 @@ static errno_t compute_function()
         for (i = 0; i < sizeoutx; i++){
             double tot = 0.0;
             int j;
-            for (j = 0; j < sizeouty; i++) {
+            for (j = 0; j < sizeouty; j++) {
                 tot += wfsin.im->array.F[i*sizeouty+j];
             }
             wfsout.im->array.F[i] = tot;
