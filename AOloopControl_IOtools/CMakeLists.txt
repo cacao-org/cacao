@@ -11,6 +11,7 @@ set(SOURCEFILES
     acquireWFSim.c
     ao188_preprocessor.c
     pl_trace_renorm.c
+    pl_column_sum.c
     findspots.c
     WFScamsim.c
     WFSmap.c
@@ -22,6 +23,7 @@ set(INCLUDEFILES
     acquireWFSim.h
     ao188_preprocessor.h
     pl_trace_renorm.h
+    pl_column_sum.h
     findspots.h
     WFScamsim.h
     WFSmap.h
