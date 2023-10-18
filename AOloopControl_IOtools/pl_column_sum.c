@@ -98,7 +98,7 @@ static errno_t compute_function()
             float tot = 0.0;
             uint32_t j;
             for (j = 0; j < sizeouty; j++) {
-                uint64_t pixindex =  i * sizeouty + j;
+                uint64_t pixindex =  j * sizeoutx + i; //i * sizeouty + j;
                 tot += wfsin.im->array.UI16[pixindex];
             }
             wfsout.im->array.F[i] = tot;
