@@ -117,7 +117,7 @@ static errno_t compute_function()
                 for (uint32_t j = 0; j < sizeouty; j++) {
                     uint64_t mpixindex = k * sizeoutx * sizeouty +  j * sizeoutx + i;
                     uint64_t pixindex = j * sizeoutx + i;
-                    tot += wfsin.im->array.UI16[pixindex] * wfsmask.im->array.F[mpixindex];
+                    tot += wfsin.im->array.UI16[pixindex] * wfsmask.im->array.UI16[mpixindex];
                 }
                 wfsout.im->array.F[k * sizeoutx + i] = tot;
             }
