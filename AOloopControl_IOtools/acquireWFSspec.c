@@ -345,7 +345,7 @@ static errno_t compute_function()
                    sizeof(float) * sizeWFS);
         }
         processinfo_update_output_stream(processinfo, imgimWFS2.ID);
-
+    }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     DEBUG_TRACE_FEXIT();
