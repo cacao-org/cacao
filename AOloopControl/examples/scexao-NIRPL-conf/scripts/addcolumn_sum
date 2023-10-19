@@ -12,14 +12,14 @@ fname="column_sum"
 setupfps "${fname}"
 
 # procinfo specific stuff
-sendFPScmd "setval ${fname}-${CACAO-LOOPNUMBER}.procinfo.triggermode 3"
-sendFPScmd "setval ${fname}-${CACAO-LOOPNUMBER}.procinfo.loopcntMax -1"
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggermode 3"
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.loopcntMax -1"
 
 if [ "${CACAO_MODE}" == "HARDW" ]
 then
-  sendFPScmd "setval ${fname}-${CACAO-LOOPNUMBER}.procinfo.triggersname ${CACAO_WFSSTREAM}"
+  sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggersname ${CACAO_WFSSTREAM}"
 elif [ "${CACAO_MODE}" == "SIM" ]
 then
-  sendFPScmd "setcal ${fname}-${CACAO-LOOPNUMBER}.procinfo.triggersname ${CACAO_WFSSTREAMSIM}"
+  sendFPScmd "setcal ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggersname ${CACAO_WFSSTREAMSIM}"
 fi
 
