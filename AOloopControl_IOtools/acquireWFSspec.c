@@ -334,7 +334,7 @@ static errno_t compute_function()
                 for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
                     imgimWFS2.im->array.F[ii] =
-                        imgimWFS1.im->array.F[ii] - imgwfsrefc.im->array.F[ii];
+                        imgimWFS1.im->array.F[ii] - imgwfsref.im->array.F[ii];
                 }
             }
         }
