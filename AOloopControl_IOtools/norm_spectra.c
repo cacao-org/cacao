@@ -128,7 +128,7 @@ static errno_t compute_function()
         else {
             memcpy(wfsout.im->array.F,
             wfsin.im->array.F,
-            sizeof(float) * sizeoutx * sizouty);
+            sizeof(float) * sizeoutx * sizeouty);
         }
         
         // Done and post downstream.
