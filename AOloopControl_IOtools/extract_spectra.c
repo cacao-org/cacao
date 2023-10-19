@@ -110,7 +110,7 @@ static errno_t compute_function()
     {
         // JON YOU GET TO WORK HERE
 
-        for (uint32_t k = 0; k < masksizeoutz){
+        for (uint32_t k = 0; k < masksizeoutz; k++){
             for (uint32_t i = 0; i < sizeoutx; i++){
                 float tot = 0.0;
                 for (uint32_t j = 0; j < sizeouty; j++) {
