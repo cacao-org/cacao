@@ -29,7 +29,6 @@ function setupfps {
 	cacaoio.$1 ..procinfo 1
 	exitCLI
 	EOF
-	sendFPScmd "rescan"
 	cd ..
 }
 
