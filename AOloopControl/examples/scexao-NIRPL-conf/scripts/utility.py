@@ -37,5 +37,5 @@ def make_spectral_mask(instreamname,outstreamname,stack_num=300,width=6):
         _outcopy = np.copy(_outstreamdata)
         _outcopy[y-width:y+width,:] = 1
         outstreamdata.append(_outcopy)
-    outstreamdata = np.array(outstreamdata)
+    outstreamdata = np.transpose(np.array(outstreamdata),(1,2,0))
     shm(outstreamname,outstreamdata)
