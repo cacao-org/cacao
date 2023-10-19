@@ -5,7 +5,7 @@
 source ./scripts/fps-utility
 
 # name of function to setup
-fname="extract_spectrum"
+fname="extract_spectra"
 
 # add to fpsCTRL, start tmux, start conf, turn on procinfo
 setupfps "${fname}"
