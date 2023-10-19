@@ -71,4 +71,5 @@ ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${CACA
 
 ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
 
-CACAO_MODE="HARDW"
+export CACAO_MODE="HARDW"
+echo "setting mode to $CACAO_MODE"
