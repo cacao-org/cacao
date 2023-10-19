@@ -95,7 +95,7 @@ static errno_t compute_function()
     uint32_t sizeoutx = wfsin.size[0];
     uint32_t sizeouty = wfsin.size[1];
 
-    IMGID wfsmask = mkIMGID_from_name(mask_shm_name);
+    IMGID wfsmask = mkIMGID_from_name(specmask_shm_name);
     resolveIMGID(&wfsmask, ERRMODE_ABORT);
     uint32_t masksizeoutz = wfsin.size[2];
 
