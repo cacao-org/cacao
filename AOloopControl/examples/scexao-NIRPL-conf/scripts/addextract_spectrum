@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# add column_sum function to fpsCTRL
+
+source ./scripts/fps-utility
+
+# name of function to setup
+fname="extract_spectrum"
+
+# add to fpsCTRL, start tmux, start conf, turn on procinfo
+setupfps "${fname}"
+
+# procinfo specific stuff
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggermode 3"
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.loopcntMax -1"
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggersname ${CACAO_WFSSTREAMSIM}"
+
+# setting input and output streams
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.wfsin ${CACAO_WFSSTREAMSIM}"
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.wfsout apapanespec" 
+
+sendFPScmd "confwupdate ${fname}-${CACAO_LOOPNUMBER}"
