@@ -61,4 +61,4 @@ ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp02.im.shm ${MILK_SHM_DIR}/aol${C
 
 ln -sf ${MILK_SHM_DIR}/dm${CACAO_DMSIMINDEX}disp.im.shm ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_dmdisp.im.shm
 
-export CACAO_MODE="SIM"
+CACAO_MODE="SIM"
