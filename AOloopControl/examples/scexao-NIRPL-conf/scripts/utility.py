@@ -34,8 +34,8 @@ def make_spectral_mask(instreamname,outstreamname,stack_num=300,width=6):
     _outstreamdata = np.zeros_like(instream.get_data(False,False))
     outstreamdata = []
     for y in ylocs:
-        _outstreamdata[:,:] = 0
-        _outstreamdata[y-width:y+width,:] = 1
-        outstreamdata.append(_outstreamdata)
+        _outcopy = np.copy(_outstreamdata)
+        _outcopy[y-width:y+width,:] = 1
+        outstreamdata.append(_outcopy)
     outstreamdata = np.array(outstreamdata)
     shm(outstreamname,outstreamdata)
