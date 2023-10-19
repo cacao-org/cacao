@@ -1,0 +1,6 @@
+#ifndef AOLOOPCONTROL_IOTOOLS_EXTRACTSPECTRA_H
+#define AOLOOPCONTROL_IOTOOLS_EXTRACTSPECTRA_H
+
+errno_t CLIADDCMD_AOloopControl_IOtools__extractspectra();
+
+#endif

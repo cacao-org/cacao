@@ -36,6 +36,7 @@
 #include "ao188_preprocessor.h"
 #include "pl_trace_renorm.h"
 #include "pl_column_sum.h"
+#include "extract_spectra.h"
 
 
 
@@ -61,6 +62,7 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_IOtools__AO188Preproc();
     CLIADDCMD_AOloopControl_IOtools__PLtracerenorm();
     CLIADDCMD_AOloopControl_IOtools__PLcolumnsum();
+    CLIADDCMD_AOloopControl_IOtools__extractspectra();
 
     // add atexit functions here
     // atexit((void*) myfunc);
