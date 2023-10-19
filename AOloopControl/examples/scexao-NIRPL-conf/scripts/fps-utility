@@ -19,6 +19,8 @@ function setupfps {
 	cacaoio.$1 _TMUXSTART_ "${CACAO_LOOPNUMBER}"
 	exitCLI
 	EOF
+	# rescan fps tree
+	sendFPScmd "rescan"
 	echo "STARTING CONF PROCESS"
 	sendFPScmd "confstart $1-${CACAO_LOOPNUMBER}"
 	echo "STARTING PROCINFO"
