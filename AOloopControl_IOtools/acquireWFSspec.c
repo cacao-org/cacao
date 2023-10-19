@@ -104,7 +104,12 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
+        data.fpsptr->parray[fpi_insname].fpflag |=
+            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
+        data.fpsptr->parray[fpi_compWFSsubdark].fpflag   |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_compWFSnormalize].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_compWFSrefsub].fpflag    |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -301,14 +306,14 @@ static errno_t compute_function()
                 float tot = 0.0;
                 int i;
                 for (i = 0; i < sizeWFSx; i++) {
-                    tot += wfsin.im->array.F[j*sizeWFSx + i];
+                    tot += imfimWFS0.im->array.F[j*sizeWFSx + i];
                 }
                 float normval = 0.;
                 if (tot > 0){
                     normval = 1./tot;
                 }
                 for (i = 0; i < sizeWFSx; i++) {
-                    imgimWFS1.im->array.F[j*sizeWFSx + i] = wfsin.im->array.F[j*sizeWFSx + i]*normval;
+                    imgimWFS1.im->array.F[j*sizeWFSx + i] = imfimWFS0.im->array.F[j*sizeWFSx + i]*normval;
                 }
             }
         }
