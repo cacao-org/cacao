@@ -98,6 +98,7 @@ static errno_t compute_function()
     IMGID wfsmask = mkIMGID_from_name(specmask_shm_name);
     resolveIMGID(&wfsmask, ERRMODE_ABORT);
     uint32_t masksizeoutz = wfsmask.size[2];
+    // size is  (image shape) * z, z is # of traces
 
     // Create output
     IMGID wfsout;
@@ -114,10 +115,11 @@ static errno_t compute_function()
             for (uint32_t i = 0; i < sizeoutx; i++){
                 float tot = 0.0;
                 for (uint32_t j = 0; j < sizeouty; j++) {
-                    uint64_t pixindex = k * sizeoutx * sizeouty +  i * sizeouty + j; //
-                    tot += wfsin.im->array.UI16[pixindex] * wfsmask.im->array.F[pixindex];
+                    uint64_t mpixindex = k * sizeoutx * sizeouty +  j * sizeoutx + i;
+                    uint64_t pixindex = j * sizeoutx + i
+                    tot += wfsin.im->array.UI16[pixindex] * wfsmask.im->array.F[mpixindex];
                 }
-                wfsout.im->array.F[k * 3 + i] = tot;
+                wfsout.im->array.F[k * sizeoutx + i] = tot;
             }
         }
         
