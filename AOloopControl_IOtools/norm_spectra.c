@@ -1,6 +1,6 @@
 /**
- * @file    pl_trace_renorm.c
- * @brief   acquire and normalize spectra of 3-port PL
+ * @file    norm_spectra.c
+ * @brief   normalize spectra
  *
  *
  *
@@ -8,6 +8,7 @@
 
 #include <math.h>
 #include "CommandLineInterface/CLIcore.h"
+#include "COREMOD_tools/COREMOD_tools.h"
 
 // Local variables pointers
 static char *input_shm_name; // input shared memory
@@ -16,8 +17,8 @@ static long  fpi_inputshmname;
 static char *output_shm_name; // output shared memory
 static long  fpi_outputshmname;
 
-static int64_t *compWFSnormalize; // spec norm toggle (lifted this from acquireWFSim.c heh)
-static long fpi_compWFSnormalize;
+static int64_t *compWFSnormalize; // toggle for normalization
+static long     fpi_compWFSnormalize;
 
 static CLICMDARGDEF farg[] =
 {
@@ -31,6 +32,15 @@ static CLICMDARGDEF farg[] =
         &fpi_inputshmname
     },
     {
+        CLIARG_ONOFF,
+        ".comp.WFSnormalize",
+        "normalize spectral traces",
+        "1",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &compWFSnormalize,
+        &fpi_compWFSnormalize
+    },
+    {
         CLIARG_STR,
         ".wfsout",
         "Wavefront sensor output",
@@ -38,15 +48,6 @@ static CLICMDARGDEF farg[] =
         CLIARG_VISIBLE_DEFAULT,
         (void **) &output_shm_name,
         &fpi_outputshmname
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.WFSnormalize",
-        "normalize WFS frames",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compWFSnormalize,
-        &fpi_compWFSnormalize
     },
 };
 
@@ -73,7 +74,7 @@ static errno_t customCONFcheck()
 
 static CLICMDDATA CLIcmddata =
 {
-    "spectra_renorm", "normalize spectral traces", CLICMD_FIELDS_DEFAULTS
+    "norm_spectra", "normalize spectra", CLICMD_FIELDS_DEFAULTS
 };
 
 
@@ -93,17 +94,15 @@ static errno_t compute_function()
 
     uint32_t sizeoutx = wfsin.size[0];
     uint32_t sizeouty = wfsin.size[1];
-    uint32_t sizeout = sizeoutx * sizeouty;
 
-    // Create output
-    // trying to copy shape of wfsin. Assume a structure 3 rows x N columns, N goes along wavelength
+    // Create output, same size as input
     IMGID wfsout;
     wfsout =
-        stream_connect_create_2D(output_shm_name, sizeoutx, sizeouty, _DATATYPE_FLOAT);
+        stream_connect_create_2D(output_shm_name,sizeoutx,sizeouty,_DATATYPE_FLOAT);
 
     // This is the while(True) {
-    //INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
     {
         // JON YOU GET TO WORK HERE
         if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF) {
@@ -112,10 +111,17 @@ static errno_t compute_function()
                 double tot = 0.0;
                 int i;
                 for (i = 0; i < sizeoutx; i++) {
-                    tot += wfsin.im->array.F[i*sizeouty+j];
+                    tot += wfsin.im->array.F[j*sizeoutx + i];
+                }
+                double normval;
+                if (tot <= 0){
+                    normval = 0;
+                }
+                else {
+                    normval = 1/tot;
                 }
                 for (i = 0; i < sizeoutx; i++) {
-                    wfsout.im->array.F[i*sizeouty+j] = wfsin.im->array.F[i*sizeouty+j]/tot;
+                    wfsout.im->array.F[j*sizeoutx + i] = wfsin.im->array.F[j*sizeoutx + i]*normval;
                 }
             }
         }
@@ -124,7 +130,7 @@ static errno_t compute_function()
             wfsin.im->array.F,
             sizeof(float) * sizeout);
         }
-
+        
         // Done and post downstream.
         processinfo_update_output_stream(processinfo, wfsout.ID);
     }
@@ -139,7 +145,7 @@ static errno_t compute_function()
 INSERT_STD_FPSCLIfunctions
 
 // Register function in CLI
-errno_t CLIADDCMD_AOloopControl_IOtools__PLtracerenorm()
+errno_t CLIADDCMD_AOloopControl_IOtools__normspectra()
 {
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;

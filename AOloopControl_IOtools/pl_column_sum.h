@@ -1,6 +1,0 @@
-#ifndef AOLOOPCONTROL_IOTOOLS_PLCOLUMNSUM_H
-#define AOLOOPCONTROL_IOTOOLS_PLCOLUMNSUM_H
-
-errno_t CLIADDCMD_AOloopControl_IOtools__PLcolumnsum();
-
-#endif

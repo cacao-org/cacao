@@ -10,12 +10,11 @@ set(SOURCEFILES
     ${SRCNAME}.h
     acquireWFSim.c
     ao188_preprocessor.c
-    pl_trace_renorm.c
-    pl_column_sum.c
     findspots.c
     WFScamsim.c
     WFSmap.c
     extract_spectra.c
+    norm_spectra.c
 )
 
 set(INCLUDEFILES
@@ -23,12 +22,11 @@ set(INCLUDEFILES
     AOloopControl_IOtools.h
     acquireWFSim.h
     ao188_preprocessor.h
-    pl_trace_renorm.h
-    pl_column_sum.h
     findspots.h
     WFScamsim.h
     WFSmap.h
     extract_spectra.h
+    norm_spectra.h
 )
 
 

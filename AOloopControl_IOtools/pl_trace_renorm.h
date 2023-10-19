@@ -1,6 +1,0 @@
-#ifndef AOLOOPCONTROL_IOTOOLS_PLTRACERENORM_H
-#define AOLOOPCONTROL_IOTOOLS_PLTRACERENORM_H
-
-errno_t CLIADDCMD_AOloopControl_IOtools__PLtracerenorm();
-
-#endif
