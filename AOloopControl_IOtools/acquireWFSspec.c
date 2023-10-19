@@ -235,7 +235,7 @@ static errno_t compute_function()
         }
         
         // Done and post downstream.
-        processinfo_update_output_stream(processinfo, imfimWFSm.ID);
+        processinfo_update_output_stream(processinfo, imgimWFSm.ID);
 
         // STEP 2: DARK SUB -> aolx_imWFS0
         // check wfsdark is to be subtracted
