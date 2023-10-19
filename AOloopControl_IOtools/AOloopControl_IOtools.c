@@ -36,6 +36,7 @@
 #include "ao188_preprocessor.h"
 #include "extract_spectra.h"
 #include "norm_spectra.h"
+#include "acquireWFSspec.h"
 
 
 
@@ -53,7 +54,6 @@ INIT_MODULE_LIB(AOloopControl_IOtools)
 
 static errno_t init_module_CLI()
 {
-
     CLIADDCMD_AOloopControl_IOtools__acquireWFSim();
     CLIADDCMD_AOloopControl_IOtools__WFScamsim();
     CLIADDCMD_AOloopControl_IOtools__WFSmap();
@@ -61,6 +61,7 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_IOtools__AO188Preproc();
     CLIADDCMD_AOloopControl_IOtools__extractspectra();
     CLIADDCMD_AOloopControl_IOtools__normspectra();
+    CLIADDCMD_AOloopControl_IOtools__acquirespectra();
 
     // add atexit functions here
     // atexit((void*) myfunc);

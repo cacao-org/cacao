@@ -15,6 +15,7 @@ set(SOURCEFILES
     WFSmap.c
     extract_spectra.c
     norm_spectra.c
+    acquireWFSspec.c
 )
 
 set(INCLUDEFILES
@@ -27,6 +28,7 @@ set(INCLUDEFILES
     WFSmap.h
     extract_spectra.h
     norm_spectra.h
+    acquireWFSspec.h
 )
 
 
