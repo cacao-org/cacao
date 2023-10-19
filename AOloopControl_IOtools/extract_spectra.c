@@ -99,14 +99,10 @@ static errno_t compute_function()
     resolveIMGID(&wfsmask, ERRMODE_ABORT);
     uint32_t masksizeoutz = wfsmask.size[2];
 
-    printf("%lu size0\n", wfsmask.size[0]);
-    printf("%lu size1\n", wfsmask.size[1]);
-    printf("%lu size2\n", wfsmask.size[2]);
-
     // Create output
     IMGID wfsout;
     wfsout =
-        stream_connect_create_2D(output_shm_name,3,sizeoutx,_DATATYPE_FLOAT);
+        stream_connect_create_2D(output_shm_name,sizeoutx,3,_DATATYPE_FLOAT);
 
     // This is the while(True) {
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
@@ -118,10 +114,10 @@ static errno_t compute_function()
             for (uint32_t i = 0; i < sizeoutx; i++){
                 float tot = 0.0;
                 for (uint32_t j = 0; j < sizeouty; j++) {
-                    uint64_t pixindex = k * sizeoutx * sizeouty + j * sizeoutx + i; //i * sizeouty + j;
+                    uint64_t pixindex = k * sizeoutx * sizeouty +  i * sizeouty + j; //
                     tot += wfsin.im->array.UI16[pixindex] * wfsmask.im->array.F[pixindex];
                 }
-                wfsout.im->array.F[k * sizeoutx + i] = tot;
+                wfsout.im->array.F[k * 3 + i] = tot;
             }
         }
         
