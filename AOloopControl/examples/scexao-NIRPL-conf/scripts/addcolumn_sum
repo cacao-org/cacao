@@ -15,6 +15,7 @@ setupfps "${fname}"
 sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggermode 3"
 sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.loopcntMax -1"
 
+echo "CURRENT MODE: ${CACAO_MODE}"
 if [ "${CACAO_MODE}" == "HARDW" ]
 then
   sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggersname ${CACAO_WFSSTREAM}"

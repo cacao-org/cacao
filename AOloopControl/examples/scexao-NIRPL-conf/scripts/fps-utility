@@ -11,6 +11,7 @@ function sendFPScmd {
 }
 
 function setupfps {
+	cd ${CACAO_LOOPRUNDIR}
 	echo "CONFIGURING: $1"
 	echo "ADDING TO FPSCTRL AND STARTING TMUX"
 	# first, init fps and start tmux
@@ -29,5 +30,6 @@ function setupfps {
 	exitCLI
 	EOF
 	sendFPScmd "rescan"
+	cd ..
 }
 
