@@ -200,11 +200,11 @@ static errno_t compute_function()
     {
         // STEP 1: extract spectra -> aolx_imWFSm
         for (uint32_t k = 0; k < numtraces; k++){
-            for (uint32_t i = 0; i < sizeoutx; i++){
+            for (uint32_t i = 0; i < sizeWFSx; i++){
                 float tot = 0.0;
-                for (uint32_t j = 0; j < sizeouty; j++) {
-                    uint64_t mpixindex = k * sizeoutx * sizeouty +  j * sizeoutx + i;
-                    uint64_t pixindex = j * sizeoutx + i;
+                for (uint32_t j = 0; j < sizeWFSy; j++) {
+                    uint64_t mpixindex = k * sizeWFSx * sizeWFSy +  j * sizeWFSx + i;
+                    uint64_t pixindex = j * sizeWFSx + i;
                     
                     // handle different input types, ultimately fast to float
                     switch(WFSatype)
@@ -230,7 +230,7 @@ static errno_t compute_function()
                             break;
                     }
                 }
-                imgimWFSm.im->array.F[k * sizeoutx + i] = tot;
+                imgimWFSm.im->array.F[k * sizeWFSx + i] = tot;
             }
         }
         
@@ -300,15 +300,15 @@ static errno_t compute_function()
             for (j = 0; j < numtraces; j++){
                 float tot = 0.0;
                 int i;
-                for (i = 0; i < sizeoutx; i++) {
-                    tot += wfsin.im->array.F[j*sizeoutx + i];
+                for (i = 0; i < sizeWFSx; i++) {
+                    tot += wfsin.im->array.F[j*sizeWFSx + i];
                 }
                 float normval = 0.;
                 if (tot > 0){
                     normval = 1./tot;
                 }
-                for (i = 0; i < sizeoutx; i++) {
-                    wfsout.im->array.F[j*sizeoutx + i] = wfsin.im->array.F[j*sizeoutx + i]*normval;
+                for (i = 0; i < sizeWFSx; i++) {
+                    wfsout.im->array.F[j*sizeWFSx + i] = wfsin.im->array.F[j*sizeWFSx + i]*normval;
                 }
             }
         }
