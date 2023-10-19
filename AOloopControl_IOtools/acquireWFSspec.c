@@ -306,14 +306,14 @@ static errno_t compute_function()
                 float tot = 0.0;
                 int i;
                 for (i = 0; i < sizeWFSx; i++) {
-                    tot += imfimWFS0.im->array.F[j*sizeWFSx + i];
+                    tot += imgimWFS0.im->array.F[j*sizeWFSx + i];
                 }
                 float normval = 0.;
                 if (tot > 0){
                     normval = 1./tot;
                 }
                 for (i = 0; i < sizeWFSx; i++) {
-                    imgimWFS1.im->array.F[j*sizeWFSx + i] = imfimWFS0.im->array.F[j*sizeWFSx + i]*normval;
+                    imgimWFS1.im->array.F[j*sizeWFSx + i] = imgimWFS0.im->array.F[j*sizeWFSx + i]*normval;
                 }
             }
         }
