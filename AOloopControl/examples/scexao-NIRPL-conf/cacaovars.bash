@@ -104,3 +104,6 @@ export CACAO_FPSPROC_MODALFILTERING="ON"
 # Compute DM command from control mode values
 #
 export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
+
+# Env variable to see if we are in sim mode or not
+export CACAO_MODE=""
