@@ -97,7 +97,11 @@ static errno_t compute_function()
 
     IMGID wfsmask = mkIMGID_from_name(specmask_shm_name);
     resolveIMGID(&wfsmask, ERRMODE_ABORT);
-    uint32_t masksizeoutz = wfsin.size[2];
+    uint32_t masksizeoutz = wfsmask.size[2];
+
+    printf("%lu size0\n", wfsmask.size[0]);
+    printf("%lu size1\n", wfsmask.size[1]);
+    printf("%lu size2\n", wfsmask.size[2]);
 
     // Create output
     IMGID wfsout;
