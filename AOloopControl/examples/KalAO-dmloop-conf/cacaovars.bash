@@ -1,5 +1,5 @@
-# cacao environment variables for setup
-# This file will be sourced by cacao-setup
+#!/usr/bin/env bash
+# This file will be sourced by cacao-setup and high-level cacao scripts
 
 export CACAO_LOOPNAME="kalaodmloop"
 export CACAO_LOOPNUMBER="1"
