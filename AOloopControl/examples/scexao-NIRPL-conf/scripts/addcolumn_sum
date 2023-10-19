@@ -11,7 +11,7 @@ fname="column_sum"
 # add to fpsCTRL, start tmux, start conf, turn on procinfo
 setupfps "${fname}"
 
-sendFPScmd "confwupdate ${fname}-${CACAO_LOOPNUMBER}"
+sleep 1
 
 # procinfo specific stuff
 sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggermode 3"
