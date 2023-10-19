@@ -308,7 +308,7 @@ static errno_t compute_function()
                     normval = 1./tot;
                 }
                 for (i = 0; i < sizeWFSx; i++) {
-                    wfsout.im->array.F[j*sizeWFSx + i] = wfsin.im->array.F[j*sizeWFSx + i]*normval;
+                    imgimWFS1.im->array.F[j*sizeWFSx + i] = wfsin.im->array.F[j*sizeWFSx + i]*normval;
                 }
             }
         }
