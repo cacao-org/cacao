@@ -10,10 +10,11 @@ fname="column_sum"
 
 # add to fpsCTRL, start tmux, start conf, turn on procinfo
 setupfps "${fname}"
+setupfps "${fname}" # do twice for no reason
 
 # procinfo specific stuff
 sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggermode 3"
 sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.loopcntMax -1"
-sendFPScmd "setcal ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggersname ${CACAO_WFSSTREAMSIM}"
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggersname ${CACAO_WFSSTREAMSIM}"
 
 sendFPScmd "confwupdate ${fname}-${CACAO_LOOPNUMBER}"
