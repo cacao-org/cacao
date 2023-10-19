@@ -32,7 +32,7 @@ static CLICMDARGDEF farg[] =
         &fpi_inputshmname
     },
     {
-        CLIARG_STR,
+        CLIARG_IMG,
         ".wfsmask",
         "Wavefront sensor spectral extraction mask",
         "wfsspecmask",
