@@ -180,7 +180,7 @@ static errno_t compute_function()
     list_image_ID();
 
     int wfsim_semwaitindex =
-        ImageStreamIO_getsemwaitindex(imgwfsim.im, *semindex);
+        ImageStreamIO_getsemwaitindex(wfsin.im, *semindex);
     if(wfsim_semwaitindex > -1)
     {
         *semindex = wfsim_semwaitindex;
