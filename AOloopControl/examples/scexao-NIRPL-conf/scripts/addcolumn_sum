@@ -3,7 +3,7 @@
 # add column_sum function to fpsCTRL
 
 source cacao-check-cacaovars
-source ./scripts/fps-utility.sh
+source ./scripts/fps-utility
 
 # name of function to setup
 fname="column_sum"
