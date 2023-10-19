@@ -108,3 +108,7 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 # Zero point offsetting
 #
 export CACAO_FPSPROC_MVMGPU_ZPO="ON"
+
+# Disabling as it it crashing
+export CACAO_FPSPROC_SCICROPMASK="OFF"
+export CACAO_FPSPROC_WFSCROPMASK="OFF"
