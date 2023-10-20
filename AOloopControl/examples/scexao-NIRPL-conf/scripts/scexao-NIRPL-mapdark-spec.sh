@@ -12,19 +12,23 @@ source milk-script-std-config
 source cacao-check-cacaovars
 
 source milk-argparse
+source ./scripts/fps-utility
 
+sendFPScmd "waitonrunON"
+sendFPScmd "waitonconfON"
 
+sendFPScmd "setval acquire_spectra-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 1"
+sendFPScmd "setval acquire_spectra-${CACAO_LOOPNUMBER}.wfsin aol${CACAO_LOOPNUMBER}_wfsdarkraw"
+sendFPScmd "confwupdate acquire_spectra-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstart acquire_spectra-${CACAO_LOOPNUMBER}"
+sendFPScmd "runstop acquire_spectra-${CACAO_LOOPNUMBER}"
 
-
-# average #NBAVE frames, write result to conf/wfsimave.fits
-
-rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm
 cacao << EOF
-loadfits "conf/wfsdarkraw.fits" darkraw
-readshmim wfsspecmask
-cacaoio.extract_spectra darkraw wfsspecmask darkm
-saveFITS darkm "conf/wfsdark.fits"
-imcpshm darkm aol${CACAO_LOOPNUMBER}_wfsdark
+readshmim aol${CACAO_LOOPNUMBER}_imWFS2
+readshmim aol${CACAO_LOOPNUMBER}_wfsdark
+imcpshm aol${CACAO_LOOPNUMBER}_imWFS2 aol${CACAO_LOOPNUMBER}_wfsdark
 exitCLI
 EOF
 
+sendFPScmd "setval acquire_spectra-${CACAO_LOOPNUMBER}.procinfo.loopcntMax -1"
+sendFPScmd "setval acquire_spectra-${CACAO_LOOPNUMBER}.wfsin ${CACAO_WFSSTREAMSIM}"
