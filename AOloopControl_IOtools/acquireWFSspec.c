@@ -72,7 +72,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_ONOFF,
         ".comp.darksub",
         "sub aolX_wfsdark -> imWFS0",
-        "1",
+        "0",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSsubdark,
         &fpi_compWFSsubdark
@@ -81,7 +81,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_ONOFF,
         ".comp.WFSnormalize",
         "normalize WFS frames -> imWFS1",
-        "1",
+        "0",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSnormalize,
         &fpi_compWFSnormalize
@@ -90,7 +90,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_ONOFF,
         ".comp.WFSrefsub",
         "subtract WFS reference aolX_wfsrefc -> imWFS2",
-        "1",
+        "0",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSrefsub,
         &fpi_compWFSrefsub
@@ -284,10 +284,11 @@ static errno_t compute_function()
         }
         else
         {
+            uint8_t  darkWFSatype = imgwfsdark.md->datatype;
             // dark subtraction
             for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
             {
-                switch(WFSatype)
+                switch(darkWFSatype)
                     {
                         case _DATATYPE_UINT16: 
                             imgimWFS0.im->array.F[ii] = imgimWFSm.im->array.F[ii] - imgwfsdark.im->array.UI16[ii];
