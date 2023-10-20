@@ -295,6 +295,8 @@ cacao-aorun-026-takeref
 
 and enable reference subtraction through `comp`.
 
+Finally, you can average the traces horizontally by `x` pixels using the `binning` parameter. By default, `x`=1 (no binning).
+
 ## how to install and uninstall
 ### installation
 In your $MILK_ROOT folder, do 
