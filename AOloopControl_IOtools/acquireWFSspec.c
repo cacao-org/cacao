@@ -135,6 +135,58 @@ static errno_t help_function()
     return RETURN_SUCCESS;
 }
 
+static errno_t extract_traces(
+    IMGID wfsin,
+    IMGID specmask,
+    IMGID wfsout,
+)
+{
+    uint32_t sizeWFSx = wfsin.size[0];
+    uint32_t sizeWFSy = wfsin.size[1];
+    uint64_t sizeWFSraw  = sizeWFSx * sizeWFSy;
+    uint8_t  WFSatype = wfsin.md->datatype;
+
+    uint32_t numtraces = specmask.size[2];
+    uint64_t sizeWFS  = sizeWFSx * numtraces;
+
+    for (uint32_t k = 0; k < numtraces; k++){
+        for (uint32_t i = 0; i < sizeWFSx; i++){
+            float tot = 0.0;
+            for (uint32_t j = 0; j < sizeWFSy; j++) {
+                uint64_t mpixindex = k * sizeWFSx * sizeWFSy +  j * sizeWFSx + i;
+                uint64_t pixindex = j * sizeWFSx + i;
+                
+                // handle different input types, ultimately fast to float
+                switch(WFSatype)
+                {
+                    case _DATATYPE_UINT16: 
+                        tot += wfsin.im->array.UI16[pixindex] * specmask.im->array.UI16[mpixindex];
+                        break;
+                    case _DATATYPE_INT16:
+                        tot += wfsin.im->array.SI16[pixindex] * specmask.im->array.UI16[mpixindex];
+                        break;
+                    case _DATATYPE_FLOAT:
+                        tot += wfsin.im->array.F[pixindex] * specmask.im->array.UI16[mpixindex];
+                        break;
+                    case _DATATYPE_UINT32:
+                        tot += wfsin.im->array.UI32[pixindex] * specmask.im->array.UI16[mpixindex];
+                        break;
+                    default:
+                        printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                            __FILE__,
+                            __LINE__);
+                        printf("datatype = %d\n", WFSatype);
+                        exit(0);
+                        break;
+                }
+            }
+            wfsout.im->array.F[k * sizeWFSx + i] = tot;
+        }
+    }  
+    DEBUG_TRACE_FEXIT();
+    return RETURN_SUCCESS;
+}
+
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
@@ -204,40 +256,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
     {
         // STEP 1: extract spectra -> aolx_imWFSm
-        for (uint32_t k = 0; k < numtraces; k++){
-            for (uint32_t i = 0; i < sizeWFSx; i++){
-                float tot = 0.0;
-                for (uint32_t j = 0; j < sizeWFSy; j++) {
-                    uint64_t mpixindex = k * sizeWFSx * sizeWFSy +  j * sizeWFSx + i;
-                    uint64_t pixindex = j * sizeWFSx + i;
-                    
-                    // handle different input types, ultimately fast to float
-                    switch(WFSatype)
-                    {
-                        case _DATATYPE_UINT16: 
-                            tot += wfsin.im->array.UI16[pixindex] * specmask.im->array.UI16[mpixindex];
-                            break;
-                        case _DATATYPE_INT16:
-                            tot += wfsin.im->array.SI16[pixindex] * specmask.im->array.UI16[mpixindex];
-                            break;
-                        case _DATATYPE_FLOAT:
-                            tot += wfsin.im->array.F[pixindex] * specmask.im->array.UI16[mpixindex];
-                            break;
-                        case _DATATYPE_UINT32:
-                            tot += wfsin.im->array.UI32[pixindex] * specmask.im->array.UI16[mpixindex];
-                            break;
-                        default:
-                            printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                                __FILE__,
-                                __LINE__);
-                            printf("datatype = %d\n", WFSatype);
-                            exit(0);
-                            break;
-                    }
-                }
-                imgimWFSm.im->array.F[k * sizeWFSx + i] = tot;
-            }
-        }
+        extract_traces(wfsin,specmask,imgimWFSm)
         
         // Done and post downstream.
         processinfo_update_output_stream(processinfo, imgimWFSm.ID);
