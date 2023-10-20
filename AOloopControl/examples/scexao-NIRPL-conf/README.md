@@ -295,6 +295,33 @@ cacao-aorun-026-takeref
 
 and enable reference subtraction through `comp`.
 
+## how to install and uninstall
+### installation
+In your $MILK_ROOT folder, do 
+```bash
+cd plugins/cacao-src
+git pull
+```
+Then, compile e.g.
+```bash
+cd ..
+mkdir _build
+cd _build
+cmake ..
+make
+make install
+```
+### uninstall
+I made a script called `cleanup`, which is run in the directory containing `NIRPL-rootdir`, with the following contents:
+```bash
+#!/usr/bin/env bash
+cacao-task-manager -C 0 scexao-NIRPL
+rm -r .NIRPL*
+tmux kill-server
+rm -r /milk/shm/*
+```
+Maybe don't run this if you have other shared memories you don't want to nuke. 
+
 THE END (for now)
 
 
