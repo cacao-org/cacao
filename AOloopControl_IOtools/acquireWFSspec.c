@@ -325,11 +325,11 @@ static errno_t compute_function()
     }
 
     // LOAD DARK
-    IMGID imgwfsdark;
+    IMGID imgWFSdark;
     {
         char wfsdarkname[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloopindex);
-        imgwfsdark = stream_connect(wfsdarkname);
+        imgWFSdark = stream_connect(wfsdarkname);
     }
 
     // This is the while(True) {
@@ -347,7 +347,7 @@ static errno_t compute_function()
         int status_darksub = 0;
         if(data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF)
         {
-            if(imgwfsdark.ID != -1)
+            if(imgWFSdark.ID != -1)
             {
                 status_darksub = 1;
             }
