@@ -13,8 +13,6 @@ set(SOURCEFILES
     findspots.c
     WFScamsim.c
     WFSmap.c
-    extract_spectra.c
-    norm_spectra.c
     acquireWFSspec.c
 )
 
@@ -26,8 +24,6 @@ set(INCLUDEFILES
     findspots.h
     WFScamsim.h
     WFSmap.h
-    extract_spectra.h
-    norm_spectra.h
     acquireWFSspec.h
 )
 

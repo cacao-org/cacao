@@ -34,8 +34,6 @@
 #include "WFScamsim.h"
 #include "WFSmap.h"
 #include "ao188_preprocessor.h"
-#include "extract_spectra.h"
-#include "norm_spectra.h"
 #include "acquireWFSspec.h"
 
 
@@ -59,8 +57,6 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_IOtools__WFSmap();
     CLIADDCMD_AOloopControl_IOtools__findspots();
     CLIADDCMD_AOloopControl_IOtools__AO188Preproc();
-    CLIADDCMD_AOloopControl_IOtools__extractspectra();
-    CLIADDCMD_AOloopControl_IOtools__normspectra();
     CLIADDCMD_AOloopControl_IOtools__acquirespectra();
 
     // add atexit functions here

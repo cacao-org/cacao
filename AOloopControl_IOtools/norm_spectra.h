@@ -1,6 +1,0 @@
-#ifndef AOLOOPCONTROL_IOTOOLS_NORMSPECTRA_H
-#define AOLOOPCONTROL_IOTOOLS_NORMSPECTRA_H
-
-errno_t CLIADDCMD_AOloopControl_IOtools__normspectra();
-
-#endif
