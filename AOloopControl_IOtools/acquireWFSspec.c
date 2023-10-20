@@ -302,17 +302,16 @@ static errno_t compute_function()
         {
             status_normalize = 1;
             int j;
-            for (j = 0; j < numtraces; j++){
+            for (int i = 0; i < sizeWFSx; i++) {
                 float tot = 0.0;
-                int i;
-                for (i = 0; i < sizeWFSx; i++) {
+                for (j = 0; j < numtraces; j++){
                     tot += imgimWFS0.im->array.F[j*sizeWFSx + i];
                 }
                 float normval = 0.;
                 if (tot > 0){
                     normval = 1./tot;
                 }
-                for (i = 0; i < sizeWFSx; i++) {
+                for (j = 0; j < numtraces; j++) {
                     imgimWFS1.im->array.F[j*sizeWFSx + i] = imgimWFS0.im->array.F[j*sizeWFSx + i]*normval;
                 }
             }
