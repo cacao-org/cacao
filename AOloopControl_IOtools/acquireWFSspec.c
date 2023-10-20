@@ -138,7 +138,7 @@ static errno_t help_function()
 static errno_t extract_traces(
     IMGID wfsin,
     IMGID specmask,
-    IMGID wfsout,
+    IMGID wfsout
 )
 {
     uint32_t sizeWFSx = wfsin.size[0];
