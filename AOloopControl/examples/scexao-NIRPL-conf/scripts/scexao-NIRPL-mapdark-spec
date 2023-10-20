@@ -6,13 +6,16 @@
 # script 1-line description
 MSdescr="remap WFS dark frame - spectral version"
 
-MSextdescr="Remaps dark according to mapping file"
+MSextdescr="Remaps dark according acquire_spectra function"
 
 source milk-script-std-config
 source cacao-check-cacaovars
 
 source milk-argparse
 source ./scripts/fps-utility
+
+# delete previous dark
+rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm
 
 sendFPScmd "waitonrunON"
 sendFPScmd "waitonconfON"

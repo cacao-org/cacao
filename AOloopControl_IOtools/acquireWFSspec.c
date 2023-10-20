@@ -15,7 +15,7 @@ static long  fpi_inputshmname;
 static char *specmask_shm_name; // mask shared memory
 static long  fpi_specmaskshmname;
 
-static int64_t *binning;
+static uint32_t *binning;
 static long     fpi_binning;
 
 static uint32_t *AOloopindex;
@@ -214,7 +214,7 @@ static errno_t dark_sub(
 )
 {
     uint8_t  darkWFSatype = wfsdark.md->datatype;
-    uint64_t sizeWFS = wfsin.size[0]*wfsin.size[1]
+    uint64_t sizeWFS = wfsin.size[0]*wfsin.size[1];
     
     // dark subtraction
     for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
@@ -251,7 +251,7 @@ static errno_t spec_norm(
 {
     uint32_t j;
     uint32_t sizeWFSx = wfsin.size[0];
-    uint32_t num_traces = wfsin.size[1];
+    uint32_t numtraces = wfsin.size[1];
 
     for (uint_fast32_t i = 0; i < sizeWFSx; i++) {
         float tot = 0.0;
@@ -284,6 +284,7 @@ static errno_t compute_function()
     resolveIMGID(&specmask, ERRMODE_ABORT);
     uint32_t numtraces = specmask.size[2];
     uint64_t sizeWFS  = sizeWFSx * numtraces;
+    uint32_t sizeWFSoutx = sizeWFSx / *binning;
 
 
     // size is  (image shape) * z, z is # of traces
@@ -300,19 +301,19 @@ static errno_t compute_function()
         char name[STRINGMAXLEN_STREAMNAME];
 
         WRITE_IMAGENAME(name, "aol%u_imWFSm", *AOloopindex);
-        imgimWFSm = stream_connect_create_2Df32(name, sizeWFSx, numtraces);
+        imgimWFSm = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
 
         WRITE_IMAGENAME(name, "aol%u_imWFS0", *AOloopindex);
-        imgimWFS0 = stream_connect_create_2Df32(name, sizeWFSx, numtraces);
+        imgimWFS0 = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
 
         WRITE_IMAGENAME(name, "aol%u_imWFS1", *AOloopindex);
-        imgimWFS1 = stream_connect_create_2Df32(name, sizeWFSx, numtraces);
+        imgimWFS1 = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
 
         WRITE_IMAGENAME(name, "aol%u_imWFS2", *AOloopindex);
-        imgimWFS2 = stream_connect_create_2Df32(name, sizeWFSx, numtraces);
+        imgimWFS2 = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
 
         WRITE_IMAGENAME(name, "aol%u_wfsref", *AOloopindex);
-        imgwfsref = stream_connect_create_2Df32(name, sizeWFSx, numtraces);
+        imgwfsref = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
     }
 
     list_image_ID();
