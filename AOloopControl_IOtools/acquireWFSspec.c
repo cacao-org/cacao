@@ -1,6 +1,6 @@
 /**
  * @file    acquireWFSspec.c
- * @brief   acquire spectra - a stripped-down replacement for acquWFSim
+ * @brief   acquire spectra - a stripped-down version of acquireWFSim for dispersed WFS
  *
  */
 
@@ -14,6 +14,9 @@ static long  fpi_inputshmname;
 
 static char *specmask_shm_name; // mask shared memory
 static long  fpi_specmaskshmname;
+
+static int64_t *binning;
+static long     fpi_binning;
 
 static uint32_t *AOloopindex;
 static long      fpi_AOloopindex;
@@ -44,11 +47,20 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_IMG,
         ".wfsmask",
-        "Wavefront sensor spectral extraction mask",
+        "wfs spectral extraction mask",
         "wfsspecmask",
         CLIARG_VISIBLE_DEFAULT,
         (void **) &specmask_shm_name,
         &fpi_specmaskshmname
+    },
+    {
+        CLIARG_UINT32,
+        ".binning",
+        "spectral trace binning",
+        "1",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &binning,
+        &fpi_binning
     },
     {
         CLIARG_UINT32,
@@ -89,7 +101,7 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF,
         ".comp.WFSrefsub",
-        "subtract WFS reference aolX_wfsrefc -> imWFS2",
+        "subtract WFS reference aolX_wfsref -> imWFS2",
         "0",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSrefsub,
@@ -132,59 +144,128 @@ static CLICMDDATA CLIcmddata =
 // detailed help
 static errno_t help_function()
 {
-    return RETURN_SUCCESS;
+    return RETURN_SUCCESS; // no help for you
 }
 
 static errno_t extract_traces(
     IMGID wfsin,
     IMGID specmask,
-    IMGID wfsout
+    IMGID wfsout,
+    uint32_t binning
 )
 {
     uint32_t sizeWFSx = wfsin.size[0];
     uint32_t sizeWFSy = wfsin.size[1];
     uint64_t sizeWFSraw  = sizeWFSx * sizeWFSy;
+
+    uint32_t sizeWFSoutx = sizeWFSx/binning;
+
     uint8_t  WFSatype = wfsin.md->datatype;
 
     uint32_t numtraces = specmask.size[2];
-    uint64_t sizeWFS  = sizeWFSx * numtraces;
+    uint64_t sizeWFSout  = sizeWFSoutx * numtraces;
 
     for (uint32_t k = 0; k < numtraces; k++){
-        for (uint32_t i = 0; i < sizeWFSx; i++){
+        uint32_t xpix_index = 0;
+        for (uint32_t i = 0; i < sizeWFSx; i=i+binning){
             float tot = 0.0;
-            for (uint32_t j = 0; j < sizeWFSy; j++) {
-                uint64_t mpixindex = k * sizeWFSx * sizeWFSy +  j * sizeWFSx + i;
-                uint64_t pixindex = j * sizeWFSx + i;
-                
-                // handle different input types, ultimately fast to float
-                switch(WFSatype)
-                {
-                    case _DATATYPE_UINT16: 
-                        tot += wfsin.im->array.UI16[pixindex] * specmask.im->array.UI16[mpixindex];
-                        break;
-                    case _DATATYPE_INT16:
-                        tot += wfsin.im->array.SI16[pixindex] * specmask.im->array.UI16[mpixindex];
-                        break;
-                    case _DATATYPE_FLOAT:
-                        tot += wfsin.im->array.F[pixindex] * specmask.im->array.UI16[mpixindex];
-                        break;
-                    case _DATATYPE_UINT32:
-                        tot += wfsin.im->array.UI32[pixindex] * specmask.im->array.UI16[mpixindex];
-                        break;
-                    default:
-                        printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
-                            __FILE__,
-                            __LINE__);
-                        printf("datatype = %d\n", WFSatype);
-                        exit(0);
-                        break;
+            for (uint32_t _i = 0; _i < binning; _i++){
+                for (uint32_t j = 0; j < sizeWFSy; j++) {
+                    uint64_t mpixindex = k * sizeWFSraw +  j * sizeWFSx + i + _i;
+                    uint64_t pixindex = j * sizeWFSx + i + _i;
+                    
+                    // handle different input types, ultimately cast to float
+                    switch(WFSatype)
+                    {
+                        case _DATATYPE_UINT16: 
+                            tot += wfsin.im->array.UI16[pixindex] * specmask.im->array.UI16[mpixindex];
+                            break;
+                        case _DATATYPE_INT16:
+                            tot += wfsin.im->array.SI16[pixindex] * specmask.im->array.UI16[mpixindex];
+                            break;
+                        case _DATATYPE_FLOAT:
+                            tot += wfsin.im->array.F[pixindex] * specmask.im->array.UI16[mpixindex];
+                            break;
+                        case _DATATYPE_UINT32:
+                            tot += wfsin.im->array.UI32[pixindex] * specmask.im->array.UI16[mpixindex];
+                            break;
+                        default:
+                            printf("ERROR: WFS data type not recognized\n File %s, line %d\n",
+                                __FILE__,
+                                __LINE__);
+                            printf("datatype = %d\n", WFSatype);
+                            exit(0);
+                            break;
+                    }
                 }
             }
-            wfsout.im->array.F[k * sizeWFSx + i] = tot;
+            wfsout.im->array.F[k * sizeWFSoutx + xpix_index] = tot;
+            xpix_index += 1;
         }
     }  
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
+}
+
+static errno_t dark_sub(
+    IMGID wfsin,
+    IMGID wfsdark,
+    IMGID wfsout
+)
+{
+    uint8_t  darkWFSatype = wfsdark.md->datatype;
+    uint64_t sizeWFS = wfsin.size[0]*wfsin.size[1]
+    
+    // dark subtraction
+    for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
+    {
+        switch(darkWFSatype)
+            {
+                case _DATATYPE_UINT16: 
+                    wfsout.im->array.F[ii] = wfsin.im->array.F[ii] - wfsdark.im->array.UI16[ii];
+                    break;
+                case _DATATYPE_INT16:
+                    wfsout.im->array.F[ii] = wfsin.im->array.F[ii] - wfsdark.im->array.SI16[ii];
+                    break;
+                case _DATATYPE_FLOAT:
+                    wfsout.im->array.F[ii] = wfsin.im->array.F[ii] - wfsdark.im->array.F[ii];
+                    break;
+                case _DATATYPE_UINT32:
+                    wfsout.im->array.F[ii] = wfsin.im->array.F[ii] - wfsdark.im->array.UI32[ii];
+                    break;
+                default:
+                    printf("ERROR: WFS DARK data type not recognized\n File %s, line %d\n",
+                        __FILE__,
+                        __LINE__);
+                    printf("datatype = %d\n", darkWFSatype);
+                    exit(0);
+                    break;
+            }
+    }
+}
+
+static errno_t spec_norm(
+    IMGID wfsin,
+    IMGID wfsout
+)
+{
+    uint32_t j;
+    uint32_t sizeWFSx = wfsin.size[0];
+    uint32_t num_traces = wfsin.size[1];
+
+    for (uint_fast32_t i = 0; i < sizeWFSx; i++) {
+        float tot = 0.0;
+        for (j = 0; j < numtraces; j++){
+            tot += wfsin.im->array.F[j*sizeWFSx + i];
+        }
+        float normval = 0.;
+        if (tot > 0){
+            normval = 1./tot;
+        }
+        for (j = 0; j < numtraces; j++) {
+            wfsout.im->array.F[j*sizeWFSx + i] = wfsin.im->array.F[j*sizeWFSx + i]*normval;
+        }
+    }
 }
 
 static errno_t compute_function()
@@ -206,7 +287,7 @@ static errno_t compute_function()
 
 
     // size is  (image shape) * z, z is # of traces
-    // each slice looks like a bar that covers one trace
+    // each z-slice looks like a bar that covers one trace
 
     // create/read images
     IMGID imgimWFSm; // mapped (extracted spectra) 
@@ -284,33 +365,7 @@ static errno_t compute_function()
         }
         else
         {
-            uint8_t  darkWFSatype = imgwfsdark.md->datatype;
-            // dark subtraction
-            for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
-            {
-                switch(darkWFSatype)
-                    {
-                        case _DATATYPE_UINT16: 
-                            imgimWFS0.im->array.F[ii] = imgimWFSm.im->array.F[ii] - imgwfsdark.im->array.UI16[ii];
-                            break;
-                        case _DATATYPE_INT16:
-                            imgimWFS0.im->array.F[ii] = imgimWFSm.im->array.F[ii] - imgwfsdark.im->array.SI16[ii];
-                            break;
-                        case _DATATYPE_FLOAT:
-                            imgimWFS0.im->array.F[ii] = imgimWFSm.im->array.F[ii] - imgwfsdark.im->array.F[ii];
-                            break;
-                        case _DATATYPE_UINT32:
-                            imgimWFS0.im->array.F[ii] = imgimWFSm.im->array.F[ii] - imgwfsdark.im->array.UI32[ii];
-                            break;
-                        default:
-                            printf("ERROR: WFS DARK data type not recognized\n File %s, line %d\n",
-                                __FILE__,
-                                __LINE__);
-                            printf("datatype = %d\n", WFSatype);
-                            exit(0);
-                            break;
-                    }
-            }
+            dark_sub(imgimWFSm,imgWFSdark,imgimWFS0); // dark sub to imWFS0
         }
         processinfo_update_output_stream(processinfo, imgimWFS0.ID); // post
 
@@ -321,20 +376,7 @@ static errno_t compute_function()
         if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
         {
             status_normalize = 1;
-            int j;
-            for (int i = 0; i < sizeWFSx; i++) {
-                float tot = 0.0;
-                for (j = 0; j < numtraces; j++){
-                    tot += imgimWFS0.im->array.F[j*sizeWFSx + i];
-                }
-                float normval = 0.;
-                if (tot > 0){
-                    normval = 1./tot;
-                }
-                for (j = 0; j < numtraces; j++) {
-                    imgimWFS1.im->array.F[j*sizeWFSx + i] = imgimWFS0.im->array.F[j*sizeWFSx + i]*normval;
-                }
-            }
+            spec_norm(imgimWFS0,imgimWFS1);
         }
         else
         {
