@@ -337,7 +337,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
     {
         // STEP 1: extract spectra -> aolx_imWFSm
-        extract_traces(wfsin,specmask,imgimWFSm);
+        extract_traces(wfsin,specmask,imgimWFSm,*binning);
         
         // Done and post downstream.
         processinfo_update_output_stream(processinfo, imgimWFSm.ID);
