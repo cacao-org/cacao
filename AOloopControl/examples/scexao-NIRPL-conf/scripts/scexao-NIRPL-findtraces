@@ -3,11 +3,11 @@
 # find spectral traces and write to shm called 'wfsspecmask'
 # run in rootdir
 
+(
 cd scripts
 
 python << EOF
 import utility
 utility.make_spectral_mask("apapanesim","wfsspecmask")
 EOF
-
-cd ..
+)
