@@ -1,6 +1,6 @@
 # Overview
 ## Near-IR Photonic Lantern - photometric 
-(scroll down for dispersed PL instructions)
+(scroll down for dispersed PL instructions!)
 
 cacao-task-manager tasks for this example :
 
@@ -233,44 +233,67 @@ the simulator is configured to pull old files corresponding to a non-dispersed 1
 ### Loop deployment
 As usual, run
 
-```cacao-loop-deploy scexao-NIRPL```
+```bash
+cacao-loop-deploy scexao-NIRPL
+```
 
 to deploy the loop. Then, to start the simulator, run 
 
-```./scripts/aorun-setmode-sim```.
+```bash
+./scripts/aorun-setmode-sim
+```
 
 To completement deployment, we add a new function, `acquire_spectra-6`, to `fpsCTRL`, using
 
-```./scripts/add-acquire_spec```
+```bash
+./scripts/add-acquire_spec
+```
 
 (which you may need to run twice in order to make sure `procinfo` is set correctly, for some unfathomable reason.)
 
 ### Start up DM
-```cacao-aorun-001-dmsim start```
+```bash
+cacao-aorun-001-dmsim start
+```
 
 ### Start WFS simulator
-```cacao-aorun-002-simwfs start```
+```bash
+cacao-aorun-002-simwfs start
+```
 
 ### Find spectral traces
 To extract spectra, we need to provide a shared memory called `wfsspecmask`, which has dimension N x M x Z where Z is the number of traces. Each Z-slice is 0, except for a rectangular region of 1s that covers one trace. Later, we multiply each slice against the wfs image and sum down columns.
 
 To make this shared memory, use
-```./scripts/scexao-NIRPL-findtraces```
+```bash
+./scripts/scexao-NIRPL-findtraces
+```
 
 which will call a Python function in `scripts/utility.py`. To edit the behavior of this script, you can add new functions to this file.
 
 ### Take dark
 First we take a raw (full-frame) dark with 
-```cacao-aorun-005-takedark```
+```bash
+cacao-aorun-005-takedark
+```
 which copies the dark to the shared memory `aol6_wfsdarkraw`.
 
 Then we remap this dark using 
-```./scripts/scexao-NIRPL-mapdark-spec```
+```bash
+./scripts/scexao-NIRPL-mapdark-spec
+```
 (which, again, you might need to run twice. The first run will initialize some needed shared memories - I need to automate this better). This rewrites `aol6_wfsdark` so it has a shape of N x Z.
 
 ### WFS image acquisition
 
-Finally, we can start the `acquire_spectra-6` function through `fpsCTRL`. In `comp`, there are toggles for dark subtraction, normalization, and reference subtraction. Note that the normalization is different than what is done in `acqu_WFS-6`; normalization is done per-wavelength, as opposed to dividing the entire WFS image by the flux total. After running, the processed WFS image is written to the shared memory `aol6_imWFS2` as usual. 
+Finally, we can start the `acquire_spectra-6` function through `fpsCTRL`. In `comp`, there are toggles for dark subtraction, normalization. Note that the normalization is different than what is done in `acqu_WFS-6`; normalization is done per-wavelength, as opposed to dividing the entire WFS image by the flux total. After running, the processed WFS image is written to the shared memory `aol6_imWFS2` as usual. 
+
+You can also take a reference using 
+```bash
+cacao-aorun-026-takeref
+```
+
+and enable reference subtraction through `comp`.
 
 THE END (for now)
 
