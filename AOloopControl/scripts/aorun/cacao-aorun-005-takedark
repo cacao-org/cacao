@@ -75,6 +75,7 @@ streamave ..procinfo 1
 streamave ..triggersname aol${CACAO_LOOPNUMBER}_wfsim
 streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
+streamave .out_shared 0
 streamave aol${CACAO_LOOPNUMBER}_wfsim imdark ${NBframe}
 saveFITS imdark "conf/wfsdarkraw.fits"
 listim
