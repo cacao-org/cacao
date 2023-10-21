@@ -108,7 +108,7 @@ The following files are written to ./conf/DMmodes/ :
 ```bash
 # Acquire response matrix - Fourier modes
 cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
-cacao-aorun-030-acqlinResp -w FpokesC.8
+cacao-aorun-030-acqlinResp FpokesC.8
 
 # NOTE: Alternate option is Hadamard modes
 # Acquire response matrix - Hadamard modes
