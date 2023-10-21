@@ -4,10 +4,21 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="Compute RM masks"
+MSdescr="Compute RM masks from zonal response matrix"
 
 
-MSextdescr="AO loop script"
+MSextdescr="Compute DM and WFS maps and masks
+
+Input: zonal response matrix
+conf/shmim.zrespM.fits
+
+Output: DM and WFS maps and msaks
+conf/dmmap.fits
+conf/dmmask.fits
+conf/wfsmap.fits
+conf/wfsmask.fits
+"
+
 source milk-script-std-config
 source cacao-check-cacaovars
 
