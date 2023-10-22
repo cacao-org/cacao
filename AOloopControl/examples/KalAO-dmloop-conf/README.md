@@ -110,11 +110,16 @@ The following files are written to ./conf/DMmodes/ :
 cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
 cacao-aorun-030-acqlinResp FpokesC.8
 
-# NOTE: Alternate option is Hadamard modes
+# Hadamard modes calibration (will compute zonal RM)
 # Acquire response matrix - Hadamard modes
-#cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
-#cacao-aorun-030-acqlinResp HpokeC
+cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
+cacao-aorun-030-acqlinResp HpokeC
+cacao-aorun-031-RMHdecode
+cacao-aorun-032-RMmkmask
 ```
+:warning: DM and WFS masks will be required to comput contro modes. They can be computed from a zonal RM (as shown above), or written by hand (single precision floats, 0.0 and 1.0 values).
+
+
 
 ### Take reference
 
