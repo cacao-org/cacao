@@ -4,12 +4,30 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="Compute RM masks"
+MSdescr="Compute RM masks from zonal response matrix"
 
 
-MSextdescr="AO loop script"
+MSextdescr="Compute DM and WFS maps and masks
+
+Input: response matrix
+default: conf/shmim.zrespM.fits
+
+Output: DM and WFS maps and msaks
+conf/dmmap.fits
+conf/dmmask.fits
+conf/wfsmap.fits
+conf/wfsmask.fits
+"
+
 source milk-script-std-config
 source cacao-check-cacaovars
+
+
+RMfname="conf/shmim.zrespM.fits"
+MSopt+=( "f:RMfname:set_RMfname:RMfname[string]:set resp matrix filename" )
+function set_RMfname() {
+	RMfname="$1"
+}
 
 
 DMmaskRMp0="0.2"
@@ -104,7 +122,7 @@ cacaomsglog "START"
 #loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
 
 cacao << EOF
-loadfits "conf/shmim.zrespM.fits" zrespM
+loadfits "${RMfname}" zrespM
 
 cacaocc.compmasksWFSDM .dmmask.perc0 ${DMmaskRMp0}
 cacaocc.compmasksWFSDM .dmmask.coeff0 ${DMmaskRMc0}

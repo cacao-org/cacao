@@ -75,6 +75,7 @@ streamave ..procinfo 1
 streamave ..triggersname aol${CACAO_LOOPNUMBER}_wfsim
 streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
+streamave .out_shared 0
 streamave aol${CACAO_LOOPNUMBER}_wfsim imdark ${NBframe}
 saveFITS imdark "conf/wfsdarkraw.fits"
 listim
@@ -83,6 +84,7 @@ EOF
 cacaomsglog "STOP acquisition"
 cacaomsglog "SAVED wfsdarkraw as conf/wfsdarkraw.fits"
 
+stat -t conf/wfsdarkraw.fits
 
 # LOGGING
 # see cacaofuncs-log for conventions
@@ -95,7 +97,8 @@ cacao-calib-logFITSfile wfsdarkraw
 cacao-calib-loadFITSfile wfsdarkraw ${LOGFILEOUT}
 cacao-calib-loadFITSfile wfsdark ${LOGFILEOUT}
 
-
+stat -t ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdarkraw.im.shm
+stat -t ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm
 
 # ======================================================================
 # Turning source on

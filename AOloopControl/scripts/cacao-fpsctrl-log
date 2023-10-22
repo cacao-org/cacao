@@ -74,7 +74,7 @@ function cleanexit
 	echo "Clean exit"
 	echo "Stopping log process in tmux ${tmuxname}"
 	tmux send-keys -t ${tmuxname} "fg" C-m
-	tmux send-keys -t ${tmuxname} C-c	
+	tmux send-keys -t ${tmuxname} C-c
 	exit 0
 }
 

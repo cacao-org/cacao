@@ -13,7 +13,7 @@ source cacao-check-cacaovars
 source milk-argparse
 
 
-
+chmod u+x scripts/*
 
 
 errexit=0
