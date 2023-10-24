@@ -11,6 +11,9 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
+#include "timeutils.h"
+
+
 
 // Holds info for each poke frame
 // A poke frame starts with a stream read.
@@ -79,26 +82,6 @@ typedef struct
     struct timespec tstart;
     struct timespec tpoke;
 
-
-    /*
-
-        // Cycle number
-        uint64_t iter;
-
-        // Did we poke DM during this time interval ?
-        int poke;
-
-        // Does frame count toward accumulated signal ?
-        int accum;
-
-
-
-        // frame counter within poke mode acquisition, starts negative
-        // becomes positive when accumulating signal
-        int pokeframeindex;
-
-        struct timespec ts;
-    */
 } PokeInfo;
 
 static PokeInfo *pkinfarray;
@@ -150,6 +133,11 @@ static uint32_t *NBexcl;
 static uint32_t *NBinnerCycle;
 
 
+// Logging
+
+// save all intermediate files
+static int64_t *saveALL;
+static long     fpi_saveALL;
 
 
 
@@ -246,6 +234,15 @@ static CLICMDARGDEF farg[] =
         CLIARG_HIDDEN_DEFAULT,
         (void **) &NBinnerCycle,
         NULL
+    },
+    {
+        CLIARG_ONOFF,
+        ".saveALL",
+        "save intermediate files",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &saveALL,
+        &fpi_saveALL
     }
 };
 
@@ -489,14 +486,12 @@ static errno_t Measure_Linear_Response_Modal(
     uint32_t    timing_NBexcl,
     uint32_t    SequInitMode,
     char       *outCname,
-    char       *outdir
+    char       *outdir,
+    int         saveALL
 )
 {
     DEBUG_TRACE_FSTART();
 
-
-    // Save all intermediate results
-    int SAVE_RMACQU_ALL = 1;
 
 
     // Convenient notations
@@ -916,12 +911,12 @@ static errno_t Measure_Linear_Response_Modal(
 
 
 
-        if(SAVE_RMACQU_ALL == 1)
+        EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdir);
+
+        if(saveALL == 1)
         {
 
             // Save all intermediate result
-
-            EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdir);
 
             FILE *fplog;
 
@@ -978,6 +973,21 @@ static errno_t Measure_Linear_Response_Modal(
             }
 
             FILE *fp = fopen(tmpfname, "w");
+
+
+            fprintf(fp, "# Poke Log\n");
+            fprintf(fp, "#\n");
+            fprintf(fp, "# col 1   Poke frame\n");
+            fprintf(fp, "# col 2   aveindex\n");
+            fprintf(fp, "# col 3   PokeIndexMEAS\n");
+            fprintf(fp, "# col 4   PokeIndexCTRL\n");
+            fprintf(fp, "# col 5   PokeIndexMEAS_Mapped\n");
+            fprintf(fp, "# col 6   PokeIndexCTRL_Mapped\n");
+            fprintf(fp, "# col 7   NBmode2\n");
+            fprintf(fp, "# col 8   timing_NBexcl\n");
+            fprintf(fp, "# col 9   timing_NBave\n");
+            fprintf(fp, "#\n");
+
             for(uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
             {
                 fprintf(fp,
@@ -1007,6 +1017,16 @@ static errno_t Measure_Linear_Response_Modal(
             FILE *fp            = fopen(tmpfname, "w");
             double ftime0 = pkinfarray[0].tstart.tv_sec + 1.0e-9 * pkinfarray[0].tstart.tv_nsec;
             double ftime;
+
+
+            fprintf(fp, "# Poke Timing\n");
+            fprintf(fp, "#\n");
+            fprintf(fp, "# col 1   NBpokeframe\n");
+            fprintf(fp, "# col 2   tstart\n");
+            fprintf(fp, "# col 3   tpoke\n");
+            fprintf(fp, "# col 4   PokeIndexMEAS\n");
+            fprintf(fp, "# col 5   time increment\n");
+
             for(uint64_t ii = 0; ii < NBpokeframe; ii++)
             {
                 ftime = pkinfarray[ii].tstart.tv_sec + 1.0e-9 * pkinfarray[ii].tstart.tv_nsec;
@@ -1023,8 +1043,6 @@ static errno_t Measure_Linear_Response_Modal(
             }
             fclose(fp);
         }
-
-
 
         iter++;
 
@@ -1064,9 +1082,6 @@ static errno_t Measure_Linear_Response_Modal(
             }
             save_fits(imgmoderespC.name, outCname);
         }
-
-
-
 
 
 
@@ -1123,6 +1138,12 @@ static errno_t compute_function()
 
     DEBUG_TRACEPOINT_PRINT("Calling Measure_Linear_Response_Modal");
 
+    // Construct RM files directory
+    char savedir[STRINGMAXLEN_DIRNAME];
+    char timestring[TIMESTRINGLEN];
+    mkUTtimestring_nanosec_now(timestring);
+    WRITE_DIRNAME(savedir, "measlinrespm/%s", timestring);
+
     Measure_Linear_Response_Modal(
         imgin,
         imgout,
@@ -1134,7 +1155,8 @@ static errno_t compute_function()
         *NBexcl,
         1,
         outmodeC,
-        "measlinrespmdir"
+        savedir,
+        *saveALL
     );
 
     list_image_ID();
