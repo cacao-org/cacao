@@ -1,5 +1,5 @@
-# cacao environment variables for setup
-# This file will be sourced by cacao-setup
+#!/usr/bin/env bash
+# This file will be sourced by cacao-setup and high-level cacao scripts
 
 export CACAO_LOOPNAME="kalaodmloop"
 export CACAO_LOOPNUMBER="1"
@@ -108,3 +108,7 @@ export CACAO_FPSPROC_MVMGPU_CMODEVAL2DM="ON"
 # Zero point offsetting
 #
 export CACAO_FPSPROC_MVMGPU_ZPO="ON"
+
+# Disabling as it it crashing
+export CACAO_FPSPROC_SCICROPMASK="OFF"
+export CACAO_FPSPROC_WFSCROPMASK="OFF"

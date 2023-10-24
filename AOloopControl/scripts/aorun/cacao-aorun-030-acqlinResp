@@ -8,10 +8,13 @@ MSdescr="Measure WFS response to DM modes"
 
 MSextdescr="
 Input DM modes in:
-<rundir>/conf/DMmodes/<name>.fits
+<rootdir>/conf/DMmodes/<name>.fits
+
+Sources <looprundir>/fps.mlat-<loopnumber>.datadir/cacaovars.bash
+to get CACAO_WFSFRATE and CACAO_LATENCYHARDWFR
 
 Output WFS response written as:
-<rundir>/conf/WFSmodes/<name>.WFSresp.fits
+<rootdir>/conf/WFSmodes/<name>.WFSresp.fits
 
 "
 
@@ -106,7 +109,7 @@ cp $(pwd)/conf/RMmodesDM/${DMmodeCname}.fits ./conf/RMmeas_modesDM.fits
 
 rm -f ./conf/RMmodesWFS/RMmodesWFS.fits
 
-#if [ $WaitForCompletion == "1" ]; then
+
 echo "Waiting for completion ..."
 pOK=1
 while [ $pOK -gt 0 ]; do

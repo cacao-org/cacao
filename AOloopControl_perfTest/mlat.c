@@ -289,8 +289,8 @@ static errno_t compute_function()
     }
 
     // Create DM patterns
-    long IDdm0 = -1;
-    long IDdm1 = -1;
+    imageID IDdm0 = -1;
+    imageID IDdm1 = -1;
     {
         uint32_t dmxsize = imgdm.md->size[0];
         uint32_t dmysize = imgdm.md->size[1];

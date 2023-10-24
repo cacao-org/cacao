@@ -2,10 +2,10 @@
 
 Latest Version (off main branch): [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/milk-org/cacao/tree/main)
 
-| Branch    | Build   | Docker Deployment    | Travis-CI    | Activity   |
-|-------------|-------------|-------------|-------------|-------------|
-**main**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|[![Build Status](https://www.travis-ci.com/cacao-org/cacao.svg?branch=main)](https://www.travis-ci.com/cacao-org/cacao)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/main.svg)|
-**dev**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|[![Build Status dev](https://www.travis-ci.com/cacao-org/cacao.svg?branch=dev)](https://www.travis-ci.com/cacao-org/cacao)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)|
+| Branch    | Build   | Docker Deployment    | Activity   |
+|-------------|-------------|-------------|-------------|
+**main**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/main.svg)|
+**dev**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)|
 
 
 Code metrics (dev branch) :
