@@ -3,46 +3,308 @@
 # This script uses milk-argparse
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
-# script 1-line description
-MSdescr="Compute Fourier-based control modes"
+# temp directory for intermediate steps
+cfCMtmpdir="compfCM"
 
-MSextdescr="Fourier- based CM"
+# script 1-line description
+MSdescr="Re-order control modes according to spatial frequency"
+
+MSextdescr="Takes as input the control modes (CM) expressed in DM and WFS space
+Re-orders the CM by rotations to match spatial frequency ordering.
+Uses temporary directory ./${cfCMtmpdir}/"
 
 source milk-script-std-config
 source cacao-check-cacaovars
+
+
+MSopt+=( "g:GPUdevice:setGPUdevice:GPUdevice[int]:Set GPU device, -1 for CPU [-1]" )
+GPUdevice="-1"
+function setGPUdevice()
+{
+	GPUdevice=$1
+}
+
+MSopt+=( "c:CPAmax:setCPAmax:cpamax[float]:Set maximum cycles per aperture (CPA) [8]" )
+CPAmax="8"
+function setCPAmax()
+{
+	CPAmax=$1
+}
+
+MSopt+=( "z:NBzer:setNBzer:NBzer[int]:Set number of Zernike polynomials [5]" )
+NBzer=5
+function setNBzer()
+{
+	NBzer=$1
+}
+
 source milk-argparse
+
+# Re-order control modes in increasing spatial frequency by multidimentional rotation
+
+
+# Input
+#
+# by convention:
+# CMmodesWFS is orthogonal over wfsmask
+# CMmodesDM is norm2 normalized over dmmask
+#
+CMmDM="conf/CMmodesDM/CMmodesDM.fits"
+CMmWFS="conf/CMmodesWFS/CMmodesWFS.fits"
+
+mkdir -p ${cfCMtmpdir}
+
+
+
+# DM-normalize output modes
+# RMS within dmmask should be = 1
+#
+milk-all << EOF
+loadfits "./${cfCMtmpdir}/CMmWFSnr.fits" CMmWFSnr
+loadfits "./${cfCMtmpdir}/CMmDMnr.fits" CMmDMnr
+normslice CMmDMnr nvec 2
+loadfits "conf/dmmask.fits" dmmask
+normslice dmmask normdmmask 2
+#saveFITS normdmmask "normdmmask.fits"
+nfact=normdmmask/nvec
+saveFITS nfact "nfact.fits"
+CMmWFSnrn=CMmWFSnr*nfact
+CMmDMnrn=CMmDMnr*nfact
+saveFITS CMmWFSnrn "conf/CMmodesWFS/CMmodesWFS_sf.fits"
+saveFITS CMmDMnrn "conf/CMmodesDM/CMmodesDM_sf.fits"
+listim
+exitCLI
+EOF
+
+exit
+
+
+
+# Renormalize modes in WFS space
+milk-all << EOF
+loadfits "${CMmDM}" CMmDM
+loadfits "${CMmWFS}" CMmWFS
+loadfits "conf/wfsmask.fits" wfsmask
+CMmWFSm=CMmWFS*wfsmask
+listim
+saveFITS CMmWFSm "./${cfCMtmpdir}/CMmWFSm.fits"
+normslice CMmWFS nvec 2
+CMmWFSn=CMmWFS/nvec
+CMmDMn=CMmDM/nvec
+saveFITS nvec "./${cfCMtmpdir}/nvec.fits"
+saveFITS CMmWFSn "./${cfCMtmpdir}/CMmWFSn.fits"
+saveFITS CMmDMn "./${cfCMtmpdir}/CMmDMn.fits"
+exitCLI
+EOF
+
+
+
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./conf/wfsmask.fits" wfsmask
+loadfits "./${cfCMtmpdir}/CMmWFSn.fits" CMmWFSn
+CMmWFSnm=CMmWFSn*wfsmask
+linalg.sgemm .transpA 1
+linalg.sgemm CMmWFSnm CMmWFSnm out
+saveFITS out "./${cfCMtmpdir}/CMmWFSnmxp.fits"
+exitCLI
+EOF
+
+
+
+# Create set of Fourier modes, store as modesF.fits
+#
+
+x0default=$(echo "scale=3; $CACAO_DMxsize/2" | bc)
+y0default=$(echo "scale=3; $CACAO_DMysize/2" | bc)
+r0default=$(echo "scale=3; 0.450*$CACAO_DMxsize" | bc)
+
+SAMPLING1Dmode=128
+
+# 2D defaults
+DMsizex=${CACAO_DMxsize}
+DMsizey=${CACAO_DMysize}
+DMx0=${CACAO_DM_beam_xcent:-$x0default}
+DMy0=${CACAO_DM_beam_ycent:-$y0default}
+DMr0=${CACAO_DM_beam_rad:-$r0t}
+
+
+# Create DM-space modes ordered by spatial frequency
+# First modes are Zernikes, then Fourier
+# Modes are not orthogonal
+#
+# This is the target ordering to which the new control modes should 
+# match as well as possible
+#
+milk-all << EOF
+zern.mkzerc .radmaskfact 1.0
+zern.mkzerc modesZ ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
+saveFITS modesZ "./${cfCMtmpdir}/modesZ.fits"
+lintools.mkFouriermodes .align.centered 0
+lintools.mkFouriermodes .align.xcenter ${DMx0}
+lintools.mkFouriermodes .align.ycenter ${DMy0}
+lintools.mkFouriermodes .rCPAmin 0.1
+lintools.mkFouriermodes modesF ${DMsizex} ${DMsizey} ${CPAmax} 0.8 ${DMr0} 1.0 0
+saveFITS modesF "./${cfCMtmpdir}/modesF.fits"
+immerge modesZ modesF modesZF 2
+saveFITS modesZF "./${cfCMtmpdir}/modesZF.fits"
+normslice modesZF nvec 2
+modesZFn=modesZF/nvec
+saveFITS modesZFn "./${cfCMtmpdir}/modesZFn.fits"
+exitCLI
+EOF
+
+
+
+# Compute WFS response of modesZFn -> modesZFnWFS
+#
+cacao << EOF
+loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
+loadfits "./${cfCMtmpdir}/modesZFn.fits" modesZFn
+cacaocc.generateRMWFS zrespM modesZFn modesZFnWFS
+saveFITS modesZFnWFS "./${cfCMtmpdir}/modesZFnWFS.fits"
+exitCLI
+EOF
+
+
+# Decompose modesZFnWFS.fits against CMmWFSn over wfsmask
+# The result is stored in modesZFWFSm_CMmWFSm_xp.fits.
+# The decomposition is a SGEMM because CMmWFSn is orthogonal
+#
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./${cfCMtmpdir}/CMmWFSn.fits" CMmWFSn
+loadfits "./conf/wfsmask.fits" wfsmask
+CMmWFSnm=CMmWFSn*wfsmask
+loadfits "./${cfCMtmpdir}/modesZFnWFS.fits" modesZFnWFS
+modesZFnWFSm=modesZFnWFS*wfsmask
+linalg.sgemm .transpA 1
+linalg.sgemm modesZFnWFSm CMmWFSnm out
+saveFITS out "./${cfCMtmpdir}/modesZFnWFSm_CMmWFSnm_xp.fits"
+exitCLI
+EOF
+
+
+
+# Compute the rotation that will turn 
+# the cross-product into a lower triangular matrix, ensuring
+# a good match between the two sets of modes.
+# The rotation is stored as matArot.fits
+# We then apply the rotation to CMmDM and CMmWFS
+#
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./${cfCMtmpdir}/modesZFnWFSm_CMmWFSnm_xp.fits" matAB
+linalg.basisrotmatch .optmode 1
+linalg.basisrotmatch matAB matArot
+# matABr.fits should now be lower triangular
+saveFITS matAB "./${cfCMtmpdir}/matABr.fits"
+saveFITS matArot "./${cfCMtmpdir}/matArot.fits"
+#
+# Apply rotation to CMmDMn
+loadfits "./${cfCMtmpdir}/CMmDMn.fits" CMmDMn
+linalg.sgemm CMmDMn matArot CMmDMnr
+saveFITS CMmDMnr "./${cfCMtmpdir}/CMmDMnr.fits"
+#
+# Apply rotation to CMmWFS
+loadfits "./${cfCMtmpdir}/CMmWFSn.fits" CMmWFSn
+linalg.sgemm CMmWFSn matArot CMmWFSnr
+saveFITS CMmWFSnr "./${cfCMtmpdir}/CMmWFSnr.fits"
+exitCLI
+EOF
+
+
+
+# rotated basis now satisfies constraints
+# Let's check it is orthonormal
+
+# Check original basis for reference
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./conf/wfsmask.fits" wfsmask
+loadfits "${CMmWFS}" CMmWFS
+CMmWFSm=CMmWFS*wfsmask
+linalg.sgemm .transpA 1
+linalg.sgemm CMmWFSm CMmWFSm out
+saveFITS out "CMmWFSmxp.fits"
+exitCLI
+EOF
+
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./conf/dmmask.fits" dmmask
+loadfits "${CMmDM}" CMmDM
+CMmDMm=CMmDM*dmmask
+linalg.sgemm .transpA 1
+linalg.sgemm CMmDMm CMmDMm out
+saveFITS out "./${cfCMtmpdir}/CMmDMmxp.fits"
+exitCLI
+EOF
+
+
+
+
+# check new basis
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./conf/wfsmask.fits" wfsmask
+loadfits "./${cfCMtmpdir}/CMmWFSnr.fits" CMmWFSnr
+CMmWFSnrm=CMmWFSnr*wfsmask
+linalg.sgemm .transpA 1
+linalg.sgemm CMmWFSnrm CMmWFSnrm out
+saveFITS out "./${cfCMtmpdir}/CMmWFSnrmxp.fits"
+exitCLI
+EOF
+
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./conf/dmmask.fits" dmmask
+loadfits "./${cfCMtmpdir}/CMmDMnr.fits" CMmDMnr
+CMmDMnrm=CMmDMnr*dmmask
+linalg.sgemm .transpA 1
+linalg.sgemm CMmDMnrm CMmDMnrm out
+saveFITS out "./${cfCMtmpdir}/CMmDMnrmxp.fits"
+exitCLI
+EOF
+
+
+
+# DM-normalize output modes
+# RMS within dmmask should be = 1
+#
+milk-all << EOF
+loadfits "./${cfCMtmpdir}/CMmWFSnr.fits" CMmWFSnr
+loadfits "./${cfCMtmpdir}/CMmDMnr.fits" CMmDMnr
+normslice CMmDMnr nvec 2
+loadfits "conf/dmmask.fits" dmmask
+normslice dmmask normdmmask 2
+nfact=normdmmask/nvec
+CMmWFSnrn=CMmWFSnr*nfact
+CMmDMnrn=CMmDMnr*nfact
+saveFITS CMmWFSnrn "conf/CMmodesWFS/CMmodesWFS_sf.fits"
+saveFITS CMmDMnrn "conf/CMmodesDM/CMmodesDM_sf.fits"
+listim
+exitCLI
+EOF
+
+
+
+
+
+
+
+
+
 
 
 
 
 errexit=0
 
-# Checking FPS
-FPScheckOK="OK"
-checkFPSON CACAO_FPSPROC_COMPFCM ${CACAO_FPSPROC_COMPFCM}
-
-if [ ${FPScheckOK} == "FAIL" ]; then
-	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
-	cacaomsglog "ERROR FPS check"
-	errexit=1
-	exit 1
-fi
-
 
 if [ $errexit = 1 ]; then
 	exit 1
 fi
 
-
-
-
-# ======================================================================
-# acquWFS
-# ======================================================================
-sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.upRMfiles ON"
-sendFPScmd "setval compfCM-${CACAO_LOOPNUMBER}.upAlign ON"
-
-sendFPScmd "confwupdate compfCM-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstart compfCM-${CACAO_LOOPNUMBER}"
 
 cacaomsglog "END"
