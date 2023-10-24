@@ -13,7 +13,8 @@ pixremap .outim.shared 1
 pixremap ..procinfo 1
 
 # trigger on semaphore of stream act1Dval
-pixremap ..triggermode 3
+pixremap ..triggermode 4
+pixremap ..triggerdelay 0.02
 pixremap ..triggersname ${act1Dval}
 
 # run forever, until killed

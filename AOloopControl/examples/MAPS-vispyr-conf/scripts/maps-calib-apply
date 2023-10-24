@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#########################################################
+# apply a calibration and reload CACAO
+#########################################################
+
+echo 'Applying Calibration' $1
+
+echo "runstop mvalC2dm-2" >> /milk/shm/maps_fpsCTRL.fifo
+echo "confstop mvalC2dm-2" >> /milk/shm/maps_fpsCTRL.fifo
+echo "runstop mfilt-2" >> /milk/shm/maps_fpsCTRL.fifo
+echo "confstop mfilt-2" >> /milk/shm/maps_fpsCTRL.fifo
+echo "runstop wfs2cmodeval-2" >> /milk/shm/maps_fpsCTRL.fifo
+echo "confstop wfs2cmodeval-2" >> /milk/shm/maps_fpsCTRL.fifo
+
+sleep 1
+echo "runstop mvalC2dm-2" >> /milk/shm/maps_fpsCTRL.fifo
+echo "runstop mfilt-2" >> /milk/shm/maps_fpsCTRL.fifo
+echo "runstop wfs2cmodeval-2" >> /milk/shm/maps_fpsCTRL.fifo
+
+sleep 1
+
+cmd='cacao-calib-apply '$1
+$cmd
+
+sleep 1
+echo "confstart wfs2cmodeval-2" >> /milk/shm/maps_fpsCTRL.fifo
+sleep 1
+echo "runstart wfs2cmodeval-2" >> /milk/shm/maps_fpsCTRL.fifo
+sleep 1
+echo "confstart mfilt-2" >> /milk/shm/maps_fpsCTRL.fifo
+sleep 1
+echo "runstart mfilt-2" >> /milk/shm/maps_fpsCTRL.fifo
+sleep 1
+echo "confstart mvalC2dm-2" >> /milk/shm/maps_fpsCTRL.fifo
+sleep 1
+echo "runstart mvalC2dm-2" >> /milk/shm/maps_fpsCTRL.fifo
