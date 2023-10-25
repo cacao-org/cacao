@@ -518,13 +518,12 @@ static errno_t Measure_Linear_Response_Modal(
     PokeInfo pkinf;
 
 
+
     DEBUG_TRACEPOINT("duplicaate each mode to positive and negative amplitude");
     //
     long NBmode2 = NBmode * 2;
     IMGID imginmodeC2 = makeIMGID_3D("pokemodeC2", sizexin, sizeyin, NBmode2);
     createimagefromIMGID(&imginmodeC2);
-
-    list_image_ID();
 
     DEBUG_TRACEPOINT("sizexyin %lu", sizexyin);
 
@@ -587,7 +586,7 @@ static errno_t Measure_Linear_Response_Modal(
     uint64_t NBpokeframe;
     NBpokeframe  = timing_NBave + timing_NBexcl;  // for each mode
     NBpokeframe *= NBmode2;                       // multiplied by number of modes
-    NBpokeframe += RMdelayfr;                // to allow for latency at startup
+    NBpokeframe += RMdelayfr;                     // to allow for latency at startup
 
     pkinfarray = (PokeInfo *) malloc(sizeof(PokeInfo) * NBpokeframe);
 
@@ -633,15 +632,6 @@ static errno_t Measure_Linear_Response_Modal(
     * If timing_NBcycle is set to zero, then the process should run in an infinite loop.
     * The process will then run until receiving SIGINT.
     */
-//    uint64_t NBiter = timing_NBcycle;
-//    if(timing_NBcycle < 1)
-//    {
-//        NBiter = LONG_MAX; // runs until SIGINT signal received
-//    }
-
-
-
-
 
 
 
@@ -911,7 +901,7 @@ static errno_t Measure_Linear_Response_Modal(
 
 
 
-        EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdir);
+        EXECUTE_SYSTEM_COMMAND("mkdir -m775 -p %s", outdir);
 
         if(saveALL == 1)
         {
@@ -1044,27 +1034,18 @@ static errno_t Measure_Linear_Response_Modal(
             fclose(fp);
         }
 
-        iter++;
+
 
 
 
         // compile and save
         {
             char tmpoutfname[STRINGMAXLEN_FULLFILENAME];
-            WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp_raw.fits", outdir);
-
-            /*            for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
-                        {
-                            for(uint64_t ii = 0; ii < sizexyout; ii++)
-                            {
-                                imgoutC2.im->array.F[PokeIndex * sizexyout + ii] /= timing_NBave * iter * ampl;
-                            }
-                        }
-            */
+            WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.raw.iter%04d.fits", outdir, iter);
             save_fits(imgoutC2.name, tmpoutfname);
 
 
-            WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.fits", outdir);
+            WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.ave.iter%04d.fits", outdir, iter);
             IMGID imgmoderespC = makeIMGID_3D("moderespC", sizexout, sizeyout, NBmode);
             createimagefromIMGID(&imgmoderespC);
 
@@ -1075,20 +1056,19 @@ static errno_t Measure_Linear_Response_Modal(
                     float posval = imgoutC2.im->array.F[(mode * 2) * sizexyout + ii];
                     float negval = imgoutC2.im->array.F[(mode * 2 + 1) * sizexyout + ii];
                     imgmoderespC.im->array.F[ mode * sizexyout + ii ] = (posval - negval) / 2 /
-                    (timing_NBave * iter * ampl);
+                    (timing_NBave * (iter+1) * ampl);
 
                 }
 
             }
+            save_fits(imgmoderespC.name, tmpoutfname);
             save_fits(imgmoderespC.name, outCname);
         }
 
-
+        iter++;
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
-
-
 
 
 
