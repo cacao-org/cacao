@@ -56,28 +56,6 @@ mkdir -p ${cfCMtmpdir}
 
 
 
-# DM-normalize output modes
-# RMS within dmmask should be = 1
-#
-milk-all << EOF
-loadfits "./${cfCMtmpdir}/CMmWFSnr.fits" CMmWFSnr
-loadfits "./${cfCMtmpdir}/CMmDMnr.fits" CMmDMnr
-normslice CMmDMnr nvec 2
-loadfits "conf/dmmask.fits" dmmask
-normslice dmmask normdmmask 2
-#saveFITS normdmmask "normdmmask.fits"
-nfact=normdmmask/nvec
-saveFITS nfact "nfact.fits"
-CMmWFSnrn=CMmWFSnr*nfact
-CMmDMnrn=CMmDMnr*nfact
-saveFITS CMmWFSnrn "conf/CMmodesWFS/CMmodesWFS_sf.fits"
-saveFITS CMmDMnrn "conf/CMmodesDM/CMmodesDM_sf.fits"
-listim
-exitCLI
-EOF
-
-exit
-
 
 
 # Renormalize modes in WFS space
@@ -269,6 +247,8 @@ EOF
 
 
 
+
+
 # DM-normalize output modes
 # RMS within dmmask should be = 1
 #
@@ -286,9 +266,6 @@ saveFITS CMmDMnrn "conf/CMmodesDM/CMmodesDM_sf.fits"
 listim
 exitCLI
 EOF
-
-
-
 
 
 
