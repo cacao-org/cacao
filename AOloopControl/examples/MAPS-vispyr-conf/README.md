@@ -63,6 +63,25 @@ cacao-fpsctrl setval simmvmgpu GPUindex 99
 cacao-aorun-002-simwfs start
 ```
 
+## Start 2D DM mapping
+MAPS deformable mirror commands are mapped as a 1D 336 element vector.  To view the commands as 2D shapes, we need to start a remapping process.
+So to view a DM channel as a 2D image, for example the total command to the dm on dm10disp:
+
+```bash
+tmux new -s dm10disp2D
+./scripts/maps-remapshmim  dm10disp dm10disp2D
+```
+You can exit the tmux window with `ctrl-b d`
+
+Or for a specific channel like aol2_dmC:
+
+```bash
+tmux new -s aol2_dmC2D
+./scripts/maps-remapshmim  aol2_dmC aol2_dmC2D
+```
+You can exit the tmux window with `ctrl-b d`
+
+You can now view the DM commands shapes by point a viewer, such as rtimv, at `dm10disp2D` or `aol2_dmC2D`.
 
 ## Start WFS acquisition
 
@@ -266,6 +285,16 @@ cacao-fpsctrl setval mfilt selfRM.enable ON
 
 Check result: maps-rundir/selfRM.fits
 
+## Starting Turbulence simulation
+To set up the turbulence simulator for MAPS we need to map from a 2D phase screen to a 1D DM command vector.  The following steps will set this up:
+
+```bash
+mux new -s maps-turb
+./scripts/maps-startturb
+```
+You can exit the tumx session with `ctrl-b d`
+
+Now in the fpsCtrl TUI, you can toggle turbulence on and off under DMatmturb-2.  You can view the phase screen by pointing an viewere, such as rtimv, at `mapsturb2D`.
 
 # Cleanup
 

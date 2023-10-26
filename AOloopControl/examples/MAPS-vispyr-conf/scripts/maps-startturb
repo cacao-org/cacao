@@ -12,6 +12,7 @@ EOF
 
 
 sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.dmstream mapsturb2D"
+sendFPScmd  "runstart DMatmturb-2"
 
 
 ./scripts/maps-unmapturb

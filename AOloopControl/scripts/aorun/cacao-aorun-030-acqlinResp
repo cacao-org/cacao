@@ -30,11 +30,11 @@ function set_NBloop() {
 	NBloop="$1"
 }
 
-#WaitForCompletion=0
-#MSopt+=( "w:waitfcomp:set_WaitForCompletion::wait for process to complete to exist script" )
-#function set_WaitForCompletion() {
-#	WaitForCompletion=1
-#}
+saveALL=0
+MSopt+=( "s:saveALL:set_saveALL::save all intermediate RMs" )
+function set_saveALL() {
+	saveALL=1
+}
 
 
 source milk-argparse
@@ -95,7 +95,11 @@ sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.streamout aol${CACAO_LOOPNUMB
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.inmodes ../conf/RMmodesDM/${DMmodeCname}.fits"
 sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.outmodes ../conf/RMmodesWFS/${DMmodeCname}.WFSresp.fits"
 
-
+if [ $saveALL = 1 ]; then
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.saveALL ON"
+else
+sendFPScmd "setval measlinresp-${CACAO_LOOPNUMBER}.saveALL OFF"
+fi
 
 sendFPScmd "confwupdate measlinresp-${CACAO_LOOPNUMBER}"
 sendFPScmd "runstart measlinresp-${CACAO_LOOPNUMBER}"

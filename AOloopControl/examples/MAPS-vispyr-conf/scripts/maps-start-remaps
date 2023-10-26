@@ -1,0 +1,66 @@
+session="dm00disp2D"
+
+##########################################
+#
+# Setup dm00disp2D
+#
+##########################################
+
+# Check if the session exists, discarding output
+# We can check $? for the exit status (zero for success, non-zero for failure)
+tmux has-session -t dm00disp2D 2>/dev/null
+
+if [ $? != 0 ]; then
+  tmux new -d -s dm00disp2D
+fi
+
+
+tmux send-keys -t dm00disp2D Enter
+tmux send-keys -t dm00disp2D C-c
+tmux send-keys -t dm00disp2D "./scripts/maps-remapshmim dm00disp dm00disp2D"
+tmux send-keys -t dm00disp2D Enter
+
+
+##########################################
+#
+# Setup aol2_dmC2D
+# 
+##########################################
+
+# Check if the session exists, discarding output
+# We can check $? for the exit status (zero for success, non-zero for failure)
+tmux has-session -t aol2_dmC2D 2>/dev/null
+
+if [ $? != 0 ]; then
+  tmux new -d -s aol2_dmC2D
+fi
+
+
+tmux send-keys -t aol2_dmC2D Enter
+tmux send-keys -t aol2_dmC2D C-c
+tmux send-keys -t aol2_dmC2D "./scripts/maps-remapshmim aol2_dmC aol2_dmC2D"
+tmux send-keys -t aol2_dmC2D Enter
+
+
+
+##########################################
+#
+# Setup aol2_dmRM2D
+# 
+##########################################
+
+# Check if the session exists, discarding output
+# We can check $? for the exit status (zero for success, non-zero for failure)
+tmux has-session -t aol2_dmRM2D 2>/dev/null
+
+if [ $? != 0 ]; then
+  tmux new -d -s aol2_dmRM2D
+fi
+
+
+tmux send-keys -t aol2_dmRM2D Enter
+tmux send-keys -t aol2_dmRM2D C-c
+tmux send-keys -t aol2_dmRM2D "./scripts/maps-remapshmim aol2_dmRM aol2_dmRM2D"
+tmux send-keys -t aol2_dmRM2D Enter
+
+
