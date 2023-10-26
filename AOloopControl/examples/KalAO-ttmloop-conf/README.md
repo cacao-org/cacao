@@ -78,7 +78,7 @@ cacao-aorun-025-acqWFS start
 
 ```bash
 # Measure latency
-cacao-aorun-020-mlat -w
+cacao-aorun-020-mlat
 ```
 
 

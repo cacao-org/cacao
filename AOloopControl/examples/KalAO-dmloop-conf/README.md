@@ -78,7 +78,7 @@ cacao-aorun-025-acqWFS start
 
 ```bash
 # Measure latency
-cacao-aorun-020-mlat -w
+cacao-aorun-020-mlat
 ```
 
 
@@ -92,7 +92,7 @@ cacao-aorun-020-mlat -w
 # Create DM poke mode cubes
 cacao-mkDMpokemodes
 ```
-The following files are written to ./conf/DMmodes/ :
+The following files are written to ./conf/RMmodes/ :
 - DMmask.fits    : DM mask
 - FpokesC.8.fits : Fourier modes
 - Zmodes.fits    : Zernike modes
