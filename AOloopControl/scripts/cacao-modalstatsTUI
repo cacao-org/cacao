@@ -51,3 +51,6 @@ echo "exitCLI" >> $SF
 
 MILK_QUIET=1 cacao -n ${pname} -f ${fifoname} -s $SF
 
+
+# cacao.modalstatsTUI
+# cacao.modalCTRLstats
