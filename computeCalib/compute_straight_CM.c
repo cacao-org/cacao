@@ -730,7 +730,7 @@ static errno_t compute_function()
         free(n2cmDM);
         free(n2cmWFS);
 
-
+        printf("SAVING FILES TO DISK \n");
         save_fits("VTmat", "./mkmodestmp/VTmat.fits");
         save_fits("CMmodesWFS", "./mkmodestmp/CMmodesWFS.fits");
         save_fits("CMmodesDM", "./mkmodestmp/CMmodesDM.fits");
