@@ -735,6 +735,8 @@ static errno_t compute_function()
         save_fits("CMmodesWFS", "./mkmodestmp/CMmodesWFS.fits");
         save_fits("CMmodesDM", "./mkmodestmp/CMmodesDM.fits");
 
+        printf("writing CMmodesDM  to file %s\n", CMmodesDMfname);
+        printf("writing CMmodesWFS to file %s\n", CMmodesWFSfname);
 
         save_fits("CMmodesDM", CMmodesDMfname);
         save_fits("CMmodesWFS", CMmodesWFSfname);
