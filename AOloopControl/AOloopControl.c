@@ -60,6 +60,7 @@ static errno_t init_module_CLI()
 
     CLIADDCMD_AOloopControl__modalfilter();
     CLIADDCMD_AOloopControl__modalCTRL_stats();
+    CLIADDCMD_AOloopControl__modalstatsTUI();
 
 
 

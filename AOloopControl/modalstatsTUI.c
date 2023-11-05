@@ -28,6 +28,61 @@ typedef struct
 
 
 
+
+static uint64_t *AOloopindex;
+
+
+
+
+static CLICMDARGDEF farg[] = {{
+        CLIARG_UINT64,
+        ".AOloopindex",
+        "AO loop index",
+        "0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &AOloopindex,
+        NULL
+    }
+};
+
+
+
+static errno_t customCONFsetup()
+{
+
+    return RETURN_SUCCESS;
+}
+
+
+static errno_t customCONFcheck()
+{
+
+    return RETURN_SUCCESS;
+}
+
+
+static CLICMDDATA CLIcmddata =
+{
+    "modalstatsTUI", "modal stats TUI", CLICMD_FIELDS_DEFAULTS
+};
+
+
+
+
+
+// detailed help
+static errno_t help_function()
+{
+    return RETURN_SUCCESS;
+}
+
+
+
+
+
+
+
+
 static int modalstats_TUI_process_user_key(
     int ch,
     MODALSTATSTRUCT *mstatstruct
@@ -417,7 +472,7 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-        TUI_printfw(" PRESS x to exit");
+        TUI_printfw(" PRESS x to exit, +/- change display scale, UP/DOWN PGUP PGDOWN");
         TUI_newline();
         TUI_printfw("Loop %ld  -  Mode %5ld / %5ld [%5ld-%5ld] - loopcnt %ld",
                     loopindex,
@@ -677,5 +732,39 @@ errno_t AOloopControl_modalstatsTUI(
     free(DMmodenorm);
 
     DEBUG_TRACE_FEXIT();
+    return RETURN_SUCCESS;
+}
+
+
+
+static errno_t compute_function()
+{
+    DEBUG_TRACE_FSTART();
+
+    AOloopControl_modalstatsTUI(*AOloopindex);
+
+
+    DEBUG_TRACE_FEXIT();
+
+    return RETURN_SUCCESS;
+}
+
+
+
+
+
+INSERT_STD_FPSCLIfunctions
+
+
+
+// Register function in CLI
+errno_t
+CLIADDCMD_AOloopControl__modalstatsTUI()
+{
+
+    //CLIcmddata.FPS_customCONFsetup = customCONFsetup;
+    //CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+    INSERT_STD_CLIREGISTERFUNC
+
     return RETURN_SUCCESS;
 }
