@@ -99,7 +99,7 @@ The following files are written to ./conf/DMmodes/ :
 - HpokeC.fits    : Hadamard modes
 - Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
 - Hpixindex.fits : Hadamard pixel index
-- Smodes.fits    : 
+- SmodesC.fits    : 
 
 
 
@@ -115,7 +115,10 @@ cacao-aorun-030-acqlinResp SmodesC
 # Acquire response matrix - Hadamard modes
 #cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
 #cacao-aorun-030-acqlinResp HpokeC
+cacao-aorun-031-RMHdecode
+cacao-aorun-032-RMmkmask
 ```
+:warning: DM and WFS masks will be required to compute control modes. They can be computed from a zonal RM (as shown above), or written by hand (single precision floats, 0.0 and 1.0 values).
 
 ### Take reference
 
@@ -168,10 +171,10 @@ Closing the loop and setting loop parameters with mfilt:
 
 ```bash
 # Set loop gain
-cacao-fpsctrl setval mfilt loopgain 1.2
+cacao-fpsctrl setval mfilt loopgain 0.04
 
 # Set loop mult
-cacao-fpsctrl setval mfilt loopmult 0.98
+cacao-fpsctrl setval mfilt loopmult 0.95
 
 # close loop
 cacao-fpsctrl setval mfilt loopON ON

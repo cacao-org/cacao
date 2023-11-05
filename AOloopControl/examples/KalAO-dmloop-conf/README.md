@@ -117,7 +117,7 @@ cacao-aorun-030-acqlinResp HpokeC
 cacao-aorun-031-RMHdecode
 cacao-aorun-032-RMmkmask
 ```
-:warning: DM and WFS masks will be required to comput contro modes. They can be computed from a zonal RM (as shown above), or written by hand (single precision floats, 0.0 and 1.0 values).
+:warning: DM and WFS masks will be required to compute control modes. They can be computed from a zonal RM (as shown above), or written by hand (single precision floats, 0.0 and 1.0 values).
 
 
 
@@ -172,10 +172,10 @@ Closing the loop and setting loop parameters with mfilt:
 
 ```bash
 # Set loop gain
-cacao-fpsctrl setval mfilt loopgain 0.95
+cacao-fpsctrl setval mfilt loopgain 0.44
 
 # Set loop mult
-cacao-fpsctrl setval mfilt loopmult 0.9
+cacao-fpsctrl setval mfilt loopmult 0.98
 
 # close loop
 cacao-fpsctrl setval mfilt loopON ON
