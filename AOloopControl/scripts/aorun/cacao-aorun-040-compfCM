@@ -49,8 +49,15 @@ source milk-argparse
 # CMmodesWFS is orthogonal over wfsmask
 # CMmodesDM is norm2 normalized over dmmask
 #
+#maxSVDmode=80
+#CMmDM="conf/CMmodesDM/CMmodesDM.fits[*,*,1:${maxSVDmode}]"
+#CMmWFS="conf/CMmodesWFS/CMmodesWFS.fits[*,*,1:${maxSVDmode}]"
+
 CMmDM="conf/CMmodesDM/CMmodesDM.fits"
 CMmWFS="conf/CMmodesWFS/CMmodesWFS.fits"
+
+
+
 
 mkdir -p ${cfCMtmpdir}
 
@@ -58,46 +65,21 @@ mkdir -p ${cfCMtmpdir}
 
 
 
-# Renormalize modes in WFS space
-milk-all << EOF
-loadfits "${CMmDM}" CMmDM
-loadfits "${CMmWFS}" CMmWFS
-loadfits "conf/wfsmask.fits" wfsmask
-CMmWFSm=CMmWFS*wfsmask
-listim
-saveFITS CMmWFSm "./${cfCMtmpdir}/CMmWFSm.fits"
-normslice CMmWFS nvec 2
-CMmWFSn=CMmWFS/nvec
-CMmDMn=CMmDM/nvec
-saveFITS nvec "./${cfCMtmpdir}/nvec.fits"
-saveFITS CMmWFSn "./${cfCMtmpdir}/CMmWFSn.fits"
-saveFITS CMmDMn "./${cfCMtmpdir}/CMmDMn.fits"
-exitCLI
-EOF
-
-
-
-milk-all << EOF
-linalg.sgemm .GPUdevice ${GPUdevice}
-loadfits "./conf/wfsmask.fits" wfsmask
-loadfits "./${cfCMtmpdir}/CMmWFSn.fits" CMmWFSn
-CMmWFSnm=CMmWFSn*wfsmask
-linalg.sgemm .transpA 1
-linalg.sgemm CMmWFSnm CMmWFSnm out
-saveFITS out "./${cfCMtmpdir}/CMmWFSnmxp.fits"
-exitCLI
-EOF
-
-
+########################################################################
+#
+# TARGET MODES
+#
+########################################################################
 
 # Create set of Fourier modes, store as modesF.fits
 #
-
-x0default=$(echo "scale=3; $CACAO_DMxsize/2" | bc)
-y0default=$(echo "scale=3; $CACAO_DMysize/2" | bc)
+#CACAO_DMxsize=12
+#CACAO_DMysize=12
+#CACAO_DM_beam_rad=5.5
+x0default=$(echo "scale=3; $CACAO_DMxsize/2-0.5" | bc)
+y0default=$(echo "scale=3; $CACAO_DMysize/2-0.5" | bc)
 r0default=$(echo "scale=3; 0.450*$CACAO_DMxsize" | bc)
 
-SAMPLING1Dmode=128
 
 # 2D defaults
 DMsizex=${CACAO_DMxsize}
@@ -105,6 +87,13 @@ DMsizey=${CACAO_DMysize}
 DMx0=${CACAO_DM_beam_xcent:-$x0default}
 DMy0=${CACAO_DM_beam_ycent:-$y0default}
 DMr0=${CACAO_DM_beam_rad:-$r0t}
+
+echo "DMx0 = $DMx0"
+echo "DMy0 = $DMy0"
+
+
+
+
 
 
 # Create DM-space modes ordered by spatial frequency
@@ -115,14 +104,14 @@ DMr0=${CACAO_DM_beam_rad:-$r0t}
 # match as well as possible
 #
 milk-all << EOF
-zern.mkzerc .radmaskfact 1.0
+zern.mkzerc .radmaskfact 1.1
 zern.mkzerc modesZ ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
 saveFITS modesZ "./${cfCMtmpdir}/modesZ.fits"
 lintools.mkFouriermodes .align.centered 0
 lintools.mkFouriermodes .align.xcenter ${DMx0}
 lintools.mkFouriermodes .align.ycenter ${DMy0}
 lintools.mkFouriermodes .rCPAmin 0.1
-lintools.mkFouriermodes modesF ${DMsizex} ${DMsizey} ${CPAmax} 0.8 ${DMr0} 1.0 0
+lintools.mkFouriermodes modesF ${DMsizex} ${DMsizey} ${CPAmax} 0.8 ${DMr0} 1.2 0
 saveFITS modesF "./${cfCMtmpdir}/modesF.fits"
 immerge modesZ modesF modesZF 2
 saveFITS modesZF "./${cfCMtmpdir}/modesZF.fits"
@@ -134,6 +123,7 @@ EOF
 
 
 
+
 # Compute WFS response of modesZFn -> modesZFnWFS
 #
 cacao << EOF
@@ -141,39 +131,221 @@ loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
 loadfits "./${cfCMtmpdir}/modesZFn.fits" modesZFn
 cacaocc.generateRMWFS zrespM modesZFn modesZFnWFS
 saveFITS modesZFnWFS "./${cfCMtmpdir}/modesZFnWFS.fits"
+loadfits "./conf/wfsmask.fits" wfsmask
+modesZFnWFSm=modesZFnWFS*wfsmask
+saveFITS modesZFnWFSm "./${cfCMtmpdir}/modesZFnWFSm.fits"
 exitCLI
 EOF
 
 
-# Decompose modesZFnWFS.fits against CMmWFSn over wfsmask
-# The result is stored in modesZFWFSm_CMmWFSm_xp.fits.
-# The decomposition is a SGEMM because CMmWFSn is orthogonal
+# Gram-Schmidt -> modesFmgs
+#
+milk-all << EOF
+loadfits "./${cfCMtmpdir}/modesZFnWFSm.fits" modesFm
+linalg.GramSchmidt modesFm modesFmgs
+saveFITS _outxp "./${cfCMtmpdir}/outxp.fits"
+saveFITS modesFmgs "./${cfCMtmpdir}/modesFmgs.fits"
+exitCLI
+EOF
+
+
+# OPTIONAL
+# Check modesFmgs orthogonality
+#
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./${cfCMtmpdir}/modesFmgs.fits" modesFmgs
+linalg.sgemm .transpA 1
+linalg.sgemm modesFmgs modesFmgs out
+saveFITS out "./${cfCMtmpdir}/modesFmgsxp.fits"
+exitCLI
+EOF
+
+
+
+
+
+
+
+
+
+
+
+########################################################################
+#
+# CONTROL MODES
+#
+########################################################################
+
+
+# COMPUTE CONTROL MODES FROM Z-RESPM
+#
+
+# Perform PCA of zespM.fits by SVD
+#
+# The output is ordered by singular value
+# This is not a friendly ordering, spatial frequency is not preserved
+# The first modes are NOT low-order mores :(
+#
+milk-all << EOF
+loadfits "conf/RMmodesWFS/zrespM-H.fits" zespM
+loadfits "conf/wfsmask.fits" wfsmask
+zespMm=zespM*wfsmask
+linalg.compSVD .Vdim0 12
+linalg.compSVD zespMm mFsvdU mFsvdS mFsvdV 0.001
+saveFITS SVDunmodes "./${cfCMtmpdir}/CMmWFS.fits"
+saveFITS mFsvdV "./${cfCMtmpdir}/CMmDM.fits"
+listim
+exitCLI
+EOF
+
+
+# Renormalize modes in WFS space
+#
+# Input: 
+# - CMmDM   : control modes in DM space, unity norm over dmmask
+# - CMmWFS  : control modes in WFS space, orthogonal basis
+# 
+# Output:
+# - CMmDMn  : control modes in DM space
+# - CMmWFSn : control modes in WFS space, orthonormal basis over wfsmask
+#
+milk-all << EOF
+loadfits "./${cfCMtmpdir}/CMmDM.fits" CMmDM
+loadfits "./${cfCMtmpdir}/CMmWFS.fits" CMmWFS
+loadfits "conf/wfsmask.fits" wfsmask
+CMmWFSm=CMmWFS*wfsmask
+listim
+saveFITS CMmWFSm "./${cfCMtmpdir}/CMmWFSm.fits"
+normslice CMmWFSm nvec 2
+CMmWFSn=CMmWFS/nvec
+CMmDMn=CMmDM/nvec
+saveFITS nvec "./${cfCMtmpdir}/nvec.fits"
+saveFITS CMmWFSn "./${cfCMtmpdir}/CMmWFSn.fits"
+saveFITS CMmDMn "./${cfCMtmpdir}/CMmDMn.fits"
+exitCLI
+EOF
+
+
+# Check orthonormality in WFS space
+#
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./conf/wfsmask.fits" wfsmask
+loadfits "./${cfCMtmpdir}/CMmWFS.fits" CMmWFS
+CMmWFSm=CMmWFS*wfsmask
+linalg.sgemm .transpA 1
+linalg.sgemm CMmWFSm CMmWFSm out
+saveFITS out "./${cfCMtmpdir}/CMmWFSmxp.fits"
+exitCLI
+EOF
+
+# Check orthonormality in WFS space
+#
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./conf/wfsmask.fits" wfsmask
+loadfits "./${cfCMtmpdir}/CMmWFSn.fits" CMmWFSn
+CMmWFSnm=CMmWFSn*wfsmask
+linalg.sgemm .transpA 1
+linalg.sgemm CMmWFSnm CMmWFSnm out
+saveFITS out "./${cfCMtmpdir}/CMmWFSnmxp.fits"
+exitCLI
+EOF
+
+# Check orthonormality in DM space
+#
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./conf/dmmask.fits" dmmask
+loadfits "./${cfCMtmpdir}/CMmDM.fits" CMmDM
+CMmDMm=CMmDM*dmmask
+linalg.sgemm .transpA 1
+linalg.sgemm CMmDMm CMmDMm out
+saveFITS out "./${cfCMtmpdir}/CMmDMmxp.fits"
+exitCLI
+EOF
+
+
+# Check orthonormality in DM space
+#
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./conf/dmmask.fits" dmmask
+loadfits "./${cfCMtmpdir}/CMmDMn.fits" CMmDMn
+CMmDMnm=CMmDMn*dmmask
+linalg.sgemm .transpA 1
+linalg.sgemm CMmDMnm CMmDMnm out
+saveFITS out "./${cfCMtmpdir}/CMmDMnmxp.fits"
+exitCLI
+EOF
+
+# Reconstruct WFS from DM (TEST)
+
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./${cfCMtmpdir}/CMmDMn.fits" CMmDMn
+loadfits "conf/RMmodesWFS/zrespM-H.fits" zespM
+linalg.sgemm zespM CMmDMn out
+saveFITS out "out.fits"
+listim
+exitCLI
+EOF
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################################
+#
+# CONTROL MODES x TARGET MODES XP
+#
+########################################################################
+
+
+
+
+# Decompose modesFmgs.fits against CMmWFSn over wfsmask
+# The result is stored in modesFmgsm_CMmWFSnm_xp.fits.
+# The decomposition is a SGEMM over wfsmask because CMmWFSn is orthogonal
 #
 milk-all << EOF
 linalg.sgemm .GPUdevice ${GPUdevice}
 loadfits "./${cfCMtmpdir}/CMmWFSn.fits" CMmWFSn
 loadfits "./conf/wfsmask.fits" wfsmask
 CMmWFSnm=CMmWFSn*wfsmask
-loadfits "./${cfCMtmpdir}/modesZFnWFS.fits" modesZFnWFS
-modesZFnWFSm=modesZFnWFS*wfsmask
+loadfits "./${cfCMtmpdir}/modesFmgs.fits" modesFmgs
+modesFmgsm=modesFmgs*wfsmask
 linalg.sgemm .transpA 1
-linalg.sgemm modesZFnWFSm CMmWFSnm out
-saveFITS out "./${cfCMtmpdir}/modesZFnWFSm_CMmWFSnm_xp.fits"
+linalg.sgemm modesFmgsm CMmWFSnm out
+#linalg.sgemm CMmWFSnm modesZFnWFSm out
+saveFITS out "./${cfCMtmpdir}/modesFmgsm_CMmWFSnm_xp.fits"
 exitCLI
 EOF
 
 
 
+
+
+
+
 # Compute the rotation that will turn 
-# the cross-product into a lower triangular matrix, ensuring
+# the cross-product into a lower(0,1)/upper(2) triangular matrix, ensuring
 # a good match between the two sets of modes.
 # The rotation is stored as matArot.fits
 # We then apply the rotation to CMmDM and CMmWFS
 #
 milk-all << EOF
 linalg.sgemm .GPUdevice ${GPUdevice}
-loadfits "./${cfCMtmpdir}/modesZFnWFSm_CMmWFSnm_xp.fits" matAB
-linalg.basisrotmatch .optmode 1
+loadfits "./${cfCMtmpdir}/modesFmgsm_CMmWFSnm_xp.fits" matAB
+linalg.basisrotmatch .optmode 0
 linalg.basisrotmatch matAB matArot
 # matABr.fits should now be lower triangular
 saveFITS matAB "./${cfCMtmpdir}/matABr.fits"
@@ -181,15 +353,28 @@ saveFITS matArot "./${cfCMtmpdir}/matArot.fits"
 #
 # Apply rotation to CMmDMn
 loadfits "./${cfCMtmpdir}/CMmDMn.fits" CMmDMn
+#linalg.sgemm .transpB 1
 linalg.sgemm CMmDMn matArot CMmDMnr
 saveFITS CMmDMnr "./${cfCMtmpdir}/CMmDMnr.fits"
 #
-# Apply rotation to CMmWFS
+# Apply rotation to CMmWFSn
 loadfits "./${cfCMtmpdir}/CMmWFSn.fits" CMmWFSn
+#linalg.sgemm .transpB 1
 linalg.sgemm CMmWFSn matArot CMmWFSnr
 saveFITS CMmWFSnr "./${cfCMtmpdir}/CMmWFSnr.fits"
+#
+listim
 exitCLI
 EOF
+
+
+
+
+
+
+
+
+
 
 
 
@@ -266,11 +451,6 @@ saveFITS CMmDMnrn "conf/CMmodesDM/CMmodesDM_sf.fits"
 listim
 exitCLI
 EOF
-
-
-
-
-
 
 
 
