@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# correct the source-spectrum independent RM
+# and link output to conf/RMmodesWFS/RMmodesWFS.fits
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+MSarg+=( "DMmodes:string:DM modes cube FITS file" )
+
+source milk-argparse
+DMmodeCname="${inputMSargARRAY[0]}"
+
+rm -f conf/RMmodesWFS/RMmodesWFS.fits
+
+export RMpath=$(pwd)/conf/RMmodesWFS/
+export RMfname=${DMmodeCname}.WFSresp.fits
+
+(
+cd scripts
+
+python << EOF
+import os
+print(os.getenv("RMpath"))
+import utility
+utility.correct_RM(os.getenv("RMpath"),os.getenv("RMfname"),"aol"+os.getenv("CACAO_LOOPNUMBER")+"_wfsnorm")
+EOF
+)
+
+ln -s $(pwd)/conf/RMmodesWFS/speccor_${DMmodeCname}.WFSresp.fits ./conf/RMmodesWFS/RMmodesWFS.fits

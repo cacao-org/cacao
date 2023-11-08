@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# load wfs reference and make spectral norm, write to 'aolx_wfsnorm'
+# run in rootdir
+
+source cacao-check-cacaovars
+
+(
+cd scripts
+
+python << EOF
+import os
+num = os.getenv("CACAO_LOOPNUMBER")
+import utility
+inshmname = "aol"+str(num)+"_wfsref"
+outshmname = "aol"+str(num)+"_wfsnorm"
+utility.compute_summed_spectral_norm(inshmname,outshmname)
+EOF
+)

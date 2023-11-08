@@ -18,5 +18,7 @@ sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.procinfo.triggersname ${CACAO_WF
 # setting input and output streams
 sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.wfsin ${CACAO_WFSSTREAMSIM}"
 sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.AOloopindex ${CACAO_LOOPNUMBER}"
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.wfsmask aol${CACAO_LOOPNUMBER}_wfsspecmask"
+sendFPScmd "setval ${fname}-${CACAO_LOOPNUMBER}.wfsnorm aol${CACAO_LOOPNUMBER}_wfsnorm"
 
 sendFPScmd "confwupdate ${fname}-${CACAO_LOOPNUMBER}"

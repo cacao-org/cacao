@@ -7,6 +7,7 @@
 #include <math.h>
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_tools/COREMOD_tools.h"
+#include <stdbool.h>
 
 // Local variables pointers
 static char *input_shm_name; // input shared memory
@@ -14,6 +15,9 @@ static long  fpi_inputshmname;
 
 static char *specmask_shm_name; // mask shared memory
 static long  fpi_specmaskshmname;
+
+static char *specnorm_shm_name; // norm shared memory
+static long  fpi_specnormshmname;
 
 static uint32_t *binning;
 static long     fpi_binning;
@@ -52,6 +56,15 @@ static CLICMDARGDEF farg[] =
         CLIARG_VISIBLE_DEFAULT,
         (void **) &specmask_shm_name,
         &fpi_specmaskshmname
+    },
+    {
+        CLIARG_IMG,
+        ".wfsnorm",
+        "wfs spectral extraction norm",
+        "wfsnorm",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &specnorm_shm_name,
+        &fpi_specnormshmname
     },
     {
         CLIARG_UINT32,
@@ -246,19 +259,18 @@ static errno_t dark_sub(
 
 static errno_t spec_norm(
     IMGID wfsin,
+    IMGID wfsnorm,
     IMGID wfsout
 )
 {
     uint32_t j;
     uint32_t sizeWFSx = wfsin.size[0];
     uint32_t numtraces = wfsin.size[1];
-
+    float normval;
+    float tot;
     for (uint_fast32_t i = 0; i < sizeWFSx; i++) {
-        float tot = 0.0;
-        for (j = 0; j < numtraces; j++){
-            tot += wfsin.im->array.F[j*sizeWFSx + i];
-        }
-        float normval = 0.;
+        tot = wfsnorm.im->array.F[i];
+        normval = 0.;
         if (tot > 0){
             normval = 1./tot;
         }
@@ -285,7 +297,6 @@ static errno_t compute_function()
     uint32_t numtraces = specmask.size[2];
     uint64_t sizeWFS  = sizeWFSx * numtraces;
     uint32_t sizeWFSoutx = sizeWFSx / *binning;
-
 
     // size is  (image shape) * z, z is # of traces
     // each z-slice looks like a bar that covers one trace
@@ -332,6 +343,9 @@ static errno_t compute_function()
         WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloopindex);
         imgWFSdark = stream_connect(wfsdarkname);
     }
+    
+    IMGID specnorm = mkIMGID_from_name(specnorm_shm_name);
+    resolveIMGID(&specnorm, ERRMODE_WARN);
 
     // This is the while(True) {
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
@@ -371,13 +385,14 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, imgimWFS0.ID); // post
 
         // STEP 3: NORMALIZATION
+
         int status_normalize = 0;
         imgimWFS1.md->write = 1;
 
         if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
         {
             status_normalize = 1;
-            spec_norm(imgimWFS0,imgimWFS1);
+            spec_norm(imgimWFS0,specnorm,imgimWFS1);
         }
         else
         {

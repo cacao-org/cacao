@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 
-# find spectral traces and write to shm called 'wfsspecmask'
+# find spectral traces and write to shm called 'aolx_wfsspecmask'
 # run in rootdir
+
+source cacao-check-cacaovars
 
 (
 cd scripts
 
 python << EOF
+import os
 import utility
-utility.make_spectral_mask("apapanesim","wfsspecmask")
+num = os.getenv("CACAO_LOOPNUMBER")
+outshmname = "aol"+str(num)+"_wfsspecmask"
+utility.make_spectral_mask("apapanesim",outshmname)
 EOF
 )
