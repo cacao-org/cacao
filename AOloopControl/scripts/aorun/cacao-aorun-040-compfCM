@@ -129,8 +129,12 @@ lintools.mkFouriermodes modesF ${DMsizex} ${DMsizey} ${CPAmax} 0.8 ${DMr0} 1.2 0
 saveFITS modesF "./${cfCMtmpdir}/modesF.fits"
 immerge modesZ modesF modesZF 2
 saveFITS modesZF "./${cfCMtmpdir}/modesZF.fits"
-normslice modesZF nvec 2
-modesZFn=modesZF/nvec
+loadfits "${DMmask}" dmmask
+modesZFm=modesZF*dmmask
+normalizeslice modesZF dmmask modesZFn 2
+listim
+#normslice modesZFm nvec 2
+#modesZFn=modesZF/nvec
 saveFITS modesZFn "./${cfCMtmpdir}/modesZFn.fits"
 exitCLI
 EOF
@@ -463,7 +467,8 @@ CMmWFSnrn=CMmWFSnr*nfact
 CMmDMnrn=CMmDMnr*nfact
 CMmDMnrnm=CMmDMnrn*dmmask
 saveFITS CMmWFSnrn "conf/CMmodesWFS/CMmodesWFS_sf.fits"
-saveFITS CMmDMnrnm "conf/CMmodesDM/CMmodesDM_sf.fits"
+saveFITS CMmDMnrn "conf/CMmodesDM/CMmodesDM_sf.fits"
+saveFITS CMmDMnrnm "conf/CMmodesDM/CMmodesDM_sfm.fits"
 listim
 exitCLI
 EOF
