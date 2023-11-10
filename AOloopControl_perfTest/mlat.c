@@ -691,9 +691,7 @@ static errno_t compute_function()
                     }
 
                     valarray[kk] = sqrt(valarray[kk] / wfssize / 2);
-                    valarrayall[NBrawmeas] = valarray[kk];
-                    dtarrayall[NBrawmeas] = dtarray[kk];
-                    NBrawmeas++;
+
 
 
                     // Look for maximum change between frames
@@ -714,6 +712,13 @@ static errno_t compute_function()
                 //
                 for(wfsframe = 1; wfsframe < NBwfsframe; wfsframe++)
                 {
+                    double ptdt = (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - *dtoffset);
+                    double ptval = valarray[wfsframe];
+
+                    valarrayall[NBrawmeas] = ptval;
+                    dtarrayall[NBrawmeas] = ptdt;
+                    NBrawmeas++;
+
                     fprintf(fphwlat,
                             "%ld   %10.2f     %g\n",
                             wfsframe - kkoffset,
@@ -824,6 +829,8 @@ static errno_t compute_function()
                     double valmedian = valarrayall[ii];
                     if(nbpts>0)
                     {
+                        // Take average of median 1/3 values
+
                         double *ptsval = (double*) malloc(sizeof(double)*nbpts);
                         double *ptsdt = (double*) malloc(sizeof(double)*nbpts);
                         for(int jj=0; jj<nbpts; jj++)
@@ -832,8 +839,22 @@ static errno_t compute_function()
                             ptsdt[jj] = dtarrayall[iimin+jj];
                         }
                         quick_sort2(ptsval, ptsdt, nbpts);
-                        dtmedian = 0.5 * (dtarrayall[iimin]+dtarrayall[iimax]);
-                        valmedian = ptsval[nbpts/2];
+                        double dtave = 0.0;
+                        double valave = 0.0;
+                        double cave = 0.0;
+
+                        for(int jj=nbpts/3; jj<2*nbpts/3; jj++)
+                        {
+                            double coeff = 1.0;
+                            dtave += coeff*ptsdt[jj];
+                            valave += coeff*ptsval[jj];
+                            cave += coeff;
+                        }
+                        dtave /= cave;
+                        valave /= cave;
+
+                        dtmedian = dtave;
+                        valmedian = valave;
 
                         free(ptsval);
                         free(ptsdt);
@@ -845,9 +866,10 @@ static errno_t compute_function()
                         latencymeaspeakdt = dtmedian;
                     }
 
-                    fprintf(fpout, "%d %g %g %d %d %g %g  %g %g\n",
+                    fprintf(fpout, "%d %g %g %d %d %g %g  %g %g %ld\n",
                             ii, dtarrayall[ii], valarrayall[ii], iimin, iimax, dtarrayall[iimin], dtarrayall[iimax],
-                            dtmedian, valmedian);
+                            dtmedian, valmedian, nbpts);
+
                 }
 
                 fclose(fpout);
