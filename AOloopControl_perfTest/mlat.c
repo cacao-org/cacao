@@ -400,6 +400,15 @@ static errno_t compute_function()
         //
         if(framerateOK == 1)
         {
+            // store all raw measurements in these arrays
+            //
+            double *valarrayall = (double *) malloc(sizeof(double) * (*wfsNBframemax) * (*NBiter) );
+            double *dtarrayall  = (double *) malloc(sizeof(double) * (*wfsNBframemax) * (*NBiter) );
+
+            // number of raw measurements
+            int NBrawmeas = 0;
+
+
             // Measure latency
             double tdouble_start;
             double tdouble_end;
@@ -650,38 +659,41 @@ static errno_t compute_function()
 
                     switch(imgwfs.datatype)
                     {
-                        case _DATATYPE_FLOAT:
-                            IMAGE_SUMMING_CASE(F);
-                            break;
-                        case _DATATYPE_DOUBLE:
-                            IMAGE_SUMMING_CASE(D);
-                            break;
-                        case _DATATYPE_UINT16:
-                            IMAGE_SUMMING_CASE(UI16);
-                            break;
-                        case _DATATYPE_INT16:
-                            IMAGE_SUMMING_CASE(SI16);
-                            break;
-                        case _DATATYPE_UINT32:
-                            IMAGE_SUMMING_CASE(UI32);
-                            break;
-                        case _DATATYPE_INT32:
-                            IMAGE_SUMMING_CASE(SI32);
-                            break;
-                        case _DATATYPE_UINT64:
-                            IMAGE_SUMMING_CASE(UI64);
-                            break;
-                        case _DATATYPE_INT64:
-                            IMAGE_SUMMING_CASE(SI64);
-                            break;
-                        case _DATATYPE_COMPLEX_FLOAT:
-                        case _DATATYPE_COMPLEX_DOUBLE:
-                        default:
-                            PRINT_ERROR("COMPLEX TYPES UNSUPPORTED");
-                            return RETURN_FAILURE;
+                    case _DATATYPE_FLOAT:
+                        IMAGE_SUMMING_CASE(F);
+                        break;
+                    case _DATATYPE_DOUBLE:
+                        IMAGE_SUMMING_CASE(D);
+                        break;
+                    case _DATATYPE_UINT16:
+                        IMAGE_SUMMING_CASE(UI16);
+                        break;
+                    case _DATATYPE_INT16:
+                        IMAGE_SUMMING_CASE(SI16);
+                        break;
+                    case _DATATYPE_UINT32:
+                        IMAGE_SUMMING_CASE(UI32);
+                        break;
+                    case _DATATYPE_INT32:
+                        IMAGE_SUMMING_CASE(SI32);
+                        break;
+                    case _DATATYPE_UINT64:
+                        IMAGE_SUMMING_CASE(UI64);
+                        break;
+                    case _DATATYPE_INT64:
+                        IMAGE_SUMMING_CASE(SI64);
+                        break;
+                    case _DATATYPE_COMPLEX_FLOAT:
+                    case _DATATYPE_COMPLEX_DOUBLE:
+                    default:
+                        PRINT_ERROR("COMPLEX TYPES UNSUPPORTED");
+                        return RETURN_FAILURE;
                     }
 
                     valarray[kk] = sqrt(valarray[kk] / wfssize / 2);
+                    valarrayall[NBrawmeas] = valarray[kk];
+                    dtarrayall[NBrawmeas] = dtarray[kk];
+                    NBrawmeas++;
 
 
                     // Look for maximum change between frames
@@ -781,20 +793,77 @@ static errno_t compute_function()
             *framerateHz = 1.0 * (wfscntend - wfscntstart) / dt;
             functionparameter_SaveParam2disk(data.fpsptr, ".out.framerateHz");
 
+
+
+
+            // Detect peak using all points
+            //
+            double latencymeaspeakdt = 0.0;
+            double latencymeaspeakval = 0.0;
+            quick_sort2(dtarrayall, valarrayall, NBrawmeas);
+
+            {
+                FILE *fpout;
+                fpout = fps_write_RUNoutput_file(data.fpsptr, "hardwlatencypts", "dat");
+                int iimin = 0;
+                int iimax = 0;
+                float dtrange = 0.5 / (*framerateHz); // in sec
+                for( int ii=0; ii<NBrawmeas; ii++)
+                {
+                    while ( (dtarrayall[iimax] < dtarrayall[ii]+dtrange) && (iimax<NBrawmeas-1) )
+                    {
+                        iimax ++;
+                    }
+                    while ( (dtarrayall[iimin] < dtarrayall[ii]-dtrange) && (iimax<NBrawmeas-1) )
+                    {
+                        iimin ++;
+                    }
+
+                    long nbpts = iimax-iimin;
+                    double dtmedian = dtarrayall[ii];
+                    double valmedian = valarrayall[ii];
+                    if(nbpts>0)
+                    {
+                        double *ptsval = (double*) malloc(sizeof(double)*nbpts);
+                        double *ptsdt = (double*) malloc(sizeof(double)*nbpts);
+                        for(int jj=0; jj<nbpts; jj++)
+                        {
+                            ptsval[jj] = valarrayall[iimin+jj];
+                            ptsdt[jj] = dtarrayall[iimin+jj];
+                        }
+                        quick_sort2(ptsval, ptsdt, nbpts);
+                        dtmedian = 0.5 * (dtarrayall[iimin]+dtarrayall[iimax]);
+                        valmedian = ptsval[nbpts/2];
+
+                        free(ptsval);
+                        free(ptsdt);
+                    }
+
+                    if( valmedian > latencymeaspeakval )
+                    {
+                        latencymeaspeakval = valmedian;
+                        latencymeaspeakdt = dtmedian;
+                    }
+
+                    fprintf(fpout, "%d %g %g %d %d %g %g  %g %g\n",
+                            ii, dtarrayall[ii], valarrayall[ii], iimin, iimax, dtarrayall[iimin], dtarrayall[iimax],
+                            dtmedian, valmedian);
+                }
+
+                fclose(fpout);
+            }
+
+            free(dtarrayall);
+            free(valarrayall);
+
+            printf("latency peak at %g, value %g\n", latencymeaspeakdt, latencymeaspeakval);
+
+
             // update latencystepave from framerate
-            latencystepave = latencyave * (1.0 * (wfscntend - wfscntstart) / dt);
 
-            quick_sort_float(latencyarray, (*NBiter));
 
-            printf("AVERAGE LATENCY = %8.3f ms   %f frames\n",
-                   latencyave * 1000.0,
-                   latencystepave);
-            printf("min / max over %u measurements: %8.3f ms / %8.3f ms\n",
-                   (*NBiter),
-                   minlatency * 1000.0,
-                   maxlatency * 1000.0);
-
-            *latencyfr = latencystepave;
+            *latencyfr = latencymeaspeakdt * (*framerateHz);
+            printf("latency = %f frame\n", *latencyfr );
             functionparameter_SaveParam2disk(data.fpsptr, ".out.latencyfr");
 
             {
@@ -804,6 +873,8 @@ static errno_t compute_function()
                 fprintf(fpout, "%8.6f", 1.01);
                 fclose(fpout);
             }
+
+
 
 
             // write results as env variables
@@ -821,8 +892,6 @@ static errno_t compute_function()
                 fprintf(fpout, "export CACAO_LATENCYHARDWFR=%.3f\n", *latencyfr);
                 fclose(fpout);
             }
-
-
 
         }
     }
