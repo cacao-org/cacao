@@ -100,9 +100,12 @@ DMx0=${CACAO_DM_beam_xcent:-$x0default}
 DMy0=${CACAO_DM_beam_ycent:-$y0default}
 DMr0=${CACAO_DM_beam_rad:-$r0t}
 
+
+DMr0="28.0"
 echo "DMx0 = $DMx0"
 echo "DMy0 = $DMy0"
 
+echo "DMr0 = $DMr0"
 
 
 
@@ -141,6 +144,46 @@ EOF
 
 
 
+# Gram-Schmidt in DM space -> modesFmgs
+# will be used for DM space extrapolation
+# spatially extrapolated version of the modes in modesZFnmgsne
+#
+milk-all << EOF
+loadfits "./${cfCMtmpdir}/modesZFn.fits" modesZFn
+loadfits "${DMmask}" dmmask
+modesZFnm=modesZFn*dmmask
+modesaux=modesZFn+0
+linalg.GramSchmidt .auxmat modesaux
+linalg.GramSchmidt modesZFnm modesZFnmgs
+normslice modesZFnmgs nvec 2
+modesZFnmgsn=modesZFnmgs/nvec
+modesauxn=modesaux/nvec
+saveFITS modesZFnmgsn "./${cfCMtmpdir}/modesZFnmgsn.fits"
+saveFITS modesauxn "./${cfCMtmpdir}/modesZFnmgsne.fits"
+exitCLI
+EOF
+
+# OPTIONAL
+# Check modesFmgs orthogonality in WFS space
+#
+milk-all << EOF
+linalg.sgemm .GPUdevice ${GPUdevice}
+loadfits "./${cfCMtmpdir}/modesZFnmgsne.fits" modesZFnmgsne
+loadfits "${DMmask}" dmmask
+modesZFnmgsnem=modesZFnmgsne*dmmask
+saveFITS modesZFnmgsnem "./${cfCMtmpdir}/modesZFnmgsnem.fits"
+linalg.sgemm .transpA 1
+linalg.sgemm modesZFnmgsnem modesZFnmgsnem out
+saveFITS out "./${cfCMtmpdir}/modesZFnmgsne_xp.fits"
+exitCLI
+EOF
+
+
+
+
+
+
+
 
 # Compute WFS response of modesZFn over wfsmask -> modesZFnWFSm.fits
 #
@@ -156,7 +199,7 @@ exitCLI
 EOF
 
 
-# Gram-Schmidt -> modesFmgs
+# Gram-Schmidt in WFS space -> modesFmgs
 #
 milk-all << EOF
 loadfits "./${cfCMtmpdir}/modesZFnWFSm.fits" modesFm
@@ -168,7 +211,7 @@ EOF
 
 
 # OPTIONAL
-# Check modesFmgs orthogonality
+# Check modesFmgs orthogonality in WFS space
 #
 milk-all << EOF
 linalg.sgemm .GPUdevice ${GPUdevice}
@@ -213,7 +256,9 @@ linalg.compSVD .GPUdevice ${GPUdevice}
 linalg.compSVD .Vdim0 ${DMsizex}
 linalg.compSVD zespMm mFsvdU mFsvdS mFsvdV 0.001
 saveFITS SVDunmodes "./${cfCMtmpdir}/CMmWFS.fits"
-saveFITS mFsvdV "./${cfCMtmpdir}/CMmDM.fits"
+loadfits "${DMmask}" dmmask
+mFsvdVm=mFsvdV*dmmask
+saveFITS mFsvdVm "./${cfCMtmpdir}/CMmDM.fits"
 listim
 exitCLI
 EOF
@@ -353,8 +398,6 @@ EOF
 
 
 
-
-
 # Compute the rotation that will turn 
 # the cross-product into a lower(0,1)/upper(2) triangular matrix, ensuring
 # a good match between the two sets of modes.
@@ -474,7 +517,24 @@ exitCLI
 EOF
 
 
-
+# Spatial extrapolation of DM modes
+#
+milk-all << EOF
+loadfits "conf/CMmodesDM/CMmodesDM_sfm.fits" CMmodesDM_sfm
+loadfits "./${cfCMtmpdir}/modesZFnmgsnem.fits" modesZFnmgsnem
+loadfits "./${cfCMtmpdir}/modesZFnmgsne.fits" modesZFnmgsne
+linalg.sgemm .GPUdevice ${GPUdevice}
+linalg.sgemm .transpA 1
+linalg.sgemm modesZFnmgsnem CMmodesDM_sfm mcoeff
+linalg.sgemm .transpA 0
+linalg.sgemm .transpB 0
+linalg.sgemm modesZFnmgsne mcoeff CMmodesDM_sfme
+saveFITS CMmodesDM_sfme "conf/CMmodesDM/CMmodesDM_sfme.fits"
+linalg.sgemm modesZFnmgsnem mcoeff CMmodesDM_sfmem
+saveFITS CMmodesDM_sfmem "conf/CMmodesDM/CMmodesDM_sfmem.fits"
+listim
+exitCLI
+EOF
 
 
 errexit=0
