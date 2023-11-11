@@ -526,6 +526,7 @@ loadfits "./${cfCMtmpdir}/modesZFnmgsne.fits" modesZFnmgsne
 linalg.sgemm .GPUdevice ${GPUdevice}
 linalg.sgemm .transpA 1
 linalg.sgemm modesZFnmgsnem CMmodesDM_sfm mcoeff
+saveFITS mcoeff "./${cfCMtmpdir}/mcoeff.fits"
 linalg.sgemm .transpA 0
 linalg.sgemm .transpB 0
 linalg.sgemm modesZFnmgsne mcoeff CMmodesDM_sfme
