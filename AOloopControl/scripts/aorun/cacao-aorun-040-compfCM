@@ -168,8 +168,11 @@ EOF
 
 
 
-
-
+########################################################################
+#
+# EXTRAPOLATION MODES
+#
+########################################################################
 
 #
 # Build modal decomposition for spatial extrapolation in DM space
@@ -571,6 +574,7 @@ imres=CMmodesDM_sfme-CMmodesDM_sf
 saveFITS imres "./${cfCMtmpdir}/imrese.fits"
 loadfits "${DMmask}" dmmask
 imouto=CMmodesDM_sfme*(1.0-dmmask)
+listim
 imout=CMmodesDM_sf+imouto
 saveFITS imout "conf/CMmodesDM/CMmodesDM_sfe.fits"
 listim
