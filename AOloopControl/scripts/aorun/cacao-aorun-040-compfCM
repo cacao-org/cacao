@@ -204,14 +204,14 @@ EOF
 # OPTIONAL
 # Check orthogonality in DM space
 #
-milk-all << EOF
-linalg.sgemm .GPUdevice ${GPUdevice}
-loadfits "./${cfCMtmpdir}/modesZFnmU.fits" modesZFnmU
-linalg.sgemm .transpA 1
-linalg.sgemm modesZFnmU modesZFnmU out
-saveFITS out "./${cfCMtmpdir}/modesZFnmU_xp.fits"
-exitCLI
-EOF
+#milk-all << EOF
+#linalg.sgemm .GPUdevice ${GPUdevice}
+#loadfits "./${cfCMtmpdir}/modesZFnmU.fits" modesZFnmU
+#linalg.sgemm .transpA 1
+#linalg.sgemm modesZFnmU modesZFnmU out
+#saveFITS out "./${cfCMtmpdir}/modesZFnmU_xp.fits"
+#exitCLI
+#EOF
 
 
 
@@ -575,9 +575,16 @@ saveFITS imres "./${cfCMtmpdir}/imrese.fits"
 loadfits "${DMmask}" dmmask
 imouto=CMmodesDM_sfme*(1.0-dmmask)
 listim
+saveFITS imouto "./${cfCMtmpdir}/imouto.fits"
+listim
+exitCLI
+EOF
+
+milk-all << EOF
+loadfits "conf/CMmodesDM/CMmodesDM_sf.fits" CMmodesDM_sf
+loadfits "./${cfCMtmpdir}/imouto.fits" imouto
 imout=CMmodesDM_sf+imouto
 saveFITS imout "conf/CMmodesDM/CMmodesDM_sfe.fits"
-listim
 exitCLI
 EOF
 
