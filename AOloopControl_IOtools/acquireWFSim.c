@@ -405,6 +405,10 @@ static errno_t compute_function()
             stream_connect_create_2Df32(wfszposname, sizexWFS, sizeyWFS);
     }
 
+
+    struct timespec time1, time2;
+    long n_print_timings = 5000;
+
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
         // ===========================================
@@ -412,20 +416,13 @@ static errno_t compute_function()
         // ===========================================
 
         int slice = 0;
-        /*
-        if(data.image[ID_wfsim].md[0].naxis == 3) // ring buffer
-        {
-          slice = data.image[ID_wfsim].md[0].cnt1;
-          if(slice == -1)
-          {
-              slice = data.image[ID_wfsim].md[0].size[2];
-          }
-        }*/
+
 
         DEBUG_TRACEPOINT(" ");
 
+        if (processinfo->loopcnt % n_print_timings == 0) clock_gettime(CLOCK_MILK, &time1);
 
-        char *ptrv;
+        void* ptrv = NULL;
         switch(WFSatype)
         {
         case _DATATYPE_FLOAT:
@@ -452,6 +449,11 @@ static errno_t compute_function()
             break;
         }
 
+        if (processinfo->loopcnt % n_print_timings == 0) {
+            clock_gettime(CLOCK_MILK, &time2);
+            printf("Pre-copy time: %f us\n", timespec_diff_double(time1, time2) * 1e6);
+        }
+
 
         // ===================================================
         // SUBTRACT WFSDARK AND MULTIPLY BY WFSMULT-> imWFS0
@@ -465,15 +467,14 @@ static errno_t compute_function()
         // check if wfsmult to be applied
         //int status_wfsmult = 0;
 
-        if(data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF)
+        if(data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF &&
+            imgwfsdark.ID != -1)
         {
-
-            if(imgwfsdark.ID != -1)
-            {
-                status_darksub = 1;
-            }
+            status_darksub = 1;
         }
 
+        if (processinfo->loopcnt % n_print_timings == 0) clock_gettime(CLOCK_MILK, &time1);
+        
         imgimWFS0.md->write = 1;
 
         switch(WFSatype)
@@ -560,7 +561,10 @@ static errno_t compute_function()
         }
 
         processinfo_update_output_stream(processinfo, imgimWFS0.ID);
-
+        if (processinfo->loopcnt % n_print_timings == 0) {
+            clock_gettime(CLOCK_MILK, &time2);
+            printf("Dark sub to imWFS0: %f us\n", timespec_diff_double(time1, time2)*1e6);
+        }
 
 
         DEBUG_TRACEPOINT(" ");
@@ -575,6 +579,7 @@ static errno_t compute_function()
         // ===========================================
         int status_normalize = 0;
 
+        if (processinfo->loopcnt % n_print_timings == 0) clock_gettime(CLOCK_MILK, &time1);
         imgimWFS1.md->write = 1;
 
         if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
@@ -652,7 +657,10 @@ static errno_t compute_function()
             }
         }
         processinfo_update_output_stream(processinfo, imgimWFS1.ID);
-
+        if (processinfo->loopcnt % n_print_timings == 0) {
+            clock_gettime(CLOCK_MILK, &time2);
+            printf("Renorm to imWFS1: %f us\n", timespec_diff_double(time1, time2)*1e6);
+        }
 
 
 
@@ -661,6 +669,7 @@ static errno_t compute_function()
         // ===========================================
 
         int status_refsub = 0;
+        if (processinfo->loopcnt % n_print_timings == 0) clock_gettime(CLOCK_MILK, &time1);
         if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF)
         {
             // subtract reference
@@ -689,6 +698,10 @@ static errno_t compute_function()
 
             processinfo_update_output_stream(processinfo, imgimWFS2.ID);
         }
+        if (processinfo->loopcnt % n_print_timings == 0) {
+            clock_gettime(CLOCK_MILK, &time2);
+            printf("Refsub to imWFS2: %f us\n", timespec_diff_double(time1, time2) * 1e6);
+        }
 
 
         // ===========================================
@@ -696,6 +709,7 @@ static errno_t compute_function()
         // ===========================================
 
         int status_ave = 0;
+        if (processinfo->loopcnt % n_print_timings == 0) clock_gettime(CLOCK_MILK, &time1);
         if(data.fpsptr->parray[fpi_compWFSsigav].fpflag & FPFLAG_ONOFF)
         {
             status_ave = 1;
@@ -711,15 +725,17 @@ static errno_t compute_function()
             }
             processinfo_update_output_stream(processinfo, imgimWFS3.ID);
         }
-
-
-
+        if (processinfo->loopcnt % n_print_timings == 0) {
+            clock_gettime(CLOCK_MILK, &time2);
+            printf("Av to imWFS3: %f us\n", timespec_diff_double(time1, time2) * 1e6);
+        }
 
         // ===========================================
         // UPDATE wfsrefc
         // ===========================================
 
         int status_wfsrefc = 0;
+        if (processinfo->loopcnt % n_print_timings == 0) clock_gettime(CLOCK_MILK, &time1);
         if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
         {
             status_wfsrefc = 1;
@@ -748,6 +764,11 @@ static errno_t compute_function()
             }
 
             processinfo_update_output_stream(processinfo, imgwfsrefc.ID);
+        }
+        if (processinfo->loopcnt % n_print_timings == 0) {
+            clock_gettime(CLOCK_MILK, &time2);
+            printf("refc to imgwfsrefc: %f us\n", timespec_diff_double(time1, time2) * 1e6);
+            fflush(stdout);
         }
 
         processinfo_WriteMessage_fmt(
