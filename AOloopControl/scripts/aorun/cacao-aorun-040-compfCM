@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Examples:
+# cacao-aorun-040-compfCM -g 0 -c 10 -sm 0.01 -se 0.01 -m 12 -ef 1.1 -eo 0.3 -t
+# cacao-aorun-040-compfCM -g 0 -zrm "./nlcWFS/zrespM-H.fits" -wfsm "./nlcWFS/wfsmask.fits" -dmm "./nlcWFS/dmmask.fits" -cm "./nlcWFS/FpokesC.8.fits" -t
+
+
 # This script uses milk-argparse
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
@@ -7,39 +12,81 @@
 cfCMtmpdir="compfCM"
 
 # script 1-line description
-MSdescr="Re-order control modes according to spatial frequency"
+MSdescr="Build control modes ordered according to spatial frequency"
 
-CMmDM="./conf/CMmodesDM/CMmodesDM.fits"
-CMmWFS="./conf/CMmodesWFS/CMmodesWFS.fits"
 DMmask="./conf/dmmask.fits"
 WFSmask="./conf/wfsmask.fits"
 zrespm="./conf/RMmodesWFS/zrespM-H.fits"
 
-MSextdescr="Takes as input the control modes (CM) expressed in DM and WFS space
-Re-orders the CM by rotations to match spatial frequency ordering.
+MSextdescr="Takes as input the zonal response matrix
 Uses temporary directory ./${cfCMtmpdir}/
 
+INPUT CONTROL MODES (Cmodes)
+The output control modes will try to adhere to the Cmodes, using the same 
+ordering.
+By default Cmdoes are Zernike modes followed by Fourior modes.
+User can specify a custom set of input control modes with -cm option.
+
+DM EXTRAPOLATION
 DM exttapolation set by extrfactor and extroffset.
 Extrapolation extends beyond dmmask by extroffset pixel (fixed quantity for all 
 modes) and extrfactor radian.(proportional to Fourier mode period). The second
 extrapolation (radian) is tapered.
 
 Input files read by script :
-	$DMmask
-	$WFSmask
-	$zrespm
+	$DMmask   (override with -dmm)
+	$WFSmask  (override with -wfsm)
+	$zrespm   (override with -zrm)
 "
 
 source milk-script-std-config
 source cacao-check-cacaovars
 
+RequiredCommands+=( fitsheader )
+
+
 TESTMODE=0
 MSopt+=( "t:testmode:setTESTMODE::permorms tests" )
-GPUdevice="-1"
 function setTESTMODE()
 {
 	TESTMODE=1
 }
+
+
+
+
+
+
+MSopt+=( "zrm:zrespm:setzrespm:zrespm[string]:zonal response matrix [${zrespm}]" )
+function setzrespm()
+{
+	zrespm=$1
+}
+
+MSopt+=( "wfsm:WFSmask:setWFSmask:WFSmask[string]:WFS mask [${WFSmask}]" )
+function setWFSmask()
+{
+	WFSmask=$1
+}
+
+MSopt+=( "dmm:DMmask:setDMmask:DMmask[string]:DM mask [${DMmask}]" )
+function setDMmask()
+{
+	DMmask=$1
+}
+
+# Control modes (input) to be used
+# These are the target modes we will try to adhere to
+#
+Cmodes="NULL"
+MSopt+=( "cm:Cmodes:setCmodes:Cmodes[string]:Control modes input, recreate if NULL [${Cmodes}]" )
+function setCmodes()
+{
+	Cmodes=$1
+}
+
+
+
 
 
 extrfactor="1.0"
@@ -126,11 +173,34 @@ mkdir -p ${cfCMtmpdir}
 
 
 
+# Get DM size from DMmask
 
+strcmd=$(fitsheader -k NAXIS1 $DMmask | tail -1)
+arr=($strcmd)
+DMsizex=${arr[2]}
+echo "DMsizex = $DMsizex"
+
+strcmd=$(fitsheader -k NAXIS2 $DMmask | tail -1)
+arr=($strcmd)
+DMsizex=${arr[2]}
+echo "DMsizex = $DMsizex"
+
+
+
+
+
+
+
+
+
+
+
+
+if [ "$Cmodes" = "NULL" ]; then
 
 ########################################################################
 #
-# CONSTRUCT TARGET MODES
+# CONSTRUCT TARGET MODES -> modesZFn
 #
 ########################################################################
 
@@ -155,8 +225,6 @@ DMr0=${CACAO_DM_beam_rad:-$r0t}
 echo "DMx0 = $DMx0"
 echo "DMy0 = $DMy0"
 echo "DMr0 = $DMr0"
-
-
 
 
 
@@ -205,8 +273,21 @@ saveFITS modesZFn "./${cfCMtmpdir}/modesZFn.fits"
 exitCLI
 EOF
 
+else
+pwd
+cp ${Cmodes} "./${cfCMtmpdir}/modesZF.fits"
 
+milk-all << EOF
+loadfits "./${cfCMtmpdir}/modesZF.fits" modesZF
+loadfits "${DMmask}" dmmask
+modesZFm=modesZF*dmmask
+listim
+normalizeslice modesZF dmmask modesZFn 2
+saveFITS modesZFn "./${cfCMtmpdir}/modesZFn.fits"
+exitCLI
+EOF
 
+fi
 
 
 
@@ -254,6 +335,9 @@ exitCLI
 EOF
 
 
+
+
+
 if [ ${TESTMODE} = 1 ]; then
 # OPTIONAL
 # Check orthogonality in DM space
@@ -285,9 +369,10 @@ milk-all << EOF
 linalg.sgemm .GPUdevice ${GPUdevice}
 loadfits "${zrespm}" zrespM
 loadfits "./${cfCMtmpdir}/modesZFn.fits" modesZFn
+loadfits "${WFSmask}" wfsmask
+listim
 linalg.sgemm zrespM modesZFn modesZFnWFS
 saveFITS modesZFnWFS "./${cfCMtmpdir}/modesZFnWFS.fits"
-loadfits "${WFSmask}" wfsmask
 modesZFnWFSm=modesZFnWFS*wfsmask
 saveFITS modesZFnWFSm "./${cfCMtmpdir}/modesZFnWFSm.fits"
 exitCLI
@@ -320,7 +405,6 @@ saveFITS modesZFWFSm "./${cfCMtmpdir}/modesZFWFSm.fits"
 listim
 exitCLI
 EOF
-
 
 
 
@@ -391,13 +475,12 @@ linalg.sgemm .transpA 0
 linalg.sgemm .transpB 0
 linalg.sgemm RMDM mFsvdV outDM
 #linalg.sgemm RMWFS mFsvdV outWFS
-#loadfits "${DMmask}" dmmask
-#mFsvdVm=mFsvdV*dmmask
 saveFITS outDM "./${cfCMtmpdir}/CMmDM.fits"
 #saveFITS outWFS "./${cfCMtmpdir}/CMmDM_WFStest.fits"
 listim
 exitCLI
 EOF
+
 
 
 if [ ${TESTMODE} = 1 ]; then
@@ -675,35 +758,6 @@ fi
 if [ ${TESTMODE} = 1 ]; then
 # rotated basis now satisfies constraints
 # check it is orthonormal
-
-
-# Check original basis for reference
-
-# OPTIONAL
-milk-all << EOF
-linalg.sgemm .GPUdevice ${GPUdevice}
-loadfits "${WFSmask}" wfsmask
-loadfits "${CMmWFS}" CMmWFS
-CMmWFSm=CMmWFS*wfsmask
-linalg.sgemm .transpA 1
-linalg.sgemm CMmWFSm CMmWFSm out
-saveFITS out "./${cfCMtmpdir}/CMmWFS_mxp.fits"
-exitCLI
-EOF
-
-# OPTIONAL
-milk-all << EOF
-linalg.sgemm .GPUdevice ${GPUdevice}
-loadfits "${DMmask}" dmmask
-loadfits "${CMmDM}" CMmDM
-CMmDMm=CMmDM*dmmask
-linalg.sgemm .transpA 1
-linalg.sgemm CMmDMm CMmDMm out
-saveFITS out "./${cfCMtmpdir}/CMmDM_mxp.fits"
-exitCLI
-EOF
-
-
 
 # OPTIONAL
 #
