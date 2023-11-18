@@ -53,7 +53,8 @@ mkdir -p ${DMMODEDIR}
 # (although that depends on the implementation of imgen.mkdisk)
 x0default=$(echo "scale=3; $CACAO_DMxsize/2" | bc)
 y0default=$(echo "scale=3; $CACAO_DMysize/2" | bc)
-r0default=$(echo "scale=3; 0.450*$CACAO_DMxsize" | bc)
+#r0default=$(echo "scale=3; 0.450*$CACAO_DMxsize" | bc)
+r0default=$(echo "scale=3; $CACAO_DMxsize" | bc)
 
 
 

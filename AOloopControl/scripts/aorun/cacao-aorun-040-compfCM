@@ -219,7 +219,8 @@ DMsizex=${CACAO_DMxsize}
 DMsizey=${CACAO_DMysize}
 DMx0=${CACAO_DM_beam_xcent:-$x0default}
 DMy0=${CACAO_DM_beam_ycent:-$y0default}
-DMr0=${CACAO_DM_beam_rad:-$r0t}
+#DMr0=${CACAO_DM_beam_rad:-$r0t}
+DMr0=${CACAO_DM_beam_rad:-$r0default}
 
 
 echo "DMx0 = $DMx0"
