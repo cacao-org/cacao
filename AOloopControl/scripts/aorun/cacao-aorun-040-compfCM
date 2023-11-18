@@ -329,11 +329,11 @@ linalg.sgemm .GPUdevice ${GPUdevice}
 linalg.sgemm .transpA 0
 linalg.sgemm .transpB 0
 linalg.sgemm modesZFn modesZFnmV out
-saveFITS out "./${cfCMtmpdir}/emodesDMe.fits"
+linalg.SVDmkU modesZFn modesZFnmV modesZFnmS emodesDMe out1US
+saveFITS emodesDMe "./${cfCMtmpdir}/emodesDMe.fits"
 listim
 exitCLI
 EOF
-
 
 
 
@@ -474,9 +474,7 @@ linalg.sgemm .GPUdevice ${GPUdevice}
 linalg.sgemm .transpA 0
 linalg.sgemm .transpB 0
 linalg.sgemm RMDM mFsvdV outDM
-#linalg.sgemm RMWFS mFsvdV outWFS
 saveFITS outDM "./${cfCMtmpdir}/CMmDM.fits"
-#saveFITS outWFS "./${cfCMtmpdir}/CMmDM_WFStest.fits"
 listim
 exitCLI
 EOF
@@ -845,6 +843,14 @@ fi
 
 
 
+########################################################################
+#
+# SPATIAL EXTENSION
+#
+########################################################################
+
+
+
 # Spatial extrapolation of DM modes
 # use emodesDM, emodesDMe
 #
@@ -868,7 +874,7 @@ linalg.sgemm .transpA 0
 linalg.sgemm .transpB 0
 linalg.sgemm emodesDMe mcoeff CMmodesDM_sfme
 saveFITS CMmodesDM_sfme "conf/CMmodesDM/CMmodesDM_sfme.fits"
-linalg.sgemm modesZFnmU mcoeff CMmodesDM_sfmem
+linalg.sgemm emodesDM mcoeff CMmodesDM_sfmem
 saveFITS CMmodesDM_sfmem "conf/CMmodesDM/CMmodesDM_sfmem.fits"
 imres=CMmodesDM_sfme-CMmodesDM_sf
 saveFITS imres "./${cfCMtmpdir}/imrese.fits"
@@ -882,8 +888,10 @@ EOF
 
 milk-all << EOF
 loadfits "conf/CMmodesDM/CMmodesDM_sf.fits" CMmodesDM_sf
+loadfits "${DMmask}" dmmask
+CMmodesDM_sfm=CMmodesDM_sf*dmmask
 loadfits "./${cfCMtmpdir}/imouto.fits" imouto
-imout=CMmodesDM_sf+imouto
+imout=CMmodesDM_sfm+imouto
 saveFITS imout "conf/CMmodesDM/CMmodesDM_sfe.fits"
 exitCLI
 EOF
