@@ -38,7 +38,12 @@ function setalpha()
 }
 
 
-
+TTfactor="8.0"
+MSopt+=( "t:ttf:setTTfactor:TTfactor[float]:Tip-Tilt amplification factor [${TTfactor}]" )
+function setTTfactor()
+{
+	TTfactor=$1
+}
 
 source milk-argparse
 
@@ -117,7 +122,7 @@ radmaskfact="1.1"
 
 milk-all << EOF
 mload cacaocomputeCalib
-zern.mkzerc .TTfactor 8.0
+zern.mkzerc .TTfactor ${TTfactor}
 zern.mkzerc .radmaskfact ${radmaskfact}
 zern.mkzerc zerc ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
 zercm=zerc*3

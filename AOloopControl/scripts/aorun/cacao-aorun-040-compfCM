@@ -59,7 +59,23 @@ function setTESTMODE()
 }
 
 
+# amplification factor for TT
+TTfactor="8.0"
+MSopt+=( "ttf:ttf:setTTfactor:TTfactor[float]:Tip-Tilt amplification factor [${TTfactor}]" )
+function setTTfactor()
+{
+	TTfactor=$1
+}
 
+
+# Fourier power law
+# large value -> fast decrease of amplitude with spatial frequency
+Falpha="1.0"
+MSopt+=( "fa:Falpha:setFalpha:Falpha[float]:Set power law index [0.5]" )
+function setFalpha()
+{
+	Falpha=$1
+}
 
 
 
@@ -247,14 +263,14 @@ echo "DMr0 = $DMr0"
 #
 
 # amplification factor for TT
-ZTTfactor="8.0"
+TTfactor="8.0"
 
 # Fourier power law
 # large value -> fast decrease of amplitude with spatial frequency
 Falpha="1.0"
 
 milk-all << EOF
-zern.mkzerc .TTfactor ${ZTTfactor}
+zern.mkzerc .TTfactor ${TTfactor}
 zern.mkzerc .radmaskfact 1.1
 zern.mkzerc modesZ ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
 saveFITS modesZ "./${cfCMtmpdir}/modesZ.fits"
@@ -267,8 +283,8 @@ lintools.mkFouriermodes .align.ycenter ${DMy0}
 lintools.mkFouriermodes .rCPAmin 0.1
 loadfits "${DMmask}" dmmask
 lintools.mkFouriermodes .maskim dmmask
-lintools.mkFouriermodes .extrfactor 1.5
-lintools.mkFouriermodes .extroffset 0.0
+lintools.mkFouriermodes .extrfactor ${extrfactor}
+lintools.mkFouriermodes .extroffset ${extroffset}
 lintools.mkFouriermodes modesF ${DMsizex} ${DMsizey} ${CPAmax} 0.8 ${DMr0} 1.2 0
 saveFITS modesF "./${cfCMtmpdir}/modesF.fits"
 immerge modesZ modesF modesZF 2
@@ -369,7 +385,6 @@ fi
 
 
 
-if [ ${TESTMODE} = 1 ]; then
 # Compute WFS response to TmodesDMn over wfsmask -> TmodesDMnWFSm.fits
 #
 milk-all << EOF
@@ -384,7 +399,6 @@ TmodesDMnWFSm=TmodesDMnWFS*wfsmask
 saveFITS TmodesDMnWFSm "./${cfCMtmpdir}/TmodesDMnWFSm.fits"
 exitCLI
 EOF
-fi
 
 
 
@@ -625,7 +639,7 @@ fi
 milk-all << EOF
 loadfits "./${cfCMtmpdir}/TmodesDMnWFSm.fits" TmodesDMnWFSm
 loadfits "./${cfCMtmpdir}/TmodesDMn.fits" TmodesDMn
-linalg.GramSchmidt .GPUdevice 0
+linalg.GramSchmidt .GPUdevice ${GPUdevice}
 linalg.GramSchmidt .auxmat TmodesDMn
 linalg.GramSchmidt TmodesDMnWFSm TmodesDMnWFSmgs
 saveFITS TmodesDMn "./${cfCMtmpdir}/TmodesDMnwfsgs.fits"
