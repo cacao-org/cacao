@@ -46,10 +46,21 @@ set(LINKLIBS
 	cacaoAOloopControl
 )
 
+#If not using MKL, check if OpenBLAS has lapacke symbols.  Include lapacke if not.
 if(NOT MKL_FOUND)
-  list(APPEND LINKLIBS lapacke)
-endif()
 
+    check_library_exists(openblas LAPACKE_sgemlq "" DONT_NEED_LAPACKE)
+
+    if(DONT_NEED_LAPACKE)
+       message("-- MKL NOT FOUND")
+       message("   LINKING OpenBLAS")
+    else()
+       message("-- MKL NOT FOUND")
+       message("   LINKING LAPACKE")
+       list(APPEND LINKLIBS lapacke)    
+    endif()
+
+endif()
 
 
 
