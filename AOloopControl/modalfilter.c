@@ -798,13 +798,7 @@ static errno_t compute_function()
             data.image[imgselfRM.ID].array.F[mi] = 0.0;
         }
 
-        //No process info yet.
-        imgselfRM.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgselfRM.md->writetime = tw;
-        imgselfRM.md->atime = tw;
-        ImageStreamIO_sempost(imgselfRM.im,-1);
+        ImageStreamIO_UpdateIm(imgselfRM.im);
     }
 
     float *selfRMpokecmd = (float *) malloc(sizeof(float) * NBmode);
@@ -882,13 +876,7 @@ static errno_t compute_function()
             data.image[imgout.ID].array.F[mi] = 0.0;
         }
 
-        //No process info yet.
-        imgout.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgout.md->writetime = tw;
-        imgout.md->atime = tw;
-        ImageStreamIO_sempost(imgout.im,-1);
+        ImageStreamIO_UpdateIm(imgout.im);
     }
 
     // connect/create aux DM control mode coeffs
@@ -902,14 +890,7 @@ static errno_t compute_function()
         {
             data.image[imgauxmDM.ID].array.F[mi] = 0.0;
         }
-
-        //No process info yet.
-        imgauxmDM.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgauxmDM.md->writetime = tw;
-        imgauxmDM.md->atime = tw;
-        ImageStreamIO_sempost(imgauxmDM.im,-1);
+        ImageStreamIO_UpdateIm(imgauxmDM.im);
     }
 
 
@@ -925,14 +906,7 @@ static errno_t compute_function()
         {
             imgPF.im->array.F[mi] = 0.0;
         }
-
-        //No process info yet.
-        imgPF.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgPF.md->writetime = tw;
-        imgPF.md->atime = tw;
-        ImageStreamIO_sempost(imgPF.im,-1);
+        ImageStreamIO_UpdateIm(imgPF.im);
     }
 
 
@@ -948,14 +922,7 @@ static errno_t compute_function()
         {
             imgmvaloffloadDM.im->array.F[mi] = 0.0;
         }
-
-        //No process info yet.
-        imgmvaloffloadDM.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgmvaloffloadDM.md->writetime = tw;
-        imgmvaloffloadDM.md->atime = tw;
-        ImageStreamIO_sempost(imgmvaloffloadDM.im,-1);
+        ImageStreamIO_UpdateIm(imgmvaloffloadDM.im);
     }
 
 
@@ -990,14 +957,7 @@ static errno_t compute_function()
         {
             imgmgainfact.im->array.F[mi] = 1.0;
         }
-        
-        //No process info yet.
-        imgmgainfact.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgmgainfact.md->writetime = tw;
-        imgmgainfact.md->atime = tw;
-        ImageStreamIO_sempost(imgmgainfact.im,-1);
+        ImageStreamIO_UpdateIm(imgmgainfact.im);
     }
 
 
@@ -1025,14 +985,7 @@ static errno_t compute_function()
         {
             imgoffloadmgainfact.im->array.F[mi] = 1.0;
         }
-
-        //No process info yet.
-        imgoffloadmgainfact.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgoffloadmgainfact.md->writetime = tw;
-        imgoffloadmgainfact.md->atime = tw;
-        ImageStreamIO_sempost(imgoffloadmgainfact.im,-1);
+        ImageStreamIO_UpdateIm(imgoffloadmgainfact.im);
     }
 
 
@@ -1067,14 +1020,7 @@ static errno_t compute_function()
         {
             imgmmultfact.im->array.F[mi] = 1.0;
         }
-
-        //No process info yet.
-        imgmmultfact.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgmmultfact.md->writetime = tw;
-        imgmmultfact.md->atime = tw;
-        ImageStreamIO_sempost(imgmmultfact.im,-1);
+        ImageStreamIO_UpdateIm(imgmmultfact.im);
     }
 
 
@@ -1097,14 +1043,7 @@ static errno_t compute_function()
         {
             imgoffloadmmultfact.im->array.F[mi] = 1.0;
         }
-
-        //No process info yet.
-        imgoffloadmmultfact.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgoffloadmmultfact.md->writetime = tw;
-        imgoffloadmmultfact.md->atime = tw;
-        ImageStreamIO_sempost(imgoffloadmmultfact.im,-1);
+        ImageStreamIO_UpdateIm(imgoffloadmmultfact.im);
     }
 
 
@@ -1122,14 +1061,7 @@ static errno_t compute_function()
         {
             imgmzeropoint.im->array.F[mi] = 0.0;
         }
-
-        //No process info yet.
-        imgmzeropoint.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgmzeropoint.md->writetime = tw;
-        imgmzeropoint.md->atime = tw;
-        ImageStreamIO_sempost(imgmzeropoint.im,-1);
+        ImageStreamIO_UpdateIm(imgmzeropoint.im);
     }
 
 
@@ -1156,14 +1088,7 @@ static errno_t compute_function()
         {
             imgmlimitfact.im->array.F[mi] = 1.0;
         }
-
-        //No process info yet.
-        imgmlimitfact.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgmlimitfact.md->writetime = tw;
-        imgmlimitfact.md->atime = tw;
-        ImageStreamIO_sempost(imgmlimitfact.im,-1);
+        ImageStreamIO_UpdateIm(imgmlimitfact.im);
     }
 
 
@@ -1186,14 +1111,7 @@ static errno_t compute_function()
         {
             imgoffloadmlimitfact.im->array.F[mi] = 1.0;
         }
-
-        //No process info yet.
-        imgoffloadmlimitfact.md->cnt0++;
-        struct timespec tw;
-        clock_gettime(CLOCK_MILK, &tw);
-        imgoffloadmlimitfact.md->writetime = tw;
-        imgoffloadmlimitfact.md->atime = tw;
-        ImageStreamIO_sempost(imgoffloadmlimitfact.im,-1);
+        ImageStreamIO_UpdateIm(imgoffloadmlimitfact.im);
     }
 
 
