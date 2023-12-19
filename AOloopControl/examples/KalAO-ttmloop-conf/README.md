@@ -108,23 +108,27 @@ The following files are written to ./conf/DMmodes/ :
 
 ```bash
 # Acquire response matrix - Simple modes
-cacao-fpsctrl setval measlinresp procinfo.loopcntMax 20
+cacao-fpsctrl setval measlinresp procinfo.loopcntMax 50
 cacao-aorun-030-acqlinResp SmodesC
 
 # NOTE: Alternate option is Hadamard modes
 # Acquire response matrix - Hadamard modes
-#cacao-fpsctrl setval measlinresp procinfo.loopcntMax 3
+#cacao-fpsctrl setval measlinresp procinfo.loopcntMax 50
 #cacao-aorun-030-acqlinResp HpokeC
 cacao-aorun-031-RMHdecode
-cacao-aorun-032-RMmkmask
+
+# The masks were manually generated for KalAO
+#cacao-aorun-032-RMmkmask
 ```
 :warning: DM and WFS masks will be required to compute control modes. They can be computed from a zonal RM (as shown above), or written by hand (single precision floats, 0.0 and 1.0 values).
 
 ### Take reference
 
+This should not be used when actually using KalAO as it would overwrite the NCPA reference.
+
 ```bash
-# Acquire reference
-cacao-aorun-026-takeref
+# Acquire reference 
+# cacao-aorun-026-takeref
 ```
 
 
@@ -133,8 +137,11 @@ cacao-aorun-026-takeref
 Compute control modes, in both WFS and DM spaces.
 
 ```bash
-cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/SmodesC.fits"
-cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/SmodesC.WFSresp.fits"
+#cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/SmodesC.fits"
+#cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/SmodesC.WFSresp.fits"
+#cacao-fpsctrl setval compstrCM svdlim 0.2
+cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/HpokeC.fits"
+cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/HpokeC.WFSresp.fits"
 cacao-fpsctrl setval compstrCM svdlim 0.2
 ```
 Then run the compstrCM process to compute CM and load it to shared memory :
