@@ -2,7 +2,7 @@
 # This file will be sourced by cacao-setup
 
 
-export CACAO_LOOPNAME="kalaottmloop"
+export CACAO_LOOPNAME="KalAO-ttmloop"
 export CACAO_LOOPNUMBER="2"
 
 
