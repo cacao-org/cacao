@@ -50,7 +50,7 @@ def straight_CM(modes_DM: np.ndarray, modes_WFS: np.ndarray, svd_lim: float):
 
         svd_lim: float
         
-        TODO incomplete
+        TODO pretty incomplete
     '''
 
     assert modes_DM.ndim == 3, "modes_DM, ndim = 3 [n_modes * dm_i * dm_j]"
@@ -72,4 +72,4 @@ def straight_CM(modes_DM: np.ndarray, modes_WFS: np.ndarray, svd_lim: float):
     CMWFS = v.T @ modes_WFS_f
     CMDM = v.T @ modes_DM_f
 
-    pass
+    return u, CMWFS, CMDM

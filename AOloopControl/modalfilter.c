@@ -792,13 +792,15 @@ static errno_t compute_function()
     {
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%lu_mfiltselfRM", *AOloopindex);
-        imgselfRM =
-            stream_connect_create_3Df32(name, NBmode, NBmode, (*selfRMzsize));
+        imgselfRM = stream_connect_create_3Df32(name, NBmode, NBmode, (*selfRMzsize));
         for(uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
         {
             data.image[imgselfRM.ID].array.F[mi] = 0.0;
         }
+
+        ImageStreamIO_UpdateIm(imgselfRM.im);
     }
+
     float *selfRMpokecmd = (float *) malloc(sizeof(float) * NBmode);
     for(uint32_t mi = 0; mi < NBmode; mi++)
     {
@@ -868,12 +870,14 @@ static errno_t compute_function()
     // connect/create output mode coeffs
     //
     IMGID imgout = stream_connect_create_2Df32(outmval, NBmode, 1);
-    for(uint32_t mi = 0; mi < NBmode; mi++)
     {
-        data.image[imgout.ID].array.F[mi] = 0.0;
+        for(uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            data.image[imgout.ID].array.F[mi] = 0.0;
+        }
+
+        ImageStreamIO_UpdateIm(imgout.im);
     }
-
-
 
     // connect/create aux DM control mode coeffs
     //
@@ -886,6 +890,7 @@ static errno_t compute_function()
         {
             data.image[imgauxmDM.ID].array.F[mi] = 0.0;
         }
+        ImageStreamIO_UpdateIm(imgauxmDM.im);
     }
 
 
@@ -901,6 +906,7 @@ static errno_t compute_function()
         {
             imgPF.im->array.F[mi] = 0.0;
         }
+        ImageStreamIO_UpdateIm(imgPF.im);
     }
 
 
@@ -916,6 +922,7 @@ static errno_t compute_function()
         {
             imgmvaloffloadDM.im->array.F[mi] = 0.0;
         }
+        ImageStreamIO_UpdateIm(imgmvaloffloadDM.im);
     }
 
 
@@ -950,6 +957,7 @@ static errno_t compute_function()
         {
             imgmgainfact.im->array.F[mi] = 1.0;
         }
+        ImageStreamIO_UpdateIm(imgmgainfact.im);
     }
 
 
@@ -977,6 +985,7 @@ static errno_t compute_function()
         {
             imgoffloadmgainfact.im->array.F[mi] = 1.0;
         }
+        ImageStreamIO_UpdateIm(imgoffloadmgainfact.im);
     }
 
 
@@ -1011,6 +1020,7 @@ static errno_t compute_function()
         {
             imgmmultfact.im->array.F[mi] = 1.0;
         }
+        ImageStreamIO_UpdateIm(imgmmultfact.im);
     }
 
 
@@ -1033,6 +1043,7 @@ static errno_t compute_function()
         {
             imgoffloadmmultfact.im->array.F[mi] = 1.0;
         }
+        ImageStreamIO_UpdateIm(imgoffloadmmultfact.im);
     }
 
 
@@ -1050,6 +1061,7 @@ static errno_t compute_function()
         {
             imgmzeropoint.im->array.F[mi] = 0.0;
         }
+        ImageStreamIO_UpdateIm(imgmzeropoint.im);
     }
 
 
@@ -1076,6 +1088,7 @@ static errno_t compute_function()
         {
             imgmlimitfact.im->array.F[mi] = 1.0;
         }
+        ImageStreamIO_UpdateIm(imgmlimitfact.im);
     }
 
 
@@ -1098,6 +1111,7 @@ static errno_t compute_function()
         {
             imgoffloadmlimitfact.im->array.F[mi] = 1.0;
         }
+        ImageStreamIO_UpdateIm(imgoffloadmlimitfact.im);
     }
 
 

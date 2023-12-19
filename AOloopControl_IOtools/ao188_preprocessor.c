@@ -12,6 +12,7 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
+static long NUM_APD_TOTAL = 216;
 static long NUM_APD_HOWFS = 188;
 static long NUM_APD_LOWFS = 16;
 
@@ -148,13 +149,14 @@ NGL, assuming size is gonna be 188...
 static errno_t two_sided_curvature_compute(
     float *curvature,
     int16_t *apd_twosided,
+    long apd_slice_size,
     long size)
 {
     float fp, fm;
     for(int k = 0; k < size; ++k)
     {
         fp = (float)apd_twosided[k];
-        fm = (float)apd_twosided[k + size];
+        fm = (float)apd_twosided[k + apd_slice_size];
         curvature[k] = (fp - fm) / (fp + fm + CURVATURE_REGZ);
     }
     return RETURN_SUCCESS;
@@ -175,14 +177,14 @@ static errno_t one_sided_curvature_compute(
     {
         for(int k = 0; k < size; ++k)
         {
-            curvature[k] = (apd_onesided[k] - apd_reference[k]) / apd_reference[k];
+            curvature[k] = (apd_onesided[k] - apd_reference[k]) / (apd_reference[k] + CURVATURE_REGZ);
         }
     }
     else
     {
         for(int k = 0; k < size; ++k)
         {
-            curvature[k] = (- apd_onesided[k] - apd_reference[k]) / apd_reference[k];
+            curvature[k] = (- apd_onesided[k] - apd_reference[k]) / (apd_reference[k] + CURVATURE_REGZ);
         }
     }
     return RETURN_SUCCESS;
@@ -352,7 +354,7 @@ static errno_t compute_function()
         // HOWFS curvature computations
         // TODO Pass keywords through. Or don't?
         curv_2k_doublesided.im->md->write = 1;
-        two_sided_curvature_compute(curv_2k_doublesided.im->array.F, apd_mat_in.im->array.SI16, NUM_APD_HOWFS);
+        two_sided_curvature_compute(curv_2k_doublesided.im->array.F, apd_mat_in.im->array.SI16, NUM_APD_TOTAL, NUM_APD_HOWFS);
         processinfo_update_output_stream(processinfo, curv_2k_doublesided.ID);
 
         // Post outputs
@@ -360,7 +362,7 @@ static errno_t compute_function()
         {
             curv_1k_doublesided.im->md->write = 1;
             memcpy(curv_1k_doublesided.im->array.F, curv_2k_doublesided.im->array.F,
-                   NUM_APD_HOWFS);
+                   NUM_APD_HOWFS * sizeof(float));
             processinfo_update_output_stream(processinfo, curv_1k_doublesided.ID);
         }
 
@@ -368,7 +370,7 @@ static errno_t compute_function()
         // Get the latest side of the APD 216x2 buffer. WARNING: Size may be 217 if the curvature tag is embedded!
         // apd_mat_in.size[0] = 216 or 217 =/= NUM_APD_HOWFS.
 
-        apd_integrator_update(apd_integrator, apd_ptr, NUM_APD_HOWFS, one_sided_curv_integrator_gain);
+        apd_integrator_update(apd_integrator, apd_ptr, one_sided_curv_integrator_gain, NUM_APD_HOWFS);
         one_sided_curvature_compute(curv_2k_singlesided.im->array.F, apd_ptr, apd_integrator, NUM_APD_HOWFS, curv_sign);
 
         processinfo_update_output_stream(processinfo, curv_2k_singlesided.ID);

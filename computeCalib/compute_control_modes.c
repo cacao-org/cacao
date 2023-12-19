@@ -363,16 +363,31 @@ static errno_t mk_ZernikeFourier_modal_basis(
 
 
     // Here we create simple Fourier modes
-    linopt_imtools_makeCPAmodes("CPAmodes",
-                                msizex,
-                                0,
-                                CPAmax,
-                                CPAmax,
-                                deltaCPA,
-                                0.5 * msizex,
-                                1.2,
-                                0,
-                                NULL);
+
+    {
+        IMGID imgoutm = mkIMGID_from_name("CPAmodes");
+
+        // optional mask
+        //
+        IMGID imgmask = mkIMGID_from_name("modesZFmask");
+        resolveIMGID(&imgmask, ERRMODE_WARN);
+
+        linopt_imtools_makeCPAmodes(&imgoutm,
+                                    msizex,
+                                    0,
+                                    CPAmax,
+                                    CPAmax,
+                                    deltaCPA,
+                                    0.5 * msizex,
+                                    1.2,
+                                    0,
+                                    NULL,
+                                    imgmask,
+                                    0.0,
+                                    0.0
+                                   );
+    }
+
     imageID ID0 = image_ID("CPAmodes");
 
     imageID IDfreq = image_ID("cpamodesfreq");

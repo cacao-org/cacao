@@ -264,6 +264,7 @@ static errno_t compute_function()
 
 
     // masks are used for normalization of output
+    // WFSmask multiplied by input WFS modes to exclude "bad" sensors
     //
     IMGID imgDMmask;
     {
@@ -279,6 +280,10 @@ static errno_t compute_function()
         load_fits(WFSmaskfname, "WFSmask", LOADFITS_ERRMODE_WARNING, &ID);
         imgWFSmask = makesetIMGID("WFSmask", ID);
     }
+
+
+
+
 
 
     struct timespec t0, t1, t2, t3, t4, t5, t6, t7, t8, t9;
@@ -318,6 +323,16 @@ static errno_t compute_function()
         int nbact = imgRMDM.md->size[0] * imgRMDM.md->size[1];
         int nbwfspix = imgRMWFS.md->size[0] * imgRMWFS.md->size[1];
 
+
+        // multiply RMmodesWFS by WFSmask
+        printf("Masking RM WFS by WFSmask\n");
+        for(int m=0; m<nbmode; m++)
+        {
+            for(int ii=0; ii<nbwfspix; ii++)
+            {
+                imgRMWFS.im->array.F[m*nbwfspix + ii] *= imgWFSmask.im->array.F[ii];
+            }
+        }
 
 
         EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");

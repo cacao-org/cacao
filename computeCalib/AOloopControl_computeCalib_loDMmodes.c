@@ -165,16 +165,31 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         }
     }
 
-    linopt_imtools_makeCPAmodes("CPAmodes",
-                                msizex,
-                                0.0,
-                                1.5*CPAmax,
-                                CPAmax,
-                                deltaCPA,
-                                0.5 * msizex,
-                                1.2,
-                                0,
-                                NULL);
+
+    {
+        IMGID imgoutm = mkIMGID_from_name("CPAmodes");
+
+        // optional mask
+        //
+        IMGID imgCPAmask = mkIMGID_from_name("modesCPAmask");
+        resolveIMGID(&imgCPAmask, ERRMODE_WARN);
+
+        linopt_imtools_makeCPAmodes(&imgoutm,
+                                    msizex,
+                                    0.0,
+                                    1.5*CPAmax,
+                                    CPAmax,
+                                    deltaCPA,
+                                    0.5 * msizex,
+                                    1.2,
+                                    0,
+                                    NULL,
+                                    imgCPAmask,
+                                    0.0,
+                                    0.0
+                                    );
+    }
+
     ID0    = image_ID("CPAmodes");
     IDfreq = image_ID("cpamodesfreq");
 
