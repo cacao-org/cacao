@@ -122,7 +122,7 @@ static errno_t compute_function()
 
 
     IMGID imDMmodesC = mkIMGID_from_name(DMmodesC);
-     resolveIMGID(&imDMmodesC, ERRMODE_ABORT);
+    resolveIMGID(&imDMmodesC, ERRMODE_ABORT);
     uint32_t dmxsize = imDMmodesC.md->size[0];
     uint32_t dmysize = imDMmodesC.md->size[1];
     uint64_t dmsize = dmxsize;
@@ -145,14 +145,15 @@ static errno_t compute_function()
     {
         for(uint32_t mode=0; mode < NBmodes; mode++)
         {
-           printf(".");
-           fflush(stdout);
+            printf(".");
+            fflush(stdout);
 
             for(uint64_t iidm=0; iidm < dmsize; iidm++)
             {
                 for(uint64_t iiwfs=0; iiwfs < wfssize; iiwfs++)
                 {
-                    imgoutWFSc.im->array.F[wfssize * mode + iiwfs] += imDMmodesC.im->array.F[dmsize*mode + iidm] * imgzRM.im->array.F[wfssize * iidm + iiwfs];
+                    imgoutWFSc.im->array.F[wfssize * mode + iiwfs] +=
+                    imDMmodesC.im->array.F[dmsize*mode + iidm] * imgzRM.im->array.F[wfssize * iidm + iiwfs];
                 }
             }
         }
