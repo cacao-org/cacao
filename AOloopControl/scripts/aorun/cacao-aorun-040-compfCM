@@ -199,12 +199,12 @@ mkdir -p ${cfCMtmpdir}
 
 echo "Checking DM size from file $DMmask"
 
-strcmd=$(fitsheader -k NAXIS1 $DMmask | tail -1)
+strcmd=$(fitsheader $DMmask | grep NAXIS1 | tail -1)
 arr=($strcmd)
 DMsizex=${arr[2]}
 echo "DMsizex = $DMsizex"
 
-strcmd=$(fitsheader -k NAXIS2 $DMmask | tail -1)
+strcmd=$(fitsheader $DMmask | grep NAXIS2 | tail -1)
 arr=($strcmd)
 DMsizex=${arr[2]}
 echo "DMsizex = $DMsizex"
