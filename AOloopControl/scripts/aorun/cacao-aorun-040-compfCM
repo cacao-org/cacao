@@ -24,11 +24,11 @@ Uses temporary directory ./${cfCMtmpdir}/
 INPUT TARGET CONTROL MODES (Tmodes)
 The output control modes will try to adhere to the Tmodes, using the same 
 ordering.
-By default Cmdoes are Zernike modes followed by Fourior modes.
+By default Cmdoes are Zernike modes followed by Fourier modes.
 User can specify a custom set of input control modes with -cm option.
 
 DM EXTRAPOLATION
-DM exttapolation set by extrfactor and extroffset.
+DM extrapolation set by extrfactor and extroffset.
 Extrapolation extends beyond dmmask by extroffset pixel (fixed quantity for all 
 modes) and extrfactor radian.(proportional to Fourier mode period). The second
 extrapolation (radian) is tapered.
@@ -196,6 +196,8 @@ mkdir -p ${cfCMtmpdir}
 
 
 # Get DM size from DMmask
+
+echo "Checking DM size from file $DMmask"
 
 strcmd=$(fitsheader -k NAXIS1 $DMmask | tail -1)
 arr=($strcmd)
