@@ -428,13 +428,13 @@ cacao-aorun-140-applyPF 1 start
 
 To setup processes for logging AO telemetry streams:
 ```bash
-cacao-logstreamsFITS pstart
+milk-streamFITSlog sname pstart
 ```
 
 To start/stop logging:
 ```bash
-cacao-logstreamsFITS on
-cacao-logstreamsFITS off
+milk-streamFITSlog sname on
+milk-streamFITSlog sname off
 ```
 
 # 12. Cleanup
