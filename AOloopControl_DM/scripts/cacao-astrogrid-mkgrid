@@ -29,7 +29,7 @@ RequiredDirs=(AOcalibs)
 
 MSarg+=( "pattern:int:grid pattern index" )
 
-MSopt+=( "b1:binfact2:setbin2::use bin factor 1" )
+MSopt+=( "b1:binfact2:setbin1::use bin factor 1" )
 MSopt+=( "b2:binfact2:setbin2::use bin factor 2" )
 MSopt+=( "b3:binfact2:setbin3::use bin factor 3" )
 MSopt+=( "b4:binfact2:setbin4::use bin factor 4" )

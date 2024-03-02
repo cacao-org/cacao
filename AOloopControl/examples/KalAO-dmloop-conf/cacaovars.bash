@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # This file will be sourced by cacao-setup and high-level cacao scripts
 
-export CACAO_LOOPNAME="kalaodmloop"
+export CACAO_LOOPNAME="KalAO-dmloop"
 export CACAO_LOOPNUMBER="1"
 
 # ====== DEFORMABLE MIRROR ==========
