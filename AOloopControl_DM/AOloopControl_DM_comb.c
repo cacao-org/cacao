@@ -803,6 +803,28 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
                 (unsigned short int)(volt / 300.0 * 16384.0);
         }
     }
+    else if((*volttype) == 3)
+    // Volt type == 3 -> SLM mode
+    {
+        // linear unipolar, output is UT16
+        for(uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        {
+            float volt = (imgdisp.im->array.F[ii] / (*stroke100)) + 0.5; // DC offest = 0.5
+            // wrapping the command
+            // assuming maxvolt = 1, minvolt = 0
+            if(volt > (*maxvolt))
+            {
+                volt = remainder(volt, 1);
+            }
+            if(volt < 0)
+            {
+                volt = remainder(volt, 1);
+            }
+            // TODO add quantization code
+            imgvolt.im->array.UI16[ii] =
+                (unsigned short int)((volt) * 65535.0);
+        }
+    }
 
     return RETURN_SUCCESS;
 }
@@ -839,9 +861,9 @@ static errno_t update_dmdisp(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
     {
         for(uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
-            dmdisptmp[ii] += (*DClevel - ave);
-
             // remove negative values
+
+            dmdisptmp[ii] += (*DClevel - ave);
             if(*voltmode == 1)
                 if(dmdisptmp[ii] < 0.0)
                 {
