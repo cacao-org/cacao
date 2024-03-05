@@ -1,9 +1,9 @@
 #!/usr/bin/bash
 
-FILENAME="respM.fits"
+FILENAME="wfsref.fits"
 
 if [ ! -f $FILENAME ]; then
 
 	# unpack compressed file
-	funpack respM.fits.fz
+	funpack wfsref.fits.fz
 fi
