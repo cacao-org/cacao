@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+if [ -z ${FPSLISTADDSCRIPT+x} ]; then
+	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Measure Latency"
+else
+
+
+	if [ ! -z "${CACAO_FPSPROC_MLAT+x}" ]; then
+		echo "CACAO_FPSPROC_MLAT set to ${CACAO_FPSPROC_MLAT}"
+
+		if [ "${CACAO_FPSPROC_MLAT}" = "ON" ]; then
+			echolog "ON  CACAO_FPSPROC_MLAT"
+			# ======================================================================
+			# ========== Measure Latency ===========================================
+			# ======================================================================
+
+			# FPS name
+			fpsname="mlat"
+			fpsarg0="${CACAO_LOOPNUMBER}"
+
+			# FPS full name
+			fpsfname="${fpsname}-${fpsarg0}"
+
+			if grep -q "${fpsname}" fpslist.txt
+			then
+				echolog "Process ${fpsname} already registered - skipping"
+			else
+				echolog "Adding process ${fpsname}"
+				echo "${fpsname}         cacao.mlat       ${fpsarg0}" >> fpslist.txt
+
+				addfpscmdheader
+
+			addfpscmd "setval ${fpsfname}.NBiter 20"
+			addfpscmd "setval ${fpsfname}.dmstream aol${CACAO_LOOPNUMBER}_dmRM"
+			addfpscmd "setval ${fpsfname}.wfsstream aol${CACAO_LOOPNUMBER}_wfsim"
+			fi
+
+		else
+			echolog "OFF CACAO_FPSPROC_MLAT"
+		fi
+
+	else
+		echo "CACAO_FPSPROC_MLAT unset"
+	fi
+
+
+fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+
