@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+FPSKWname="CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM"
+fi
+
+
+# FPS name
+fpsname="mvalWFS2dm"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="linalg.MVMmextrmodes"
+
+# short description
+fpsdescr="MVM-compute DM shape from WFS modes"
+
+
+
+function fpsentry_addmodules() {
+	echo "+milklinalgebra" >> fpslist.txt
+}
+
+function fpsentry_addcmds() {
+
+    addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+    addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+    addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalWFS"
+
+    addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_modevalWFS"
+    addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_DMmodes"
+    addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_dmWFS"
+    addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
+
+
+    addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+
+    addfpscmd "setval ${fpsfname}.outinit OFF"
+
+    addfpscmd "setval ${fpsfname}.GPUindex 0"
+
+    addfpscmd "setval ${fpsfname}.option.axmode 1"
+    addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
+    addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+    addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
+
+    addfpscmd "setval ${fpsfname}.option.twait 0"
+}
+
+
+
+source milk-fpslist-addentry
+

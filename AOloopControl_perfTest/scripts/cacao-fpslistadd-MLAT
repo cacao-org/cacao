@@ -1,48 +1,42 @@
 #!/usr/bin/env bash
 
-if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Measure Latency"
-else
+FPSKWname="CACAO_FPSPROC_MLAT"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_MLAT+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_MLAT"
+fi
 
 
-	if [ ! -z "${CACAO_FPSPROC_MLAT+x}" ]; then
-		echo "CACAO_FPSPROC_MLAT set to ${CACAO_FPSPROC_MLAT}"
+# FPS name
+fpsname="mlat"
+fpsarg0="${CACAO_LOOPNUMBER}"
 
-		if [ "${CACAO_FPSPROC_MLAT}" = "ON" ]; then
-			echolog "ON  CACAO_FPSPROC_MLAT"
-			# ======================================================================
-			# ========== Measure Latency ===========================================
-			# ======================================================================
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
 
-			# FPS name
-			fpsname="mlat"
-			fpsarg0="${CACAO_LOOPNUMBER}"
+# function call
+fpsfcall="cacaopt.mlat"
 
-			# FPS full name
-			fpsfname="${fpsname}-${fpsarg0}"
-
-			if grep -q "${fpsname}" fpslist.txt
-			then
-				echolog "Process ${fpsname} already registered - skipping"
-			else
-				echolog "Adding process ${fpsname}"
-				echo "${fpsname}         cacao.mlat       ${fpsarg0}" >> fpslist.txt
-
-				addfpscmdheader
-
-			addfpscmd "setval ${fpsfname}.NBiter 20"
-			addfpscmd "setval ${fpsfname}.dmstream aol${CACAO_LOOPNUMBER}_dmRM"
-			addfpscmd "setval ${fpsfname}.wfsstream aol${CACAO_LOOPNUMBER}_wfsim"
-			fi
-
-		else
-			echolog "OFF CACAO_FPSPROC_MLAT"
-		fi
-
-	else
-		echo "CACAO_FPSPROC_MLAT unset"
-	fi
+# short description
+fpsdescr="Measure Latency"
 
 
-fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+
+
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
+
+
+function fpsentry_addcmds() {
+	addfpscmd "setval ${fpsfname}.NBiter 20"
+	addfpscmd "setval ${fpsfname}.dmstream aol${CACAO_LOOPNUMBER}_dmRM"
+	addfpscmd "setval ${fpsfname}.wfsstream aol${CACAO_LOOPNUMBER}_wfsim"
+}
+
+
+
+source milk-fpslist-addentry
+
 

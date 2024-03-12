@@ -1,54 +1,48 @@
 #!/usr/bin/env bash
 
-if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: DM control in sim mode"
-else
+FPSKWname="CACAO_FPSPROC_DMCH2DISPSIM"
 
-	if [ ! -z "${CACAO_FPSPROC_DMCH2DISPSIM+x}" ]; then
-		echo "CACAO_FPSPROC_DMCH2DISPSIM set to ${CACAO_FPSPROC_DMCH2DISPSIM}"
-
-
-		if [ "${CACAO_FPSPROC_DMCH2DISPSIM}" = "ON" ]; then
-
-			echolog "ON  CACAO_FPSPROC_DMCH2DISPSIM"
-			# ==============================================================================
-			# ==========  DM combination ===================================================
-			# ==============================================================================
-
-			# FPS name
-			fpsname="DMch2disp"
-			fpsarg0="${CACAO_DMSIMINDEX}"
-
-			# FPS full name
-			fpsfname="${fpsname}-${fpsarg0}"
-
-			fpslistline="${fpsname} cacaodm.DMcomb ${CACAO_DMSIMINDEX}"
-			if grep -q "${fpslistline}" fpslist.txt
-			then
-				echolog "Process ${fpsname} already registered - skipping"
-			else
-				echolog "Adding process ${fpsname}"
-				echo "${fpslistline}"  >> fpslist.txt
-
-				addfpscmdheader
-				# infinite loop
-				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-				addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
-				addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
-				addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 1" # 1s
-				addfpscmd "setval ${fpsfname}.DMindex ${CACAO_DMSIMINDEX}"
-				addfpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
-				addfpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
-				addfpscmd "setval ${fpsfname}.DMcombout dm${CACAO_DMSIMINDEX}disp"
-				addfpscmd "setval ${fpsfname}.astrogrid aol${CACAO_LOOPNUMBER}_DMastrogrid"
-				addfpscmd "setval ${fpsfname}.zpoffset.DMcomboutzpo aol${CACAO_LOOPNUMBER}_dmzpo"
-			fi
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_DMCH2DISPSIM+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_DMCH2DISPSIM"
+fi
 
 
-		fi # end of if [ "${CACAO_FPSPROC_DMCH2DISPSIM}" = "ON" ]
+# FPS name
+fpsname="DMch2disp"
+fpsarg0="${CACAO_DMSIMINDEX}"
 
-	else
-		echo "CACAO_FPSPROC_DMCH2DISPSIM unset"
-	fi
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
 
-fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+# function call
+fpsfcall="cacaodm.DMcomb"
+
+# short description
+fpsdescr="DM channels combination"
+
+
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
+
+
+function fpsentry_addcmds() {
+	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+	addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+	addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
+	addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 1" # 1s
+	addfpscmd "setval ${fpsfname}.DMindex ${CACAO_DMSIMINDEX}"
+	addfpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
+	addfpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
+	addfpscmd "setval ${fpsfname}.DMcombout dm${CACAO_DMSIMINDEX}disp"
+	addfpscmd "setval ${fpsfname}.astrogrid aol${CACAO_LOOPNUMBER}_DMastrogrid"
+	addfpscmd "setval ${fpsfname}.zpoffset.DMcomboutzpo aol${CACAO_LOOPNUMBER}_dmzpo"
+}
+
+
+
+source milk-fpslist-addentry
+
+
+

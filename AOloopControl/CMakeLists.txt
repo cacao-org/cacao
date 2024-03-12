@@ -71,11 +71,19 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-exec
 	scripts/cacao.tmux
 	scripts/cacao-fpslistadd
+	scripts/cacao-fpslistadd-ACQWFS
+	scripts/cacao-fpslistadd-MAPWFS
 	scripts/cacao-fpslistadd-MVMGPU_CMODEVAL2DM
 	scripts/cacao-fpslistadd-MVMGPU_CMODEVALOFFLOAD2DM
+	scripts/cacao-fpslistadd-MVMGPU_WFS2CMODEVAL
+	scripts/cacao-fpslistadd-MVMGPU_ZPO
 	scripts/cacao-fpslistadd-MODALCTRL_STATS
 	scripts/cacao-fpslistadd-MODALFILTERING
 	scripts/cacao-fpslistadd-MVMGPU_ZPO
+	scripts/cacao-fpslistadd-OLMODEVAL2DM
+	scripts/cacao-fpslistadd-SIMMVMGPU
+	scripts/cacao-fpslistadd-WFSMODEVAL2DM
+	scripts/cacao-fpslistadd-WFSCAMSIM
 	scripts/cacao-modalstatsTUI
 	scripts/cacao-takedark
 	scripts/cacao-task-manager

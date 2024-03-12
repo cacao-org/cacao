@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+FPSKWname="CACAO_FPSPROC_MAPWFS"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_MAPWFS+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_MAPWFS"
+fi
+
+
+# FPS name
+fpsname="mapWFS"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="cacaoio.mapWFS"
+
+# short description
+fpsdescr="remap WFS input"
+
+
+
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
+
+function fpsentry_addcmds() {
+    # run simulator at finite frame rate
+    addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+    addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
+    addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
+
+    addfpscmd "setval ${fpsfname}.wfsin aol${CACAO_LOOPNUMBER}_wfsim"
+    addfpscmd "setval ${fpsfname}.map aol${CACAO_LOOPNUMBER}_wfsmapping"
+    addfpscmd "setval ${fpsfname}.wfsout aol${CACAO_LOOPNUMBER}_wfsimmap"
+}
+
+
+
+source milk-fpslist-addentry
+

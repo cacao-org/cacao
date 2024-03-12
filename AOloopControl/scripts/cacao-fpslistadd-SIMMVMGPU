@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+FPSKWname="CACAO_FPSPROC_SIMMVMGPU"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_SIMMVMGPU+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_SIMMVMGPU"
+fi
+
+
+# FPS name
+fpsname="simmvmgpu"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="linalg.MVMmextrmodes"
+
+# short description
+fpsdescr="GPU-based Linear Simulator"
+
+
+
+function fpsentry_addmodules() {
+	echo "+milklinalgebra" >> fpslist.txt
+}
+
+function fpsentry_addcmds() {
+	milk-FITS2shm "./simLHS/respM.fits" aol${CACAO_LOOPNUMBER}_simLHSrespM
+    milk-FITS2shm "./simLHS/wfsref.fits" aol${CACAO_LOOPNUMBER}_simLHSwfsref
+
+	LINSIMDT="0.0015"
+	addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_dmdispD"
+    addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_simLHSrespM"
+    addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_linsimWFS"
+    addfpscmd "setval ${fpsfname}.outinit ON"
+
+    # run simulator at finite frame rate
+    addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+    addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+    addfpscmd "setval ${fpsfname}.procinfo.triggerdelay ${LINSIMDT}"
+    addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 0.0"
+
+    addfpscmd "setval ${fpsfname}.option.axmode 1"
+    addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
+    addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+    addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
+    addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
+    addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+    addfpscmd "setval ${fpsfname}.option.sname_refout aol${CACAO_LOOPNUMBER}_simLHSwfsref"
+}
+
+
+
+
+source milk-fpslist-addentry
+
+
+
+
+
+

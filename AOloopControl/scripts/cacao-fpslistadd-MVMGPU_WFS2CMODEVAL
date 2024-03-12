@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+FPSKWname="CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL"
+fi
+
+
+# FPS name
+fpsname="wfs2cmodeval"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="linalg.MVMmextrmodes"
+
+# short description
+fpsdescr="MVM-compute control modes values from WFS"
+
+
+
+function fpsentry_addmodules() {
+	echo "+milklinalgebra" >> fpslist.txt
+}
+
+function fpsentry_addcmds() {
+    addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+    addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+    addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS2"
+
+
+    addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_imWFS2"
+    addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_modesWFS"
+    addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_modevalWFS"
+
+	addfpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
+
+	# is using imWFS2 as input, no need to subtract reference
+    addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
+
+    addfpscmd "setval ${fpsfname}.option.sname_refout NULL"
+
+    addfpscmd "setval ${fpsfname}.outinit ON"
+
+    addfpscmd "setval ${fpsfname}.GPUindex 0"
+
+    addfpscmd "setval ${fpsfname}.option.PROCESS ON"
+    addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+    addfpscmd "setval ${fpsfname}.option.MODENORM ON"
+
+    addfpscmd "setval ${fpsfname}.option.twait 0"
+}
+
+
+
+source milk-fpslist-addentry
+

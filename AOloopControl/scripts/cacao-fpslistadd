@@ -9,37 +9,80 @@
 # - fpssetup.setval files created
 
 
-function printHELP 
-{
-	echo "Add FPS entries to fpslist file"
-	echo ""
-	echo "Runs from CACAO_LOOPROOTDIR"
-	echo ""
-	echo "For each FPS-enabled process:"
-	echo " - entry is added to fpslist.txt file"
-	echo " - fpssetup.setval files created"
+
+# script 1-line description
+MSdescr="Register cacao processes to fpslist file"
+
+
+
+
+MSextdescr="Add FPS entries to fpslist file
+
+Runs from CACAO_LOOPROOTDIR
+
+For each FPS-enabled process:
+- entry is added to fpslist.txt file
+- fpssetup.setval files created
+"
+
+
+source milk-script-std-config
+
+
+
+
+ListFPSADDscripts=0
+MSopt+=( "l:listfpsadd:set_ListFPSADDscripts::List all fpslistadd scrits" )
+function set_ListFPSADDscripts() {
+	ListFPSADDscripts=1
 }
 
 
-MILKSCRIPTMODE=""
-if [ "$#" -ge 1 ]; then
+source milk-argparse
 
-	# Print one line help and exit
-	if [ "$1" = "-hs" ]; then
-		printf "%s\n" "Add FPS entries to fpslist file"
-	exit 0
-	fi
+errexit=0
 
-	if [ "$1" = "-h" ]; then
-		MILKSCRIPTMODE="help"
-		printHELP
-		exit 0
-	fi
-	
+
+
+
+if [ $errexit = 1 ]; then
+	exit 1
 fi
 
+set +u
 
 
+
+
+if [ $ListFPSADDscripts == "1" ]; then
+
+# Run all system fpslistadd files
+#
+milkbindir="${MILK_INSTALLDIR}/bin"
+shopt -s nullglob
+for fpslistaddexec in ${milkbindir}/cacao-fpslistadd-*; do
+        #echo ">>>>>>>>>>>>>>>>>> Running ${fpslistaddexec}"
+        FPSLISTADD_MODE="info" ${fpslistaddexec} -h
+done
+shopt -u nullglob
+
+
+# Run local fpslistadd files
+#
+shopt -s nullglob
+for fpslf in cacao-fpslistadd-*; do
+	#echo "Processing fpslistadd file ${fpslf}"
+	. ./${fpslf} -h
+done
+shopt -u nullglob
+
+exit
+
+fi
+
+set -u
+source cacao-check-cacaovars
+set +u
 
 
 touch fpslist.txt
@@ -114,727 +157,8 @@ echolog "START"
 
 
 
-
-
-
-if [ ! -z "${CACAO_FPSPROC_SIMMVMGPU+x}" ]; then
-echo "CACAO_FPSPROC_SIMMVMGPU set to ${CACAO_FPSPROC_SIMMVMGPU}"
-if [ "${CACAO_FPSPROC_SIMMVMGPU}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_SIMMVMGPU"
-    # ==============================================================================
-    # ========== GPU-based Linear Simulator ========================================
-    # ==============================================================================
-
-    # FPS name
-    fpsname="simmvmgpu"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "+milklinalgebra" >> fpslist.txt
-        echo "${fpsname}      linalg.MVMmextrmodes       ${fpsarg0}"  >> fpslist.txt
-
-        # time delay [s]
-        LINSIMDT="0.0015"
-
-        # copy calibration files
-
-        #runstrcmd "mkdir -p ${CACAO_LOOPRUNDIR}/simLHS"
-        #runstrcmd "cp simLHS/respM.fits ./${CACAO_LOOPRUNDIR}/simLHS/simLHS.respM.fits"
-        #runstrcmd "cp simLHS/wfsref.fits ./${CACAO_LOOPRUNDIR}/simLHS/simLHS.wfsref.fits"
-
-        #runstrcmd "cp ./${CACAO_LOOPRUNDIR}/simLHS/simLHS.respM.fits ./${CACAO_LOOPRUNDIR}/conf/shmim.aolsimLHSrespM.fits"
-        #runstrcmd "cp ./${CACAO_LOOPRUNDIR}/simLHS/simLHS.wfsref.fits ./${CACAO_LOOPRUNDIR}/conf/shmim.aolsimLHSwfsref.fits"
-        milk-FITS2shm "./simLHS/respM.fits" aol${CACAO_LOOPNUMBER}_simLHSrespM
-        milk-FITS2shm "./simLHS/wfsref.fits" aol${CACAO_LOOPNUMBER}_simLHSwfsref
-
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_dmdispD"
-        addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_simLHSrespM"
-        addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_linsimWFS"
-        addfpscmd "setval ${fpsfname}.outinit ON"
-
-        # run simulator at finite frame rate
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
-        addfpscmd "setval ${fpsfname}.procinfo.triggerdelay ${LINSIMDT}"
-        addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 0.0"
-
-        addfpscmd "setval ${fpsfname}.option.axmode 1"
-        addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
-        addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
-        addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
-        addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
-        addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
-        addfpscmd "setval ${fpsfname}.option.sname_refout aol${CACAO_LOOPNUMBER}_simLHSwfsref"
-
-    fi
-else
-    echolog "CACAO_FPSPROC_SIMMVMGPU = OFF"
-fi
-fi
-
-
-
-
-if [ ! -z "${CACAO_FPSPROC_WFSCAMSIM+x}" ]; then
-echo "CACAO_FPSPROC_WFSCAMSIM set to ${CACAO_FPSPROC_WFSCAMSIM}"
-if [ "${CACAO_FPSPROC_WFSCAMSIM}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_WFSCAMSIM"
-    # ==============================================================================
-    # ========== CAMERA SIMULATOR ==================================================
-    # ==============================================================================
-
-    # FPS name
-    fpsname="wfscamsim"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}           cacaoio.WFScamsim     ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_linsimWFS"
-
-        addfpscmd "setval ${fpsfname}.wfssignal aol${CACAO_LOOPNUMBER}_linsimWFS"
-        addfpscmd "setval ${fpsfname}.wfscamim aol${CACAO_LOOPNUMBER}_wfsim"
-        addfpscmd "setval ${fpsfname}.compdarkadd ON"
-        addfpscmd "setval ${fpsfname}.camdark aol${CACAO_LOOPNUMBER}_simwfsdark"
-        addfpscmd "setval ${fpsfname}.fluxtotal 100000"
-        addfpscmd "setval ${fpsfname}.compphnoise ON"
-        addfpscmd "setval ${fpsfname}.camRON 1.0"
-    fi
-else
-    echolog "CACAO_FPSPROC_WFSCAMSIM = OFF"
-fi
-fi
-
-
-
-
-
-
-
-
-if [ ! -z "${CACAO_FPSPROC_MLAT+x}" ]; then
-echo "CACAO_FPSPROC_MLAT set to ${CACAO_FPSPROC_MLAT}"
-if [ "${CACAO_FPSPROC_MLAT}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MLAT"
-    # ==============================================================================
-    # ========== Measure Latency ===================================================
-    # ==============================================================================
-
-    # FPS name
-    fpsname="mlat"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}           cacaopt.mlat     ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.NBiter 20"
-        addfpscmd "setval ${fpsfname}.dmstream aol${CACAO_LOOPNUMBER}_dmRM"
-        addfpscmd "setval ${fpsfname}.wfsstream aol${CACAO_LOOPNUMBER}_wfsim"
-        #fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
-    fi
-else
-    echolog "CACAO_FPSPROC_MLAT = OFF"
-fi
-fi
-
-
-
-if [ ! -z "${CACAO_FPSPROC_MAPWFS+x}" ]; then
-echo "CACAO_FPSPROC_MAPWFS set to ${CACAO_FPSPROC_MAPWFS}"
-if [ "${CACAO_FPSPROC_MAPWFS}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MAPWFS"
-    # ==============================================================================
-    # ========== WFS acquire frames ================================================
-    # ==============================================================================
-
-    # FPS name
-    fpsname="mapWFS"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        milk-FITS2shm "./simLHS/WFSmapping.fits.gz" aol${CACAO_LOOPNUMBER}_wfsmapping
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}           cacaoio.mapWFS     ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
-
-        # run simulator at finite frame rate
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
-
-        addfpscmd "setval ${fpsfname}.wfsin aol${CACAO_LOOPNUMBER}_wfsim"
-        addfpscmd "setval ${fpsfname}.map aol${CACAO_LOOPNUMBER}_wfsmapping"
-        addfpscmd "setval ${fpsfname}.wfsout aol${CACAO_LOOPNUMBER}_wfsimmap"
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_MAPWFS"
-fi
-else
-echo "CACAO_FPSPROC_MAPWFS unset"
-fi
-
-
-
-
-if [ ! -z "${CACAO_FPSPROC_ACQUWFS+x}" ]; then
-echo "CACAO_FPSPROC_ACQUWFS set to ${CACAO_FPSPROC_ACQUWFS}"
-if [ "${CACAO_FPSPROC_ACQUWFS}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_ACQUWFS"
-    # ==============================================================================
-    # ========== WFS acquire frames ================================================
-    # ==============================================================================
-
-    # FPS name
-    fpsname="acquWFS"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}           cacaoio.acquireWFS     ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_wfsim"
-
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim"
-
-
-		addfpscmd "setval ${fpsfname}.comp.darksub ON"
-        addfpscmd "setval ${fpsfname}.comp.WFSnormalize ON"
-        addfpscmd "setval ${fpsfname}.comp.WFSrefsub ON"
-        addfpscmd "setval ${fpsfname}.comp.WFSsigav ON"
-        addfpscmd "setval ${fpsfname}.comp.WFSrefc ON"
-        addfpscmd "setval ${fpsfname}.comp.imtotal ON"
-        addfpscmd "setval ${fpsfname}.comp.normwfsim ON"
-
-        addfpscmd "setval ${fpsfname}.wfszpo aol${CACAO_LOOPNUMBER}_wfszpo"
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_ACQUWFS"
-fi
-fi
-
-
-
-
-
-
-
-if [ ! -z "${CACAO_FPSPROC_ACQWFSLINCALZ+x}" ]; then
-echo "CACAO_FPSPROC_ACQWFSLINCALZ set to ${CACAO_FPSPROC_ACQWFSLINCALZ}"
-if [ "${CACAO_FPSPROC_ACQWFSLINCALZ}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_ACQWFSLINCALZ"
-    # ==============================================================================
-    # ========== [NEW] Acquire Linear Response Matrix (ZONAL) ============================
-    # ==============================================================================
-
-    # FPS name
-    fpsname="acqWFSlincal_z"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-    # get scripts that will be used
-    mkdir -p ${CACAO_LOOPRUNDIR}/cacaobin
-    ln -s $(which cacao-RMdecode) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-RMdecode
-    ln -s $(which cacao-mkDMWFSmasks) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-mkDMWFSmasks
-    ln -s $(which cacao-mkDMslaveActprox) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-mkDMslaveActprox
-    ln -s $(which cacao-mkLODMmodes) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-mkLODMmodes
-    ln -s $(which cacao-NULL) ${CACAO_LOOPRUNDIR}/cacaobin/cacao-NULL
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}           cacaoac.acqWFSlincal     ${fpsarg0}" >> fpslist.txt
-
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.dmstream aol${CACAO_LOOPNUMBER}_dmRM"
-
-		# Timing
-        addfpscmd "setval ${fpsfname}.timing.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.timing.autoTiming ON"
-        addfpscmd "setval ${fpsfname}.timing.NBave 1"
-        addfpscmd "setval ${fpsfname}.timing.NBcycle 2"
-        addfpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
-        addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
-
-        # DM
-        addfpscmd "setval ${fpsfname}.RMDMmask.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
-
-        # default startup values
-        addfpscmd "setval ${fpsfname}.normalize ON"
-        addfpscmd "setval ${fpsfname}.Hpoke ON"
-        addfpscmd "setval ${fpsfname}.compDMmask ON"
-        addfpscmd "setval ${fpsfname}.compMpoke ON"
-
-        addfpscmd "setval ${fpsfname}.MaskMode ON"
-        addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-RMdecode"
-        addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-mkDMWFSmasks"
-        addfpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-mkDMslaveActprox"
-        addfpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-mkLODMmodes"
-        #fpscmd "setval ${fpsfname}.out.dirname ${outdir}"
-
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_ACQWFSLINCALZ"
-fi
-fi
-
-
-
-
-
-if [ ! -z "${CACAO_FPSPROC_ACQLINLORM+x}" ]; then
-echo "CACAO_FPSPROC_ACQLINLORM set to ${CACAO_FPSPROC_ACQLINLORM}"
-if [ "${CACAO_FPSPROC_ACQLINLORM}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_ACQLINLORM"
-    # ==============================================================================
-    # ========== Acquire Linear Response Matrix (Low Orders - MODAL) ===============
-    # ==============================================================================
-
-    # FPS name
-    fpsname="acqlin_loRM"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
-
-        addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
-
-
-        # default startup values
-        addfpscmd "setval ${fpsfname}.normalize ON"
-        addfpscmd "setval ${fpsfname}.Hpoke OFF"
-        addfpscmd "setval ${fpsfname}.autoTiming ON"
-        addfpscmd "setval ${fpsfname}.compDMmask OFF"
-        addfpscmd "setval ${fpsfname}.compMpoke OFF"
-
-
-        addfpscmd "setval ${fpsfname}.timing.NBave 1"
-        addfpscmd "setval ${fpsfname}.timing.NBcycle 4"
-        addfpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
-        addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
-
-
-        addfpscmd "setval ${fpsfname}.fn_pokeC respM_LOmodes.fits"
-
-        addfpscmd "setval ${fpsfname}.MaskMode OFF"
-
-        addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-NULL"
-        addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL"
-        addfpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
-        addfpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
-
-
-        #addfpscmd "setval ${fpsfname}.out.dirname ${outdir}"
-
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_ACQLINLORM"
-fi
-fi
-
-
-
-
-
-
-
-if [ ! -z "${CACAO_FPSPROC_COMPCTRLMODES+x}" ]; then
-echo "CACAO_FPSPROC_COMPCTRLMODES set to ${CACAO_FPSPROC_COMPCTRLMODES}"
-if [ "${CACAO_FPSPROC_COMPCTRLMODES}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_COMPCTRLMODES"
-    # ==============================================================================
-    # ========== Compute Control Matrix using Fourier modes (spatial frequency) ====
-    # ==============================================================================
-
-    # FPS name
-    fpsname="compctrlmodes"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "+milkZernikePolyn;milklinalgebra" >> fpslist.txt
-        echo "${fpsname}         cacaocc.compctrlmodes       ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
-
-        addfpscmd "setval ${fpsfname}.FPS_zRMacqu acqlin_zRM-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.auxRM.FPS_loRMacqu acqlin_loRM-${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.DMgeom.FPS_DMcomb DMch2disp-${CACAO_DMINDEX}"
-
-        #addfpscmd "setval ${fpsfname}.out.dirname ${outdir}"
-
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_COMPFCM"
-fi
-fi
-
-
-
-
-
-
-
-
-
-
-if [ ! -z "${CACAO_FPSPROC_MODESEXTRACTWFSGPU+x}" ]; then
-echo "CACAO_FPSPROC_MODESEXTRACTWFSGPU set to ${CACAO_FPSPROC_MODESEXTRACTWFSGPU}"
-if [ "${CACAO_FPSPROC_MODESEXTRACTWFSGPU}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MODESEXTRACTWFSGPU"
-    # ==============================================================================
-    # ========== GPU-based MVM extract modes ============================================
-    # ==============================================================================
-
-    # FPS name
-    fpsname="modesextractWFSGPU"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}         linalg.cudaextrmodes       ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
-
-        # input frame
-        addfpscmd "setval ${fpsfname}.sname_in aol${CACAO_LOOPNUMBER}_imWFS0"
-        addfpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
-
-        # we use respM for direct MVM as it is already orthonormal set of modes
-        addfpscmd "setval ${fpsfname}.sname_modes aol${CACAO_LOOPNUMBER}_modesWFS"
-        # TBD: load in shm
-
-        addfpscmd "setval ${fpsfname}.option.sname_refin aol${CACAO_LOOPNUMBER}_wfsref"
-
-        addfpscmd "setval ${fpsfname}.sname_outmodesval aol${CACAO_LOOPNUMBER}_modeval"
-        addfpscmd "setval ${fpsfname}.outinit ON"
-
-        addfpscmd "setval ${fpsfname}.option.GPUindex 0"
-        addfpscmd "setval ${fpsfname}.option.PROCESS ON"
-        addfpscmd "setval ${fpsfname}.option.TRACEMODE ON"
-        addfpscmd "setval ${fpsfname}.option.MODENORM ON"
-
-
-        addfpscmd "setval ${fpsfname}.option.insem 2"
-
-        addfpscmd "setval ${fpsfname}.option.axmode 0"
-
-        # run GPU full speed
-        addfpscmd "setval ${fpsfname}.option.twait 0"
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_MODESEXTRACTWFSGPU"
-fi
-fi
-
-
-
-
-
-if [ ! -z "${CACAO_FPSPROC_AOLOOP_RUN+x}" ]; then
-echo "CACAO_FPSPROC_AOLOOP_RUN set to ${CACAO_FPSPROC_AOLOOP_RUN}"
-if [ "${CACAO_FPSPROC_AOLOOP_RUN}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_AOLOOP_RUN"
-    # ==============================================================================
-    # ========== Run control loop =========
-    # ==============================================================================
-
-    # FPS name
-    fpsname="loopRUN"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "${fpsname}         cacao.aolrun       ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-        addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
-        addfpscmd "setval ${fpsfname}.sn_wfs aol${CACAO_LOOPNUMBER}_imWFS1"
-
-        addfpscmd "setval ${fpsfname}.loopgain 0.02"
-        addfpscmd "setval ${fpsfname}.loopmult 0.99"
-        addfpscmd "setval ${fpsfname}.loopON OFF"
-        addfpscmd "setval ${fpsfname}.loopZERO OFF"
-        addfpscmd "setval ${fpsfname}.wfsrefON OFF"
-
-        addfpscmd "setval ${fpsfname}.sn_cmat aol${CACAO_LOOPNUMBER}_CMat"
-        addfpscmd "setval ${fpsfname}.sn_DMout aol${CACAO_LOOPNUMBER}_dmC"
-
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_AOLOOP_RUN"
-fi
-fi
-
-
-
-if [ ! -z "${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL+x}" ]; then
-echo "CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL set to ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}"
-if [ "${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MVM_WFS2CMODEVAL"
-    # ======================================================================
-    # ========== MVM-compute control modes values from WFS =================
-    # ======================================================================
-
-    # FPS name
-    fpsname="wfs2cmodeval"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "+milklinalgebra" >> fpslist.txt
-        echo "${fpsname}         linalg.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-
-
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_imWFS2"
-
-
-        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_imWFS2"
-        addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_modesWFS"
-        addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_modevalWFS"
-
-        addfpscmd "setval ${fpsfname}.option.sname_intot aol${CACAO_LOOPNUMBER}_imWFS0tot"
-
-        # is using imWFS2 as input, no need to subtract reference
-        addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
-        
-        addfpscmd "setval ${fpsfname}.option.sname_refout NULL"
-
-        addfpscmd "setval ${fpsfname}.outinit ON"
-
-        addfpscmd "setval ${fpsfname}.GPUindex 0"
-
-        addfpscmd "setval ${fpsfname}.option.PROCESS ON"
-        addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
-        addfpscmd "setval ${fpsfname}.option.MODENORM ON"
-
-        addfpscmd "setval ${fpsfname}.option.twait 0"
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_MVM_WFS2CMODEVAL"
-fi
-fi
-
-
-
-
-
-
-
-if [ ! -z "${CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM+x}" ]; then
-echo "CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM set to ${CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM}"
-if [ "${CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM"
-    # ======================================================================
-    # ========== MVM-compute DM shape from pseudo open-loop modes ==========
-    # ======================================================================
-
-    # FPS name
-    fpsname="mvalOL2dm"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "+milklinalgebra" >> fpslist.txt
-        echo "${fpsname}         linalg.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL"
-
-        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_modevalOL"
-        addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_DMmodes"
-        addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_dmOL"
-        addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
-
-
-        addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
-
-        addfpscmd "setval ${fpsfname}.outinit OFF"
-
-        addfpscmd "setval ${fpsfname}.GPUindex 0"
-
-        addfpscmd "setval ${fpsfname}.option.axmode 1"
-        addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
-        addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
-        addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
-
-        addfpscmd "setval ${fpsfname}.option.twait 0"
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_MVMGPU_OLMODEVAL2DM"
-fi
-fi
-
-
-
-if [ ! -z "${CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM+x}" ]; then
-echo "CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM set to ${CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM}"
-if [ "${CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM}" = "ON" ]; then
-    echolog "ON  CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM"
-    # ======================================================================
-    # ========== MVM-compute DM shape from WFS modes =======================
-    # ======================================================================
-
-    # FPS name
-    fpsname="mvalWFS2dm"
-    fpsarg0="${CACAO_LOOPNUMBER}"
-
-
-    # FPS full name
-    fpsfname="${fpsname}-${fpsarg0}"
-
-    if grep -q "${fpsname}" fpslist.txt
-    then
-        echolog "Process ${fpsname} already registered - skipping"
-    else
-        echolog "Adding process ${fpsname}"
-        echo "+milklinalgebra" >> fpslist.txt
-        echo "${fpsname}         linalg.MVMmextrmodes       ${fpsarg0}" >> fpslist.txt
-
-        addfpscmdheader
-
-        addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-        addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-        addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalWFS"
-
-        addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_modevalWFS"
-        addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_DMmodes"
-        addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_dmWFS"
-        addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
-
-
-        addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
-
-        addfpscmd "setval ${fpsfname}.outinit OFF"
-
-        addfpscmd "setval ${fpsfname}.GPUindex 0"
-
-        addfpscmd "setval ${fpsfname}.option.axmode 1"
-        addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
-        addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
-        addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
-
-        addfpscmd "setval ${fpsfname}.option.twait 0"
-    fi
-else
-    echolog "OFF CACAO_FPSPROC_MVMGPU_WFSMODEVAL2DM"
-fi
-fi
-
-
-
-
-
 # If CACAO_FPSPROC_CMDMCOMB set, DM index for control modes
 CACAO_CMDMINDEX="2"
-
 
 
 

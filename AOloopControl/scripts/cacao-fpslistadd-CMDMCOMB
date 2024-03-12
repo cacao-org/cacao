@@ -1,52 +1,44 @@
 #!/usr/bin/env bash
 
-# ==============================================================================
-# ==========  DM combination (control modes) ===================================
-# ==============================================================================
+FPSKWname="CACAO_FPSPROC_CMDMCOMB"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_CMDMCOMB+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_CMDMCOMB"
+fi
 
 
-if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: zero point offset"
-else
+# FPS name
+fpsname="DMcomb"
+fpsarg0="cm${CACAO_DMINDEX}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="cacaodm.DMcomb"
+
+# short description
+fpsdescr="Combine DM channels"
 
 
-	if [ ! -z "${CACAO_FPSPROC_CMDMCOMB+x}" ]; then
-		echo "CACAO_FPSPROC_CMDMCOMB set to ${CACAO_FPSPROC_CMDMCOMB}"
 
-		if [ "${CACAO_FPSPROC_CMDMCOMB}" = "ON" ]; then
-			echolog "ON  CACAO_FPSPROC_CMDMCOMB"
 
-			# FPS name
-			fpsname="DMcomb"
-			fpsarg0="cm${CACAO_DMINDEX}"
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
 
-			# FPS full name
-			fpsfname="${fpsname}-${fpsarg0}"
+function fpsentry_addcmds() {
+	CACAO_CMDMINDEX=2
+	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+	addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
+	addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
+	addfpscmd "setval ${fpsfname}.DMindex ${CACAO_CMDMINDEX}"
+	addfpscmd "setval ${fpsfname}.DMxsize 100"
+	addfpscmd "setval ${fpsfname}.DMysize 1"
+}
 
-			if grep -q "${fpsname}" fpslist.txt
-			then
-				echolog "Process ${fpsname} already registered - skipping"
-			else
-				echolog "Adding process ${fpsname}"
-				echo "${fpsname}      cacaodm.DMcomb       cm${CACAO_DMINDEX}"  >> fpslist.txt
 
-				addfpscmdheader
-				# infinite loop
-				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-				addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
-				addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.00001" # 10us
-				addfpscmd "setval ${fpsfname}.DMindex ${CACAO_CMDMINDEX}"
-				addfpscmd "setval ${fpsfname}.DMxsize 100"
-				addfpscmd "setval ${fpsfname}.DMysize 1"
-			fi
 
-		else
-			echolog "OFF CACAO_FPSPROC_CMDMCOMB"
-		fi
 
-	else
-		echo "CACAO_FPSPROC_CMDMCOMB unset"
-	fi
-
-fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
-
+source milk-fpslist-addentry

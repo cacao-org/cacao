@@ -18,6 +18,7 @@ set(SCRIPTFILES
 	scripts/cacao-selectWFSframes
 	scripts/cacao-syncStreams
 	scripts/cacao-WFSrefTunePSFloop
+	scripts/cacao-fpslistadd-MLAT
 )
 
 

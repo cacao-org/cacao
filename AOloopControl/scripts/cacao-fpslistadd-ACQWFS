@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+FPSKWname="CACAO_FPSPROC_ACQUWFS"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_ACQUWFS+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_ACQUWFS"
+fi
+
+
+# FPS name
+fpsname="acquWFS"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="cacaoio.acquireWFS"
+
+# short description
+fpsdescr="WFS acquire frames"
+
+
+
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
+
+function fpsentry_addcmds() {
+    addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
+    addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_wfsim"
+
+    addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+    addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
+    addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim"
+
+	addfpscmd "setval ${fpsfname}.comp.darksub ON"
+    addfpscmd "setval ${fpsfname}.comp.WFSnormalize ON"
+    addfpscmd "setval ${fpsfname}.comp.WFSrefsub ON"
+    addfpscmd "setval ${fpsfname}.comp.WFSsigav ON"
+    addfpscmd "setval ${fpsfname}.comp.WFSrefc ON"
+    addfpscmd "setval ${fpsfname}.comp.imtotal ON"
+    addfpscmd "setval ${fpsfname}.comp.normwfsim ON"
+
+    addfpscmd "setval ${fpsfname}.wfszpo aol${CACAO_LOOPNUMBER}_wfszpo"
+}
+
+
+
+source milk-fpslist-addentry
+

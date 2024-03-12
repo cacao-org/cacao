@@ -1,55 +1,49 @@
 #!/usr/bin/env bash
 
-if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: DM time delay"
-else
+FPSKWname="CACAO_FPSPROC_DMSIMDELAY"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_DMSIMDELAY+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_DMSIMDELAY"
+fi
 
 
-	if [ ! -z "${CACAO_FPSPROC_DMSIMDELAY+x}" ]; then
-		echo "CACAO_FPSPROC_DMSIMDELAY set to ${CACAO_FPSPROC_DMSIMDELAY}"
+# FPS name
+fpsname="DMstreamDelay"
+fpsarg0="${CACAO_DMSIMINDEX}"
 
-		if [ "${CACAO_FPSPROC_DMSIMDELAY}" = "ON" ]; then
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
 
-			echolog "ON  CACAO_FPSPROC_STREAMDELAY"
-			# ==============================================================================
-			# ==========  streamdelay for simulation mode ==================================
-			# ==============================================================================
+# function call
+fpsfcall="streamdelay"
 
-			# FPS name
-			fpsname="DMstreamDelay"
-			fpsarg0="${CACAO_DMSIMINDEX}"
+# short description
+fpsdescr="streamdelay for simulation mode"
 
-			# FPS full name
-			fpsfname="${fpsname}-${fpsarg0}"
 
-			if grep -q "${fpsname}" fpslist.txt
-			then
-				echolog "Process ${fpsname} already registered - skipping"
-			else
-				echolog "Adding process ${fpsname}"
-				echo "${fpsname}    streamdelay         ${fpsarg0}"  >> fpslist.txt
 
-				addfpscmdheader
 
-				# Run simulator at finite frame rate
-				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-				# tigger mode is delay
-				addfpscmd "setval ${fpsfname}.procinfo.triggermode 4"
-				# set delay to 100us = 10 kHz
-				addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.0001"
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
 
-				addfpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
-				addfpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
-				addfpscmd "setval ${fpsfname}.delaysec 0.001"
-				#addfpscmd "setval ${fpsfname}.dtus 10000"
-				#addfpscmd "setval ${fpsfname}.timebuffsize 1000"
-				#addfpscmd "setval ${fpsfname}.option.avedt 0.005"
-			fi
 
-		fi # end of if [ "${CACAO_FPSPROC_DMSIMDELAY}" = "ON" ]
+function fpsentry_addcmds() {
+	# Run simulator at finite frame rate
+	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+	# tigger mode is delay
+	addfpscmd "setval ${fpsfname}.procinfo.triggermode 4"
+	# set delay to 100us = 10 kHz
+	addfpscmd "setval ${fpsfname}.procinfo.triggerdelay 0.0001"
 
-	else
-		echo "CACAO_FPSPROC_DMSIMDELAY unset"
-	fi
-	
-fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+	addfpscmd "setval ${fpsfname}.in_name aol${CACAO_LOOPNUMBER}_dmdisp"
+	addfpscmd "setval ${fpsfname}.out_name aol${CACAO_LOOPNUMBER}_dmdispD"
+	addfpscmd "setval ${fpsfname}.delaysec 0.001"
+}
+
+
+
+source milk-fpslist-addentry
+
+

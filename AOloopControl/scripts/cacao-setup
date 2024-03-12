@@ -740,8 +740,9 @@ fi
 
 # cacao-provided default script
 # writes in fpslist.txt and fps.conf/fpssetup.confstart.<fpsname>.conf
-source cacao-fpslistadd
-
+echo "Running cacao-fpslistadd"
+cacao-fpslistadd
+echo "Done with cacao-fpslistadd"
 
 
 # &>> ${LOGFILENAME}

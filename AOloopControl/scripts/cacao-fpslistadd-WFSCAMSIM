@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+FPSKWname="CACAO_FPSPROC_WFSCAMSIM"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_WFSCAMSIM+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_WFSCAMSIM"
+fi
+
+
+# FPS name
+fpsname="wfscamsim"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="cacaoio.WFScamsim"
+
+# short description
+fpsdescr="WFS camera simulation"
+
+
+
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
+
+function fpsentry_addcmds() {
+    addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+    addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+    addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_linsimWFS"
+
+    addfpscmd "setval ${fpsfname}.wfssignal aol${CACAO_LOOPNUMBER}_linsimWFS"
+    addfpscmd "setval ${fpsfname}.wfscamim aol${CACAO_LOOPNUMBER}_wfsim"
+    addfpscmd "setval ${fpsfname}.compdarkadd ON"
+    addfpscmd "setval ${fpsfname}.camdark aol${CACAO_LOOPNUMBER}_simwfsdark"
+    addfpscmd "setval ${fpsfname}.fluxtotal 100000"
+    addfpscmd "setval ${fpsfname}.compphnoise ON"
+    addfpscmd "setval ${fpsfname}.camRON 1.0"
+}
+
+
+
+source milk-fpslist-addentry
+

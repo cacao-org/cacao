@@ -1,74 +1,63 @@
 #!/usr/bin/env bash
 
-# ==============================================================================
-# ========== Acquire Linear Response Matrix (control modes - MODAL) ============
-# ==============================================================================
+FPSKWname="CACAO_FPSPROC_ACQLINCMRM"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_ACQLINCMRM+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_ACQLINCMRM"
+fi
 
 
-if [ -z ${CACAO_FPSPROC_ACQLINCMRM+x} ]; then
-	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: cquire Linear Response Matrix on Control Modes"
-else
+# FPS name
+fpsname="acqlin_cmRM"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="cacaoac.aolmeaslWFSrespC"
+
+# short description
+fpsdescr="Acquire Linear Response Matrix on Control Modes"
 
 
-	if [ ! -z "${CACAO_FPSPROC_ACQLINCMRM+x}" ]; then
-		echo "CACAO_FPSPROC_ACQLINCMRM set to ${CACAO_FPSPROC_ACQLINCMRM}"
 
-		if [ "${CACAO_FPSPROC_ACQLINCMRM}" = "ON" ]; then
-			echolog "ON  CACAO_FPSPROC_ACQLINCMRM"
-		
-			# FPS name
-			fpsname="acqlin_cmRM"
-			fpsarg0="${CACAO_LOOPNUMBER}"
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
 
-			CACAO_CMLOOPNUMBER="2"
+function fpsentry_addcmds() {
+	CACAO_CMDMINDEX=2
+	addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
-			# FPS full name
-			fpsfname="${fpsname}-${fpsarg0}"
-
-			if grep -q "${fpsname}" fpslist.txt
-			then
-				echolog "Process ${fpsname} already registered - skipping"
-			else
-				echolog "Adding process ${fpsname}"
-				echo "${fpsname}           cacaoac.aolmeaslWFSrespC     ${fpsarg0}" >> fpslist.txt
-
-				addfpscmdheader
-				addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
-
-				addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-				addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-cm${CACAO_DMINDEX}"
+	addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
+	addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-cm${CACAO_DMINDEX}"
 
 
-				# default startup values
-				addfpscmd "setval ${fpsfname}.normalize OFF"
-				addfpscmd "setval ${fpsfname}.Hpoke OFF"
-				addfpscmd "setval ${fpsfname}.autoTiming ON"
-				addfpscmd "setval ${fpsfname}.compDMmask OFF"
-				addfpscmd "setval ${fpsfname}.compMpoke OFF"
+	# default startup values
+	addfpscmd "setval ${fpsfname}.normalize OFF"
+	addfpscmd "setval ${fpsfname}.Hpoke OFF"
+	addfpscmd "setval ${fpsfname}.autoTiming ON"
+	addfpscmd "setval ${fpsfname}.compDMmask OFF"
+	addfpscmd "setval ${fpsfname}.compMpoke OFF"
 
-				addfpscmd "setval ${fpsfname}.timing.NBave 1"
-				addfpscmd "setval ${fpsfname}.timing.NBcycle 4"
-				addfpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
-				addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
+	addfpscmd "setval ${fpsfname}.timing.NBave 1"
+	addfpscmd "setval ${fpsfname}.timing.NBcycle 4"
+	addfpscmd "setval ${fpsfname}.timing.NBinnerCycle 1"
+	addfpscmd "setval ${fpsfname}.timing.NBexcl 0"
 
 
-				addfpscmd "setval ${fpsfname}.fn_pokeC respM_LOmodes.fits"
+	addfpscmd "setval ${fpsfname}.fn_pokeC respM_LOmodes.fits"
 
-				addfpscmd "setval ${fpsfname}.MaskMode OFF"
+	addfpscmd "setval ${fpsfname}.MaskMode OFF"
 
-				addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-NULL"
-				addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL"
-				addfpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
-				addfpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
-			fi
+	addfpscmd "setval ${fpsfname}.exec.RMdecode cacaobin/cacao-NULL"
+	addfpscmd "setval ${fpsfname}.exec.mkDMWFSmasks cacaobin/cacao-NULL"
+	addfpscmd "setval ${fpsfname}.exec.mkDMslaveact cacaobin/cacao-NULL"
+	addfpscmd "setval ${fpsfname}.exec.mkLODMmodes cacaobin/cacao-NULL"
+}
 
-		else
-			echolog "OFF CACAO_FPSPROC_ACQLINCMRM"
-		fi
 
-	else
-		echo "CACAO_FPSPROC_ACQLINCMRM unset"
-	fi
-
-fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+source milk-fpslist-addentry
 

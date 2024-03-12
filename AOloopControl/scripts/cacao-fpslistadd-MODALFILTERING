@@ -1,51 +1,42 @@
 #!/usr/bin/env bash
 
-if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Modal filtering"
-else
+FPSKWname="CACAO_FPSPROC_MODALFILTERING"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_MODALFILTERING+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_MODALFILTERING"
+fi
 
 
-	if [ ! -z "${CACAO_FPSPROC_MODALFILTERING+x}" ]; then
-		echo "CACAO_FPSPROC_MODALFILTERING set to ${CACAO_FPSPROC_MODALFILTERING}"
+# FPS name
+fpsname="mfilt"
+fpsarg0="${CACAO_LOOPNUMBER}"
 
-		if [ "${CACAO_FPSPROC_MODALFILTERING}" = "ON" ]; then
-			echolog "ON  CACAO_FPSPROC_MODALFILTERING"
-			# ======================================================================
-			# ========== Modal control filtering ===================================
-			# ======================================================================
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
 
-			# FPS name
-			fpsname="mfilt"
-			fpsarg0="${CACAO_LOOPNUMBER}"
+# function call
+fpsfcall="cacao.modalfilter"
 
-			# FPS full name
-			fpsfname="${fpsname}-${fpsarg0}"
-
-			if grep -q "${fpsname}" fpslist.txt
-			then
-				echolog "Process ${fpsname} already registered - skipping"
-			else
-				echolog "Adding process ${fpsname}"
-				echo "${fpsname}         cacao.modalfilter       ${fpsarg0}" >> fpslist.txt
-
-				addfpscmdheader
-
-				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
-				addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
-				addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalWFS"
-
-				addfpscmd "setval ${fpsfname}.inmval aol${CACAO_LOOPNUMBER}_modevalWFS"
-				addfpscmd "setval ${fpsfname}.outmval aol${CACAO_LOOPNUMBER}_modevalDM"
-			fi
-
-		else
-			echolog "OFF CACAO_FPSPROC_MODALFILTERING"
-		fi
-
-	else
-		echo "CACAO_FPSPROC_MODALFILTERING unset"
-	fi
+# short description
+fpsdescr="Modal filtering"
 
 
-fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
+
+function fpsentry_addcmds() {
+	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
+	addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
+	addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalWFS"
+
+	addfpscmd "setval ${fpsfname}.inmval aol${CACAO_LOOPNUMBER}_modevalWFS"
+	addfpscmd "setval ${fpsfname}.outmval aol${CACAO_LOOPNUMBER}_modevalDM"
+}
+
+
+
+source milk-fpslist-addentry
 

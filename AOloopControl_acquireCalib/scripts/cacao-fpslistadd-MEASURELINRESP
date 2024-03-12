@@ -1,44 +1,44 @@
 #!/usr/bin/env bash
 
-if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Measure linear response"
-else
+FPSKWname="CACAO_FPSPROC_MEASURELINRESP"
 
-	if [ ! -z "${CACAO_FPSPROC_MEASURELINRESP+x}" ]; then
-		echo "CACAO_FPSPROC_MEASURELINRESP set to ${CACAO_FPSPROC_MEASURELINRESP}"
-
-		if [ "${CACAO_FPSPROC_MEASURELINRESP}" = "ON" ]; then
-
-			echolog "ON  CACAO_FPSPROC_MEASURELINRESP"
-
-			# FPS name
-			fpsname="measlinresp"
-			fpsarg0="${CACAO_LOOPNUMBER}"
-
-			# FPS full name
-			fpsfname="${fpsname}-${fpsarg0}"
-
-			if grep -q "${fpsname}" fpslist.txt
-			then
-				echolog "Process ${fpsname} already registered - skipping"
-			else
-				echolog "Adding process ${fpsname}"
-				echo "${fpsname}           cacaoac.measlinresp     ${fpsarg0}" >> fpslist.txt
-
-				addfpscmdheader
-			
-				addfpscmd "setval ${fpsfname}.procinfo.loopcntMax 10"
-				addfpscmd "setval ${fpsfname}.streamin aol${CACAO_LOOPNUMBER}_dmRM"
-				addfpscmd "setval ${fpsfname}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
-			fi
-
-		else
-			echolog "OFF CACAO_FPSPROC_MEASURELINRESP"
-		fi
-
-	else
-		echo "CACAO_FPSPROC_MEASURELINRESP unset"
-	fi
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_MEASURELINRESP+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_MEASURELINRESP"
+fi
 
 
-fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+# FPS name
+fpsname="measlinresp"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="cacaoac.measlinresp"
+
+# short description
+fpsdescr="Measure linear response"
+
+
+
+function fpsentry_addmodules() {
+	echo "no module to be added"
+}
+
+function fpsentry_addcmds() {
+	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax 10"
+	addfpscmd "setval ${fpsfname}.streamin aol${CACAO_LOOPNUMBER}_dmRM"
+	addfpscmd "setval ${fpsfname}.streamout aol${CACAO_LOOPNUMBER}_imWFS2"
+}
+
+
+
+
+source milk-fpslist-addentry
+
+
+
+
+

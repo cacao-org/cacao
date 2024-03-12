@@ -1,61 +1,59 @@
 #!/usr/bin/env bash
 
-if [ -z ${FPSLISTADDSCRIPT+x} ]; then
-	printf "\e[1;34m[sourced by cacao-fpslistadd]\e[0m FPS add: Apply predictive control filter"
-else
+FPSKWname="CACAO_FPSPROC_APPLYPF"
+
+FPSKWval="NULL"
+if [ ! -z "${CACAO_FPSPROC_APPLYPF+x}" ]; then
+	FPSKWval="$CACAO_FPSPROC_APPLYPF"
+fi
 
 
-	if [ ! -z "${CACAO_FPSPROC_APPLYPF+x}" ]; then
-		echo "CACAO_FPSPROC_APPLYPF set to ${CACAO_FPSPROC_APPLYPF}"
-
-		if [ "${CACAO_FPSPROC_APPLYPF}" = "ON" ]; then
-
-
-			for (( blki=0; blki<$CACAO_PF_NBBLOCK; blki++ ))
-			do
-				BLKindex=$( printf %02d $blki )
+if [ -z "${CACAO_PF_NBBLOCK+x}" ]; then
+	CACAO_PF_NBBLOCK=1
+fi
 
 
-				echolog "Apply Predictive Filter ${BLKindex}"
-				# ==============================================================================
-				# ========== Apply Predictive Filter ${BLKindex} ================================
-				# ==============================================================================
+for (( blki=0; blki<${CACAO_PF_NBBLOCK}; blki++ ))
+do
+
+BLKindex=$( printf %02d $blki )
+
+# FPS name
+fpsname="applyPF${BLKindex}"
+fpsarg0="${CACAO_LOOPNUMBER}"
+
+# FPS full name
+fpsfname="${fpsname}-${fpsarg0}"
+
+# function call
+fpsfcall="larpf.applyPF"
+
+# short description
+fpsdescr="Apply Predictive Filter ${BLKindex}"
 
 
-				# FPS name
-				fpsname="applyPF${BLKindex}"
-				fpsarg0="${CACAO_LOOPNUMBER}"
 
-				# FPS full name
-				fpsfname="${fpsname}-${fpsarg0}"
 
-				if grep -q "${fpsname}" fpslist.txt
-				then
-					echolog "Process ${fpsname} already registered - skipping"
-				else
-					echolog "Adding process ${fpsname}"
-					echo "+milklinARfilterPred;milklinalgebra" >> fpslist.txt
-					echo "${fpsname}           larpf.applyPF     ${fpsarg0}" >> fpslist.txt
+function fpsentry_addmodules() {
+	echo "+milklinARfilterPred;milklinalgebra" >> fpslist.txt
+}
 
-					addfpscmdheader
-					addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
-					addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
-					addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL"
-					addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
-					addfpscmd "setval ${fpsfname}.outPFstat aol${CACAO_LOOPNUMBER}_outPFstat"
-					addfpscmd "setval ${fpsfname}.indata aol${CACAO_LOOPNUMBER}_modevalOL"
-					addfpscmd "setval ${fpsfname}.inmask aol${CACAO_LOOPNUMBER}_blkmask${BLKindex}"
-					addfpscmd "setval ${fpsfname}.PFmat aol${CACAO_LOOPNUMBER}_outPF_blk${BLKindex}"
-					addfpscmd "setval ${fpsfname}.outdata aol${CACAO_LOOPNUMBER}_modevalPF"
-					addfpscmd "setval ${fpsfname}.outmask aol${CACAO_LOOPNUMBER}_blkmask${BLKindex}"
-				fi
-			done # end of for blki in {0..${CACAO_PF_NBBLOCK}}
+function fpsentry_addcmds() {
+	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
+	addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" #semaphore
+	addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_modevalOL"
+	addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 10000.0"
 
-		fi # end of if [ "${CACAO_FPSPROC_APPLYPF}" = "ON" ]
+	addfpscmd "setval ${fpsfname}.outPFstat aol${CACAO_LOOPNUMBER}_outPFstat"
+	addfpscmd "setval ${fpsfname}.indata aol${CACAO_LOOPNUMBER}_modevalOL"
+	addfpscmd "setval ${fpsfname}.inmask aol${CACAO_LOOPNUMBER}_blkmask${BLKindex}"
+	addfpscmd "setval ${fpsfname}.PFmat aol${CACAO_LOOPNUMBER}_outPF_blk${BLKindex}"
+	addfpscmd "setval ${fpsfname}.outdata aol${CACAO_LOOPNUMBER}_modevalPF"
+	addfpscmd "setval ${fpsfname}.outmask aol${CACAO_LOOPNUMBER}_blkmask${BLKindex}"
+}
 
-	else
-		echo "CACAO_FPSPROC_APPLYPF unset"
-	fi
 
-fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+source milk-fpslist-addentry
+
+done
