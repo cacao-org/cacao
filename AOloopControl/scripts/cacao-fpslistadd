@@ -168,7 +168,9 @@ CACAO_CMDMINDEX="2"
 milkbindir="${MILK_INSTALLDIR}/bin"
 shopt -s nullglob
 for fpslistaddexec in ${milkbindir}/cacao-fpslistadd-*; do
-        echo ">>>>>>>>>>>>>>>>>> Running ${fpslistaddexec}"
+        source ${fpslistaddexec}
+done
+for fpslistaddexec in ${milkbindir}/milk-fpslistadd-*; do
         source ${fpslistaddexec}
 done
 shopt -u nullglob
@@ -178,6 +180,10 @@ shopt -u nullglob
 #
 shopt -s nullglob
 for fpslf in cacao-fpslistadd-*; do
+	echo "Processing fpslistadd file ${fpslf}"
+	. ./${fpslf}
+done
+for fpslf in milk-fpslistadd-*; do
 	echo "Processing fpslistadd file ${fpslf}"
 	. ./${fpslf}
 done
