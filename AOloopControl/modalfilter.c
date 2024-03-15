@@ -895,6 +895,9 @@ static errno_t compute_function()
 
 
 
+
+    // ======================= PRDICTIVE FILTER ==========================
+
     // connect/create predictive filter (PF) control mode coeffs
     //
     IMGID imgPF;
@@ -908,6 +911,50 @@ static errno_t compute_function()
         }
         ImageStreamIO_UpdateIm(imgPF.im);
     }
+
+
+    IMGID imgmPFmix;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mPFmix", *AOloopindex);
+        imgmPFmix = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+
+    IMGID imgmPFmixfact;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%lu_mPFmixfact", *AOloopindex);
+        imgmPFmixfact = stream_connect_create_2Df32(name, NBmode, 1);
+        for(uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            imgmPFmixfact.im->array.F[mi] = 1.0;
+        }
+        ImageStreamIO_UpdateIm(imgmPFmixfact.im);
+    }
+
+
+
+    // PREDICTIVE RECONSTRUCTION SMALL CIRCULAR TELEMETRY BUFFERS
+    //
+    IMGID imgcbuff_mvalPF;
+    uint32_t PFcbuff_index = 0;
+    int      PFcbuff_size = 20;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+
+        WRITE_IMAGENAME(name, "aol%lu_modevalPF_cbuff", *AOloopindex);
+        imgcbuff_mvalPF =
+            stream_connect_create_2Df32(name, NBmode, PFcbuff_size);
+    }
+
+
+
+
+
+
+
+
 
 
 
@@ -1199,8 +1246,6 @@ static errno_t compute_function()
 
     // initialization for testOL
     *testOLcnt = 0;
-    FILE *testOLfp;
-
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
@@ -1343,17 +1388,13 @@ static errno_t compute_function()
                     }
                     if(val < -limit)
                     {
-                       val = -limit;
+                        val = -limit;
                     }
                     imgmvaloffloadDM.im->array.F[mi] = val;
 
                 }
                 processinfo_update_output_stream(processinfo, imgmvaloffloadDM.ID);
             }
-
-
-
-
 
 
 
@@ -1397,21 +1438,22 @@ static errno_t compute_function()
                 imgOLmval.md->write = 1;
                 for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
+                    // mvalDMOL is the DM command in the past (lookback time = latency)
                     float tmpmDMval = latfrac * mvalDMbuff[DMtstep0 * NBmode + mi];
                     tmpmDMval +=
                         (1.0 - latfrac) * mvalDMbuff[DMtstep1 * NBmode + mi];
                     mvalDMOL[mi] = tmpmDMval;
 
+                    // last WFS measurement
                     float tmpmWFSval = imginWFS.im->array.F[mi];
 
+                    // OL value
                     imgOLmval.im->array.F[mi] = (*psol_WFSfact)*tmpmWFSval - mvalDMOL[mi];
                 }
 
                 uint64_t PFcnt = imgPF.md->cnt0;
 
                 processinfo_update_output_stream(processinfo, imgOLmval.ID);
-
-
 
 
 
@@ -1438,6 +1480,7 @@ static errno_t compute_function()
                     {
                         mvalout[mi] = imgPF.im->array.F[mi] * (*PFmixcoeff) +
                                       mvalout[mi] * (1.0 - *PFmixcoeff);
+
                         mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
                     }
 
@@ -1446,7 +1489,6 @@ static errno_t compute_function()
                            sizeof(float) * NBmode);
                     processinfo_update_output_stream(processinfo, imgout.ID);
                 }
-
 
 
 
@@ -1465,34 +1507,30 @@ static errno_t compute_function()
                     if(*testOLcnt == 0)
                     {
                         // initialization
-                        testOLfp = fopen("testOL.log", "w");
 
                         psOL_probe = (float*) malloc(sizeof(float)*(*testOLnbsample));
                         psOL_estimate = (float*) malloc(sizeof(float)*(*testOLnbsample));
 
 
-
+                        // lock parameters while running
                         data.fpsptr->parray[fpi_testOLampl].fpflag &= ~FPFLAG_WRITERUN;
                         data.fpsptr->parray[fpi_testOLmode].fpflag &= ~FPFLAG_WRITERUN;
                         data.fpsptr->parray[fpi_testOLnbsample].fpflag &= ~FPFLAG_WRITERUN;
                     }
 
+                    // increase probe temporal frequency
                     float x = 1.0*(*testOLcnt)/(*testOLnbsample);
                     float freqfact = 0.01 + 1.99*x;
+
+                    // Write probe to auxDM channel
                     imgauxmDM.im->array.F[*testOLmode] =
                         (*testOLampl) * sin( 1.0*(*testOLcnt)/M_PI/2 * freqfact);
 
+                    // Record probe
                     psOL_probe[*testOLcnt] = imgauxmDM.im->array.F[*testOLmode];
+                    // Record pOL
                     psOL_estimate[*testOLcnt] = imgOLmval.im->array.F[*testOLmode];
 
-
-                    fprintf(testOLfp, "%5u  %g %g %g %g\n",
-                            *testOLcnt,                                 // frame counter
-                            imgauxmDM.im->array.F[*testOLmode],         // probe applied
-                            -mvalDMOL[*testOLmode],                      // DM applied, time corrected
-                            (*psol_WFSfact) * imginWFS.im->array.F[*testOLmode],          // WFS signal
-                            imgOLmval.im->array.F[*testOLmode]          // pseudo OL reconstruction
-                           );
 
                     (*testOLcnt) ++;
                     if(*testOLcnt == *testOLnbsample)
@@ -1503,9 +1541,9 @@ static errno_t compute_function()
                         *testOL = 0;
                         data.fpsptr->parray[fpi_testOL].fpflag &= ~FPFLAG_ONOFF;
                         *testOLcnt = 0;
-                        fclose(testOLfp);
                         imgauxmDM.im->array.F[*testOLmode] = 0.0;
 
+                        // unlock parameters
                         data.fpsptr->parray[fpi_testOLampl].fpflag |= FPFLAG_WRITERUN;
                         data.fpsptr->parray[fpi_testOLmode].fpflag |= FPFLAG_WRITERUN;
                         data.fpsptr->parray[fpi_testOLnbsample].fpflag |= FPFLAG_WRITERUN;
@@ -1534,7 +1572,9 @@ static errno_t compute_function()
                                     long jj1 = jj0+1;
                                     if(jj1 < (*testOLnbsample))
                                     {
+                                        // pull OLval from past
                                         double OLval = (1.0-jjfrac)*psOL_estimate[jj0] + jjfrac*psOL_estimate[jj1];
+
                                         double resval = OLval*WFSfactval - psOL_probe[ii];
                                         psOLresidual += resval*resval;
                                     }
@@ -1555,11 +1595,41 @@ static errno_t compute_function()
                         printf("OPTIMAL WFSfact = %f\n", WFSfactoptimal);
 
 
-                        // update
+                        // update solution
                         float g0 = 1.0 - (*testOLupdategain);
                         float g1 = (*testOLupdategain);
                         (*latencysoftwfr) = g0*(*latencysoftwfr) + g1*(latencyoptimal - (*latencyhardwfr));
                         (*psol_WFSfact) = g0*(*psol_WFSfact) + g1*WFSfactoptimal;
+
+
+                        // Write time series to file
+                        {
+                            FILE * testOLfp = fopen("testOL.log", "w");
+                            float psOLdelay_fr = (*latencysoftwfr)+(*latencyhardwfr);
+                            //float WFSfactval = (*psol_WFSfact);
+
+                            for(long ii=0; ii < (*testOLnbsample); ii++)
+                            {
+                                float tframeOL = 1.0*ii + psOLdelay_fr;
+                                long jj0 = (long) tframeOL;
+                                float jjfrac = tframeOL - jj0;
+                                long jj1 = jj0+1;
+                                if(jj1 < (*testOLnbsample))
+                                {
+                                    double OLval = (1.0-jjfrac)*psOL_estimate[jj0] + jjfrac*psOL_estimate[jj1];
+                                    double resval = OLval - psOL_probe[ii];
+
+                                    fprintf(testOLfp, "%5ld  %g %g %g\n",
+                                            ii,               // frame counter
+                                            psOL_probe[ii],   // probe applied
+                                            OLval,            // OL reconstruction
+                                            resval            // residual
+                                           );
+
+                                }
+                            }
+                            fclose(testOLfp);
+                        }
 
                         free(psOL_probe);
                         free(psOL_estimate);
@@ -1648,6 +1718,14 @@ static errno_t compute_function()
 
 
 
+            // predictive filter mixing
+            for(uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                imgmPFmix.im->array.F[mi] =
+                    imgmPFmixfact.im->array.F[mi] * (*PFmixcoeff);
+            }
+            processinfo_update_output_stream(processinfo, imgmPFmix.ID);
+
 
 
 
@@ -1667,6 +1745,8 @@ static errno_t compute_function()
                 }
 
 
+
+
                 if((*auxDMmvalenable) == 1)
                 {
                     for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -1677,11 +1757,14 @@ static errno_t compute_function()
                 }
                 else
                 {
+
                     for(uint32_t mi = 0; mi < NBmode; mi++)
                     {
                         imgtbuff_mvalDM.im->array.F[kkoffset + mi] = mvalout[mi];
                     }
                 }
+
+
 
                 for(uint32_t mi = 0; mi < NBmode; mi++)
                 {
@@ -1817,6 +1900,7 @@ static errno_t compute_function()
 
 
 
+
         if(*autoloopenable == 1)
         {
             // write output back to input
@@ -1833,8 +1917,6 @@ static errno_t compute_function()
             memcpy(imginWFS.im->array.F, imgout.im->array.F, sizeof(float) * NBmode);
             processinfo_update_output_stream(processinfo, imginWFS.ID);
         }
-
-
 
 
         if(*selfRMenable == 1)
