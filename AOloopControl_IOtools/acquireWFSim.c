@@ -780,7 +780,6 @@ static errno_t compute_function()
                 {
                     imgwfsrefc.im->array.F[ii] /= imtotal;
                 }
-
             }
 
 

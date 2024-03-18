@@ -332,6 +332,24 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
+    // ====================== Predictive Control ==================
+    IMGID imgmPFmix;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%d_mPFmix", loopindex);
+        imgmPFmix = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+    IMGID imgmvalPFresrms;
+    {
+        char name[STRINGMAXLEN_STREAMNAME];
+        WRITE_IMAGENAME(name, "aol%d_mvalPFresrms", loopindex);
+        imgmvalPFresrms = stream_connect_create_2Df32(name, NBmode, 1);
+    }
+
+
+
+
 
 
     double *WFSave = (double*) malloc(sizeof(double)*mstatstruct.NBmode);
@@ -490,6 +508,9 @@ errno_t AOloopControl_modalstatsTUI(
 
 
         TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |          OL       | LIMTRUC WFS/OL  DM/OL");
+
+        TUI_printfw(" [ mPFmix ] ");
+
         TUI_newline();
 
         /*  long buffWFSindex = imgmodevalWFSbuff.md->cnt0;
@@ -658,6 +679,25 @@ errno_t AOloopControl_modalstatsTUI(
             screenprint_setcolor(color);
             TUI_printfw("%6.4f", DMoverOL);
             screenprint_unsetcolor(color);
+
+
+
+            // Predictive Filter
+            //
+            TUI_printfw("  [ %5.3f ]",
+                        imgmPFmix.im->array.F[mi]
+                       );
+
+            TUI_printfw("   %6.4f ",
+                        imgmvalPFresrms.im->array.F[mi]
+                       );
+            TUI_printfw("  %5.3f ",
+                        imgmvalPFresrms.im->array.F[mi]/imgmvalWFSrms.im->array.F[mi]
+                       );
+            TUI_printfw("  %8.6f ",
+                        imgmvalPFresrms.im->array.F[mi]/imgmvalOLrms.im->array.F[mi]
+                       );
+
 
 
 
