@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="Record mfilt burst on seeded turbulence"
+
+MSextdescr="
+Seed turblence to zero position and start mfilt burst recording
+"
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+
+source milk-argparse
+
+
+if [ -f DMINDEX ]; then
+    DMINDEX=$( head -1 DMINDEX )
+else
+	cacaomsglog "Error: no DMINDEX file. Are we running this from the correct directory ?"
+    exit 1
+fi
+
+# Checking FPS
+FPScheckOK="OK"
+checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
+checkFPSON CACAO_FPSPROC_DMATMTURB ${CACAO_FPSPROC_DMATMTURB}
+
+if [ ${FPScheckOK} == "FAIL" ]; then
+	echo "[$(tput setaf 1)$(tput bold) FAILED $(tput sgr0)] FPS check failed"
+	cacaomsglog "ERROR FPScheck"
+	exit 1
+fi
+
+
+
+sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turb ON"
+sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.autoampl OFF"
+
+
+sleep 1
+
+sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.seedZERO ON"
+sendFPScmd "setval mfilt-${CACAO_LOOPNUMBER}.rec.enable ON"
+
+cacaomsglog "END"
