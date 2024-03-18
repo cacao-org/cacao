@@ -128,6 +128,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-120-mstat
 	scripts/aorun/cacao-aorun-130-mkPF
 	scripts/aorun/cacao-aorun-140-applyPF
+	scripts/aorun/cacao-aorun-200-mfiltturbrec
 	DESTINATION bin)
 
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})

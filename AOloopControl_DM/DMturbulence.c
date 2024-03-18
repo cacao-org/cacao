@@ -23,6 +23,9 @@ static long     fpi_turbON;
 static int64_t *turbZERO;
 static long     fpi_turbZERO;
 
+// set seed position to zero
+static int64_t *seedZERO;
+static long     fpi_seedZERO;
 
 
 // output stream name
@@ -52,6 +55,10 @@ static long   fpi_turbwangle;
 // Wind amplitude [um]
 static float *turbampl;
 static long   fpi_turbampl;
+
+// autpmatically adjust amplitude to match turbampl
+static uint64_t *autoampl;
+static long      fpi_autoampl;
 
 
 
@@ -112,6 +119,15 @@ static CLICMDARGDEF farg[] =
         &fpi_turbZERO
     },
     {
+        CLIARG_ONOFF,
+        ".seedZERO",
+        "set seed pos to zero",
+        "OFF",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &seedZERO,
+        &fpi_seedZERO
+    },
+    {
         CLIARG_STREAM,
         ".dmstream",
         "output DM turbulence stream",
@@ -155,6 +171,15 @@ static CLICMDARGDEF farg[] =
         CLIARG_HIDDEN_DEFAULT,
         (void **) &turbampl,
         &fpi_turbampl
+    },
+    {
+        CLIARG_ONOFF,
+        ".autoampl",
+        "automatic WF amplitude match to ampl",
+        "ON",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &autoampl,
+        &fpi_autoampl
     },
     {
         CLIARG_ONOFF,
@@ -215,6 +240,8 @@ static errno_t customCONFsetup()
 
         data.fpsptr->parray[fpi_turbON].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_turbZERO].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_seedZERO].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_autoampl].fpflag |= FPFLAG_WRITERUN;
 
         data.fpsptr->parray[fpi_dmstream].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
@@ -222,6 +249,9 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_turbwspeed].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_turbwangle].fpflag |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_turbampl].fpflag |= FPFLAG_WRITERUN;
+
+        // set ON by default
+        data.fpsptr->parray[fpi_autoampl].fpflag |= FPFLAG_ONOFF;
     }
 
     return RETURN_SUCCESS;
@@ -283,6 +313,8 @@ static errno_t make_seed_turbulence_screen(
     delete_image_ID("tmppha", DELETE_IMAGE_ERRMODE_WARNING);
     //  make_dist("tmpd",size,size,size/2,size/2);
     create_2Dimage_ID("tmpd", size, size, &ID);
+
+
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
         {
@@ -529,6 +561,18 @@ static errno_t compute_function()
         }
 
 
+        // zero position seed
+        if(data.fpsptr->parray[fpi_seedZERO].fpflag & FPFLAG_ONOFF)
+        {
+            x0m = 0.0;
+            y0m = 0.0;
+
+            // toggle back to OFF
+            data.fpsptr->parray[fpi_seedZERO].fpflag &= ~FPFLAG_ONOFF;
+        }
+
+
+
 
         if((*turbON) == 1)
         {
@@ -624,7 +668,11 @@ static errno_t compute_function()
             double logdiff = log10(coeffstep);
             double logdiff3abs = pow(fabs(logdiff), 3.0);
             double amplloopgain = 1.0e-4 + logdiff3abs / (logdiff3abs + 1.0);
-            amplcoeff *= pow(10.0, amplloopgain * logdiff);
+
+            if( *autoampl == 1)
+            {
+                amplcoeff *= pow(10.0, amplloopgain * logdiff);
+            }
 
             printf("RMS= %6.3f / %6.3f  logdiff = %6.3f  factor = %6.3f\n", RMSval, (*turbampl), logdiff, pow(10.0, logdiff));
 
