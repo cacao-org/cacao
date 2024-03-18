@@ -166,7 +166,7 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF,
         ".comp.darksub",
-        "sub aolX_wfsdark mult aolX_wfsgain -> imWFS0",
+        "- aolX_wfsdark,  x aolX_wfsmult -> imWFS0",
         "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSsubdark,
@@ -175,7 +175,7 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_ONOFF,
         ".comp.WFSnormalize",
-        "normalize WFS frames -> imWFS1",
+        "normalize over wfsmask, x wfsmask -> imWFS1",
         "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &compWFSnormalize,
@@ -468,13 +468,13 @@ static errno_t compute_function()
         //int status_wfsmult = 0;
 
         if(data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF &&
-            imgwfsdark.ID != -1)
+                imgwfsdark.ID != -1)
         {
             status_darksub = 1;
         }
 
         if (processinfo->loopcnt % n_print_timings == 0) clock_gettime(CLOCK_MILK, &time1);
-        
+
         imgimWFS0.md->write = 1;
 
         switch(WFSatype)
@@ -749,6 +749,7 @@ static errno_t compute_function()
                 for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
                     imgwfsrefc.im->array.F[ii] =
+                        imgwfsmask.im->array.F[ii] *
                         refcmult * (imgwfsref.im->array.F[ii] +
                                     imgdispzpo.im->array.F[ii]) +
                         (1.0 - refcmult) * imgwfsrefc.im->array.F[ii];
@@ -762,6 +763,26 @@ static errno_t compute_function()
                     imgwfsrefc.im->array.F[ii] +
                     refcgain * imgimWFS3.im->array.F[ii];
             }
+
+            // normalize
+            if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
+            {
+                // Compute image total
+                double imtotal = 0.0;
+                uint64_t nelem = imgwfsrefc.md->size[0] *
+                                 imgwfsrefc.md->size[1];
+
+                for(uint64_t ii = 0; ii < nelem; ii++)
+                {
+                    imtotal +=  imgwfsrefc.im->array.F[ii];
+                }
+                for(uint64_t ii = 0; ii < nelem; ii++)
+                {
+                    imgwfsrefc.im->array.F[ii] /= imtotal;
+                }
+
+            }
+
 
             processinfo_update_output_stream(processinfo, imgwfsrefc.ID);
         }
