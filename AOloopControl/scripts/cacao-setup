@@ -8,8 +8,10 @@ source milk-script-std-config
 
 
 MSextdescr="
-Initial setup for cacao instance
-Creates work directory, install scripts and start conf processes in tmux sessions.
+Initial setup for cacao instance.
+Run this script for loop rootdir.
+
+Creates work directory (rundir), install scripts and start conf processes in tmux sessions.
 Each cacao loop has a unique ASCII name, referred to as <loopname> in this manual.
 
 Main steps performed by cacao-setup:
@@ -73,7 +75,7 @@ RequiredDirs=( )
 
 
 
-MSarg+=( "confname:string:configuration name" )
+MSarg+=( "loopname:string:loopname" )
 
 
 # SCRIPT OPTIONS
@@ -99,7 +101,7 @@ function set_fpsset {
 }
 
 UPDATEMODE="0"
-MSopt+=( "u:update:set_updatemode::update mode, do not quit/restart processes" )
+MSopt+=( "u:update:set_updatemode::update mode, only start process if not running" )
 function set_updatemode {
 	UPDATEMODE="1"
 }
@@ -305,7 +307,7 @@ function allFPScmd {
             echolog "FILE ${taskflist} EXISTS"
             while IFS='' read -r taskline || [[ -n "${taskline}" ]]; do
                 echolog "${taskline}"
-                echo "        ${taskline}   >> ${fpsCTRLfifo} "
+                echo "TASK:        ${taskline}   >> ${fpsCTRLfifo} "
                 echo "${taskline}" >> ${fpsCTRLfifo}
             done < ${taskflist}
         else
@@ -777,8 +779,7 @@ cd ${CACAO_LOOPRUNDIR_FULLPATH}
 export FPS_KEYWORDARRAY=":cacao-setup:${CACAO_LOOPNAME}:aol${CACAO_LOOPNUMBER}:"
 milk-fpsinit -e cacao -C
 
-
-
+# list of new FPS written in fpsinit.newFPS.log
 
 
 
@@ -827,15 +828,42 @@ fi
 
 
 # ===================================================================================
-# ========= START ALL CONF PROCESSES  ===============================================
+# ========= START CONF PROCESSES  ===================================================
 # ===================================================================================
 echolog "    (re)-starting conf processes ..."
 # stop CONF processes in case already running
-allFPScmd confstop
 
-allFPScmd confstart
+if [ "$UPDATEMODE" = "0" ]; then
+  allFPScmd confstop
+  allFPScmd confstart
+else
+  fpsnewfname="fpsinit.newFPS.log"
+  echo "READING FILE ${fpsnewfname}"
+  if [ -f "${fpsnewfname}" ]; then
+    echo "File found"
+    while read -r LINE
+    do
+	  fpsname="${LINE}"
+      printf "NEW FPS ENTRY = %s\n" "$LINE"
+      echo "confstart ${fpsname}" >> ${fpsCTRLfifo}
+      # if there is a taskfile associated with command, load it
+      taskflist="${CACAO_LOOPRUNDIR_FULLPATH}/fps.conf/fpssetup.cacaosetup-confstart.${fpsname}.conf"
+      echo "TASKFILELIST : ${taskflist}"
+      if [ -f ${taskflist} ]; then
+        while IFS='' read -r taskline || [[ -n "${taskline}" ]]; do
+          echolog "${taskline}"
+          echo "TASK:        ${taskline}   >> ${fpsCTRLfifo} "
+          echo "${taskline}" >> ${fpsCTRLfifo}
+        done < ${taskflist}
+      else
+        echo "FILE ${taskflist} DOES NOT EXIST - NOTHING TO DO"
+      fi
+    done < "$fpsnewfname"
+  fi
+fi
 
-
+echo "STEP 01"
+sleep 5
 
 
 
@@ -846,6 +874,8 @@ echolog "    INIT settings imported from conf file ..."
 if [ "$UPDATEMODE" = "0" ]; then
     fpssetparamconf
 fi
+
+
 
 
 # ===================================================================================
@@ -863,8 +893,6 @@ if [ "$UPDATEMODE" = "0" ]; then
     #echolog "    linking WFS ..."
     #milk-streamlink -p aol${LOOPNUMBER}_ wfsim # &>> ${LOGFILENAME}
 fi
-
-
 
 
 
