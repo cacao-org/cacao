@@ -57,6 +57,11 @@ static long     fpi_compWFSsigav;
 static int64_t *compWFSrefc;
 static long     fpi_compWFSrefc;
 
+// reset aolX_wfsrefc to aolX_wfsref
+static int64_t *resetWFSrefc;
+static long     fpi_resetWFSrefc;
+
+
 static char *wfszposname;
 static long  fpi_wfszposname;
 
@@ -209,6 +214,15 @@ static CLICMDARGDEF farg[] =
         &fpi_compWFSrefc
     },
     {
+        CLIARG_ONOFF,
+        ".comp.resetWFSrefc",
+        "reset WFS reference correction",
+        "0",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &resetWFSrefc,
+        &fpi_resetWFSrefc
+    },
+    {
         CLIARG_STREAM,
         ".wfszpo",
         "Wavefront sensor zero point offset",
@@ -240,6 +254,7 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_compWFSrefsub].fpflag    |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_compWFSsigav].fpflag     |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_compWFSrefc].fpflag      |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_resetWFSrefc].fpflag     |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_WFSrefcgain].fpflag      |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_WFSrefcmult].fpflag      |= FPFLAG_WRITERUN;
     }
@@ -736,6 +751,20 @@ static errno_t compute_function()
 
         int status_wfsrefc = 0;
         if (processinfo->loopcnt % n_print_timings == 0) clock_gettime(CLOCK_MILK, &time1);
+
+        if(data.fpsptr->parray[fpi_resetWFSrefc].fpflag & FPFLAG_ONOFF)
+        {
+            for(uint64_t ii = 0; ii < sizeWFS; ii++)
+            {
+                imgwfsrefc.im->array.F[ii] = imgwfsref.im->array.F[ii];
+                imgdispzpo.im->array.F[ii] = 0.0;
+                imgimWFS3.im->array.F[ii] = 0.0;
+            }
+
+            // toggle back to OFF
+            data.fpsptr->parray[fpi_resetWFSrefc].fpflag &= ~FPFLAG_ONOFF;
+        }
+
         if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
         {
             status_wfsrefc = 1;
