@@ -40,7 +40,7 @@ exit 1
 fi
 
 
-
+NBchannel=12
 
 if [ ${ACTION} == "start" ]; then
 ACTIONOK=1
@@ -49,10 +49,10 @@ cacaomsglog "START"
 # Starting DM combination process
 # ======================================================================
 
+sendFPScmd "setval DMch2disp-${CACAO_DMSIMINDEX}.NBchannel ${NBchannel}"
 sendFPScmd "setval DMch2disp-${CACAO_DMSIMINDEX}.option.voltmode OFF"
 sendFPScmd "setval DMch2disp-${CACAO_DMSIMINDEX}.option.DClevel 0.0"
-#taskset_DMch2disp="3"
-#sendFPScmd "setval DMch2disp-${CACAO_DMSIMINDEX}.procinfo.taskset ${taskset_DMch2disp}"
+
 sendFPScmd "confwupdate DMch2disp-${CACAO_DMSIMINDEX}"
 sendFPScmd "runstart DMch2disp-${CACAO_DMSIMINDEX}"
 
@@ -64,6 +64,14 @@ do
      sleep 0.1
 done
 milk-shmim-zero aol${CACAO_LOOPNUMBER}_dmC
+
+for (( ch=0; ch<NBchannel; ch++ ))
+do
+   echo "zeroing $ch"
+   dmchstring=$( printf "dm%02ddisp%02d" ${CACAO_DMSIMINDEX} $ch )
+   milk-shmim-zero ${dmchstring} 
+done
+
 
 fi
 
