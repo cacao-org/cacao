@@ -4,6 +4,9 @@
  *
  */
 
+
+#include <math.h>
+
 #include "CommandLineInterface/CLIcore.h"
 
 // Local variables pointers
@@ -217,7 +220,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_ONOFF,
         ".comp.resetWFSrefc",
         "reset WFS reference correction",
-        "0",
+        "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &resetWFSrefc,
         &fpi_resetWFSrefc
@@ -257,6 +260,9 @@ static errno_t customCONFsetup()
         data.fpsptr->parray[fpi_resetWFSrefc].fpflag     |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_WFSrefcgain].fpflag      |= FPFLAG_WRITERUN;
         data.fpsptr->parray[fpi_WFSrefcmult].fpflag      |= FPFLAG_WRITERUN;
+
+        // reset WFS ave at startup
+        data.fpsptr->parray[fpi_resetWFSrefc].fpflag |= FPFLAG_ONOFF;
     }
 
     return RETURN_SUCCESS;
@@ -733,10 +739,20 @@ static errno_t compute_function()
             float tave_mult = *WFStaveragemult;
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
-                imgimWFS3.im->array.F[ii] =
+                float valf =
                     tave_mult *
                     ((1.0 - tave_gain) * imgimWFS3.im->array.F[ii] +
                      tave_gain * imgimWFS2.im->array.F[ii]);
+
+                // clean any NaN or inf, as they would loop back to wfsrefc
+                if( fpclassify(valf) == FP_NORMAL )
+                {
+                    imgimWFS3.im->array.F[ii] = valf;
+                }
+                else
+                {
+                    imgimWFS3.im->array.F[ii] = 0.0;
+                }
             }
             processinfo_update_output_stream(processinfo, imgimWFS3.ID);
         }
