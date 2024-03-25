@@ -183,6 +183,12 @@ function checkFileInfoOptional {
 
 
 echo "LOOPNAME = $LOOPNAME"
+if [ "$UPDATEMODE" = "0" ]; then
+export FPSLISTADD_MODE=" "
+else
+export FPSLISTADD_MODE="update"
+fi
+
 
 
 function cacaoCreateExampe_cacaovars {
@@ -699,7 +705,7 @@ fi
 
 # cacao-provided default script
 # writes in fpslist.txt and fps.conf/fpssetup.confstart.<fpsname>.conf
-echo "Running cacao-fpslistadd"
+echo "Running cacao-fpslistadd from $PWD"
 cacao-fpslistadd
 echo "Done with cacao-fpslistadd"
 
@@ -796,6 +802,7 @@ if [ "$UPDATEMODE" = "0" ]; then
 else
   fpsnewfname="fpsinit.newFPS.log"
   echo "READING FILE ${fpsnewfname}"
+  
   if [ -f "${fpsnewfname}" ]; then
     echo "File found"
     while read -r LINE
@@ -803,6 +810,7 @@ else
 	  fpsname="${LINE}"
       printf "NEW FPS ENTRY = %s\n" "$LINE"
       echo "confstart ${fpsname}" >> ${fpsCTRLfifo}
+      
       # if there is a taskfile associated with command, load it
       taskflist="${CACAO_LOOPRUNDIR_FULLPATH}/fps.conf/fpssetup.cacaosetup-confstart.${fpsname}.conf"
       echo "TASKFILELIST : ${taskflist}"
