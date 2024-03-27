@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="Measure hardware latency"
+
+
+MSextdescr="Measures hardware latency between input and output streams
+
+Pokes input stream, listens to ouput stream
+Requires acquWFS process to run
+
+Writes output to env variables CACAO_WFSFRATE and CACAO_LATENCYHARDWFR
+These are written in file <looprundir>/fps.mlat-<loopnumber>.datadir/cacaovars.bash,
+which is sourced by subsequent scripts.
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+source milk-argparse
+
+
+errexit=0
+
+if [ $errexit = 1 ]; then
+	exit 1
+fi
+
+echo "Running GNUPLOT over the latest run"
+$(cd ${CACAO_LOOPNAME}-rundir/fps.mlat-${CACAO_LOOPNUMBER}.datadir;
+gnuplot -p << EOF
+plot "hardwlatency.dat" u 2:3
+exit
+EOF
+);
+
