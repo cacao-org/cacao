@@ -792,7 +792,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
 
     char cm_name[] = "sCMat";
 
-#ifdef HAVE_CUDA
+#ifdef HAVE_MAGMA
     if(GPUmode)
     {
         LINALGEBRA_magma_compute_SVDpseudoInverse("respM",
@@ -808,16 +808,16 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
     }
     else
     {
-#endif
+#endif // HAVE_MAGMA
         linopt_compute_SVDpseudoInverse("respM",
                                         cm_name,
                                         SVDlim,
                                         10000,
                                         "VTmat",
                                         NULL);
-#ifdef HAVE_CUDA
+#ifdef HAVE_MAGMA
     }
-#endif
+#endif // HAVE_MAGMA
 
     {
         char ffname[STRINGMAXLEN_FULLFILENAME];
