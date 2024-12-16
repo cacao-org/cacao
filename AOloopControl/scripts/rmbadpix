@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+sname="iiwi"
+NBframe=8000
+limfact="4.0"
+
+milk-all << EOF
+readshmim ${sname}
+streamave ..procinfo 1
+streamave ..triggersname ${sname}
+streamave ..triggermode 1
+streamave ..loopcntMax ${NBframe}
+streamave .outrms_name imrms
+streamave .comp.rms 1
+streamave .out_shared 0
+streamave ?
+streamave ${sname} imave ${NBframe}
+saveFITS imrms imrms.fits
+a=perc(imrms,0.5)
+limv=a*${limfact}
+imrms1=imrms/limv
+imtrunc imrms1 0 1.1 imrms2
+badpix=floor(imrms2)
+mask=1-badpix
+saveFITS mask pixmask.fits
+readshmim aol7_wfsmask
+cp mask aol7_wfsmask
+listim
+exitCLI
+EOF
+
