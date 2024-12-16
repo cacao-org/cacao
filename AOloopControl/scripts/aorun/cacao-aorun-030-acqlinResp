@@ -14,7 +14,7 @@ set -u
 
 MSextdescr="
 Input DM modes in:
-./${CACAO_CONFWDIR}/DMmodes/<name>.fits
+./${CACAO_CONFWDIR}/RMmodesDM/<name>.fits
 
 Sources <looprundir>/fps.mlat-<loopnumber>.datadir/cacaovars.bash
 to get CACAO_WFSFRATE and CACAO_LATENCYHARDWFR
