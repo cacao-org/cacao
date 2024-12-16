@@ -21,7 +21,7 @@ Use CACAO_CONFWDIR to select directory
 Copies dmmask<TAG>, wfsmask<TAG>, CMmodesWFS<TAG>, CMmodesDM<TAG> from:
 CACAO_CONFWDIR/
 to:
-conf/
+${CACAO_CONFWDIR}/
 
 Load to shared memory
 
@@ -48,18 +48,6 @@ source milk-argparse
 # Calibration files / streams
 declare -a calarr=("CMmodesDM" "CMmodesWFS" "dmmask" "wfsmask" "zrespM")
 
-
-# construct filenames: DESTINATION
-#CMDMfnameDEST="conf/CMmodesDM.fits"
-#CMWFSfnameDEST="conf/CMmodesWFS.fits"
-#dmmaskfnameDEST="conf/dmmask.fits"
-#wfsmaskfnameDEST="conf/wfsmask.fits"
-
-# SOURCE
-#CMDMfnameSRC="${CACAO_CONFWDIR}/CMmodesDM${filetag}.fits"
-#CMWFSfnameSRC="${CACAO_CONFWDIR}/CMmodesWFS${filetag}.fits"
-#dmmaskfnameSRC="${CACAO_CONFWDIR}/dmmask${filetag}.fits"
-#wfsmaskfnameSRC="${CACAO_CONFWDIR}/wfsmask${filetag}.fits"
 
 EXITSTATUS=0
 
@@ -144,11 +132,6 @@ done
 fi
 
 
-# legacy
-#rm -f /milk/shm/aol${CACAO_LOOPNUMBER}_DMmodes.im.shm
-#rm -f /milk/shm/aol${CACAO_LOOPNUMBER}_modesWFS.im.shm
-#milk-FITS2shm ${CMDMfnameSRC} aol${CACAO_LOOPNUMBER}_DMmodes
-#milk-FITS2shm ${CMWFSfnameSRC} aol${CACAO_LOOPNUMBER}_modesWFS
 
 CACAO_CONFWDIR="conf" # force update
 for calname in "${calarr[@]}"
@@ -156,7 +139,3 @@ do
 cacao-calib-streamupdate ${calname}
 done
 
-#cacao-calib-streamupdate CMmodesDM
-#cacao-calib-streamupdate CMmodesWFS
-#cacao-calib-streamupdate dmmask
-#cacao-calib-streamupdate wfsmask
