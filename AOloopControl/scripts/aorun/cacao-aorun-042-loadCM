@@ -131,6 +131,9 @@ if [[ "${CACAO_CONFWDIR}" == "conf" ]]; then
   echo "Adopting existing conf"
 else
   echo "Adopting external conf: Updating files"
+fi
+
+
 
 
 for calname in "${calarr[@]}"
@@ -138,11 +141,15 @@ do
   fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
   fnameDEST="conf/${calname}.fits"
 
-  echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
-  if [[ ${TESTMODE} == 0 ]]; then
-    ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
+  if [[ "${fnameSRC}" == "${fnameDEST}" ]]; then
+    echo "No linking needed"
   else
-    echo "COMMAND: ln -sf ${PWD}/${fnameSRC} ${fnameDEST}"
+    echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
+    if [[ ${TESTMODE} == 0 ]]; then
+      ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
+    else
+      echo "COMMAND: ln -sf ${PWD}/${fnameSRC} ${fnameDEST}"
+    fi
   fi
 done
 
@@ -158,7 +165,7 @@ done
 
 #echo "linking ${PWD}/${wfsmaskfnameSRC} as ${wfsmaskfnameDEST}"
 #ln -sf ${PWD}/${wfsmaskfnameSRC} ${wfsmaskfnameDEST}
-fi
+
 
 
 
