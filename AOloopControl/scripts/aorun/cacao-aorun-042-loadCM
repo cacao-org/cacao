@@ -46,6 +46,14 @@ function setfiletag()
 	filetag=".$1"
 }
 
+MSopt+=( "l:listcomm:setlistcommands::List commands, do not run them" )
+TESTMODE=0
+function setlistcommands()
+{
+	TESTMODE=1
+}
+
+
 
 source milk-argparse
 
@@ -64,8 +72,9 @@ for calname in "${calarr[@]}"
 do
 fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
 fnameDEST="conf/${calname}.fits"
+if [[ $TESTMODE == 0 ]]; then
 checkFile ${fnameSRC}
-checkFile ${fnameSRC}
+fi
 done
 
 
@@ -83,23 +92,34 @@ fi
 
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
-if [ ${FPScheckOK} == "OK" ]; then
+if [[ ${FPScheckOK} == "OK" ]]; then
+if [[ ${TESTMODE} == 0 ]]; then
 	sendFPScmd "runstop mvalC2dm-${CACAO_LOOPNUMBER}"
+else
+	echo "COMMAND: runstop mvalC2dm-${CACAO_LOOPNUMBER}"
+fi
 fi
 
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
-if [ ${FPScheckOK} == "OK" ]; then
+if [[ ${FPScheckOK} == "OK" ]]; then
+if [[ ${TESTMODE} == 0 ]]; then
 	sendFPScmd "runstop mfilt-${CACAO_LOOPNUMBER}"
+else
+	echo "COMMAND: runstop mfilt-${CACAO_LOOPNUMBER}"
+fi
 fi
 
 
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
-if [ ${FPScheckOK} == "OK" ]; then
+if [[ ${FPScheckOK} == "OK" ]]; then
+if [[ ${TESTMODE} == 0 ]]; then
 	sendFPScmd "runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
+else
+	echo "COMMAND: runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
 fi
-
+fi
 
 
 
@@ -108,18 +128,22 @@ fi
 
 
 if [[ "${CACAO_CONFWDIR}" == "conf" ]]; then
-echo "Adopting existing conf"
+  echo "Adopting existing conf"
 else
-echo "Adopting external conf: Updating files"
+  echo "Adopting external conf: Updating files"
 
 
 for calname in "${calarr[@]}"
 do
-fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
-fnameDEST="conf/${calname}.fits"
+  fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
+  fnameDEST="conf/${calname}.fits"
 
-echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
-ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
+  echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
+  if [[ ${TESTMODE} == 0 ]]; then
+    ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
+  else
+    echo "COMMAND: ln -sf ${PWD}/${fnameSRC} ${fnameDEST}"
+  fi
 done
 
 
@@ -138,9 +162,13 @@ fi
 
 
 
-CACAO_CONFWDIR="conf" # force update
+CACAO_CONFWDIR="conf" # update from conf
 for calname in "${calarr[@]}"
 do
-cacao-calib-streamload ${calname}
+if [[ ${TESTMODE} == 0 ]]; then
+  cacao-calib-streamload ${calname}
+else
+  echo "COMMAND: cacao-calib-streamload ${calname}"
+fi
 done
 
