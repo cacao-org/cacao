@@ -136,6 +136,6 @@ fi
 CACAO_CONFWDIR="conf" # force update
 for calname in "${calarr[@]}"
 do
-cacao-calib-streamupdate ${calname}
+cacao-calib-streamload ${calname}
 done
 
