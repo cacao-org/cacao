@@ -16,14 +16,19 @@ set -u
 
 MSextdescr="Select control matrix and load it
 
-Use CACAO_CONFWDIR to select directory
+CACAO_CONFWDIR
+Optional: Use CACAO_CONFWDIR to select directory
+Default: ./conf/
 
-Copies dmmask<TAG>, wfsmask<TAG>, CMmodesWFS<TAG>, CMmodesDM<TAG> from:
-CACAO_CONFWDIR/
+TAG
+Optional: specify <TAG> with -t option
+Default: none
+
+For sname in ( dmmask, wfsmask, CMmodesWFS, CMmodesDM ), copy file
+CACAO_CONFWDIR/sname.<TAG>.fits
 to:
-${CACAO_CONFWDIR}/
-
-Load to shared memory
+./conf/sname.fits
+and then load file to shared memory sname
 
 "
 source milk-script-std-config
