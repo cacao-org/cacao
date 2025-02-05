@@ -85,7 +85,7 @@ if [ ${EXITSTATUS} = 1 ]; then
 	exit 1
 fi
 
-
+echo "TAG = ${filetag}"
 
 
 # Checking FPS and turning off runproc
