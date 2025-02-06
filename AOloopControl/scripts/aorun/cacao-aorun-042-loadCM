@@ -139,7 +139,7 @@ fi
 
 
 
-
+CACAO_CONFWDIR="conf" # updates will be done from conf
 for calname in "${calarrmand[@]}"
 do
   fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
@@ -155,7 +155,13 @@ do
       echo "COMMAND: ln -sf ${PWD}/${fnameSRC} ${fnameDEST}"
     fi
   fi
+  if [[ ${TESTMODE} == 0 ]]; then
+    cacao-calib-streamload ${calname}
+  fi
 done
+
+
+
 
 for calname in "${calarropt[@]}"
 do
@@ -174,12 +180,17 @@ do
       echo "COMMAND: ln -sf ${PWD}/${fnameSRC} ${fnameDEST}"
     fi
   fi
+
+  if [[ ${TESTMODE} == 0 ]]; then
+    cacao-calib-streamload ${calname}
+  fi
+
   fi
 
 done
 
 
-
+exit
 
 CACAO_CONFWDIR="conf" # update from conf
 for calname in "${calarr[@]}"
