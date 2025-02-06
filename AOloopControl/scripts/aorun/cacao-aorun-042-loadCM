@@ -59,7 +59,11 @@ source milk-argparse
 
 
 # Calibration files / streams
-declare -a calarr=("CMmodesDM" "CMmodesWFS" "dmmask" "wfsmask" "zrespM")
+# mandatory
+declare -a calarrmand=("CMmodesDM" "CMmodesWFS")
+# optional
+declare -a calarropt=("dmmask" "wfsmask" "zrespM")
+
 
 
 EXITSTATUS=0
@@ -68,7 +72,7 @@ EXITSTATUS=0
 #checkFile ${CMWFSfnameSRC}
 
 
-for calname in "${calarr[@]}"
+for calname in "${calarrmand[@]}"
 do
 fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
 fnameDEST="conf/${calname}.fits"
@@ -136,7 +140,7 @@ fi
 
 
 
-for calname in "${calarr[@]}"
+for calname in "${calarrmand[@]}"
 do
   fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
   fnameDEST="conf/${calname}.fits"
@@ -153,18 +157,26 @@ do
   fi
 done
 
+for calname in "${calarropt[@]}"
+do
+  fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
+  fnameDEST="conf/${calname}.fits"
 
-#echo "lininking ${PWD}/${CMDMfnameSRC} as ${CMDMfnameDEST}"
-#ln -sf ${PWD}/${CMDMfnameSRC} ${CMDMfnameDEST}
+  if [ -f ${fnameSRC} ]; then
 
-#echo "linking ${PWD}/${CMWFSfnameSRC} as ${CMWFSfnameDEST}"
-#ln -sf ${PWD}/${CMWFSfnameSRC} ${CMWFSfnameDEST}
+  if [[ "${fnameSRC}" == "${fnameDEST}" ]]; then
+    echo "No linking needed"
+  else
+    echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
+    if [[ ${TESTMODE} == 0 ]]; then
+      ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
+    else
+      echo "COMMAND: ln -sf ${PWD}/${fnameSRC} ${fnameDEST}"
+    fi
+  fi
+  fi
 
-#echo "linking ${PWD}/${dmmaskfnameSRC} as ${dmmaskfnameDEST}"
-#ln -sf ${PWD}/${dmmaskfnameSRC} ${dmmaskfnameDEST}
-
-#echo "linking ${PWD}/${wfsmaskfnameSRC} as ${wfsmaskfnameDEST}"
-#ln -sf ${PWD}/${wfsmaskfnameSRC} ${wfsmaskfnameDEST}
+done
 
 
 
