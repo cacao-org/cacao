@@ -96,7 +96,7 @@ echo "confstop acquWFS-${CACAO_LOOPNUMBER}" >> /milk/shm/${CACAO_LOOPNAME}_fpsCT
 
 #run pre-apply script if it exists.
 if [ -d "scripts" ]; then
-    cd scripts
+    cd scripts || exit
     if [ -f "pre-calib-apply" ]; then
         echo "running pre-calib-apply"
         ./pre-calib-apply ${calib} ${ARCHDIR}
@@ -135,7 +135,7 @@ sleep 1
 echo "runstart mvalC2dm-${CACAO_LOOPNUMBER}" >> /milk/shm/${CACAO_LOOPNAME}_fpsCTRL.fifo
 
 if [ -d "scripts" ]; then
-    cd scripts
+    cd scripts || exit
     if [ -f "post-calib-apply" ]; then
         echo "running post-calib-apply"
         ./post-calib-apply ${calib} ${ARCHDIR}
