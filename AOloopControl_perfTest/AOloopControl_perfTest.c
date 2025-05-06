@@ -15,11 +15,6 @@
  *
  */
 
-/* ================================================================== */
-/* ================================================================== */
-/*            MODULE INFO                                             */
-/* ================================================================== */
-/* ================================================================== */
 
 // module default short name
 // all CLI calls to this module functions will be <shortname>.<funcname>
@@ -34,18 +29,7 @@
 
 #define _GNU_SOURCE
 
-// uncomment for test print statements to stdout
-//#define _PRINT_TEST
 
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/*                                        HEADER FILES */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 #include <dirent.h>
 #include <math.h>
 #include <pthread.h>
@@ -69,6 +53,7 @@
 #include "compRMsensitivity.h"
 #include "mlat.h"
 #include "mlat_decode.h"
+#include "streamlogtimesample.h"
 
 
 
@@ -107,247 +92,25 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_perfTest__mlat();
     CLIADDCMD_AOloopControl_perfTest__mlat_decode();
 
-    return RETURN_SUCCESS;
-}
-
-
-char *remove_ext(char *mystr, char dot, char sep)
-{
-    char *retstr, *lastdot, *lastsep;
-
-    // Error checks and allocate string.
-
-    if(mystr == NULL)
-    {
-        return NULL;
-    }
-    if((retstr = malloc(strlen(mystr) + 1)) == NULL)
-    {
-        return NULL;
-    }
-
-    // Make a copy and find the relevant characters.
-
-    strcpy(retstr, mystr);
-    lastdot = strrchr(retstr, dot);
-    lastsep = (sep == 0) ? NULL : strrchr(retstr, sep);
-
-    // If it has an extension separator.
-
-    if(lastdot != NULL)
-    {
-        // and it's before the extenstion separator.
-
-        if(lastsep != NULL)
-        {
-            if(lastsep < lastdot)
-            {
-                // then remove it.
-
-                *lastdot = '\0';
-            }
-        }
-        else
-        {
-            // Has extension separator with no path separator.
-
-            *lastdot = '\0';
-        }
-    }
-
-    // Return the modified string.
-
-    return retstr;
-}
-
-//
-// WARNING: right=NBelem-1
-//
-void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
-{
-    register long  i, j;
-    StreamDataFile x, y;
-
-    i        = left;
-    j        = right;
-    x.tstart = datfile[(left + right) / 2].tstart;
-
-    do
-    {
-        while(datfile[i].tstart < x.tstart && i < right)
-        {
-            i++;
-        }
-        while(x.tstart < datfile[j].tstart && j > left)
-        {
-            j--;
-        }
-
-        if(i <= j)
-        {
-            y.tstart = datfile[i].tstart;
-            y.tend   = datfile[i].tend;
-            y.cnt    = datfile[i].cnt;
-            strcpy(y.name, datfile[i].name);
-
-            datfile[i].tstart = datfile[j].tstart;
-            datfile[i].tend   = datfile[j].tend;
-            datfile[i].cnt    = datfile[j].cnt;
-            strcpy(datfile[i].name, datfile[j].name);
-
-            datfile[j].tstart = y.tstart;
-            datfile[j].tend   = y.tend;
-            datfile[j].cnt    = y.cnt;
-            strcpy(datfile[j].name, y.name);
-
-            i++;
-            j--;
-        }
-    }
-    while(i <= j);
-
-    if(left < j)
-    {
-        quicksort_StreamDataFile(datfile, left, j);
-    }
-    if(i < right)
-    {
-        quicksort_StreamDataFile(datfile, i, right);
-    }
-}
-
-/**
- * # Purpose
- *
- * Create timing summary file
- *
- */
-errno_t AOloopControl_perfTest_mkTimingFile(char *inTimingfname,
-        char *outTimingfname,
-        char *tmpstring)
-{
-    FILE          *fp;
-    FILE          *fpout;
-    StreamDataFile datfile;
-    long           cnt;
-    double         valf1, valf2;
-    long           vald1, vald2, vald3, vald4;
-    char           line[512];
-    long           linecnt = 0;
-
-    double *tarray;
-    double  MaxNBsample = 1000000;
-
-    if((fp = fopen(inTimingfname, "r")) == NULL)
-    {
-        printf("Cannot open file \"%s\"\n", inTimingfname);
-        exit(0);
-    }
-    else
-    {
-        double tlast  = 0.0;
-        int    tOK    = 1;
-        int    scanOK = 1;
-
-        tarray = (double *) malloc(sizeof(double) * MaxNBsample);
-        if(tarray == NULL)
-        {
-            PRINT_ERROR("malloc returns NULL pointer");
-            abort(); // or handle error in other ways
-        }
-
-        cnt = 0;
-
-        while(scanOK == 1)
-        {
-            if(fgets(line, sizeof(line), fp) == NULL)
-            {
-                scanOK = 0;
-            }
-            else
-            {
-                if(line[0] != '#')
-                {
-                    scanOK = 1;
-                }
-
-                if(scanOK == 1)
-                {
-                    if((sscanf(line,
-                               "%ld %ld %lf %lf %ld %ld\n",
-                               &vald1,
-                               &vald2,
-                               &valf1,
-                               &valf2,
-                               &vald3,
-                               &vald4) == 6) &&
-                            (tOK == 1))
-                    {
-                        // printf("cnt %5ld read\n", cnt);//TEST
-                        tarray[cnt] = valf2;
-
-                        if(cnt == 0)
-                        {
-                            datfile.tstart = valf2;
-                            tlast          = valf2;
-                        }
-                        else
-                        {
-                            if(valf2 > tlast)
-                            {
-                                tOK = 1;
-                            }
-                            else
-                            {
-                                tOK = 0;
-                            }
-                            tlast = valf2;
-                        }
-                        cnt++;
-                    }
-                }
-            }
-
-            if(tOK == 0)
-            {
-                scanOK = 0;
-            }
-
-            // printf("[%5ld] [%d] LINE: \"%s\"\n", linecnt, scanOK, line);
-            linecnt++;
-        }
-        fclose(fp);
-        datfile.tend = valf2;
-        datfile.cnt  = cnt;
-        strcpy(datfile.name, tmpstring);
-
-        free(tarray);
-    }
-
-    // printf("datfile.tstart  = %f\n", datfile.tstart);
-    // printf("datfile.tend    = %f\n", datfile.tend);
-
-    // write timing summary file
-
-    if((fpout = fopen(outTimingfname, "w")) == NULL)
-    {
-        printf("Cannot write file \"%s\"\n", outTimingfname);
-        exit(0);
-    }
-    else
-    {
-        fprintf(fpout,
-                "%s   %20.9f %20.9f   %10ld  %10.3f\n",
-                tmpstring,
-                datfile.tstart,
-                datfile.tend,
-                datfile.cnt,
-                datfile.cnt / (datfile.tend - datfile.tstart));
-        fclose(fpout);
-    }
+    CLIADDCMD_AOloopControl_perfTest__streamlogtimesample();
 
     return RETURN_SUCCESS;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * # Purpose
@@ -361,6 +124,7 @@ errno_t AOloopControl_perfTest_mkTimingFile(char *inTimingfname,
  * dtlag: positive when stream0 is earlier than stream1
  *
  */
+/*
 errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
         char  *stream0,
         char  *stream1,
@@ -830,18 +594,7 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                 }
             }
 
-            /*
-                      for(j=0; j<datfile[i].cnt; j++)
-                      {
-                          if(fscanf(fp, "%ld %ld %lf %lf %ld %ld\n", &vald1,
-             &vald2, &valf1, &valf2, &vald3, &vald4)!=6)
-                          {
-                              printf("fscanf error, %s line %d\n", __FILE__,
-             __LINE__); exit(0);
-                          }
-                          else
-                              intarray_end[j] = valf2;
-                      }*/
+
             fclose(fp);
 
             printf(" %ld lines processed\n", j);
@@ -1196,13 +949,39 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
     return RETURN_SUCCESS;
 }
 
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * # Purpose
  *
  * Compute similarity matrix between frames of a datacube
  *
  */
-
+/*
 errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
         char *IDname_out)
 {
@@ -1285,6 +1064,9 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
 
     return RETURN_SUCCESS;
 }
+*/
+
+
 
 /**
  * # Purpose
@@ -1310,7 +1092,7 @@ errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
  * sim1diff1      : best sim pairs 1, differences stream 1 images\n
  *
  */
-
+/*
 errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
         char *IDname_stream1,
         char *IDname_simM0,
@@ -1777,6 +1559,10 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
 
     return RETURN_SUCCESS;
 }
+*/
+
+
+
 
 /**
  *
