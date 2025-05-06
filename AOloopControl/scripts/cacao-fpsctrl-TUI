@@ -17,4 +17,4 @@ source cacao-check-cacaovars
 
 source milk-argparse
 
-MILK_FPS_LOGFILE="fpsCTRL.log" FPS_FILTSTRING_KEYWORD="aol${CACAO_LOOPNUMBER}" milk-fpsCTRL
+MILK_FPS_LOGFILE="fpsCTRL.log" FPS_FILTSTRING_KEYWORD="aol${CACAO_LOOPNUMBER}_" milk-fpsCTRL
