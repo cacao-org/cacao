@@ -115,6 +115,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-003-wfsmapping
 	scripts/aorun/cacao-aorun-005-takedark
 	scripts/aorun/cacao-aorun-020-mlat
+	scripts/aorun/cacao-aorun-020-mlatset
 	scripts/aorun/cacao-aorun-021-mlatshow
 	scripts/aorun/cacao-aorun-025-acqWFS
 	scripts/aorun/cacao-aorun-026-takeref
