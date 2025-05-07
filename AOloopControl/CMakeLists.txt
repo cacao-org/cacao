@@ -73,6 +73,8 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-calib-streamload
 	scripts/cacao-exec
 	scripts/cacao.tmux
+	scripts/cacao-fpsconfstart
+	scripts/cacao-fpsconfstop
 	scripts/cacao-fpslistadd
 	scripts/cacao-fpslistadd-ACQWFS
 	scripts/cacao-fpslistadd-MAPWFS
@@ -89,6 +91,8 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-fpslistadd-WFSMODEVAL2DM
 	scripts/cacao-fpslistadd-WFSCAMSIM
 	scripts/cacao-fpslistadd-ZONALFILTERING
+	scripts/cacao-fpsrunstart
+	scripts/cacao-fpsrunstop
 	scripts/cacao-modalstatsTUI
 	scripts/cacao-takedark
 	scripts/cacao-task-manager
