@@ -542,7 +542,7 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-        TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |");
+        TUI_printfw("MODE [ gain  mult  lim ]           WFS          |          DM       |");
         if(MODALTUI_DMfilt)
         {
             TUI_printfw("    DMf       |");
@@ -551,7 +551,7 @@ errno_t AOloopControl_modalstatsTUI(
 
         if(MODALTUI_PF)
         {
-            TUI_printfw(" [ mPFmix ] ");
+            TUI_printfw("  [ mPFmix ] ");
         }
 
         TUI_newline();
@@ -755,7 +755,7 @@ errno_t AOloopControl_modalstatsTUI(
 
                 // Predictive Filter
                 //
-                TUI_printfw("  [ %5.3f ]",
+                TUI_printfw("  [ %6.4f ]",
                             imgmPFmix.im->array.F[mi]
                            );
 
