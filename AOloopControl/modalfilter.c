@@ -250,7 +250,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_STREAM,
-        ".inmval       ",
+        ".inmval",
         "input mode values from WFS",
         "aol0_modevalWFS",
         CLIARG_VISIBLE_DEFAULT,
@@ -259,7 +259,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_STREAM,
-        ".outmval       ",
+        ".outmval",
         "output mode values to DM",
         "aol0_modevalDM",
         CLIARG_VISIBLE_DEFAULT,
@@ -403,7 +403,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_ONOFF,
-        ".auxDMmval.enab       le",
+        ".auxDMmval.enable",
         "mixing aux DM mode vals from stream aolx_modevalauxDM ?",
         "0",
         CLIARG_HIDDEN_DEFAULT,
@@ -506,7 +506,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_UINT32,
-        ".selfRM.NBm       ode",
+        ".selfRM.NBmode",
         "number of mode poked",
         "32",
         CLIARG_HIDDEN_DEFAULT,
