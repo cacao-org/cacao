@@ -547,11 +547,11 @@ errno_t AOloopControl_modalstatsTUI(
         {
             TUI_printfw("    DMf       |");
         }
-        TUI_printfw("          OL       | LIMTRUC WFS/OL    DM/OL");
+        TUI_printfw("          OL       | LIMTRUC WFS/OL   DM/OL");
 
         if(MODALTUI_PF)
         {
-            TUI_printfw("  [ mPFmix ]   res  res/WFS   res/pOL");
+            TUI_printfw("  [ mPFmix ]    res    res/WFS   res/pOL");
         }
 
         TUI_newline();
