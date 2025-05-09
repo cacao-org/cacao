@@ -542,16 +542,16 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-        TUI_printfw("MODE [ gain  mult  lim ]           WFS          |          DM       |");
+        TUI_printfw("MODE [ gain  mult    lim  ]        WFS          |          DM       |");
         if(MODALTUI_DMfilt)
         {
             TUI_printfw("    DMf       |");
         }
-        TUI_printfw("          OL       | LIMTRUC WFS/OL  DM/OL");
+        TUI_printfw("          OL       | LIMTRUC WFS/OL    DM/OL");
 
         if(MODALTUI_PF)
         {
-            TUI_printfw("  [ mPFmix ] ");
+            TUI_printfw("  [ mPFmix ]   res  res/WFS   res/pOL");
         }
 
         TUI_newline();
@@ -755,16 +755,22 @@ errno_t AOloopControl_modalstatsTUI(
 
                 // Predictive Filter
                 //
+                // mixing ratio
                 TUI_printfw("  [ %6.4f ]",
                             imgmPFmix.im->array.F[mi]
                            );
 
+                // PF residual
                 TUI_printfw("   %6.4f ",
                             imgmvalPFresrms.im->array.F[mi]
                            );
+
+                // PF residual / WFS
                 TUI_printfw("  %5.3f ",
                             imgmvalPFresrms.im->array.F[mi] / imgmvalWFSrms.im->array.F[mi]
                            );
+
+                // PF residual / pOL
                 TUI_printfw("  %8.6f ",
                             imgmvalPFresrms.im->array.F[mi] / imgmvalOLrms.im->array.F[mi]
                            );
