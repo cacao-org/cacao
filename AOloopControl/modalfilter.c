@@ -2332,7 +2332,7 @@ static errno_t compute_function()
                 fprintf(fprec,
                         "#  7 : Predicted OL at WFS time       time offset = - %5.3f frame\n",
                         *latencyhardwfr);
-                //fprintf(fprec, "#  8 : \n");
+                fprintf(fprec, "#  \n");
                 //fprintf(fprec, "#  9 : \n");
                 //fprintf(fprec, "# 10 : \n");
             }
