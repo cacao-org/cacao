@@ -41,6 +41,8 @@
 
 
 #include "modalfilter.h"
+#include "modalfilter_test.h"
+
 #include "modalCTRL_stats.h"
 #include "modalstatsTUI.h"
 
@@ -57,6 +59,7 @@ INIT_MODULE_LIB(AOloopControl)
 static errno_t init_module_CLI()
 {
     CLIADDCMD_AOloopControl__modalfilter();
+    CLIADDCMD_AOloopControl__modalfilter_test();
     CLIADDCMD_AOloopControl__modalCTRL_stats();
     CLIADDCMD_AOloopControl__modalstatsTUI();
 

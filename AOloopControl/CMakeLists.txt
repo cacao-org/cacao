@@ -14,6 +14,8 @@ add_library(${LIBNAME} SHARED ${SRCNAME}.c
 	${SRCNAME}.h
 	modalfilter.c
 	modalfilter.h
+	modalfilter_test.c
+	modalfilter_test.h
 	modalCTRL_stats.c
 	modalCTRL_stats.h
 	modalstatsTUI.c
@@ -78,6 +80,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-fpslistadd
 	scripts/cacao-fpslistadd-ACQWFS
 	scripts/cacao-fpslistadd-MAPWFS
+	scripts/cacao-fpslistadd-MFILTTEST
 	scripts/cacao-fpslistadd-MVMGPU_CMODEVAL2DM
 	scripts/cacao-fpslistadd-MVMGPU_CMODEVALOFFLOAD2DM
 	scripts/cacao-fpslistadd-MVMGPU_DM2MVAL
