@@ -24,7 +24,7 @@ TAG
 Optional: specify <TAG> with -t option
 Default: none
 
-For sname in ( dmmask, wfsmask, CMmodesWFS, CMmodesDM ), copy file
+For sname in ( CMmodesWFS, CMmodesDM, dmmask, wfsmask, zrespm ), copy file
 CACAO_CONFWDIR/sname.<TAG>.fits
 to:
 ./conf/sname.fits
@@ -138,8 +138,6 @@ else
 fi
 
 
-
-CACAO_CONFWDIR="conf" # updates will be done from conf
 for calname in "${calarrmand[@]}"
 do
   fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
@@ -189,16 +187,4 @@ do
 
 done
 
-
-exit
-
-CACAO_CONFWDIR="conf" # update from conf
-for calname in "${calarr[@]}"
-do
-if [[ ${TESTMODE} == 0 ]]; then
-  cacao-calib-streamload ${calname}
-else
-  echo "COMMAND: cacao-calib-streamload ${calname}"
-fi
-done
 
