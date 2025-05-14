@@ -16,7 +16,7 @@ set -u
 
 MSextdescr="Select control matrix and load it
 
-CACAO_CONFWDIR
+CACAO_CONFWDIR = ${CACAO_CONFWDIR}
 Optional: Use CACAO_CONFWDIR to select directory
 Default: ./conf/
 
