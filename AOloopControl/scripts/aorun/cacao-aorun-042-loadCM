@@ -14,6 +14,14 @@ fi
 set -u
 
 
+# Calibration files / streams
+# mandatory
+declare -a calarrmand=("CMmodesDM" "CMmodesWFS")
+# optional
+declare -a calarropt=("dmmask" "wfsmask" "zrespM" "wfsdarkraw" "wfsref")
+
+
+
 MSextdescr="Select control matrix and load it
 
 CACAO_CONFWDIR = ${CACAO_CONFWDIR}
@@ -24,11 +32,14 @@ TAG
 Optional: specify <TAG> with -t option
 Default: none
 
-For sname in ( CMmodesWFS, CMmodesDM, dmmask, wfsmask, zrespm ), copy file
+For each cal sname, symlink file
 CACAO_CONFWDIR/sname.<TAG>.fits
 to:
 ./conf/sname.fits
 and then load file to shared memory sname
+
+Mandatory: ${calarrmand[@]}
+Optional : ${calarropt[@]}
 
 "
 source milk-script-std-config
@@ -58,11 +69,7 @@ function setlistcommands()
 source milk-argparse
 
 
-# Calibration files / streams
-# mandatory
-declare -a calarrmand=("CMmodesDM" "CMmodesWFS")
-# optional
-declare -a calarropt=("dmmask" "wfsmask" "zrespM")
+
 
 
 
@@ -146,6 +153,7 @@ do
   if [[ "${fnameSRC}" == "${fnameDEST}" ]]; then
     echo "No linking needed"
   else
+	echo ""
     echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
     if [[ ${TESTMODE} == 0 ]]; then
       ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
@@ -171,6 +179,7 @@ do
   if [[ "${fnameSRC}" == "${fnameDEST}" ]]; then
     echo "No linking needed"
   else
+	echo ""
     echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
     if [[ ${TESTMODE} == 0 ]]; then
       ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
