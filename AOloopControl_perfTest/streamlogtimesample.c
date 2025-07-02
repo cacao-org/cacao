@@ -209,7 +209,7 @@ static CLICMDARGDEF farg[] = {
     {
         CLIARG_INT32,
         ".timingmode",
-        "timing mode",
+        "timing mode (0+: inherit from stream)",
         "-1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &timingmode,
@@ -479,25 +479,28 @@ static errno_t processTimingFile(
                                &framecnt1) == 7) &&
                             (tOK == 1))
                     {
-                        // printf("cnt %5ld read\n", cnt);//TEST
-                        tarray[cnt] = absacqtimesec;
+                        // Use logtime instead of acqtime
+                        double abstimesec = abslogtimesec;
+
+                        tarray[cnt] = abstimesec;
                         cnt0array[cnt] = framecnt0;
 
                         if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LOAD)
                         {
-                            timingarray[cnt] = absacqtimesec;
+                            timingarray[cnt] = abstimesec;
                         }
 
                         if(cnt == 0)
                         {
-                            tfirst         = absacqtimesec;
-                            tlast          = absacqtimesec;
+                            tfirst         = abstimesec;
+                            tlast          = abstimesec;
                             cnt0first      = framecnt0;
                             cnt0last       = framecnt0;
                         }
                         else
                         {
-                            if(absacqtimesec > tlast)
+                            // if enforcing monotonic time
+                            if(abstimesec > tlast)
                             {
                                 tOK = 1;
                             }
@@ -505,7 +508,7 @@ static errno_t processTimingFile(
                             {
                                 tOK = 0;
                             }
-                            tlast = absacqtimesec;
+                            tlast = abstimesec;
                             cnt0last = framecnt0;
                         }
                         cnt++;
@@ -984,8 +987,9 @@ static errno_t compute_function()
 
                             if( frameout < zsize)
                             {
-                                printf("  [%3d]  %4ld/%4ld  -> %4ld/%4ld    %5.3f  \n",
+                                printf("  [%3d / %3d]  %4ld/%4ld  -> %4ld/%4ld    %8.6f  \n",
                                        idatfile,
+                                       NBdatFiles,
                                        framein, datfile[idatfile].cnt,
                                        frameout, zsize,
                                        expfrac);
@@ -1170,6 +1174,7 @@ static errno_t compute_function()
 
 
                 printf("INPUT FRAME RANGE : %ld - %ld\n", frameinmin, frameinmax);
+                printf("===================================\n\n\n");
             }
 
 
