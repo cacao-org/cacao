@@ -68,7 +68,7 @@ echo "WFSdir = ${streamWFSdir}"
 
 
 iter=0
-NBiter=10
+NBiter=100
 
 while [ ${iter} -ne ${NBiter} ] ; do
 
@@ -125,6 +125,8 @@ fi
 
 if [ "$vOK" = "1" ]; then
 echo "PROCESSING"
+# exit loop
+iter=${NBiter}
 fi
 
 
