@@ -46,13 +46,14 @@ UTDAY=$(date -u '+%Y%m%d')
 
 streamWFSdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
 streamPSFdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
-
+streamDMdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp
 
 
 EXITSTATUS=0
 
 checkDir ${streamWFSdir}
 checkDir ${streamPSFdir}
+checkDir ${streamDMdir}
 #checkFile ${RMWFSfname}
 #checkFile ${CMDMfname}
 #checkFile ${CMWFSfname}
