@@ -66,6 +66,16 @@ fi
 
 echo "WFSdir = ${streamWFSdir}"
 
+
+iter=1
+NBiter=10
+
+while [ ${iter0} -ne ${NBiter} ] ; do
+
+	echo "ITERATION ${iter}"
+	let iter++ || :
+
+
 set +e
 # allow for error as timing files are either .dat or .txt, not both
 ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
@@ -112,6 +122,9 @@ if [ "${lastLogTimePSF}" -lt "${timeend}" ]; then
 fi
 
 
+speep 2.0
+
+done
 
 
 cacaomsglog "END"
