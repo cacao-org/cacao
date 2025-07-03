@@ -54,9 +54,6 @@ EXITSTATUS=0
 checkDir ${streamWFSdir}
 checkDir ${streamPSFdir}
 checkDir ${streamDMdir}
-#checkFile ${RMWFSfname}
-#checkFile ${CMDMfname}
-#checkFile ${CMWFSfname}
 
 if [ ${EXITSTATUS} = 1 ]; then
 	echo "missing file - cannot proceed"
@@ -71,6 +68,7 @@ echo "WFSdir = ${streamWFSdir}"
 
 ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFileWFS=$( ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
+echo "OK"
 echo "Last WFS file = ${lastLogFileWFS}"
 cp $lastLogFileWFS _lastlogfileWFS
 
