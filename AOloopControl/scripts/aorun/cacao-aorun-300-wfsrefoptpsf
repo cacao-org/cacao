@@ -68,8 +68,8 @@ echo "WFSdir = ${streamWFSdir}"
 
 set +e
 # allow for error as timing files are either .dat or .txt, not both
-ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
-lastLogFileWFS=$( ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
+ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFileWFS=$( ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last WFS file = ${lastLogFileWFS}"
 cp $lastLogFileWFS _lastlogfileWFS
 
