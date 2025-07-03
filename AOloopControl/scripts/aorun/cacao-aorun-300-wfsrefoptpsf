@@ -47,9 +47,27 @@ UTDAY=$(date -u '+%Y%m%d')
 streamWFSdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
 streamPSFdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
 
+
+
+EXITSTATUS=0
+
+checkDir ${streamWFSdir}
+checkDir ${streamPSFdir}
+#checkFile ${RMWFSfname}
+#checkFile ${CMDMfname}
+#checkFile ${CMWFSfname}
+
+if [ ${EXITSTATUS} = 1 ]; then
+	echo "missing file - cannot proceed"
+	exit 1
+fi
+
+
+
 # find last timing files in telemetry directories
 
 echo "WFSdir = ${streamWFSdir}"
+
 ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFileWFS=$( ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last WFS file = ${lastLogFileWFS}"
