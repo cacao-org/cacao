@@ -122,7 +122,13 @@ if [ "${lastLogTimePSF}" -lt "${timeend}" ]; then
 fi
 
 
-speep 2.0
+
+if [ "$vOK" = "1" ]; then
+echo "PROCESSING"
+fi
+
+
+sleep 2.0
 
 done
 
