@@ -49,13 +49,13 @@ streamPSFdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
 
 # find last timing files in telemetry directories
 
-#echo "WFSdir = ${streamWFSdir}"
+echo "WFSdir = ${streamWFSdir}"
 ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFileWFS=$( ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last WFS file = ${lastLogFileWFS}"
 cp $lastLogFileWFS _lastlogfileWFS
 
-#echo "PSFdir = ${streamPSFdir}"
+echo "PSFdir = ${streamPSFdir}"
 ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFilePSF=$( ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last PSF file = ${lastLogFilePSF}"
