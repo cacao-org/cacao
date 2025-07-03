@@ -74,8 +74,8 @@ echo "Last WFS file = ${lastLogFileWFS}"
 cp $lastLogFileWFS _lastlogfileWFS
 
 echo "PSFdir = ${streamPSFdir}"
-ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
-lastLogFilePSF=$( ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
+ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFilePSF=$( ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last PSF file = ${lastLogFilePSF}"
 cp $lastLogFilePSF _lastlogfilePSF
 set -e
