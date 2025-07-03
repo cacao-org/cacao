@@ -1,0 +1,6 @@
+#ifndef AOLOOPCONTROL_PERFTEST_WFSREFOPTIMSELECT_H
+#define AOLOOPCONTROL_PERFTEST_WFSREFOPTIMSELECT_H
+
+errno_t CLIADDCMD_AOloopControl_perfTest__WFSref_optimize_PSFselection();
+
+#endif

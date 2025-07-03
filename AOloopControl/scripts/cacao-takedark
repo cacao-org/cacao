@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-MSdescr="Take WFS dark"
+MSdescr="Take dark from stream"
 
-MSextdescr="Take WFS dark, copy it to AOcalib/wfsdark dir"
+MSextdescr="Take dark, copy it to AOcalib/wfsdark dir"
 
 source milk-script-std-config
 

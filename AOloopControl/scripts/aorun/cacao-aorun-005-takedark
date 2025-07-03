@@ -15,8 +15,9 @@ set -u
 
 # Extended description
 MSextdescr="Reads from aolX_wfsim stream
+
 Averages a number of frames
-Saes into stream aolX_wfsdarkraw
+Saves into stream aolX_wfsdarkraw
 Make aolX_wfsdark sym link pointer to aolX_wfsdarkraw
 Saves dark as ${CACAO_CONFWDIR}/aolX_wfsdarkraw.fits"
 

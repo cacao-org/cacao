@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="WFS reference optimization from PSF stream"
+
+MSextdescr="Optimize WFS reference from PSF stream
+
+Processes filesystem telemetry:
+- PSF (CACAO_PSFSTREAM)
+- WFS (CACAO_WFSSTREAM)
+- DM (dmXXdisp)
+These 3 streams must be recorded.
+
+WFS telemetry location:
+CACAO_TELEMETRY_LOGDIR/YYYYMMDD/
+
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+MSarg+=( "tspan:float:time span [s]" )
+MSarg+=( "tint:float:integration time per sample" )
+
+
+source milk-argparse
+TSPAN="${inputMSargARRAY[0]}"
+TINT="${inputMSargARRAY[1]}"
+
+ACTIONOK=0
+
+
+
+# Checking FPS
+FPScheckOK="OK"
+
+cacaomsglog "START"
+
+# UNIX time at start
+timestart=$(date +%s)
+
+UTDAY=$(date -u '+%Y%m%d')
+
+streamWFSdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
+streamPSFdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
+
+# find last timing files in telemetry directories
+
+#echo "WFSdir = ${streamWFSdir}"
+ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFileWFS=$( ls ${streamWFSdir}/*.dat ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
+echo "Last WFS file = ${lastLogFileWFS}"
+cp $lastLogFileWFS _lastlogfileWFS
+
+#echo "PSFdir = ${streamPSFdir}"
+ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFilePSF=$( ls ${streamPSFdir}/*.dat ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
+echo "Last PSF file = ${lastLogFilePSF}"
+cp $lastLogFilePSF _lastlogfilePSF
+
+let "timeend = timestart + TSPAN"
+
+echo "TIME : ${timestart} + ${TSPAN} -> ${timeend} ====================================="
+
+
+
+# vOK is 1 if files need to be processed
+# 0 if no input files to be processed
+vOK="1"
+
+
+lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
+echo "WFS last log at $lastLogTimeWFS"
+
+if [ "${lastLogTimeWFS}" -lt "${timeend}" ]; then
+	vOK="0"
+	echo "last WFS has not reached time end yet!"
+	echo "${lastLogTimeWFS} < ${timeend}"
+fi
+
+
+lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
+echo "PSF last log at $lastLogTimePSF"
+
+if [ "${lastLogTimePSF}" -lt "${timeend}" ]; then
+	vOK="0"
+	echo "last PSF has not reached time end yet!"
+	echo "${lastLogTimePSF} < ${timeend}"
+fi
+
+
+
+
+cacaomsglog "END"

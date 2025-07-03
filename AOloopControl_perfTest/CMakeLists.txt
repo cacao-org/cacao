@@ -7,6 +7,7 @@ set(SOURCEFILES
 	mlat.c
 	mlat_decode.c
 	streamlogtimesample.c
+	wfsrefoptimselect.c
 )
 
 # list include files (.h) that should be installed on system
