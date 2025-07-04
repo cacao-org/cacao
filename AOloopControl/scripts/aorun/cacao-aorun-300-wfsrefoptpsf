@@ -196,7 +196,9 @@ if [ "$vOK" = "1" ]; then
 
 # PROCESS PSF FILES
 
+
 # file list
+mkdir -p ./${UTDAY}/${CACAO_PSFSTREAM}/
 for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt; do
 	#echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
@@ -218,6 +220,7 @@ done
 
 
 # PROCESS WFS FILES
+mkdir -p ./${UTDAY}/${CACAO_WFSSTREAM}/
 for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt; do
 	#echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
