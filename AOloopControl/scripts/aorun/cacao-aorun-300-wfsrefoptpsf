@@ -32,12 +32,13 @@ MSarg+=( "tint:float:integration time per sample" )
 # UNIX time at start
 #
 TIMESTART=$(date +%s)
+echo "TIMESTART = ${TIMESTART}"
 #UTDAY=$(date -u '+%Y%m%d')
 MSopt+=( "ts:tstart:set_timestart:TIMESTART[long]:set time start [unix tstamp]" )
 function set_timestart() {
 	TIMESTART="$1"
+	echo "Setting TIMESTART to ${TIMESTART}"
 }
-UTDAY=$(date -d @{$TIMESTART} +%Y%m%d)
 
 
 # logdir
@@ -49,25 +50,36 @@ function set_logdir() {
 }
 
 
+# PSF crop window
+#
+PSFCROP="*,*"
+MSopt+=( "pc:PSFcrop:set_PSFcrop:PSFcrop[string]:PSF crop window x1,x2\:y1,y2" )
+function set_PSFcrop() {
+	PSFCROP="$1"
+}
+
+
 
 source milk-argparse
 TSPAN="${inputMSargARRAY[0]}"
 TINT="${inputMSargARRAY[1]}"
 
-
+UTDAY=$(date -u -d @$TIMESTART +%Y%m%d)
 
 echo "LOGDIR    : ${LOGDIR}"
 echo "TIMESTART : ${TIMESTART}"
 echo "UTDAY     : ${UTDAY}"
 
-exit
+
+
+
 
 # Checking FPS
 FPScheckOK="OK"
 
 cacaomsglog "START"
 
-
+WDIR="wdir_wfsrefoptpsf"
 
 streamWFSdir=${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
 streamPSFdir=${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
@@ -87,12 +99,39 @@ fi
 
 
 
+# 1: stream name
+# 2: file name (basename)
+# 3: 2D crop window, "x1:x2,y1:y2", or "*:*"
+function processcube()
+{
+	PTAG=".proc"
+	INFILE="${LOGDIR}/${UTDAY}/$1/$2.fits"
+	OUTFILE=${UTDAY}/$1/$2${PTAG}.fits
+	mkdir -p ${UTDAY}/$1
+	echo "Processing $INFILE -> $OUTFILE"
+
+	if [ ! -f ${OUTFILE} ]; then
+milk-all << EOF
+loadfits "${INFILE}[$3,*]" imc
+loadfits "$1.dark.fits[$3]" imd
+imcd=imc-imd
+saveFITS imcd "${OUTFILE}"
+listim
+exitCLI
+EOF
+	fi
+}
+
+
+
+
+
 # find last timing files in telemetry directories
 
 echo "WFSdir = ${streamWFSdir}"
 
-mkdir -p wdir_wfsrefoptpsf
-cd wdir_wfsrefoptpsf
+mkdir -p ${WDIR}
+cd ${WDIR}
 
 iter=0
 NBiter=100
@@ -118,9 +157,9 @@ cp $lastLogFilePSF _lastlogfilePSF
 set -e
 
 
-let "timeend = TIMESTART + TSPAN"
+let "TIMEEND = TIMESTART + TSPAN"
 
-echo "TIME : ${TIMESTART} + ${TSPAN} -> ${timeend} ====================================="
+echo "TIME : ${TIMESTART} + ${TSPAN} -> ${TIMEEND} ====================================="
 
 
 
@@ -129,67 +168,103 @@ echo "TIME : ${TIMESTART} + ${TSPAN} -> ${timeend} =============================
 vOK="1"
 
 
+
+
 lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
 echo "WFS last log at $lastLogTimeWFS"
 
-if [ "${lastLogTimeWFS}" -lt "${timeend}" ]; then
+if [ "${lastLogTimeWFS}" -lt "${TIMEEND}" ]; then
 	vOK="0"
 	echo "last WFS has not reached time end yet!"
-	echo "${lastLogTimeWFS} < ${timeend}"
+	echo "${lastLogTimeWFS} < ${TIMEEND}"
 fi
 
 
 lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
 echo "PSF last log at $lastLogTimePSF"
 
-if [ "${lastLogTimePSF}" -lt "${timeend}" ]; then
+if [ "${lastLogTimePSF}" -lt "${TIMEEND}" ]; then
 	vOK="0"
 	echo "last PSF has not reached time end yet!"
-	echo "${lastLogTimePSF} < ${timeend}"
+	echo "${lastLogTimePSF} < ${TIMEEND}"
 fi
-
 
 
 if [ "$vOK" = "1" ]; then
-echo "PROCESSING"
 
 
 
-# Preprocessing
+# PROCESS PSF FILES
 
-for fname in ${LOGDIR}/${UTDAY}/${SNAME}/*.timing; do
-echo "FILE: $fname"
-while IFS=" " read -r name findexstart ftimestart findexend ftimeend fnbframe ffrate
-do
-if (( $(echo "$ftimestart < $TEND" |bc -l) )); then
-if (( $(echo "$ftimeend > $TSTART" |bc -l) )); then
-  echo "    timestart = ${ftimestart}"
-  echo "    timeend   = ${ftimeend}"
-  echo "    FRAME   OK"
+# file list
+for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt; do
+	#echo "scanning file $fname"
+	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
+	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
+	#echo "   time : $filetstart -> $filetend"
 
-  fname1=${fname%.timing}
-  fname2=${fname1##*/}
-  echo " $fname -> $fname2"
-  processcube $fname2
-  echo ""
-fi
-fi
-done < $fname
+	if (( $(echo "$filetstart < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend > $TIMESTART" |bc -l) )); then
+		fname1=${fname%.txt}
+		fname2=${fname1##*/}
+		echo "PROCESSING ${fname2}"
+		cp $fname ./${UTDAY}/${CACAO_PSFSTREAM}/
+		processcube ${CACAO_PSFSTREAM} ${fname2} "${PSFCROP}"
+	fi
+	fi
 done
 
-#cacao << EOF
-#cacaopt.slogtsample .logdir "${CACAO_TELEMETRY_LOGDIR}"
-#cacaopt.slogtsample .s0name ${CACAO_PSFSTREAM}
-##cacaopt.slogtsample .s0tag ${S0TAG}
-#cacaopt.slogtsample .s1name ${S1NAME}
-#cacaopt.slogtsample .s1tag ${S1TAG}
-#cacaopt.slogtsample .tstartnsec ${TSTARTNSEC}
-#cacaopt.slogtsample .tendnsec ${TENDNSEC}
-#cacaopt.slogtsample ${TSTARTSEC} ${TENDSEC} 0.02
-#saveFITS ${S0NAME} "${S0NAME}.sync.fits"
-#saveFITS ${S1NAME} "${S1NAME}.sync.fits"
-#exitCLI
-#EOF
+
+
+
+# PROCESS WFS FILES
+for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt; do
+	#echo "scanning file $fname"
+	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
+	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
+	#echo "   time : $filetstart -> $filetend"
+
+	if (( $(echo "$filetstart < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend > $TIMESTART" |bc -l) )); then
+		fname1=${fname%.txt}
+		fname2=${fname1##*/}
+		echo "PROCESSING ${fname2}"
+		cp $fname ./${UTDAY}/${CACAO_WFSSTREAM}/
+		processcube ${CACAO_WFSSTREAM} ${fname2} "*,*"
+	fi
+	fi
+done
+
+
+
+cacao << EOF
+cacaopt.slogtsample .logdir "."
+cacaopt.slogtsample .s0name ${CACAO_PSFSTREAM}
+cacaopt.slogtsample .s0tag ".proc"
+cacaopt.slogtsample .s1name ${CACAO_WFSSTREAM}
+cacaopt.slogtsample .s1tag ".proc"
+cacaopt.slogtsample .tstartnsec 0
+cacaopt.slogtsample .tendnsec 0
+cacaopt.slogtsample ?
+cacaopt.slogtsample ${TIMESTART} ${TIMEEND} ${TINT}
+listim
+saveFITS ${CACAO_PSFSTREAM} "${CACAO_PSFSTREAM}.sync.fits"
+saveFITS ${CACAO_WFSSTREAM} "${CACAO_WFSSTREAM}.sync.fits"
+exitCLI
+EOF
+
+
+cacao << EOF
+loadfits "${CACAO_WFSSTREAM}.sync.fits" wfsimc
+loadfits "${CACAO_PSFSTREAM}.sync.fits" psfimc
+cacaopt.wfsroptsel .selnormplaw 4.0
+cacaopt.wfsroptsel psfimc wfsimc
+saveFITS psf_sorted "psf_sorted.fits"
+saveFITS wfs_sorted "wfs_sorted.fits"
+saveFITS wfsrefopt "wfsrefopt.fits"
+listim
+exitCLI
+EOF
 
 
 
