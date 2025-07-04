@@ -66,12 +66,14 @@ fi
 
 echo "WFSdir = ${streamWFSdir}"
 
+mkdir -p wdir_wfsrefoptpsf
+cd wdir_wfsrefoptpsf
 
 iter=0
 NBiter=100
 
 while [ ${iter} -ne ${NBiter} ] ; do
-
+	echo ""
 	echo "ITERATION ${iter}"
 	let iter++ || :
 
@@ -125,6 +127,47 @@ fi
 
 if [ "$vOK" = "1" ]; then
 echo "PROCESSING"
+
+
+
+# Preprocessing
+
+for fname in ${LOGDIR}/${UTDAY}/${SNAME}/*.timing; do
+echo "FILE: $fname"
+while IFS=" " read -r name findexstart ftimestart findexend ftimeend fnbframe ffrate
+do
+if (( $(echo "$ftimestart < $TEND" |bc -l) )); then
+if (( $(echo "$ftimeend > $TSTART" |bc -l) )); then
+  echo "    timestart = ${ftimestart}"
+  echo "    timeend   = ${ftimeend}"
+  echo "    FRAME   OK"
+
+  fname1=${fname%.timing}
+  fname2=${fname1##*/}
+  echo " $fname -> $fname2"
+  processcube $fname2
+  echo ""
+fi
+fi
+done < $fname
+done
+
+#cacao << EOF
+#cacaopt.slogtsample .logdir "${CACAO_TELEMETRY_LOGDIR}"
+#cacaopt.slogtsample .s0name ${CACAO_PSFSTREAM}
+##cacaopt.slogtsample .s0tag ${S0TAG}
+#cacaopt.slogtsample .s1name ${S1NAME}
+#cacaopt.slogtsample .s1tag ${S1TAG}
+#cacaopt.slogtsample .tstartnsec ${TSTARTNSEC}
+#cacaopt.slogtsample .tendnsec ${TENDNSEC}
+#cacaopt.slogtsample ${TSTARTSEC} ${TENDSEC} 0.02
+#saveFITS ${S0NAME} "${S0NAME}.sync.fits"
+#saveFITS ${S1NAME} "${S1NAME}.sync.fits"
+#exitCLI
+#EOF
+
+
+
 # exit loop
 iter=${NBiter}
 fi
@@ -136,6 +179,7 @@ done
 
 
 
+cd ..
 
 
 cacaomsglog "END"
