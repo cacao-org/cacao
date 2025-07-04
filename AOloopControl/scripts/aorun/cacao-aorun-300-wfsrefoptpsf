@@ -30,22 +30,37 @@ MSarg+=( "tint:float:integration time per sample" )
 
 
 # UNIX time at start
+#
 TIMESTART=$(date +%s)
-UTDAY=$(date -d @{$TIMESTART} +%Y%m%d)
 #UTDAY=$(date -u '+%Y%m%d')
 MSopt+=( "ts:tstart:set_timestart:TIMESTART[long]:set time start [unix tstamp]" )
 function set_timestart() {
 	TIMESTART="$1"
 }
+UTDAY=$(date -d @{$TIMESTART} +%Y%m%d)
+
+
+# logdir
+#
+LOGDIR="${CACAO_TELEMETRY_LOGDIR}"
+MSopt+=( "l:logdir:set_logdir:LOGDIR[string]:set log directory from which to read telemetry" )
+function set_logdir() {
+	LOGDIR="$1"
+}
+
 
 
 source milk-argparse
 TSPAN="${inputMSargARRAY[0]}"
 TINT="${inputMSargARRAY[1]}"
 
-ACTIONOK=0
 
 
+echo "LOGDIR    : ${LOGDIR}"
+echo "TIMESTART : ${TIMESTART}"
+echo "UTDAY     : ${UTDAY}"
+
+exit
 
 # Checking FPS
 FPScheckOK="OK"
@@ -54,9 +69,9 @@ cacaomsglog "START"
 
 
 
-streamWFSdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
-streamPSFdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
-streamDMdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp
+streamWFSdir=${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
+streamPSFdir=${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
+streamDMdir=${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp
 
 
 EXITSTATUS=0
