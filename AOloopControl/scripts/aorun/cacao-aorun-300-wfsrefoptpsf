@@ -17,6 +17,9 @@ These 3 streams must be recorded.
 WFS telemetry location:
 CACAO_TELEMETRY_LOGDIR/YYYYMMDD/
 
+By default, timestart for the optimization is current time at script launch.
+Can be overriden with ts option
+
 "
 
 source milk-script-std-config
@@ -24,6 +27,16 @@ source cacao-check-cacaovars
 
 MSarg+=( "tspan:float:time span [s]" )
 MSarg+=( "tint:float:integration time per sample" )
+
+
+# UNIX time at start
+TIMESTART=$(date +%s)
+UTDAY=$(date -d @{$TIMESTART} +%Y%m%d)
+#UTDAY=$(date -u '+%Y%m%d')
+MSopt+=( "ts:tstart:set_timestart:TIMESTART[long]:set time start [unix tstamp]" )
+function set_timestart() {
+	TIMESTART="$1"
+}
 
 
 source milk-argparse
@@ -39,10 +52,7 @@ FPScheckOK="OK"
 
 cacaomsglog "START"
 
-# UNIX time at start
-timestart=$(date +%s)
 
-UTDAY=$(date -u '+%Y%m%d')
 
 streamWFSdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
 streamPSFdir=${CACAO_TELEMETRY_LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
@@ -93,9 +103,9 @@ cp $lastLogFilePSF _lastlogfilePSF
 set -e
 
 
-let "timeend = timestart + TSPAN"
+let "timeend = TIMESTART + TSPAN"
 
-echo "TIME : ${timestart} + ${TSPAN} -> ${timeend} ====================================="
+echo "TIME : ${TIMESTART} + ${TSPAN} -> ${timeend} ====================================="
 
 
 
