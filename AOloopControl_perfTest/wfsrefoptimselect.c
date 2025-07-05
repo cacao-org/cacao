@@ -260,10 +260,10 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         uint64_t dmxysize = dmxsize * dmysize;
         uint32_t dmzsize  = dmimg.md->size[2];
 
-        IMGID imgwfssorted  = makeIMGID_3D("wfs_sorted", dmxsize, dmysize, dmzsize);
+        IMGID imgwfssorted  = makeIMGID_3D("dm_sorted", dmxsize, dmysize, dmzsize);
         createimagefromIMGID(&imgwfssorted);
 
-        IMGID imgwfsrefopt  = makeIMGID_2D("wfsrefopt", dmxsize, dmysize);
+        IMGID imgwfsrefopt  = makeIMGID_2D("dmrefopt", dmxsize, dmysize);
         createimagefromIMGID(&imgwfsrefopt);
 
         double sumcoeff = 0.0;
