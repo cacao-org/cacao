@@ -246,6 +246,8 @@ cacaopt.slogtsample .s0name ${CACAO_PSFSTREAM}
 cacaopt.slogtsample .s0tag ".proc"
 cacaopt.slogtsample .s1name ${CACAO_WFSSTREAM}
 cacaopt.slogtsample .s1tag ".proc"
+cacaopt.slogtsample .s2name dm${CACAO_DMINDEX}disp
+cacaopt.slogtsample .s2tag ""
 cacaopt.slogtsample .tstartnsec 0
 cacaopt.slogtsample .tendnsec 0
 cacaopt.slogtsample ?
@@ -253,6 +255,7 @@ cacaopt.slogtsample ${TIMESTART} ${TIMEEND} ${TINT}
 listim
 saveFITS ${CACAO_PSFSTREAM} "${CACAO_PSFSTREAM}.sync.fits"
 saveFITS ${CACAO_WFSSTREAM} "${CACAO_WFSSTREAM}.sync.fits"
+saveFITS dm${CACAO_DMINDEX}disp "dm${CACAO_DMINDEX}disp.sync.fits"
 exitCLI
 EOF
 
@@ -260,11 +263,14 @@ EOF
 cacao << EOF
 loadfits "${CACAO_WFSSTREAM}.sync.fits" wfsimc
 loadfits "${CACAO_PSFSTREAM}.sync.fits" psfimc
+loadfits "dm${CACAO_DMINDEX}disp.sync.fits" dmimc
 cacaopt.wfsroptsel .selnormplaw 4.0
 cacaopt.wfsroptsel psfimc wfsimc
 saveFITS psf_sorted "psf_sorted.fits"
 saveFITS wfs_sorted "wfs_sorted.fits"
+saveFITS dm_sorted "dm_sorted.fits"
 saveFITS wfsrefopt "wfsrefopt.fits"
+saveFITS wfsrefopt "dmrefopt.fits"
 listim
 exitCLI
 EOF

@@ -33,6 +33,7 @@ static char *selinput;
 
 static char *wfsinput;
 
+static char *dminput;
 
 static float *selnormplaw;
 static long      fpi_selnormplaw = -1;
@@ -44,7 +45,7 @@ static CLICMDARGDEF farg[] = {
         CLIARG_IMG,
         ".selinput",
         "selection input (PSF)",
-        "im1",
+        "psfim",
         CLIARG_VISIBLE_DEFAULT,
         (void **) &selinput,
         NULL
@@ -53,13 +54,21 @@ static CLICMDARGDEF farg[] = {
         CLIARG_IMG,
         ".wfsinput",
         "WFS input",
-        "im1",
+        "wfsim",
         CLIARG_VISIBLE_DEFAULT,
         (void **) &wfsinput,
         NULL
     },
     {
-        // argument is not part of CLI call, FPFLAG ignored
+        CLIARG_IMG,
+        ".dminput",
+        "DM input",
+        "dmim",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &dminput,
+        NULL
+    },
+    {
         CLIARG_FLOAT32,
         ".selnormplaw",
         "selection norm power law",
@@ -120,6 +129,7 @@ static errno_t help_function()
 static errno_t WFSref_optimizeWFS_PSFselect(
     IMGID psfimg,
     IMGID wfsimg,
+    IMGID dmimg,
     float selnorm_powerlaw
 )
 {
@@ -135,9 +145,9 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 
 
 
-    uint32_t xsize  = psfimg.md->size[0];
-    uint32_t ysize  = psfimg.md->size[1];
-    uint64_t xysize = xsize * ysize;
+    uint32_t psfxsize  = psfimg.md->size[0];
+    uint32_t psfysize  = psfimg.md->size[1];
+    uint64_t psfxysize = psfxsize * psfysize;
     uint32_t zsize  = psfimg.md->size[2];
 
     double *psfnorm = (double *) malloc(sizeof(double)*zsize);
@@ -146,9 +156,9 @@ static errno_t WFSref_optimizeWFS_PSFselect(
     {
         double totalpow = 0.0;
         double total = 0.0;
-        for(uint64_t ii = 0; ii < xysize; ii++)
+        for(uint64_t ii = 0; ii < psfxysize; ii++)
         {
-            double pval = psfimg.im->array.F[xysize*frame+ii];
+            double pval = psfimg.im->array.F[psfxysize*frame+ii];
             if(pval > 0.0)
             {
                 totalpow += pow(pval, selnorm_powerlaw);
@@ -178,7 +188,8 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 
 
     // create 3D outputs
-    IMGID imgpsfsorted  = makeIMGID_3D("psf_sorted", xsize, ysize, zsize);
+    //
+    IMGID imgpsfsorted  = makeIMGID_3D("psf_sorted", psfxsize, psfysize, zsize);
     createimagefromIMGID(&imgpsfsorted);
 
 
@@ -188,55 +199,103 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         printf("frome %5d  slice %5ld   val %11.9f\n", frame, slice, psfnorm[frame]);
 
         char *ptr0 = (char*) psfimg.im->array.F;
-        ptr0 += sizeof(float)*xysize*slice;
+        ptr0 += sizeof(float)*psfxysize*slice;
 
         char *ptr1 = (char*) imgpsfsorted.im->array.F;
-        ptr1 += sizeof(float)*xysize*frame;
+        ptr1 += sizeof(float)*psfxysize*frame;
 
-        memcpy(ptr1, ptr0, sizeof(float)*xysize);
+        memcpy(ptr1, ptr0, sizeof(float)*psfxysize);
     }
 
-
-    uint32_t wfsxsize  = wfsimg.md->size[0];
-    uint32_t wfsysize  = wfsimg.md->size[1];
-    uint64_t wfsxysize = wfsxsize * wfsysize;
-    uint32_t wfszsize  = wfsimg.md->size[2];
-
-    IMGID imgwfssorted  = makeIMGID_3D("wfs_sorted", wfsxsize, wfsysize, wfszsize);
-    createimagefromIMGID(&imgwfssorted);
-
-    IMGID imgwfsrefopt  = makeIMGID_2D("wfsrefopt", wfsxsize, wfsysize);
-    createimagefromIMGID(&imgwfsrefopt);
-
-    double sumcoeff = 0.0;
-    double lambda = 10.0;
-
-    for(uint32_t frame=0; frame < wfszsize; frame++)
+    // WFS frames
     {
-        long slice = imindex[wfszsize-frame-1];
+        uint32_t wfsxsize  = wfsimg.md->size[0];
+        uint32_t wfsysize  = wfsimg.md->size[1];
+        uint64_t wfsxysize = wfsxsize * wfsysize;
+        uint32_t wfszsize  = wfsimg.md->size[2];
 
-        char *ptr0 = (char*) wfsimg.im->array.F;
-        ptr0 += sizeof(float)*wfsxysize*slice;
+        IMGID imgwfssorted  = makeIMGID_3D("wfs_sorted", wfsxsize, wfsysize, wfszsize);
+        createimagefromIMGID(&imgwfssorted);
 
-        char *ptr1 = (char*) imgwfssorted.im->array.F;
-        ptr1 += sizeof(float)*wfsxysize*frame;
+        IMGID imgwfsrefopt  = makeIMGID_2D("wfsrefopt", wfsxsize, wfsysize);
+        createimagefromIMGID(&imgwfsrefopt);
 
-        memcpy(ptr1, ptr0, sizeof(float)*wfsxysize);
+        double sumcoeff = 0.0;
+        double lambda = 10.0;
 
-        double xs = 1.0*frame/wfszsize;
-        double coeff = exp(-lambda*xs*xs);
-        sumcoeff += coeff;
+        for(uint32_t frame=0; frame < wfszsize; frame++)
+        {
+            long slice = imindex[wfszsize-frame-1];
 
+            char *ptr0 = (char*) wfsimg.im->array.F;
+            ptr0 += sizeof(float)*wfsxysize*slice;
+
+            char *ptr1 = (char*) imgwfssorted.im->array.F;
+            ptr1 += sizeof(float)*wfsxysize*frame;
+
+            memcpy(ptr1, ptr0, sizeof(float)*wfsxysize);
+
+            double xs = 1.0*frame/wfszsize;
+            double coeff = exp(-lambda*xs*xs);
+            sumcoeff += coeff;
+
+
+            for(uint64_t ii=0; ii<wfsxysize; ii++)
+            {
+                imgwfsrefopt.im->array.F[ii] += coeff * imgwfssorted.im->array.F[frame*wfsxysize + ii];
+            }
+        }
 
         for(uint64_t ii=0; ii<wfsxysize; ii++)
         {
-            imgwfsrefopt.im->array.F[ii] += coeff * imgwfssorted.im->array.F[frame*wfsxysize + ii];
+            imgwfsrefopt.im->array.F[ii] /= sumcoeff;
         }
     }
 
-    for(uint64_t ii=0; ii<wfsxysize; ii++)
+
+    // DM frames
     {
-        imgwfsrefopt.im->array.F[ii] /= sumcoeff;
+        uint32_t dmxsize  = dmimg.md->size[0];
+        uint32_t dmysize  = dmimg.md->size[1];
+        uint64_t dmxysize = dmxsize * dmysize;
+        uint32_t dmzsize  = dmimg.md->size[2];
+
+        IMGID imgwfssorted  = makeIMGID_3D("wfs_sorted", dmxsize, dmysize, dmzsize);
+        createimagefromIMGID(&imgwfssorted);
+
+        IMGID imgwfsrefopt  = makeIMGID_2D("wfsrefopt", dmxsize, dmysize);
+        createimagefromIMGID(&imgwfsrefopt);
+
+        double sumcoeff = 0.0;
+        double lambda = 10.0;
+
+        for(uint32_t frame=0; frame < dmzsize; frame++)
+        {
+            long slice = imindex[dmzsize-frame-1];
+
+            char *ptr0 = (char*) wfsimg.im->array.F;
+            ptr0 += sizeof(float)*dmxysize*slice;
+
+            char *ptr1 = (char*) imgwfssorted.im->array.F;
+            ptr1 += sizeof(float)*dmxysize*frame;
+
+            memcpy(ptr1, ptr0, sizeof(float)*dmxysize);
+
+            double xs = 1.0*frame/dmzsize;
+            double coeff = exp(-lambda*xs*xs);
+            sumcoeff += coeff;
+
+
+            for(uint64_t ii=0; ii<dmxysize; ii++)
+            {
+                imgwfsrefopt.im->array.F[ii] += coeff * imgwfssorted.im->array.F[frame*dmxysize + ii];
+            }
+        }
+
+        for(uint64_t ii=0; ii<dmxysize; ii++)
+        {
+            imgwfsrefopt.im->array.F[ii] /= sumcoeff;
+        }
     }
 
 
@@ -259,7 +318,8 @@ static errno_t compute_function()
     IMGID inwfsimg = mkIMGID_from_name(wfsinput);
     resolveIMGID(&inwfsimg, ERRMODE_ABORT);
 
-
+    IMGID indmimg = mkIMGID_from_name(dminput);
+    resolveIMGID(&indmimg, ERRMODE_ABORT);
 
 
 
@@ -271,6 +331,7 @@ static errno_t compute_function()
         WFSref_optimizeWFS_PSFselect(
             inpsfimg,
             inwfsimg,
+            indmimg,
             *selnormplaw
         );
     }
