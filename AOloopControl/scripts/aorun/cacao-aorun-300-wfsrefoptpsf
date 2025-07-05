@@ -324,7 +324,7 @@ saveFITS psf_sorted "psf_sorted.fits"
 saveFITS wfs_sorted "wfs_sorted.fits"
 saveFITS dm_sorted "dm_sorted.fits"
 saveFITS wfsrefopt "wfsrefopt.fits"
-saveFITS wfsrefopt "dmrefopt.fits"
+saveFITS dmrefopt "dmrefopt.fits"
 listim
 exitCLI
 EOF
