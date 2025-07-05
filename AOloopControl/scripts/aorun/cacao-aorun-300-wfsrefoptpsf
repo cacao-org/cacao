@@ -275,7 +275,7 @@ done
 
 # PROCESS DM FILES
 mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
-for fname in ${LOGDIR}/${UTDAY}dm${CACAO_DMINDEX}disp}/*.txt; do
+for fname in ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp}/*.txt; do
 	#echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
