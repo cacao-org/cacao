@@ -319,7 +319,7 @@ loadfits "${CACAO_WFSSTREAM}.sync.fits" wfsimc
 loadfits "${CACAO_PSFSTREAM}.sync.fits" psfimc
 loadfits "dm${CACAO_DMINDEX}disp.sync.fits" dmimc
 cacaopt.wfsroptsel .selnormplaw 4.0
-cacaopt.wfsroptsel psfimc wfsimc
+cacaopt.wfsroptsel psfimc wfsimc dmimc
 saveFITS psf_sorted "psf_sorted.fits"
 saveFITS wfs_sorted "wfs_sorted.fits"
 saveFITS dm_sorted "dm_sorted.fits"
