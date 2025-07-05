@@ -125,7 +125,7 @@ EOF
 
 function noprocesscube()
 {
-	PTAG=".proc"
+	PTAG=""
 	INFILE="${LOGDIR}/${UTDAY}/$1/$2.fits"
 	OUTFILE=${UTDAY}/$1/$2${PTAG}.fits
 	mkdir -p ${UTDAY}/$1
