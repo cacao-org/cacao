@@ -341,6 +341,15 @@ sleep 2.0
 done
 
 
+# Move results to timestamp directory
+
+mkdir -p opt-${TIMESTART}
+cp wfsrefopt.fits opt-${TIMESTART}
+cp dmrefopt.fits opt-${TIMESTART}
+cp psf_sorted.fits opt-${TIMESTART}
+cp wfs_sorted.fits opt-${TIMESTART}
+cp dm_sorted.fits opt-${TIMESTART}
+
 
 cd ..
 
