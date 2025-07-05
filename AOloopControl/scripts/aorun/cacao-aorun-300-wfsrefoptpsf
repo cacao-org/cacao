@@ -168,6 +168,15 @@ echo "Last PSF file = ${lastLogFilePSF}"
 cp $lastLogFilePSF _lastlogfilePSF
 set -e
 
+echo "DMdir = ${streamDMdir}"
+ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFileDM=$( ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1 )
+echo "Last DM file = ${lastLogFileDM}"
+cp $lastLogFileDM _lastlogfileDM
+set -e
+
+
+
 
 let "TIMEEND = TIMESTART + TSPAN"
 
@@ -200,6 +209,17 @@ if [ "${lastLogTimePSF}" -lt "${TIMEEND}" ]; then
 	echo "last PSF has not reached time end yet!"
 	echo "${lastLogTimePSF} < ${TIMEEND}"
 fi
+
+
+lastLogTimeDM=$( cat _lastlogfileDM | tail -n 1 | awk '{print int($4)}' )
+echo "DM last log at $lastLogTimeDM"
+
+if [ "${lastLogTimeDM}" -lt "${TIMEEND}" ]; then
+	vOK="0"
+	echo "last DM has not reached time end yet!"
+	echo "${lastLogTimeDM} < ${TIMEEND}"
+fi
+
 
 
 if [ "$vOK" = "1" ]; then
