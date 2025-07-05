@@ -123,6 +123,18 @@ EOF
 }
 
 
+function noprocesscube()
+{
+	PTAG=".proc"
+	INFILE="${LOGDIR}/${UTDAY}/$1/$2.fits"
+	OUTFILE=${UTDAY}/$1/$2${PTAG}.fits
+	mkdir -p ${UTDAY}/$1
+	echo "noProcessing $INFILE -> $OUTFILE"
+
+	if [ ! -f ${OUTFILE} ]; then
+	cp ${INFILE} ${OUTFILE}
+	fi
+}
 
 
 
@@ -234,6 +246,28 @@ for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt; do
 		echo "PROCESSING ${fname2}"
 		cp $fname ./${UTDAY}/${CACAO_WFSSTREAM}/
 		processcube ${CACAO_WFSSTREAM} ${fname2} "*,*"
+	fi
+	fi
+done
+
+
+
+
+# PROCESS DM FILES
+mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
+for fname in ${LOGDIR}/${UTDAY}dm${CACAO_DMINDEX}disp}/*.txt; do
+	#echo "scanning file $fname"
+	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
+	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
+	#echo "   time : $filetstart -> $filetend"
+
+	if (( $(echo "$filetstart < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend > $TIMESTART" |bc -l) )); then
+		fname1=${fname%.txt}
+		fname2=${fname1##*/}
+		echo "PROCESSING ${fname2}"
+		cp $fname ./${UTDAY}/dm${CACAO_DMINDEX}disp/
+		noprocesscube dm${CACAO_DMINDEX}disp ${fname2}
 	fi
 	fi
 done
