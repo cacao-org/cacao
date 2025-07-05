@@ -260,11 +260,11 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         uint64_t dmxysize = dmxsize * dmysize;
         uint32_t dmzsize  = dmimg.md->size[2];
 
-        IMGID imgwfssorted  = makeIMGID_3D("dm_sorted", dmxsize, dmysize, dmzsize);
-        createimagefromIMGID(&imgwfssorted);
+        IMGID imgdmsorted  = makeIMGID_3D("dm_sorted", dmxsize, dmysize, dmzsize);
+        createimagefromIMGID(&imgdmsorted);
 
-        IMGID imgwfsrefopt  = makeIMGID_2D("dmrefopt", dmxsize, dmysize);
-        createimagefromIMGID(&imgwfsrefopt);
+        IMGID imgdmrefopt  = makeIMGID_2D("dmrefopt", dmxsize, dmysize);
+        createimagefromIMGID(&imgdmrefopt);
 
         double sumcoeff = 0.0;
         double lambda = 10.0;
@@ -273,10 +273,10 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         {
             long slice = imindex[dmzsize-frame-1];
 
-            char *ptr0 = (char*) wfsimg.im->array.F;
+            char *ptr0 = (char*) dmimg.im->array.F;
             ptr0 += sizeof(float)*dmxysize*slice;
 
-            char *ptr1 = (char*) imgwfssorted.im->array.F;
+            char *ptr1 = (char*) imgdmsorted.im->array.F;
             ptr1 += sizeof(float)*dmxysize*frame;
 
             memcpy(ptr1, ptr0, sizeof(float)*dmxysize);
@@ -288,13 +288,13 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 
             for(uint64_t ii=0; ii<dmxysize; ii++)
             {
-                imgwfsrefopt.im->array.F[ii] += coeff * imgwfssorted.im->array.F[frame*dmxysize + ii];
+                imgdmrefopt.im->array.F[ii] += coeff * imgdmsorted.im->array.F[frame*dmxysize + ii];
             }
         }
 
         for(uint64_t ii=0; ii<dmxysize; ii++)
         {
-            imgwfsrefopt.im->array.F[ii] /= sumcoeff;
+            imgdmrefopt.im->array.F[ii] /= sumcoeff;
         }
     }
 
