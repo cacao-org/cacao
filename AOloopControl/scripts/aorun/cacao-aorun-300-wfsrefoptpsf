@@ -8,12 +8,16 @@ MSdescr="WFS reference optimization from PSF stream"
 
 MSextdescr="Optimize WFS reference from PSF stream
 
+DARKS
+Will use darks if they exist. Read darks from streams:
+sname.dark
+
+TELEMETRY
 Processes filesystem telemetry:
 - PSF (CACAO_PSFSTREAM)
 - WFS (CACAO_WFSSTREAM)
 - DM (dmXXdisp)
 These 3 streams must be recorded.
-
 WFS telemetry location:
 CACAO_TELEMETRY_LOGDIR/YYYYMMDD/
 
@@ -50,6 +54,14 @@ function set_logdir() {
 }
 
 
+# working directory
+#
+WDORKIR="wdir_wfsrefoptpsf"
+MSopt+=( "w:workdir:set_workdir:WORKDIR[string]:set work directory" )
+function set_workdir() {
+	WORKDIR="$1"
+}
+
 # PSF crop window
 #
 PSFCROP="*,*"
@@ -57,6 +69,9 @@ MSopt+=( "pc:PSFcrop:set_PSFcrop:PSFcrop[string]:PSF crop window x1,x2\:y1,y2" )
 function set_PSFcrop() {
 	PSFCROP="$1"
 }
+
+
+
 
 
 
@@ -79,7 +94,7 @@ FPScheckOK="OK"
 
 cacaomsglog "START"
 
-WDIR="wdir_wfsrefoptpsf"
+
 
 streamWFSdir=${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
 streamPSFdir=${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
@@ -113,8 +128,9 @@ function processcube()
 	if [ ! -f ${OUTFILE} ]; then
 milk-all << EOF
 loadfits "${INFILE}[$3,*]" imc
-loadfits "$1.dark.fits[$3]" imd
-imcd=imc-imd
+readshmim $1.dark
+#loadfits "$1.dark.fits[$3]" imd
+imcd=imc-$1.dark
 saveFITS imcd "${OUTFILE}"
 listim
 exitCLI
@@ -123,16 +139,18 @@ EOF
 }
 
 
+# no processing, so we can use sym link to save space
+#
 function noprocesscube()
 {
 	PTAG=""
 	INFILE="${LOGDIR}/${UTDAY}/$1/$2.fits"
-	OUTFILE=${UTDAY}/$1/$2${PTAG}.fits
+	OUTFILE="${UTDAY}/$1/$2${PTAG}.fits"
 	mkdir -p ${UTDAY}/$1
 	echo "noProcessing $INFILE -> $OUTFILE"
 
 	if [ ! -f ${OUTFILE} ]; then
-	cp ${INFILE} ${OUTFILE}
+	ln -s ${INFILE} ${OUTFILE}
 	fi
 }
 
@@ -142,8 +160,8 @@ function noprocesscube()
 
 echo "WFSdir = ${streamWFSdir}"
 
-mkdir -p ${WDIR}
-cd ${WDIR}
+mkdir -p ${WORKDIR}
+cd ${WORKDIR}
 
 iter=0
 NBiter=100
@@ -349,6 +367,9 @@ cp dmrefopt.fits opt-${TIMESTART}
 cp psf_sorted.fits opt-${TIMESTART}
 cp wfs_sorted.fits opt-${TIMESTART}
 cp dm_sorted.fits opt-${TIMESTART}
+
+rm -f opt-latest
+ln -s opt-${TIMESTART} opt-latest
 
 
 cd ..
