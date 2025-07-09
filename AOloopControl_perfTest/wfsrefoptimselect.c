@@ -180,7 +180,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
             }
             psfvalue[frame] = total;
 
-            printf("%5d   %12.9f\n", frame, total);
+            printf("%5d   %g\n", frame, total);
         }
         break;
 
@@ -196,7 +196,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
             }
             psfvalue[frame] = -total;
 
-            printf("%5d   %12.9f\n", frame, -total);
+            printf("%5d   %g\n", frame, -total);
         }
         break;
 
@@ -219,7 +219,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
             double fluxconc = totalpow / pow(total, selnorm_powerlaw);
             psfvalue[frame] = fluxconc;
 
-            printf("%5d   %12.9f\n", frame, fluxconc);
+            printf("%5d   %g\n", frame, fluxconc);
         }
         break;
 
@@ -377,7 +377,7 @@ static errno_t compute_function()
     IMGID indmimg = mkIMGID_from_name(dminput);
     resolveIMGID(&indmimg, ERRMODE_ABORT);
 
-    int optmode = OPTMODE_MAXN;
+
 
     DEBUG_TRACE_FSTART();
 
@@ -388,7 +388,7 @@ static errno_t compute_function()
             inpsfimg,
             inwfsimg,
             indmimg,
-            optmode,
+            *optmode,
             *selnormplaw
         );
     }
