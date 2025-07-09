@@ -414,6 +414,11 @@ static errno_t processTimingFile(
     double* timingarray
 )
 {
+
+    printf("Processing File %s -> %s\n", inTimingfname, outTimingfname);
+    fflush(stdout);
+
+
     FILE *fp;
     if((fp = fopen(inTimingfname, "r")) == NULL)
     {
@@ -636,6 +641,9 @@ static errno_t processTimingFile(
             }
         }
     }
+
+    printf("Processing txt file done\n");
+    fflush(stdout);
 
     return RETURN_SUCCESS;
 }
