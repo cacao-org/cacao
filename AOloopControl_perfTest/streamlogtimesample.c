@@ -670,12 +670,11 @@ static errno_t compute_function()
 
 
 
-
-
-
-
+    // loop over streams
     for(int sindex=0; sindex < 4; sindex++)
     {
+
+        // skip steams is name = null
         if ( strcmp(sname[sindex], "null") )
         {
             printf("STREAM %d : %s\n", sindex, sname[sindex]);
@@ -710,6 +709,8 @@ static errno_t compute_function()
 
 
 
+            // Find timing files overlapping with time interval
+            //
             int NBdatFiles = 0;
 
             DIR *d0;
@@ -956,20 +957,22 @@ static errno_t compute_function()
                 }
 
 
-                printf("datfile[idatfile].cnt = %ld\n", datfile[idatfile].cnt);
-                printf("frameinmin = %ld\n", frameinmin);
-                printf("frameinmax = %ld\n", frameinmax);
-
+                // increments if input frame falls withing output cube
+                long NBinframeOK = 0;
                 for ( long framein=0; framein < datfile[idatfile].cnt; framein++)
                 {
+                    // Unix times
                     double inframetimestart = (tarrayin[framein] - dtin) - *slatency[sindex];
                     double inframetimeend   = (tarrayin[framein]) - *slatency[sindex];
 
+                    // remap timing to frame index
                     double findexframestart = (inframetimestart - outtimestart)/(*timingdt);
                     double findexframeend   = (inframetimeend   - outtimestart)/(*timingdt);
 
+                    // if frame falls within output cube
                     if((findexframeend > 0) && (findexframestart < zsize))
                     {
+                        NBinframeOK++;
                         //printf("input file %3d frame %4ld maps to output frame range [%f - %f]\n",
                         //       idatfile, framein, findexframestart, findexframeend);
                         long frameout0 = (long) (findexframestart);
@@ -1021,6 +1024,7 @@ static errno_t compute_function()
                 maxNBcmd = cmdindex;
                 free(tarrayin);
 
+                printf("NBinframeOK = %ld\n", NBinframeOK);
                 printf("datfile[idatfile].cnt = %ld\n", datfile[idatfile].cnt);
                 printf("frameinmin = %ld\n", frameinmin);
                 printf("frameinmax = %ld\n", frameinmax);
