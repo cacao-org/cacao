@@ -325,11 +325,11 @@ if [ "$vOK" = "1" ]; then
 
 
 # PROCESS PSF FILES
-readarray -d '' filearray < <(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTAR -name \"*.txt\" -print0)
+readarray -d '' filearray < <(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name \"*.txt\" -print0)
 
 for i in "${filearray[@]}"
 do
-   echo "$i"
+   echo "FILE : $i"
    # or do whatever with individual element of the array
 done
 sleep 10
