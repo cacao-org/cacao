@@ -56,7 +56,7 @@ function set_logdir() {
 
 # working directory
 #
-WDORKIR="wdir_wfsrefoptpsf"
+WORKDIR="wdir_wfsrefoptpsf"
 MSopt+=( "w:workdir:set_workdir:WORKDIR[string]:set work directory" )
 function set_workdir() {
 	WORKDIR="$1"
@@ -165,7 +165,7 @@ function noprocesscube()
 
 # find last timing files in telemetry directories
 
-echo "WFSdir = ${streamWFSdir}"
+echo "WORKDIR = ${streamWFSdir}"
 
 mkdir -p ${WORKDIR}
 cd ${WORKDIR}
