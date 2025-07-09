@@ -15,8 +15,8 @@ sname.dark
 TELEMETRY
 Processes filesystem telemetry:
 - PSF (CACAO_PSFSTREAM)
-- WFS (CACAO_WFSSTREAM)
-- DM (dmXXdisp)
+- WFS (CACAO_WFSSTREAM) (optional)
+- DM (dmXXdisp)         (optional)
 These 3 streams must be recorded.
 WFS telemetry location:
 CACAO_TELEMETRY_LOGDIR/YYYYMMDD/
@@ -70,7 +70,13 @@ function set_PSFcrop() {
 	PSFCROP="$1"
 }
 
-
+# Wait time between scans
+#
+TSCANWAIT=2.0
+MSopt+=( "w:tscanwait:set_TSCANWAIT:TSCANWAIT[float]:Wait time between filesystem scans" )
+function set_TSCANWAIT() {
+	TSCANWAIT="$1"
+}
 
 
 
@@ -95,16 +101,17 @@ FPScheckOK="OK"
 cacaomsglog "START"
 
 
+streamPSFdir=${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
 
 streamWFSdir=${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
-streamPSFdir=${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
 streamDMdir=${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp
 
 
 EXITSTATUS=0
 
-checkDir ${streamWFSdir}
 checkDir ${streamPSFdir}
+
+checkDir ${streamWFSdir}
 checkDir ${streamDMdir}
 
 if [ ${EXITSTATUS} = 1 ]; then
@@ -173,7 +180,7 @@ while [ ${iter} -ne ${NBiter} ] ; do
 
 
 set +e
-# allow for error as timing files are either .dat or .txt, not both
+# allow for either .dat or .txt, not both
 ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFileWFS=$( ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last WFS file = ${lastLogFileWFS}"
@@ -202,10 +209,12 @@ echo "TIME : ${TIMESTART} + ${TSPAN} -> ${TIMEEND} =============================
 
 
 
+# SCANNING FOR FILES
+#
+
 # vOK is 1 if files need to be processed
 # 0 if no input files to be processed
 vOK="1"
-
 
 
 
@@ -237,6 +246,8 @@ if [ "${lastLogTimeDM}" -lt "${TIMEEND}" ]; then
 	echo "last DM has not reached time end yet!"
 	echo "${lastLogTimeDM} < ${TIMEEND}"
 fi
+
+
 
 
 
@@ -354,7 +365,10 @@ iter=${NBiter}
 fi
 
 
-sleep 2.0
+echo "Required files not found (yet), will scan again in $TSCANWAIT sec"
+echo ""
+echo ""
+sleep $TSCANWAIT
 
 done
 
