@@ -219,7 +219,7 @@ if [ "${lastLogTime}" -gt "${TIMEEND}" ]; then
 else
 	dirTelemetryOK=0
 	echo "	last entry has not reached time end yet! $TIMEEND  $lastLogTime"
-	let "timeleft = TIMEEND - lastLogTime"
+	let "timeleft = TIMEEND - lastLogTime" || :
 	echo "timeleft = $timeleft"
 	echo "	  Telemetry NOT OK: ${lastLogTime} < ${TIMEEND}"
 	echo "    Missing $timeleft sec"
