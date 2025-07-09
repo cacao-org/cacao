@@ -1093,7 +1093,7 @@ static errno_t compute_function()
 
                             printf("mapping slice %5ld/%5d (%d x %d) to %5ld/%5ld (%d x %d)\n",
                                    mapping_orig[cmdindex], zsizein, data.image[IDc].md->size[0], data.image[IDc].md->size[1],
-                                   mapping_dest[cmdindex], zsizeout, imgout.im->md->size[0], imgout.im->md->size[2] );
+                                   mapping_dest[cmdindex], zsizeout, imgout.im->md->size[0], imgout.im->md->size[1] );
 
                         //printf("CMD %4ld / %4ld : %3ld -> %3ld\n", cmdindex, maxNBcmd, mapping_orig[cmdindex], mapping_dest[cmdindex]);
 
@@ -1201,6 +1201,8 @@ static errno_t compute_function()
 
 
                     }
+
+                    list_image_ID();
 
                     printf("Removing image im0C\n");
                     fflush(stdout);
