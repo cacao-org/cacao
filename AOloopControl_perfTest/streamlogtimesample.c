@@ -619,6 +619,8 @@ static errno_t processTimingFile(
             datfile.cnt  = cnt;
             strcpy(datfile.name, fnamestring);
 
+            printf("Writing summary\n");
+            fflush(stdout);
 
             FILE *fpout;
             if((fpout = fopen(outTimingfname, "w")) == NULL)
