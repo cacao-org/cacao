@@ -1019,6 +1019,10 @@ static errno_t compute_function()
                 free(tarrayin);
 
 
+                printf("frameinmin = %ld\n", frameinmin);
+                printf("frameinmax = %ld\n", frameinmax);
+
+
 
                 // RUN MAPPING COMMANDS
                 //
