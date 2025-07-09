@@ -73,7 +73,7 @@ function set_PSFcrop() {
 # Wait time between scans
 #
 TSCANWAIT=2.0
-MSopt+=( "w:tscanwait:set_TSCANWAIT:TSCANWAIT[float]:Wait time between filesystem scans" )
+MSopt+=( "tsw:tscanwait:set_TSCANWAIT:TSCANWAIT[float]:Wait time between filesystem scans" )
 function set_TSCANWAIT() {
 	TSCANWAIT="$1"
 }
