@@ -169,6 +169,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
     switch (optmode) {
 
     case OPTMODE_MAXF:
+        printf("OPTMODE: Max Flux\n");
         for(uint32_t frame=0; frame < zsize; frame++)
         {
             double total = 0.0;
@@ -184,6 +185,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         break;
 
     case OPTMODE_MINF:
+        printf("OPTMODE: Min Flux\n");
         for(uint32_t frame=0; frame < zsize; frame++)
         {
             double total = 0.0;
@@ -199,7 +201,8 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         break;
 
     default:
-        for(uint32_t frame=0; frame < zsize; frame++)
+         printf("OPTMODE: Max norm\n");
+         for(uint32_t frame=0; frame < zsize; frame++)
         {
             double totalpow = 0.0;
             double total = 0.0;
