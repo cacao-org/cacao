@@ -370,11 +370,6 @@ fi
 
 
 
-
-
-echo ${streamname}
-
-
 pname="cacaoaorun300wfsrefwfsoptpsf"
 fifoname="milkCLIfifo.${pname}"
 SF="milkCLIstartup.${pname}"
