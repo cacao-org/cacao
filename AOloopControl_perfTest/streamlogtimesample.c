@@ -1190,11 +1190,16 @@ static errno_t compute_function()
                     delete_image_ID("im0C", DELETE_IMAGE_ERRMODE_WARNING);
                 }
 
+
+                printf("Freeing memory\n");
+                fflush(stdout);
+
                 free(mapping_orig);
                 free(mapping_dest);
                 free(mapping_coeff);
 
-
+                printf("Memory freed\n");
+                fflush(stdout);
 
                 printf("INPUT FRAME RANGE : %ld - %ld\n", frameinmin, frameinmax);
                 printf("===================================\n\n\n");
