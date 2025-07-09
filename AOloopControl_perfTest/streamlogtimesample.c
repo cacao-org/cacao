@@ -158,7 +158,7 @@ long         fpi_lintiming[4];
         CLIARG_ONOFF,\
         ".s"#INDEX"lint",\
         "stream "#INDEX" linearize timing",\
-        "1",\
+        "0",\
         CLIARG_HIDDEN_DEFAULT,\
         (void **) &lintiming[INDEX],\
         &fpi_lintiming[INDEX]\
@@ -975,14 +975,14 @@ static errno_t compute_function()
                     WRITE_FILENAME(fnameTXTout,
                                    "%s.out.txt",
                                    datfile[idatfile].name);
-                    //if(*lintiming[sindex] == 1)
-                    //{
+                    if(*lintiming[sindex] == 1)
+                    {
                         processTimingFile(fnameTXT, fnameTXTout, NULL, PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_LINTIMING|PROCESSTIMINGFLAG_WRITE, tarrayin);
-                   // }
-                    //else
-                   // {
+                    }
+                    else
+                    {
                         processTimingFile(fnameTXT, fnameTXTout, NULL, PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_WRITE, tarrayin);
-                    //}
+                    }
                 }
 
 
