@@ -201,7 +201,7 @@ echo "  No txt file in directory"
 else
 ls $1/*.txt 2> /dev/null | tail -n 1
 lastLogFile=$( ls $1/*.txt 2> /dev/null | tail -n 1 )
-echo "Last PSF file = ${lastLogFile}"
+echo "Last file = ${lastLogFile}"
 cp $lastLogFile _lastTelemetryFile
 fi
 else
@@ -218,8 +218,9 @@ if [ "${lastLogTime}" -gt "${TIMEEND}" ]; then
 	echo "  Telemetry OK       : "${lastLogTime} > ${TIMEEND}""
 else
 	dirTelemetryOK=0
-	echo "	last entry has not reached time end yet!"
+	echo "	last entry has not reached time end yet! $TIMEEND  $lastLogTime"
 	let "timeleft = TIMEEND - lastLogTime"
+	echo "timeleft = $timeleft"
 	echo "	  Telemetry NOT OK: ${lastLogTime} < ${TIMEEND}"
 	echo "    Missing $timeleft sec"
 fi
