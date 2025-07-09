@@ -327,6 +327,9 @@ if [ "$vOK" = "1" ]; then
 # PROCESS PSF FILES
 readarray -d '' filearray < <(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name \"*.txt\" -print0)
 
+find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt" -print0
+echo "find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name \"*.txt\" -print0"
+
 for i in "${filearray[@]}"
 do
    echo "FILE : $i"
