@@ -158,7 +158,7 @@ long         fpi_lintiming[4];
         CLIARG_ONOFF,\
         ".s"#INDEX"lint",\
         "stream "#INDEX" linearize timing",\
-        "0",\
+        "1",\
         CLIARG_HIDDEN_DEFAULT,\
         (void **) &lintiming[INDEX],\
         &fpi_lintiming[INDEX]\
