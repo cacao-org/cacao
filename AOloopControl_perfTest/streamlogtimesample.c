@@ -414,11 +414,6 @@ static errno_t processTimingFile(
     double* timingarray
 )
 {
-
-    printf("Processing File %s -> %s\n", inTimingfname, outTimingfname);
-    fflush(stdout);
-
-
     FILE *fp;
     if((fp = fopen(inTimingfname, "r")) == NULL)
     {
@@ -527,9 +522,6 @@ static errno_t processTimingFile(
         }
         fclose(fp);
 
-        printf("Read scan completed\n");
-        fflush(stdout);
-
 
         if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LOAD)
         {
@@ -620,9 +612,6 @@ static errno_t processTimingFile(
         // write timing summary file
         if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_WRITE)
         {
-            printf("Compile summary\n");
-            fflush(stdout);
-
             StreamDataFile datfile;
 
             datfile.tstart = tfirst;
@@ -630,14 +619,7 @@ static errno_t processTimingFile(
             datfile.tend = tlast;
             datfile.cnt0end = cnt0last;
             datfile.cnt  = cnt;
-
-            printf("Writing string %s\n", fnamestring);
-            fflush(stdout);
-
             strcpy(datfile.name, fnamestring);
-
-            printf("Writing summary\n");
-            fflush(stdout);
 
             FILE *fpout;
             if((fpout = fopen(outTimingfname, "w")) == NULL)
@@ -661,8 +643,6 @@ static errno_t processTimingFile(
         }
     }
 
-    printf("Processing txt file done\n");
-    fflush(stdout);
 
     return RETURN_SUCCESS;
 }

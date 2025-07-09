@@ -21,7 +21,9 @@
 
 
 
-
+#define OPTMODE_MAXNORM 1
+#define OPTMODE_MAXTOT 2
+#define OPTMODE_MINTOT 3
 
 
 
@@ -34,6 +36,8 @@ static char *selinput;
 static char *wfsinput;
 
 static char *dminput;
+
+static char *optmode;
 
 static float *selnormplaw;
 static long      fpi_selnormplaw = -1;
@@ -66,6 +70,15 @@ static CLICMDARGDEF farg[] = {
         "dmim",
         CLIARG_VISIBLE_DEFAULT,
         (void **) &dminput,
+        NULL
+    },
+    {
+        CLIARG_STR,
+        ".optmode",
+        "maxnorm, maxtot, mintot",
+        "norm",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &optmode,
         NULL
     },
     {
@@ -130,6 +143,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
     IMGID psfimg,
     IMGID wfsimg,
     IMGID dmimg,
+    int optmode,
     float selnorm_powerlaw
 )
 {
@@ -150,41 +164,80 @@ static errno_t WFSref_optimizeWFS_PSFselect(
     uint64_t psfxysize = psfxsize * psfysize;
     uint32_t zsize  = psfimg.md->size[2];
 
-    double *psfnorm = (double *) malloc(sizeof(double)*zsize);
+    double *psfvalue = (double *) malloc(sizeof(double)*zsize);
 
-    for(uint32_t frame=0; frame < zsize; frame++)
-    {
-        double totalpow = 0.0;
-        double total = 0.0;
-        for(uint64_t ii = 0; ii < psfxysize; ii++)
+    switch (optmode) {
+
+    case OPTMODE_MAXTOT:
+        for(uint32_t frame=0; frame < zsize; frame++)
         {
-            double pval = psfimg.im->array.F[psfxysize*frame+ii];
-            if(pval > 0.0)
+            double total = 0.0;
+            for(uint64_t ii = 0; ii < psfxysize; ii++)
             {
-                totalpow += pow(pval, selnorm_powerlaw);
+                double pval = psfimg.im->array.F[psfxysize*frame+ii];
                 total += pval;
             }
+            psfvalue[frame] = total;
+
+            printf("%5d   %12.9f\n", frame, total);
         }
+        break;
 
-        double fluxconc = totalpow / pow(total, selnorm_powerlaw);
-        psfnorm[frame] = fluxconc;
+    case OPTMODE_MINTOT:
+        for(uint32_t frame=0; frame < zsize; frame++)
+        {
+            double total = 0.0;
+            for(uint64_t ii = 0; ii < psfxysize; ii++)
+            {
+                double pval = psfimg.im->array.F[psfxysize*frame+ii];
+                total += pval;
+            }
+            psfvalue[frame] = -total;
 
-        printf("%5d   %12.9f\n", frame, fluxconc);
+            printf("%5d   %12.9f\n", frame, -total);
+        }
+        break;
+
+    default:
+        for(uint32_t frame=0; frame < zsize; frame++)
+        {
+            double totalpow = 0.0;
+            double total = 0.0;
+            for(uint64_t ii = 0; ii < psfxysize; ii++)
+            {
+                double pval = psfimg.im->array.F[psfxysize*frame+ii];
+                if(pval > 0.0)
+                {
+                    totalpow += pow(pval, selnorm_powerlaw);
+                    total += pval;
+                }
+            }
+
+            double fluxconc = totalpow / pow(total, selnorm_powerlaw);
+            psfvalue[frame] = fluxconc;
+
+            printf("%5d   %12.9f\n", frame, fluxconc);
+        }
+        break;
+
     }
 
 
-    // Create output image if needed
-    //imcreateIMGID(outimg);
 
 
-    // sort images according to psf norm
+
+
+
+
+
+    // sort images according to optimization metric
     //
     long *imindex = (long *) malloc(sizeof(long)*zsize);
     for(long i=0; i<zsize; i++) {
         imindex[i] = i;
     }
 
-    quick_sort2l(psfnorm, imindex, zsize);
+    quick_sort2l(psfvalue, imindex, zsize);
 
 
     // create 3D outputs
@@ -196,7 +249,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
     for(uint32_t frame=0; frame < zsize; frame++)
     {
         long slice = imindex[zsize-frame-1];
-        printf("frame %5d  slice %5ld   val %11.9f\n", frame, slice, psfnorm[frame]);
+        printf("frame %5d  slice %5ld   val %11.9f\n", frame, slice, psfvalue[frame]);
 
         char *ptr0 = (char*) psfimg.im->array.F;
         ptr0 += sizeof(float)*psfxysize*slice;
@@ -299,7 +352,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
     }
 
 
-    free(psfnorm);
+    free(psfvalue);
     free(imindex);
 
     DEBUG_TRACE_FEXIT();
@@ -321,7 +374,7 @@ static errno_t compute_function()
     IMGID indmimg = mkIMGID_from_name(dminput);
     resolveIMGID(&indmimg, ERRMODE_ABORT);
 
-
+    int optmode = OPTMODE_MAXNORM;
 
     DEBUG_TRACE_FSTART();
 
@@ -332,6 +385,7 @@ static errno_t compute_function()
             inpsfimg,
             inwfsimg,
             indmimg,
+            optmode,
             *selnormplaw
         );
     }
