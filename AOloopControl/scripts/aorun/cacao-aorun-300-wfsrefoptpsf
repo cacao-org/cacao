@@ -207,6 +207,7 @@ fi
 
 
 
+let "TIMEEND = TIMESTART + TSPAN"
 
 
 
@@ -227,18 +228,25 @@ while [ ${iter} -ne ${NBiter} ] ; do
 	let iter++ || :
 
 
-set +e
+#set +e
 
+echo "TIME INTERVAL : ${TIMESTART} --> ${TIMEEND} ====================================="
 
 dirTelemetryOK=0
 scantxtfiles ${streamPSFdir} _lastlogfilePSF
+echo "  PSF Telemetry :  $dirTelemetryOK"
+echo ""
+
 
 dirTelemetryOK=0
 scantxtfiles ${streamWFSdir} _lastlogfileWFS
+echo "  WFS Telemetry :  $dirTelemetryOK"
+echo ""
 
 dirTelemetryOK=0
 scantxtfiles ${streamDMdir} _lastlogfileDM
-
+echo "  DM  Telemetry :  $dirTelemetryOK"
+echo ""
 
 #rm -f _lastlogfilePSF
 #if [ -d ${streamPSFdir} ]; then
@@ -291,12 +299,10 @@ scantxtfiles ${streamDMdir} _lastlogfileDM
 
 
 
-set -e
+#set -e
 
 
-let "TIMEEND = TIMESTART + TSPAN"
 
-echo "TIME : ${TIMESTART} + ${TSPAN} -> ${TIMEEND} ====================================="
 
 
 
