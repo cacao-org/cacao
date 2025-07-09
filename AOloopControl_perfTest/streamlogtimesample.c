@@ -527,11 +527,17 @@ static errno_t processTimingFile(
         }
         fclose(fp);
 
+        printf("Read scan completed\n");
+        fflush(stdout);
+
+
         if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LOAD)
         {
             if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LINTIMING)
             {
                 // linear extrapolation
+                printf("Apply linear extrapolation\n");
+                fflush(stdout);
 
                 // average first and last 1/4 point
                 double ave0_cnt0;
