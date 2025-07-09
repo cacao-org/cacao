@@ -213,7 +213,8 @@ if [ -f "_lastTelemetryFile" ]; then
 lastLogTime=$( cat _lastTelemetryFile | tail -n 1 | awk '{print int($4)}' )
 echo "  Last log at $lastLogTime"
 
-if [ "${lastLogTime}" -gt "${TIMEEND}" ]; then
+let "lastLogTime1 = lastLogTime - 1" # add 1 sec for margin
+if [ "${lastLogTime1}" -gt "${TIMEEND}" ]; then
 	dirTelemetryOK=1
 	echo "  Telemetry OK       : "${lastLogTime} > ${TIMEEND}""
 else
@@ -311,9 +312,11 @@ for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt; do
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
 	#echo "   time : $filetstart -> $filetend"
+	let "filetstart1 = filetstart - 1"
+	let "filetend1 = filetend + 1"
 
-	if (( $(echo "$filetstart < $TIMEEND" |bc -l) )); then
-	if (( $(echo "$filetend > $TIMESTART" |bc -l) )); then
+	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
 		fname1=${fname%.txt}
 		fname2=${fname1##*/}
 		echo "PROCESSING ${fname2}"
@@ -333,9 +336,11 @@ for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt; do
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
 	#echo "   time : $filetstart -> $filetend"
+	let "filetstart1 = filetstart - 1"
+	let "filetend1 = filetend + 1"
 
-	if (( $(echo "$filetstart < $TIMEEND" |bc -l) )); then
-	if (( $(echo "$filetend > $TIMESTART" |bc -l) )); then
+	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
 		fname1=${fname%.txt}
 		fname2=${fname1##*/}
 		echo "PROCESSING ${fname2}"
@@ -355,9 +360,11 @@ for fname in ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp/*.txt; do
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
 	#echo "   time : $filetstart -> $filetend"
+	let "filetstart1 = filetstart - 1"
+	let "filetend1 = filetend + 1"
 
-	if (( $(echo "$filetstart < $TIMEEND" |bc -l) )); then
-	if (( $(echo "$filetend > $TIMESTART" |bc -l) )); then
+	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
 		fname1=${fname%.txt}
 		fname2=${fname1##*/}
 		echo "PROCESSING ${fname2}"
