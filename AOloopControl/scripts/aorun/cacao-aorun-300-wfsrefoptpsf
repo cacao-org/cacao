@@ -329,7 +329,7 @@ if [ "$vOK" = "1" ]; then
 # file list
 mkdir -p ./${UTDAY}/${CACAO_PSFSTREAM}/
 #for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt
-for i in $(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+for fname in $(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
 do
 	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
@@ -355,7 +355,7 @@ if [ "${PROCESSWFS}" -eq "1" ]; then
 # PROCESS WFS FILES
 mkdir -p ./${UTDAY}/${CACAO_WFSSTREAM}/
 #for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt
-for i in $(find ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+for fname in $(find ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
 do
 	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
@@ -381,7 +381,7 @@ if [ "${PROCESSDM}" -eq "1" ]; then
 # PROCESS DM FILES
 mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
 #for fname in ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp/*.txt
-for i in $(find ${LOGDIR}/${UTDAY}dm${CACAO_DMINDEX}disp -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+for fname in $(find ${LOGDIR}/${UTDAY}dm${CACAO_DMINDEX}disp -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
 do
 	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
