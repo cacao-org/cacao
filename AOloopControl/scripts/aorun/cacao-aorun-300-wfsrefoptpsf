@@ -313,7 +313,7 @@ fi
 fi
 
 
-
+COMPSUCCESS=0
 
 if [ "$vOK" = "1" ]; then
 
@@ -325,7 +325,7 @@ if [ "$vOK" = "1" ]; then
 # file list
 mkdir -p ./${UTDAY}/${CACAO_PSFSTREAM}/
 for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt; do
-	#echo "scanning file $fname"
+	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
 	#echo "   time : $filetstart -> $filetend"
@@ -349,7 +349,7 @@ if [ "${PROCESSWFS}" -eq "1" ]; then
 # PROCESS WFS FILES
 mkdir -p ./${UTDAY}/${CACAO_WFSSTREAM}/
 for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt; do
-	#echo "scanning file $fname"
+	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
 	#echo "   time : $filetstart -> $filetend"
@@ -373,7 +373,7 @@ if [ "${PROCESSDM}" -eq "1" ]; then
 # PROCESS DM FILES
 mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
 for fname in ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp/*.txt; do
-	#echo "scanning file $fname"
+	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
 	#echo "   time : $filetstart -> $filetend"
@@ -494,11 +494,15 @@ rm ${SF}
 
 # exit loop
 iter=${NBiter}
+COMPSUCCESS=1
+
 fi
 
+if [ "${COMPSUCCESS}" -eq "0" ]; then
 echo ""
 echo "Required files not found (yet), will scan again in $TSCANWAIT sec"
 echo ""
+fi
 
 sleep $TSCANWAIT
 
