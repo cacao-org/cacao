@@ -161,7 +161,7 @@ function processcube()
 milk-all << EOF
 loadfits "${INFILE}[$3,*]" imc
 readshmim $1.dark
-#loadfits "$1.dark.fits[$3]" imd
+loadfits "$1.dark.fits[$3]" imd
 imcd=imc-$1.dark
 saveFITS imcd "${OUTFILE}"
 listim
@@ -243,6 +243,12 @@ echo "WORKDIR = ${streamWFSdir}"
 
 mkdir -p ${WORKDIR}
 cd ${WORKDIR}
+
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+milk-shm2FITS ${CACAO_WFSSTREAM}.dark ${CACAO_WFSSTREAM}.dark.fits
+fi
+
 
 iter=0
 NBiter=1000
