@@ -160,9 +160,9 @@ function processcube()
 	if [ ! -f ${OUTFILE} ]; then
 milk-all << EOF
 loadfits "${INFILE}[$3,*]" imc
-readshmim $1.dark
+#readshmim $1.dark
 loadfits "$1.dark.fits[$3]" imd
-imcd=imc-$1.dark
+imcd=imc-imd
 saveFITS imcd "${OUTFILE}"
 listim
 exitCLI
