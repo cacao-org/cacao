@@ -706,8 +706,7 @@ static errno_t compute_function()
             printf("Scanning directory : %s\n", datadirstream);
 
             StreamDataFile *datfile;
-            datfile =
-                (StreamDataFile *) malloc(sizeof(StreamDataFile) * MaxNBdatFiles);
+            datfile = (StreamDataFile *) malloc(sizeof(StreamDataFile) * MaxNBdatFiles);
             if(datfile == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
@@ -1229,8 +1228,12 @@ static errno_t compute_function()
                        outframearray[tstep].etimesec);
             }
 
-
+            printf("Free outframearray\n");
+            fflush(stdout);
             free(outframearray);
+
+            printf("Free datfile\n");
+            fflush(stdout);
             free(datfile);
 
         }
