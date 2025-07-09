@@ -91,7 +91,7 @@ function set_nowfs() {
 #
 PROCESSDM=1
 MSopt+=( "nodm:nodm:set_nodm::do not process DM" )
-function set_nowfs() {
+function set_nodm() {
 	PROCESSDM=0
 }
 
