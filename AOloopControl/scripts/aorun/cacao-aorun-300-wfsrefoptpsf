@@ -247,7 +247,7 @@ NBiter=1000
 
 while [ ${iter} -ne ${NBiter} ] ; do
 	echo ""
-	echo "ITERATION ${iter} / ${NBITER}"
+	echo "ITERATION ${iter} / ${NBiter}"
 	let iter++ || :
 
 
