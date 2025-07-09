@@ -464,11 +464,11 @@ fi
 
 
 if [ "$OPTMODE" = "maxf" ]; then
-echo "ccacaopt.wfsroptsel .optmode 2"
+echo "ccacaopt.wfsroptsel .optmode 2"  >> $SF
 elif [ "$OPTMODE" = "minf" ]; then
-echo "ccacaopt.wfsroptsel .optmode 3"
+echo "ccacaopt.wfsroptsel .optmode 3"  >> $SF
 else
-echo "ccacaopt.wfsroptsel .optmode 1"
+echo "ccacaopt.wfsroptsel .optmode 1"  >> $SF
 fi
 
 echo "cacaopt.wfsroptsel .selnormplaw 4.0" >> $SF
