@@ -472,6 +472,7 @@ echo "ccacaopt.wfsroptsel .optmode 1"  >> $SF
 fi
 
 echo "cacaopt.wfsroptsel .selnormplaw 4.0" >> $SF
+echo "cacaopt.wfsroptsel ?" >> EOF
 echo "listim" >> $SF
 echo "cacaopt.wfsroptsel psfimc $wfsimc $dmimc" >> $SF
 
