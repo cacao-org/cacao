@@ -187,7 +187,7 @@ streamPSFdirOK=0
 rm -f _lastlogfilePSF
 if [ -d ${streamPSFdir} ]; then
 echo "PSFdir = ${streamPSFdir}"
-if [ -z "$( ls -A ${streamPSFdir}/*.txt )" ]; then
+if [ -z "$( ls -A ${streamPSFdir}/*.txt 2> /dev/null )" ]; then
 echo "No txt file in directory"
 else
 ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
@@ -204,7 +204,7 @@ streamWFSdirOK=0
 rm -f _lastlogfileWFS
 if [ -d ${streamWFSdir} ]; then
 echo "PSFdir = ${streamWFSdir}"
-if [ -z "$( ls -A ${streamWFSdir}/*.txt )" ]; then
+if [ -z "$( ls -A ${streamWFSdir}/*.txt 2> /dev/null )" ]; then
 echo "No txt file in directory"
 else
 ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
@@ -221,7 +221,7 @@ streamDMdirOK=0
 rm -f _lastlogfileDM
 if [ -d ${streamDMdir} ]; then
 echo "DMdir = ${streamDMdir}"
-if [ -z "$( ls -A ${streamDMdir}/*.txt )" ]; then
+if [ -z "$( ls -A ${streamDMdir}/*.txt 2> /dev/null )" ]; then
 echo "No txt file in directory"
 else
 ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1
