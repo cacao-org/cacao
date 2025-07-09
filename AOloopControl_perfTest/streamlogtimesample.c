@@ -1006,7 +1006,7 @@ static errno_t compute_function()
                             }
                             double expfrac = iend - istart;
 
-                            if( frameout < zsizeout)
+                            if((frameout>-1)&&(frameout < zsizeout))
                             {
                                 printf("  [%3d / %3d]  %4ld/%4ld  -> %4ld/%4ld    %4ld:%4ld    %8.6f  \n",
                                        idatfile,
