@@ -673,6 +673,7 @@ static errno_t compute_function()
     // loop over streams
     for(int sindex=0; sindex < 4; sindex++)
     {
+        int ouputimginit = 0;
 
         // skip steams is name = null
         if ( strcmp(sname[sindex], "null") )
@@ -1055,14 +1056,15 @@ static errno_t compute_function()
 
                     uint32_t xsize = data.image[IDc].md->size[0];
                     uint32_t ysize = data.image[IDc].md->size[1];
-                    uint32_t zsizein = data.image[IDc].md->size[2];
+                    //uint32_t zsizein = data.image[IDc].md->size[2];
                     uint64_t xysize = xsize;
                     xysize *= ysize;
 
-                    if(idatfile == 0)
+                    if(ouputimginit == 0)
                     {
                         imgout = makeIMGID_3D(sname[sindex], xsize, ysize, zsizeout);
                         createimagefromIMGID(&imgout);
+                        ouputimginit = 1;
                     }
                     printf("Writing to image %s\n", sname[sindex]);
 
@@ -1073,7 +1075,7 @@ static errno_t compute_function()
                     {
                         mapping_orig[cmdindex] -= frameinmin;
 
-                        printf("mapping slice %5ld/%5d to %5ld/%5ld\n", mapping_orig[cmdindex], zsizein, mapping_dest[cmdindex], zsizeout);
+                        //printf("mapping slice %5ld/%5d to %5ld/%5ld\n", mapping_orig[cmdindex], zsizein, mapping_dest[cmdindex], zsizeout);
 
                         //printf("CMD %4ld / %4ld : %3ld -> %3ld\n", cmdindex, maxNBcmd, mapping_orig[cmdindex], mapping_dest[cmdindex]);
 
