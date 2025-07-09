@@ -429,10 +429,10 @@ pname="cacaoaorun300wfsrefwfsoptpsf"
 fifoname="milkCLIfifo.${pname}"
 SF="milkCLIstartup.${pname}"
 
-echo "loadfits \"${CACAO_PSFSTREAM}.sync.fits\" psfimc" >> $SF
+echo "loadfits \"${CACAO_PSFSTREAM}.sync.fits\" psfimc" > $SF
 
 if [ "${PROCESSWFS}" -eq "1" ]; then
-echo "loadfits \"${CACAO_WFSSTREAM}.sync.fits\" wfsimc" > $SF
+echo "loadfits \"${CACAO_WFSSTREAM}.sync.fits\" wfsimc" >> $SF
 wfsimc="wfsimc"
 else
 wfsimc="null"
@@ -446,7 +446,7 @@ dmimc="null"
 fi
 
 echo "cacaopt.wfsroptsel .selnormplaw 4.0" >> $SF
-
+echo "listim" >> $SF
 echo "cacaopt.wfsroptsel psfimc $wfsimc $dmimc" >> $SF
 
 echo "saveFITS psf_sorted \"psf_sorted.fits\"" >> $SF
