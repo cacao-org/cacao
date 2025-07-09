@@ -164,6 +164,38 @@ function noprocesscube()
 }
 
 
+#
+# arg1 : directory
+# arg2 : lastlogfile name. Will contain last txt file if it exists
+#
+function scantxtfiles()
+{
+rm -f $2
+if [ -d $1 ]; then
+echo "scanning directory  $1"
+if [ -z "$( ls -A $1/*.txt 2> /dev/null )" ]; then
+echo "  No txt file in directory"
+else
+ls $1/*.txt 2> /dev/null | tail -n 1
+lastLogFile=$( ls $1/*.txt 2> /dev/null | tail -n 1 )
+echo "Last PSF file = ${lastLogFile}"
+cp $lastLogFile $2
+fi
+else
+echo "Cannot find directory $1"
+fi
+
+}
+
+
+
+
+
+
+
+
+
+
 
 # find last timing files in telemetry directories
 
@@ -183,67 +215,65 @@ while [ ${iter} -ne ${NBiter} ] ; do
 
 set +e
 
-streamPSFdirOK=0
-rm -f _lastlogfilePSF
-if [ -d ${streamPSFdir} ]; then
-echo "PSFdir = ${streamPSFdir}"
-if [ -z "$( ls -A ${streamPSFdir}/*.txt 2> /dev/null )" ]; then
-echo "No txt file in directory"
-else
-ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
-lastLogFilePSF=$( ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
-echo "Last PSF file = ${lastLogFilePSF}"
-cp $lastLogFilePSF _lastlogfilePSF
-fi
-else
-echo "Cannot find directory ${streamPSFdir}"
-fi
 
 
-streamWFSdirOK=0
-rm -f _lastlogfileWFS
-if [ -d ${streamWFSdir} ]; then
-echo "PSFdir = ${streamWFSdir}"
-if [ -z "$( ls -A ${streamWFSdir}/*.txt 2> /dev/null )" ]; then
-echo "No txt file in directory"
-else
-ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
-lastLogFileWFS=$( ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
-echo "Last WFS file = ${lastLogFileWFS}"
-cp $lastLogFileWFS _lastlogfileWFS
-fi
-else
-echo "Cannot find directory ${streamWFSdir}"
-fi
+scantxtfiles ${streamPSFdir} _lastlogfilePSF
+scantxtfiles ${streamWFSdir} _lastlogfileWFS
+scantxtfiles ${streamDMdir} _lastlogfileDM
 
 
-streamDMdirOK=0
-rm -f _lastlogfileDM
-if [ -d ${streamDMdir} ]; then
-echo "DMdir = ${streamDMdir}"
-if [ -z "$( ls -A ${streamDMdir}/*.txt 2> /dev/null )" ]; then
-echo "No txt file in directory"
-else
-ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1
-lastLogFileDM=$( ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1 )
-echo "Last DM file = ${lastLogFileDM}"
-cp $lastLogFileDM _lastlogfileDM
-fi
-else
-echo "Cannot find directory ${streamDMdir}"
-fi
+#rm -f _lastlogfilePSF
+#if [ -d ${streamPSFdir} ]; then
+#echo "PSFdir = ${streamPSFdir}"
+#if [ -z "$( ls -A ${streamPSFdir}/*.txt 2> /dev/null )" ]; then
+#echo "  No txt file in directory"
+#else
+#ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
+#lastLogFilePSF=$( ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
+#echo "Last PSF file = ${lastLogFilePSF}"
+#cp $lastLogFilePSF _lastlogfilePSF
+#fi
+#else
+#echo "Cannot find directory ${streamPSFdir}"
+#fi
+
+
+
+#rm -f _lastlogfileWFS
+#if [ -d ${streamWFSdir} ]; then
+#echo "PSFdir = ${streamWFSdir}"
+#if [ -z "$( ls -A ${streamWFSdir}/*.txt 2> /dev/null )" ]; then
+#echo "  No txt file in directory"
+#else
+#ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
+#lastLogFileWFS=$( ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
+#echo "Last WFS file = ${lastLogFileWFS}"
+#cp $lastLogFileWFS _lastlogfileWFS
+#fi
+#else
+#echo "Cannot find directory ${streamWFSdir}"
+#fi
+
+
+
+#rm -f _lastlogfileDM
+#if [ -d ${streamDMdir} ]; then
+#echo "DMdir = ${streamDMdir}"
+#if [ -z "$( ls -A ${streamDMdir}/*.txt 2> /dev/null )" ]; then
+#echo "  No txt file in directory"
+#else
+#ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1
+#lastLogFileDM=$( ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1 )
+#echo "Last DM file = ${lastLogFileDM}"
+#cp $lastLogFileDM _lastlogfileDM
+#fi
+#else
+#echo "Cannot find directory ${streamDMdir}"
+#fi
 
 
 
 set -e
-
-
-if [ -z "$( ls -A '/path/to/dir' )" ]; then
-   echo "Empty"
-else
-   echo "Not Empty"
-fi
-
 
 
 let "TIMEEND = TIMESTART + TSPAN"
