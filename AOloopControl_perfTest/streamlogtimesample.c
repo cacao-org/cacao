@@ -966,6 +966,9 @@ static errno_t compute_function()
                     double inframetimestart = (tarrayin[framein] - dtin) - *slatency[sindex];
                     double inframetimeend   = (tarrayin[framein]) - *slatency[sindex];
 
+                    printf("%4ld   %.3f\n", framein, tarrayin[framein]);
+                    printf("  inframetimestart/end:  %.3f %.3f\n", inframetimestart, inframetimeend);
+
                     // remap timing to frame index
                     double findexframestart = (inframetimestart - outtimestart)/(*timingdt);
                     double findexframeend   = (inframetimeend   - outtimestart)/(*timingdt);
