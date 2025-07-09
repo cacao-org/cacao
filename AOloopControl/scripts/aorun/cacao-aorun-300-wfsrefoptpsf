@@ -180,24 +180,43 @@ while [ ${iter} -ne ${NBiter} ] ; do
 
 
 set +e
-# allow for either .dat or .txt, not both
-ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
-lastLogFileWFS=$( ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
-echo "Last WFS file = ${lastLogFileWFS}"
-cp $lastLogFileWFS _lastlogfileWFS
 
+streamPSFdirOK=0
+if [ -d ${streamPSFdir} ]; then
 echo "PSFdir = ${streamPSFdir}"
 ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFilePSF=$( ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last PSF file = ${lastLogFilePSF}"
 cp $lastLogFilePSF _lastlogfilePSF
-set -e
+else
+echo "Cannot find directory ${streamPSFdir}"
+fi
 
+
+streamWFSdirOK=0
+if [ -d ${streamWFSdir} ]; then
+ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
+lastLogFileWFS=$( ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
+echo "Last WFS file = ${lastLogFileWFS}"
+cp $lastLogFileWFS _lastlogfileWFS
+else
+echo "Cannot find directory ${streamWFSdir}"
+fi
+
+
+streamDMdirOK=0
+if [ -d ${streamDMdir} ]; then
 echo "DMdir = ${streamDMdir}"
 ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFileDM=$( ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last DM file = ${lastLogFileDM}"
 cp $lastLogFileDM _lastlogfileDM
+else
+echo "Cannot find directory ${streamDMdir}"
+fi
+
+
+
 set -e
 
 
@@ -217,7 +236,7 @@ echo "TIME : ${TIMESTART} + ${TSPAN} -> ${TIMEEND} =============================
 vOK="1"
 
 
-
+if [ -f _lastlogfileWFS ]; then
 lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
 echo "WFS last log at $lastLogTimeWFS"
 
@@ -226,8 +245,11 @@ if [ "${lastLogTimeWFS}" -lt "${TIMEEND}" ]; then
 	echo "last WFS has not reached time end yet!"
 	echo "${lastLogTimeWFS} < ${TIMEEND}"
 fi
+else
+vOK=0
+fi
 
-
+if [ -f _lastlogfilePSF ]; then
 lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
 echo "PSF last log at $lastLogTimePSF"
 
@@ -236,8 +258,11 @@ if [ "${lastLogTimePSF}" -lt "${TIMEEND}" ]; then
 	echo "last PSF has not reached time end yet!"
 	echo "${lastLogTimePSF} < ${TIMEEND}"
 fi
+else
+vOK=0
+fi
 
-
+if [ -f _lastlogfileDM ]; then
 lastLogTimeDM=$( cat _lastlogfileDM | tail -n 1 | awk '{print int($4)}' )
 echo "DM last log at $lastLogTimeDM"
 
@@ -246,7 +271,9 @@ if [ "${lastLogTimeDM}" -lt "${TIMEEND}" ]; then
 	echo "last DM has not reached time end yet!"
 	echo "${lastLogTimeDM} < ${TIMEEND}"
 fi
-
+else
+vOK=0
+fi
 
 
 
