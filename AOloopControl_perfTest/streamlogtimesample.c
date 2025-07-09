@@ -981,11 +981,11 @@ static errno_t compute_function()
                                    datfile[idatfile].name);
                     if(*lintiming[sindex] == 1)
                     {
-                        processTimingFile(fnameTXT, fnameTXTout, NULL, PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_LINTIMING|PROCESSTIMINGFLAG_WRITE, tarrayin);
+                        processTimingFile(fnameTXT, fnameTXTout, sname[sindex], PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_LINTIMING|PROCESSTIMINGFLAG_WRITE, tarrayin);
                     }
                     else
                     {
-                        processTimingFile(fnameTXT, fnameTXTout, NULL, PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_WRITE, tarrayin);
+                        processTimingFile(fnameTXT, fnameTXTout, sname[sindex], PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_WRITE, tarrayin);
                     }
                 }
 
