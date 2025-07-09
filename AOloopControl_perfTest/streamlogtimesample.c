@@ -994,11 +994,12 @@ static errno_t compute_function()
 
                             if( frameout < zsizeout)
                             {
-                                printf("  [%3d / %3d]  %4ld/%4ld  -> %4ld/%4ld    %8.6f  \n",
+                                printf("  [%3d / %3d]  %4ld/%4ld  -> %4ld/%4ld    %4ld:%4ld    %8.6f  \n",
                                        idatfile,
                                        NBdatFiles,
                                        framein, datfile[idatfile].cnt,
                                        frameout, zsizeout,
+                                       frameout0, frameout1,
                                        expfrac);
                                 mapping_orig[cmdindex] = framein;
                                 mapping_dest[cmdindex] = frameout;
