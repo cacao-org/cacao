@@ -326,19 +326,17 @@ if [ "$vOK" = "1" ]; then
 
 # PROCESS PSF FILES
 readarray -d '' filearray < <(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTAR -name \"*.txt\" -print0)
+
 for i in "${filearray[@]}"
 do
    echo "$i"
    # or do whatever with individual element of the array
 done
+sleep 10
 
-
-exit
 # file list
 mkdir -p ./${UTDAY}/${CACAO_PSFSTREAM}/
-#for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt; do
-
-
+for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt; do
 	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
