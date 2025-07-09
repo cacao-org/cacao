@@ -21,6 +21,11 @@ These 3 streams must be recorded.
 WFS telemetry location:
 CACAO_TELEMETRY_LOGDIR/YYYYMMDD/
 
+Optimization modes:
+- maxn : maximize norm (default)
+- maxf : maximize flux
+- minf : minimize flux
+
 By default, timestart for the optimization is current time at script launch.
 Can be overriden with ts option
 
@@ -61,6 +66,16 @@ MSopt+=( "w:workdir:set_workdir:WORKDIR[string]:set work directory" )
 function set_workdir() {
 	WORKDIR="$1"
 }
+
+# Optimization mode
+#
+OPTMODE="maxn"
+MSopt+=( "optm:optmode:set_OPTMODE:OPTMODE[string]:optimization mode (maxn,maxf,minf)" )
+function set_OPTMODE() {
+	OPTMODE="$1"
+}
+
+
 
 # PSF crop window
 #
