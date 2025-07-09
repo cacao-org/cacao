@@ -452,7 +452,6 @@ static errno_t processTimingFile(
         }
 
         long cnt = 0;
-        StreamDataFile datfile;
 
 
         double  cubetimesec, abslogtimesec, absacqtimesec;
@@ -612,12 +611,14 @@ static errno_t processTimingFile(
         // write timing summary file
         if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_WRITE)
         {
+            StreamDataFile datfile;
+
             datfile.tstart = tfirst;
             datfile.cnt0start = cnt0first;
             datfile.tend = tlast;
             datfile.cnt0end = cnt0last;
             datfile.cnt  = cnt;
-            strcpy(datfile.name, fnamestring);
+            //strcpy(datfile.name, fnamestring);
 
             printf("Writing summary\n");
             fflush(stdout);
