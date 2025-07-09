@@ -392,23 +392,12 @@ fi
 
 if [ "${PROCESSDM}" -eq "1" ]; then
 echo "cacaopt.slogtsample .s2name dm${CACAO_DMINDEX}disp" >> $SF
-echo "cacaopt.slogtsample .s2tag """ >> $SF
+echo "cacaopt.slogtsample .s2tag \"\"" >> $SF
 fi
 
 echo "cacaopt.slogtsample ?" >> $SF
 echo "cacaopt.slogtsample ${TIMESTART} ${TIMEEND} ${TINT}" >> $SF
 echo "listim" >> $SF
-
-
-if [ "${PROCESSWFS}" -eq "1" ]; then
-echo "cacaopt.slogtsample .s1name ${CACAO_WFSSTREAM}" >> $SF
-echo "cacaopt.slogtsample .s1tag ".proc"" >> $SF
-fi
-
-if [ "${PROCESSDM}" -eq "1" ]; then
-echo "cacaopt.slogtsample .s2name dm${CACAO_DMINDEX}disp" >> $SF
-echo "cacaopt.slogtsample .s2tag """ >> $SF
-fi
 
 echo "saveFITS ${CACAO_PSFSTREAM} \"${CACAO_PSFSTREAM}.sync.fits\"" >> $SF
 
