@@ -258,14 +258,16 @@ scantxtfiles ${streamPSFdir} _lastlogfilePSF
 echo "  PSF Telemetry :  $dirTelemetryOK"
 echo ""
 
-if [ "${PROCESSWFS}" -eq 1 ]; then
+echo "PROCESSWFS = ${PROCESSWFS}"
+if [ "${PROCESSWFS}" -eq "1" ]; then
 dirTelemetryOK=0
 scantxtfiles ${streamWFSdir} _lastlogfileWFS
 echo "  WFS Telemetry :  $dirTelemetryOK"
 echo ""
 fi
 
-if [ "${PROCESSDM}" -eq 1 ]; then
+echo "PROCESSDM = ${PROCESSDM}"
+if [ "${PROCESSDM}" -eq "1" ]; then
 dirTelemetryOK=0
 scantxtfiles ${streamDMdir} _lastlogfileDM
 echo "  DM  Telemetry :  $dirTelemetryOK"
