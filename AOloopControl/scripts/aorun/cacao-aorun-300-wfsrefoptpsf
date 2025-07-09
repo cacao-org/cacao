@@ -460,6 +460,16 @@ else
 dmimc="null"
 fi
 
+
+if [ "$OPTMODE" = "maxf" ]; then
+echo "ccacaopt.wfsroptsel .optmode 2"
+else
+if [ "$OPTMODE" = "minf" ]; then
+echo "ccacaopt.wfsroptsel .optmode 3"
+else
+echo "ccacaopt.wfsroptsel .optmode 1"
+fi
+
 echo "cacaopt.wfsroptsel .selnormplaw 4.0" >> $SF
 echo "listim" >> $SF
 echo "cacaopt.wfsroptsel psfimc $wfsimc $dmimc" >> $SF

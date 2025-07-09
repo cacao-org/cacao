@@ -21,9 +21,9 @@
 
 
 
-#define OPTMODE_MAXNORM 1
-#define OPTMODE_MAXTOT 2
-#define OPTMODE_MINTOT 3
+#define OPTMODE_MAXN 1
+#define OPTMODE_MAXF 2
+#define OPTMODE_MINF 3
 
 
 
@@ -37,7 +37,7 @@ static char *wfsinput;
 
 static char *dminput;
 
-static char *optmode;
+static uint32_t *optmode;
 
 static float *selnormplaw;
 static long      fpi_selnormplaw = -1;
@@ -73,10 +73,10 @@ static CLICMDARGDEF farg[] = {
         NULL
     },
     {
-        CLIARG_STR,
+        CLIARG_UINT32,
         ".optmode",
-        "maxnorm, maxtot, mintot",
-        "norm",
+        "1 maxn, 2 maxf, 3 minf",
+        "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &optmode,
         NULL
@@ -374,7 +374,7 @@ static errno_t compute_function()
     IMGID indmimg = mkIMGID_from_name(dminput);
     resolveIMGID(&indmimg, ERRMODE_ABORT);
 
-    int optmode = OPTMODE_MAXNORM;
+    int optmode = OPTMODE_MAXN;
 
     DEBUG_TRACE_FSTART();
 
