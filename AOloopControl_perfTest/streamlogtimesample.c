@@ -540,12 +540,12 @@ static errno_t processTimingFile(
                 fflush(stdout);
 
                 // average first and last 1/4 point
-                double ave0_cnt0;
-                double ave1_cnt0;
+                double ave0_cnt0 = 0.0;
+                double ave1_cnt0 = 0.0;
                 long ave0cnt = 0;
 
-                double ave0_time;
-                double ave1_time;
+                double ave0_time = 0.0;
+                double ave1_time = 0.0;
                 long ave1cnt = 0;
 
                 for(long pti=0; pti<cnt; pti++)
