@@ -121,6 +121,8 @@ fi
 
 
 
+
+
 # 1: stream name
 # 2: file name (basename)
 # 3: 2D crop window, "x1:x2,y1:y2", or "*:*"
@@ -182,35 +184,51 @@ while [ ${iter} -ne ${NBiter} ] ; do
 set +e
 
 streamPSFdirOK=0
+rm _lastlogfilePSF
 if [ -d ${streamPSFdir} ]; then
 echo "PSFdir = ${streamPSFdir}"
+if [ -z "$( ls -A ${streamPSFdir}/*.txt )" ]; then
+echo "No txt file in directory"
+else
 ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFilePSF=$( ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last PSF file = ${lastLogFilePSF}"
 cp $lastLogFilePSF _lastlogfilePSF
+fi
 else
 echo "Cannot find directory ${streamPSFdir}"
 fi
 
 
 streamWFSdirOK=0
+rm _lastlogfileWFS
 if [ -d ${streamWFSdir} ]; then
+echo "PSFdir = ${streamWFSdir}"
+if [ -z "$( ls -A ${streamWFSdir}/*.txt )" ]; then
+echo "No txt file in directory"
+else
 ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFileWFS=$( ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last WFS file = ${lastLogFileWFS}"
 cp $lastLogFileWFS _lastlogfileWFS
+fi
 else
 echo "Cannot find directory ${streamWFSdir}"
 fi
 
 
 streamDMdirOK=0
+rm _lastlogfileDM
 if [ -d ${streamDMdir} ]; then
 echo "DMdir = ${streamDMdir}"
+if [ -z "$( ls -A ${streamDMdir}/*.txt )" ]; then
+echo "No txt file in directory"
+else
 ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1
 lastLogFileDM=$( ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1 )
 echo "Last DM file = ${lastLogFileDM}"
 cp $lastLogFileDM _lastlogfileDM
+fi
 else
 echo "Cannot find directory ${streamDMdir}"
 fi
@@ -219,6 +237,12 @@ fi
 
 set -e
 
+
+if [ -z "$( ls -A '/path/to/dir' )" ]; then
+   echo "Empty"
+else
+   echo "Not Empty"
+fi
 
 
 
@@ -236,7 +260,7 @@ echo "TIME : ${TIMESTART} + ${TSPAN} -> ${TIMEEND} =============================
 vOK="1"
 
 
-if [ -f _lastlogfileWFS ]; then
+if [ -f "_lastlogfileWFS" ]; then
 lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
 echo "WFS last log at $lastLogTimeWFS"
 
@@ -249,7 +273,7 @@ else
 vOK=0
 fi
 
-if [ -f _lastlogfilePSF ]; then
+if [ -f "_lastlogfilePSF" ]; then
 lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
 echo "PSF last log at $lastLogTimePSF"
 
@@ -262,7 +286,7 @@ else
 vOK=0
 fi
 
-if [ -f _lastlogfileDM ]; then
+if [ -f "_lastlogfileDM" ]; then
 lastLogTimeDM=$( cat _lastlogfileDM | tail -n 1 | awk '{print int($4)}' )
 echo "DM last log at $lastLogTimeDM"
 
