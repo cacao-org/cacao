@@ -184,7 +184,7 @@ while [ ${iter} -ne ${NBiter} ] ; do
 set +e
 
 streamPSFdirOK=0
-rm _lastlogfilePSF
+rm -f _lastlogfilePSF
 if [ -d ${streamPSFdir} ]; then
 echo "PSFdir = ${streamPSFdir}"
 if [ -z "$( ls -A ${streamPSFdir}/*.txt )" ]; then
@@ -201,7 +201,7 @@ fi
 
 
 streamWFSdirOK=0
-rm _lastlogfileWFS
+rm -f _lastlogfileWFS
 if [ -d ${streamWFSdir} ]; then
 echo "PSFdir = ${streamWFSdir}"
 if [ -z "$( ls -A ${streamWFSdir}/*.txt )" ]; then
@@ -218,7 +218,7 @@ fi
 
 
 streamDMdirOK=0
-rm _lastlogfileDM
+rm -f _lastlogfileDM
 if [ -d ${streamDMdir} ]; then
 echo "DMdir = ${streamDMdir}"
 if [ -z "$( ls -A ${streamDMdir}/*.txt )" ]; then
