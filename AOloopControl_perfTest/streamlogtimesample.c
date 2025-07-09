@@ -947,14 +947,19 @@ static errno_t compute_function()
                 double *tarrayin = (double*) malloc(sizeof(double)*datfile[idatfile].cnt);
 
 
-
-                if(*lintiming[sindex] == 1)
                 {
-                    processTimingFile(fnameTXT, NULL, NULL, PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_LINTIMING, tarrayin);
-                }
-                else
-                {
-                    processTimingFile(fnameTXT, NULL, NULL, PROCESSTIMINGFLAG_LOAD, tarrayin);
+                    char fnameTXTout[STRINGMAXLEN_FULLFILENAME];
+                    WRITE_FILENAME(fnameTXTout,
+                                   "%s.out.txt",
+                                   datfile[idatfile].name);
+                    if(*lintiming[sindex] == 1)
+                    {
+                        processTimingFile(fnameTXT, fnameTXTout, NULL, PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_LINTIMING, tarrayin);
+                    }
+                    else
+                    {
+                        processTimingFile(fnameTXT, fnameTXTout, NULL, PROCESSTIMINGFLAG_LOAD, tarrayin);
+                    }
                 }
 
 
@@ -1080,7 +1085,7 @@ static errno_t compute_function()
                         mapping_orig[cmdindex] -= frameinmin;
                         if((mapping_dest[cmdindex]>-1)&&(mapping_dest[cmdindex]<zsizeout))
 
-                        printf("mapping slice %5ld/%5d to %5ld/%5ld\n", mapping_orig[cmdindex], zsizein, mapping_dest[cmdindex], zsizeout);
+                            printf("mapping slice %5ld/%5d to %5ld/%5ld\n", mapping_orig[cmdindex], zsizein, mapping_dest[cmdindex], zsizeout);
 
                         //printf("CMD %4ld / %4ld : %3ld -> %3ld\n", cmdindex, maxNBcmd, mapping_orig[cmdindex], mapping_dest[cmdindex]);
 
