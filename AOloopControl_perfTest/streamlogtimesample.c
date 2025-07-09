@@ -1064,6 +1064,7 @@ static errno_t compute_function()
                         imgout = makeIMGID_3D(sname[sindex], xsize, ysize, zsizeout);
                         createimagefromIMGID(&imgout);
                     }
+                    printf("Writing to image %s\n", sname[sindex]);
 
 
                     list_image_ID();
