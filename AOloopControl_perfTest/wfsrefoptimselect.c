@@ -196,7 +196,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
     for(uint32_t frame=0; frame < zsize; frame++)
     {
         long slice = imindex[zsize-frame-1];
-        printf("frome %5d  slice %5ld   val %11.9f\n", frame, slice, psfnorm[frame]);
+        printf("frame %5d  slice %5ld   val %11.9f\n", frame, slice, psfnorm[frame]);
 
         char *ptr0 = (char*) psfimg.im->array.F;
         ptr0 += sizeof(float)*psfxysize*slice;

@@ -370,6 +370,10 @@ fi
 
 
 
+rm -f ${CACAO_PSFSTREAM}.sync.fits
+rm -f ${CACAO_WFSSTREAM}.sync.fits
+rm -f dm${CACAO_DMINDEX}disp.sync.fits
+
 
 pname="cacaoaorun300wfsrefwfsoptpsf"
 fifoname="milkCLIfifo.${pname}"
