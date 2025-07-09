@@ -614,9 +614,15 @@ static errno_t processTimingFile(
         free(tarray);
         free(cnt0array);
 
+
+
+
         // write timing summary file
         if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_WRITE)
         {
+            printf("Compile summary\n");
+            fflush(stdout);
+
             StreamDataFile datfile;
 
             datfile.tstart = tfirst;
@@ -624,7 +630,7 @@ static errno_t processTimingFile(
             datfile.tend = tlast;
             datfile.cnt0end = cnt0last;
             datfile.cnt  = cnt;
-            //strcpy(datfile.name, fnamestring);
+            strcpy(datfile.name, fnamestring);
 
             printf("Writing summary\n");
             fflush(stdout);
