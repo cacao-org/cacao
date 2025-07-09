@@ -168,7 +168,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 
     switch (optmode) {
 
-    case OPTMODE_MAXTOT:
+    case OPTMODE_MAXF:
         for(uint32_t frame=0; frame < zsize; frame++)
         {
             double total = 0.0;
@@ -183,7 +183,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         }
         break;
 
-    case OPTMODE_MINTOT:
+    case OPTMODE_MINF:
         for(uint32_t frame=0; frame < zsize; frame++)
         {
             double total = 0.0;
