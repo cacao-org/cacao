@@ -166,11 +166,11 @@ function noprocesscube()
 
 #
 # arg1 : directory
-# arg2 : lastlogfile name. Will contain last txt file if it exists
+# updates dirTelemetryOK variable
 #
 function scantxtfiles()
 {
-rm -f $2
+rm -f _lastTelemetryFile
 if [ -d $1 ]; then
 echo "scanning directory  $1"
 if [ -z "$( ls -A $1/*.txt 2> /dev/null )" ]; then
@@ -179,12 +179,26 @@ else
 ls $1/*.txt 2> /dev/null | tail -n 1
 lastLogFile=$( ls $1/*.txt 2> /dev/null | tail -n 1 )
 echo "Last PSF file = ${lastLogFile}"
-cp $lastLogFile $2
+cp $lastLogFile _lastTelemetryFile
 fi
 else
 echo "Cannot find directory $1"
 fi
 
+
+if [ -f "_lastTelemetryFile" ]; then
+lastLogTime=$( cat _lastTelemetryFile | tail -n 1 | awk '{print int($4)}' )
+echo "  Last log at $lastLogTime"
+
+if [ "${lastLogTime}" -gt "${TIMEEND}" ]; then
+	dirTelemetryOK=1
+	echo "  Telemetry OK       : "${lastLogTime} > ${TIMEEND}""
+else
+	dirTelemetryOK=0
+	echo "	last entry has not reached time end yet!"
+	echo "	  Telemetry NOT OK: ${lastLogTime} < ${TIMEEND}"
+fi
+fi
 }
 
 
@@ -216,9 +230,13 @@ while [ ${iter} -ne ${NBiter} ] ; do
 set +e
 
 
-
+dirTelemetryOK=0
 scantxtfiles ${streamPSFdir} _lastlogfilePSF
+
+dirTelemetryOK=0
 scantxtfiles ${streamWFSdir} _lastlogfileWFS
+
+dirTelemetryOK=0
 scantxtfiles ${streamDMdir} _lastlogfileDM
 
 
@@ -287,51 +305,51 @@ echo "TIME : ${TIMESTART} + ${TSPAN} -> ${TIMEEND} =============================
 
 # vOK is 1 if files need to be processed
 # 0 if no input files to be processed
-vOK="1"
+#vOK="1"
 
 
-if [ -f "_lastlogfileWFS" ]; then
-lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
-echo "WFS last log at $lastLogTimeWFS"
+#if [ -f "_lastlogfileWFS" ]; then
+#lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
+#echo "WFS last log at $lastLogTimeWFS"
 
-if [ "${lastLogTimeWFS}" -lt "${TIMEEND}" ]; then
-	vOK="0"
-	echo "last WFS has not reached time end yet!"
-	echo "${lastLogTimeWFS} < ${TIMEEND}"
-fi
-else
+#if [ "${lastLogTimeWFS}" -lt "${TIMEEND}" ]; then
+#	vOK="0"
+#	echo "last WFS has not reached time end yet!"
+#	echo "${lastLogTimeWFS} < ${TIMEEND}"
+#fi
+#else
+#vOK=0
+#fi
+
+#if [ -f "_lastlogfilePSF" ]; then
+#lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
+#echo "PSF last log at $lastLogTimePSF"
+
+#if [ "${lastLogTimePSF}" -lt "${TIMEEND}" ]; then
+#	vOK="0"
+#	echo "last PSF has not reached time end yet!"
+#	echo "${lastLogTimePSF} < ${TIMEEND}"
+#fi
+#else
+#vOK=0
+#fi
+
+#if [ -f "_lastlogfileDM" ]; then
+#lastLogTimeDM=$( cat _lastlogfileDM | tail -n 1 | awk '{print int($4)}' )
+#echo "DM last log at $lastLogTimeDM"
+
+#if [ "${lastLogTimeDM}" -lt "${TIMEEND}" ]; then
+#	vOK="0"
+#	echo "last DM has not reached time end yet!"
+#	echo "${lastLogTimeDM} < ${TIMEEND}"
+#fi
+#else
+#vOK=0
+#fi
+
+
+
 vOK=0
-fi
-
-if [ -f "_lastlogfilePSF" ]; then
-lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
-echo "PSF last log at $lastLogTimePSF"
-
-if [ "${lastLogTimePSF}" -lt "${TIMEEND}" ]; then
-	vOK="0"
-	echo "last PSF has not reached time end yet!"
-	echo "${lastLogTimePSF} < ${TIMEEND}"
-fi
-else
-vOK=0
-fi
-
-if [ -f "_lastlogfileDM" ]; then
-lastLogTimeDM=$( cat _lastlogfileDM | tail -n 1 | awk '{print int($4)}' )
-echo "DM last log at $lastLogTimeDM"
-
-if [ "${lastLogTimeDM}" -lt "${TIMEEND}" ]; then
-	vOK="0"
-	echo "last DM has not reached time end yet!"
-	echo "${lastLogTimeDM} < ${TIMEEND}"
-fi
-else
-vOK=0
-fi
-
-
-
-
 if [ "$vOK" = "1" ]; then
 
 
