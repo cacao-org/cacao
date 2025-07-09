@@ -175,7 +175,6 @@ function processcube()
 	if [ ! -f ${OUTFILE} ]; then
 milk-all << EOF
 loadfits "${INFILE}[$3,*]" imc
-#readshmim $1.dark
 loadfits "$1.dark.fits[$3]" imd
 imcd=imc-imd
 saveFITS imcd "${OUTFILE}"
@@ -262,9 +261,12 @@ mkdir -p ${WORKDIR}
 cd ${WORKDIR}
 
 
+milk-shm2FITS ${CACAO_PSFSTREAM}.dark ${CACAO_PSFSTREAM}.dark.fits
+
 if [ "${PROCESSWFS}" -eq "1" ]; then
 milk-shm2FITS ${CACAO_WFSSTREAM}.dark ${CACAO_WFSSTREAM}.dark.fits
 fi
+
 
 
 iter=0
