@@ -956,6 +956,9 @@ static errno_t compute_function()
                 }
 
 
+                printf("datfile[idatfile].cnt = %ld\n", datfile[idatfile].cnt);
+                printf("frameinmin = %ld\n", frameinmin);
+                printf("frameinmax = %ld\n", frameinmax);
 
                 for ( long framein=0; framein < datfile[idatfile].cnt; framein++)
                 {
@@ -1018,7 +1021,7 @@ static errno_t compute_function()
                 maxNBcmd = cmdindex;
                 free(tarrayin);
 
-
+                printf("datfile[idatfile].cnt = %ld\n", datfile[idatfile].cnt);
                 printf("frameinmin = %ld\n", frameinmin);
                 printf("frameinmax = %ld\n", frameinmax);
 
