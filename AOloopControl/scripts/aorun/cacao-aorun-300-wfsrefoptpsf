@@ -320,11 +320,18 @@ if [ "$vOK" = "1" ]; then
 
 
 # PROCESS PSF FILES
-
-
+readarray -d '' filearray < <(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -type f -newermt @$TIMESTAR -name "*.txt" -print0)
+for i in "${filearray[@]}"
+do
+   echo "$i"
+   # or do whatever with individual element of the array
+done
+exit
 # file list
 mkdir -p ./${UTDAY}/${CACAO_PSFSTREAM}/
-for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt; do
+#for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt; do
+
+
 	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
@@ -464,15 +471,15 @@ fi
 
 
 if [ "$OPTMODE" = "maxf" ]; then
-echo "ccacaopt.wfsroptsel .optmode 2"  >> $SF
+echo "cacaopt.wfsroptsel .optmode 2"  >> $SF
 elif [ "$OPTMODE" = "minf" ]; then
-echo "ccacaopt.wfsroptsel .optmode 3"  >> $SF
+echo "cacaopt.wfsroptsel .optmode 3"  >> $SF
 else
-echo "ccacaopt.wfsroptsel .optmode 1"  >> $SF
+echo "cacaopt.wfsroptsel .optmode 1"  >> $SF
 fi
 
 echo "cacaopt.wfsroptsel .selnormplaw 4.0" >> $SF
-echo "cacaopt.wfsroptsel ?" >> EOF
+echo "cacaopt.wfsroptsel ?" >> $SF
 echo "listim" >> $SF
 echo "cacaopt.wfsroptsel psfimc $wfsimc $dmimc" >> $SF
 
