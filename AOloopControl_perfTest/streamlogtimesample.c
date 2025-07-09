@@ -630,6 +630,10 @@ static errno_t processTimingFile(
             datfile.tend = tlast;
             datfile.cnt0end = cnt0last;
             datfile.cnt  = cnt;
+
+            printf("Writing string %s\n", fnamestring);
+            fflush(stdout);
+
             strcpy(datfile.name, fnamestring);
 
             printf("Writing summary\n");
