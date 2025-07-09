@@ -1075,6 +1075,7 @@ static errno_t compute_function()
                     for ( long cmdindex=0; cmdindex < maxNBcmd; cmdindex++)
                     {
                         mapping_orig[cmdindex] -= frameinmin;
+                        if((mapping_dest[cmdindex]>-1)&&(mapping_dest[cmdindex]<zsizeout))
 
                         printf("mapping slice %5ld/%5d to %5ld/%5ld\n", mapping_orig[cmdindex], zsizein, mapping_dest[cmdindex], zsizeout);
 
