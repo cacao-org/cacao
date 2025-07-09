@@ -15,8 +15,8 @@ sname.dark
 TELEMETRY
 Processes filesystem telemetry:
 - PSF (CACAO_PSFSTREAM)
-- WFS (CACAO_WFSSTREAM) (optional)
-- DM (dmXXdisp)         (optional)
+- WFS (CACAO_WFSSTREAM) (optional, see -nowfs option)
+- DM (dmXXdisp)         (optional, see -nodm option)
 These 3 streams must be recorded.
 WFS telemetry location:
 CACAO_TELEMETRY_LOGDIR/YYYYMMDD/
@@ -79,6 +79,24 @@ function set_TSCANWAIT() {
 }
 
 
+# set to 0 if WFS not processed
+#
+PROCESSWFS=1
+MSopt+=( "nowfs:nowfs:set_nowfs::do not process WFS" )
+function set_nowfs() {
+	PROCESSWFS=0
+}
+
+# set to 0 if DM not processed
+#
+PROCESSDM=1
+MSopt+=( "nodm:nodm:set_nodm::do not process DM" )
+function set_nowfs() {
+	PROCESSDM=0
+}
+
+
+
 
 
 source milk-argparse
@@ -102,7 +120,6 @@ cacaomsglog "START"
 
 
 streamPSFdir=${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
-
 streamWFSdir=${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
 streamDMdir=${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp
 
@@ -111,10 +128,16 @@ EXITSTATUS=0
 
 checkDir ${streamPSFdir}
 
+if [ "$PROCESSWFS" -eq "1" ]; then
 checkDir ${streamWFSdir}
-checkDir ${streamDMdir}
+fi
 
-if [ ${EXITSTATUS} = 1 ]; then
+if [ "$PROCESSDM" -eq "1" ]; then
+checkDir ${streamDMdir}
+fi
+
+
+if [ ${EXITSTATUS} -eq 1 ]; then
 	echo "missing file - cannot proceed"
 	exit 1
 fi
@@ -220,15 +243,13 @@ mkdir -p ${WORKDIR}
 cd ${WORKDIR}
 
 iter=0
-NBiter=100
+NBiter=1000
 
 while [ ${iter} -ne ${NBiter} ] ; do
 	echo ""
-	echo "ITERATION ${iter}"
+	echo "ITERATION ${iter} / ${NBITER}"
 	let iter++ || :
 
-
-#set +e
 
 echo "TIME INTERVAL : ${TIMESTART} --> ${TIMEEND} ====================================="
 
@@ -237,121 +258,21 @@ scantxtfiles ${streamPSFdir} _lastlogfilePSF
 echo "  PSF Telemetry :  $dirTelemetryOK"
 echo ""
 
-
+if [ "${PROCESSWFS}" -eq 1 ]; then
 dirTelemetryOK=0
 scantxtfiles ${streamWFSdir} _lastlogfileWFS
 echo "  WFS Telemetry :  $dirTelemetryOK"
 echo ""
+fi
 
+if [ "${PROCESSDM}" -eq 1 ]; then
 dirTelemetryOK=0
 scantxtfiles ${streamDMdir} _lastlogfileDM
 echo "  DM  Telemetry :  $dirTelemetryOK"
 echo ""
-
-#rm -f _lastlogfilePSF
-#if [ -d ${streamPSFdir} ]; then
-#echo "PSFdir = ${streamPSFdir}"
-#if [ -z "$( ls -A ${streamPSFdir}/*.txt 2> /dev/null )" ]; then
-#echo "  No txt file in directory"
-#else
-#ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1
-#lastLogFilePSF=$( ls ${streamPSFdir}/*.txt 2> /dev/null | tail -n 1 )
-#echo "Last PSF file = ${lastLogFilePSF}"
-#cp $lastLogFilePSF _lastlogfilePSF
-#fi
-#else
-#echo "Cannot find directory ${streamPSFdir}"
-#fi
+fi
 
 
-
-#rm -f _lastlogfileWFS
-#if [ -d ${streamWFSdir} ]; then
-#echo "PSFdir = ${streamWFSdir}"
-#if [ -z "$( ls -A ${streamWFSdir}/*.txt 2> /dev/null )" ]; then
-#echo "  No txt file in directory"
-#else
-#ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1
-#lastLogFileWFS=$( ls ${streamWFSdir}/*.txt 2> /dev/null | tail -n 1 )
-#echo "Last WFS file = ${lastLogFileWFS}"
-#cp $lastLogFileWFS _lastlogfileWFS
-#fi
-#else
-#echo "Cannot find directory ${streamWFSdir}"
-#fi
-
-
-
-#rm -f _lastlogfileDM
-#if [ -d ${streamDMdir} ]; then
-#echo "DMdir = ${streamDMdir}"
-#if [ -z "$( ls -A ${streamDMdir}/*.txt 2> /dev/null )" ]; then
-#echo "  No txt file in directory"
-#else
-#ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1
-#lastLogFileDM=$( ls ${streamDMdir}/*.txt 2> /dev/null | tail -n 1 )
-#echo "Last DM file = ${lastLogFileDM}"
-#cp $lastLogFileDM _lastlogfileDM
-#fi
-#else
-#echo "Cannot find directory ${streamDMdir}"
-#fi
-
-
-
-#set -e
-
-
-
-
-
-
-# SCANNING FOR FILES
-#
-
-# vOK is 1 if files need to be processed
-# 0 if no input files to be processed
-#vOK="1"
-
-
-#if [ -f "_lastlogfileWFS" ]; then
-#lastLogTimeWFS=$( cat _lastlogfileWFS | tail -n 1 | awk '{print int($4)}' )
-#echo "WFS last log at $lastLogTimeWFS"
-
-#if [ "${lastLogTimeWFS}" -lt "${TIMEEND}" ]; then
-#	vOK="0"
-#	echo "last WFS has not reached time end yet!"
-#	echo "${lastLogTimeWFS} < ${TIMEEND}"
-#fi
-#else
-#vOK=0
-#fi
-
-#if [ -f "_lastlogfilePSF" ]; then
-#lastLogTimePSF=$( cat _lastlogfilePSF | tail -n 1 | awk '{print int($4)}' )
-#echo "PSF last log at $lastLogTimePSF"
-
-#if [ "${lastLogTimePSF}" -lt "${TIMEEND}" ]; then
-#	vOK="0"
-#	echo "last PSF has not reached time end yet!"
-#	echo "${lastLogTimePSF} < ${TIMEEND}"
-#fi
-#else
-#vOK=0
-#fi
-
-#if [ -f "_lastlogfileDM" ]; then
-#lastLogTimeDM=$( cat _lastlogfileDM | tail -n 1 | awk '{print int($4)}' )
-#echo "DM last log at $lastLogTimeDM"
-
-#if [ "${lastLogTimeDM}" -lt "${TIMEEND}" ]; then
-#	vOK="0"
-#	echo "last DM has not reached time end yet!"
-#	echo "${lastLogTimeDM} < ${TIMEEND}"
-#fi
-#else
-#vOK=0
-#fi
 
 
 
