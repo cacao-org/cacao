@@ -463,8 +463,7 @@ fi
 
 if [ "$OPTMODE" = "maxf" ]; then
 echo "ccacaopt.wfsroptsel .optmode 2"
-else
-if [ "$OPTMODE" = "minf" ]; then
+elif [ "$OPTMODE" = "minf" ]; then
 echo "ccacaopt.wfsroptsel .optmode 3"
 else
 echo "ccacaopt.wfsroptsel .optmode 1"
