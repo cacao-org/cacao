@@ -416,7 +416,7 @@ MILK_QUIET=1 cacao -n ${pname} -f ${fifoname} -s ${SF}
 rm ${SF}
 
 
-exit
+exit # TBE
 
 pname="cacaoaorun300wfsrefwfsoptpsf"
 fifoname="milkCLIfifo.${pname}"

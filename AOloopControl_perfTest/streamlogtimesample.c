@@ -880,15 +880,15 @@ static errno_t compute_function()
             double outtimeend = *tendsec + 1e-9 * (*tendnsec);
             printf("    outtimestart = %.9lf sec\n", outtimestart);
             printf("    outtimeend   = %.9lf sec\n", outtimeend);
-            long zsize = (outtimeend - outtimestart) / *timingdt;
-            printf("zsize = %ld\n", zsize);
-            ResampledFrame *outframearray = (ResampledFrame*) malloc(sizeof(ResampledFrame)*zsize);
+            long zsizeout = (outtimeend - outtimestart) / *timingdt;
+            printf("zsizeout = %ld\n", zsizeout);
+            ResampledFrame *outframearray = (ResampledFrame*) malloc(sizeof(ResampledFrame)*zsizeout);
 
 
-            for(long tstep = 0; tstep < zsize; tstep++)
+            for(long tstep = 0; tstep < zsizeout; tstep++)
             {
-                outframearray[tstep].tstart = outtimestart + 1.0 * tstep * (outtimeend - outtimestart) / zsize;
-                outframearray[tstep].tend = outtimestart + 1.0 * (tstep + 1) * (outtimeend - outtimestart) / zsize;
+                outframearray[tstep].tstart = outtimestart + 1.0 * tstep * (outtimeend - outtimestart) / zsizeout;
+                outframearray[tstep].tend = outtimestart + 1.0 * (tstep + 1) * (outtimeend - outtimestart) / zsizeout;
                 outframearray[tstep].etimesec  = 0.0;
                 outframearray[tstep].etimeframe = 0.0;
             }
@@ -970,7 +970,7 @@ static errno_t compute_function()
                     double findexframeend   = (inframetimeend   - outtimestart)/(*timingdt);
 
                     // if frame falls within output cube
-                    if((findexframeend > 0) && (findexframestart < zsize))
+                    if((findexframeend > 0) && (findexframestart < zsizeout))
                     {
                         NBinframeOK++;
                         //printf("input file %3d frame %4ld maps to output frame range [%f - %f]\n",
@@ -991,13 +991,13 @@ static errno_t compute_function()
                             }
                             double expfrac = iend - istart;
 
-                            if( frameout < zsize)
+                            if( frameout < zsizeout)
                             {
                                 printf("  [%3d / %3d]  %4ld/%4ld  -> %4ld/%4ld    %8.6f  \n",
                                        idatfile,
                                        NBdatFiles,
                                        framein, datfile[idatfile].cnt,
-                                       frameout, zsize,
+                                       frameout, zsizeout,
                                        expfrac);
                                 mapping_orig[cmdindex] = framein;
                                 mapping_dest[cmdindex] = frameout;
@@ -1055,12 +1055,13 @@ static errno_t compute_function()
 
                     uint32_t xsize = data.image[IDc].md->size[0];
                     uint32_t ysize = data.image[IDc].md->size[1];
+                    uint32_t zsizein = data.image[IDc].md->size[2];
                     uint64_t xysize = xsize;
                     xysize *= ysize;
 
                     if(idatfile == 0)
                     {
-                        imgout = makeIMGID_3D(sname[sindex], xsize, ysize, zsize);
+                        imgout = makeIMGID_3D(sname[sindex], xsize, ysize, zsizeout);
                         createimagefromIMGID(&imgout);
                     }
 
@@ -1070,6 +1071,8 @@ static errno_t compute_function()
                     for ( long cmdindex=0; cmdindex < maxNBcmd; cmdindex++)
                     {
                         mapping_orig[cmdindex] -= frameinmin;
+
+                        printf("mapping slice %5ld/%5d to %5ld/%5ld\n", mapping_orig[cmdindex], zsizein, mapping_dest[cmdindex], zsizeout);
 
                         //printf("CMD %4ld / %4ld : %3ld -> %3ld\n", cmdindex, maxNBcmd, mapping_orig[cmdindex], mapping_dest[cmdindex]);
 
@@ -1193,7 +1196,7 @@ static errno_t compute_function()
             }
 
 
-            for(long tstep = 0; tstep < zsize; tstep++)
+            for(long tstep = 0; tstep < zsizeout; tstep++)
             {
                 printf(" OUT frame %3ld   %6.3f  %9.6f\n",
                        tstep,
