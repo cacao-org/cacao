@@ -219,7 +219,9 @@ if [ "${lastLogTime}" -gt "${TIMEEND}" ]; then
 else
 	dirTelemetryOK=0
 	echo "	last entry has not reached time end yet!"
+	let "timeleft = TIMEEND - lastLogTime"
 	echo "	  Telemetry NOT OK: ${lastLogTime} < ${TIMEEND}"
+	echo "    Missing $timeleft sec"
 fi
 fi
 }
@@ -253,10 +255,15 @@ while [ ${iter} -ne ${NBiter} ] ; do
 
 echo "TIME INTERVAL : ${TIMESTART} --> ${TIMEEND} ====================================="
 
+vOK=1
+
 dirTelemetryOK=0
 scantxtfiles ${streamPSFdir} _lastlogfilePSF
 echo "  PSF Telemetry :  $dirTelemetryOK"
 echo ""
+if [ "${dirTelemetryOK}" -eq 0 ]; then
+vOK=0
+fi
 
 echo "PROCESSWFS = ${PROCESSWFS}"
 if [ "${PROCESSWFS}" -eq "1" ]; then
@@ -264,6 +271,9 @@ dirTelemetryOK=0
 scantxtfiles ${streamWFSdir} _lastlogfileWFS
 echo "  WFS Telemetry :  $dirTelemetryOK"
 echo ""
+if [ "${dirTelemetryOK}" -eq 0 ]; then
+vOK=0
+fi
 fi
 
 echo "PROCESSDM = ${PROCESSDM}"
@@ -272,13 +282,14 @@ dirTelemetryOK=0
 scantxtfiles ${streamDMdir} _lastlogfileDM
 echo "  DM  Telemetry :  $dirTelemetryOK"
 echo ""
+if [ "${dirTelemetryOK}" -eq 0 ]; then
+vOK=0
+fi
 fi
 
 
 
 
-
-vOK=0
 if [ "$vOK" = "1" ]; then
 
 
@@ -307,7 +318,7 @@ done
 
 
 
-
+if [ "${PROCESSWFS}" -eq "1" ]; then
 # PROCESS WFS FILES
 mkdir -p ./${UTDAY}/${CACAO_WFSSTREAM}/
 for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt; do
@@ -326,10 +337,10 @@ for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt; do
 	fi
 	fi
 done
+fi
 
 
-
-
+if [ "${PROCESSDM}" -eq "1" ]; then
 # PROCESS DM FILES
 mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
 for fname in ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp/*.txt; do
@@ -348,54 +359,119 @@ for fname in ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp/*.txt; do
 	fi
 	fi
 done
+fi
 
 
 
-cacao << EOF
-cacaopt.slogtsample .logdir "."
-cacaopt.slogtsample .s0name ${CACAO_PSFSTREAM}
-cacaopt.slogtsample .s0tag ".proc"
-cacaopt.slogtsample .s1name ${CACAO_WFSSTREAM}
-cacaopt.slogtsample .s1tag ".proc"
-cacaopt.slogtsample .s2name dm${CACAO_DMINDEX}disp
-cacaopt.slogtsample .s2tag ""
-cacaopt.slogtsample .tstartnsec 0
-cacaopt.slogtsample .tendnsec 0
-cacaopt.slogtsample ?
-cacaopt.slogtsample ${TIMESTART} ${TIMEEND} ${TINT}
-listim
-saveFITS ${CACAO_PSFSTREAM} "${CACAO_PSFSTREAM}.sync.fits"
-saveFITS ${CACAO_WFSSTREAM} "${CACAO_WFSSTREAM}.sync.fits"
-saveFITS dm${CACAO_DMINDEX}disp "dm${CACAO_DMINDEX}disp.sync.fits"
-exitCLI
-EOF
 
 
-cacao << EOF
-loadfits "${CACAO_WFSSTREAM}.sync.fits" wfsimc
-loadfits "${CACAO_PSFSTREAM}.sync.fits" psfimc
-loadfits "dm${CACAO_DMINDEX}disp.sync.fits" dmimc
-cacaopt.wfsroptsel .selnormplaw 4.0
-cacaopt.wfsroptsel psfimc wfsimc dmimc
-saveFITS psf_sorted "psf_sorted.fits"
-saveFITS wfs_sorted "wfs_sorted.fits"
-saveFITS dm_sorted "dm_sorted.fits"
-saveFITS wfsrefopt "wfsrefopt.fits"
-saveFITS dmrefopt "dmrefopt.fits"
-listim
-exitCLI
-EOF
+
+echo ${streamname}
 
 
+pname="cacaoaorun300wfsrefwfsoptpsf"
+fifoname="milkCLIfifo.${pname}"
+SF="milkCLIstartup.${pname}"
+
+echo "cacaopt.slogtsample .logdir \".\"" > $SF
+echo "cacaopt.slogtsample .s0name ${CACAO_PSFSTREAM}" >> $SF
+echo "cacaopt.slogtsample .s0tag ".proc"" >> $SF
+echo "cacaopt.slogtsample .tstartnsec 0" >> $SF
+echo "cacaopt.slogtsample .tendnsec 0" >> $SF
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+echo "cacaopt.slogtsample .s1name ${CACAO_WFSSTREAM}" >> $SF
+echo "cacaopt.slogtsample .s1tag ".proc"" >> $SF
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+echo "cacaopt.slogtsample .s2name dm${CACAO_DMINDEX}disp" >> $SF
+echo "cacaopt.slogtsample .s2tag """ >> $SF
+fi
+
+echo "cacaopt.slogtsample ?" >> $SF
+echo "cacaopt.slogtsample ${TIMESTART} ${TIMEEND} ${TINT}" >> $SF
+echo "listim" >> $SF
+
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+echo "cacaopt.slogtsample .s1name ${CACAO_WFSSTREAM}" >> $SF
+echo "cacaopt.slogtsample .s1tag ".proc"" >> $SF
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+echo "cacaopt.slogtsample .s2name dm${CACAO_DMINDEX}disp" >> $SF
+echo "cacaopt.slogtsample .s2tag """ >> $SF
+fi
+
+echo "saveFITS ${CACAO_PSFSTREAM} \"${CACAO_PSFSTREAM}.sync.fits\"" >> $SF
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+echo "saveFITS ${CACAO_WFSSTREAM} \"${CACAO_WFSSTREAM}.sync.fits\"" >> $SF
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+echo "saveFITS dm${CACAO_DMINDEX}disp \"dm${CACAO_DMINDEX}disp.sync.fits\"" >> $SF
+fi
+
+echo "exitCLI" >> $SF
+
+MILK_QUIET=1 milk -n ${pname} -f ${fifoname} -s ${SF}
+
+rm ${SF}
+
+
+
+
+pname="cacaoaorun300wfsrefwfsoptpsf"
+fifoname="milkCLIfifo.${pname}"
+SF="milkCLIstartup.${pname}"
+
+echo "loadfits \"${CACAO_PSFSTREAM}.sync.fits\" psfimc" >> $SF
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+echo "loadfits \"${CACAO_WFSSTREAM}.sync.fits\" wfsimc" > $SF
+wfsimc="wfsimc"
+else
+wfsimc="null"
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+echo "loadfits \"dm${CACAO_DMINDEX}disp.sync.fits\" dmimc" >> $SF
+dmimc="dmimc"
+else
+dmimc="null"
+fi
+
+echo "cacaopt.wfsroptsel .selnormplaw 4.0" >> $SF
+
+echo "cacaopt.wfsroptsel psfimc $wfsimc $dmimc" >> $SF
+
+echo "saveFITS psf_sorted \"psf_sorted.fits\"" >> $SF
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+echo "saveFITS wfs_sorted \"wfs_sorted.fits\"" >> $SF
+echo "saveFITS wfsrefopt \"wfsrefopt.fits\"" >> $SF
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+echo "saveFITS dm_sorted \"dm_sorted.fits\"" >> $SF
+echo "saveFITS dmrefopt \"dmrefopt.fits\"" >> $SF
+fi
+
+
+echo "exitCLI" >> $SF
+MILK_QUIET=1 milk -n ${pname} -f ${fifoname} -s ${SF}
+rm ${SF}
 
 # exit loop
 iter=${NBiter}
 fi
 
-
+echo ""
 echo "Required files not found (yet), will scan again in $TSCANWAIT sec"
 echo ""
-echo ""
+
 sleep $TSCANWAIT
 
 done
@@ -404,11 +480,19 @@ done
 # Move results to timestamp directory
 
 mkdir -p opt-${TIMESTART}
-cp wfsrefopt.fits opt-${TIMESTART}
-cp dmrefopt.fits opt-${TIMESTART}
+
 cp psf_sorted.fits opt-${TIMESTART}
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+cp wfsrefopt.fits opt-${TIMESTART}
 cp wfs_sorted.fits opt-${TIMESTART}
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+cp dmrefopt.fits opt-${TIMESTART}
 cp dm_sorted.fits opt-${TIMESTART}
+fi
+
 
 rm -f opt-latest
 ln -s opt-${TIMESTART} opt-latest
