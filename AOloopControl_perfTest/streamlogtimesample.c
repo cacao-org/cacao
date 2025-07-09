@@ -1033,155 +1033,159 @@ static errno_t compute_function()
 
                 // RUN MAPPING COMMANDS
                 //
-
-                // load relevant section of input data cube
-                //
-                imageID IDc;
-                char fnameFITS[STRINGMAXLEN_FULLFILENAME];
-                WRITE_FILENAME(fnameFITS,
-                               "%s/%s%s.fits[*,*,%ld:%ld]",
-                               datadirstream,
-                               datfile[idatfile].name,
-                               stag[sindex],
-                               frameinmin+1,
-                               frameinmax+1);
-
-                printf("----------------------[%d] LOADING FILE %s\n", idatfile, fnameFITS);
-                load_fits(fnameFITS, "im0C", 1, &IDc);
-
-
-
-                uint32_t xsize = data.image[IDc].md->size[0];
-                uint32_t ysize = data.image[IDc].md->size[1];
-                uint64_t xysize = xsize;
-                xysize *= ysize;
-
-                if(idatfile == 0)
+                if(NBinframeOK>0)
                 {
-                    imgout = makeIMGID_3D(sname[sindex], xsize, ysize, zsize);
-                    createimagefromIMGID(&imgout);
-                }
+
+                    // load relevant section of input data cube
+                    //
+                    imageID IDc;
+                    char fnameFITS[STRINGMAXLEN_FULLFILENAME];
+                    WRITE_FILENAME(fnameFITS,
+                                   "%s/%s%s.fits[*,*,%ld:%ld]",
+                                   datadirstream,
+                                   datfile[idatfile].name,
+                                   stag[sindex],
+                                   frameinmin+1,
+                                   frameinmax+1);
+
+                    printf("----------------------[%d] LOADING FILE %s\n", idatfile, fnameFITS);
+                    load_fits(fnameFITS, "im0C", 1, &IDc);
 
 
-                list_image_ID();
 
-                for ( long cmdindex=0; cmdindex < maxNBcmd; cmdindex++)
-                {
-                    mapping_orig[cmdindex] -= frameinmin;
+                    uint32_t xsize = data.image[IDc].md->size[0];
+                    uint32_t ysize = data.image[IDc].md->size[1];
+                    uint64_t xysize = xsize;
+                    xysize *= ysize;
 
-                    //printf("CMD %4ld / %4ld : %3ld -> %3ld\n", cmdindex, maxNBcmd, mapping_orig[cmdindex], mapping_dest[cmdindex]);
-
-                    switch(data.image[IDc].md->datatype)
+                    if(idatfile == 0)
                     {
-                    case _DATATYPE_UINT8:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.UI8[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    case _DATATYPE_INT8:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.SI8[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    case _DATATYPE_UINT16:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.UI16[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    case _DATATYPE_INT16:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.SI16[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    case _DATATYPE_UINT32:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.UI32[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    case _DATATYPE_INT32:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.SI32[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    case _DATATYPE_UINT64:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.UI64[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    case _DATATYPE_INT64:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.SI64[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    case _DATATYPE_FLOAT:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.F[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    case _DATATYPE_DOUBLE:
-                        for(uint64_t ii = 0; ii < xysize; ii++)
-                        {
-                            imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
-                                mapping_coeff[cmdindex] *
-                                data.image[IDc].array.D[xysize * mapping_orig[cmdindex] + ii];
-                        }
-                        break;
-
-                    default:
-                        list_image_ID();
-                        PRINT_ERROR("datatype value not recognised");
-                        printf("ID %ld  datatype = %d\n",
-                               IDc,
-                               data.image[IDc].md[0].datatype);
-                        exit(0);
-                        break;
+                        imgout = makeIMGID_3D(sname[sindex], xsize, ysize, zsize);
+                        createimagefromIMGID(&imgout);
                     }
 
 
-                }
+                    list_image_ID();
 
+                    for ( long cmdindex=0; cmdindex < maxNBcmd; cmdindex++)
+                    {
+                        mapping_orig[cmdindex] -= frameinmin;
+
+                        //printf("CMD %4ld / %4ld : %3ld -> %3ld\n", cmdindex, maxNBcmd, mapping_orig[cmdindex], mapping_dest[cmdindex]);
+
+                        switch(data.image[IDc].md->datatype)
+                        {
+                        case _DATATYPE_UINT8:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.UI8[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        case _DATATYPE_INT8:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.SI8[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        case _DATATYPE_UINT16:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.UI16[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        case _DATATYPE_INT16:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.SI16[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        case _DATATYPE_UINT32:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.UI32[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        case _DATATYPE_INT32:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.SI32[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        case _DATATYPE_UINT64:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.UI64[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        case _DATATYPE_INT64:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.SI64[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        case _DATATYPE_FLOAT:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.F[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        case _DATATYPE_DOUBLE:
+                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            {
+                                imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
+                                    mapping_coeff[cmdindex] *
+                                    data.image[IDc].array.D[xysize * mapping_orig[cmdindex] + ii];
+                            }
+                            break;
+
+                        default:
+                            list_image_ID();
+                            PRINT_ERROR("datatype value not recognised");
+                            printf("ID %ld  datatype = %d\n",
+                                   IDc,
+                                   data.image[IDc].md[0].datatype);
+                            exit(0);
+                            break;
+                        }
+
+
+                    }
+
+
+                    delete_image_ID("im0C", DELETE_IMAGE_ERRMODE_WARNING);
+                }
 
                 free(mapping_orig);
                 free(mapping_dest);
                 free(mapping_coeff);
 
-                delete_image_ID("im0C", DELETE_IMAGE_ERRMODE_WARNING);
 
 
                 printf("INPUT FRAME RANGE : %ld - %ld\n", frameinmin, frameinmax);
