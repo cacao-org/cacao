@@ -240,6 +240,7 @@ else
 	echo "    Missing $timeleft sec"
 fi
 fi
+rm -f _lastTelemetryFile
 }
 
 
@@ -528,15 +529,18 @@ done
 
 mkdir -p opt-${TIMESTART}
 
+mv ${CACAO_PSFSTREAM}.sync.fits opt-${TIMESTART}
 mv psf_sorted.fits opt-${TIMESTART}
 mv *.out.txt opt-${TIMESTART} || :
 
 if [ "${PROCESSWFS}" -eq "1" ]; then
+mv ${CACAO_WFSSTREAM}.sync.fits opt-${TIMESTART}
 mv wfsrefopt.fits opt-${TIMESTART}
 mv wfs_sorted.fits opt-${TIMESTART}
 fi
 
 if [ "${PROCESSDM}" -eq "1" ]; then
+mv dm${CACAO_DMINDEX}disp.sync.fits opt-${TIMESTART}
 mv dmrefopt.fits opt-${TIMESTART}
 mv dm_sorted.fits opt-${TIMESTART}
 fi
