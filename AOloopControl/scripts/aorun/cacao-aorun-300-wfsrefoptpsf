@@ -458,7 +458,7 @@ fifoname="milkCLIfifo.${pname}"
 SF="milkCLIstartup.${pname}"
 
 
-if [ -f psfmask.fits ]; then
+if [ -f "psfmask.fits" ]; then
 echo "loadfits \"${CACAO_PSFSTREAM}.sync.fits\" psfimc0" > $SF
 echo "loadfits \"psfmask.fits\" psfmask" >> $SF
 echo "psfimc=psfimc0*psfmask" >> $SF
