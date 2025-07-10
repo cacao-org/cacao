@@ -55,7 +55,7 @@ static CLICMDARGDEF farg[] = {
         NULL
     },
     {
-        CLIARG_IMG,
+        CLIARG_STR,
         ".wfsinput",
         "WFS input",
         "wfsim",
@@ -64,7 +64,7 @@ static CLICMDARGDEF farg[] = {
         NULL
     },
     {
-        CLIARG_IMG,
+        CLIARG_STR,
         ".dminput",
         "DM input",
         "dmim",
