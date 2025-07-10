@@ -151,12 +151,6 @@ static errno_t WFSref_optimizeWFS_PSFselect(
     // custom stream process function code
 
 
-    // resolve images
-    resolveIMGID(&psfimg, ERRMODE_ABORT);
-
-    // resolve images
-    resolveIMGID(&wfsimg, ERRMODE_ABORT);
-
 
 
     uint32_t psfxsize  = psfimg.md->size[0];
@@ -201,8 +195,8 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         break;
 
     default:
-         printf("OPTMODE: Max norm\n");
-         for(uint32_t frame=0; frame < zsize; frame++)
+        printf("OPTMODE: Max norm\n");
+        for(uint32_t frame=0; frame < zsize; frame++)
         {
             double totalpow = 0.0;
             double total = 0.0;
@@ -224,12 +218,6 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         break;
 
     }
-
-
-
-
-
-
 
 
 
@@ -263,7 +251,12 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         memcpy(ptr1, ptr0, sizeof(float)*psfxysize);
     }
 
+
+
+
+
     // WFS frames
+    if(wfsimg.ID != -1)
     {
         uint32_t wfsxsize  = wfsimg.md->size[0];
         uint32_t wfsysize  = wfsimg.md->size[1];
@@ -310,6 +303,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 
 
     // DM frames
+    if(dmimg.ID != -1)
     {
         uint32_t dmxsize  = dmimg.md->size[0];
         uint32_t dmysize  = dmimg.md->size[1];
@@ -371,11 +365,28 @@ static errno_t compute_function()
     IMGID inpsfimg = mkIMGID_from_name(selinput);
     resolveIMGID(&inpsfimg, ERRMODE_ABORT);
 
-    IMGID inwfsimg = mkIMGID_from_name(wfsinput);
-    resolveIMGID(&inwfsimg, ERRMODE_ABORT);
+    IMGID inwfsimg;
+    if ( strcmp(wfsinput, "null") )
+    {
+        inwfsimg = mkIMGID_from_name(wfsinput);
+        resolveIMGID(&inwfsimg, ERRMODE_ABORT);
+    }
+    else
+    {
+        inwfsimg.ID = -1;
+    }
 
-    IMGID indmimg = mkIMGID_from_name(dminput);
-    resolveIMGID(&indmimg, ERRMODE_ABORT);
+
+    IMGID indmimg;
+    if ( strcmp(dminput, "null") )
+    {
+        indmimg = mkIMGID_from_name(dminput);
+        resolveIMGID(&indmimg, ERRMODE_ABORT);
+    }
+    else
+    {
+        indmimg.ID = -1;
+    }
 
 
 
