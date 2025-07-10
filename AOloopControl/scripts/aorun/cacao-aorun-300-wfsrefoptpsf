@@ -457,7 +457,14 @@ pname="cacaoaorun300wfsrefwfsoptpsf"
 fifoname="milkCLIfifo.${pname}"
 SF="milkCLIstartup.${pname}"
 
+
+if [ -f psfmask.fits ]; then
+echo "loadfits \"${CACAO_PSFSTREAM}.sync.fits\" psfimc0" > $SF
+echo "loadfits \"psfmask.fits\" psfmask" >> $SF
+echo "psfimc=psfimc0*psfmask" >> $SF
+else
 echo "loadfits \"${CACAO_PSFSTREAM}.sync.fits\" psfimc" > $SF
+fi
 
 if [ "${PROCESSWFS}" -eq "1" ]; then
 echo "loadfits \"${CACAO_WFSSTREAM}.sync.fits\" wfsimc" >> $SF
