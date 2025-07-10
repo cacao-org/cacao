@@ -382,7 +382,7 @@ if [ "${PROCESSDM}" -eq "1" ]; then
 # PROCESS DM FILES
 mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
 #for fname in ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp/*.txt
-for fname in $(find ${LOGDIR}/${UTDAY}dm${CACAO_DMINDEX}disp -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+for fname in $(find ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
 do
 	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
