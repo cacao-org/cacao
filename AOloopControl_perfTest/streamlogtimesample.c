@@ -1225,13 +1225,20 @@ static errno_t compute_function()
                 printf("===================================\n\n\n");
             }
 
-
-            for(long tstep = 0; tstep < zsizeout; tstep++)
             {
-                printf(" OUT frame %3ld   %6.3f  %9.6f\n",
-                       tstep,
-                       outframearray[tstep].etimeframe,
-                       outframearray[tstep].etimesec);
+                // write output timing file
+                //
+                FILE *fptimingout = fopen("timing.sync.txt", "w");
+                fprintf(fptimingout, "# outframe   etimeframe   etimesec\n");
+
+                for(long tstep = 0; tstep < zsizeout; tstep++)
+                {
+                    fprintf(fptimingout, "%4ld   %6.3f  %9.6f\n",
+                           tstep,
+                           outframearray[tstep].etimeframe,
+                           outframearray[tstep].etimesec);
+                }
+                fclose(fptimingout);
             }
 
             printf("Free outframearray\n");
