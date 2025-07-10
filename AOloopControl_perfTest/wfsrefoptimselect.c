@@ -219,6 +219,15 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 
     }
 
+    {
+        // Write values to file
+        FILE *fppsfval = fopen("psfval.txt", "w");
+        for(uint32_t frame=0; frame < zsize; frame++)
+        {
+            fprintf(fppsfval, "%5d  %g\n", frame, psfvalue[frame]);
+        }
+        fclose(fppsfval);
+    }
 
 
     // sort images according to optimization metric
