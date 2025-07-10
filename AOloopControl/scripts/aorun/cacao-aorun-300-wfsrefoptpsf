@@ -536,6 +536,8 @@ done
 
 mkdir -p opt-${TIMESTART}
 
+mv timing.sync.txt opt-${TIMESTART}
+
 mv ${CACAO_PSFSTREAM}.sync.fits opt-${TIMESTART}
 mv psf_sorted.fits opt-${TIMESTART}
 mv *.out.txt opt-${TIMESTART} || :
@@ -552,6 +554,7 @@ mv dmrefopt.fits opt-${TIMESTART}
 mv dm_sorted.fits opt-${TIMESTART}
 fi
 
+mv psfval.txt opt-${TIMESTART}
 
 rm -f opt-latest
 ln -s opt-${TIMESTART} opt-latest
