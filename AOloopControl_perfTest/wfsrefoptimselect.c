@@ -261,7 +261,13 @@ static errno_t WFSref_optimizeWFS_PSFselect(
     }
 
 
-
+    // max value for lambdai
+    // lambdai is the selection exp coeff
+    // frames are given a weigth according to their order from best to worst
+    // coefficient = exp(-lambdai*x*x)
+    // where x is the order (0.0=best, 1.0=worst)
+    //
+    int lambdaimax = 100;
 
 
     // WFS frames
@@ -275,12 +281,6 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         IMGID imgwfssorted  = makeIMGID_3D("wfs_sorted", wfsxsize, wfsysize, wfszsize);
         createimagefromIMGID(&imgwfssorted);
 
-        IMGID imgwfsrefopt  = makeIMGID_2D("wfsrefopt", wfsxsize, wfsysize);
-        createimagefromIMGID(&imgwfsrefopt);
-
-        double sumcoeff = 0.0;
-        double lambda = 10.0;
-
         for(uint32_t frame=0; frame < wfszsize; frame++)
         {
             long slice = imindex[wfszsize-frame-1];
@@ -292,21 +292,39 @@ static errno_t WFSref_optimizeWFS_PSFselect(
             ptr1 += sizeof(float)*wfsxysize*frame;
 
             memcpy(ptr1, ptr0, sizeof(float)*wfsxysize);
-
-            double xs = 1.0*frame/wfszsize;
-            double coeff = exp(-lambda*xs*xs);
-            sumcoeff += coeff;
-
-
-            for(uint64_t ii=0; ii<wfsxysize; ii++)
-            {
-                imgwfsrefopt.im->array.F[ii] += coeff * imgwfssorted.im->array.F[frame*wfsxysize + ii];
-            }
         }
 
-        for(uint64_t ii=0; ii<wfsxysize; ii++)
+        for(int lambdai=0; lambdai < lambdaimax; lambdai*=2)
         {
-            imgwfsrefopt.im->array.F[ii] /= sumcoeff;
+            char  imgname[STRINGMAXLEN_IMGNAME];
+            WRITE_IMAGENAME(imgname,
+                            "wfsrefopt%d",
+                            lambdai);
+
+            IMGID imgwfsrefopt  = makeIMGID_2D(imgname, wfsxsize, wfsysize);
+            createimagefromIMGID(&imgwfsrefopt);
+
+            double sumcoeff = 0.0;
+            for(uint32_t frame=0; frame < wfszsize; frame++)
+            {
+                double xs = 1.0*frame/wfszsize;
+                double coeff = exp(-1.0*lambdai*xs*xs);
+                sumcoeff += coeff;
+
+                for(uint64_t ii=0; ii<wfsxysize; ii++)
+                {
+                    imgwfsrefopt.im->array.F[ii] += coeff * imgwfssorted.im->array.F[frame*wfsxysize + ii];
+                }
+            }
+            for(uint64_t ii=0; ii<wfsxysize; ii++)
+            {
+                imgwfsrefopt.im->array.F[ii] /= sumcoeff;
+            }
+
+            if(lambdai == 0)
+            {
+                lambdai = 1;
+            }
         }
     }
 
@@ -322,11 +340,6 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         IMGID imgdmsorted  = makeIMGID_3D("dm_sorted", dmxsize, dmysize, dmzsize);
         createimagefromIMGID(&imgdmsorted);
 
-        IMGID imgdmrefopt  = makeIMGID_2D("dmrefopt", dmxsize, dmysize);
-        createimagefromIMGID(&imgdmrefopt);
-
-        double sumcoeff = 0.0;
-        double lambda = 10.0;
 
         for(uint32_t frame=0; frame < dmzsize; frame++)
         {
@@ -339,21 +352,40 @@ static errno_t WFSref_optimizeWFS_PSFselect(
             ptr1 += sizeof(float)*dmxysize*frame;
 
             memcpy(ptr1, ptr0, sizeof(float)*dmxysize);
+        }
 
-            double xs = 1.0*frame/dmzsize;
-            double coeff = exp(-lambda*xs*xs);
-            sumcoeff += coeff;
 
+        for(int lambdai=0; lambdai < lambdaimax; lambdai*=2)
+        {
+            char  imgname[STRINGMAXLEN_IMGNAME];
+            WRITE_IMAGENAME(imgname,
+                            "dmrefopt%d",
+                            lambdai);
+
+            IMGID imgdmrefopt  = makeIMGID_2D(imgname, dmxsize, dmysize);
+            createimagefromIMGID(&imgdmrefopt);
+
+            double sumcoeff = 0.0;
+            for(uint32_t frame=0; frame < dmzsize; frame++)
+            {
+                double xs = 1.0*frame/dmzsize;
+                double coeff = exp(-1.0*lambdai*xs*xs);
+                sumcoeff += coeff;
+
+                for(uint64_t ii=0; ii<dmxysize; ii++)
+                {
+                    imgdmrefopt.im->array.F[ii] += coeff * imgdmsorted.im->array.F[frame*dmxysize + ii];
+                }
+            }
 
             for(uint64_t ii=0; ii<dmxysize; ii++)
             {
-                imgdmrefopt.im->array.F[ii] += coeff * imgdmsorted.im->array.F[frame*dmxysize + ii];
+                imgdmrefopt.im->array.F[ii] /= sumcoeff;
             }
-        }
-
-        for(uint64_t ii=0; ii<dmxysize; ii++)
-        {
-            imgdmrefopt.im->array.F[ii] /= sumcoeff;
+            if(lambdai == 0)
+            {
+                lambdai = 1;
+            }
         }
     }
 
