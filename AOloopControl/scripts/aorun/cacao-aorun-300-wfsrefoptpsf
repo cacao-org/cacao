@@ -173,6 +173,7 @@ function processcube()
 	echo "Processing $INFILE -> $OUTFILE"
 
 	if [ ! -f ${OUTFILE} ]; then
+echo "Processing $INFILE -> $OUTFILE" >> processcube.list
 milk-all << EOF
 loadfits "${INFILE}[$3,*]" imc
 loadfits "$1.dark.fits[$3]" imd
@@ -325,7 +326,7 @@ echo "WORKDIR = ${streamWFSdir}"
 
 mkdir -p ${WORKDIR}
 cd ${WORKDIR}
-
+rm -f processcube.list
 
 milk-shm2FITS ${CACAO_PSFSTREAM}.dark ${CACAO_PSFSTREAM}.dark.fits
 
