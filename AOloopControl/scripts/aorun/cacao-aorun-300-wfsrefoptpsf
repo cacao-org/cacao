@@ -249,7 +249,7 @@ rm -f _lastTelemetryFile
 
 function processPSFfile()
 {
-	fnane="$1"
+	fname="$1"
 	echo "scanning file $fname"
 	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
 	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
