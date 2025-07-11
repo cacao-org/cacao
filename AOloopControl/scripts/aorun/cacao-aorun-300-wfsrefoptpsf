@@ -204,6 +204,7 @@ function noprocesscube()
 #
 # arg1 : directory
 # updates dirTelemetryOK variable
+# updates variable lastLogFile
 #
 function scantxtfiles()
 {
@@ -246,6 +247,70 @@ rm -f _lastTelemetryFile
 
 
 
+function processPSFfile()
+{
+	fnane="$1"
+	echo "scanning file $fname"
+	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
+	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
+	#echo "   time : $filetstart -> $filetend"
+	let "filetstart1 = filetstart - 1"
+	let "filetend1 = filetend + 1"
+
+	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
+		fname1=${fname%.txt}
+		fname2=${fname1##*/}
+		echo "PROCESSING ${fname2}"
+		cp $fname ./${UTDAY}/${CACAO_PSFSTREAM}/
+		processcube ${CACAO_PSFSTREAM} ${fname2} "${PSFCROP}"
+	fi
+	fi
+}
+
+
+function processWFSfile()
+{
+	fname="$1"
+	echo "scanning file $fname"
+	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
+	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
+	#echo "   time : $filetstart -> $filetend"
+	let "filetstart1 = filetstart - 1"
+	let "filetend1 = filetend + 1"
+
+	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
+		fname1=${fname%.txt}
+		fname2=${fname1##*/}
+		echo "PROCESSING ${fname2}"
+		cp $fname ./${UTDAY}/${CACAO_WFSSTREAM}/
+		processcube ${CACAO_WFSSTREAM} ${fname2} "*,*"
+	fi
+	fi
+}
+
+function processDMfile()
+{
+	fname="$1"
+	echo "scanning file $fname"
+	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
+	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
+	#echo "   time : $filetstart -> $filetend"
+	let "filetstart1 = filetstart - 1"
+	let "filetend1 = filetend + 1"
+
+	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
+		fname1=${fname%.txt}
+		fname2=${fname1##*/}
+		echo "PROCESSING ${fname2}"
+		cp $fname ./${UTDAY}/dm${CACAO_DMINDEX}disp/
+		noprocesscube dm${CACAO_DMINDEX}disp ${fname2}
+	fi
+	fi
+}
+
 
 
 
@@ -284,7 +349,11 @@ echo "TIME INTERVAL : ${TIMESTART} --> ${TIMEEND} ==============================
 vOK=1
 
 dirTelemetryOK=0
-scantxtfiles ${streamPSFdir} _lastlogfilePSF
+lastLogFile="null.null"
+scantxtfiles ${streamPSFdir} #_lastlogfilePSF
+if [ -f "$lastLogFile" ]; then
+	processPSFfile $lastLogFile
+fi
 echo "  PSF Telemetry :  $dirTelemetryOK"
 echo ""
 if [ "${dirTelemetryOK}" -eq 0 ]; then
@@ -294,7 +363,11 @@ fi
 echo "PROCESSWFS = ${PROCESSWFS}"
 if [ "${PROCESSWFS}" -eq "1" ]; then
 dirTelemetryOK=0
-scantxtfiles ${streamWFSdir} _lastlogfileWFS
+lastLogFile="null.null"
+scantxtfiles ${streamWFSdir} #_lastlogfileWFS
+if [ -f "$lastLogFile" ]; then
+	processWFSfile $lastLogFile
+fi
 echo "  WFS Telemetry :  $dirTelemetryOK"
 echo ""
 if [ "${dirTelemetryOK}" -eq 0 ]; then
@@ -305,7 +378,11 @@ fi
 echo "PROCESSDM = ${PROCESSDM}"
 if [ "${PROCESSDM}" -eq "1" ]; then
 dirTelemetryOK=0
-scantxtfiles ${streamDMdir} _lastlogfileDM
+lastLogFile="null.null"
+scantxtfiles ${streamDMdir} #_lastlogfileDM
+if [ -f "$lastLogFile" ]; then
+	processDMfile $lastLogFile
+fi
 echo "  DM  Telemetry :  $dirTelemetryOK"
 echo ""
 if [ "${dirTelemetryOK}" -eq 0 ]; then
@@ -322,32 +399,14 @@ if [ "$vOK" = "1" ]; then
 
 
 
-
-
-
 # PROCESS PSF FILES
 
 # file list
 mkdir -p ./${UTDAY}/${CACAO_PSFSTREAM}/
 #for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt
-for fname in $(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+for fnametxt in $(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
 do
-	echo "scanning file $fname"
-	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
-	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
-	#echo "   time : $filetstart -> $filetend"
-	let "filetstart1 = filetstart - 1"
-	let "filetend1 = filetend + 1"
-
-	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
-	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
-		fname1=${fname%.txt}
-		fname2=${fname1##*/}
-		echo "PROCESSING ${fname2}"
-		cp $fname ./${UTDAY}/${CACAO_PSFSTREAM}/
-		processcube ${CACAO_PSFSTREAM} ${fname2} "${PSFCROP}"
-	fi
-	fi
+	processPSFfile $fnametxt
 done
 
 
@@ -356,24 +415,9 @@ if [ "${PROCESSWFS}" -eq "1" ]; then
 # PROCESS WFS FILES
 mkdir -p ./${UTDAY}/${CACAO_WFSSTREAM}/
 #for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt
-for fname in $(find ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+for fnametxt in $(find ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
 do
-	echo "scanning file $fname"
-	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
-	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
-	#echo "   time : $filetstart -> $filetend"
-	let "filetstart1 = filetstart - 1"
-	let "filetend1 = filetend + 1"
-
-	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
-	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
-		fname1=${fname%.txt}
-		fname2=${fname1##*/}
-		echo "PROCESSING ${fname2}"
-		cp $fname ./${UTDAY}/${CACAO_WFSSTREAM}/
-		processcube ${CACAO_WFSSTREAM} ${fname2} "*,*"
-	fi
-	fi
+	processWFSfile $fnametxt
 done
 fi
 
@@ -382,24 +426,9 @@ if [ "${PROCESSDM}" -eq "1" ]; then
 # PROCESS DM FILES
 mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
 #for fname in ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp/*.txt
-for fname in $(find ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+for fnametxt in $(find ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
 do
-	echo "scanning file $fname"
-	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
-	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
-	#echo "   time : $filetstart -> $filetend"
-	let "filetstart1 = filetstart - 1"
-	let "filetend1 = filetend + 1"
-
-	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
-	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
-		fname1=${fname%.txt}
-		fname2=${fname1##*/}
-		echo "PROCESSING ${fname2}"
-		cp $fname ./${UTDAY}/dm${CACAO_DMINDEX}disp/
-		noprocesscube dm${CACAO_DMINDEX}disp ${fname2}
-	fi
-	fi
+	processDMfile $fnametxt
 done
 fi
 
