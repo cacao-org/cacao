@@ -453,6 +453,9 @@ rm ${SF}
 
 
 
+EXPLAMBDA="64"
+
+
 pname="cacaoaorun300wfsrefwfsoptpsf"
 fifoname="milkCLIfifo.${pname}"
 SF="milkCLIstartup.${pname}"
@@ -498,12 +501,16 @@ echo "saveFITS psf_sorted \"psf_sorted.fits\"" >> $SF
 
 if [ "${PROCESSWFS}" -eq "1" ]; then
 echo "saveFITS wfs_sorted \"wfs_sorted.fits\"" >> $SF
-echo "saveFITS wfsrefopt${lambdai} \"wfsrefopt.fits\"" >> $SF
+echo "saveFITS wfsrefopt${EXPLAMBDA} \"wfsrefopt.fits\"" >> $SF
+echo "deltawfsrefopt=wfsrefopt${EXPLAMBDA}-wfsrefopt" >> $SF
+echo "saveFITS deltawfsrefopt \"deltawfsrefopt.fits\"" >> $SF
 fi
 
 if [ "${PROCESSDM}" -eq "1" ]; then
 echo "saveFITS dm_sorted \"dm_sorted.fits\"" >> $SF
-echo "saveFITS dmrefopt${lambdai} \"dmrefopt.fits\"" >> $SF
+echo "saveFITS dmrefopt${EXPLAMBDA} \"dmrefopt.fits\"" >> $SF
+echo "deltadmrefopt=dmrefopt${EXPLAMBDA}-dmrefopt0" >> $SF
+echo "saveFITS deltadmrefopt \"deltadmrefopt.fits\"" >> $SF
 fi
 
 
