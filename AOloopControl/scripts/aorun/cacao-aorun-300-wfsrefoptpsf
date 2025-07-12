@@ -289,7 +289,8 @@ function processWFSfile()
 		echo "PROCESSING ${fname2}"
 		mkdir -p ./${UTDAY}/${CACAO_WFSSTREAM}/
 		cp $fname ./${UTDAY}/${CACAO_WFSSTREAM}/
-		processcube ${CACAO_WFSSTREAM} ${fname2} "*,*"
+		#processcube ${CACAO_WFSSTREAM} ${fname2} "*,*"
+		noprocesscube ${CACAO_WFSSTREAM} ${fname2}
 	fi
 	fi
 }
@@ -401,6 +402,8 @@ COMPSUCCESS=0
 if [ "$vOK" = "1" ]; then
 
 
+# mark time - all telemetry hase been acquired
+echo "# =====================" >> processcube.list
 
 
 
@@ -456,7 +459,7 @@ echo "cacaopt.slogtsample .tendnsec 0" >> $SF
 
 if [ "${PROCESSWFS}" -eq "1" ]; then
 echo "cacaopt.slogtsample .s1name ${CACAO_WFSSTREAM}" >> $SF
-echo "cacaopt.slogtsample .s1tag ".proc"" >> $SF
+echo "cacaopt.slogtsample .s1tag ".nproc"" >> $SF
 fi
 
 if [ "${PROCESSDM}" -eq "1" ]; then
