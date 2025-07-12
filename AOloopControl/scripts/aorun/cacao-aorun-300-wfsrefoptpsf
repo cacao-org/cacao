@@ -177,6 +177,7 @@ echo "Processing $INFILE -> $OUTFILE" >> processcube.list
 milk-all << EOF
 loadfits "${INFILE}[$3,*]" imc
 loadfits "$1.dark.fits[$3]" imd
+listim
 imcd=imc-imd
 saveFITS imcd "${OUTFILE}"
 listim
