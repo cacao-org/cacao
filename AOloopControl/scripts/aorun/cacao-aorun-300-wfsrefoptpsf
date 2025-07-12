@@ -490,7 +490,7 @@ rm ${SF}
 
 
 
-EXPLAMBDA="64"
+EXPLAMBDA="8"
 
 
 pname="cacaoaorun300wfsrefwfsoptpsf"
