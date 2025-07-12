@@ -263,6 +263,7 @@ function processPSFfile()
 		fname1=${fname%.txt}
 		fname2=${fname1##*/}
 		echo "PROCESSING ${fname2}"
+		mkdir -p ${UTDAY}/${CACAO_PSFSTREAM}/
 		cp $fname ./${UTDAY}/${CACAO_PSFSTREAM}/
 		processcube ${CACAO_PSFSTREAM} ${fname2} "${PSFCROP}"
 	fi
@@ -285,6 +286,7 @@ function processWFSfile()
 		fname1=${fname%.txt}
 		fname2=${fname1##*/}
 		echo "PROCESSING ${fname2}"
+		mkdir -p ./${UTDAY}/${CACAO_WFSSTREAM}/
 		cp $fname ./${UTDAY}/${CACAO_WFSSTREAM}/
 		processcube ${CACAO_WFSSTREAM} ${fname2} "*,*"
 	fi
@@ -306,6 +308,7 @@ function processDMfile()
 		fname1=${fname%.txt}
 		fname2=${fname1##*/}
 		echo "PROCESSING ${fname2}"
+		mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
 		cp $fname ./${UTDAY}/dm${CACAO_DMINDEX}disp/
 		noprocesscube dm${CACAO_DMINDEX}disp ${fname2}
 	fi
