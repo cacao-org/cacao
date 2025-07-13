@@ -700,7 +700,11 @@ static errno_t compute_function()
 
 
                 // copy to storage buffer
-                memcpy(imgctrlcube.im->array.F + sizeof(float)*ctrlxysize*pokeindex,
+                printf("copying ctrl to buffer slize %d\n", pokeindex);
+                char * ptrdest;
+                ptrdest = (char*) imgctrlcube.im->array.F;
+                ptrdest += sizeof(float)*ctrlxysize*pokeindex;
+                memcpy(ptrdest, // + sizeof(float)*ctrlxysize*pokeindex,
                        imgctrl.im->array.F,
                        sizeof(float)*ctrlxysize
                       );
