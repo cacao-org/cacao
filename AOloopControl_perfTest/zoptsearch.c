@@ -666,6 +666,8 @@ static errno_t compute_function()
                 uint32_t ctrlysize = imgctrl.md->size[1];
                 uint32_t ctrlxysize = ctrlxsize*ctrlysize;
 
+
+                imgctrl.md->write = 1;
                 if (imgctrlamp.ID == -1)
                 {
                     // no amplitude map, assume range is from -1 to +1
@@ -681,6 +683,7 @@ static errno_t compute_function()
                         imgctrl.im->array.F[ii] = (1.0 - 2.0*ran1()) * imgctrlamp.im->array.F[ii];
                     }
                 }
+                ImageStreamIO_UpdateIm(&imgctrl);
             }
             framecollected = 0;
 
