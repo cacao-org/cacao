@@ -701,13 +701,16 @@ static errno_t compute_function()
 
                 // copy to storage buffer
                 printf("copying ctrl to buffer slize %d\n", pokeindex);
-                char * ptrdest;
-                ptrdest = (char*) imgctrlcube.im->array.F;
-                ptrdest += sizeof(float)*ctrlxysize*pokeindex;
-                memcpy(ptrdest, // + sizeof(float)*ctrlxysize*pokeindex,
-                       imgctrl.im->array.F,
-                       sizeof(float)*ctrlxysize
-                      );
+                if(pokeindex < *nbpoke)
+                {
+                    char * ptrdest;
+                    ptrdest = (char*) imgctrlcube.im->array.F;
+                    ptrdest += sizeof(float)*ctrlxysize*pokeindex;
+                    memcpy(ptrdest, // + sizeof(float)*ctrlxysize*pokeindex,
+                           imgctrl.im->array.F,
+                           sizeof(float)*ctrlxysize
+                          );
+                }
             }
             framecollected = 0;
 
