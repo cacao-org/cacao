@@ -150,11 +150,11 @@ static long fpi_optparam1;
 // Timing
 
 // wait number of frames after actuation
-uint32_t twaitframe;
+float *twaitframe;
 static long     fpi_twaitframe;
 
 // integrate sensing signal for number of frames
-uint32_t tintframe;
+uint32_t *tintframe;
 static long     fpi_tintframe;;
 
 
@@ -289,9 +289,9 @@ static CLICMDARGDEF farg[] =
         &fpi_optparam1
     },
     {
-        CLIARG_UINT32,
-        ".twaitframe",
-        "number of frames to wait before measurement",
+        CLIARG_FLOAT32,
+        ".twaitsec",
+        "time to wait after poke before measurement",
         "1",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &twaitframe,
@@ -536,13 +536,16 @@ static errno_t compute_function()
     IMGID imgsens = mkIMGID_from_name(senssname);
     resolveIMGID(&imgsens, ERRMODE_ABORT);
 
+    uint32_t sensxsize = imgsens.md->size[0];
+    uint32_t sensysize = imgsens.md->size[1];
+    uint32_t sensxysize = sensxsize*sensysize;
+    IMGID imgacc = makeIMGID_2D("imacc", sensxsize, sensysize);
+
     // output of image processing
     IMGID imgsensproc;
     if ( strcmp(sensproc, "null") )
     {
-        uint32_t xsize = imgsens.md->size[0];
-        uint32_t ysize = imgsens.md->size[1];
-        imgsensproc = stream_connect_create_2Df32(sensproc, xsize, ysize);
+        imgsensproc = stream_connect_create_2Df32(sensproc, sensxsize, sensysize);
     }
     else
     {
@@ -602,43 +605,82 @@ static errno_t compute_function()
     list_image_ID();
 
 
-
-
+    // frame index within poke
+    //
+    int framestep = 0;
+    int framecollected = 0;
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
+        printf("framestep = %4d\n");
 
-        // apply control
-        //
+        if(framestep == 0)
         {
-            uint32_t ctrlxsize = imgctrl.md->size[0];
-            uint32_t ctrlysize = imgctrl.md->size[1];
+            printf("    Initialize\n");
+            // apply control
+            //
+            {
+                uint32_t ctrlxsize = imgctrl.md->size[0];
+                uint32_t ctrlysize = imgctrl.md->size[1];
 
-            //gauss_trc();
+                //gauss_trc();
+            }
+            framecollected = 0;
+
+            // initialize accumulated frame
+            for(uint32_t ii=0; ii<sensxysize; ii++)
+            {
+                imgacc.im->array.F[ii] = 0.0;
+            }
+        }
+
+        if(framestep > *twaitframe)
+        {
+            // accumulate
+            printf("    Accumulate\n");
+            for(uint32_t ii=0; ii<sensxysize; ii++)
+            {
+                imgacc.im->array.F[ii] += imgsens.im->array.F[ii];
+            }
+
+            framecollected++;
         }
 
 
+        if(framecollected == *tintframe)
+        {
+            // Average
+            printf("    Average and process\n");
+            if(framecollected>1)
+            {
+                for(uint32_t ii=0; ii<sensxysize; ii++)
+                {
+                    imgacc.im->array.F[ii] /= framecollected;
+                }
+            }
 
-        struct optimizationmode optm;
-        optm.type = *opttype;
-        optm.comp = *optcomp;
-        optm.v0 = *optparam0;
-        optm.v1 = *optparam1;
-        optm.norm0 = *sensnorm0;
-        optm.norm1 = *sensnorm1;
+            struct optimizationmode optm;
+            optm.type = *opttype;
+            optm.comp = *optcomp;
+            optm.v0 = *optparam0;
+            optm.v1 = *optparam1;
+            optm.norm0 = *sensnorm0;
+            optm.norm1 = *sensnorm1;
 
-        double optval = image_optvalue(
-            imgsens,
-            optm,
-            imgsensref0,
-            imgsensmask0,
-            imgsensref1,
-            imgsensmask1,
-            imgsensproc
-        );
+            double optval = image_optvalue(
+                                imgacc,
+                                optm,
+                                imgsensref0,
+                                imgsensmask0,
+                                imgsensref1,
+                                imgsensmask1,
+                                imgsensproc
+                            );
 
-        printf("%5ld  Value = %g\n", processinfo->loopcnt, optval);
+            printf("%5ld  Value = %g\n", processinfo->loopcnt, optval);
 
+            framestep = 0;
+        }
 
 //        if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
 
