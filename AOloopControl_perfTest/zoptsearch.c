@@ -555,6 +555,11 @@ static errno_t compute_function()
     IMGID imgctrl = mkIMGID_from_name(ctrlsname);
     resolveIMGID(&imgctrl, ERRMODE_ABORT);
 
+    uint32_t ctrlxsize = imgctrl.md->size[0];
+    uint32_t ctrlysize = imgctrl.md->size[1];
+    uint32_t ctrlxysize = ctrlxsize*ctrlysize;
+
+
     // optional control amplitude map
     IMGID imgctrlamp;
     if ( strcmp(sensref0, "null") )
@@ -643,6 +648,19 @@ static errno_t compute_function()
     }
 
 
+
+
+    // prepare image cube buffers
+
+    IMGID imgsenscube = makeIMGID_3D("imsenscube", sensxsize, sensysize, *nbpoke);
+    createimagefromIMGID(&imgsenscube);
+
+    IMGID imgctrlcube = makeIMGID_3D("imctrlcube", ctrlxsize, ctrlysize, *nbpoke);
+    createimagefromIMGID(&imgctrlcube);
+
+
+
+
     list_image_ID();
 
 
@@ -662,11 +680,6 @@ static errno_t compute_function()
             // apply control
             //
             {
-                uint32_t ctrlxsize = imgctrl.md->size[0];
-                uint32_t ctrlysize = imgctrl.md->size[1];
-                uint32_t ctrlxysize = ctrlxsize*ctrlysize;
-
-
                 imgctrl.md->write = 1;
                 if (imgctrlamp.ID == -1)
                 {
