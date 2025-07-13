@@ -673,14 +673,14 @@ static errno_t compute_function()
                     // no amplitude map, assume range is from -1 to +1
                     for(uint32_t ii=0; ii<ctrlxysize; ii++)
                     {
-                        imgctrl.im->array.F[ii] = 1.0 - 2.0*ran1();
+                        imgctrl.im->array.F[ii] = (1.0 - 2.0*ran1()) * (*ctrlamp);
                     }
                 }
                 else
                 {
                     for(uint32_t ii=0; ii<ctrlxysize; ii++)
                     {
-                        imgctrl.im->array.F[ii] = (1.0 - 2.0*ran1()) * imgctrlamp.im->array.F[ii];
+                        imgctrl.im->array.F[ii] = (1.0 - 2.0*ran1()) * imgctrlamp.im->array.F[ii] * (*ctrlamp);
                     }
                 }
                 ImageStreamIO_UpdateIm(imgctrl.im);
