@@ -738,7 +738,7 @@ static errno_t compute_function()
                                 imgsensproc
                             );
 
-            printf("%5ld  Value = %g\n", processinfo->loopcnt, optval);
+            printf("[%4d] %5ld  Value = %g\n", pokeindex, processinfo->loopcnt, optval);
 
 
             pokeindex ++;
