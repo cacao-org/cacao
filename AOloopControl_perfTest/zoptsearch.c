@@ -613,7 +613,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-        printf("framestep = %4d\n", framestep);
+        printf("%5ld   framestep = %4d\n", processinfo->loopcnt, framestep);
 
         if(framestep == 0)
         {
@@ -682,6 +682,7 @@ static errno_t compute_function()
 
             framestep = 0;
         }
+        framestep++;
 
 //        if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
 
