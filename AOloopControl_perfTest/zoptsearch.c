@@ -62,13 +62,16 @@ struct optimizationmode {
 
 // Local variables pointers
 
-static int64_t *optON;
-static long     fpi_optON;
 
 
 // input control stream
 static char *ctrlsname;
 long fpi_ctrlsname;
+
+
+static uint32_t *nbpoke;
+long fpi_nbpoke;
+
 
 // actuation amplitude map
 // actuation will be from -val to +val
@@ -166,15 +169,6 @@ static long     fpi_tintframe;;
 static CLICMDARGDEF farg[] =
 {
     {
-        CLIARG_ONOFF,
-        ".optON",
-        "Optimization on/off",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &optON,
-        &fpi_optON
-    },
-    {
         CLIARG_STR,
         ".ctrlsname",
         "control stream",
@@ -182,6 +176,15 @@ static CLICMDARGDEF farg[] =
         CLIARG_VISIBLE_DEFAULT,
         (void **) &ctrlsname,
         &fpi_ctrlsname
+    },
+    {
+        CLIARG_UINT32,
+        ".nbpoke",
+        "number of pokes",
+        "1000",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &nbpoke,
+        &fpi_nbpoke
     },
     {
         CLIARG_FLOAT32,
@@ -647,6 +650,7 @@ static errno_t compute_function()
     //
     int framestep = 0;
     int framecollected = 0;
+    uint32_t pokeindex = 0;
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
@@ -733,8 +737,13 @@ static errno_t compute_function()
 
             printf("%5ld  Value = %g\n", processinfo->loopcnt, optval);
 
-            // exit loop
-            processinfo->loopcntMax = 0;
+
+            pokeindex ++;
+            if(pokeindex == *nbpoke)
+            {
+                // exit loop
+                processinfo->loopcntMax = 0;
+            }
 
             framestep = 0;
         }
