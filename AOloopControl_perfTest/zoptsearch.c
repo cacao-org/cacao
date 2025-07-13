@@ -72,9 +72,12 @@ long fpi_ctrlsname;
 
 // actuation amplitude map
 // actuation will be from -val to +val
-static char *ctrlmapamp;
-long fpi_ctrlmapamp;
+static char *ctrlampmap;
+long fpi_ctrlampmap;
 
+// actuation amplitude
+static float  *ctrlamp;
+static long fpi_ctrlamp;
 
 
 
@@ -179,6 +182,24 @@ static CLICMDARGDEF farg[] =
         CLIARG_VISIBLE_DEFAULT,
         (void **) &ctrlsname,
         &fpi_ctrlsname
+    },
+    {
+        CLIARG_FLOAT32,
+        ".ctrlamp",
+        "control amplitude",
+        "0.01",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &ctrlamp,
+        &fpi_ctrlamp
+    },
+    {
+        CLIARG_STR,
+        ".ctrlampmap",
+        "control stream amplitude map",
+        "null",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &ctrlampmap,
+        &fpi_ctrlampmap
     },
     {
         CLIARG_STR,
@@ -531,6 +552,22 @@ static errno_t compute_function()
     IMGID imgctrl = mkIMGID_from_name(ctrlsname);
     resolveIMGID(&imgctrl, ERRMODE_ABORT);
 
+    // optional control amplitude map
+    IMGID imgctrlamp;
+    if ( strcmp(sensref0, "null") )
+    {
+        imgctrlamp = mkIMGID_from_name(ctrlampmap);
+        resolveIMGID(&imgctrlamp, ERRMODE_ABORT);
+    }
+    else
+    {
+        imgctrlamp.ID = -1;
+    }
+
+
+
+
+
     // connect to sensing stream
     //
     IMGID imgsens = mkIMGID_from_name(senssname);
@@ -623,8 +660,23 @@ static errno_t compute_function()
             {
                 uint32_t ctrlxsize = imgctrl.md->size[0];
                 uint32_t ctrlysize = imgctrl.md->size[1];
+                uint32_t ctrlxysize = ctrlxsize*ctrlysize;
 
-                //gauss_trc();
+                if (imgctrlamp.ID == -1)
+                {
+                    // no amplitude map, assume range is from -1 to +1
+                    for(uint32_t ii=0; ii<ctrlxysize; ii++)
+                    {
+                        imgctrl.im->array.F[ii] = 1.0 - 2.0*ran1();
+                    }
+                }
+                else
+                {
+                    for(uint32_t ii=0; ii<ctrlxysize; ii++)
+                    {
+                        imgctrl.im->array.F[ii] = (1.0 - 2.0*ran1()) * imgctrlamp.im->array.F[ii];
+                    }
+                }
             }
             framecollected = 0;
 
