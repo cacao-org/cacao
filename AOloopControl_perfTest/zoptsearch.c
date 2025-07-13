@@ -734,7 +734,7 @@ static errno_t compute_function()
             printf("%5ld  Value = %g\n", processinfo->loopcnt, optval);
 
             // exit loop
-            processloopOK = 0;
+            processinfo->loopcntMax = 0;
 
             framestep = 0;
         }
