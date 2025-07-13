@@ -540,6 +540,7 @@ static errno_t compute_function()
     uint32_t sensysize = imgsens.md->size[1];
     uint32_t sensxysize = sensxsize*sensysize;
     IMGID imgacc = makeIMGID_2D("imacc", sensxsize, sensysize);
+    createimagefromIMGID(&imgacc);
 
     // output of image processing
     IMGID imgsensproc;
