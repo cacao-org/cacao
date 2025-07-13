@@ -647,11 +647,12 @@ static errno_t compute_function()
             framecollected++;
         }
 
+        framestep++;
 
         if(framecollected == *tintframe)
         {
             // Average
-            printf("    Average and process\n");
+            printf(" >>>> Average and process\n");
             if(framecollected>1)
             {
                 for(uint32_t ii=0; ii<sensxysize; ii++)
@@ -682,7 +683,7 @@ static errno_t compute_function()
 
             framestep = 0;
         }
-        framestep++;
+
 
 //        if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
 
