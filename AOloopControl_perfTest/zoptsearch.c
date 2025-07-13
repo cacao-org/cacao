@@ -697,6 +697,13 @@ static errno_t compute_function()
                     }
                 }
                 ImageStreamIO_UpdateIm(imgctrl.im);
+
+
+                // copy to storage buffer
+                memcpy(imgctrlcube.im->array.F + sizeof(float)*ctrlxysize*pokeindex,
+                       imgctrl.im->array.F,
+                       sizeof(float)*ctrlxysize
+                      );
             }
             framecollected = 0;
 
@@ -732,6 +739,12 @@ static errno_t compute_function()
                     imgacc.im->array.F[ii] /= framecollected;
                 }
             }
+
+            // copy to storage buffer
+            memcpy(imgsenscube.im->array.F + sizeof(float)*sensxysize*pokeindex,
+                   imgacc.im->array.F,
+                   sizeof(float)*sensxysize
+                  );
 
             struct optimizationmode optm;
             optm.type = *opttype;
