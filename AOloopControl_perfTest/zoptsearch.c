@@ -612,7 +612,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-        printf("framestep = %4d\n");
+        printf("framestep = %4d\n", framestep);
 
         if(framestep == 0)
         {
