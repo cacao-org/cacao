@@ -11,6 +11,7 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
+#include "statistic/statistic.h" // ran1, gauss, gauss_trc
 #include "COREMOD_tools/quicksort.h"
 
 // optimization modes
@@ -190,7 +191,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_STR,
-        ".sensproc",
+        ".sensprocout",
         "processed image output",
         "null",
         CLIARG_HIDDEN_DEFAULT,
@@ -199,7 +200,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_STR,
-        ".sensref0",
+        ".sproc.sensref0",
         "sensing reference 0",
         "null",
         CLIARG_HIDDEN_DEFAULT,
@@ -208,7 +209,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_STR,
-        ".sensmask0",
+        ".sproc.sensmask0",
         "sensing mask 0 (float)",
         "null",
         CLIARG_HIDDEN_DEFAULT,
@@ -217,7 +218,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_ONOFF,
-        ".sensnorm0",
+        ".sproc.sensnorm0",
         "normalization 0 on/off",
         "0",
         CLIARG_HIDDEN_DEFAULT,
@@ -226,7 +227,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_STR,
-        ".sensref1",
+        ".sproc.sensref1",
         "sensing reference 1",
         "null",
         CLIARG_HIDDEN_DEFAULT,
@@ -235,7 +236,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_STR,
-        ".sensmask1",
+        ".sproc.sensmask1",
         "sensing mask 1 (float)",
         "null",
         CLIARG_HIDDEN_DEFAULT,
@@ -244,7 +245,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_ONOFF,
-        ".sensnorm1",
+        ".sproc.sensnorm1",
         "normalization 1 on/off",
         "0",
         CLIARG_HIDDEN_DEFAULT,
@@ -253,7 +254,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_UINT32,
-        ".opttype",
+        ".optm.opttype",
         "1:min, 2:max, 3:absmin, 4:absmax",
         "2",
         CLIARG_HIDDEN_DEFAULT,
@@ -262,7 +263,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_UINT32,
-        ".optcomp",
+        ".optm.optcomp",
         "1:tot, 2:norma, 3:tota, 4:percr",
         "1",
         CLIARG_HIDDEN_DEFAULT,
@@ -271,7 +272,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_FLOAT32,
-        ".optparam0",
+        ".optm.optparam0",
         "optimization parameter 0",
         "0.01",
         CLIARG_HIDDEN_DEFAULT,
@@ -280,7 +281,7 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_FLOAT32,
-        ".optparam1",
+        ".optm.optparam1",
         "optimization parameter 1",
         "0.01",
         CLIARG_HIDDEN_DEFAULT,
@@ -606,6 +607,18 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
+
+        // apply control
+        //
+        {
+            uint32_t ctrlxsize = imgctrl.md->size[0];
+            uint32_t ctrlysize = imgctrl.md->size[1];
+
+            //gauss_trc();
+        }
+
+
+
         struct optimizationmode optm;
         optm.type = *opttype;
         optm.comp = *optcomp;
@@ -624,7 +637,7 @@ static errno_t compute_function()
             imgsensproc
         );
 
-        printf("Value = %g\n", optval);
+        printf("%5ld  Value = %g\n", processinfo->loopcnt, optval);
 
 
 //        if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
