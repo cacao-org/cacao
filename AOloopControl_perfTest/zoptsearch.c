@@ -451,58 +451,65 @@ static double image_optvalue(
 
     double optval = 0.0;
 
-    switch (optm.comp)
+
     {
-
-    case OPTMODE_COMP_TOTFLUX:
-        for(uint32_t ii=0; ii<xysize; ii++)
-        {
-            optval += imbuff[ii];
-        }
-        break;
-
-    case OPTMODE_COMP_TOTPALPHA:
-        for(uint32_t ii=0; ii<xysize; ii++)
-        {
-            float val = imbuff[ii];
-            if(val>0.0) {
-                optval += pow(val, optm.v0);
-            }
-        }
-        break;
-
-    case OPTMODE_COMP_NORM_ALPHA:
         double imtot = 0.0;
         double imtotpow = 0.0;
-        for(uint32_t ii=0; ii<xysize; ii++)
-        {
-            float val = imbuff[ii];
-            if(val>0.0) {
-                imtot += val;
-                imtotpow += pow(val, optm.v0);
-            }
-        }
-        optval = imtotpow/pow(imtot, optm.v0);
-        break;
+        int iperc0 = 0;
+        int iperc1 = 0;
+        float pixval = 0.0;
 
-    case OPTMODE_COMP_PERCRANGE:
-        quick_sort_float(imbuff, xysize);
-        int iperc0 = (int) (xysize*optm.v0);
-        int iperc1 = (int) (xysize*optm.v1);
-        if(iperc0 < 0) {
-            iperc0 = 0;
+        switch (optm.comp)
+        {
+
+        case OPTMODE_COMP_TOTFLUX:
+            for(uint32_t ii=0; ii<xysize; ii++)
+            {
+                optval += imbuff[ii];
+            }
+            break;
+
+        case OPTMODE_COMP_TOTPALPHA:
+            for(uint32_t ii=0; ii<xysize; ii++)
+            {
+                pixval = imbuff[ii];
+                if(pixval>0.0) {
+                    optval += pow(pixval, optm.v0);
+                }
+            }
+            break;
+
+        case OPTMODE_COMP_NORM_ALPHA:
+            for(uint32_t ii=0; ii<xysize; ii++)
+            {
+                pixval = imbuff[ii];
+                if(pixval>0.0) {
+                    imtot += pixval;
+                    imtotpow += pow(pixval, optm.v0);
+                }
+            }
+            optval = imtotpow/pow(imtot, optm.v0);
+            break;
+
+        case OPTMODE_COMP_PERCRANGE:
+            quick_sort_float(imbuff, xysize);
+            iperc0 = (int) (xysize*optm.v0);
+            iperc1 = (int) (xysize*optm.v1);
+            if(iperc0 < 0) {
+                iperc0 = 0;
+            }
+            if(iperc0 > xysize-1) {
+                iperc0 = xysize-1;
+            }
+            if(iperc1 < 0) {
+                iperc1 = 0;
+            }
+            if(iperc1 > xysize-1) {
+                iperc1 = xysize-1;
+            }
+            optval = imbuff[iperc1] - imbuff[iperc0];
+            break;
         }
-        if(iperc0 > xysize-1) {
-            iperc0 = xysize-1;
-        }
-        if(iperc1 < 0) {
-            iperc1 = 0;
-        }
-        if(iperc1 > xysize-1) {
-            iperc1 = xysize-1;
-        }
-        optval = imbuff[iperc1] - imbuff[iperc0];
-        break;
     }
 
     free(imbuff);
