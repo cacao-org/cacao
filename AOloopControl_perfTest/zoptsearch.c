@@ -700,7 +700,7 @@ static errno_t compute_function()
 
 
                 // copy to storage buffer
-                memcpy(imgctrlcube.im->array.F, // + sizeof(float)*ctrlxysize*pokeindex,
+                memcpy(imgctrlcube.im->array.F + sizeof(float)*ctrlxysize*pokeindex,
                        imgctrl.im->array.F,
                        sizeof(float)*ctrlxysize
                       );
