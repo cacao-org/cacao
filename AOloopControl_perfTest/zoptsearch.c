@@ -683,7 +683,7 @@ static errno_t compute_function()
                         imgctrl.im->array.F[ii] = (1.0 - 2.0*ran1()) * imgctrlamp.im->array.F[ii];
                     }
                 }
-                ImageStreamIO_UpdateIm(&imgctrl);
+                ImageStreamIO_UpdateIm(imgctrl.im);
             }
             framecollected = 0;
 
