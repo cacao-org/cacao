@@ -171,7 +171,7 @@ static CLICMDARGDEF farg[] =
         &fpi_optON
     },
     {
-        CLIARG_STREAM,
+        CLIARG_STR,
         ".ctrlsname",
         "control stream",
         "ctrl",
@@ -180,7 +180,7 @@ static CLICMDARGDEF farg[] =
         &fpi_ctrlsname
     },
     {
-        CLIARG_STREAM,
+        CLIARG_STR,
         ".senssname",
         "sensing stream",
         "sens",
