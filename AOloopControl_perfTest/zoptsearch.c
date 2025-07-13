@@ -748,10 +748,17 @@ static errno_t compute_function()
             }
 
             // copy to storage buffer
-            memcpy(imgsenscube.im->array.F + sizeof(float)*sensxysize*pokeindex,
-                   imgacc.im->array.F,
-                   sizeof(float)*sensxysize
-                  );
+            printf("copying ctrl to buffer slize %d\n", pokeindex);
+            if(pokeindex < *nbpoke)
+            {
+                char * ptrdest;
+                ptrdest = (char*) imgsenscube.im->array.F;
+                ptrdest += sizeof(float)*sensxysize*pokeindex;
+                memcpy(ptrdest, // + sizeof(float)*ctrlxysize*pokeindex,
+                       imgacc.im->array.F,
+                       sizeof(float)*sensxysize
+                      );
+            }
 
             struct optimizationmode optm;
             optm.type = *opttype;
