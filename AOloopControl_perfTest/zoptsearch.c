@@ -166,7 +166,7 @@ static CLICMDARGDEF farg[] =
         ".optON",
         "Optimization on/off",
         "1",
-        CLIARG_VISIBLE_DEFAULT,
+        CLIARG_HIDDEN_DEFAULT,
         (void **) &optON,
         &fpi_optON
     },
