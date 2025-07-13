@@ -292,7 +292,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_FLOAT32,
         ".twaitsec",
         "time to wait after poke before measurement",
-        "1",
+        "2",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &twaitframe,
         &fpi_twaitframe
@@ -301,7 +301,7 @@ static CLICMDARGDEF farg[] =
         CLIARG_UINT32,
         ".tintframe",
         "number of frames to integrate per measurement",
-        "1",
+        "3",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &tintframe,
         &fpi_tintframe
@@ -613,7 +613,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-        printf("%5ld   framestep = %4d\n", processinfo->loopcnt, framestep);
+        printf("=== %3ld   framestep = %4d\n", processinfo->loopcnt, framestep);
 
         if(framestep == 0)
         {
