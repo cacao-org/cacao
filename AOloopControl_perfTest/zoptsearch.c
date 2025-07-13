@@ -650,11 +650,11 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-        printf("=== %3ld   framestep = %4d\n", processinfo->loopcnt, framestep);
+        //printf("=== %3ld   framestep = %4d\n", processinfo->loopcnt, framestep);
 
         if(framestep == 0)
         {
-            printf("    Initialize\n");
+            //printf("    Initialize\n");
             // apply control
             //
             {
@@ -690,7 +690,7 @@ static errno_t compute_function()
         if(framestep > *twaitframe)
         {
             // accumulate
-            printf("    Accumulate\n");
+            //printf("    Accumulate\n");
             for(uint32_t ii=0; ii<sensxysize; ii++)
             {
                 imgacc.im->array.F[ii] += imgsens.im->array.F[ii];
@@ -704,7 +704,7 @@ static errno_t compute_function()
         if(framecollected == *tintframe)
         {
             // Average
-            printf(" >>>> Average and process\n");
+            //printf(" >>>> Average and process\n");
             if(framecollected>1)
             {
                 for(uint32_t ii=0; ii<sensxysize; ii++)
@@ -732,6 +732,9 @@ static errno_t compute_function()
                             );
 
             printf("%5ld  Value = %g\n", processinfo->loopcnt, optval);
+
+            // exit loop
+            processloopOK = 0;
 
             framestep = 0;
         }
