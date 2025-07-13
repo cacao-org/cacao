@@ -55,6 +55,7 @@
 #include "mlat_decode.h"
 #include "streamlogtimesample.h"
 #include "wfsrefoptimselect.h"
+#include "zoptsearch.h"
 
 
 #ifdef _OPENMP
@@ -95,6 +96,8 @@ static errno_t init_module_CLI()
     CLIADDCMD_AOloopControl_perfTest__streamlogtimesample();
 
     CLIADDCMD_AOloopControl_perfTest__WFSref_optimize_PSFselection();
+
+    CLIADDCMD_AOloopControl_perfTest__zoptsearch();
 
     return RETURN_SUCCESS;
 }
