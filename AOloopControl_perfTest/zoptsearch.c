@@ -741,7 +741,7 @@ static errno_t compute_function()
             }
 
             // copy to storage buffer
-            memcpy(imgsenscube.im->array.F + sizeof(float)*sensxysize*pokeindex,
+            memcpy(imgsenscube.im->array.F, // + sizeof(float)*sensxysize*pokeindex,
                    imgacc.im->array.F,
                    sizeof(float)*sensxysize
                   );
