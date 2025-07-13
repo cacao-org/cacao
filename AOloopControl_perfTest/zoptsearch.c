@@ -748,7 +748,7 @@ static errno_t compute_function()
             }
 
             // copy to storage buffer
-            printf("copying ctrl to buffer slize %d\n", pokeindex);
+            printf("copying sens to buffer slize %d\n", pokeindex);
             if(pokeindex < *nbpoke)
             {
                 char * ptrdest;
@@ -782,9 +782,10 @@ static errno_t compute_function()
 
 
             pokeindex ++;
-            if(pokeindex == *nbpoke-1)
+            if(pokeindex == *nbpoke)
             {
                 // exit loop
+                printf("Reached pokeindex = %d -> Exiting loop\n", *nbpoke);
                 processinfo->loopcntMax = 0;
             }
 
