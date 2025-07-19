@@ -16,7 +16,6 @@
 // includes AOLOOPCONTROL_DM_DISPCOMB_CONF
 //#include "AOloopControl_DM.h"
 
-//#include <time.h>
 
 static int DMdisp_add_disp_from_circular_buffer_init = 0;
 
