@@ -62,9 +62,8 @@
 #include "linalgebra/linalgebra.h"
 
 
-
 imageID AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name,
-        const char *IDout_name)
+    const char *IDout_name)
 {
     imageID IDout;
     imageID IDmaskRM;
@@ -72,125 +71,36 @@ imageID AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name,
     float   val1;
     long    xsize, ysize;
 
+    // Offsets for 24-neighborhood (distance 1 and 2)
+    const int dx[24] = {  1, -1,  0,  0,  1,  1, -1, -1,
+              2, -2,  0,  0,  1,  1, -1, -1,
+             -1, -1,  1,  1,  2, -2,  2, -2 };
+    const int dy[24] = {  0,  0,  1, -1,  1, -1,  1, -1,
+              0,  0,  2, -2,  2, -2,  2, -2,
+              2, -2,  2, -2,  1,  1, -1, -1 };
+
     IDmaskRM = image_ID(IDmaskRM_name);
     xsize    = data.image[IDmaskRM].md[0].size[0];
     ysize    = data.image[IDmaskRM].md[0].size[1];
 
     create_2Dimage_ID(IDout_name, xsize, ysize, &IDout);
 
-    for(ii = 1; ii < xsize - 1; ii++)
-        for(jj = 1; jj < ysize - 1; jj++)
+    for(ii = 2; ii < xsize - 2; ii++)
+    for(jj = 2; jj < ysize - 2; jj++)
+    {
+        val1 = 0.0;
+        if(data.image[IDmaskRM].array.F[jj * xsize + ii] > 0.5)
         {
-            val1 = 0.0;
-            if(data.image[IDmaskRM].array.F[jj * xsize + ii] > 0.5)
-            {
-                if(data.image[IDmaskRM].array.F[jj * xsize + ii + 1] < 0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[jj * xsize + ii - 1] < 0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj + 1) * xsize + ii] < 0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj - 1) * xsize + ii] < 0.5)
-                {
-                    val1 += 1.0;
-                }
-
-                if(data.image[IDmaskRM].array.F[(jj + 1) * xsize + ii + 1] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj + 1) * xsize + ii - 1] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj - 1) * xsize + ii + 1] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj - 1) * xsize + ii - 1] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-
-                if(data.image[IDmaskRM].array.F[jj * xsize + ii + 2] < 0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[jj * xsize + ii - 2] < 0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj + 2) * xsize + ii] < 0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj - 2) * xsize + ii] < 0.5)
-                {
-                    val1 += 1.0;
-                }
-
-                if(data.image[IDmaskRM].array.F[(jj + 1) * xsize + ii + 2] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj + 1) * xsize + ii - 2] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj - 1) * xsize + ii + 2] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj - 1) * xsize + ii - 2] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-
-                if(data.image[IDmaskRM].array.F[(jj + 2) * xsize + ii - 1] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj - 2) * xsize + ii - 1] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj + 2) * xsize + ii + 1] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-                if(data.image[IDmaskRM].array.F[(jj - 2) * xsize + ii + 1] <
-                        0.5)
-                {
-                    val1 += 1.0;
-                }
-            }
-            if(val1 > 4.9)
-            {
-                val1 = 1.0;
-            }
-            else
-            {
-                val1 = 0.0;
-            }
-            data.image[IDout].array.F[jj * xsize + ii] = val1;
+        for(int k = 0; k < 24; ++k)
+        {
+            int ni = ii + dx[k];
+            int nj = jj + dy[k];
+            if(data.image[IDmaskRM].array.F[nj * xsize + ni] < 0.5)
+            val1 += 1.0;
         }
+        }
+        data.image[IDout].array.F[jj * xsize + ii] = (val1 > 4.9) ? 1.0 : 0.0;
+    }
 
     return IDout;
 }
