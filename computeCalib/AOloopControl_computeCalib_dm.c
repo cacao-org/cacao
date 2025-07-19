@@ -63,6 +63,21 @@
 
 
 
+
+/**
+ * @brief      Detects the edge of a deformable mirror (DM) mask.
+ *
+ * @param[in]  IDmaskRM_name The name of the input DM response matrix mask image.
+ * @param[in]  IDout_name    The name for the output image where the detected edge will be stored.
+ * @return     The imageID of the newly created output image containing the edge.
+ *
+ * This function identifies the pixels that form the boundary of the active region
+ * in a DM mask. It iterates through each pixel of the input mask (`IDmaskRM_name`).
+ * A pixel is considered part of the edge if its value is greater than 0.5 (active)
+ * and it has at least 5 neighboring pixels (within a 24-pixel neighborhood)
+ * with a value less than 0.5 (inactive). The resulting binary edge mask is
+ * stored in a new image created with the name `IDout_name`.
+ */
 imageID AOloopControl_computeCalib_DMedgeDetect(
     const char *IDmaskRM_name,
     const char *IDout_name)
