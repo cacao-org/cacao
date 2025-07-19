@@ -62,7 +62,9 @@
 #include "linalgebra/linalgebra.h"
 
 
-imageID AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name,
+
+imageID AOloopControl_computeCalib_DMedgeDetect(
+    const char *IDmaskRM_name,
     const char *IDout_name)
 {
     imageID IDout;
@@ -86,29 +88,31 @@ imageID AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name,
     create_2Dimage_ID(IDout_name, xsize, ysize, &IDout);
 
     for(ii = 2; ii < xsize - 2; ii++)
-    for(jj = 2; jj < ysize - 2; jj++)
-    {
-        val1 = 0.0;
-        if(data.image[IDmaskRM].array.F[jj * xsize + ii] > 0.5)
+        for(jj = 2; jj < ysize - 2; jj++)
         {
-        for(int k = 0; k < 24; ++k)
-        {
-            int ni = ii + dx[k];
-            int nj = jj + dy[k];
-            if(data.image[IDmaskRM].array.F[nj * xsize + ni] < 0.5)
-            val1 += 1.0;
+            val1 = 0.0;
+            // Access the mask value once per pixel
+            float mask_val = data.image[IDmaskRM].array.F[jj * xsize + ii];
+            if(mask_val > 0.5)
+            {
+                for(int k = 0; k < 24; ++k)
+                {
+                    int ni = ii + dx[k];
+                    int nj = jj + dy[k];
+                    // Access neighbor mask value once
+                    if(data.image[IDmaskRM].array.F[nj * xsize + ni] < 0.5)
+                        val1 += 1.0f; // Use float literal for consistency
+                }
+            }
+            data.image[IDout].array.F[jj * xsize + ii] = (val1 > 4.9f) ? 1.0f : 0.0f; // Use float literals
         }
-        }
-        data.image[IDout].array.F[jj * xsize + ii] = (val1 > 4.9) ? 1.0 : 0.0;
-    }
 
     return IDout;
 }
 
 
-
-
-long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name,
+long AOloopControl_computeCalib_DMextrapolateModes(
+    const char *IDin_name,
         const char *IDmask_name,
         const char *IDcpa_name,
         const char *IDout_name)
