@@ -1,6 +1,6 @@
-#ifndef AOLOOPCONTROL_IOTOOLS_ACQUIREWFS_H
-#define AOLOOPCONTROL_IOTOOLS_ACQUIREWFS_H
+#ifndef AOLOOPCONTROL_PERFTEST_ZOPTSEARCH_H
+#define AOLOOPCONTROL_PERFTEST_ZOPTSEARCH_H
 
-errno_t CLIADDCMD_AOloopControl_IOtools__acquireWFSim();
+errno_t CLIADDCMD_AOloopControl_perfTest__zoptsearch();
 
 #endif
