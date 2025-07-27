@@ -277,7 +277,7 @@ long AOloopControl_computeCalib_DMslaveExt(
     long IDsl = image_ID(IDsl_name);     // IDsl is local to this function
 
     for(long ii = 0; ii < xsize; ii++)
-        for(jj = 0; jj < ysize; jj++)
+        for(long jj = 0; jj < ysize; jj++)
         {
             index = jj * xsize + ii;
             if (data.image[IDmask].array.F[index] > 0.5)
