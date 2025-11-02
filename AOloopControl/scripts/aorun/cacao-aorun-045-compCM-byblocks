@@ -83,7 +83,7 @@ fi
 
 
 
-NBRMmodes=$( fitsheader ${CACAO_CONFWDIR}/RMmodesDM/RMmodesDM.fits | grep "NAXIS3" | awk '{print $3}' )
+NBRMmodes=$( milk-fitsheader ${CACAO_CONFWDIR}/RMmodesDM/RMmodesDM.fits | grep "NAXIS3" | awk '{print $3}' )
 echo "NB modes = ${NBRMmodes}"
 
 
