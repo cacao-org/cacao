@@ -19,7 +19,7 @@ and copied to shared memory aolX_DMastrogrid
 "
 
 source milk-script-std-config
-
+source cacao-check-cacaovars
 
 mkdir -p AOcalibs
 
@@ -86,7 +86,7 @@ fi
 
 milk << EOF
 mload cacaoAOloopControlDM
-cacaodm.mk3Ddmgrid im 50 50 ${pattern} ${binfact}
+cacaodm.mk3Ddmgrid im ${CACAO_DMxsize} ${CACAO_DMxsize} ${pattern} ${binfact}
 saveFITS im "AOcalibs/astrogrid.fits"
 listim
 readshmim DMastrogrid
