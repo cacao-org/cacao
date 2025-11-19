@@ -328,7 +328,7 @@ static errno_t compute_function()
     IMGID imgwfsrefc;
     IMGID imgwfsmask;
     {
-        char name[STRINGMAXLEN_STREAMNAME];
+        char name[STRINGMAXLEN_IMGNAME];
 
         WRITE_IMAGENAME(name, "aol%u_imWFS0", *AOloopindex);
         imgimWFS0 = stream_connect_create_2Df32(name, sizexWFS, sizeyWFS);

@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="Sets hardware latency"
+
+
+MSextdescr="set hardware latency between input and output streams
+
+Writes output to env variables CACAO_WFSFRATE and CACAO_LATENCYHARDWFR
+These are written in file <looprundir>/fps.mlat-<loopnumber>.datadir/cacaovars.bash,
+which is sourced by subsequent scripts.
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+
+MSarg+=( "framerate:float:frame rate [Hz]" )
+MSarg+=( "framelat:float:latency [frame]" )
+
+source milk-argparse
+
+FRAMERATE="${inputMSargARRAY[0]}"
+FRAMELAT="${inputMSargARRAY[1]}"
+
+
+cacaomsglog "START"
+
+FNAME="${CACAO_LOOPNAME}-rundir/fps.mlat-${CACAO_LOOPNUMBER}.datadir/cacaovars.bash"
+echo "export CACAO_WFSFRATE=${FRAMERATE}" > ${FNAME}
+echo "export CACAO_LATENCYHARDWFR=${FRAMELAT}" >> ${FNAME}
+
+cacaomsglog "END"

@@ -5,6 +5,14 @@
 
 # script 1-line description
 MSdescr="Take reference (from imWFS2)"
+
+set +u
+if [ -z ${CACAO_CONFWDIR+x} ]; then
+	CACAO_CONFWDIR="conf"
+fi
+set -u
+
+
 # Extended description
 MSextdescr="Acquire WFS reference by averaging imWFS2"
 source milk-script-std-config
@@ -41,7 +49,7 @@ streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
 streamave .out_shared 0
 streamave aol${CACAO_LOOPNUMBER}_imWFS1 wfsref ${NBframe}
-saveFITS wfsref "conf/wfsref.fits"
+saveFITS wfsref "${CACAO_CONFWDIR}/wfsref.fits"
 listim
 exitCLI
 EOF

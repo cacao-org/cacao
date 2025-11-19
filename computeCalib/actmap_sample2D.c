@@ -121,6 +121,7 @@ static IMGID load_actmapcoord2D(
         exit(0);
     }
 
+
     // count number of lines
     long actindex;
     float xcoord;

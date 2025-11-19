@@ -16,28 +16,41 @@ set -u
 MSextdescr="
 Build 2D Zernike-Fourier DM modal basis
 
-Ouput: ${CACAO_CONFWDIR}/RMmodesDM/modesZF.fits
-synthetic DM modes, one mode per slice
+CACAO_CONFWDIR
+Optional: Use CACAO_CONFWDIR to select directory
+Default: ./conf/
+
+
+OUTPUT
+
+  <CACAO_CONFWDIR>/RMmodesDM/modesZF.fits
+	synthetic DM modes, one mode per slice
+
 
 Spatial frequency range specified in cycles per aperture (CPA).
 The radial CPA range goes from rCPAmin (-c0 option) to rCPAmax (-c1 option).
-Max CPA per single axis is CPAmax (-c option). To control a square with
+Max CPA per single axis is CPAmax (-c option).
+
+To control a square with
 maximum CPA=10 in the (u,v) plane, use:
 -c0 0 -c1 20 -c 10
+
 To control a disk of radius 10 CPA in the (u,v) plane, use:
 -c0 0 -c1 10 -c 20
+
 To control a donut:
 -c0 5 -c1 10 -c 20
+
 Note that if rCPAmin=0, the first 5 Zernike will be added (TTF+Astig).
 
 Parameter radmaskfact sets the radial extension factor beyond the beam radius CACAO_DM_beam_rad.
 Zernike and Fourier modes are computed over this extended domain before edge blurring.
 
 The scripts main steps are:
-[1] Compute DM-space Fourier modes: ${CACAO_CONFWDIR}/RMmodesDM/modesZF0.fits, over disk
-defined by (CACAO_DM_beam_xcent, CACAO_DM_beam_ycent, CACAO_DM_beam_rad).
-[2] Edge apodization, preserving response for actuators within ./${CACAO_CONFWDIR}/dmmask.fits,
-and blurring actuators within  CACAO_DM_beam_rad*radmaskfact outside of dmmask.fits
+	[1] Compute DM-space Fourier modes: <CACAO_CONFWDIR>/RMmodesDM/modesZF0.fits, over disk
+		defined by (CACAO_DM_beam_xcent, CACAO_DM_beam_ycent, CACAO_DM_beam_rad).
+	[2] Edge apodization, preserving response for actuators within .<CACAO_CONFWDIR>/dmmask.fits,
+		and blurring actuators within  CACAO_DM_beam_rad*radmaskfact outside of dmmask.fits
 "
 
 source milk-script-std-config
@@ -166,7 +179,7 @@ deltaCPA="0.8"
 # Create synthetic DM modes
 # These modes are NOT extrapolated and extend beyond beam size by factor radmaskfact
 
-if [[ $rCPAmin -eq 0 ]]; then
+if [[ ${rCPAmin} -eq 0 ]]; then
 
 milk-all << EOF
 mload cacaocomputeCalib
@@ -208,7 +221,8 @@ fi
 
 
 # Edge apodization
-
+# Uses dmmask.fits
+#
 milk-all << EOF
 mload cacaocomputeCalib
 radext=${DMr0}*${radmaskfact}

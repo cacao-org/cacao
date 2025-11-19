@@ -777,12 +777,12 @@ static errno_t help_function()
 
     printf(
         "Main input/output streams :\n"
-        "[STREAM]   <.inmval>    input mode values\n"
+        "[STREAM]   <.inmval>    input mo       de values\n"
         "[STREAM]   <.outmval>   output mode values\n");
 
     printf(
         "Auxillary input, added to output\n"
-        "[STREAM]  aolx_modevalauxDM  auxillary mode values\n"
+        "[STREAM]  aolx_mo       devalauxDM  auxillary mode values\n"
         "If enabled, add mode values to output");
 
     return RETURN_SUCCESS;
@@ -794,9 +794,9 @@ static errno_t help_function()
 /**
  * @brief Modal filtering AO processing
  *
- * Basic modal control. Each mode controlled independently.
+        * Basic modal control. Each mode controlled independently.
  *
- * Control parameters for each mode are:
+        * Control parameters for each mode are:
  * - (g) gain
  * - (m) mult
  * - (z) zeropt
@@ -892,6 +892,7 @@ static errno_t compute_function()
     // OPEN LOOP MODE VALUES
     //
     // allocate memory for DM modes history
+    //
     int    NB_DMtstep = 10; // history buffer size
     int    DMtstep    = 0;  // current index
     float *mvalDMbuff = (float *) malloc(sizeof(float) * NBmode * NB_DMtstep);
@@ -1329,7 +1330,8 @@ static errno_t compute_function()
     // PFres is the predictive filter residual: PFres(n) = PF(n-k) - OL(n), with k the time latency
     // for the prediction
 
-    double *mvalPFres = (double *) malloc(sizeof(double) * NBmode);
+    double *mvalPFres    = (double *) malloc(sizeof(double) * NBmode);
+    double *mvalPFold    = (double *) malloc(sizeof(double) * NBmode); // PF at time of WFS
     double *mvalPFresave = (double *) malloc(sizeof(double) * NBmode);
     double *mvalPFresrms = (double *) malloc(sizeof(double) * NBmode);
 
@@ -1575,7 +1577,7 @@ static errno_t compute_function()
                     // last WFS measurement
                     float tmpmWFSval = imginWFS.im->array.F[mi];
 
-                    // OL value
+                    // OL value = latest WFS measurement - past DM state
                     imgOLmval.im->array.F[mi] = (*psol_WFSfact) * tmpmWFSval - mvalDMOL[mi];
                 }
 
@@ -1590,7 +1592,6 @@ static errno_t compute_function()
                 {
                     // wait for PF blocks to complete
                     //
-
                     struct timespec t0;
                     struct timespec t1;
                     clock_gettime(CLOCK_MILK, &t0);
@@ -1604,6 +1605,30 @@ static errno_t compute_function()
                         clock_gettime(CLOCK_MILK, &t1);
                     }
 
+
+
+                    // Mix predicted value with integrator
+                    //
+                    for(uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        float mixf = imgmPFmix.im->array.F[mi];
+                        mvalout[mi] = imgmvalPF.im->array.F[mi] * mixf +
+                                      mvalout[mi] * (1.0 - mixf);
+
+                        mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
+                    }
+
+                    // Write to DM
+                    //
+                    memcpy(imgout.im->array.F,
+                           mvaloutapply,
+                           sizeof(float) * NBmode);
+                    processinfo_update_output_stream(processinfo, imgout.ID);
+
+
+
+                    // Record PF values to buffer
+                    //
                     for(uint32_t mi = 0; mi < NBmode; mi++)
                     {
                         imgcbuff_mvalPF.im->array.F[ PFcbuff_index * NBmode + mi] =
@@ -1615,21 +1640,9 @@ static errno_t compute_function()
                         PFcbuff_index = 0;
                     }
 
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        float mixf = imgmPFmix.im->array.F[mi];
-                        mvalout[mi] = imgmvalPF.im->array.F[mi] * mixf +
-                                      mvalout[mi] * (1.0 - mixf);
 
-                        mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
-                    }
-
-                    memcpy(imgout.im->array.F,
-                           mvaloutapply,
-                           sizeof(float) * NBmode);
-                    processinfo_update_output_stream(processinfo, imgout.ID);
-
-
+                    // Compute prediction residual
+                    //
                     float latencytotalfr = (*latencyhardwfr) + (*latencysoftwfr);
                     int lat0int = (int) latencytotalfr;
                     int lat1int = lat0int + 1;
@@ -1651,11 +1664,9 @@ static errno_t compute_function()
                     {
                         float mval0 = lat1alpha * imgcbuff_mvalPF.im->array.F[ ti0 * NBmode + mi];
                         float mval1 = lat1alpha * imgcbuff_mvalPF.im->array.F[ ti1 * NBmode + mi];
-
-                        mvalPFres[mi] = imgOLmval.im->array.F[mi] - (mval0 + mval1);
-
+                        mvalPFold[mi] = (mval0 + mval1);
+                        mvalPFres[mi] = imgOLmval.im->array.F[mi] - mvalPFold[mi];
                     }
-
                 }
 
 
@@ -2292,7 +2303,7 @@ static errno_t compute_function()
 
 
 
-
+        // Record burst of telemetry for one mode, save to file
         if(*recburst == 1)
         {
             if(recburstsample == 0)
@@ -2305,30 +2316,36 @@ static errno_t compute_function()
                 // print header
                 fprintf(fprec, "#  1 : sample index (loop step)\n");
                 fprintf(fprec,
-                        "#  2 : input (WFS signal)             time offset = - %5.3f frame\n",
+                        "#  2 : WFS signal                     time offset = - %5.3f frame\n",
                         *latencyhardwfr);
                 fprintf(fprec,
-                        "#  3 : output (DM control)            time offset =   0.000 frame\n");
+                        "#  3 : DM control output              time offset =   0.000 frame\n");
                 fprintf(fprec,
                         "#  4 : Open Loop (OL) reconstruction  time offset = - %5.3f frame\n",
                         *latencyhardwfr);
                 fprintf(fprec,
-                        "#  5 : Prediction of OL               time offset = + %5.3f frame\n",
+                        "#  5 : Predicted OL                   time offset = + %5.3f frame\n",
                         *latencysoftwfr);
-                fprintf(fprec, "#  6 : \n");
-                fprintf(fprec, "#  7 : \n");
-                fprintf(fprec, "#  8 : \n");
-                fprintf(fprec, "#  9 : \n");
-                fprintf(fprec, "# 10 : \n");
+                fprintf(fprec,
+                        "#  6 : Prediction residual (PF-OL)    time offset = - %5.3f frame\n",
+                        *latencyhardwfr);
+                fprintf(fprec,
+                        "#  7 : Predicted OL at WFS time       time offset = - %5.3f frame\n",
+                        *latencyhardwfr);
+                fprintf(fprec, "#  \n");
+                //fprintf(fprec, "#  9 : \n");
+                //fprintf(fprec, "# 10 : \n");
             }
             int mi = *recburst_mode;
 
-            fprintf(fprec, "%05ld  %+8.6f  %+8.6f  %+8.6f  %+8.6f\n",
+            fprintf(fprec, "%05ld  %+8.6f  %+8.6f  %+8.6f  %+8.6f  %8.6f  %8.6f\n",
                     recburstsample,
                     imginWFS.im->array.F[mi],
                     imgout.im->array.F[mi],
                     imgOLmval.im->array.F[mi],
-                    imgmvalPF.im->array.F[mi]
+                    imgmvalPF.im->array.F[mi],
+                    mvalPFres[mi],
+                    mvalPFold[mi]
                    );
 
 
@@ -2369,6 +2386,7 @@ static errno_t compute_function()
     free(mvalOLrms);
 
     free(mvalPFres);
+    free(mvalPFold);
     free(mvalPFresave);
     free(mvalPFresrms);
 

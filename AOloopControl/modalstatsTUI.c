@@ -240,7 +240,7 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_CMmodesDM", loopindex);
         imgDMmodes = mkIMGID_from_name(name);
-        resolveIMGID(&imgDMmodes, ERRMODE_ABORT);
+        resolveIMGID(&imgDMmodes, ERRMODE_WARN);
         NBmode = imgDMmodes.md->size[2];
     }
     mstatstruct.NBmode = NBmode;
@@ -254,7 +254,7 @@ errno_t AOloopControl_modalstatsTUI(
         resolveIMGID(&imgmodevalWFS, ERRMODE_ABORT);
         NBmode = imgmodevalWFS.md->size[0];
     }
-//    mstatstruct.NBmode = NBmode;
+    mstatstruct.NBmode = NBmode;
 
 
     IMGID imgmodevalDM;
@@ -399,20 +399,32 @@ errno_t AOloopControl_modalstatsTUI(
 
 
     // Compute DMmodes norm
+    //
     double *DMmodenorm = (double *) malloc(sizeof(double) * NBmode);
-    for(uint32_t mi = 0; mi < NBmode; mi++)
+    if(imgDMmodes.ID == -1)
     {
-        double val = 0.0;
-        double valcnt = 0.0;
-        for(uint64_t ii = 0; ii < imgDMmodes.md->size[0]*imgDMmodes.md->size[1]; ii++)
+        for(uint32_t mi = 0; mi < NBmode; mi++)
         {
-            val += imgDMmodes.im->array.F[mi * imgDMmodes.md->size[0] *
-                                             imgDMmodes.md->size[1] + ii]
-                   * imgDMmodes.im->array.F[mi * imgDMmodes.md->size[0] * imgDMmodes.md->size[1] +
-                                               ii];
-            valcnt += 1.0;
+            DMmodenorm[mi] = 1.0;
         }
-        DMmodenorm[mi] = sqrt(val / valcnt);
+
+    }
+    else
+    {
+        for(uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            double val = 0.0;
+            double valcnt = 0.0;
+            for(uint64_t ii = 0; ii < imgDMmodes.md->size[0]*imgDMmodes.md->size[1]; ii++)
+            {
+                val += imgDMmodes.im->array.F[mi * imgDMmodes.md->size[0] *
+                                                 imgDMmodes.md->size[1] + ii]
+                       * imgDMmodes.im->array.F[mi * imgDMmodes.md->size[0] * imgDMmodes.md->size[1] +
+                                                   ii];
+                valcnt += 1.0;
+            }
+            DMmodenorm[mi] = sqrt(val / valcnt);
+        }
     }
 
 
@@ -542,16 +554,16 @@ errno_t AOloopControl_modalstatsTUI(
 
 
 
-        TUI_printfw("MODE [ gain  mult  lim ]           WFS       |          DM       |");
+        TUI_printfw("MODE [ gain  mult    lim  ]        WFS          |          DM       |");
         if(MODALTUI_DMfilt)
         {
             TUI_printfw("    DMf       |");
         }
-        TUI_printfw("          OL       | LIMTRUC WFS/OL  DM/OL");
+        TUI_printfw("          OL       | LIMTRUC WFS/OL   DM/OL");
 
         if(MODALTUI_PF)
         {
-            TUI_printfw(" [ mPFmix ] ");
+            TUI_printfw("  [ mPFmix ]    res    res/WFS   res/pOL");
         }
 
         TUI_newline();
@@ -755,16 +767,22 @@ errno_t AOloopControl_modalstatsTUI(
 
                 // Predictive Filter
                 //
-                TUI_printfw("  [ %5.3f ]",
+                // mixing ratio
+                TUI_printfw("  [ %6.4f ]",
                             imgmPFmix.im->array.F[mi]
                            );
 
+                // PF residual
                 TUI_printfw("   %6.4f ",
                             imgmvalPFresrms.im->array.F[mi]
                            );
+
+                // PF residual / WFS
                 TUI_printfw("  %5.3f ",
                             imgmvalPFresrms.im->array.F[mi] / imgmvalWFSrms.im->array.F[mi]
                            );
+
+                // PF residual / pOL
                 TUI_printfw("  %8.6f ",
                             imgmvalPFresrms.im->array.F[mi] / imgmvalOLrms.im->array.F[mi]
                            );

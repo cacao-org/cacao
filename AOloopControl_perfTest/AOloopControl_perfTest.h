@@ -10,7 +10,8 @@
 #define _AOLOOPCONTROL_PERFTEST_H
 
 
-errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
+errno_t AOloopControl_perfTest_mkSyncStreamFiles2(
+        char  *datadir,
         char  *stream0,
         char  *stream1,
         double tstart,
@@ -18,17 +19,20 @@ errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
         double dt,
         double dtlag);
 
-errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(char *IDname,
+errno_t AOloopControl_perfTest_ComputeSimilarityMatrix(
+        char *IDname,
         char *IDname_out);
 
-int AOloopControl_perfTest_StatAnalysis_2streams(char         *IDname_stream0,
+int AOloopControl_perfTest_StatAnalysis_2streams(
+        char         *IDname_stream0,
         char         *IDname_stream1,
         char         *IDname_simM0,
         char         *IDname_simM1,
         long          dtmin,
         unsigned long NBselected);
 
-errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
+errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(
+        char *IDnameWFS,
         char *IDnamePSF,
         float frac,
         long  x0,

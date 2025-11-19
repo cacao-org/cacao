@@ -14,6 +14,8 @@ add_library(${LIBNAME} SHARED ${SRCNAME}.c
 	${SRCNAME}.h
 	modalfilter.c
 	modalfilter.h
+	modalfilter_test.c
+	modalfilter_test.h
 	modalCTRL_stats.c
 	modalCTRL_stats.h
 	modalstatsTUI.c
@@ -73,9 +75,12 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-calib-streamload
 	scripts/cacao-exec
 	scripts/cacao.tmux
+	scripts/cacao-fpsconfstart
+	scripts/cacao-fpsconfstop
 	scripts/cacao-fpslistadd
 	scripts/cacao-fpslistadd-ACQWFS
 	scripts/cacao-fpslistadd-MAPWFS
+	scripts/cacao-fpslistadd-MFILTTEST
 	scripts/cacao-fpslistadd-MVMGPU_CMODEVAL2DM
 	scripts/cacao-fpslistadd-MVMGPU_CMODEVALOFFLOAD2DM
 	scripts/cacao-fpslistadd-MVMGPU_DM2MVAL
@@ -89,6 +94,8 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-fpslistadd-WFSMODEVAL2DM
 	scripts/cacao-fpslistadd-WFSCAMSIM
 	scripts/cacao-fpslistadd-ZONALFILTERING
+	scripts/cacao-fpsrunstart
+	scripts/cacao-fpsrunstop
 	scripts/cacao-modalstatsTUI
 	scripts/cacao-takedark
 	scripts/cacao-task-manager
@@ -111,6 +118,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-003-wfsmapping
 	scripts/aorun/cacao-aorun-005-takedark
 	scripts/aorun/cacao-aorun-020-mlat
+	scripts/aorun/cacao-aorun-020-mlatset
 	scripts/aorun/cacao-aorun-021-mlatshow
 	scripts/aorun/cacao-aorun-025-acqWFS
 	scripts/aorun/cacao-aorun-026-takeref
@@ -140,6 +148,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-130-mkPF
 	scripts/aorun/cacao-aorun-140-applyPF
 	scripts/aorun/cacao-aorun-200-mfiltturbrec
+	scripts/aorun/cacao-aorun-300-wfsrefoptpsf
 	DESTINATION bin)
 
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})

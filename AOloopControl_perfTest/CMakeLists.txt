@@ -6,6 +6,9 @@ set(SOURCEFILES
 	compRMsensitivity.c
 	mlat.c
 	mlat_decode.c
+	streamlogtimesample.c
+	wfsrefoptimselect.c
+	zoptsearch.c
 )
 
 # list include files (.h) that should be installed on system

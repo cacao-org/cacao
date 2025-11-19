@@ -394,7 +394,7 @@ errno_t mlat_diffseq_decode(
         IMGID imgU  = mkIMGID_from_name("outU");
         IMGID imgS  = mkIMGID_from_name("outS");
         IMGID imgV  = mkIMGID_from_name("outV");
-        compute_SVD(imgtmat, imgU, imgS, imgV, Vdim0, svdlim, maxNBmode, GPUdev, 6);
+        compute_SVD(imgtmat, &imgU, &imgS, &imgV, Vdim0, svdlim, maxNBmode, GPUdev, 6, "SVDunmodes", "SVDvnmodes");
 
         IMGID imgpsinv = mkIMGID_from_name("psinv");
         resolveIMGID(&imgpsinv, ERRMODE_ABORT);

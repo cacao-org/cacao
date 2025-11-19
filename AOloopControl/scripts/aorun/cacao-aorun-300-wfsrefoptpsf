@@ -1,0 +1,612 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="WFS reference optimization from PSF stream"
+
+MSextdescr="Optimize WFS reference from PSF stream
+
+DARKS
+Will use darks if they exist. Read darks from streams:
+sname.dark
+
+TELEMETRY
+Processes filesystem telemetry:
+- PSF (CACAO_PSFSTREAM)
+- WFS (CACAO_WFSSTREAM) (optional, see -nowfs option)
+- DM (dmXXdisp)         (optional, see -nodm option)
+These 3 streams must be recorded.
+WFS telemetry location:
+CACAO_TELEMETRY_LOGDIR/YYYYMMDD/
+
+Optimization modes:
+- maxn : maximize norm (default)
+- maxf : maximize flux
+- minf : minimize flux
+
+By default, timestart for the optimization is current time at script launch.
+Can be overriden with ts option
+
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+MSarg+=( "tspan:float:time span [s]" )
+MSarg+=( "tint:float:integration time per sample" )
+
+
+# UNIX time at start
+#
+TIMESTART=$(date +%s)
+echo "TIMESTART = ${TIMESTART}"
+#UTDAY=$(date -u '+%Y%m%d')
+MSopt+=( "ts:tstart:set_timestart:TIMESTART[long]:set time start [unix tstamp]" )
+function set_timestart() {
+	TIMESTART="$1"
+	echo "Setting TIMESTART to ${TIMESTART}"
+}
+
+
+# logdir
+#
+LOGDIR="${CACAO_TELEMETRY_LOGDIR}"
+MSopt+=( "l:logdir:set_logdir:LOGDIR[string]:set log directory from which to read telemetry" )
+function set_logdir() {
+	LOGDIR="$1"
+}
+
+
+# working directory
+#
+WORKDIR="wdir_wfsrefoptpsf"
+MSopt+=( "w:workdir:set_workdir:WORKDIR[string]:set work directory" )
+function set_workdir() {
+	WORKDIR="$1"
+}
+
+# Optimization mode
+#
+OPTMODE="maxn"
+MSopt+=( "optm:optmode:set_OPTMODE:OPTMODE[string]:optimization mode (maxn,maxf,minf)" )
+function set_OPTMODE() {
+	OPTMODE="$1"
+}
+
+
+
+# PSF crop window
+#
+PSFCROP="*,*"
+MSopt+=( "pc:PSFcrop:set_PSFcrop:PSFcrop[string]:PSF crop window x1,x2\:y1,y2" )
+function set_PSFcrop() {
+	PSFCROP="$1"
+}
+
+# Wait time between scans
+#
+TSCANWAIT=2.0
+MSopt+=( "tsw:tscanwait:set_TSCANWAIT:TSCANWAIT[float]:Wait time between filesystem scans" )
+function set_TSCANWAIT() {
+	TSCANWAIT="$1"
+}
+
+
+# set to 0 if WFS not processed
+#
+PROCESSWFS=1
+MSopt+=( "nowfs:nowfs:set_nowfs::do not process WFS" )
+function set_nowfs() {
+	PROCESSWFS=0
+}
+
+# set to 0 if DM not processed
+#
+PROCESSDM=1
+MSopt+=( "nodm:nodm:set_nodm::do not process DM" )
+function set_nodm() {
+	PROCESSDM=0
+}
+
+
+
+
+
+source milk-argparse
+TSPAN="${inputMSargARRAY[0]}"
+TINT="${inputMSargARRAY[1]}"
+
+UTDAY=$(date -u -d @$TIMESTART +%Y%m%d)
+
+echo "LOGDIR    : ${LOGDIR}"
+echo "TIMESTART : ${TIMESTART}"
+echo "UTDAY     : ${UTDAY}"
+
+
+
+
+
+# Checking FPS
+FPScheckOK="OK"
+
+cacaomsglog "START"
+
+
+streamPSFdir=${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}
+streamWFSdir=${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}
+streamDMdir=${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp
+
+
+EXITSTATUS=0
+
+checkDir ${streamPSFdir}
+
+if [ "$PROCESSWFS" -eq "1" ]; then
+checkDir ${streamWFSdir}
+fi
+
+if [ "$PROCESSDM" -eq "1" ]; then
+checkDir ${streamDMdir}
+fi
+
+
+if [ ${EXITSTATUS} -eq 1 ]; then
+	echo "missing file - cannot proceed"
+	exit 1
+fi
+
+
+
+
+
+# 1: stream name
+# 2: file name (basename)
+# 3: 2D crop window, "x1:x2,y1:y2", or "*:*"
+function processcube()
+{
+	PTAG=".proc"
+	INFILE="${LOGDIR}/${UTDAY}/$1/$2.fits"
+	OUTFILE=${UTDAY}/$1/$2${PTAG}.fits
+	mkdir -p ${UTDAY}/$1
+	echo "Processing $INFILE -> $OUTFILE"
+
+	if [ ! -f ${OUTFILE} ]; then
+echo "Processing $INFILE -> $OUTFILE" >> processcube.list
+milk-all << EOF
+loadfits "${INFILE}[$3,*]" imc
+loadfits "$1.dark.fits[$3]" imd
+listim
+imcd=imc-imd
+saveFITS imcd "${OUTFILE}"
+listim
+exitCLI
+EOF
+	fi
+}
+
+
+# no processing, so we can use sym link to save space
+#
+function noprocesscube()
+{
+	PTAG=".nproc"
+	INFILE="${LOGDIR}/${UTDAY}/$1/$2.fits"
+	OUTFILE="${UTDAY}/$1/$2${PTAG}.fits"
+	mkdir -p ${UTDAY}/$1
+	echo "noProcessing $INFILE -> $OUTFILE"
+
+	if [ ! -f ${OUTFILE} ]; then
+	ln -s ${INFILE} ${OUTFILE}
+	fi
+}
+
+
+#
+# arg1 : directory
+# updates dirTelemetryOK variable
+# updates variable lastLogFile
+#
+function scantxtfiles()
+{
+rm -f _lastTelemetryFile
+if [ -d $1 ]; then
+echo "scanning directory  $1"
+if [ -z "$( ls -A $1/*.txt 2> /dev/null )" ]; then
+echo "  No txt file in directory"
+else
+ls $1/*.txt 2> /dev/null | tail -n 1
+lastLogFile=$( ls $1/*.txt 2> /dev/null | tail -n 1 )
+echo "Last file = ${lastLogFile}"
+cp $lastLogFile _lastTelemetryFile
+fi
+else
+echo "Cannot find directory $1"
+fi
+
+
+if [ -f "_lastTelemetryFile" ]; then
+lastLogTime=$( cat _lastTelemetryFile | tail -n 1 | awk '{print int($4)}' )
+echo "  Last log at $lastLogTime"
+
+let "lastLogTime1 = lastLogTime - 1" # add 1 sec for margin
+if [ "${lastLogTime1}" -gt "${TIMEEND}" ]; then
+	dirTelemetryOK=1
+	echo "  Telemetry OK       : "${lastLogTime} > ${TIMEEND}""
+else
+	dirTelemetryOK=0
+	echo "	last entry has not reached time end yet! $TIMEEND  $lastLogTime"
+	let "timeleft = TIMEEND - lastLogTime" || :
+	echo "timeleft = $timeleft"
+	echo "	  Telemetry NOT OK: ${lastLogTime} < ${TIMEEND}"
+	echo "    Missing $timeleft sec"
+fi
+fi
+rm -f _lastTelemetryFile
+}
+
+
+
+
+function processPSFfile()
+{
+	fname="$1"
+	echo "scanning file $fname"
+	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
+	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
+	#echo "   time : $filetstart -> $filetend"
+	let "filetstart1 = filetstart - 1"
+	let "filetend1 = filetend + 1"
+
+	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
+		fname1=${fname%.txt}
+		fname2=${fname1##*/}
+		echo "PROCESSING ${fname2}"
+		mkdir -p ${UTDAY}/${CACAO_PSFSTREAM}/
+		cp $fname ./${UTDAY}/${CACAO_PSFSTREAM}/
+		processcube ${CACAO_PSFSTREAM} ${fname2} "${PSFCROP}"
+	fi
+	fi
+}
+
+
+function processWFSfile()
+{
+	fname="$1"
+	echo "scanning file $fname"
+	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
+	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
+	#echo "   time : $filetstart -> $filetend"
+	let "filetstart1 = filetstart - 1"
+	let "filetend1 = filetend + 1"
+
+	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
+		fname1=${fname%.txt}
+		fname2=${fname1##*/}
+		echo "PROCESSING ${fname2}"
+		mkdir -p ./${UTDAY}/${CACAO_WFSSTREAM}/
+		cp $fname ./${UTDAY}/${CACAO_WFSSTREAM}/
+		#processcube ${CACAO_WFSSTREAM} ${fname2} "*,*"
+		noprocesscube ${CACAO_WFSSTREAM} ${fname2}
+	fi
+	fi
+}
+
+function processDMfile()
+{
+	fname="$1"
+	echo "scanning file $fname"
+	filetstart=$( sed /^#/d $fname | sed -n 1p | awk '{print int($4)}' )
+	filetend=$( cat $fname | tail -n 1 | awk '{print int($4)}' )
+	#echo "   time : $filetstart -> $filetend"
+	let "filetstart1 = filetstart - 1"
+	let "filetend1 = filetend + 1"
+
+	if (( $(echo "$filetstart1 < $TIMEEND" |bc -l) )); then
+	if (( $(echo "$filetend1 > $TIMESTART" |bc -l) )); then
+		fname1=${fname%.txt}
+		fname2=${fname1##*/}
+		echo "PROCESSING ${fname2}"
+		mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
+		cp $fname ./${UTDAY}/dm${CACAO_DMINDEX}disp/
+		noprocesscube dm${CACAO_DMINDEX}disp ${fname2}
+	fi
+	fi
+}
+
+
+
+
+let "TIMEEND = TIMESTART + TSPAN"
+
+
+
+
+# find last timing files in telemetry directories
+
+echo "WORKDIR = ${streamWFSdir}"
+
+mkdir -p ${WORKDIR}
+cd ${WORKDIR}
+rm -f processcube.list
+
+milk-shm2FITS ${CACAO_PSFSTREAM}.dark ${CACAO_PSFSTREAM}.dark.fits
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+milk-shm2FITS ${CACAO_WFSSTREAM}.dark ${CACAO_WFSSTREAM}.dark.fits
+fi
+
+
+
+iter=0
+NBiter=1000
+
+while [ ${iter} -ne ${NBiter} ] ; do
+	echo ""
+	echo "ITERATION ${iter} / ${NBiter}"
+	let iter++ || :
+
+
+echo "TIME INTERVAL : ${TIMESTART} --> ${TIMEEND} ====================================="
+
+vOK=1
+
+dirTelemetryOK=0
+lastLogFile="null.null"
+scantxtfiles ${streamPSFdir} #_lastlogfilePSF
+if [ -f "$lastLogFile" ]; then
+	processPSFfile $lastLogFile
+fi
+echo "  PSF Telemetry :  $dirTelemetryOK"
+echo ""
+if [ "${dirTelemetryOK}" -eq 0 ]; then
+vOK=0
+fi
+
+echo "PROCESSWFS = ${PROCESSWFS}"
+if [ "${PROCESSWFS}" -eq "1" ]; then
+dirTelemetryOK=0
+lastLogFile="null.null"
+scantxtfiles ${streamWFSdir} #_lastlogfileWFS
+if [ -f "$lastLogFile" ]; then
+	processWFSfile $lastLogFile
+fi
+echo "  WFS Telemetry :  $dirTelemetryOK"
+echo ""
+if [ "${dirTelemetryOK}" -eq 0 ]; then
+vOK=0
+fi
+fi
+
+echo "PROCESSDM = ${PROCESSDM}"
+if [ "${PROCESSDM}" -eq "1" ]; then
+dirTelemetryOK=0
+lastLogFile="null.null"
+scantxtfiles ${streamDMdir} #_lastlogfileDM
+if [ -f "$lastLogFile" ]; then
+	processDMfile $lastLogFile
+fi
+echo "  DM  Telemetry :  $dirTelemetryOK"
+echo ""
+if [ "${dirTelemetryOK}" -eq 0 ]; then
+vOK=0
+fi
+fi
+
+
+COMPSUCCESS=0
+
+if [ "$vOK" = "1" ]; then
+
+
+# mark time - all telemetry hase been acquired
+echo "# =====================" >> processcube.list
+
+
+
+# PROCESS PSF FILES
+
+# file list
+mkdir -p ./${UTDAY}/${CACAO_PSFSTREAM}/
+#for fname in ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM}/*.txt
+for fnametxt in $(find ${LOGDIR}/${UTDAY}/${CACAO_PSFSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+do
+	processPSFfile $fnametxt
+done
+
+
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+# PROCESS WFS FILES
+mkdir -p ./${UTDAY}/${CACAO_WFSSTREAM}/
+#for fname in ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM}/*.txt
+for fnametxt in $(find ${LOGDIR}/${UTDAY}/${CACAO_WFSSTREAM} -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+do
+	processWFSfile $fnametxt
+done
+fi
+
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+# PROCESS DM FILES
+mkdir -p ./${UTDAY}/dm${CACAO_DMINDEX}disp/
+#for fname in ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp/*.txt
+for fnametxt in $(find ${LOGDIR}/${UTDAY}/dm${CACAO_DMINDEX}disp -maxdepth 1 -type f -newermt @$TIMESTART -name "*.txt")
+do
+	processDMfile $fnametxt
+done
+fi
+
+
+
+rm -f ${CACAO_PSFSTREAM}.sync.fits
+rm -f ${CACAO_WFSSTREAM}.sync.fits
+rm -f dm${CACAO_DMINDEX}disp.sync.fits
+
+
+pname="cacaoaorun300wfsrefwfsoptpsf"
+fifoname="milkCLIfifo.${pname}"
+SF="milkCLIstartup.${pname}"
+
+echo "cacaopt.slogtsample .logdir \".\"" > $SF
+echo "cacaopt.slogtsample .s0name ${CACAO_PSFSTREAM}" >> $SF
+echo "cacaopt.slogtsample .s0tag ".proc"" >> $SF
+echo "cacaopt.slogtsample .tstartnsec 0" >> $SF
+echo "cacaopt.slogtsample .tendnsec 0" >> $SF
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+echo "cacaopt.slogtsample .s1name ${CACAO_WFSSTREAM}" >> $SF
+echo "cacaopt.slogtsample .s1tag ".nproc"" >> $SF
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+echo "cacaopt.slogtsample .s2name dm${CACAO_DMINDEX}disp" >> $SF
+echo "cacaopt.slogtsample .s2tag \".nproc\"" >> $SF
+fi
+
+echo "cacaopt.slogtsample ?" >> $SF
+echo "cacaopt.slogtsample ${TIMESTART} ${TIMEEND} ${TINT}" >> $SF
+echo "listim" >> $SF
+
+echo "saveFITS ${CACAO_PSFSTREAM} \"${CACAO_PSFSTREAM}.sync.fits\"" >> $SF
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+echo "saveFITS ${CACAO_WFSSTREAM} \"${CACAO_WFSSTREAM}.sync.fits\"" >> $SF
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+echo "saveFITS dm${CACAO_DMINDEX}disp \"dm${CACAO_DMINDEX}disp.sync.fits\"" >> $SF
+fi
+
+echo "exitCLI" >> $SF
+
+MILK_QUIET=1 cacao -n ${pname} -f ${fifoname} -s ${SF}
+
+rm ${SF}
+
+
+
+
+EXPLAMBDA="8"
+
+
+pname="cacaoaorun300wfsrefwfsoptpsf"
+fifoname="milkCLIfifo.${pname}"
+SF="milkCLIstartup.${pname}"
+
+
+if [ -f "psfmask.fits" ]; then
+echo "loadfits \"${CACAO_PSFSTREAM}.sync.fits\" psfimc0" > $SF
+echo "loadfits \"psfmask.fits\" psfmask" >> $SF
+echo "psfimc=psfimc0*psfmask" >> $SF
+else
+echo "loadfits \"${CACAO_PSFSTREAM}.sync.fits\" psfimc" > $SF
+fi
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+echo "loadfits \"${CACAO_WFSSTREAM}.sync.fits\" wfsimc" >> $SF
+wfsimc="wfsimc"
+else
+wfsimc="null"
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+echo "loadfits \"dm${CACAO_DMINDEX}disp.sync.fits\" dmimc" >> $SF
+dmimc="dmimc"
+else
+dmimc="null"
+fi
+
+
+if [ "$OPTMODE" = "maxf" ]; then
+echo "cacaopt.wfsroptsel .optmode 2"  >> $SF
+elif [ "$OPTMODE" = "minf" ]; then
+echo "cacaopt.wfsroptsel .optmode 3"  >> $SF
+else
+echo "cacaopt.wfsroptsel .optmode 1"  >> $SF
+fi
+
+echo "cacaopt.wfsroptsel .selnormplaw 4.0" >> $SF
+echo "cacaopt.wfsroptsel ?" >> $SF
+echo "listim" >> $SF
+echo "cacaopt.wfsroptsel psfimc $wfsimc $dmimc" >> $SF
+
+echo "saveFITS psf_sorted \"psf_sorted.fits\"" >> $SF
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+echo "saveFITS wfs_sorted \"wfs_sorted.fits\"" >> $SF
+echo "saveFITS wfsrefopt${EXPLAMBDA} \"wfsrefopt.fits\"" >> $SF
+echo "saveFITS wfsrefopt0 \"wfsrefopt0.fits\"" >> $SF
+echo "deltawfsrefopt=wfsrefopt${EXPLAMBDA}-wfsrefopt0" >> $SF
+echo "saveFITS deltawfsrefopt \"deltawfsrefopt.fits\"" >> $SF
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+echo "saveFITS dm_sorted \"dm_sorted.fits\"" >> $SF
+echo "saveFITS dmrefopt${EXPLAMBDA} \"dmrefopt.fits\"" >> $SF
+echo "saveFITS dmrefopt0 \"dmrefopt0.fits\"" >> $SF
+echo "deltadmrefopt=dmrefopt${EXPLAMBDA}-dmrefopt0" >> $SF
+echo "saveFITS deltadmrefopt \"deltadmrefopt.fits\"" >> $SF
+fi
+
+
+echo "exitCLI" >> $SF
+MILK_QUIET=1 cacao -n ${pname} -f ${fifoname} -s ${SF}
+rm ${SF}
+
+# exit loop
+iter=${NBiter}
+COMPSUCCESS=1
+
+fi
+
+if [ "${COMPSUCCESS}" -eq "0" ]; then
+echo ""
+echo "Required files not found (yet), will scan again in $TSCANWAIT sec"
+echo ""
+fi
+
+sleep $TSCANWAIT
+
+done
+
+
+
+
+
+
+# Move results to timestamp directory
+
+mkdir -p opt-${TIMESTART}
+
+mv timing.sync.txt opt-${TIMESTART}
+
+mv ${CACAO_PSFSTREAM}.sync.fits opt-${TIMESTART}
+mv psf_sorted.fits opt-${TIMESTART}
+mv *.out.txt opt-${TIMESTART} || :
+
+if [ "${PROCESSWFS}" -eq "1" ]; then
+mv ${CACAO_WFSSTREAM}.sync.fits opt-${TIMESTART}
+mv *wfsrefopt*.fits opt-${TIMESTART}
+mv wfs_sorted.fits opt-${TIMESTART}
+fi
+
+if [ "${PROCESSDM}" -eq "1" ]; then
+mv dm${CACAO_DMINDEX}disp.sync.fits opt-${TIMESTART}
+mv *dmrefopt*.fits opt-${TIMESTART}
+mv dm_sorted.fits opt-${TIMESTART}
+fi
+
+mv psfval.txt opt-${TIMESTART}
+
+rm -f opt-latest
+ln -s opt-${TIMESTART} opt-latest
+
+
+cd ..
+
+
+cacaomsglog "END"

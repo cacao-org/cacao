@@ -30,6 +30,7 @@ function fpsentry_addmodules() {
 }
 
 function fpsentry_addcmds() {
+	addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
 	addfpscmd "setval ${fpsfname}.procinfo.triggermode 3"
 	addfpscmd "setval ${fpsfname}.procinfo.triggertimeout 100"

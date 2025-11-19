@@ -13,14 +13,18 @@ fi
 set -u
 
 MSextdescr="
+CACAO_CONFWDIR
+Optional: Use CACAO_CONFWDIR to select directory
+Default: ./conf/
+
 Input DM modes in:
-./${CACAO_CONFWDIR}/DMmodes/<name>.fits
+./<CACAO_CONFWDIR>/RMmodesDM/<name>.fits
 
 Sources <looprundir>/fps.mlat-<loopnumber>.datadir/cacaovars.bash
 to get CACAO_WFSFRATE and CACAO_LATENCYHARDWFR
 
 Output WFS response written as:
-./${CACAO_CONFWDIR}/WFSmodes/<name>.WFSresp.fits
+./<CACAO_CONFWDIR>/WFSmodes/<name>.WFSresp.fits
 
 "
 

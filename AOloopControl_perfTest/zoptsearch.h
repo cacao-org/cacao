@@ -1,0 +1,6 @@
+#ifndef AOLOOPCONTROL_PERFTEST_ZOPTSEARCH_H
+#define AOLOOPCONTROL_PERFTEST_ZOPTSEARCH_H
+
+errno_t CLIADDCMD_AOloopControl_perfTest__zoptsearch();
+
+#endif

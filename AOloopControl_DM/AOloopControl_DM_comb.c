@@ -16,7 +16,6 @@
 // includes AOLOOPCONTROL_DM_DISPCOMB_CONF
 //#include "AOloopControl_DM.h"
 
-//#include <time.h>
 
 static int DMdisp_add_disp_from_circular_buffer_init = 0;
 
@@ -849,7 +848,9 @@ static errno_t DMdisp_add_disp_from_circular_buffer(IMGID dispchout)
 
 
 
-static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
+static errno_t DM_displ2V(
+    IMGID imgdisp,
+    IMGID imgvolt)
 {
     //    printf("DISP -> VOLT  %lu actuators\n",
     //           ((uint64_t) (*DMxsize)) * (*DMysize));
@@ -1149,12 +1150,20 @@ static errno_t update_dmdisp(
            dmdisptmp,
            sizeof(float) * (*DMxsize) * (*DMysize));
 
+    // print current time
+    
+
+
     return RETURN_SUCCESS;
 }
 
 
 
-static errno_t update_dmdispzpo(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
+static errno_t update_dmdispzpo(
+    IMGID imgdisp,
+    IMGID *imgch,
+    float *dmdisptmp
+)
 {
     for(uint_fast64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
     {
@@ -1199,12 +1208,17 @@ static errno_t compute_function()
         imgch[ch] = stream_connect_create_2Df32(name, *DMxsize, *DMysize);
     }
 
-    // Combined DM channel
+    // Combined DM displacement
+    // This is the sum of active DM displacement channels
+    //
     IMGID imgdisp = stream_connect_create_2Df32(DMcombout, *DMxsize, *DMysize);
 
     // Combined DM channel zero point offset
+    //
     IMGID imgdispzpo =
         stream_connect_create_2Df32(DMcomboutzpo, *DMxsize, *DMysize);
+
+   
 
 
     // Create temporaray storage to compute summed displacement
@@ -1428,6 +1442,7 @@ static errno_t compute_function()
 
     free(dmdisptmp);
     free(imgch);
+
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;

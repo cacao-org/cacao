@@ -6,9 +6,45 @@
 
 MSdescr="make DM poke modes"
 
+set +u
+if [ -z ${CACAO_CONFWDIR+x} ]; then
+	CACAO_CONFWDIR="conf"
+fi
+set -u
+
 MSextdescr="Make DM poke modes for response matrix acquisition
 
-Writes DM poke matrices to ./conf/RMmodesDM/ directory
+CACAO_CONFWDIR
+Optional: Use CACAO_CONFWDIR to select directory
+Default: ./conf/
+
+INPUT (optional)
+
+  <CACAO_CONFWDIR>/RMmodesDM/DMmask.fits
+	DM mask. Value=1 for active actuators, 0 otherwise
+	Will be created if it does not exist, assuming all actuators active.
+
+OUTPUT
+
+  <CACAO_CONFWDIR>/RMmodesDM/FpokesC.<CPAmax>.fits
+	Fourier modes, up to cycles per aperture = <CPAmax>
+
+  <CACAO_CONFWDIR>/RMmodesDM/ZpokesC.<NBzer>.fits
+	Zerkine mode, up to index <NBzer>
+
+  <CACAO_CONFWDIR>/RMmodesDM/HpokeC.fits
+  <CACAO_CONFWDIR>/RMmodesDM/Hpixindex.fits
+  <CACAO_CONFWDIR>/RMmodesDM/Hmat.fits
+	Hadamard modes, full complement.
+	HpokeC    : modes
+	Hpixindex : actuator index
+	Hmat      : encoding/decoding matrix
+
+
+Writes DM poke matrices to ./<CACAO_CONFWDIR>/RMmodesDM/ directory
+
+Creates DM modes with minimal assumptions or knowledge of the optical sytem.
+This is typically the starting point of a calibration, used to define poke modes to probe the system.
 "
 
 source milk-script-std-config
@@ -48,7 +84,7 @@ if [ "$CACAO_DMSPATIAL" == "0" ]; then
 	echo "CACAO_DM_beam_rad: ${CACAO_DM_beam_rad}"
 fi
 
-DMMODEDIR="conf/RMmodesDM"
+DMMODEDIR="${CACAO_CONFWDIR}/RMmodesDM"
 mkdir -p ${DMMODEDIR}
 
 

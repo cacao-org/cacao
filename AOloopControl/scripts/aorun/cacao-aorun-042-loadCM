@@ -14,16 +14,32 @@ fi
 set -u
 
 
+# Calibration files / streams
+# mandatory
+declare -a calarrmand=("CMmodesDM" "CMmodesWFS")
+# optional
+declare -a calarropt=("dmmask" "wfsmask" "zrespM" "wfsdarkraw" "wfsref")
+
+
+
 MSextdescr="Select control matrix and load it
 
-Use CACAO_CONFWDIR to select directory
+CACAO_CONFWDIR = ${CACAO_CONFWDIR}
+Optional: Use CACAO_CONFWDIR to select directory
+Default: ./conf/
 
-Copies dmmask<TAG>, wfsmask<TAG>, CMmodesWFS<TAG>, CMmodesDM<TAG> from:
-CACAO_CONFWDIR/
+TAG
+Optional: specify <TAG> with -t option
+Default: none
+
+For each cal sname, symlink file
+CACAO_CONFWDIR/sname.<TAG>.fits
 to:
-conf/
+./conf/sname.fits
+and then load file to shared memory sname
 
-Load to shared memory
+Mandatory: ${calarrmand[@]}
+Optional : ${calarropt[@]}
 
 "
 source milk-script-std-config
@@ -41,25 +57,21 @@ function setfiletag()
 	filetag=".$1"
 }
 
+MSopt+=( "l:listcomm:setlistcommands::List commands, do not run them" )
+TESTMODE=0
+function setlistcommands()
+{
+	TESTMODE=1
+}
+
+
 
 source milk-argparse
 
 
-# Calibration files / streams
-declare -a calarr=("CMmodesDM" "CMmodesWFS" "dmmask" "wfsmask" "zrespM")
 
 
-# construct filenames: DESTINATION
-#CMDMfnameDEST="conf/CMmodesDM.fits"
-#CMWFSfnameDEST="conf/CMmodesWFS.fits"
-#dmmaskfnameDEST="conf/dmmask.fits"
-#wfsmaskfnameDEST="conf/wfsmask.fits"
 
-# SOURCE
-#CMDMfnameSRC="${CACAO_CONFWDIR}/CMmodesDM${filetag}.fits"
-#CMWFSfnameSRC="${CACAO_CONFWDIR}/CMmodesWFS${filetag}.fits"
-#dmmaskfnameSRC="${CACAO_CONFWDIR}/dmmask${filetag}.fits"
-#wfsmaskfnameSRC="${CACAO_CONFWDIR}/wfsmask${filetag}.fits"
 
 EXITSTATUS=0
 
@@ -67,12 +79,13 @@ EXITSTATUS=0
 #checkFile ${CMWFSfnameSRC}
 
 
-for calname in "${calarr[@]}"
+for calname in "${calarrmand[@]}"
 do
 fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
 fnameDEST="conf/${calname}.fits"
+if [[ $TESTMODE == 0 ]]; then
 checkFile ${fnameSRC}
-checkFile ${fnameSRC}
+fi
 done
 
 
@@ -83,30 +96,41 @@ if [ ${EXITSTATUS} = 1 ]; then
 	exit 1
 fi
 
-
+echo "TAG = ${filetag}"
 
 
 # Checking FPS and turning off runproc
 
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MVMGPU_CMODEVAL2DM ${CACAO_FPSPROC_MVMGPU_CMODEVAL2DM}
-if [ ${FPScheckOK} == "OK" ]; then
+if [[ ${FPScheckOK} == "OK" ]]; then
+if [[ ${TESTMODE} == 0 ]]; then
 	sendFPScmd "runstop mvalC2dm-${CACAO_LOOPNUMBER}"
+else
+	echo "COMMAND: runstop mvalC2dm-${CACAO_LOOPNUMBER}"
+fi
 fi
 
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MODALFILTERING ${CACAO_FPSPROC_MODALFILTERING}
-if [ ${FPScheckOK} == "OK" ]; then
+if [[ ${FPScheckOK} == "OK" ]]; then
+if [[ ${TESTMODE} == 0 ]]; then
 	sendFPScmd "runstop mfilt-${CACAO_LOOPNUMBER}"
+else
+	echo "COMMAND: runstop mfilt-${CACAO_LOOPNUMBER}"
+fi
 fi
 
 
 FPScheckOK="OK"
 checkFPSON CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL ${CACAO_FPSPROC_MVMGPU_WFS2CMODEVAL}
-if [ ${FPScheckOK} == "OK" ]; then
+if [[ ${FPScheckOK} == "OK" ]]; then
+if [[ ${TESTMODE} == 0 ]]; then
 	sendFPScmd "runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
+else
+	echo "COMMAND: runstop wfs2cmodeval-${CACAO_LOOPNUMBER}"
 fi
-
+fi
 
 
 
@@ -115,48 +139,61 @@ fi
 
 
 if [[ "${CACAO_CONFWDIR}" == "conf" ]]; then
-echo "Adopting existing conf"
+  echo "Adopting existing conf"
 else
-echo "Adopting external conf: Updating files"
-
-
-for calname in "${calarr[@]}"
-do
-fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
-fnameDEST="conf/${calname}.fits"
-
-echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
-ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
-done
-
-
-#echo "lininking ${PWD}/${CMDMfnameSRC} as ${CMDMfnameDEST}"
-#ln -sf ${PWD}/${CMDMfnameSRC} ${CMDMfnameDEST}
-
-#echo "linking ${PWD}/${CMWFSfnameSRC} as ${CMWFSfnameDEST}"
-#ln -sf ${PWD}/${CMWFSfnameSRC} ${CMWFSfnameDEST}
-
-#echo "linking ${PWD}/${dmmaskfnameSRC} as ${dmmaskfnameDEST}"
-#ln -sf ${PWD}/${dmmaskfnameSRC} ${dmmaskfnameDEST}
-
-#echo "linking ${PWD}/${wfsmaskfnameSRC} as ${wfsmaskfnameDEST}"
-#ln -sf ${PWD}/${wfsmaskfnameSRC} ${wfsmaskfnameDEST}
+  echo "Adopting external conf: Updating files"
 fi
 
 
-# legacy
-#rm -f /milk/shm/aol${CACAO_LOOPNUMBER}_DMmodes.im.shm
-#rm -f /milk/shm/aol${CACAO_LOOPNUMBER}_modesWFS.im.shm
-#milk-FITS2shm ${CMDMfnameSRC} aol${CACAO_LOOPNUMBER}_DMmodes
-#milk-FITS2shm ${CMWFSfnameSRC} aol${CACAO_LOOPNUMBER}_modesWFS
-
-CACAO_CONFWDIR="conf" # force update
-for calname in "${calarr[@]}"
+for calname in "${calarrmand[@]}"
 do
-cacao-calib-streamupdate ${calname}
+  fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
+  fnameDEST="conf/${calname}.fits"
+
+  if [[ "${fnameSRC}" == "${fnameDEST}" ]]; then
+    echo "No linking needed"
+  else
+	echo ""
+    echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
+    if [[ ${TESTMODE} == 0 ]]; then
+      ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
+    else
+      echo "COMMAND: ln -sf ${PWD}/${fnameSRC} ${fnameDEST}"
+    fi
+  fi
+  if [[ ${TESTMODE} == 0 ]]; then
+    cacao-calib-streamload ${calname}
+  fi
 done
 
-#cacao-calib-streamupdate CMmodesDM
-#cacao-calib-streamupdate CMmodesWFS
-#cacao-calib-streamupdate dmmask
-#cacao-calib-streamupdate wfsmask
+
+
+
+for calname in "${calarropt[@]}"
+do
+  fnameSRC="${CACAO_CONFWDIR}/${calname}${filetag}.fits"
+  fnameDEST="conf/${calname}.fits"
+
+  if [ -f ${fnameSRC} ]; then
+
+  if [[ "${fnameSRC}" == "${fnameDEST}" ]]; then
+    echo "No linking needed"
+  else
+	echo ""
+    echo "lininking ${PWD}/${fnameSRC} as ${fnameDEST}"
+    if [[ ${TESTMODE} == 0 ]]; then
+      ln -sf ${PWD}/${fnameSRC} ${fnameDEST}
+    else
+      echo "COMMAND: ln -sf ${PWD}/${fnameSRC} ${fnameDEST}"
+    fi
+  fi
+
+  if [[ ${TESTMODE} == 0 ]]; then
+    cacao-calib-streamload ${calname}
+  fi
+
+  fi
+
+done
+
+

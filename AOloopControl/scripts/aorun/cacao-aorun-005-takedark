@@ -6,13 +6,20 @@
 # script 1-line description
 MSdescr="Take WFS camera dark frame"
 
+set +u
+if [ -z ${CACAO_CONFWDIR+x} ]; then
+	CACAO_CONFWDIR="conf"
+fi
+set -u
+
 
 # Extended description
 MSextdescr="Reads from aolX_wfsim stream
+
 Averages a number of frames
-Saes into stream aolX_wfsdarkraw
+Saves into stream aolX_wfsdarkraw
 Make aolX_wfsdark sym link pointer to aolX_wfsdarkraw
-Saves dark as conf/aolX_wfsdarkraw.fits"
+Saves dark as ${CACAO_CONFWDIR}/aolX_wfsdarkraw.fits"
 
 
 source milk-script-std-config
@@ -64,7 +71,7 @@ set -u
 
 sleep 1
 
-mkdir -p conf
+mkdir -p ${CACAO_CONFWDIR}
 
 datestring="$(date -u +'%Y-%m-%dT%H:%M:%S.%NZ')"
 
@@ -77,14 +84,14 @@ streamave ..triggermode 3
 streamave ..loopcntMax ${NBframe}
 streamave .out_shared 0
 streamave aol${CACAO_LOOPNUMBER}_wfsim imdark ${NBframe}
-saveFITS imdark "conf/wfsdarkraw.fits"
+saveFITS imdark "${CACAO_CONFWDIR}/wfsdarkraw.fits"
 listim
 exitCLI
 EOF
 cacaomsglog "STOP acquisition"
-cacaomsglog "SAVED wfsdarkraw as conf/wfsdarkraw.fits"
+cacaomsglog "SAVED wfsdarkraw as ${CACAO_CONFWDIR}/wfsdarkraw.fits"
 
-stat -t conf/wfsdarkraw.fits
+stat -t ${CACAO_CONFWDIR}/wfsdarkraw.fits
 
 # LOGGING
 # see cacaofuncs-log for conventions

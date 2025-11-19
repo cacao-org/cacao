@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
+
+# script 1-line description
+MSdescr="cacao stop run process"
+
+MSextdescr="cacao stop run process
+interface to fpsCTRL
+
+Example:
+cacao-fpsrunstop mfilt
+"
+
+source milk-script-std-config
+source cacao-check-cacaovars
+
+MSarg+=( "fpsname:string:FPS name" )
+
+append_loopnumber="1"
+MSopt+=( "n:noappend:set_noappend::dont append -CACAO_LOOPNUMBER to fpsname" )
+function set_noappend() {
+	append_loopnumber="0"
+}
+
+source milk-argparse
+fpsname="${inputMSargARRAY[0]}"
+
+
+fpsfullname="$fpsname"
+if [ ${append_loopnumber} == "1" ]; then
+fpsfullname="${fpsname}-${CACAO_LOOPNUMBER}"
+fi
+
+sendFPScmd "runstop ${fpsfullname}"
