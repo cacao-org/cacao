@@ -244,10 +244,12 @@ static errno_t dark_sub(
                    __FILE__,
                    __LINE__);
             printf("datatype = %d\n", darkWFSatype);
-            exit(0);
+            exit(1); // That's a little agressive ?
             break;
         }
     }
+
+    return RETURN_SUCCESS;
 }
 
 static errno_t spec_norm(
@@ -277,6 +279,8 @@ static errno_t spec_norm(
                                                    normval;
         }
     }
+
+    return RETURN_SUCCESS;
 }
 
 static errno_t compute_function()
