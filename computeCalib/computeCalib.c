@@ -19,9 +19,6 @@
 // Application to which module belongs
 #define MODULE_APPLICATION "cacao"
 
-#define _GNU_SOURCE
-
-
 
 #include "CommandLineInterface/CLIcore.h"
 

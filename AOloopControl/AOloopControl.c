@@ -32,8 +32,6 @@
 // Module short description
 #define MODULE_DESCRIPTION "AO loop control"
 
-#define _GNU_SOURCE
-
 
 
 
