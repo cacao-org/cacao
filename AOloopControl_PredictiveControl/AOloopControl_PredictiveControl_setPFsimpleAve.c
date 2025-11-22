@@ -10,8 +10,6 @@
 
 #include <math.h>
 
-#include <math.h>
-
 #include "CommandLineInterface/CLIcore.h"
 
 #include "COREMOD_memory/COREMOD_memory.h"
