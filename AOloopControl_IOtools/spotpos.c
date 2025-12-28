@@ -182,7 +182,7 @@ static errno_t spot_position(
     //
     IMGID spotposimg;
     spotposimg =
-        stream_connect_create_2D(outimg->name, 4, 1, _DATATYPE_FLOAT);
+        stream_connect_create_2D(outimg->name, 6, 1, _DATATYPE_FLOAT);
 
 
     float xstart = spot_x0 - spot_searchrad;
@@ -214,9 +214,6 @@ static errno_t spot_position(
         jjend = (uint32_t) yend;
     }
 
-    printf("Window size %f:  X %d %d  Y %d %d\n", spot_searchrad, iistart, iiend, jjstart, jjend);
-    fflush(stdout);
-
     double xpos = 0.0;
     double ypos = 0.0;
     double sumval = 0.0;
@@ -226,9 +223,6 @@ static errno_t spot_position(
     // If dark image is present, subtract it from inimg
     if(indarkimg->ID != -1)
     {
-        printf("with dark\n");
-        fflush(stdout);
-
         for(uint32_t ii = iistart; ii < iiend; ii++)
             for(uint32_t jj = jjstart; jj < jjend; jj++)
             {
@@ -244,9 +238,6 @@ static errno_t spot_position(
     }
     else
     {
-        printf("no dark\n");
-        fflush(stdout);
-
         for(uint32_t ii = iistart; ii < iiend; ii++)
             for(uint32_t jj = jjstart; jj < jjend; jj++)
             {
@@ -266,8 +257,10 @@ static errno_t spot_position(
 
     spotposimg.im->array.F[0] = xpos;
     spotposimg.im->array.F[1] = ypos;
-    spotposimg.im->array.F[2] = sumval;
-    spotposimg.im->array.F[3] = pixcnt;
+    spotposimg.im->array.F[2] = xpos + spot_x0;
+    spotposimg.im->array.F[3] = ypos + spot_y0;
+    spotposimg.im->array.F[4] = sumval;
+    spotposimg.im->array.F[5] = pixcnt;
 
 
     DEBUG_TRACE_FEXIT();
@@ -295,7 +288,7 @@ static errno_t compute_function()
     {
         printf("CONNECTING / CREATING output stream\n");
         outposimg =
-            stream_connect_create_2D(outspotpos, 4, 1, _DATATYPE_FLOAT);
+            stream_connect_create_2D(outspotpos, 6, 1, _DATATYPE_FLOAT);
     }
 
 
