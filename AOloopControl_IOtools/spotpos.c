@@ -219,10 +219,10 @@ static errno_t spot_position(
     float spot_y0,
     float spot_searchrad,
     IMGID *outimg,
-    float *mappingXX,
-    float *mappingYY,
-    float *mappingXY,
-    float *mappingYX,
+    float mappingXX,
+    float mappingYY,
+    float mappingXY,
+    float mappingYX,
     IMGID *outvecimg
 )
 {
@@ -332,6 +332,8 @@ static errno_t spot_position(
     spotposimg.im->array.F[4] = sumval;
     spotposimg.im->array.F[5] = pixcnt;
 
+    spotposvecimg.im->array.F[0] = xpos * mappingXX + ypos * mappingYX;
+    spotposvecimg.im->array.F[1] = xpos * mappingXY + ypos * mappingYY;
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
@@ -381,10 +383,10 @@ static errno_t compute_function()
             *spoty0,
             *searchrad,
             &outposimg,
-            mappingXX,
-            mappingYY,
-            mappingXY,
-            mappingYX,
+            *mappingXX,
+            *mappingYY,
+            *mappingXY,
+            *mappingYX,
             &outposvecimg
         );
 
