@@ -63,6 +63,12 @@ target_include_directories(${LIBNAME} PUBLIC
 target_link_libraries(${LIBNAME} PRIVATE ${LINKLIBS})
 
 install(TARGETS ${LIBNAME} DESTINATION lib)
+
+install(PROGRAMS
+	scripts/cacao-fpslistadd-SPOTPOS
+	DESTINATION bin)
+
+
 install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 
 install(PROGRAMS ${SCRIPTS} DESTINATION bin)
