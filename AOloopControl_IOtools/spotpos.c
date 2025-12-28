@@ -226,6 +226,9 @@ static errno_t spot_position(
     // If dark image is present, subtract it from inimg
     if(indarkimg->ID != 0)
     {
+        printf("with dark\n");
+        fflush(stdout);
+
         for(uint32_t ii = iistart; ii < iiend; ii++)
             for(uint32_t jj = jjstart; jj < jjend; jj++)
             {
@@ -241,6 +244,9 @@ static errno_t spot_position(
     }
     else
     {
+        printf("no dark\n");
+        fflush(stdout);
+
         for(uint32_t ii = iistart; ii < iiend; ii++)
             for(uint32_t jj = jjstart; jj < jjend; jj++)
             {
