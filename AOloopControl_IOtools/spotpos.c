@@ -30,8 +30,24 @@ static long      fpi_spoty0 = -1;
 static float *searchrad;
 static long      fpi_searchrad = -1;
 
-
+// position data
+// xrel, yrel, xabs, yabs, flux, pixcnt
 static char *outspotpos;
+
+
+// 2D transformation matrix between pixel pos and TT value
+static float *mappingXX;
+static long      fpi_mappingXX = -1;
+static float *mappingYY;
+static long      fpi_mappingYY = -1;
+static float *mappingXY;
+static long      fpi_mappingXY = -1;
+static float *mappingYX;
+static long      fpi_mappingYX = -1;
+
+// 2D position vector matching control TT
+static char *outspotposvec;
+
 
 static CLICMDARGDEF farg[] =
 {
@@ -92,10 +108,55 @@ static CLICMDARGDEF farg[] =
     {
         CLIARG_STR,
         ".outspotpos",
-        "output spot position vector",
-        "ttvect",
+        "output spot position data",
+        "ttdat",
         CLIARG_HIDDEN_DEFAULT,
         (void **) &outspotpos,
+        NULL
+    },
+    {
+        CLIARG_FLOAT32,
+        ".mappingXX",
+        "mapping XX coeff",
+        "1.0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &mappingXX,
+        &fpi_mappingXX
+    },
+    {
+        CLIARG_FLOAT32,
+        ".mappingYY",
+        "mapping YY coeff",
+        "1.0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &mappingYY,
+        &fpi_mappingYY
+    },
+    {
+        CLIARG_FLOAT32,
+        ".mappingXY",
+        "mapping XY coeff",
+        "0.0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &mappingXY,
+        &fpi_mappingXY
+    },
+    {
+        CLIARG_FLOAT32,
+        ".mappingYX",
+        "mapping YX coeff",
+        "0.0",
+        CLIARG_VISIBLE_DEFAULT,
+        (void **) &mappingYX,
+        &fpi_mappingYX
+    },
+    {
+        CLIARG_STR,
+        ".outspotposvec",
+        "output 2D spot position vector (control TT)",
+        "ttvec",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &outspotposvec,
         NULL
     }
 };
@@ -157,7 +218,12 @@ static errno_t spot_position(
     float spot_x0,
     float spot_y0,
     float spot_searchrad,
-    IMGID *outimg
+    IMGID *outimg,
+    float *mappingXX,
+    float *mappingYY,
+    float *mappingXY,
+    float *mappingYX,
+    IMGID *outvecimg
 )
 {
     DEBUG_TRACE_FSTART();
@@ -184,6 +250,10 @@ static errno_t spot_position(
     spotposimg =
         stream_connect_create_2D(outimg->name, 6, 1, _DATATYPE_FLOAT);
 
+
+    IMGID spotposvecimg;
+    spotposimg =
+        stream_connect_create_2D(outimg->name, 2, 1, _DATATYPE_FLOAT);
 
     float xstart = spot_x0 - spot_searchrad;
     uint32_t iistart = 0;
@@ -291,6 +361,12 @@ static errno_t compute_function()
             stream_connect_create_2D(outspotpos, 6, 1, _DATATYPE_FLOAT);
     }
 
+    IMGID outposvecimg;
+    {
+        printf("CONNECTING / CREATING output stream\n");
+        outposvecimg =
+            stream_connect_create_2D(outspotposvec, 2, 1, _DATATYPE_FLOAT);
+    }
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
@@ -304,12 +380,18 @@ static errno_t compute_function()
             *spotx0,
             *spoty0,
             *searchrad,
-            &outposimg
+            &outposimg,
+            mappingXX,
+            mappingYY,
+            mappingXY,
+            mappingYX,
+            &outposvecimg
         );
 
         // stream is updated here, and not in the function called above, so that
         // the above function can be chained with others
         processinfo_update_output_stream(processinfo, outposimg.ID);
+        processinfo_update_output_stream(processinfo, outposvecimg.ID);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
