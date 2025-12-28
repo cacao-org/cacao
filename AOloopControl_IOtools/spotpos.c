@@ -224,7 +224,7 @@ static errno_t spot_position(
 
 
     // If dark image is present, subtract it from inimg
-    if(indarkimg->ID != 0)
+    if(indarkimg->ID != -1)
     {
         printf("with dark\n");
         fflush(stdout);
