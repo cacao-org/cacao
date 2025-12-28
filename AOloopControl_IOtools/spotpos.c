@@ -37,7 +37,7 @@ static CLICMDARGDEF farg[] =
 {
     {
         CLIARG_IMG,
-        ".in_name",
+        ".insname",
         "input image",
         "im1",
         CLIARG_VISIBLE_DEFAULT,
