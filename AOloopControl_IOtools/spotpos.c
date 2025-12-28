@@ -81,7 +81,7 @@ static CLICMDARGDEF farg[] =
         &fpi_spoty0
     },
     {
-        CLIARG_UINT32,
+        CLIARG_FLOAT32,
         ".searchrad",
         "search radius",
         "10",
