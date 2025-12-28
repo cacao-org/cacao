@@ -257,7 +257,8 @@ static errno_t spot_position(
     ypos /= sumval;
 
     spotposimg.im->array.F[0] = xpos;
-    spotposimg.im->array.F[0] = ypos;
+    spotposimg.im->array.F[1] = ypos;
+    spotposimg.im->array.F[2] = sumval;
 
 
     DEBUG_TRACE_FEXIT();
@@ -285,7 +286,7 @@ static errno_t compute_function()
     {
         printf("CONNECTING / CREATING output stream\n");
         outposimg =
-            stream_connect_create_2D(outspotpos, 2, 1, _DATATYPE_FLOAT);
+            stream_connect_create_2D(outspotpos, 3, 1, _DATATYPE_FLOAT);
     }
 
 
