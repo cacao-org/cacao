@@ -31,6 +31,7 @@
 
 #include "acquireWFSim.h"
 #include "findspots.h"
+#include "spotpos.h"
 #include "WFScamsim.h"
 #include "WFSmap.h"
 #include "ao188_preprocessor.h"
@@ -53,6 +54,7 @@ INIT_MODULE_LIB(AOloopControl_IOtools)
 static errno_t init_module_CLI()
 {
     CLIADDCMD_AOloopControl_IOtools__acquireWFSim();
+    CLIADDCMD_AOloopControl_IOtools__spotpos();
     CLIADDCMD_AOloopControl_IOtools__WFScamsim();
     CLIADDCMD_AOloopControl_IOtools__WFSmap();
     CLIADDCMD_AOloopControl_IOtools__findspots();

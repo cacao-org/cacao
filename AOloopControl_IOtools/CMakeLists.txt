@@ -11,6 +11,7 @@ set(SOURCEFILES
     acquireWFSim.c
     ao188_preprocessor.c
     findspots.c
+    spotpos.c
     WFScamsim.c
     WFSmap.c
     acquireWFSspec.c
@@ -22,6 +23,7 @@ set(INCLUDEFILES
     acquireWFSim.h
     ao188_preprocessor.h
     findspots.h
+    spotpos.h
     WFScamsim.h
     WFSmap.h
     acquireWFSspec.h
