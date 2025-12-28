@@ -221,41 +221,40 @@ static errno_t spot_position(
     double ypos = 0.0;
     double sumval = 0.0;
     double pixcnt = 0.0;
-    for(uint32_t ii = iistart; ii < iiend; ii++)
+
+
+    // If dark image is present, subtract it from inimg
+    if(indarkimg->ID != 0)
     {
+        for(uint32_t ii = iistart; ii < iiend; ii++)
+            for(uint32_t jj = jjstart; jj < jjend; jj++)
+            {
+                float x = 1.0*ii - spot_x0;
+                float y = 1.0*jj - spot_y0;
+                float v = inimg->im->array.F[jj * xsize + ii]- indarkimg->im->array.F[jj * xsize + ii];
 
-        // If dark image is present, subtract it from inimg
-        if(indarkimg->ID != 0)
-        {
-            for(uint32_t ii = iistart; ii < iiend; ii++)
-                for(uint32_t jj = jjstart; jj < jjend; jj++)
-                {
-                    float x = 1.0*ii - spot_x0;
-                    float y = 1.0*jj - spot_y0;
-                    float v = inimg->im->array.F[jj * xsize + ii]- indarkimg->im->array.F[jj * xsize + ii];
-
-                    xpos += x*v;
-                    ypos += y*v;
-                    sumval += v;
-                    pixcnt += 1.0;
-                }
-        }
-        else
-        {
-            for(uint32_t ii = iistart; ii < iiend; ii++)
-                for(uint32_t jj = jjstart; jj < jjend; jj++)
-                {
-                    float x = 1.0*ii - spot_x0;
-                    float y = 1.0*jj - spot_y0;
-                    float v = inimg->im->array.F[jj * xsize + ii];
-
-                    xpos += x*v;
-                    ypos += y*v;
-                    sumval += v;
-                    pixcnt += 1.0;
-                }
-        }
+                xpos += x*v;
+                ypos += y*v;
+                sumval += v;
+                pixcnt += 1.0;
+            }
     }
+    else
+    {
+        for(uint32_t ii = iistart; ii < iiend; ii++)
+            for(uint32_t jj = jjstart; jj < jjend; jj++)
+            {
+                float x = 1.0*ii - spot_x0;
+                float y = 1.0*jj - spot_y0;
+                float v = inimg->im->array.F[jj * xsize + ii];
+
+                xpos += x*v;
+                ypos += y*v;
+                sumval += v;
+                pixcnt += 1.0;
+            }
+    }
+
     xpos /= sumval;
     ypos /= sumval;
 
