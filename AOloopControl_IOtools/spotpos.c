@@ -46,7 +46,7 @@ static float *mappingYX;
 static long      fpi_mappingYX = -1;
 
 // 2D position vector matching control TT
-static char *outspotposvec;
+static char *outTTvec;
 
 
 static CLICMDARGDEF farg[] =
@@ -152,11 +152,11 @@ static CLICMDARGDEF farg[] =
     },
     {
         CLIARG_STR,
-        ".outspotposvec",
-        "output 2D spot position vector (control TT)",
+        ".outTTvec",
+        "output 2D TT vector (control TT)",
         "ttvec",
         CLIARG_HIDDEN_DEFAULT,
-        (void **) &outspotposvec,
+        (void **) &outTTvec,
         NULL
     }
 };
@@ -218,7 +218,7 @@ static errno_t spot_position(
     float spot_x0,
     float spot_y0,
     float spot_searchrad,
-    IMGID *outimg,
+    IMGID *outdatimg,
     float mappingXX,
     float mappingYY,
     float mappingXY,
@@ -242,18 +242,11 @@ static errno_t spot_position(
     // check if dark image exists
     resolveIMGID(indarkimg, ERRMODE_NULL);
 
-
-
-    // Create/connect to output
+    // Checko output
     //
-    IMGID spotposimg;
-    spotposimg =
-        stream_connect_create_2D(outimg->name, 6, 1, _DATATYPE_FLOAT);
+    resolveIMGID(outdatimg, ERRMODE_ABORT);
+    resolveIMGID(outvecimg, ERRMODE_ABORT);
 
-
-    IMGID spotposvecimg;
-    spotposimg =
-        stream_connect_create_2D(outimg->name, 2, 1, _DATATYPE_FLOAT);
 
     float xstart = spot_x0 - spot_searchrad;
     uint32_t iistart = 0;
@@ -325,15 +318,15 @@ static errno_t spot_position(
     xpos /= sumval;
     ypos /= sumval;
 
-    spotposimg.im->array.F[0] = xpos;
-    spotposimg.im->array.F[1] = ypos;
-    spotposimg.im->array.F[2] = xpos + spot_x0;
-    spotposimg.im->array.F[3] = ypos + spot_y0;
-    spotposimg.im->array.F[4] = sumval;
-    spotposimg.im->array.F[5] = pixcnt;
+    outdatimg->im->array.F[0] = xpos;
+    outdatimg->im->array.F[1] = ypos;
+    outdatimg->im->array.F[2] = xpos + spot_x0;
+    outdatimg->im->array.F[3] = ypos + spot_y0;
+    outdatimg->im->array.F[4] = sumval;
+    outdatimg->im->array.F[5] = pixcnt;
 
-    spotposvecimg.im->array.F[0] = xpos * mappingXX + ypos * mappingYX;
-    spotposvecimg.im->array.F[1] = xpos * mappingXY + ypos * mappingYY;
+    outvecimg->im->array.F[0] = xpos * mappingXX + ypos * mappingYX;
+    outvecimg->im->array.F[1] = xpos * mappingXY + ypos * mappingYY;
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
@@ -363,11 +356,11 @@ static errno_t compute_function()
             stream_connect_create_2D(outspotpos, 6, 1, _DATATYPE_FLOAT);
     }
 
-    IMGID outposvecimg;
+    IMGID outTTvecimg;
     {
         printf("CONNECTING / CREATING output stream\n");
-        outposvecimg =
-            stream_connect_create_2D(outspotposvec, 2, 1, _DATATYPE_FLOAT);
+        outTTvecimg =
+            stream_connect_create_2D(outTTvec, 2, 1, _DATATYPE_FLOAT);
     }
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
@@ -387,13 +380,13 @@ static errno_t compute_function()
             *mappingYY,
             *mappingXY,
             *mappingYX,
-            &outposvecimg
+            &outTTvecimg
         );
 
         // stream is updated here, and not in the function called above, so that
         // the above function can be chained with others
-        processinfo_update_output_stream(processinfo, outposimg.ID);
-        processinfo_update_output_stream(processinfo, outposvecimg.ID);
+        processinfo_update_output_stream(processinfo, outposimg.ID); // outposimg
+        processinfo_update_output_stream(processinfo, outTTvecimg.ID); // outTTvecimg
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
