@@ -182,7 +182,7 @@ static errno_t spot_position(
     //
     IMGID spotposimg;
     spotposimg =
-        stream_connect_create_2D(outimg->name, 3, 1, _DATATYPE_FLOAT);
+        stream_connect_create_2D(outimg->name, 4, 1, _DATATYPE_FLOAT);
 
 
     float xstart = spot_x0 - spot_searchrad;
@@ -214,12 +214,15 @@ static errno_t spot_position(
         jjend = (uint32_t) yend;
     }
 
+    printf("Window:  X %d %d  Y %d %d\n", iistart, iiend, jjstart, jjend);
+    fflush(stdout);
 
 
 
     double xpos = 0.0;
     double ypos = 0.0;
     double sumval = 0.0;
+    double pixcnt = 0.0;
     for(uint32_t ii = iistart; ii < iiend; ii++)
     {
 
@@ -236,6 +239,7 @@ static errno_t spot_position(
                     xpos += x*v;
                     ypos += y*v;
                     sumval += v;
+                    pixcnt += 1.0;
                 }
         }
         else
@@ -250,6 +254,7 @@ static errno_t spot_position(
                     xpos += x*v;
                     ypos += y*v;
                     sumval += v;
+                    pixcnt += 1.0;
                 }
         }
     }
@@ -259,6 +264,7 @@ static errno_t spot_position(
     spotposimg.im->array.F[0] = xpos;
     spotposimg.im->array.F[1] = ypos;
     spotposimg.im->array.F[2] = sumval;
+    spotposimg.im->array.F[3] = pixcnt;
 
 
     DEBUG_TRACE_FEXIT();
@@ -286,7 +292,7 @@ static errno_t compute_function()
     {
         printf("CONNECTING / CREATING output stream\n");
         outposimg =
-            stream_connect_create_2D(outspotpos, 3, 1, _DATATYPE_FLOAT);
+            stream_connect_create_2D(outspotpos, 4, 1, _DATATYPE_FLOAT);
     }
 
 
