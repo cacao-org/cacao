@@ -214,10 +214,8 @@ static errno_t spot_position(
         jjend = (uint32_t) yend;
     }
 
-    printf("Window:  X %d %d  Y %d %d\n", iistart, iiend, jjstart, jjend);
+    printf("Window size %f:  X %d %d  Y %d %d\n", spot_searchrad, iistart, iiend, jjstart, jjend);
     fflush(stdout);
-
-
 
     double xpos = 0.0;
     double ypos = 0.0;
