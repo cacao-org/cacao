@@ -12,6 +12,7 @@
 #include "COREMOD_tools/COREMOD_tools.h"
 
 static char *inimname;
+static char *indarkname;
 
 // approximate spot size
 //
@@ -41,6 +42,15 @@ static CLICMDARGDEF farg[] =
         "im1",
         CLIARG_VISIBLE_DEFAULT,
         (void **) &inimname,
+        NULL
+    },
+    {
+        CLIARG_IMG,
+        ".indark_name",
+        "input image dark (optional)",
+        "imdark",
+        CLIARG_HIDDEN_DEFAULT,
+        (void **) &indarkname,
         NULL
     },
     {
@@ -84,7 +94,7 @@ static CLICMDARGDEF farg[] =
         ".outspotpos",
         "output spot position vector",
         "ttvect",
-        CLIARG_VISIBLE_DEFAULT,
+        CLIARG_HIDDEN_DEFAULT,
         (void **) &outspotpos,
         NULL
     }
@@ -142,6 +152,7 @@ static errno_t help_function()
 
 static errno_t spot_position(
     IMGID *inimg,
+    IMGID *indarkimg,
     float spot_size,
     float spot_x0,
     float spot_y0,
@@ -152,11 +163,20 @@ static errno_t spot_position(
     DEBUG_TRACE_FSTART();
     // custom stream process function code
 
+    // check input image exists
+    resolveIMGID(inimg, ERRMODE_ABORT);
+
     // get image size
     uint32_t xsize = inimg->size[0];
     uint32_t ysize = inimg->size[1];
     uint64_t xysize = (uint64_t) xsize;
     xysize *= ysize;
+
+
+    // check if dark image exists
+    resolveIMGID(indarkimg, ERRMODE_NULL);
+
+
 
     // Create/connect to output
     //
@@ -202,15 +222,35 @@ static errno_t spot_position(
     double sumval = 0.0;
     for(uint32_t ii = iistart; ii < iiend; ii++)
     {
-        for(uint32_t jj = jjstart; jj < jjend; jj++)
-        {
-            float x = 1.0*ii - spot_x0;
-            float y = 1.0*jj - spot_y0;
-            float v = inimg->im->array.F[jj * xsize + ii];
 
-            xpos += x*v;
-            ypos += y*v;
-            sumval += v;
+        // If dark image is present, subtract it from inimg
+        if(indarkimg->ID != 0)
+        {
+            for(uint32_t ii = iistart; ii < iiend; ii++)
+                for(uint32_t jj = jjstart; jj < jjend; jj++)
+                {
+                    float x = 1.0*ii - spot_x0;
+                    float y = 1.0*jj - spot_y0;
+                    float v = inimg->im->array.F[jj * xsize + ii]- indarkimg->im->array.F[jj * xsize + ii];
+
+                    xpos += x*v;
+                    ypos += y*v;
+                    sumval += v;
+                }
+        }
+        else
+        {
+            for(uint32_t ii = iistart; ii < iiend; ii++)
+                for(uint32_t jj = jjstart; jj < jjend; jj++)
+                {
+                    float x = 1.0*ii - spot_x0;
+                    float y = 1.0*jj - spot_y0;
+                    float v = inimg->im->array.F[jj * xsize + ii];
+
+                    xpos += x*v;
+                    ypos += y*v;
+                    sumval += v;
+                }
         }
     }
     xpos /= sumval;
@@ -231,8 +271,13 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
+    // resolve image and create IMGID
     IMGID inimg = mkIMGID_from_name(inimname);
     resolveIMGID(&inimg, ERRMODE_ABORT);
+
+    // resolve dark image and create IMGID (optional)
+    IMGID indarkimg = mkIMGID_from_name(indarkname);
+    resolveIMGID(&indarkimg, ERRMODE_NULL);
 
     // Create output
     //
@@ -251,6 +296,7 @@ static errno_t compute_function()
 
         spot_position(
             &inimg,
+            &indarkimg,
             *spotsize,
             *spotx0,
             *spoty0,
