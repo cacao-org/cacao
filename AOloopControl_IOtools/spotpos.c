@@ -188,6 +188,16 @@ static errno_t customCONFcheck()
 {
     if(data.fpsptr != NULL)
     {
+        // allow for change of parameter during runtime
+        data.fpsptr->parray[fpi_mappingXX].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_mappingYY].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_mappingXY].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_mappingYX].fpflag |= FPFLAG_WRITERUN;
+
+        data.fpsptr->parray[fpi_spotx0].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_spoty0].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_searchrad].fpflag |= FPFLAG_WRITERUN;
+        data.fpsptr->parray[fpi_spotsize].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
