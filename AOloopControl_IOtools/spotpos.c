@@ -182,7 +182,7 @@ static errno_t spot_position(
     //
     IMGID spotposimg;
     spotposimg =
-        stream_connect_create_2D(outimg->name, 2, 1, _DATATYPE_FLOAT);
+        stream_connect_create_2D(outimg->name, 3, 1, _DATATYPE_FLOAT);
 
 
     float xstart = spot_x0 - spot_searchrad;
