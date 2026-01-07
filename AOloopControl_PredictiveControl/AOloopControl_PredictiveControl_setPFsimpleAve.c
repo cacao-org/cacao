@@ -8,8 +8,6 @@
  *
  */
 
-#define _GNU_SOURCE
-
 #include <math.h>
 
 #include "CommandLineInterface/CLIcore.h"

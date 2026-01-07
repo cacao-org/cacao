@@ -20,9 +20,6 @@
 // Application to which module belongs
 #define MODULE_APPLICATION "cacao"
 
-#define _GNU_SOURCE
-
-
 
 #include "CommandLineInterface/CLIcore.h"
 
@@ -44,10 +41,6 @@
 // macro argument defines module name for bindings
 //
 INIT_MODULE_LIB(AOloopControl_IOtools)
-
-
-
-
 
 
 

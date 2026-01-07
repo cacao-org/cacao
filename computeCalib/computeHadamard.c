@@ -4,8 +4,6 @@
  *
  */
 
-#define _GNU_SOURCE
-
 
 
 #include "CommandLineInterface/CLIcore.h"
