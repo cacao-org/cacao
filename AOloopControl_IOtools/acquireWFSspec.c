@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    acquireWFSspec.c
  * @brief   acquire spectra - a stripped-down version of acquireWFSim for dispersed WFS
@@ -352,7 +353,7 @@ static errno_t compute_function()
         extract_traces(wfsin, specmask, imgimWFSm, *binning);
 
         // Done and post downstream.
-        processinfo_update_output_stream(processinfo, imgimWFSm.ID);
+        processinfo_update_output_stream(processinfo, imgimWFSm.im, NULL);
 
         // STEP 2: DARK SUB -> aolx_imWFS0
         // check wfsdark is to be subtracted
@@ -379,7 +380,7 @@ static errno_t compute_function()
         {
             dark_sub(imgimWFSm, imgWFSdark, imgimWFS0); // dark sub to imWFS0
         }
-        processinfo_update_output_stream(processinfo, imgimWFS0.ID); // post
+        processinfo_update_output_stream(processinfo, imgimWFS0.im, NULL); // post
 
         // STEP 3: NORMALIZATION
         int status_normalize = 0;
@@ -396,7 +397,7 @@ static errno_t compute_function()
                    imgimWFS0.im->array.F,
                    sizeof(float) * sizeWFS);
         }
-        processinfo_update_output_stream(processinfo, imgimWFS1.ID);
+        processinfo_update_output_stream(processinfo, imgimWFS1.im, NULL);
 
         // STEP 4: REFERENCE SUBTRACTION
 
@@ -422,7 +423,7 @@ static errno_t compute_function()
                    imgimWFS1.im->array.F,
                    sizeof(float) * sizeWFS);
         }
-        processinfo_update_output_stream(processinfo, imgimWFS2.ID);
+        processinfo_update_output_stream(processinfo, imgimWFS2.im, NULL);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

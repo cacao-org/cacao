@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    zonalfilter.c
  * @brief   Apply zonal filtering in DM space
@@ -9,7 +10,7 @@
 #include <math.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "CommandLineInterface/timeutils.h"
+#include "timeutils.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
@@ -421,7 +422,7 @@ static errno_t compute_function()
                 zvalDMc[act] = 0.0;
             }
             memcpy(imgout.im->array.F, zvalDMc, sizeof(float) * dmxysize);
-            processinfo_update_output_stream(processinfo, imgout.ID);
+            processinfo_update_output_stream(processinfo, imgout.im, NULL);
 
             // toggle back to OFF
             data.fpsptr->parray[fpi_loopZERO].fpflag &= ~FPFLAG_ONOFF;
@@ -497,7 +498,7 @@ static errno_t compute_function()
                 imgzgain.im->array.F[act] =
                     imgzgainfact.im->array.F[act] * (*loopgain);
             }
-            processinfo_update_output_stream(processinfo, imgzgain.ID);
+            processinfo_update_output_stream(processinfo, imgzgain.im, NULL);
 
 
             for(uint32_t act = 0; act < dmxysize; act++)
@@ -505,7 +506,7 @@ static errno_t compute_function()
                 imgzmult.im->array.F[act] =
                     imgzmultfact.im->array.F[act] * (*loopmult);
             }
-            processinfo_update_output_stream(processinfo, imgzmult.ID);
+            processinfo_update_output_stream(processinfo, imgzmult.im, NULL);
 
 
             for(uint32_t act = 0; act < dmxysize; act++)
@@ -513,7 +514,7 @@ static errno_t compute_function()
                 imgzlimit.im->array.F[act] =
                     imgzlimitfact.im->array.F[act] * (*looplimit);
             }
-            processinfo_update_output_stream(processinfo, imgzlimit.ID);
+            processinfo_update_output_stream(processinfo, imgzlimit.im, NULL);
 
         }
 

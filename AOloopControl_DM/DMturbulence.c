@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
 
@@ -536,7 +537,7 @@ static errno_t compute_function()
 
             imgDM.md->write = 1;
             memcpy(imgDM.im->array.F, turbimarray, sizeof(float)*xsize * ysize);
-            processinfo_update_output_stream(processinfo, imgDM.ID);
+            processinfo_update_output_stream(processinfo, imgDM.im, NULL);
 
             // toggle back to OFF
             data.fpsptr->parray[fpi_turbZERO].fpflag &= ~FPFLAG_ONOFF;
@@ -667,7 +668,7 @@ static errno_t compute_function()
 
             imgDM.md->write = 1;
             memcpy(imgDM.im->array.F, turbimarray, sizeof(float)*xsize * ysize);
-            processinfo_update_output_stream(processinfo, imgDM.ID);
+            processinfo_update_output_stream(processinfo, imgDM.im, NULL);
 
         }
     }

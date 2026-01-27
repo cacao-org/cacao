@@ -12,7 +12,7 @@
 #include "CommandLineInterface/CLIcore.h"
 
 #include "statistic/statistic.h" // ran1, gauss, gauss_trc
-#include "COREMOD_tools/quicksort.h"
+#include "quicksort.h"
 
 // optimization modes
 

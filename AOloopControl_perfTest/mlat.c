@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    mlat.c
  * @brief   measure hardware latency
@@ -570,7 +571,7 @@ static errno_t compute_function()
                 {
                     imgdm.im->array.F[ii] = 0.0;
                 }
-                processinfo_update_output_stream(processinfo, imgdm.ID);
+                processinfo_update_output_stream(processinfo, imgdm.im, NULL);
 
 
 
@@ -708,7 +709,7 @@ static errno_t compute_function()
                             {
                                 imgdm.im->array.F[ii] = (*OPDamp) * imgpokemap.im->array.F[ii];
                             }
-                            processinfo_update_output_stream(processinfo, imgdm.ID);
+                            processinfo_update_output_stream(processinfo, imgdm.im, NULL);
                         }
 
                         // Record time at which DM command is sent
@@ -732,7 +733,7 @@ static errno_t compute_function()
                     {
                         imgdm.im->array.F[ii] = (*OPDamp) * imgpokemap.im->array.F[ii];
                     }
-                    processinfo_update_output_stream(processinfo, imgdm.ID);
+                    processinfo_update_output_stream(processinfo, imgdm.im, NULL);
                 }
                 dmstate = 0;
 

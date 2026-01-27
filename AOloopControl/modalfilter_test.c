@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    modalfilter_test.c
  * @brief   simulate sequence for modal filter test
@@ -395,7 +396,7 @@ static errno_t compute_function()
 
 
     memcpy(imgmvalWFS.im->array.F, mvalCd, sizeof(float)*NBmode);
-    processinfo_update_output_stream(processinfo, imgmvalWFS.ID);
+    processinfo_update_output_stream(processinfo, imgmvalWFS.im, NULL);
 
     /*
         {

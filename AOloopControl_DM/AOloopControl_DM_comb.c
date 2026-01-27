@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    AOloopControl_DM_comb.c
  * @brief   DM control
@@ -1377,18 +1378,18 @@ static errno_t compute_function()
             {
                 DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
                 processinfo_update_output_stream(processinfo,
-                                                 imgch[(*astrogridchan)].ID);
+                                                 imgch[(*astrogridchan)].im, NULL);
             }
 
             // Sum all channels
             update_dmdisp(imgdisp, imgch, dmdisptmp);
-            processinfo_update_output_stream(processinfo, imgdisp.ID);
+            processinfo_update_output_stream(processinfo, imgdisp.im, NULL);
 
             if(*voltmode == 1)
             {
                 imgdmvolt.md->write = 1;
                 DM_displ2V(imgdisp, imgdmvolt);
-                processinfo_update_output_stream(processinfo, imgdmvolt.ID);
+                processinfo_update_output_stream(processinfo, imgdmvolt.im, NULL);
             }
 
 
@@ -1412,18 +1413,18 @@ static errno_t compute_function()
 
                 DMdisp_add_disp_from_circular_buffer(imgch[(*astrogridchan)]);
                 processinfo_update_output_stream(processinfo,
-                                                 imgch[(*astrogridchan)].ID);
+                                                 imgch[(*astrogridchan)].im, NULL);
 
                 // Sum all channels
                 //
                 update_dmdisp(imgdisp, imgch, dmdisptmp);
-                processinfo_update_output_stream(processinfo, imgdisp.ID);
+                processinfo_update_output_stream(processinfo, imgdisp.im, NULL);
 
                 if(*voltmode == 1)
                 {
                     imgdmvolt.md->write = 1;
                     DM_displ2V(imgdisp, imgdmvolt);
-                    processinfo_update_output_stream(processinfo, imgdmvolt.ID);
+                    processinfo_update_output_stream(processinfo, imgdmvolt.im, NULL);
                 }
             }
         }
@@ -1432,7 +1433,7 @@ static errno_t compute_function()
         {
             // printf("Updating zpo %d\n", zpooffsetchange);
             update_dmdispzpo(imgdispzpo, imgch, dmdisptmp);
-            processinfo_update_output_stream(processinfo, imgdispzpo.ID);
+            processinfo_update_output_stream(processinfo, imgdispzpo.im, NULL);
         }
 
 

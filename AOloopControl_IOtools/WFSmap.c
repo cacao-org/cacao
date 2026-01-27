@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    WFSmap.c
  * @brief   remap WFS image
@@ -297,7 +298,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
         image_pixremap(wfsinimg, mapimg, wfsoutimg, 1);
-        processinfo_update_output_stream(processinfo, wfsoutimg.ID);
+        processinfo_update_output_stream(processinfo, wfsoutimg.im, NULL);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

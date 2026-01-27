@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file mlat_decode.c
  *
@@ -549,7 +550,7 @@ static errno_t compute_function()
             *nb0end
         );
 
-        processinfo_update_output_stream(processinfo, outimg.ID);
+        processinfo_update_output_stream(processinfo, outimg.im, NULL);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

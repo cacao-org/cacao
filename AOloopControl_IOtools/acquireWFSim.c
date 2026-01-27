@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    acquireWFS.c
  * @brief   acquire and preprocess WFS image
@@ -570,7 +571,7 @@ static errno_t compute_function()
             }
         }
 
-        processinfo_update_output_stream(processinfo, imgimWFS0.ID);
+        processinfo_update_output_stream(processinfo, imgimWFS0.im, NULL);
         if(processinfo->loopcnt % n_print_timings == 0)
         {
             clock_gettime(CLOCK_MILK, &time2);
@@ -675,7 +676,7 @@ static errno_t compute_function()
                        sizeof(float) * sizeWFS);
             }
         }
-        processinfo_update_output_stream(processinfo, imgimWFS1.ID);
+        processinfo_update_output_stream(processinfo, imgimWFS1.im, NULL);
         if(processinfo->loopcnt % n_print_timings == 0)
         {
             clock_gettime(CLOCK_MILK, &time2);
@@ -710,7 +711,7 @@ static errno_t compute_function()
                 }
             }
 
-            processinfo_update_output_stream(processinfo, imgimWFS2.ID);
+            processinfo_update_output_stream(processinfo, imgimWFS2.im, NULL);
         }
         else
         {
@@ -719,7 +720,7 @@ static errno_t compute_function()
                    imgimWFS1.im->array.F,
                    sizeof(float) * sizeWFS);
 
-            processinfo_update_output_stream(processinfo, imgimWFS2.ID);
+            processinfo_update_output_stream(processinfo, imgimWFS2.im, NULL);
         }
         if(processinfo->loopcnt % n_print_timings == 0)
         {
@@ -760,7 +761,7 @@ static errno_t compute_function()
                     imgimWFS3.im->array.F[ii] = 0.0;
                 }
             }
-            processinfo_update_output_stream(processinfo, imgimWFS3.ID);
+            processinfo_update_output_stream(processinfo, imgimWFS3.im, NULL);
         }
         if(processinfo->loopcnt % n_print_timings == 0)
         {
@@ -867,7 +868,7 @@ static errno_t compute_function()
             }
 
 
-            processinfo_update_output_stream(processinfo, imgwfsrefc.ID);
+            processinfo_update_output_stream(processinfo, imgwfsrefc.im, NULL);
         }
         if(processinfo->loopcnt % n_print_timings == 0)
         {

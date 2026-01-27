@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file compute_control_modes.c
  * @brief Compute AO control modes in both input (WFS) and output (DM) space
@@ -1198,7 +1199,7 @@ static errno_t compute_function()
 
 
         // streamprocess(inimg, outimg);
-        // processinfo_update_output_stream(processinfo, outimg.ID);
+        // processinfo_update_output_stream(processinfo, outimg.im, NULL);
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END

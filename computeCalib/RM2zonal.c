@@ -7,7 +7,7 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
-#include "CommandLineInterface/timeutils.h"
+#include "timeutils.h"
 
 /*
 #include <gsl/gsl_blas.h>

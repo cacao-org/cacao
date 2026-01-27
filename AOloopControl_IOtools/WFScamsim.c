@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    WFScamsim.c
  * @brief   camera simulation for WFS
@@ -321,7 +322,7 @@ static errno_t compute_function()
         }
         wfsoutimg.im->md->atime = ts;
 
-        processinfo_update_output_stream(processinfo, wfsoutimg.ID);
+        processinfo_update_output_stream(processinfo, wfsoutimg.im, NULL);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

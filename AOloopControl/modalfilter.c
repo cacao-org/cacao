@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    modalfilter.c
  * @brief   Apply modal filtering
@@ -9,7 +10,7 @@
 #include <math.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "CommandLineInterface/timeutils.h"
+#include "timeutils.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
@@ -1375,7 +1376,7 @@ static errno_t compute_function()
             }
 
             memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
-            processinfo_update_output_stream(processinfo, imgout.ID);
+            processinfo_update_output_stream(processinfo, imgout.im, NULL);
 
             // toggle back to OFF
             data.fpsptr->parray[fpi_loopZERO].fpflag &= ~FPFLAG_ONOFF;
@@ -1494,7 +1495,7 @@ static errno_t compute_function()
                 // if not running PF, apply modes to output
                 //
                 memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
-                processinfo_update_output_stream(processinfo, imgout.ID);
+                processinfo_update_output_stream(processinfo, imgout.im, NULL);
             }
 
 
@@ -1523,7 +1524,7 @@ static errno_t compute_function()
                     imgmvaloffloadDM.im->array.F[mi] = val;
 
                 }
-                processinfo_update_output_stream(processinfo, imgmvaloffloadDM.ID);
+                processinfo_update_output_stream(processinfo, imgmvaloffloadDM.im, NULL);
             }
 
 
@@ -1583,7 +1584,7 @@ static errno_t compute_function()
 
                 uint64_t PFcnt = imgmvalPF.md->cnt0;
 
-                processinfo_update_output_stream(processinfo, imgOLmval.ID);
+                processinfo_update_output_stream(processinfo, imgOLmval.im, NULL);
 
 
 
@@ -1623,7 +1624,7 @@ static errno_t compute_function()
                     memcpy(imgout.im->array.F,
                            mvaloutapply,
                            sizeof(float) * NBmode);
-                    processinfo_update_output_stream(processinfo, imgout.ID);
+                    processinfo_update_output_stream(processinfo, imgout.im, NULL);
 
 
 
@@ -1863,7 +1864,7 @@ static errno_t compute_function()
                 imgmgain.im->array.F[mi] =
                     imgmgainfact.im->array.F[mi] * (*loopgain);
             }
-            processinfo_update_output_stream(processinfo, imgmgain.ID);
+            processinfo_update_output_stream(processinfo, imgmgain.im, NULL);
 
 
             for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -1871,7 +1872,7 @@ static errno_t compute_function()
                 imgmmult.im->array.F[mi] =
                     imgmmultfact.im->array.F[mi] * (*loopmult);
             }
-            processinfo_update_output_stream(processinfo, imgmmult.ID);
+            processinfo_update_output_stream(processinfo, imgmmult.im, NULL);
 
 
             for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -1879,7 +1880,7 @@ static errno_t compute_function()
                 imgmlimit.im->array.F[mi] =
                     imgmlimitfact.im->array.F[mi] * (*looplimit);
             }
-            processinfo_update_output_stream(processinfo, imgmlimit.ID);
+            processinfo_update_output_stream(processinfo, imgmlimit.im, NULL);
 
 
 
@@ -1888,7 +1889,7 @@ static errno_t compute_function()
                 imgoffloadmgain.im->array.F[mi] =
                     imgoffloadmgainfact.im->array.F[mi] * (*offloadloopgain);
             }
-            processinfo_update_output_stream(processinfo, imgoffloadmgain.ID);
+            processinfo_update_output_stream(processinfo, imgoffloadmgain.im, NULL);
 
 
             for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -1896,7 +1897,7 @@ static errno_t compute_function()
                 imgoffloadmmult.im->array.F[mi] =
                     imgoffloadmmultfact.im->array.F[mi] * (*offloadloopmult);
             }
-            processinfo_update_output_stream(processinfo, imgoffloadmmult.ID);
+            processinfo_update_output_stream(processinfo, imgoffloadmmult.im, NULL);
 
 
             for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -1904,7 +1905,7 @@ static errno_t compute_function()
                 imgoffloadmlimit.im->array.F[mi] =
                     imgoffloadmlimitfact.im->array.F[mi] * (*offloadlooplimit);
             }
-            processinfo_update_output_stream(processinfo, imgoffloadmlimit.ID);
+            processinfo_update_output_stream(processinfo, imgoffloadmlimit.im, NULL);
 
 
 
@@ -1914,7 +1915,7 @@ static errno_t compute_function()
                 imgmPFmix.im->array.F[mi] =
                     imgmPFmixfact.im->array.F[mi] * (*PFmixcoeff);
             }
-            processinfo_update_output_stream(processinfo, imgmPFmix.ID);
+            processinfo_update_output_stream(processinfo, imgmPFmix.im, NULL);
 
 
 
@@ -1978,15 +1979,15 @@ static errno_t compute_function()
 
                     imgtbuff_mvalDM.md->cnt1 = tbuffslice;
                     processinfo_update_output_stream(processinfo,
-                                                     imgtbuff_mvalDM.ID);
+                                                     imgtbuff_mvalDM.im, NULL);
 
                     imgtbuff_mvalWFS.md->cnt1 = tbuffslice;
                     processinfo_update_output_stream(processinfo,
-                                                     imgtbuff_mvalWFS.ID);
+                                                     imgtbuff_mvalWFS.im, NULL);
 
                     imgtbuff_mvalOL.md->cnt1 = tbuffslice;
                     processinfo_update_output_stream(processinfo,
-                                                     imgtbuff_mvalOL.ID);
+                                                     imgtbuff_mvalOL.im, NULL);
 
                     tbuffslice++;
                     if(tbuffslice == 2)
@@ -2004,7 +2005,7 @@ static errno_t compute_function()
                                                            modal_limit_counter;
                         mlimitcntarray[mi] = 0;
                     }
-                    processinfo_update_output_stream(processinfo, imgmlimitcntfrac.ID);
+                    processinfo_update_output_stream(processinfo, imgmlimitcntfrac.im, NULL);
 
 
 
@@ -2018,14 +2019,14 @@ static errno_t compute_function()
                         imgmvalDMave.im->array.F[mi] = mvalDMave[mi] / modal_limit_counter;
                         mvalDMave[mi] = 0;
                     }
-                    processinfo_update_output_stream(processinfo, imgmvalDMave.ID);
+                    processinfo_update_output_stream(processinfo, imgmvalDMave.im, NULL);
 
                     for(uint32_t mi = 0; mi < NBmode; mi++)
                     {
                         imgmvalDMrms.im->array.F[mi] = sqrt(mvalDMrms[mi] / modal_limit_counter);
                         mvalDMrms[mi] = 0;
                     }
-                    processinfo_update_output_stream(processinfo, imgmvalDMrms.ID);
+                    processinfo_update_output_stream(processinfo, imgmvalDMrms.im, NULL);
 
 
                     // WFS buffer stats
@@ -2036,14 +2037,14 @@ static errno_t compute_function()
                         imgmvalWFSave.im->array.F[mi] = mvalWFSave[mi] / modal_limit_counter;
                         mvalWFSave[mi] = 0;
                     }
-                    processinfo_update_output_stream(processinfo, imgmvalWFSave.ID);
+                    processinfo_update_output_stream(processinfo, imgmvalWFSave.im, NULL);
 
                     for(uint32_t mi = 0; mi < NBmode; mi++)
                     {
                         imgmvalWFSrms.im->array.F[mi] = sqrt(mvalWFSrms[mi] / modal_limit_counter);
                         mvalWFSrms[mi] = 0;
                     }
-                    processinfo_update_output_stream(processinfo, imgmvalWFSrms.ID);
+                    processinfo_update_output_stream(processinfo, imgmvalWFSrms.im, NULL);
 
 
 
@@ -2054,14 +2055,14 @@ static errno_t compute_function()
                         imgmvalOLave.im->array.F[mi] = mvalOLave[mi] / modal_limit_counter;
                         mvalOLave[mi] = 0;
                     }
-                    processinfo_update_output_stream(processinfo, imgmvalOLave.ID);
+                    processinfo_update_output_stream(processinfo, imgmvalOLave.im, NULL);
 
                     for(uint32_t mi = 0; mi < NBmode; mi++)
                     {
                         imgmvalOLrms.im->array.F[mi] = sqrt(mvalOLrms[mi] / modal_limit_counter);
                         mvalOLrms[mi] = 0;
                     }
-                    processinfo_update_output_stream(processinfo, imgmvalOLrms.ID);
+                    processinfo_update_output_stream(processinfo, imgmvalOLrms.im, NULL);
 
 
 
@@ -2072,14 +2073,14 @@ static errno_t compute_function()
                         imgmvalPFresave.im->array.F[mi] = mvalPFresave[mi] / modal_limit_counter;
                         mvalPFresave[mi] = 0;
                     }
-                    processinfo_update_output_stream(processinfo, imgmvalPFresave.ID);
+                    processinfo_update_output_stream(processinfo, imgmvalPFresave.im, NULL);
 
                     for(uint32_t mi = 0; mi < NBmode; mi++)
                     {
                         imgmvalPFresrms.im->array.F[mi] = sqrt(mvalPFresrms[mi] / modal_limit_counter);
                         mvalPFresrms[mi] = 0;
                     }
-                    processinfo_update_output_stream(processinfo, imgmvalPFresrms.ID);
+                    processinfo_update_output_stream(processinfo, imgmvalPFresrms.im, NULL);
 
 
 
@@ -2129,7 +2130,7 @@ static errno_t compute_function()
             nanosleep(&twait, NULL);
 
             memcpy(imginWFS.im->array.F, imgout.im->array.F, sizeof(float) * NBmode);
-            processinfo_update_output_stream(processinfo, imginWFS.ID);
+            processinfo_update_output_stream(processinfo, imginWFS.im, NULL);
         }
 
 

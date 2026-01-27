@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    modaloptimize.c
  * @brief   Optimize modal control parameters
@@ -520,7 +521,7 @@ static errno_t compute_function()
         {
             imgblkmask[blki].im->array.SI8[mi] = 1;
         }
-        processinfo_update_output_stream(processinfo, imgblkmask[blki].ID);
+        processinfo_update_output_stream(processinfo, imgblkmask[blki].im, NULL);
     }
 
 
@@ -554,7 +555,7 @@ static errno_t compute_function()
                                mvalOLbuffarray[blki],
                                sizeof(float) * blksize[blki] * blksamplesize[blki]);
                         processinfo_update_output_stream(processinfo,
-                                                         imgmvalOLbuffblk[blki].ID);
+                                                         imgmvalOLbuffblk[blki].im, NULL);
                         blksampleindex[blki] = 0;
                     }
                 }

@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    ao188_preprocessor.c
  * @brief   Convert ao188 APD data into curvature + SH data
@@ -334,7 +335,7 @@ static errno_t compute_function()
         // Begin with LOWFS computations
         lowfs_info.im->md->write = 1;
         compute_lowfs_info(lowfs_info_ptr, apd_lowfs_ptr);
-        processinfo_update_output_stream(processinfo, lowfs_info.ID);
+        processinfo_update_output_stream(processinfo, lowfs_info.im, NULL);
 
 
         // TODO these 3 curvature computations
@@ -345,7 +346,7 @@ static errno_t compute_function()
         // TODO Pass keywords through. Or don't?
         curv_2k_doublesided.im->md->write = 1;
         two_sided_curvature_compute(curv_2k_doublesided.im->array.F, apd_mat_in.im->array.SI16, NUM_APD_TOTAL, NUM_APD_HOWFS);
-        processinfo_update_output_stream(processinfo, curv_2k_doublesided.ID);
+        processinfo_update_output_stream(processinfo, curv_2k_doublesided.im, NULL);
 
         // Post outputs
         if(curv_sign == 1)
@@ -353,7 +354,7 @@ static errno_t compute_function()
             curv_1k_doublesided.im->md->write = 1;
             memcpy(curv_1k_doublesided.im->array.F, curv_2k_doublesided.im->array.F,
                    NUM_APD_HOWFS * sizeof(float));
-            processinfo_update_output_stream(processinfo, curv_1k_doublesided.ID);
+            processinfo_update_output_stream(processinfo, curv_1k_doublesided.im, NULL);
         }
 
         curv_2k_singlesided.im->md->write = 1;
@@ -363,7 +364,7 @@ static errno_t compute_function()
         apd_integrator_update(apd_integrator, apd_ptr, one_sided_curv_integrator_gain, NUM_APD_HOWFS);
         one_sided_curvature_compute(curv_2k_singlesided.im->array.F, apd_ptr, apd_integrator, NUM_APD_HOWFS, curv_sign);
 
-        processinfo_update_output_stream(processinfo, curv_2k_singlesided.ID);
+        processinfo_update_output_stream(processinfo, curv_2k_singlesided.im, NULL);
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END

@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file spotpos.c
  * @brief Measure spot position, photocenter
@@ -395,8 +396,8 @@ static errno_t compute_function()
 
         // stream is updated here, and not in the function called above, so that
         // the above function can be chained with others
-        processinfo_update_output_stream(processinfo, outposimg.ID); // outposimg
-        processinfo_update_output_stream(processinfo, outTTvecimg.ID); // outTTvecimg
+        processinfo_update_output_stream(processinfo, outposimg.im, NULL); // outposimg
+        processinfo_update_output_stream(processinfo, outTTvecimg.im, NULL); // outTTvecimg
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

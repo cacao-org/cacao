@@ -1,3 +1,4 @@
+#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    measure_linear_respm.c
  * @brief   Measure linear response to perturbation
@@ -832,7 +833,7 @@ static errno_t Measure_Linear_Response_Modal(
                    (void *)(ptr0 + pkinfarray[pokeframe].PokeIndexCTRL_Mapped * framesize),
                    sizeof(float) * sizexyin);
             imgin.md->cnt1 = pkinfarray[pokeframe].PokeIndexCTRL_Mapped;
-            processinfo_update_output_stream(processinfo, imgin.ID);
+            processinfo_update_output_stream(processinfo, imgin.im, NULL);
             clock_gettime(CLOCK_MILK, &pkinfarray[pokeframe].tpoke);
 
 
@@ -866,7 +867,7 @@ static errno_t Measure_Linear_Response_Modal(
                    (void *)(arrayf),
                    sizeof(float) * sizexyin);
             imgin.md->cnt1 = 0;
-            processinfo_update_output_stream(processinfo, imgin.ID);
+            processinfo_update_output_stream(processinfo, imgin.im, NULL);
             free(arrayf);
         }
 

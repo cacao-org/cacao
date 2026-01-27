@@ -10,7 +10,7 @@
 #include <ncurses.h>
 
 #include "CommandLineInterface/CLIcore.h"
-#include "CommandLineInterface/TUItools.h"
+#include "TUItools.h"
 
 
 static short unsigned int wrow, wcol;
