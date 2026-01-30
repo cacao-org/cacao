@@ -154,3 +154,4 @@ install(PROGRAMS scripts/cacao-setup
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})
 
 add_cacao_standalone(cacao-zonalfilter zonalfilter.c)
+add_cacao_standalone(mfilt modalfilter.c)

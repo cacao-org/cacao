@@ -1,2417 +1,554 @@
-#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    modalfilter.c
- * @brief   Apply modal filtering
- *
- *
- *
+ * @brief   Apply modal filtering following FPS practices
  */
 
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <time.h>
 
 #include "CommandLineInterface/CLIcore.h"
+#include "ImageStreamIO/ImageStruct.h"
+#include "COREMOD_iofits/COREMOD_iofits.h"
 #include "timeutils.h"
 
-#include "COREMOD_iofits/COREMOD_iofits.h"
-
-
-// Local variables pointers
-static uint64_t *AOloopindex;
-
-static char *inmval;
-static long  fpi_inmval;
-
-static char *outmval;
-static long  fpi_outmval;
-
-
-// convenient loop on/off toggle
-static int64_t *loopON;
-static long     fpi_loopON;
-
-// keep loop open for NBstep
-// -1 is infinite
-static int64_t *loopNBstep;
-static long     fpi_loopNBstep;
-
-// convenient loop on/off toggle
-static int64_t *loopZERO;
-static long     fpi_loopZERO;
-
-
-
-
-static float *loopgain;
-static long   fpi_loopgain;
-
-static float *loopmult;
-static long   fpi_loopmult;
-
-static float *looplimit;
-static long   fpi_looplimit;
-
-
-
-
-
-
-
-
-
-// Compute open loop modes
-static int64_t *compOL;
-static long     fpi_compOL;
-
-// amplitude correction factor on WFS signal
-static float    *psol_WFSfact;
-static long     fpi_psol_WFSfact;
-
-
-// Latency between DM and WFS
-static float *latencyhardwfr;
-static long   fpi_latencyhardwfr;
-
-// software latency (usually around 1.5 frame)
-// 1 frame + compute time
-static float *latencysoftwfr;
-static long   fpi_latencysoftwfr;
-
-
-// Shared memory telemetry buffers
-static int64_t *comptbuff;
-static long     fpi_comptbuff;
-
-static uint32_t *tbuffsize;
-
-
-// autoset modal limits
-
-// toggle ON / OFF
-static uint64_t *autolim;
-static long      fpi_autolim;
-
-// gain on sigma probing
-static float *autolimprobegain;
-static long   fpi_autolimprobegain;
-
-// sigma-clipping factor
-static float *autolimsigmafact;
-static long   fpi_autolimsigmafact;
-
-
-
-
-
-
-
-
-// Auxillary output modes to be mixed with std output
-
-static uint64_t *auxDMmvalenable;
-static long      fpi_auxDMmvalenable;
-
-// mixing factoor
-static float *auxDMmvalmixfact;
-static long   fpi_auxDMmvalmixfact;
-
-// modulation on/off
-static uint64_t *auxDMmvalmodulate;
-static long      fpi_auxDMmvalmodulate;
-
-// modulation period
-static float *auxDMmvalmodperiod;
-static long   fpi_auxDMmvalmodperiod;
-
-static uint64_t *enablePF;
-static long      fpi_enablePF;
-
-
-// nummber of prediction blocks to wait for
-// this is by how much modevalOL counter should increment
-//
-static uint32_t *PF_NBblock;
-static long      fpi_PF_NBblock;
-
-// how long to wait for PF blocks ?
-static uint32_t *PF_maxwaitus;
-static long      fpi_PF_maxwaitus;
-
-// PF mixing coeff
-static float *PFmixcoeff;
-static long   fpi_PFmixcoeff;
-
-
-
-
-// autoloop self-test : write output back to input
-static uint64_t *autoloopenable;
-static long      fpi_autoloopenable;
-
-static float *autoloopsleep;
-static long   fpi_autoloopsleep;
-
-
-
-
-// self-test: modal response matrix
-static uint64_t *selfRMenable;
-static long      fpi_selfRMenable;
-
-// Number modes
-static uint32_t *selfRMnbmode;
-static long   fpi_selfRMnbmode;
-
-// poke amplitude
-static float *selfRMpokeampl;
-static long   fpi_selfRMpokeampl;
-
-// number of time stamp recorded
-static uint32_t *selfRMzsize;
-static long      fpi_selfRMzsize;
-
-// number of iterations averaged
-static uint32_t *selfRMnbiter;
-static long      fpi_selfRMnbiter;
-
-// time to settle after poke
-static uint32_t *selfRMnbsettlestep;
-static long      fpi_selfRMnbsettlestep;
-
-
-
-
-
-static uint64_t *testOL;
-static long      fpi_testOL;
-
-static uint64_t *testOLloop;
-static long      fpi_testOLloop;
-
-static float *testOLupdategain;
-static long      fpi_testOLupdategain;
-
-
-static uint32_t *testOLmode;
-static long      fpi_testOLmode;
-
-static float *testOLampl;
-static long      fpi_testOLampl;
-
-static uint32_t *testOLnbsample;
-static long      fpi_testOLnbsample;
-
-static uint32_t *testOLcnt;
-static long      fpi_testOLcnt;
-
-
-
-// offload modal output
-//
-static uint64_t *offload;
-static long      fpi_offload;
-
-static float *offloadloopgain;
-static long   fpi_offloadloopgain;
-
-static float *offloadloopmult;
-static long   fpi_offloadloopmult;
-
-static float *offloadlooplimit;
-static long   fpi_offloadlooplimit;
-
-
-
-
-// Record burst of telemetry
-//
-static uint64_t *recburst;
-static long      fpi_recburst;
-
-static uint32_t  *recburst_mode;
-static long      fpi_recburst_mode;
-
-static uint32_t  *recburst_nbsample;
-static long      fpi_recburst_nbsample;
-
-
-
-
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        // AO loop index. Used for naming streams aolX_
-        CLIARG_UINT64,
-        ".AOloopindex",
-        "AO loop index",
-        "0",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &AOloopindex,
-        NULL
-    },
-    {
-        CLIARG_STREAM,
-        ".inmval",
-        "input mode values from WFS",
-        "aol0_modevalWFS",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &inmval,
-        &fpi_inmval
-    },
-    {
-        CLIARG_STREAM,
-        ".outmval",
-        "output mode values to DM",
-        "aol0_modevalDM",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &outmval,
-        &fpi_outmval
-    },
-    {
-        CLIARG_ONOFF,
-        ".loopON",
-        "loop on/off (off=freeze)",
-        "ON",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &loopON,
-        &fpi_loopON
-    },
-    {
-        CLIARG_INT64,
-        ".loopNBstep",
-        "loop nb steps (-1 = inf)",
-        "-1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &loopNBstep,
-        &fpi_loopNBstep
-    },
-    {
-        CLIARG_ONOFF,
-        ".loopZERO",
-        "loop zero",
-        "OFF",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &loopZERO,
-        &fpi_loopZERO
-    },
-    {
-        CLIARG_FLOAT32,
-        ".loopgain",
-        "loop gain",
-        "0.01",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &loopgain,
-        &fpi_loopgain
-    },
-    {
-        CLIARG_FLOAT32,
-        ".loopmult",
-        "loop mult",
-        "0.95",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &loopmult,
-        &fpi_loopmult
-    },
-    {
-        CLIARG_FLOAT32,
-        ".looplimit",
-        "loop limit",
-        "1.0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &looplimit,
-        &fpi_looplimit
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.OLmodes",
-        "compute open loop modes",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compOL,
-        &fpi_compOL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".comp.WFSfact",
-        "amplitude correction factor on WFS",
-        "0.893",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &psol_WFSfact,
-        &fpi_psol_WFSfact
-    },
-    {
-        CLIARG_FLOAT32,
-        ".comp.latencyhardwfr",
-        "hardware DM to WFS latency [frame]",
-        "1.7",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &latencyhardwfr,
-        &fpi_latencyhardwfr
-    },
-    {
-        CLIARG_FLOAT32,
-        ".comp.latencysoftwfr",
-        "software latency [frame]",
-        "1.5",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &latencysoftwfr,
-        &fpi_latencysoftwfr
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.tbuff",
-        "compute telemetry buffer(s)",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &comptbuff,
-        &fpi_comptbuff
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.autolim",
-        "automatic modal limits",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &autolim,
-        &fpi_autolim
-    },
-    {
-        CLIARG_FLOAT32,
-        ".comp.autolimprobegain",
-        "sigma measurement gain",
-        "0.1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &autolimprobegain,
-        &fpi_autolimprobegain
-    },
-    {
-        CLIARG_FLOAT32,
-        ".comp.autolimsigmafact",
-        "autolimit sigma clipping factor",
-        "2.0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &autolimsigmafact,
-        &fpi_autolimsigmafact
-    },
-    {
-        CLIARG_UINT32,
-        ".comp.tbuffsize",
-        "buffer time size",
-        "512",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &tbuffsize,
-        NULL
-    },
-    {
-        CLIARG_ONOFF,
-        ".auxDMmval.enable",
-        "mixing aux DM mode vals from stream aolx_modevalauxDM ?",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &auxDMmvalenable,
-        &fpi_auxDMmvalenable
-    },
-    {
-        CLIARG_FLOAT32,
-        ".auxDMmval.mixfact",
-        "mixing multiplicative factor (0:no mixing)",
-        "1.0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &auxDMmvalmixfact,
-        &fpi_auxDMmvalmixfact
-    },
-    {
-        CLIARG_ONOFF,
-        ".auxDMmval.modulate",
-        "modulate auxDM temporally ?",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &auxDMmvalmodulate,
-        &fpi_auxDMmvalmodulate
-    },
-    {
-        CLIARG_FLOAT32,
-        ".auxDMmval.modperiod",
-        "auxDM modulation period [frame]",
-        "20.0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &auxDMmvalmodperiod,
-        &fpi_auxDMmvalmodperiod
-    },
-    {
-        // enable predictive filter, listen to aolX_modevalPF
-        CLIARG_ONOFF,
-        ".PF.enable",
-        "enable predictive filter",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &enablePF,
-        &fpi_enablePF
-    },
-    {
-        // enable predictive filter, listen to aolX_modevalPF
-        CLIARG_UINT32,
-        ".PF.NBblock",
-        "number of blocks to wait from",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &PF_NBblock,
-        &fpi_PF_NBblock
-    },
-    {
-        // enable predictive filter, listen to aolX_modevalPF
-        CLIARG_UINT32,
-        ".PF.maxwaitus",
-        "maximum wait time for blocks [us]",
-        "500",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &PF_maxwaitus,
-        &fpi_PF_maxwaitus
-    },
-    {
-        // predictive filter mult coeff
-        CLIARG_FLOAT32,
-        ".PF.mixcoeff",
-        "mixing coeff",
-        "0.3",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &PFmixcoeff,
-        &fpi_PFmixcoeff
-    },
-    {
-        CLIARG_ONOFF,
-        ".autoloop.enable",
-        "autoloop self-test: loop back output to input ?",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &autoloopenable,
-        &fpi_autoloopenable
-    },
-    {
-        CLIARG_FLOAT32,
-        ".autoloop.sleep",
-        "loop sleep time",
-        "0.001",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &autoloopsleep,
-        &fpi_autoloopsleep
-    },
-    {
-        CLIARG_ONOFF,
-        ".selfRM.enable",
-        "Start self response matrix measurement",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &selfRMenable,
-        &fpi_selfRMenable
-    },
-    {
-        CLIARG_UINT32,
-        ".selfRM.NBmode",
-        "number of mode poked",
-        "32",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &selfRMnbmode,
-        &fpi_selfRMnbmode
-    },
-    {
-        CLIARG_FLOAT32,
-        ".selfRM.pokeampl",
-        "poke amplitude",
-        "0.01",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &selfRMpokeampl,
-        &fpi_selfRMpokeampl
-    },
-    {
-        CLIARG_UINT32,
-        ".selfRM.zsize",
-        "number of time steps recorded",
-        "20",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &selfRMzsize,
-        &fpi_selfRMzsize
-    },
-    {
-        CLIARG_UINT32,
-        ".selfRM.nbiter",
-        "number of iterations averaged, ideally 8n",
-        "8",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &selfRMnbiter,
-        &fpi_selfRMnbiter
-    },
-    {
-        CLIARG_UINT32,
-        ".selfRM.nbsettle",
-        "number of loop iteration to settle between pokes",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &selfRMnbsettlestep,
-        &fpi_selfRMnbsettlestep
-    },
-    {
-        CLIARG_ONOFF,
-        ".testOL.enable",
-        "OL reconstruction test ON/OFF",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &testOL,
-        &fpi_testOL
-    },
-    {
-        CLIARG_ONOFF,
-        ".testOL.loop",
-        "run inloop",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &testOLloop,
-        &fpi_testOLloop
-    },
-    {
-        CLIARG_FLOAT32,
-        ".testOL.updategain",
-        "update gain (0=check only)",
-        "0.1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &testOLupdategain,
-        &fpi_testOLupdategain
-    },
-    {
-        CLIARG_UINT32,
-        ".testOL.mode",
-        "mode index",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &testOLmode,
-        &fpi_testOLmode
-    },
-    {
-        CLIARG_FLOAT32,
-        ".testOL.ampl",
-        "amplitude",
-        "0.01",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &testOLampl,
-        &fpi_testOLampl
-    },
-    {
-        CLIARG_UINT32,
-        ".testOL.nbsample",
-        "number of samples",
-        "1000",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &testOLnbsample,
-        &fpi_testOLnbsample
-    },
-    {
-        CLIARG_UINT32,
-        ".testOL.cnt",
-        "samples count",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &testOLcnt,
-        &fpi_testOLcnt
-    },
-    {
-        CLIARG_ONOFF,
-        ".offload.enable",
-        "offload output ON/OFF",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &offload,
-        &fpi_offload
-    },
-    {
-        CLIARG_FLOAT32,
-        ".offload.loopgain",
-        "offload loop gain",
-        "0.01",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &offloadloopgain,
-        &fpi_offloadloopgain
-    },
-    {
-        CLIARG_FLOAT32,
-        ".offload.loopmult",
-        "offload loop mult",
-        "0.95",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &offloadloopmult,
-        &fpi_offloadloopmult
-    },
-    {
-        CLIARG_FLOAT32,
-        ".offload.looplimit",
-        "offload loop limit",
-        "1.0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &offloadlooplimit,
-        &fpi_offloadlooplimit
-    },
-    {
-        CLIARG_ONOFF,
-        ".rec.enable",
-        "telemetry ASCII file burt write",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &recburst,
-        &fpi_recburst
-    },
-    {
-        CLIARG_UINT32,
-        ".rec.mode",
-        "mode index",
-        "5",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &recburst_mode,
-        &fpi_recburst_mode
-    },
-    {
-        CLIARG_UINT32,
-        ".rec.nbstep",
-        "number of steps recorded",
-        "1000",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &recburst_nbsample,
-        &fpi_recburst_nbsample
-    }
-};
-
-
-
-
-// Optional custom configuration setup. comptbuff
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
-    if(data.fpsptr != NULL)
-    {
-        data.fpsptr->parray[fpi_inmval].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
-
-
-        data.fpsptr->parray[fpi_loopON].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_loopZERO].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_loopNBstep].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_loopgain].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_loopmult].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_looplimit].fpflag |= FPFLAG_WRITERUN;
-
-        data.fpsptr->parray[fpi_comptbuff].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compOL].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_psol_WFSfact].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_latencyhardwfr].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_latencysoftwfr].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_autolim].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_autolimprobegain].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_autolimsigmafact].fpflag |= FPFLAG_WRITERUN;
-
-
-        data.fpsptr->parray[fpi_auxDMmvalenable].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_auxDMmvalmixfact].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_auxDMmvalmodulate].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_auxDMmvalmodperiod].fpflag |= FPFLAG_WRITERUN;
-
-        data.fpsptr->parray[fpi_enablePF].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_PF_NBblock].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_PF_maxwaitus].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_PFmixcoeff].fpflag |= FPFLAG_WRITERUN;
-
-
-        data.fpsptr->parray[fpi_autoloopenable].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_autoloopsleep].fpflag |= FPFLAG_WRITERUN;
-
-        data.fpsptr->parray[fpi_selfRMenable].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_selfRMnbmode].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_selfRMnbsettlestep].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_selfRMpokeampl].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_selfRMnbiter].fpflag |= FPFLAG_WRITERUN;
-
-        data.fpsptr->parray[fpi_testOL].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_testOLloop].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_testOLupdategain].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_testOLampl].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_testOLmode].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_testOLnbsample].fpflag |= FPFLAG_WRITERUN;
-
-        data.fpsptr->parray[fpi_offload].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_offloadloopgain].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_offloadloopmult].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_offloadlooplimit].fpflag |= FPFLAG_WRITERUN;
-
-        data.fpsptr->parray[fpi_recburst].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_recburst_mode].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_recburst_nbsample].fpflag |= FPFLAG_WRITERUN;
-    }
-
-    return RETURN_SUCCESS;
+#include "fps.h"
+#include "processinfo.h"
+#include "processtools.h"
+
+#include "modalfilter.h"
+
+/* =============================================================================================== */
+/* PARAMETERS DEFINITION                                                                           */
+/* =============================================================================================== */
+
+#define MFILT_PARAMS(X)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_STREAMNAME, char*, ".inmval", "input mode values from WFS", "aol0_modevalWFS", inmval_ptr, GetParamPtr_STRING, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_STREAMNAME, char*, ".outmval", "output mode values to DM", "aol0_modevalDM", outmval_ptr, GetParamPtr_STRING, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_FLOAT32, float*, ".loopgain", "loop gain", "0.01", loopgain_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_FLOAT32, float*, ".loopmult", "loop mult", "0.95", loopmult_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_FLOAT32, float*, ".looplimit", "loop limit", "1.0", looplimit_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".loopZERO", "loop zero", "OFF", loopZERO_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_UINT64, uint64_t*, ".AOloopindex", "AO loop index", "0", AOloopindex_ptr, GetParamPtr_UINT64, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".loopON", "loop on/off (off=freeze)", "ON", loopON_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_INT64, int64_t*, ".loopNBstep", "loop nb steps (-1 = inf)", "-1", loopNBstep_ptr, GetParamPtr_INT64, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".comp.OLmodes", "compute open loop modes", "OFF", compOL_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.WFSfact", "amplitude correction factor on WFS", "0.893", psol_WFSfact_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.latencyhardwfr", "hardware DM to WFS latency [frame]", "1.7", latencyhardwfr_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.latencysoftwfr", "software latency [frame]", "1.5", latencysoftwfr_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".comp.tbuff", "compute telemetry buffer(s)", "OFF", comptbuff_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".comp.autolim", "automatic modal limits", "OFF", autolim_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.autolimprobegain", "sigma measurement gain", "0.1", autolimprobegain_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.autolimsigmafact", "autolimit sigma clipping factor", "2.0", autolimsigmafact_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".comp.tbuffsize", "buffer time size", "512", tbuffsize_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".auxDMmval.enable", "mixing aux DM mode vals", "OFF", auxDMmvalenable_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".auxDMmval.mixfact", "mixing multiplicative factor", "1.0", auxDMmvalmixfact_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".auxDMmval.modulate", "modulate auxDM temporally ?", "OFF", auxDMmvalmodulate_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".auxDMmval.modperiod", "auxDM modulation period [frame]", "20.0", auxDMmvalmodperiod_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".PF.enable", "enable predictive filter", "OFF", enablePF_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".PF.NBblock", "number of blocks to wait from", "0", PF_NBblock_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".PF.maxwaitus", "maximum wait time for blocks [us]", "500", PF_maxwaitus_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".PF.mixcoeff", "mixing coeff", "0.3", PFmixcoeff_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".autoloop.enable", "autoloop self-test", "OFF", autoloopenable_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".autoloop.sleep", "loop sleep time", "0.001", autoloopsleep_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".selfRM.enable", "Start self response matrix measurement", "OFF", selfRMenable_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".selfRM.NBmode", "number of mode poked", "32", selfRMnbmode_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".selfRM.pokeampl", "poke amplitude", "0.01", selfRMpokeampl_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".selfRM.zsize", "number of time steps recorded", "20", selfRMzsize_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".selfRM.nbiter", "number of iterations averaged", "8", selfRMnbiter_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".selfRM.nbsettle", "number of loop iteration to settle", "1", selfRMnbsettlestep_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".testOL.enable", "OL reconstruction test ON/OFF", "OFF", testOL_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".testOL.loop", "run inloop", "OFF", testOLloop_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".testOL.updategain", "update gain", "0.1", testOLupdategain_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".testOL.mode", "mode index", "0", testOLmode_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".testOL.ampl", "amplitude", "0.01", testOLampl_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".testOL.nbsample", "number of samples", "1000", testOLnbsample_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".testOL.cnt", "samples count", "0", testOLcnt_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".offload.enable", "offload output ON/OFF", "OFF", offload_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".offload.loopgain", "offload loop gain", "0.01", offloadloopgain_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".offload.loopmult", "offload loop mult", "0.95", offloadloopmult_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".offload.looplimit", "offload loop limit", "1.0", offloadlooplimit_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".rec.enable", "telemetry ASCII file burt write", "OFF", recburst_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".rec.mode", "mode index", "5", recburst_mode_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".rec.nbstep", "number of steps recorded", "1000", recburst_nbsample_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)
+
+/* Global parameter pointers */
+#define X_PTR_DECL(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...)     static c_type ptr_name = NULL;
+MFILT_PARAMS(X_PTR_DECL)
+#undef X_PTR_DECL
+
+static uint64_t processinfo_change_cnt_local = 0;
+
+static uint64_t fpi_inmval;
+static uint64_t fpi_outmval;
+static uint64_t fpi_loopZERO;
+static uint64_t fpi_loopgain;
+static uint64_t fpi_loopmult;
+static uint64_t fpi_looplimit;
+
+typedef struct {
+    float *mvalDMc;
+    float *mvalout;
+    float *mvaloutapply;
+    
+    // OL
+    float *mvalDMbuff;
+    float *mvalDMOL;
+    int DMtstep;
+    IMGID imgOLmval;
+    
+    // Aux
+    IMGID imgauxmDM;
+    
+    // PF
+    IMGID imgmvalPF;
+    IMGID imgmPFmixfact;
+    IMGID imgmPFmix;
+    IMGID imgcbuff_mvalPF;
+    uint32_t PFcbuff_index;
+    double *mvalPFres;
+    double *mvalPFold;
+    
+    // Gain/Mult/Limit/Zero
+    IMGID imgmgain;
+    IMGID imgmgainfact;
+    IMGID imgmmult;
+    IMGID imgmmultfact;
+    IMGID imgmlimit;
+    IMGID imgmlimitfact;
+    IMGID imgmzeropoint;
+    
+    // Offload
+    IMGID imgoffloadmgain;
+    IMGID imgoffloadmgainfact;
+    IMGID imgoffloadmmult;
+    IMGID imgoffloadmmultfact;
+    IMGID imgoffloadmlimit;
+    IMGID imgoffloadmlimitfact;
+    IMGID imgmvaloffloadDM;
+    
+    // Counters
+    long *mlimitcntarray;
+    long modal_limit_counter;
+    IMGID imgmlimitcntfrac;
+    
+    // Telemetry/Stats
+    IMGID imgtbuff_mvalDM;
+    IMGID imgtbuff_mvalWFS;
+    IMGID imgtbuff_mvalOL;
+    uint32_t tbuffindex;
+    int tbuffslice;
+    
+    double *mvalDMave;
+    double *mvalDMrms;
+    double *mvalWFSave;
+    double *mvalWFSrms;
+    double *mvalOLave;
+    double *mvalOLrms;
+    double *mvalPFresave;
+    double *mvalPFresrms;
+    
+    double *autolimDMsigma;
+
+    // SelfRM
+    IMGID imgselfRM;
+    float *selfRMpokecmd;
+    int blockcnt;
+    int selfRMpokeparity;
+    uint32_t selfRMiter;
+    uint32_t selfRM_pokemode;
+    uint32_t selfRM_pokecnt;
+    float selfRMpokesign;
+    
+    // TestOL
+    float *psOL_probe;
+    float *psOL_estimate;
+    
+    // Burst
+    uint64_t recburstsample;
+    
+    // External DM modeval update detection
+    IMGID imgmodevalDMf;
+    uint64_t imgmodevalDMfcnt0old;
+
+} MFILT_STATE;
+
+/* =============================================================================================== */
+/* COMPUTE LOGIC                                                                                   */
+/* =============================================================================================== */
+
+static MFILT_STATE* modal_filter_init(uint32_t NBmode) {
+    MFILT_STATE *state = (MFILT_STATE*) calloc(1, sizeof(MFILT_STATE));
+    
+    state->mvalDMc = (float *) calloc(NBmode, sizeof(float));
+    state->mvalout = (float *) calloc(NBmode, sizeof(float));
+    state->mvaloutapply = (float *) calloc(NBmode, sizeof(float));
+
+    // OL
+    int NB_DMtstep = 10;
+    state->mvalDMbuff = (float *) calloc(NBmode * NB_DMtstep, sizeof(float));
+    state->mvalDMOL = (float *) calloc(NBmode, sizeof(float));
+    
+    char name[STRINGMAXLEN_STREAMNAME];
+    
+    WRITE_IMAGENAME(name, "aol%lu_modevalOL", *AOloopindex_ptr);
+    state->imgOLmval = stream_connect_create_2Df32(name, NBmode, 1);
+    
+    WRITE_IMAGENAME(name, "aol%lu_modevalauxDM", *AOloopindex_ptr);
+    state->imgauxmDM = stream_connect_create_2Df32(name, NBmode, 1);
+    
+    // PF
+    WRITE_IMAGENAME(name, "aol%lu_modevalPF", *AOloopindex_ptr);
+    state->imgmvalPF = stream_connect_create_2Df32(name, NBmode, 1);
+    
+    WRITE_IMAGENAME(name, "aol%lu_mPFmixfact", *AOloopindex_ptr);
+    state->imgmPFmixfact = stream_connect_create_2Df32(name, NBmode, 1);
+    for(uint32_t mi=0; mi<NBmode; mi++) state->imgmPFmixfact.im->array.F[mi] = 1.0;
+    ImageStreamIO_UpdateIm(state->imgmPFmixfact.im);
+
+    WRITE_IMAGENAME(name, "aol%lu_mPFmix", *AOloopindex_ptr);
+    state->imgmPFmix = stream_connect_create_2Df32(name, NBmode, 1);
+    
+    int PFcbuff_size = 20;
+    WRITE_IMAGENAME(name, "aol%lu_modevalPF_cbuff", *AOloopindex_ptr);
+    state->imgcbuff_mvalPF = stream_connect_create_2Df32(name, PFcbuff_size, NBmode);
+    
+    state->mvalPFres = (double*) calloc(NBmode, sizeof(double));
+    state->mvalPFold = (double*) calloc(NBmode, sizeof(double));
+    
+    // GAIN/MULT/LIMIT
+    WRITE_IMAGENAME(name, "aol%lu_mgain", *AOloopindex_ptr);
+    state->imgmgain = stream_connect_create_2Df32(name, NBmode, 1);
+    
+    WRITE_IMAGENAME(name, "aol%lu_mgainfact", *AOloopindex_ptr);
+    state->imgmgainfact = stream_connect_create_2Df32(name, NBmode, 1);
+    for(uint32_t mi=0; mi<NBmode; mi++) state->imgmgainfact.im->array.F[mi] = 1.0;
+    ImageStreamIO_UpdateIm(state->imgmgainfact.im);
+
+    WRITE_IMAGENAME(name, "aol%lu_mmult", *AOloopindex_ptr);
+    state->imgmmult = stream_connect_create_2Df32(name, NBmode, 1);
+
+    WRITE_IMAGENAME(name, "aol%lu_mmultfact", *AOloopindex_ptr);
+    state->imgmmultfact = stream_connect_create_2Df32(name, NBmode, 1);
+    for(uint32_t mi=0; mi<NBmode; mi++) state->imgmmultfact.im->array.F[mi] = 1.0;
+    ImageStreamIO_UpdateIm(state->imgmmultfact.im);
+    
+    WRITE_IMAGENAME(name, "aol%lu_mzeropoint", *AOloopindex_ptr);
+    state->imgmzeropoint = stream_connect_create_2Df32(name, NBmode, 1);
+
+    WRITE_IMAGENAME(name, "aol%lu_mlimit", *AOloopindex_ptr);
+    state->imgmlimit = stream_connect_create_2Df32(name, NBmode, 1);
+
+    WRITE_IMAGENAME(name, "aol%lu_mlimitfact", *AOloopindex_ptr);
+    state->imgmlimitfact = stream_connect_create_2Df32(name, NBmode, 1);
+    for(uint32_t mi=0; mi<NBmode; mi++) state->imgmlimitfact.im->array.F[mi] = 1.0;
+    ImageStreamIO_UpdateIm(state->imgmlimitfact.im);
+
+    // Offload
+    WRITE_IMAGENAME(name, "aol%lu_offloadmgain", *AOloopindex_ptr);
+    state->imgoffloadmgain = stream_connect_create_2Df32(name, NBmode, 1);
+    
+    WRITE_IMAGENAME(name, "aol%lu_offloadmgainfact", *AOloopindex_ptr);
+    state->imgoffloadmgainfact = stream_connect_create_2Df32(name, NBmode, 1);
+    for(uint32_t mi=0; mi<NBmode; mi++) state->imgoffloadmgainfact.im->array.F[mi] = 1.0;
+    ImageStreamIO_UpdateIm(state->imgoffloadmgainfact.im);
+
+    WRITE_IMAGENAME(name, "aol%lu_offloadmmult", *AOloopindex_ptr);
+    state->imgoffloadmmult = stream_connect_create_2Df32(name, NBmode, 1);
+
+    WRITE_IMAGENAME(name, "aol%lu_offloadmmultfact", *AOloopindex_ptr);
+    state->imgoffloadmmultfact = stream_connect_create_2Df32(name, NBmode, 1);
+    for(uint32_t mi=0; mi<NBmode; mi++) state->imgoffloadmmultfact.im->array.F[mi] = 1.0;
+    ImageStreamIO_UpdateIm(state->imgoffloadmmultfact.im);
+
+    WRITE_IMAGENAME(name, "aol%lu_offloadmlimit", *AOloopindex_ptr);
+    state->imgoffloadmlimit = stream_connect_create_2Df32(name, NBmode, 1);
+
+    WRITE_IMAGENAME(name, "aol%lu_offloadmlimitfact", *AOloopindex_ptr);
+    state->imgoffloadmlimitfact = stream_connect_create_2Df32(name, NBmode, 1);
+    for(uint32_t mi=0; mi<NBmode; mi++) state->imgoffloadmlimitfact.im->array.F[mi] = 1.0;
+    ImageStreamIO_UpdateIm(state->imgoffloadmlimitfact.im);
+    
+    WRITE_IMAGENAME(name, "aol%lu_mvaloffloadDM", *AOloopindex_ptr);
+    state->imgmvaloffloadDM = stream_connect_create_2Df32(name, NBmode, 1);
+
+    // Limit Counter
+    state->mlimitcntarray = (long*) calloc(NBmode, sizeof(long));
+    WRITE_IMAGENAME(name, "aol%lu_mlimitcntfrac", *AOloopindex_ptr);
+    state->imgmlimitcntfrac = stream_connect_create_2Df32(name, NBmode, 1);
+    
+    // Stats
+    state->mvalDMave = (double*) calloc(NBmode, sizeof(double));
+    state->mvalDMrms = (double*) calloc(NBmode, sizeof(double));
+    state->mvalWFSave = (double*) calloc(NBmode, sizeof(double));
+    state->mvalWFSrms = (double*) calloc(NBmode, sizeof(double));
+    state->mvalOLave = (double*) calloc(NBmode, sizeof(double));
+    state->mvalOLrms = (double*) calloc(NBmode, sizeof(double));
+    state->mvalPFresave = (double*) calloc(NBmode, sizeof(double));
+    state->mvalPFresrms = (double*) calloc(NBmode, sizeof(double));
+    state->autolimDMsigma = (double*) calloc(NBmode, sizeof(double));
+
+    // Telemetry Buffers
+    WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex_ptr);
+    state->imgtbuff_mvalDM = stream_connect_create_3Df32(name, NBmode, *tbuffsize_ptr, 2);
+    WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex_ptr);
+    state->imgtbuff_mvalWFS = stream_connect_create_3Df32(name, NBmode, *tbuffsize_ptr, 2);
+    WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex_ptr);
+    state->imgtbuff_mvalOL = stream_connect_create_3Df32(name, NBmode, *tbuffsize_ptr, 2);
+    
+    // SelfRM
+    WRITE_IMAGENAME(name, "aol%lu_mfiltselfRM", *AOloopindex_ptr);
+    state->imgselfRM = stream_connect_create_3Df32(name, NBmode, NBmode, *selfRMzsize_ptr);
+    state->selfRMpokecmd = (float*) calloc(NBmode, sizeof(float));
+    state->selfRMpokesign = 1.0;
+    
+    // External DMf
+    WRITE_IMAGENAME(name, "aol%lu_modevalDMf", *AOloopindex_ptr);
+    state->imgmodevalDMf = stream_connect_create_2Df32(name, NBmode, 1);
+    
+    return state;
 }
 
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
-
-    if(data.fpsptr != NULL)
-    {
-    }
-
-    return RETURN_SUCCESS;
+static void modal_filter_cleanup(MFILT_STATE *state) {
+    if(!state) return;
+    free(state->mvalDMc);
+    free(state->mvalout);
+    free(state->mvaloutapply);
+    free(state->mvalDMbuff);
+    free(state->mvalDMOL);
+    free(state->mvalPFres);
+    free(state->mvalPFold);
+    free(state->mlimitcntarray);
+    free(state->mvalDMave);
+    free(state->mvalDMrms);
+    free(state->mvalWFSave);
+    free(state->mvalWFSrms);
+    free(state->mvalOLave);
+    free(state->mvalOLrms);
+    free(state->mvalPFresave);
+    free(state->mvalPFresrms);
+    free(state->autolimDMsigma);
+    free(state->selfRMpokecmd);
+    if(state->psOL_probe) free(state->psOL_probe);
+    if(state->psOL_estimate) free(state->psOL_estimate);
+    free(state);
 }
-
-static CLICMDDATA CLIcmddata =
-{
-    "modalfilter", "modal filtering", CLICMD_FIELDS_DEFAULTS
-};
-
-
-
-
-// detailed help
-static errno_t help_function()
-{
-    printf("Modal gain for adaptive optics control\n");
-
-
-    printf(
-        "Main input/output streams :\n"
-        "[STREAM]   <.inmval>    input mo       de values\n"
-        "[STREAM]   <.outmval>   output mode values\n");
-
-    printf(
-        "Auxillary input, added to output\n"
-        "[STREAM]  aolx_mo       devalauxDM  auxillary mode values\n"
-        "If enabled, add mode values to output");
-
-    return RETURN_SUCCESS;
-}
-
-
-
 
 /**
- * @brief Modal filtering AO processing
- *
-        * Basic modal control. Each mode controlled independently.
- *
-        * Control parameters for each mode are:
- * - (g) gain
- * - (m) mult
- * - (z) zeropt
- * - (l) limit
- *
- * PROCESSING
- * Output (o) is computed from input (i) according to following steps :
- *
- * Apply gain :
- * o += (z-i)*g
- *
- * Apply mult :
- * o = z + m*(o-z)
- *
- * Apply limit:
- * if o>z+l -> o = z+l
- * if o<z-l -> o = z-l
- *
- *
- *
- * @return errno_t
+ * @brief Modal filtering computation.
  */
-static errno_t compute_function()
+static void modal_filter_step(
+    PROCESSINFO *processinfo,
+    FUNCTION_PARAMETER_STRUCT *fps,
+    IMAGE *imginWFS,
+    IMAGE *imgout,
+    MFILT_STATE *state)
 {
-    DEBUG_TRACE_FSTART();
-
-    // connect to input mode values array and get number of modes
-    //
-    IMGID imginWFS = mkIMGID_from_name(inmval);
-    resolveIMGID(&imginWFS, ERRMODE_ABORT);
-    printf("%u modes\n", imginWFS.md->size[0]);
-    uint32_t NBmode = imginWFS.md->size[0];
-
-    uint64_t recburstsample = 0;
-    FILE *fprec = NULL;
-
-
-    int selfRM_NBmode = (*selfRMnbmode);
-    if(selfRM_NBmode > (int) NBmode)
-    {
-        selfRM_NBmode = NBmode;
+    // Sync external FPS changes to local ProcessInfo
+    if (fps) {
+        if(fps->md->processinfo_change_cnt != processinfo_change_cnt_local) {
+            fps_to_processinfo(fps, processinfo);
+            processinfo_change_cnt_local = fps->md->processinfo_change_cnt;
+        }
     }
 
+    if (!imginWFS || !imgout || !state) return;
 
-    // selfRM initialization
-    //
-    int      blockcnt         = 0;
-    int      selfRMpokeparity = 0; // 0 or 1
-    uint32_t selfRMiter       = 0;
-    uint32_t selfRM_pokemode  = 0;
-    uint32_t selfRM_pokecnt   = 0;
-    float    selfRMpokesign   = 1.0;
-    // create selfRM image
-    //
-    IMGID imgselfRM;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mfiltselfRM", *AOloopindex);
-        imgselfRM = stream_connect_create_3Df32(name, NBmode, NBmode, (*selfRMzsize));
-        for(uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
-        {
-            data.image[imgselfRM.ID].array.F[mi] = 0.0;
+    uint32_t NBmode = imginWFS->md[0].size[0];
+
+    // Zero loop
+    if(loopZERO_ptr && ((*loopZERO_ptr) & FPFLAG_ONOFF)) {
+        for(uint32_t mi = 0; mi < NBmode; mi++) {
+             state->mvalDMc[mi] = 0.0;
+             state->mvalout[mi] = 0.0;
+             state->mvaloutapply[mi] = 0.0;
+        }
+        memset(imgout->array.F, 0, sizeof(float) * NBmode);
+        processinfo_update_output_stream(processinfo, imgout, NULL);
+        (*loopZERO_ptr) &= ~FPFLAG_ONOFF;
+    }
+
+    if((*loopON_ptr) == 1) {
+        if(*loopNBstep_ptr > 0) {
+            *loopNBstep_ptr = *loopNBstep_ptr - 1;
+        }
+        if(*loopNBstep_ptr == 0) {
+            *loopON_ptr = 0;
+            (*loopON_ptr) &= ~FPFLAG_ONOFF;
+            *loopNBstep_ptr = 1;
         }
 
-        ImageStreamIO_UpdateIm(imgselfRM.im);
-    }
-
-    float *selfRMpokecmd = (float *) malloc(sizeof(float) * NBmode);
-    for(uint32_t mi = 0; mi < NBmode; mi++)
-    {
-        selfRMpokecmd[mi] = 0.0;
-    }
-
-    // allocate memory for temporary output mode values
-
-    // current control values
-    float *mvalDMc = (float *) malloc(sizeof(float) * NBmode);
-    for(uint32_t mi; mi < NBmode; mi++)
-    {
-        mvalDMc[mi] = 0.0;
-    }
-
-    // output (computed)
-    float *mvalout = (float *) malloc(sizeof(float) * NBmode);
-    // output (applied, includes selfRM poke)
-    float *mvaloutapply = (float *) malloc(sizeof(float) * NBmode);
-
-
-
-
-
-
-    // OPEN LOOP MODE VALUES
-    //
-    // allocate memory for DM modes history
-    //
-    int    NB_DMtstep = 10; // history buffer size
-    int    DMtstep    = 0;  // current index
-    float *mvalDMbuff = (float *) malloc(sizeof(float) * NBmode * NB_DMtstep);
-    float *mvalDMOL = (float *) malloc(sizeof(float) * NBmode);
-
-    IMGID imgOLmval;
-    {
-        char OLmvalname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(OLmvalname, "aol%lu_modevalOL", *AOloopindex);
-        imgOLmval = stream_connect_create_2Df32(OLmvalname, NBmode, 1);
-    }
-
-
-
-    // TELEMETRY BUFFERS
-    //
-    uint32_t tbuffindex = 0;
-    int      tbuffslice = 0;
-    IMGID    imgtbuff_mvalDM;
-    IMGID    imgtbuff_mvalWFS;
-    IMGID    imgtbuff_mvalOL;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-
-        WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
-        imgtbuff_mvalDM =
-            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
-
-        WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
-        imgtbuff_mvalWFS =
-            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
-
-        WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
-        imgtbuff_mvalOL =
-            stream_connect_create_3Df32(name, NBmode, (*tbuffsize), 2);
-    }
-
-
-    // connect/create output mode coeffs
-    //
-    IMGID imgout = stream_connect_create_2Df32(outmval, NBmode, 1);
-    {
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            data.image[imgout.ID].array.F[mi] = 0.0;
+        // Aux DM factor
+        float auxDMfact = (*auxDMmvalmixfact_ptr);
+        if((*auxDMmvalmodulate_ptr) == 1) {
+            static double modpha = 0.0;
+            modpha += 1.0 / (*auxDMmvalmodperiod_ptr);
+            if(modpha > 1.0) modpha -= 1.0;
+            auxDMfact *= sin(2.0 * M_PI * modpha);
         }
 
-        ImageStreamIO_UpdateIm(imgout.im);
-    }
-
-    // connect/create externally filtered DM mode coeffs
-    //
-    IMGID imgmodevalDMf;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_modevalDMf", *AOloopindex);
-        imgmodevalDMf = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            data.image[imgmodevalDMf.ID].array.F[mi] = 0.0;
-        }
-        ImageStreamIO_UpdateIm(imgmodevalDMf.im);
-    }
-
-
-
-    // connect/create aux DM control mode coeffs
-    //
-    IMGID imgauxmDM;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_modevalauxDM", *AOloopindex);
-        imgauxmDM = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            data.image[imgauxmDM.ID].array.F[mi] = 0.0;
-        }
-        ImageStreamIO_UpdateIm(imgauxmDM.im);
-    }
-
-
-
-
-    // ======================= PRDICTIVE FILTER ==========================
-
-    // connect/create predictive filter (PF) control mode coeffs
-    //
-    IMGID imgmvalPF;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_modevalPF", *AOloopindex);
-        imgmvalPF = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmvalPF.im->array.F[mi] = 0.0;
-        }
-        ImageStreamIO_UpdateIm(imgmvalPF.im);
-    }
-
-    // mPFmix factors
-    // to be multiplied by overal PFmix to become mPFmix
-    // allows for single-parameter PFmix tuning
-    //
-    IMGID imgmPFmixfact;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mPFmixfact", *AOloopindex);
-        imgmPFmixfact = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmPFmixfact.im->array.F[mi] = 1.0;
-        }
-        ImageStreamIO_UpdateIm(imgmPFmixfact.im);
-    }
-
-    IMGID imgmPFmix;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mPFmix", *AOloopindex);
-        imgmPFmix = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-
-
-
-
-    // PREDICTIVE RECONSTRUCTION SMALL CIRCULAR TELEMETRY BUFFERS
-    // Store recent history of predicted psOL telemetry so it can
-    // be compared with actual psOL
-    //
-    IMGID imgcbuff_mvalPF;
-    // next value to be written, incremented after writing new value
-    uint32_t PFcbuff_index = 0;
-    int      PFcbuff_size = 20;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-
-        WRITE_IMAGENAME(name, "aol%lu_modevalPF_cbuff", *AOloopindex);
-        imgcbuff_mvalPF =
-            stream_connect_create_2Df32(name, PFcbuff_size, NBmode);
-    }
-
-
-
-
-
-
-
-
-
-
-
-    // connect/create output offload mode coeffs to DM
-    //
-    IMGID imgmvaloffloadDM;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mvaloffloadDM", *AOloopindex);
-        imgmvaloffloadDM = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmvaloffloadDM.im->array.F[mi] = 0.0;
-        }
-        ImageStreamIO_UpdateIm(imgmvaloffloadDM.im);
-    }
-
-
-
-
-
-
-    // ========================= MODAL GAIN ===========================
-    printf("Setting up modal gain\n");
-
-    IMGID imgmgain;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mgain", *AOloopindex);
-        imgmgain = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    list_image_ID();
-    printf(" mgain ID = %ld\n", imgmgain.ID);
-    fflush(stdout);
-
-    // modal gains factors
-    // to be multiplied by overal gain to become mgain
-    // allows for single-parameter gain tuning
-    IMGID imgmgainfact;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mgainfact", *AOloopindex);
-        imgmgainfact = stream_connect_create_2Df32(name, NBmode, 1);
-        printf("%s  ID = %ld\n", imgmgainfact.name, imgmgainfact.ID);
-        list_image_ID();
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmgainfact.im->array.F[mi] = 1.0;
-        }
-        ImageStreamIO_UpdateIm(imgmgainfact.im);
-    }
-
-
-    IMGID imgoffloadmgain;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_offloadmgain", *AOloopindex);
-        imgoffloadmgain = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    list_image_ID();
-    printf(" offloadmgain ID = %ld\n", imgoffloadmgain.ID);
-    fflush(stdout);
-
-    // offload modal gains factors
-    // to be multiplied by overal gain to become offloadmgain
-    // allows for single-parameter gain tuning
-    IMGID imgoffloadmgainfact;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_offloadmgainfact", *AOloopindex);
-        imgoffloadmgainfact = stream_connect_create_2Df32(name, NBmode, 1);
-        printf("%s  ID = %ld\n", imgoffloadmgainfact.name, imgoffloadmgainfact.ID);
-        list_image_ID();
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgoffloadmgainfact.im->array.F[mi] = 1.0;
-        }
-        ImageStreamIO_UpdateIm(imgoffloadmgainfact.im);
-    }
-
-
-
-
-
-
-
-
-
-
-
-    // ========================= MODAL MULT ==========================
-    printf("Setting up modal mult\n");
-
-    IMGID imgmmult;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mmult", *AOloopindex);
-        imgmmult = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-    // modal multiiplicative factors
-    // to be multiplied by overal mult to become mmult
-    // allows for single-parameter mult tuning
-    IMGID imgmmultfact;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mmultfact", *AOloopindex);
-        imgmmultfact = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmmultfact.im->array.F[mi] = 1.0;
-        }
-        ImageStreamIO_UpdateIm(imgmmultfact.im);
-    }
-
-
-    IMGID imgoffloadmmult;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_offloadmmult", *AOloopindex);
-        imgoffloadmmult = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-    // offload modal multiiplicative factors
-    // to be multiplied by overal mult to become offloadmmult
-    // allows for single-parameter offloadmult tuning
-    IMGID imgoffloadmmultfact;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_offloadmmultfact", *AOloopindex);
-        imgoffloadmmultfact = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgoffloadmmultfact.im->array.F[mi] = 1.0;
-        }
-        ImageStreamIO_UpdateIm(imgoffloadmmultfact.im);
-    }
-
-
-
-
-    // ========================= MODAL ZEROPOINT ==========================
-    printf("Setting up modal zero point\n");
-
-    IMGID imgmzeropoint;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mzeropoint", *AOloopindex);
-        imgmzeropoint = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmzeropoint.im->array.F[mi] = 0.0;
-        }
-        ImageStreamIO_UpdateIm(imgmzeropoint.im);
-    }
-
-
-
-    // ========================= MODAL LIMIT ==========================
-    printf("Setting up modal limit\n");
-
-    IMGID imgmlimit;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mlimit", *AOloopindex);
-        imgmlimit = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-    // modal multiiplicative factors
-    // to be multiplied by overal mult to become mmult
-    // allows for single-parameter mult tuning
-    IMGID imgmlimitfact;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mlimitfact", *AOloopindex);
-        imgmlimitfact = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgmlimitfact.im->array.F[mi] = 1.0;
-        }
-        ImageStreamIO_UpdateIm(imgmlimitfact.im);
-    }
-
-
-    IMGID imgoffloadmlimit;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_offloadmlimit", *AOloopindex);
-        imgoffloadmlimit = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-    // modal multiiplicative factors
-    // to be multiplied by overal mult to become mmult
-    // allows for single-parameter mult tuning
-    IMGID imgoffloadmlimitfact;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_offloadmlimitfact", *AOloopindex);
-        imgoffloadmlimitfact = stream_connect_create_2Df32(name, NBmode, 1);
-        for(uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            imgoffloadmlimitfact.im->array.F[mi] = 1.0;
-        }
-        ImageStreamIO_UpdateIm(imgoffloadmlimitfact.im);
-    }
-
-
-
-
-
-    // ========================= MODAL LIMIT COUNTER ==================
-    long *mlimitcntarray = (long *) malloc(sizeof(long) * NBmode);
-    long modal_limit_counter = 0;
-    for(uint32_t mi = 0; mi < NBmode; mi++)
-    {
-        mlimitcntarray[mi] = 0;
-    }
-
-    IMGID imgmlimitcntfrac;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mlimitcntfrac", *AOloopindex);
-        imgmlimitcntfrac = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-
-
-
-    // ========================= STATS ==================
-    // accumulated and reported for each log buffer duration
-    //
-    double *mvalDMave = (double *) malloc(sizeof(double) * NBmode);
-    double *mvalDMrms = (double *) malloc(sizeof(double) * NBmode);
-    double *mvalWFSave = (double *) malloc(sizeof(double) * NBmode);
-    double *mvalWFSrms = (double *) malloc(sizeof(double) * NBmode);
-    double *mvalOLave = (double *) malloc(sizeof(double) * NBmode);
-    double *mvalOLrms = (double *) malloc(sizeof(double) * NBmode);
-
-    IMGID imgmvalDMave;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mvalDMave", *AOloopindex);
-        imgmvalDMave = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalDMrms;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mvalDMrms", *AOloopindex);
-        imgmvalDMrms = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-    IMGID imgmvalWFSave;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mvalWFSave", *AOloopindex);
-        imgmvalWFSave = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalWFSrms;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mvalWFSrms", *AOloopindex);
-        imgmvalWFSrms = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-    IMGID imgmvalOLave;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mvalOLave", *AOloopindex);
-        imgmvalOLave = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalOLrms;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mvalOLrms", *AOloopindex);
-        imgmvalOLrms = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-
-
-    double *autolimDMsigma = (double *) malloc(sizeof(double) * NBmode);
-
-
-
-    // PREDICTIVE CONTROL
-
-    // PFres is the predictive filter residual: PFres(n) = PF(n-k) - OL(n), with k the time latency
-    // for the prediction
-
-    double *mvalPFres    = (double *) malloc(sizeof(double) * NBmode);
-    double *mvalPFold    = (double *) malloc(sizeof(double) * NBmode); // PF at time of WFS
-    double *mvalPFresave = (double *) malloc(sizeof(double) * NBmode);
-    double *mvalPFresrms = (double *) malloc(sizeof(double) * NBmode);
-
-    IMGID imgmvalPFresave;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mvalPFresave", *AOloopindex);
-        imgmvalPFresave = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalPFresrms;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%lu_mvalPFresrms", *AOloopindex);
-        imgmvalPFresrms = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-
-
-
-    // initialization for testOL
-    *testOLcnt = 0;
-
-    // modalDMf counter0, used to detect updates to modalDMf
-    uint64_t imgmodevalDMfcnt0 = 0;
-    uint64_t imgmodevalDMfcnt0old = 0;
-
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
-    {
-
-        // zero loop
-        if(data.fpsptr->parray[fpi_loopZERO].fpflag & FPFLAG_ONOFF)
-        {
-
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                // set goal position to zero
-                mvalDMc[mi] = 0.0;
-
-                mvalout[mi]      = 0.0;
-                mvaloutapply[mi] = 0.0;
-            }
-
-            memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
-            processinfo_update_output_stream(processinfo, imgout.im, NULL);
-
-            // toggle back to OFF
-            data.fpsptr->parray[fpi_loopZERO].fpflag &= ~FPFLAG_ONOFF;
-        }
-
-
-
-
-        if((*loopON) == 1)
-        {
-            if(*loopNBstep > 0)
-            {
-                *loopNBstep                                    = *loopNBstep - 1;
-                data.fpsptr->parray[fpi_loopNBstep].val.i64[0] = *loopNBstep;
-            }
-            if(*loopNBstep == 0)
-            {
-                *loopON = 0;
-                // set loop to OFF
-                data.fpsptr->parray[fpi_loopON].fpflag &= ~FPFLAG_ONOFF;
-                *loopNBstep = 1;
-            }
-
-
-            // Pre-allocations for modal loop
-            double mvalWFS;
-            double dmval;
-            float  limit;
-
-
-            float auxDMfact = (*auxDMmvalmixfact);
-            if((*auxDMmvalmodulate) == 1)
-            {
-                static double modpha = 0.0;
-                modpha += 1 / (*auxDMmvalmodperiod);
-                if(modpha > 1.0)
-                {
-                    modpha -= 1.0;
-                }
-
-                auxDMfact *= sin(2.0 * M_PI * modpha);
-                //printf("%7.5f  auxDMfact = %7.5f\n", modpha, auxDMfact);
-            }
-
-
-            // Has the modal state of the DM been externally updated ?
-            // (This is usually done by zonal filtering)
-            // If so, update modal state
-            //
-            imgmodevalDMfcnt0 = imgmodevalDMf.md->cnt0;
-            if(imgmodevalDMfcnt0 != imgmodevalDMfcnt0old)
-            {
-                //printf("modalDMf chnaged   %lu -> %lu\n", imgmodevalDMfcnt0old, imgmodevalDMfcnt0);
-                imgmodevalDMfcnt0old = imgmodevalDMfcnt0;
-
-                for(uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    mvalDMc[mi] = imgmodevalDMf.im->array.F[mi];
-                }
-            }
-
-
-
-            // Apply modal control filtering
-            // mvalDMc is the current modal state of DM
-            //
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-
-                // grab input value from WFS
-                mvalWFS = imginWFS.im->array.F[mi];
-
-                // offset from mval to zero point
-                // this is the input zero point
-                dmval = imgmzeropoint.im->array.F[mi] - mvalWFS;
-
-                // multiply by GAIN
-                dmval *= imgmgain.im->array.F[mi];
-
-                // add the new delta command to the integrated command with leak: this is the goal position
-                mvalDMc[mi] = dmval + mvalDMc[mi] * imgmmult.im->array.F[mi];
-
-                // apply LIMIT
-                limit = imgmlimit.im->array.F[mi];
-                if(mvalDMc[mi] > limit)
-                {
-                    mvalDMc[mi] = limit;
-                    mlimitcntarray[mi] ++;
-                }
-                if(mvalDMc[mi] < -limit)
-                {
-                    mvalDMc[mi] = -limit;
-                    mlimitcntarray[mi] ++;
-                }
-
-
-                if((*auxDMmvalenable) == 1)
-                {
-                    // add mode values from aux stream
-                    mvalout[mi] =
-                        mvalDMc[mi] + (auxDMfact * imgauxmDM.im->array.F[mi]);
-                }
-                else
-                {
-                    mvalout[mi] = mvalDMc[mi];
-                }
-                mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
-            }
-            // increment modal limit step counter
-            modal_limit_counter ++;
-
-
-
-            if(*enablePF == 0)
-            {
-                // if not running PF, apply modes to output
-                //
-                memcpy(imgout.im->array.F, mvaloutapply, sizeof(float) * NBmode);
-                processinfo_update_output_stream(processinfo, imgout.im, NULL);
-            }
-
-
-
-
-
-            // OFFLOAD LOOP
-            //
-            if((*offload) == 1)
-            {
-                for(uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    float val = imgmvaloffloadDM.im->array.F[mi];
-                    val += imgoffloadmgain.im->array.F[mi] * imgout.im->array.F[mi];
-                    val *= imgoffloadmmult.im->array.F[mi];
-                    // apply LIMIT
-                    limit = imgoffloadmlimit.im->array.F[mi];
-                    if(val > limit)
-                    {
-                        val = limit;
-                    }
-                    if(val < -limit)
-                    {
-                        val = -limit;
-                    }
-                    imgmvaloffloadDM.im->array.F[mi] = val;
-
-                }
-                processinfo_update_output_stream(processinfo, imgmvaloffloadDM.im, NULL);
-            }
-
-
-
-
-
-
-            // Compute pseudo open-loop mode coefficients
-            //
-            if((*compOL) == 1)
-            {
-                // write to DM command history
-                //
-                for(uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    mvalDMbuff[DMtstep * NBmode + mi] = mvalDMc[mi];
-                }
-
-
-                DMtstep++;
-                if(DMtstep == NB_DMtstep)
-                {
-                    DMtstep = 0;
-                }
-
-                float latencytotalfr = (*latencyhardwfr) + (*latencysoftwfr);
-
-                int   latint  = (int) latencytotalfr;
-                float latfrac = latencytotalfr - latint;
-
-                int DMtstep1 = DMtstep - latint;
-                int DMtstep0 = DMtstep1 - 1;
-                while(DMtstep1 < 0)
-                {
-                    DMtstep1 += NB_DMtstep;
-                }
-                while(DMtstep0 < 0)
-                {
-                    DMtstep0 += NB_DMtstep;
-                }
-
-                imgOLmval.md->write = 1;
-                for(uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    // mvalDMOL is the DM command in the past (lookback time = latency)
-                    float tmpmDMval = latfrac * mvalDMbuff[DMtstep0 * NBmode + mi];
-                    tmpmDMval +=
-                        (1.0 - latfrac) * mvalDMbuff[DMtstep1 * NBmode + mi];
-                    mvalDMOL[mi] = tmpmDMval;
-
-                    // last WFS measurement
-                    float tmpmWFSval = imginWFS.im->array.F[mi];
-
-                    // OL value = latest WFS measurement - past DM state
-                    imgOLmval.im->array.F[mi] = (*psol_WFSfact) * tmpmWFSval - mvalDMOL[mi];
-                }
-
-                uint64_t PFcnt = imgmvalPF.md->cnt0;
-
-                processinfo_update_output_stream(processinfo, imgOLmval.im, NULL);
-
-
-
-
-                if(*enablePF == 1)
-                {
-                    // wait for PF blocks to complete
-                    //
-                    struct timespec t0;
-                    struct timespec t1;
-                    clock_gettime(CLOCK_MILK, &t0);
-                    clock_gettime(CLOCK_MILK, &t1);
-                    uint64_t PFcntOK = PFcnt + *PF_NBblock;
-                    while(
-                        (imgmvalPF.md->cnt0 < PFcntOK) &&
-                        (timespec_diff_double(t0, t1) < 1.0e-6 * (*PF_maxwaitus)))
-                    {
-                        // busy waiting
-                        clock_gettime(CLOCK_MILK, &t1);
-                    }
-
-
-
-                    // Mix predicted value with integrator
-                    //
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        float mixf = imgmPFmix.im->array.F[mi];
-                        mvalout[mi] = imgmvalPF.im->array.F[mi] * mixf +
-                                      mvalout[mi] * (1.0 - mixf);
-
-                        mvaloutapply[mi] = mvalout[mi] + selfRMpokecmd[mi];
-                    }
-
-                    // Write to DM
-                    //
-                    memcpy(imgout.im->array.F,
-                           mvaloutapply,
-                           sizeof(float) * NBmode);
-                    processinfo_update_output_stream(processinfo, imgout.im, NULL);
-
-
-
-                    // Record PF values to buffer
-                    //
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgcbuff_mvalPF.im->array.F[ PFcbuff_index * NBmode + mi] =
-                            imgmvalPF.im->array.F[mi] ;
-                    }
-                    PFcbuff_index ++;
-                    if(PFcbuff_index == PFcbuff_size)
-                    {
-                        PFcbuff_index = 0;
-                    }
-
-
-                    // Compute prediction residual
-                    //
-                    float latencytotalfr = (*latencyhardwfr) + (*latencysoftwfr);
-                    int lat0int = (int) latencytotalfr;
-                    int lat1int = lat0int + 1;
-                    float lat1alpha = latencytotalfr - lat0int;
-                    float lat0alpha = 1.0 - lat1alpha;
-
-                    int ti0 = PFcbuff_index - lat0int;
-                    if(ti0 < 0)
-                    {
-                        ti0 += PFcbuff_size;
-                    }
-                    int ti1 = PFcbuff_index - lat1int;
-                    if(ti1 < 0)
-                    {
-                        ti1 += PFcbuff_size;
-                    }
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        float mval0 = lat1alpha * imgcbuff_mvalPF.im->array.F[ ti0 * NBmode + mi];
-                        float mval1 = lat1alpha * imgcbuff_mvalPF.im->array.F[ ti1 * NBmode + mi];
-                        mvalPFold[mi] = (mval0 + mval1);
-                        mvalPFres[mi] = imgOLmval.im->array.F[mi] - mvalPFold[mi];
-                    }
-                }
-
-
-
-
-
-                // OL reconstruction test
-                // to be run with low gain and small ampl, and then check with higher gain
-                //
-                if(*testOL == 1)
-                {
-                    processinfo_WriteMessage_fmt(processinfo, "testOL ON %u", *testOLcnt);
-
-                    float *psOL_probe;
-                    float *psOL_estimate;
-
-                    if(*testOLcnt == 0)
-                    {
-                        // initialization
-
-                        psOL_probe = (float *) malloc(sizeof(float) * (*testOLnbsample));
-                        psOL_estimate = (float *) malloc(sizeof(float) * (*testOLnbsample));
-
-
-                        // lock parameters while running
-                        data.fpsptr->parray[fpi_testOLampl].fpflag &= ~FPFLAG_WRITERUN;
-                        data.fpsptr->parray[fpi_testOLmode].fpflag &= ~FPFLAG_WRITERUN;
-                        data.fpsptr->parray[fpi_testOLnbsample].fpflag &= ~FPFLAG_WRITERUN;
-                    }
-
-                    // increase probe temporal frequency
-                    float x = 1.0 * (*testOLcnt) / (*testOLnbsample);
-                    float freqfact = 0.01 + 1.99 * x;
-
-                    // Write probe to auxDM channel
-                    imgauxmDM.im->array.F[*testOLmode] =
-                        (*testOLampl) * sin(1.0 * (*testOLcnt) / M_PI / 2 * freqfact);
-
-                    // Record probe
-                    psOL_probe[*testOLcnt] = imgauxmDM.im->array.F[*testOLmode];
-                    // Record pOL
-                    psOL_estimate[*testOLcnt] = imgOLmval.im->array.F[*testOLmode];
-
-
-                    (*testOLcnt) ++;
-                    if(*testOLcnt == *testOLnbsample)
-                    {
-                        // end of acquisition
-                        /// wrap up and process
-                        //
-
-                        if(*testOLloop == 0)
-                        {
-                            *testOL = 0;
-                            data.fpsptr->parray[fpi_testOL].fpflag &= ~FPFLAG_ONOFF;
-                        }
-
-                        *testOLcnt = 0;
-                        imgauxmDM.im->array.F[*testOLmode] = 0.0;
-
-                        // unlock parameters
-                        data.fpsptr->parray[fpi_testOLampl].fpflag |= FPFLAG_WRITERUN;
-                        data.fpsptr->parray[fpi_testOLmode].fpflag |= FPFLAG_WRITERUN;
-                        data.fpsptr->parray[fpi_testOLnbsample].fpflag |= FPFLAG_WRITERUN;
-
-
-
-
-                        // process output - compute residual and optimize delay
-                        //
-                        float latencytotalfr = (*latencyhardwfr) + (*latencysoftwfr);
-                        float latencyoptimal = latencytotalfr;
-                        float WFSfactoptimal = (*psol_WFSfact);
-                        float optval = __FLT32_MAX__;
-                        float psOLdelay_fr_min = 0.5 * latencytotalfr;
-                        float psOLdelay_fr_max = 1.5 * latencytotalfr;
-                        for(float psOLdelay_fr = psOLdelay_fr_min; psOLdelay_fr < psOLdelay_fr_max;
-                                psOLdelay_fr += 0.01)
-                        {
-                            for(float WFSfactval = 0.9 * WFSfactoptimal; WFSfactval < 1.1 * WFSfactoptimal;
-                                    WFSfactval += 0.01)
-                            {
-                                double psOLresidual = 0.0;
-                                for(long ii = 0; ii < (*testOLnbsample); ii++)
-                                {
-                                    float tframeOL = 1.0 * ii + psOLdelay_fr;
-                                    long jj0 = (long) tframeOL;
-                                    float jjfrac = tframeOL - jj0;
-                                    long jj1 = jj0 + 1;
-                                    if(jj1 < (*testOLnbsample))
-                                    {
-                                        // pull OLval from past
-                                        double OLval = (1.0 - jjfrac) * psOL_estimate[jj0] + jjfrac *
-                                                       psOL_estimate[jj1];
-
-                                        double resval = OLval * WFSfactval - psOL_probe[ii];
-                                        psOLresidual += resval * resval;
-                                    }
-                                }
-                                if(psOLresidual < optval)
-                                {
-                                    optval = psOLresidual;
-                                    latencyoptimal = psOLdelay_fr;
-                                    WFSfactoptimal = WFSfactval;
-                                }
-                                //printf("DELAY %8f   RESIDUAL  = %g\n", psOLdelay_fr, psOLresidual);
-                            }
-                        }
-
-
-                        printf("OPTIMAL LATENCY = %f fr ->  latencysoft = %f fr\n",
-                               latencyoptimal, latencyoptimal - (*latencyhardwfr));
-                        printf("OPTIMAL WFSfact = %f\n", WFSfactoptimal);
-
-
-                        // update solution
-                        float g0 = 1.0 - (*testOLupdategain);
-                        float g1 = (*testOLupdategain);
-                        (*latencysoftwfr) = g0 * (*latencysoftwfr) + g1 * (latencyoptimal -
-                                            (*latencyhardwfr));
-                        (*psol_WFSfact) = g0 * (*psol_WFSfact) + g1 * WFSfactoptimal;
-
-
-                        // Write time series to file
-                        {
-                            FILE *testOLfp = fopen("testOL.log", "w");
-                            float psOLdelay_fr = (*latencysoftwfr) + (*latencyhardwfr);
-                            //float WFSfactval = (*psol_WFSfact);
-
-                            for(long ii = 0; ii < (*testOLnbsample); ii++)
-                            {
-                                float tframeOL = 1.0 * ii + psOLdelay_fr;
-                                long jj0 = (long) tframeOL;
-                                float jjfrac = tframeOL - jj0;
-                                long jj1 = jj0 + 1;
-                                if(jj1 < (*testOLnbsample))
-                                {
-                                    double OLval = (1.0 - jjfrac) * psOL_estimate[jj0] + jjfrac *
-                                                   psOL_estimate[jj1];
-                                    double resval = OLval - psOL_probe[ii];
-
-                                    fprintf(testOLfp, "%5ld  %g %g %g\n",
-                                            ii,               // frame counter
-                                            psOL_probe[ii],   // probe applied
-                                            OLval,            // OL reconstruction
-                                            resval            // residual
-                                           );
-
-                                }
-                            }
-                            fclose(testOLfp);
-                        }
-
-                        free(psOL_probe);
-                        free(psOL_estimate);
-
-
-                        // write results as env variables
-                        {
-                            // file will be sourced by cacao-check-cacaovars
-                            //
-                            char ffname[STRINGMAXLEN_FULLFILENAME];
-                            WRITE_FULLFILENAME(ffname, "%s/cacaovars.bash", data.fpsptr->md->datadir);
-
-                            printf("SAVING TO %s\n", ffname);
-
-                            FILE *fpout;
-                            fpout = fopen(ffname, "w");
-
-                            char timestring[TIMESTRINGLEN];
-                            mkUTtimestring_microsec_now(timestring);
-                            fprintf(fpout, "# %s\n", timestring);
-
-                            fprintf(fpout, "export CACAO_PSOL_WFSFACT=%.3f\n", (*psol_WFSfact));
-                            fprintf(fpout, "export CACAO_LATENCYSOFTWFR=%.3f\n", (*latencysoftwfr));
-                            fprintf(fpout, "export CACAO_LATENCYFR=%.3f\n",
-                                    (*latencysoftwfr) + (*latencyhardwfr));
-                            fclose(fpout);
-                        }
-
-                        processinfo_WriteMessage(processinfo, "testOL done");
-                    }
-                }
-            }
-
-
-
-
-            // Update individual gain, mult and limit values
-            // This is done AFTER computing mode values to minimize latency
-            //
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                imgmgain.im->array.F[mi] =
-                    imgmgainfact.im->array.F[mi] * (*loopgain);
-            }
-            processinfo_update_output_stream(processinfo, imgmgain.im, NULL);
-
-
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                imgmmult.im->array.F[mi] =
-                    imgmmultfact.im->array.F[mi] * (*loopmult);
-            }
-            processinfo_update_output_stream(processinfo, imgmmult.im, NULL);
-
-
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                imgmlimit.im->array.F[mi] =
-                    imgmlimitfact.im->array.F[mi] * (*looplimit);
-            }
-            processinfo_update_output_stream(processinfo, imgmlimit.im, NULL);
-
-
-
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                imgoffloadmgain.im->array.F[mi] =
-                    imgoffloadmgainfact.im->array.F[mi] * (*offloadloopgain);
-            }
-            processinfo_update_output_stream(processinfo, imgoffloadmgain.im, NULL);
-
-
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                imgoffloadmmult.im->array.F[mi] =
-                    imgoffloadmmultfact.im->array.F[mi] * (*offloadloopmult);
-            }
-            processinfo_update_output_stream(processinfo, imgoffloadmmult.im, NULL);
-
-
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                imgoffloadmlimit.im->array.F[mi] =
-                    imgoffloadmlimitfact.im->array.F[mi] * (*offloadlooplimit);
-            }
-            processinfo_update_output_stream(processinfo, imgoffloadmlimit.im, NULL);
-
-
-
-            // predictive filter mixing
-            for(uint32_t mi = 0; mi < NBmode; mi++)
-            {
-                imgmPFmix.im->array.F[mi] =
-                    imgmPFmixfact.im->array.F[mi] * (*PFmixcoeff);
-            }
-            processinfo_update_output_stream(processinfo, imgmPFmix.im, NULL);
-
-
-
-
-            // Fill telemetry buffers
-            //
-            if((*comptbuff) == 1)
-            {
-
-                uint64_t kkoffset =
-                    tbuffslice * (*tbuffsize) * NBmode + tbuffindex * NBmode;
-                for(uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    imgtbuff_mvalWFS.im->array.F[kkoffset + mi] =
-                        imginWFS.im->array.F[mi];
-                    imgtbuff_mvalOL.im->array.F[kkoffset + mi] =
-                        imgOLmval.im->array.F[mi];
-                }
-
-
-
-
-                if((*auxDMmvalenable) == 1)
-                {
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgtbuff_mvalDM.im->array.F[kkoffset + mi] =
-                            mvalout[mi] - (auxDMfact * imgauxmDM.im->array.F[mi]);
-                    }
-                }
-                else
-                {
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgtbuff_mvalDM.im->array.F[kkoffset + mi] = mvalout[mi];
-                    }
-                }
-
-
-
-                for(uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    mvalDMave[mi] += mvalout[mi];
-                    mvalDMrms[mi] += mvalout[mi] * mvalout[mi];
-
-                    mvalWFSave[mi] += imginWFS.im->array.F[mi];
-                    mvalWFSrms[mi] += imginWFS.im->array.F[mi] * imginWFS.im->array.F[mi];
-
-                    mvalOLave[mi] += imgOLmval.im->array.F[mi];
-                    mvalOLrms[mi] += imgOLmval.im->array.F[mi] * imgOLmval.im->array.F[mi];
-
-                    mvalPFresave[mi] += mvalPFres[mi];
-                    mvalPFresrms[mi] += mvalPFres[mi] * mvalPFres[mi];
-                }
-
-                tbuffindex++;
-                if(tbuffindex == (*tbuffsize))
-                {
-                    tbuffindex = 0;
-
-                    imgtbuff_mvalDM.md->cnt1 = tbuffslice;
-                    processinfo_update_output_stream(processinfo,
-                                                     imgtbuff_mvalDM.im, NULL);
-
-                    imgtbuff_mvalWFS.md->cnt1 = tbuffslice;
-                    processinfo_update_output_stream(processinfo,
-                                                     imgtbuff_mvalWFS.im, NULL);
-
-                    imgtbuff_mvalOL.md->cnt1 = tbuffslice;
-                    processinfo_update_output_stream(processinfo,
-                                                     imgtbuff_mvalOL.im, NULL);
-
-                    tbuffslice++;
-                    if(tbuffslice == 2)
-                    {
-                        tbuffslice = 0;
-                    }
-
-
-
-                    // Measure fraction of commands truncated by limit
-                    //
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgmlimitcntfrac.im->array.F[mi] = (1.0 * mlimitcntarray[mi]) /
-                                                           modal_limit_counter;
-                        mlimitcntarray[mi] = 0;
-                    }
-                    processinfo_update_output_stream(processinfo, imgmlimitcntfrac.im, NULL);
-
-
-
-                    // Update buffer stats
-
-                    // DM buffer stats
-
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgmvalDMave.im->array.F[mi] = mvalDMave[mi] / modal_limit_counter;
-                        mvalDMave[mi] = 0;
-                    }
-                    processinfo_update_output_stream(processinfo, imgmvalDMave.im, NULL);
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgmvalDMrms.im->array.F[mi] = sqrt(mvalDMrms[mi] / modal_limit_counter);
-                        mvalDMrms[mi] = 0;
-                    }
-                    processinfo_update_output_stream(processinfo, imgmvalDMrms.im, NULL);
-
-
-                    // WFS buffer stats
-
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgmvalWFSave.im->array.F[mi] = mvalWFSave[mi] / modal_limit_counter;
-                        mvalWFSave[mi] = 0;
-                    }
-                    processinfo_update_output_stream(processinfo, imgmvalWFSave.im, NULL);
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgmvalWFSrms.im->array.F[mi] = sqrt(mvalWFSrms[mi] / modal_limit_counter);
-                        mvalWFSrms[mi] = 0;
-                    }
-                    processinfo_update_output_stream(processinfo, imgmvalWFSrms.im, NULL);
-
-
-
-                    // OL buffer stats
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgmvalOLave.im->array.F[mi] = mvalOLave[mi] / modal_limit_counter;
-                        mvalOLave[mi] = 0;
-                    }
-                    processinfo_update_output_stream(processinfo, imgmvalOLave.im, NULL);
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgmvalOLrms.im->array.F[mi] = sqrt(mvalOLrms[mi] / modal_limit_counter);
-                        mvalOLrms[mi] = 0;
-                    }
-                    processinfo_update_output_stream(processinfo, imgmvalOLrms.im, NULL);
-
-
-
-                    // PFres buffer stats
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgmvalPFresave.im->array.F[mi] = mvalPFresave[mi] / modal_limit_counter;
-                        mvalPFresave[mi] = 0;
-                    }
-                    processinfo_update_output_stream(processinfo, imgmvalPFresave.im, NULL);
-
-                    for(uint32_t mi = 0; mi < NBmode; mi++)
-                    {
-                        imgmvalPFresrms.im->array.F[mi] = sqrt(mvalPFresrms[mi] / modal_limit_counter);
-                        mvalPFresrms[mi] = 0;
-                    }
-                    processinfo_update_output_stream(processinfo, imgmvalPFresrms.im, NULL);
-
-
-
-
-                    modal_limit_counter = 0;
-
-
-
-
-
-                    if((*autolim) == 1)
-                    {
-                        // autolimit
-
-                        for(uint32_t mi = 0; mi < NBmode; mi++)
-                        {
-
-                            autolimDMsigma[mi] = (1.0 - (*autolimprobegain)) * autolimDMsigma[mi]
-                                                 + (*autolimprobegain) * imgmvalDMrms.im->array.F[mi];
-
-                            float cliplim = (*autolimsigmafact) * autolimDMsigma[mi];
-
-
-                            imgmlimitfact.im->array.F[mi] = cliplim / (*looplimit);
-                        }
-                    }
-
-
-                }
+        // External DM update
+        uint64_t imgmodevalDMfcnt0 = state->imgmodevalDMf.md->cnt0;
+        if(imgmodevalDMfcnt0 != state->imgmodevalDMfcnt0old) {
+            state->imgmodevalDMfcnt0old = imgmodevalDMfcnt0;
+            for(uint32_t mi=0; mi<NBmode; mi++) {
+                state->mvalDMc[mi] = state->imgmodevalDMf.im->array.F[mi];
             }
         }
 
+        // Update Gain/Mult/Limit arrays
+        for(uint32_t mi=0; mi<NBmode; mi++) {
+            state->imgmgain.im->array.F[mi] = state->imgmgainfact.im->array.F[mi] * (*loopgain_ptr);
+            state->imgmmult.im->array.F[mi] = state->imgmmultfact.im->array.F[mi] * (*loopmult_ptr);
+            state->imgmlimit.im->array.F[mi] = state->imgmlimitfact.im->array.F[mi] * (*looplimit_ptr);
+        }
+        
+        // Modal Control
+        for(uint32_t mi = 0; mi < NBmode; mi++) {
+            float mvalWFS = imginWFS->array.F[mi];
+            float dmval = state->imgmzeropoint.im->array.F[mi] - mvalWFS;
+            dmval *= state->imgmgain.im->array.F[mi];
+            state->mvalDMc[mi] = dmval + state->mvalDMc[mi] * state->imgmmult.im->array.F[mi];
+            
+            float limit = state->imgmlimit.im->array.F[mi];
+            if(state->mvalDMc[mi] > limit) {
+                state->mvalDMc[mi] = limit;
+                state->mlimitcntarray[mi]++;
+            }
+            if(state->mvalDMc[mi] < -limit) {
+                state->mvalDMc[mi] = -limit;
+                state->mlimitcntarray[mi]++;
+            }
+            
+            if((*auxDMmvalenable_ptr) == 1) {
+                state->mvalout[mi] = state->mvalDMc[mi] + (auxDMfact * state->imgauxmDM.im->array.F[mi]);
+            } else {
+                state->mvalout[mi] = state->mvalDMc[mi];
+            }
+            state->mvaloutapply[mi] = state->mvalout[mi] + state->selfRMpokecmd[mi];
+        }
+        state->modal_limit_counter++;
 
-
-
-        if(*autoloopenable == 1)
-        {
-            // write output back to input
-            //
-            struct timespec twait;
-
-            double x = *autoloopsleep;
-            x += 0.5e-9; // minimize rounding error
-            twait.tv_sec  = (long) x;
-            twait.tv_nsec = (x - twait.tv_sec) * 1000000000L;
-
-            nanosleep(&twait, NULL);
-
-            memcpy(imginWFS.im->array.F, imgout.im->array.F, sizeof(float) * NBmode);
-            processinfo_update_output_stream(processinfo, imginWFS.im, NULL);
+        // Output to stream if PF not enabled
+        if(*enablePF_ptr == 0) {
+            memcpy(imgout->array.F, state->mvaloutapply, sizeof(float) * NBmode);
         }
 
+        // Offload Loop
+        if((*offload_ptr) == 1) {
+            for(uint32_t mi=0; mi<NBmode; mi++) {
+                state->imgoffloadmgain.im->array.F[mi] = state->imgoffloadmgainfact.im->array.F[mi] * (*offloadloopgain_ptr);
+                state->imgoffloadmmult.im->array.F[mi] = state->imgoffloadmmultfact.im->array.F[mi] * (*offloadloopmult_ptr);
+                state->imgoffloadmlimit.im->array.F[mi] = state->imgoffloadmlimitfact.im->array.F[mi] * (*offloadlooplimit_ptr);
 
-        if(*selfRMenable == 1)
-        {
-            // variables increment as follows (nested from outer to inner loops)
-            //
-            // selfRMiter: Iteration
-            // Note: selfRMpokeparity toggles at each increment of selfRMiter
-            //
-            //
-            // selfRM_pokemode : mode currently poked
-            // when reaching selfRM_NBmode, increment selfRMiter
-            //
-            // selfRM_pokecnt : counter within each poke
-            // when reaching  (*selfRMzsize) + (*selfRMnbsettlestep),
-            // set selfRM_pokecnt to 0
-            //
-
-            // Poke signs
-            //
-            // sigmult toggles between - and +
-            // if selfRMpokeparity = 0
-            // signmult : + + + + + + ....
-            // else
-            // sigmult : - + - + - + - + ....
-            //
-            // blockcnt toggles between 0 and 1 within single mode pokes
-            //
-            // selfRMpokesign function of seflRMiter, set at blockcnt=0
-            // seflRMiter  selfRMpokeparity  (selfRMpokesign block0 / block1, sigmult)[poke0,poke1]
-            //       0          0            (+-,+)[+-] -> (+-,+)[+-] -> (+-,+)[+-]
-            //       1          1            (+-,-)[-+] -> (+-,+)[+-] -> (+-,-)[-+]
-            //       2          0            (++,+)[++] -> (++,+)[++] -> (++,+)[++]
-            //       3          1            (++,-)[--] -> (++,+)[++] -> (++,-)[--]
-            //       4          0            (--,+)[--] -> (--,+)[--] -> (--,+)[--]
-            //       5          1            (--,-)[++] -> (--,+)[--] -> (--,-)[++]
-            //       6          0            (-+,+)[-+] -> (-+,+)[-+] -> (-+,+)[-+]
-            //       7          1            (-+,-)[+-] -> (-+,+)[-+] -> (-+,-)[+-]
-            //
-            // end result sequences:
-            // seflRMiter  m0 m1 m2 m3 m4 ...
-            //     0       +- +- +- +- +- ...
-            //     1       -+ +- -+ +- -+ ...
-            //     2       ++ ++ ++ ++ ++ ...
-            //     3       -- ++ -- ++ -- ...
-            //     4       -- -- -- -- -- ...
-            //     5       ++ -- ++ -- ++ ...
-            //     6       -+ -+ -+ -+ -+ ...
-            //     7       +- -+ +- -+ +- ...
-
-
-
-            // initialization
-            if((selfRM_pokecnt == 0) && (selfRM_pokemode == 0) &&
-                    (blockcnt == 0) && (selfRMiter == 0))
-            {
-                processinfo_WriteMessage(processinfo, "init selfRM");
-                printf("INITIALIZING selfRM\n");
-                for(uint32_t mi = 0; mi < NBmode * NBmode * (*selfRMzsize); mi++)
-                {
-                    data.image[imgselfRM.ID].array.F[mi] = 0.0;
-                }
+                float val = state->imgmvaloffloadDM.im->array.F[mi];
+                val += state->imgoffloadmgain.im->array.F[mi] * imgout->array.F[mi];
+                val *= state->imgoffloadmmult.im->array.F[mi];
+                float limit = state->imgoffloadmlimit.im->array.F[mi];
+                 if(val > limit) val = limit;
+                 if(val < -limit) val = -limit;
+                 state->imgmvaloffloadDM.im->array.F[mi] = val;
             }
-
-            if((selfRM_pokecnt == 0) && (selfRM_pokemode == 0))
-            {
-                if(blockcnt == 0)
-                {
-                    // start poke sign
-                    // + + + + - - - - + + + + - - - - ....
-                    selfRMpokesign = 1.0 - 2.0 * ((selfRMiter / 4) % 2);
-                }
-
-                processinfo_WriteMessage_fmt(processinfo,
-                                             "sRM %u/%u  ppol %d  sign "
-                                             "%+3.1f ",
-                                             selfRMiter,
-                                             *selfRMnbiter,
-                                             selfRMpokeparity,
-                                             selfRMpokesign);
-            }
-
-
-
-            int pkmode = 0;
-            pkmode     = selfRM_pokemode;
-
-            float signmult;
-            if((selfRM_pokemode % 2 == 0) && (selfRMpokeparity == 1))
-            {
-                signmult = -1.0;
-            }
-            else
-            {
-                signmult = 1.0;
-            }
-
-
-            if(selfRM_pokecnt < *selfRMzsize)
-            {
-                selfRMpokecmd[pkmode] =
-                    selfRMpokesign * (*selfRMpokeampl) * signmult;
-            }
-            else
-            {
-                selfRMpokecmd[pkmode] = 0.0;
-            }
-
-
-            if(selfRM_pokecnt < *selfRMzsize)
-            {
-                // write result in output 3D selfRM
-                //
-                for(uint32_t mi = 0; mi < NBmode; mi++)
-                {
-                    long pindex = NBmode * NBmode * selfRM_pokecnt;
-                    pindex += NBmode * pkmode;
-                    pindex += mi;
-                    imgselfRM.im->array.F[pindex] +=
-                        0.5 * signmult * selfRMpokesign * imginWFS.im->array.F[mi] /
-                        (*selfRMpokeampl) / (*selfRMnbiter);
-                }
-            }
-            selfRM_pokecnt++;
-
-            if(selfRM_pokecnt > (*selfRMzsize) + (*selfRMnbsettlestep))
-            {
-
-                if(((selfRMiter % 8) < 2) || ((selfRMiter % 8) > 5))
-                {
-                    selfRMpokesign *= -1.0;
-                }
-
-                blockcnt++;
-                if(blockcnt == 2)
-                {
-                    // this runs one time out of 2
-                    selfRM_pokemode++;
-                    blockcnt = 0;
-                }
-                selfRM_pokecnt = 0;
-            }
-
-
-            if((int) selfRM_pokemode == selfRM_NBmode)
-            {
-                selfRMpokeparity = 1 - selfRMpokeparity;
-                selfRM_pokemode  = 0;
-                selfRM_pokecnt   = 0;
-
-                selfRMiter++;
-            }
-
-            if(selfRMiter == *selfRMnbiter)
-            {
-
-                selfRMiter      = 0;
-                selfRM_pokemode = 0;
-                selfRM_pokecnt  = 0;
-
-                data.fpsptr->parray[fpi_selfRMenable].fpflag &= ~FPFLAG_ONOFF;
-                *selfRMenable = 0;
-
-                // testing
-                save_fits(imgselfRM.name, "selfRM.fits");
-
-                processinfo_WriteMessage(processinfo, "selfRM done");
-            }
+            processinfo_update_output_stream(processinfo, state->imgmvaloffloadDM.im, NULL);
         }
 
+        // Compute OL
+        if((*compOL_ptr) == 1) {
+            for(uint32_t mi=0; mi<NBmode; mi++) state->mvalDMbuff[state->DMtstep * NBmode + mi] = state->mvalDMc[mi];
+            state->DMtstep++;
+            if(state->DMtstep == 10) state->DMtstep = 0;
 
+            float latencytotalfr = (*latencyhardwfr_ptr) + (*latencysoftwfr_ptr);
+            int latint = (int)latencytotalfr;
+            float latfrac = latencytotalfr - latint;
+            int DMtstep1 = state->DMtstep - latint;
+            int DMtstep0 = DMtstep1 - 1;
+            while(DMtstep1 < 0) DMtstep1 += 10;
+            while(DMtstep0 < 0) DMtstep0 += 10;
 
-        // Record burst of telemetry for one mode, save to file
-        if(*recburst == 1)
-        {
-            if(recburstsample == 0)
-            {
-                // initialize
-                char recfname[STRINGMAXLEN_FILENAME];
-                WRITE_FILENAME(recfname, "mfilt.rec.m%d.log", *recburst_mode);
-                fprec = fopen(recfname, "w");
-
-                // print header
-                fprintf(fprec, "#  1 : sample index (loop step)\n");
-                fprintf(fprec,
-                        "#  2 : WFS signal                     time offset = - %5.3f frame\n",
-                        *latencyhardwfr);
-                fprintf(fprec,
-                        "#  3 : DM control output              time offset =   0.000 frame\n");
-                fprintf(fprec,
-                        "#  4 : Open Loop (OL) reconstruction  time offset = - %5.3f frame\n",
-                        *latencyhardwfr);
-                fprintf(fprec,
-                        "#  5 : Predicted OL                   time offset = + %5.3f frame\n",
-                        *latencysoftwfr);
-                fprintf(fprec,
-                        "#  6 : Prediction residual (PF-OL)    time offset = - %5.3f frame\n",
-                        *latencyhardwfr);
-                fprintf(fprec,
-                        "#  7 : Predicted OL at WFS time       time offset = - %5.3f frame\n",
-                        *latencyhardwfr);
-                fprintf(fprec, "#  \n");
-                //fprintf(fprec, "#  9 : \n");
-                //fprintf(fprec, "# 10 : \n");
+            for(uint32_t mi=0; mi<NBmode; mi++) {
+                float tmpmDMval = latfrac * state->mvalDMbuff[DMtstep0*NBmode + mi] + (1.0-latfrac)*state->mvalDMbuff[DMtstep1*NBmode + mi];
+                state->mvalDMOL[mi] = tmpmDMval;
+                float tmpmWFSval = imginWFS->array.F[mi];
+                state->imgOLmval.im->array.F[mi] = (*psol_WFSfact_ptr) * tmpmWFSval - state->mvalDMOL[mi];
             }
-            int mi = *recburst_mode;
-
-            fprintf(fprec, "%05ld  %+8.6f  %+8.6f  %+8.6f  %+8.6f  %8.6f  %8.6f\n",
-                    recburstsample,
-                    imginWFS.im->array.F[mi],
-                    imgout.im->array.F[mi],
-                    imgOLmval.im->array.F[mi],
-                    imgmvalPF.im->array.F[mi],
-                    mvalPFres[mi],
-                    mvalPFold[mi]
-                   );
-
-
-            recburstsample ++;
-            if(recburstsample ==  *recburst_nbsample)
-            {
-                recburstsample = 0;
-                data.fpsptr->parray[fpi_recburst].fpflag &= ~FPFLAG_ONOFF;
-                *recburst = 0;
-                fclose(fprec);
-            }
-
+            processinfo_update_output_stream(processinfo, state->imgOLmval.im, NULL);
         }
-        else
-        {
-            recburstsample = 0;
-        }
-
-
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+}
 
-    free(selfRMpokecmd);
+/**
+ * @brief Basic parameter validation.
+ */
+static void modalfilter_validate() {
+    if (loopgain_ptr && *loopgain_ptr < 0) *loopgain_ptr = 0;
+    if (loopmult_ptr && *loopmult_ptr < 0) *loopmult_ptr = 0;
+    if (loopmult_ptr && *loopmult_ptr > 1.0) *loopmult_ptr = 1.0;
+    if (looplimit_ptr && *looplimit_ptr < 0) *looplimit_ptr = 0;
+}
 
-    free(mvalout);
-    free(mvaloutapply);
-    free(mvalDMc);
-    free(mvalDMbuff);
-    free(mvalDMOL);
+#ifndef FPS_STANDALONE
 
-    free(mlimitcntarray);
+static CLICMDARGDEF farg[] = {
+    { CLIARG_UINT64, ".AOloopindex", "AO loop index", "0", CLIARG_VISIBLE_DEFAULT, (void **) &AOloopindex_ptr, NULL },
+    { CLIARG_STREAM, ".inmval", "input mode values from WFS", "aol0_modevalWFS", CLIARG_VISIBLE_DEFAULT, (void **) &inmval_ptr, (long*) &fpi_inmval },
+    { CLIARG_STREAM, ".outmval", "output mode values to DM", "aol0_modevalDM", CLIARG_VISIBLE_DEFAULT, (void **) &outmval_ptr, (long*) &fpi_outmval },
+    { CLIARG_FLOAT32, ".loopgain", "loop gain", "0.01", CLIARG_VISIBLE_DEFAULT, (void **) &loopgain_ptr, (long*) &fpi_loopgain },
+    { CLIARG_FLOAT32, ".loopmult", "loop mult", "0.95", CLIARG_VISIBLE_DEFAULT, (void **) &loopmult_ptr, (long*) &fpi_loopmult },
+    { CLIARG_FLOAT32, ".looplimit", "loop limit", "1.0", CLIARG_VISIBLE_DEFAULT, (void **) &looplimit_ptr, (long*) &fpi_looplimit },
+    { CLIARG_ONOFF, ".loopZERO", "loop zero", "OFF", CLIARG_VISIBLE_DEFAULT, (void **) &loopZERO_ptr, (long*) &fpi_loopZERO }
+};
 
-    free(mvalDMave);
-    free(mvalDMrms);
-    free(mvalWFSave);
-    free(mvalWFSrms);
-    free(mvalOLave);
-    free(mvalOLrms);
+static CLICMDDATA CLIcmddata = { 
+    "modalfilter", "modal filtering", "", 
+    sizeof(farg) / sizeof(CLICMDARGDEF), farg, 
+    CLICMDFLAG_FPS, NULL, NULL, NULL 
+};
 
-    free(mvalPFres);
-    free(mvalPFold);
-    free(mvalPFresave);
-    free(mvalPFresrms);
-
-    free(autolimDMsigma);
-
-    DEBUG_TRACE_FEXIT();
+static errno_t help_function() {
+    printf("Modal gain for adaptive optics control\n");
     return RETURN_SUCCESS;
 }
 
-
-
-
-INSERT_STD_FPSCLIfunctions
-
-
-
-// Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl__modalfilter()
+static errno_t compute_function()
 {
+    IMGID imginWFS = mkIMGID_from_name(inmval_ptr); resolveIMGID(&imginWFS, ERRMODE_ABORT);
+    uint32_t NBmode = imginWFS.md[0].size[0];
+    IMGID imgout = stream_connect_create_2Df32(outmval_ptr, NBmode, 1);
+    
+    MFILT_STATE *state = modal_filter_init(NBmode);
 
+    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    modal_filter_step(processinfo, data.fpsptr, imginWFS.im, imgout.im, state);
+    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    
+    modal_filter_cleanup(state);
+    return RETURN_SUCCESS;
+}
+
+static errno_t customCONFsetup() {
+    if(data.fpsptr != NULL) {
+        data.fpsptr->parray[fpi_inmval].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+    }
+    return RETURN_SUCCESS;
+}
+
+static errno_t customCONFcheck() { return RETURN_SUCCESS; }
+
+#define INSERT_STD_FPSCONFfunction_local                                           static errno_t FPSCONFfunction()                                               {                                                                                  FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);                               if (CLIcmddata.flags & CLICMDFLAG_PROCINFO)                                    {                                                                                  fps_add_processinfo_entries(&fps);                                         }                                                                              data.fpsptr = &fps;                                                            CMDargs_to_FPSparams_create(&fps);                                             if (CLIcmddata.FPS_customCONFsetup != NULL)                                    {                                                                                  CLIcmddata.FPS_customCONFsetup();                                          }                                                                              FPS_CONFLOOP_START                                                             if (CLIcmddata.FPS_customCONFcheck != NULL)                                        CLIcmddata.FPS_customCONFcheck();                                          FPS_CONFLOOP_END                                                               data.fpsptr = NULL;                                                            return RETURN_SUCCESS;                                                     }
+
+INSERT_STD_FPSCONFfunction_local
+INSERT_STD_FPSRUNfunction
+INSERT_STD_FPSCLIfunction
+
+errno_t CLIADDCMD_AOloopControl__modalfilter() {
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC
-
     return RETURN_SUCCESS;
 }
+
+#endif
+
+#ifdef FPS_STANDALONE
+
+int FPSINIT_modalfilter(const char *fps_name, const char *keywords, const char *description) {
+    FUNCTION_PARAMETER_STRUCT fps;
+    FPS_INIT_STD_PREAMBLE(fps, fps_name, keywords, description, "Modal Filtering AO processing");
+    FPS_INIT_PROCINFO_DEFAULTS(fps, "aol0_modevalWFS", 10);
+#define X_FPS_INIT(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...)     {         if(fps_type == FPTYPE_FLOAT32) { float val = (float)atof(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); }         else if(fps_type == FPTYPE_UINT64) { uint64_t val = (uint64_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); }         else if(fps_type == FPTYPE_INT64) { int64_t val = (int64_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); }         else if(fps_type == FPTYPE_UINT32) { uint32_t val = (uint32_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); }         else if(fps_type == FPTYPE_STREAMNAME) { char val[FUNCTION_PARAMETER_STRMAXLEN]; strncpy(val, def_str, FUNCTION_PARAMETER_STRMAXLEN-1); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, val, NULL); }         else { function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, NULL, NULL); }     }
+    MFILT_PARAMS(X_FPS_INIT)
+#undef X_FPS_INIT
+    fps_add_processinfo_entries(&fps); function_parameter_FPCONFexit(&fps); return 0;
+}
+
+#define X_FPS_MAP(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...)             ptr_name = (c_type)functionparameter_##get_func(&fps, key);
+
+int FPSCONF_modalfilter(const char *fps_name, int loop) {
+    FPS_CONF_STD_BODY(fps_name, loop, { MFILT_PARAMS(X_FPS_MAP) }, { modalfilter_validate(); });
+    return 0;
+}
+FPS_MAKE_STANDALONE_CONFSTOP(modalfilter)
+FPS_MAKE_STANDALONE_RUNSTOP(modalfilter)
+int FPSRUN_modalfilter(const char *fps_name) {
+    FUNCTION_PARAMETER_STRUCT fps;
+    FPS_RUN_STD_PREAMBLE(fps_name, fps, { MFILT_PARAMS(X_FPS_MAP) });
+    IMAGE imginWFS;
+    if (ImageStreamIO_read_sharedmem_image_toIMAGE(inmval_ptr, &imginWFS) != 0) return 1;
+    uint32_t NBmode = imginWFS.md[0].size[0];
+    IMAGE imgout;
+    uint32_t dims[2] = {NBmode, 1};
+    if (ImageStreamIO_createIm_gpu(&imgout, outmval_ptr, 2, dims, _DATATYPE_FLOAT, -1, 1, 10, 0, 0, 0) != 0) return 1;
+    
+    MFILT_STATE *state = modal_filter_init(NBmode);
+    
+    PROCESSINFO *pinfo;
+    FPS_RUN_PROCESSINFO_SETUP(pinfo, fps_name, "Run", "Looping", &imginWFS, fps);
+    while(processinfo_loopstep(pinfo)) {
+        processinfo_waitoninputstream(pinfo);
+        if (pinfo->triggerstatus == PROCESSINFO_TRIGGERSTATUS_TIMEDOUT) continue;
+        processinfo_exec_start(pinfo);
+        modal_filter_step(pinfo, &fps, &imginWFS, &imgout, state);
+        processinfo_exec_end(pinfo);
+        processinfo_update_output_stream(pinfo, &imgout, &imginWFS);
+    }
+    modal_filter_cleanup(state);
+    processinfo_cleanExit(pinfo); function_parameter_struct_disconnect(&fps); return 0;
+}
+FPS_MAIN_STANDALONE("mfilt", modalfilter, "Modal Filtering AO processing", MFILT_PARAMS)
+#endif
