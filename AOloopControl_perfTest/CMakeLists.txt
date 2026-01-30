@@ -61,3 +61,5 @@ install(FILES ${SRCNAME}.h ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 install(PROGRAMS
 	${SCRIPTFILES}
 	DESTINATION bin)
+
+add_cacao_standalone(cacaopt-compRMsens compRMsensitivity.c)

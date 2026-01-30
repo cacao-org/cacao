@@ -152,3 +152,5 @@ install(PROGRAMS scripts/cacao-setup
 	DESTINATION bin)
 
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})
+
+add_cacao_standalone(cacao-zonalfilter zonalfilter.c)

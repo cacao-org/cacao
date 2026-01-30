@@ -12,6 +12,20 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
+#include "fps.h"
+#include "processinfo.h"
+
+#define COMPRMSENSITIVITY_HELPTEXT "Compute response matrix sensitivity"
+
+// Changed ptr_addr to pass identifier (e.g. dmmodes) instead of address (&dmmodes)
+#define COMPRMSENSITIVITY_PARAMS(X) \
+    X(CLIARG_IMG, FPTYPE_FILENAME, char*, ".DMmodes", "DM modes", "dmmodes", NULL, dmmodes, functionparameter_GetParamPtr_STRING, FPFLAG_DEFAULT_INPUT) \
+    X(CLIARG_IMG, FPTYPE_FILENAME, char*, ".DMmask", "DM mask", "dmmask", NULL, dmmask, functionparameter_GetParamPtr_STRING, FPFLAG_DEFAULT_INPUT) \
+    X(CLIARG_IMG, FPTYPE_FILENAME, char*, ".WFSref", "WFS reference", "wfsref", NULL, wfsref, functionparameter_GetParamPtr_STRING, FPFLAG_DEFAULT_INPUT) \
+    X(CLIARG_IMG, FPTYPE_FILENAME, char*, ".WFSmodes", "WFS modes", "wfsmodes", NULL, wfsmodes, functionparameter_GetParamPtr_STRING, FPFLAG_DEFAULT_INPUT) \
+    X(CLIARG_IMG, FPTYPE_FILENAME, char*, ".WFSmask", "WFS mask", "wfsmask", NULL, wfsmask, functionparameter_GetParamPtr_STRING, FPFLAG_DEFAULT_INPUT) \
+    X(CLIARG_FLOAT32, FPTYPE_FLOAT32, float, ".ampl", "RM modes ampl limit [um]", "1.0", 1.0, amplum, functionparameter_GetParamPtr_FLOAT32, FPFLAG_DEFAULT_INPUT) \
+    X(CLIARG_FLOAT32, FPTYPE_FLOAT32, float, ".lambdaum", "wavelength [um]", "0.8", 0.8, lambdaum, functionparameter_GetParamPtr_FLOAT32, FPFLAG_DEFAULT_INPUT)
 
 
 // Local variables pointers
@@ -37,71 +51,95 @@ static float *lambdaum;
 long          fpi_lambdaum;
 
 
+//
+// measure response matrix sensitivity
+//
+static errno_t
+AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
+        const char *IDdmmask_name,
+        const char *IDwfsref_name,
+        const char *IDwfsresp_name,
+        const char *IDwfsmask_name,
+        float       amplimitum,
+        float       lambdaum,
+        const char *foutname);
 
-static CLICMDARGDEF farg[] = {{
-        CLIARG_IMG,
-        ".DMmodes",
-        "DM modes",
-        "dmmodes",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &dmmodes,
-        &fpi_dmmodes
-    },
-    {
-        CLIARG_IMG,
-        ".DMmask",
-        "DM mask",
-        "dmmask",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &dmmask,
-        &fpi_dmmask
-    },
-    {
-        CLIARG_IMG,
-        ".WFSref",
-        "WFS reference",
-        "wfsref",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &wfsref,
-        &fpi_wfsref
-    },
-    {
-        CLIARG_IMG,
-        ".WFSmodes",
-        "WFS modes",
-        "wfsmodes",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &wfsmodes,
-        &fpi_wfsmodes
-    },
-    {
-        CLIARG_IMG,
-        ".WFSmask",
-        "WFS mask",
-        "wfsmask",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &wfsmask,
-        &fpi_wfsmask
-    },
-    {
-        CLIARG_FLOAT32,
-        ".ampl",
-        "RM modes ampl limit [um]",
-        "1.0",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &amplum,
-        &fpi_amplum
-    },
-    {
-        CLIARG_FLOAT32,
-        ".lambdaum",
-        "wavelength [um]",
-        "0.8",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &lambdaum,
-        &fpi_lambdaum
-    }
+
+/* ================================================================== */
+/* STANDALONE IMPLEMENTATION                                          */
+
+int FPSINIT_compRMsensitivity(const char *fps_name, const char *keywords, const char *description) {
+    FUNCTION_PARAMETER_STRUCT fps;
+    FPS_INIT_STD_PREAMBLE(fps, fps_name, keywords, description, COMPRMSENSITIVITY_HELPTEXT);
+    FPS_INIT_PROCINFO_DEFAULTS(fps, "stream", 10); 
+
+#define X_FPS_INIT(cli_type, fps_type, c_type, key, descr, def_str, def_val, ptr_addr, val_expr, cli_flags) \
+    { c_type val = def_val; function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, val_expr, NULL); }
+    COMPRMSENSITIVITY_PARAMS(X_FPS_INIT)
+#undef X_FPS_INIT
+
+    fps_add_processinfo_entries(&fps);
+    function_parameter_FPCONFexit(&fps);
+    return 0;
+}
+
+#define X_FPS_CONF(cli_type, fps_type, c_type, key, descr, def_str, def_val, ptr_addr, val_expr, cli_flags) \
+    ptr_addr = val_expr(&fps, key);
+
+int FPSCONF_compRMsensitivity(const char *fps_name, int loop) {
+    FPS_CONF_STD_BODY(fps_name, loop,
+        {
+            COMPRMSENSITIVITY_PARAMS(X_FPS_CONF)
+        },
+        {
+            // Validation logic
+        }
+    );
+    return 0;
+}
+#undef X_FPS_CONF
+
+FPS_MAKE_STANDALONE_CONFSTOP(compRMsensitivity)
+FPS_MAKE_STANDALONE_RUNSTOP(compRMsensitivity)
+
+#define X_FPS_RUN(cli_type, fps_type, c_type, key, descr, def_str, def_val, ptr_addr, val_expr, cli_flags) \
+    ptr_addr = val_expr(&fps, key);
+
+int FPSRUN_compRMsensitivity(const char *fps_name) {
+    FUNCTION_PARAMETER_STRUCT fps;
+    
+    FPS_RUN_STD_PREAMBLE(fps_name, fps, {
+        COMPRMSENSITIVITY_PARAMS(X_FPS_RUN)
+    });
+
+    AOloopControl_perfTest_computeRM_sensitivity(dmmodes,
+            dmmask,
+            wfsref,
+            wfsmodes,
+            wfsmask,
+            *amplum,
+            *lambdaum,
+            "RMsens.txt");
+
+    function_parameter_struct_disconnect(&fps);
+    return 0;
+}
+#undef X_FPS_RUN
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE("compRMsensitivity", compRMsensitivity, COMPRMSENSITIVITY_HELPTEXT, COMPRMSENSITIVITY_PARAMS)
+#endif
+
+
+#ifndef FPS_STANDALONE
+// Adjusted X_CLI_DEF to align with CLICMDARGDEF structure
+#define X_CLI_DEF(cli_type, fps_type, c_type, key, descr, def_str, def_val, ptr_addr, val_expr, cli_flags) \
+    { cli_type, key, descr, def_str, CLICMDARG_FLAG_DEFAULT, (uint64_t)fps_type, (uint64_t)cli_flags, (void **) &ptr_addr, NULL },
+
+static CLICMDARGDEF farg[] = {
+    COMPRMSENSITIVITY_PARAMS(X_CLI_DEF)
 };
+#undef X_CLI_DEF
 
 
 // Optional custom configuration setup.
@@ -139,8 +177,7 @@ static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
+#endif
 
 
 //
@@ -348,7 +385,7 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
 
 
 
-
+#ifndef FPS_STANDALONE
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
@@ -383,3 +420,4 @@ CLIADDCMD_AOloopControl_perfTest__compRMsensitivity()
 
     return RETURN_SUCCESS;
 }
+#endif
