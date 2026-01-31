@@ -65,3 +65,5 @@ install(TARGETS ${LIBNAME} DESTINATION lib)
 install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 
 install(PROGRAMS ${SCRIPTS} DESTINATION bin)
+add_cacao_standalone(dmcomb AOloopControl_DM_comb.c)
+add_cacao_standalone(dmturb DMturbulence.c)
