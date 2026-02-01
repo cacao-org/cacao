@@ -40,7 +40,7 @@ errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(
     modeoffset = modeout - (long)(modesize / 2);
     modeouto   = modeout - modeoffset;
 
-    IDmodecoeff = image_ID(IDmodecoeff_name);
+    IDmodecoeff = image_ID(IDmodecoeff_name, data.image, data.NB_MAX_IMAGE);
     NBmodes     = data.image[IDmodecoeff].md[0].size[0];
     NBsamples   = data.image[IDmodecoeff].md[0].size[2];
 

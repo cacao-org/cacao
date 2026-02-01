@@ -34,7 +34,7 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
     float  *coeff;
     float   total;
 
-    IDPF        = image_ID(IDPF_name);
+    IDPF        = image_ID(IDPF_name, data.image, data.NB_MAX_IMAGE);
     xsize       = data.image[IDPF].md[0].size[0];
     ysize       = data.image[IDPF].md[0].size[1];
     FilterOrder = xsize / ysize;

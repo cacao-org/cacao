@@ -96,7 +96,7 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
               0,  0,  2, -2,  2, -2,  2, -2,
               2, -2,  2, -2,  1,  1, -1, -1 };
 
-    IDmaskRM = image_ID(IDmaskRM_name);
+    IDmaskRM = image_ID(IDmaskRM_name, data.image, data.NB_MAX_IMAGE);
     xsize    = data.image[IDmaskRM].md[0].size[0];
     ysize    = data.image[IDmaskRM].md[0].size[1];
 
@@ -150,7 +150,7 @@ long AOloopControl_computeCalib_DMextrapolateModes(
     const char *IDcpa_name,
     const char *IDout_name)
 {
-    imageID IDin = image_ID(IDin_name);
+    imageID IDin = image_ID(IDin_name, data.image, data.NB_MAX_IMAGE);
     long xsize = data.image[IDin].md[0].size[0];
     long ysize = data.image[IDin].md[0].size[1];
     long zsize;
@@ -168,8 +168,8 @@ long AOloopControl_computeCalib_DMextrapolateModes(
     }
     long xysize = xsize * ysize;
 
-    imageID IDmask = image_ID(IDmask_name); // Scope: used only in this function
-    imageID IDcpa  = image_ID(IDcpa_name);  // Scope: used only in this function
+    imageID IDmask = image_ID(IDmask_name, data.image, data.NB_MAX_IMAGE); // Scope: used only in this function
+    imageID IDcpa  = image_ID(IDcpa_name, data.image, data.NB_MAX_IMAGE);  // Scope: used only in this function
 
     // Measure pixel distance to the active region of the mask
     long IDpixdist = -1; // Scope: used only in this function
@@ -245,7 +245,7 @@ long AOloopControl_computeCalib_DMslaveExt(
     const char *IDout_name,
     float       r0)
 {
-    long IDin = image_ID(IDin_name);
+    long IDin = image_ID(IDin_name, data.image, data.NB_MAX_IMAGE);
     long xsize = data.image[IDin].md[0].size[0];
     long ysize = data.image[IDin].md[0].size[1];
     long zsize;
@@ -273,8 +273,8 @@ long AOloopControl_computeCalib_DMslaveExt(
     }
     long xysize = xsize * ysize;
 
-    long IDmask = image_ID(IDmask_name); // IDmask is local to this function
-    long IDsl = image_ID(IDsl_name);     // IDsl is local to this function
+    long IDmask = image_ID(IDmask_name, data.image, data.NB_MAX_IMAGE); // IDmask is local to this function
+    long IDsl = image_ID(IDsl_name, data.image, data.NB_MAX_IMAGE);     // IDsl is local to this function
 
     for(long ii = 0; ii < xsize; ii++)
         for(long jj = 0; jj < ysize; jj++)

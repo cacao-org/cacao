@@ -241,7 +241,7 @@ static errno_t spot_position(
     // custom stream process function code
 
     // check input image exists
-    resolveIMGID(inimg, ERRMODE_ABORT);
+    resolveIMGID(inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     // get image size
     uint32_t xsize = inimg->size[0];
@@ -251,12 +251,12 @@ static errno_t spot_position(
 
 
     // check if dark image exists
-    resolveIMGID(indarkimg, ERRMODE_NULL);
+    resolveIMGID(indarkimg, ERRMODE_NULL, data.image, data.NB_MAX_IMAGE);
 
     // Checko output
     //
-    resolveIMGID(outdatimg, ERRMODE_ABORT);
-    resolveIMGID(outvecimg, ERRMODE_ABORT);
+    resolveIMGID(outdatimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(outvecimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
     float xstart = spot_x0 - spot_searchrad;
@@ -352,11 +352,11 @@ static errno_t compute_function()
 
     // resolve image and create IMGID
     IMGID inimg = mkIMGID_from_name(inimname);
-    resolveIMGID(&inimg, ERRMODE_ABORT);
+    resolveIMGID(&inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     // resolve dark image and create IMGID (optional)
     IMGID indarkimg = mkIMGID_from_name(indarkname);
-    resolveIMGID(&indarkimg, ERRMODE_NULL);
+    resolveIMGID(&indarkimg, ERRMODE_NULL, data.image, data.NB_MAX_IMAGE);
 
     // Create output
     //

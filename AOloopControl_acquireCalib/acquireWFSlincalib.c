@@ -634,7 +634,7 @@ static errno_t customCONFcheck()
 
 
 
-        imageID IDdmRM = image_ID(dmstream);
+        imageID IDdmRM = image_ID(dmstream, data.image, data.NB_MAX_IMAGE);
         if(IDdmRM != -1)
         {
             uint32_t DMxsize = data.image[IDdmRM].md->size[0];
@@ -756,7 +756,7 @@ static errno_t customCONFcheck()
             if(data.fpsptr->parray[fpi_compPokeMat].fpflag & FPFLAG_ONOFF)
             {
 
-                imageID IDdmRM = image_ID(dmstream);
+                imageID IDdmRM = image_ID(dmstream, data.image, data.NB_MAX_IMAGE);
 
                 if(IDdmRM != -1)
                 {
@@ -862,7 +862,7 @@ static errno_t compute_function()
         {
             printf("Computing Poke Matrix\n");
 
-            imageID IDdmRM = image_ID(dmstream);
+            imageID IDdmRM = image_ID(dmstream, data.image, data.NB_MAX_IMAGE);
 
             if(IDdmRM != -1)
             {

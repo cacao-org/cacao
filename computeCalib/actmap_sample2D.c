@@ -172,7 +172,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID imgWF2D = mkIMGID_from_name(inWF2D);
-    resolveIMGID(&imgWF2D, ERRMODE_ABORT);
+    resolveIMGID(&imgWF2D, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t wfxsize = imgWF2D.md->size[0];
     uint32_t wfysize = imgWF2D.md->size[1];
     uint64_t wfsize = wfxsize;
@@ -181,7 +181,7 @@ static errno_t compute_function()
 
 
     IMGID imgmap2D = mkIMGID_from_name(map2D);
-    resolveIMGID(&imgmap2D, ERRMODE_WARN);
+    resolveIMGID(&imgmap2D, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
     if(imgmap2D.ID == -1)
     {
         imgmap2D = load_actmapcoord2D("mapcoord2D.txt", map2D);

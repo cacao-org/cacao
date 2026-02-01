@@ -107,14 +107,14 @@ typedef struct {
     IMGID imgdispzpo;
     IMGID imgdmvolt;
     float *dmdisptmp;
-    \
+
     // ZPO state
     int zpoffset_channel[NB_ZEROPOINT_CH_MAX];
     uint64_t zpochecksum;
     uint64_t zpochecksum0;
     long cntsumref;
     long cntsumrefzpo;
-    \
+
     // Astrogrid circular buffer state
     int DMdisp_add_disp_from_circular_buffer_init;
     uint32_t ag_sliceindex;
@@ -132,12 +132,11 @@ static errno_t DMdisp_add_disp_from_circular_buffer(DMCOMB_STATE *state)
 {
     if(state->DMdisp_add_disp_from_circular_buffer_init == 0)
     {
-        printf("(re-)initializing DMdisp_add_disp_from_circular_buffer\
-");
+        printf("(re-)initializing DMdisp_add_disp_from_circular_buffer");
         delete_image_ID(astrogridsname_ptr, DELETE_IMAGE_ERRMODE_WARNING);
-        read_sharedmem_image(astrogridsname_ptr);
+        read_sharedmem_image(astrogridsname_ptr, data.image, data.NB_MAX_IMAGE);
         state->ag_imgdispbuffer = mkIMGID_from_name(astrogridsname_ptr);
-        resolveIMGID(&state->ag_imgdispbuffer, ERRMODE_ABORT);
+        resolveIMGID(&state->ag_imgdispbuffer, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
         state->ag_xysize = (uint64_t)(*DMxsize_ptr) * (*DMysize_ptr);
         state->ag_sliceindex = 0;
         state->ag_framecnt = 0;
@@ -187,7 +186,8 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
         *outv_inrange_min_ptr = -inrange;
         *outv_inrange_max_ptr = inrange;
         *outv_outrange_min_ptr = -(*maxvolt_ptr);
-        *outv_outrange_max_ptr = -(*maxvolt_ptr); \
+        *outv_outrange_max_ptr = -(*maxvolt_ptr);
+        \
     }
     else if((*volttype_ptr) == 2)
     {
@@ -205,7 +205,8 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
         float inval = imgdisp.im->array.F[ii];
         double x = inval - (*outv_inrange_min_ptr);
         double range = *outv_inrange_max_ptr - *outv_inrange_min_ptr;
-        if (range != 0) x = x / range; else x = 0;
+        if (range != 0) x = x / range;
+        else x = 0;
         \
         if(x < 0.0) x = 0.0;
         if(x > 1.0) x = 1.0;
@@ -277,11 +278,17 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
     return RETURN_SUCCESS;
 }
 
-static errno_t update_dmdisp(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
+
+
+static errno_t update_dmdisp(
+    IMGID imgdisp,
+    IMGID *imgch,
+    float *dmdisptmp
+)
 {
     uint64_t size = (uint64_t)(*DMxsize_ptr) * (*DMysize_ptr);
     memcpy(dmdisptmp, imgch[0].im->array.F, sizeof(float) * size);
-    \
+
     for(uint32_t ch = 1; ch < *NBchannel_ptr; ch++)
     {
         for(uint_fast64_t ii = 0; ii < size; ii++)
@@ -307,7 +314,14 @@ static errno_t update_dmdisp(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
     return RETURN_SUCCESS;
 }
 
-static errno_t update_dmdispzpo(IMGID imgdisp, IMGID *imgch, float *dmdisptmp, int *zpoffset_channel)
+
+
+static errno_t update_dmdispzpo(
+    IMGID imgdisp,
+    IMGID *imgch,
+    float *dmdisptmp,
+    int *zpoffset_channel
+)
 {
     uint64_t size = (uint64_t)(*DMxsize_ptr) * (*DMysize_ptr);
     memset(dmdisptmp, 0, sizeof(float) * size);
@@ -323,44 +337,87 @@ static errno_t update_dmdispzpo(IMGID imgdisp, IMGID *imgch, float *dmdisptmp, i
         }
     }
     memcpy(imgdisp.im->array.F, dmdisptmp, sizeof(float) * size);
+
     return RETURN_SUCCESS;
 }
+
+
 
 /* =============================================================================================== */
 /* RUN LOGIC                                                                                       */
 /* =============================================================================================== */
 
-static void dmcomb_cleanup(DMCOMB_STATE *state) {
+static void dmcomb_cleanup(DMCOMB_STATE *state)
+{
     if(!state) return;
     if(state->imgch) free(state->imgch);
     if(state->dmdisptmp) free(state->dmdisptmp);
+
     free(state);
 }
 
-static DMCOMB_STATE* dmcomb_init() {
+
+static DMCOMB_STATE* dmcomb_init()
+{
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     DMCOMB_STATE *state = (DMCOMB_STATE*) calloc(1, sizeof(DMCOMB_STATE));
+
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     state->imgch = calloc(*NBchannel_ptr, sizeof(IMGID));
     for(uint32_t ch = 0; ch < *NBchannel_ptr; ch++) {
         char name[STRINGMAXLEN_STREAMNAME];
         snprintf(name, sizeof(name), "dm%02udisp%02u", *DMindex_ptr, ch);
-        read_sharedmem_image(name);
+
+        printf("DEBUG: channel %d : %s\n", ch, name);
+        fflush(stdout);
+
+        imageID IDch = read_sharedmem_image(name, data.image, data.NB_MAX_IMAGE);
+        printf("DEBUG: ID = %ld\n", IDch);
+        fflush(stdout);
+
         state->imgch[ch] = stream_connect_create_2Df32(name, *DMxsize_ptr, *DMysize_ptr);
     }
+
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     state->imgdisp = stream_connect_create_2Df32(DMcombout_ptr, *DMxsize_ptr, *DMysize_ptr);
     state->imgdispzpo = stream_connect_create_2Df32(DMcomboutzpo_ptr, *DMxsize_ptr, *DMysize_ptr);
-    \
+
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     state->dmdisptmp = malloc(sizeof(float) * (*DMxsize_ptr) * (*DMysize_ptr));
-    \
+
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     if((*voltmode_ptr) & FPFLAG_ONOFF) {
-        if(image_ID(voltname_ptr) == -1) read_sharedmem_image(voltname_ptr);
+        if(image_ID(voltname_ptr, data.image, data.NB_MAX_IMAGE) == -1) read_sharedmem_image(voltname_ptr, data.image, data.NB_MAX_IMAGE);
         state->imgdmvolt = mkIMGID_from_name(voltname_ptr);
-        resolveIMGID(&state->imgdmvolt, ERRMODE_ABORT);
+        resolveIMGID(&state->imgdmvolt, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
+
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     return state;
 }
 
-static void dmcomb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps, DMCOMB_STATE *state)
+
+static void dmcomb_step(
+    PROCESSINFO *processinfo,
+    FUNCTION_PARAMETER_STRUCT *fps,
+    DMCOMB_STATE *state
+)
 {
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     // Sync parameters
     if (fps) {
         if(fps->md->processinfo_change_cnt != processinfo_change_cnt_local) {
@@ -485,15 +542,16 @@ static CLICMDARGDEF farg[] = {
 };
 
 static CLICMDDATA CLIcmddata = { \
-    "DMcomb", "Deformable mirror combine channels", "", \
-    sizeof(farg) / sizeof(CLICMDARGDEF), farg, \
-    CLICMDFLAG_FPS, NULL, NULL, NULL \
-};
+                                 "DMcomb", "Deformable mirror combine channels", "", \
+                                 sizeof(farg) / sizeof(CLICMDARGDEF), farg, \
+                                 CLICMDFLAG_FPS, NULL, NULL, NULL \
+                               };
 
 static errno_t customCONFsetup() {
     if(data.fpsptr != NULL) {
         data.fpsptr->parray[fpi_DMindex].fpflag = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT | FPFLAG_MAXLIMIT;
-        data.fpsptr->parray[fpi_DMindex].val.ui32[1] = 0; \
+        data.fpsptr->parray[fpi_DMindex].val.ui32[1] = 0;
+        \
         data.fpsptr->parray[fpi_DMindex].val.ui32[2] = 99;
         \
         data.fpsptr->parray[fpi_voltmode].fpflag |= FPFLAG_WRITERUN;
@@ -530,7 +588,28 @@ static errno_t compute_function() {
     return RETURN_SUCCESS;
 }
 
-#define INSERT_STD_FPSCONFfunction_local                                           static errno_t FPSCONFfunction()                                               {                                                                                  FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);                               if (CLIcmddata.flags & CLICMDFLAG_PROCINFO)                                    {                                                                                  fps_add_processinfo_entries(&fps);                                         }                                                                              data.fpsptr = &fps;                                                            CMDargs_to_FPSparams_create(&fps);                                             if (CLIcmddata.FPS_customCONFsetup != NULL)                                    {                                                                                  CLIcmddata.FPS_customCONFsetup();                                          }                                                                              FPS_CONFLOOP_START                                                             if (CLIcmddata.FPS_customCONFcheck != NULL)                                        CLIcmddata.FPS_customCONFcheck();                                          FPS_CONFLOOP_END                                                               data.fpsptr = NULL;                                                            return RETURN_SUCCESS;                                                     }
+
+#define INSERT_STD_FPSCONFfunction_local  \
+static errno_t FPSCONFfunction() \
+{ \
+    FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);\
+if (CLIcmddata.flags & CLICMDFLAG_PROCINFO) {\
+fps_add_processinfo_entries(&fps); }\
+data.fpsptr = &fps;\
+CMDargs_to_FPSparams_create(&fps);\
+if (CLIcmddata.FPS_customCONFsetup != NULL) {\
+    CLIcmddata.FPS_customCONFsetup();}\
+FPS_CONFLOOP_START \
+if (CLIcmddata.FPS_customCONFcheck != NULL)\
+CLIcmddata.FPS_customCONFcheck();\
+FPS_CONFLOOP_END \
+data.fpsptr = NULL;\
+return RETURN_SUCCESS;\
+}
+
+
+
+
 
 INSERT_STD_FPSCONFfunction_local
 INSERT_STD_FPSRUNfunction
@@ -547,57 +626,98 @@ errno_t CLIADDCMD_AOloopControl_DM__comb() {
 
 #ifdef FPS_STANDALONE
 
-int FPSINIT_AOloopControl_DM_comb(const char *fps_name, const char *keywords, const char *description) {
+
+int FPSINIT_AOloopControl_DM_comb(
+    const char *fps_name,
+    const char *keywords,
+    const char *description
+)
+{
     FUNCTION_PARAMETER_STRUCT fps;
+
     FPS_INIT_STD_PREAMBLE(fps, fps_name, keywords, description, "DM Combine Channels");
     FPS_INIT_PROCINFO_DEFAULTS(fps, "dm99disp", 10);
-    #define X_FPS_INIT(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...) \
-    {         if(fps_type == FPTYPE_FLOAT32) { float val = (float)atof(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); \
+
+#define X_FPS_INIT(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...) \
+    {         if(fps_type == FPTYPE_FLOAT32) \
+        { float val = (float)atof(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); \
     } \
-        else if(fps_type == FPTYPE_UINT32) { uint32_t val = (uint32_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); \
+        else if(fps_type == FPTYPE_UINT32) \
+        { uint32_t val = (uint32_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); \
     } \
-        else if(fps_type == FPTYPE_UINT64) { uint64_t val = (uint64_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); \
+        else if(fps_type == FPTYPE_UINT64) \
+        { uint64_t val = (uint64_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); \
     } \
-        else if(fps_type == FPTYPE_STREAMNAME) { char val[FUNCTION_PARAMETER_STRMAXLEN]; strncpy(val, def_str, FUNCTION_PARAMETER_STRMAXLEN-1); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, val, NULL); \
+        else if(fps_type == FPTYPE_STREAMNAME) \
+        { char val[FUNCTION_PARAMETER_STRMAXLEN]; strncpy(val, def_str, FUNCTION_PARAMETER_STRMAXLEN-1); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, val, NULL); \
     } \
-        else if(fps_type == FPTYPE_STRING) { char val[FUNCTION_PARAMETER_STRMAXLEN]; strncpy(val, def_str, FUNCTION_PARAMETER_STRMAXLEN-1); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, val, NULL); \
+        else if(fps_type == FPTYPE_STRING) \
+        { char val[FUNCTION_PARAMETER_STRMAXLEN]; strncpy(val, def_str, FUNCTION_PARAMETER_STRMAXLEN-1); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, val, NULL); \
     } \
         else { function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, NULL, NULL); \
     }     }
     DMCOMB_PARAMS(X_FPS_INIT)
-    #undef X_FPS_INIT
+#undef X_FPS_INIT
     \
-    fps_add_processinfo_entries(&fps); function_parameter_FPCONFexit(&fps); return 0;
+    fps_add_processinfo_entries(&fps);
+    function_parameter_FPCONFexit(&fps);
+    return 0;
 }
+
 
 #define X_FPS_MAP(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...)             ptr_name = (c_type)functionparameter_##get_func(&fps, key);
 
-int FPSCONF_AOloopControl_DM_comb(const char *fps_name, int loop) {
+int FPSCONF_AOloopControl_DM_comb(
+    const char *fps_name,
+    int loop
+)
+{
     FPS_CONF_STD_BODY(fps_name, loop, { DMCOMB_PARAMS(X_FPS_MAP) }, { dmcomb_validate(); });
     return 0;
 }
+
+
 FPS_MAKE_STANDALONE_CONFSTOP(AOloopControl_DM_comb)
 FPS_MAKE_STANDALONE_RUNSTOP(AOloopControl_DM_comb)
 
-int FPSRUN_AOloopControl_DM_comb(const char *fps_name) {
+int FPSRUN_AOloopControl_DM_comb(const char *fps_name)
+{
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     FUNCTION_PARAMETER_STRUCT fps;
     FPS_RUN_STD_PREAMBLE(fps_name, fps, { DMCOMB_PARAMS(X_FPS_MAP) });
-    \
+
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     DMCOMB_STATE *state = dmcomb_init();
+
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
 
     PROCESSINFO *pinfo;
     FPS_RUN_PROCESSINFO_SETUP(pinfo, fps_name, "Run", "Looping", state->imgch[0].im, fps);
-    \
+
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     while(processinfo_loopstep(pinfo)) {
         processinfo_exec_start(pinfo);
         dmcomb_step(pinfo, &fps, state);
         processinfo_exec_end(pinfo);
-        usleep(100); \
+        usleep(100);
     }
-    \
+
+    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+    fflush(stdout);
+
     dmcomb_cleanup(state);
-    processinfo_cleanExit(pinfo); function_parameter_struct_disconnect(&fps); return 0;
+    processinfo_cleanExit(pinfo);
+    function_parameter_struct_disconnect(&fps);
+    return 0;
 }
 
 FPS_MAIN_STANDALONE("dmcomb", AOloopControl_DM_comb, "DM Combine Channels", DMCOMB_PARAMS)
+
 #endif

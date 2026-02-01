@@ -138,7 +138,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID imginmodeC = mkIMGID_from_name(inmodeC);
-    resolveIMGID(&imginmodeC, ERRMODE_ABORT);
+    resolveIMGID(&imginmodeC, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t xsize = imginmodeC.md->size[0];
     uint32_t ysize = imginmodeC.md->size[1];
     uint64_t xysize = xsize;
@@ -147,10 +147,10 @@ static errno_t compute_function()
     printf("%u modes\n", NBmodes);
 
     IMGID imgmask = mkIMGID_from_name(maskim);
-    resolveIMGID(&imgmask, ERRMODE_ABORT);
+    resolveIMGID(&imgmask, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     IMGID imgextmask = mkIMGID_from_name(extmaskim);
-    resolveIMGID(&imgextmask, ERRMODE_ABORT);
+    resolveIMGID(&imgextmask, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
 

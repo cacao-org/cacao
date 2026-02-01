@@ -113,7 +113,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID imgzRM = mkIMGID_from_name(zrespWFS);
-    resolveIMGID(&imgzRM, ERRMODE_ABORT);
+    resolveIMGID(&imgzRM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t wfsxsize = imgzRM.md->size[0];
     uint32_t wfsysize = imgzRM.md->size[1];
     uint64_t wfssize = wfsxsize;
@@ -122,7 +122,7 @@ static errno_t compute_function()
 
 
     IMGID imDMmodesC = mkIMGID_from_name(DMmodesC);
-    resolveIMGID(&imDMmodesC, ERRMODE_ABORT);
+    resolveIMGID(&imDMmodesC, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t dmxsize = imDMmodesC.md->size[0];
     uint32_t dmysize = imDMmodesC.md->size[1];
     uint64_t dmsize = dmxsize;

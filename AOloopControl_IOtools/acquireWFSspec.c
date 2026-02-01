@@ -285,7 +285,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID wfsin = mkIMGID_from_name(input_shm_name); // input raw wfs image
-    resolveIMGID(&wfsin, ERRMODE_ABORT);
+    resolveIMGID(&wfsin, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     uint32_t sizeWFSx = wfsin.size[0];
     uint32_t sizeWFSy = wfsin.size[1];
@@ -293,7 +293,7 @@ static errno_t compute_function()
     uint8_t  WFSatype = wfsin.md->datatype;
 
     IMGID specmask = mkIMGID_from_name(specmask_shm_name);
-    resolveIMGID(&specmask, ERRMODE_ABORT);
+    resolveIMGID(&specmask, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t numtraces = specmask.size[2];
     uint64_t sizeWFS  = sizeWFSx * numtraces;
     uint32_t sizeWFSoutx = sizeWFSx / *binning;

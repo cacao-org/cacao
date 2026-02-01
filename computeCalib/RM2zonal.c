@@ -205,10 +205,10 @@ static errno_t compute_function()
 
 
     IMGID imgRMDM = mkIMGID_from_name(RMmodesDM);
-    resolveIMGID(&imgRMDM, ERRMODE_ABORT);
+    resolveIMGID(&imgRMDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     IMGID imgRMWFS = mkIMGID_from_name(RMmodesWFS);
-    resolveIMGID(&imgRMWFS, ERRMODE_ABORT);
+    resolveIMGID(&imgRMWFS, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     struct timespec t0, t1, t2, t3, t4, t5;
 
@@ -240,7 +240,7 @@ static errno_t compute_function()
 
 
 
-        //ID = image_ID("VTmat");
+        //ID = image_ID("VTmat", data.image, data.NB_MAX_IMAGE);
         //IMGID imgVT = makesetIMGID("VTmat", ID);
 
         int nbmode;

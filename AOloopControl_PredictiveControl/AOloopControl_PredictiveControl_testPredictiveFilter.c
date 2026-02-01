@@ -56,7 +56,7 @@ AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name,
     float   v0;
     // float    NoiseAmpl = 0.02;
 
-    IDtrace = image_ID(IDtrace_name);
+    IDtrace = image_ID(IDtrace_name, data.image, data.NB_MAX_IMAGE);
 
     NBtraceVec = data.image[IDtrace].md[0].size[0];
     NBch       = data.image[IDtrace].md[0].size[1];
@@ -123,7 +123,7 @@ AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name,
 
     save_fits("WFPmatA", "WFPmatA.fits");
     save_fits("WFPmatC", "WFPmatC.fits");
-    IDmatC = image_ID("WFPmatC");
+    IDmatC = image_ID("WFPmatC", data.image, data.NB_MAX_IMAGE);
 
     create_2Dimage_ID(IDfilt_name, filtsize, NBch, &IDfilt);
     for(l = 0; l < filtsize; l++)

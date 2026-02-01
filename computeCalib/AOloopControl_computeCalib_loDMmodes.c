@@ -99,7 +99,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
 
     printf("msizexy = %u %u\n", msizex, msizey);
     list_image_ID();
-    IDmask = image_ID("dmmask");
+    IDmask = image_ID("dmmask", data.image, data.NB_MAX_IMAGE);
     if(IDmask == -1)
     {
         double val0, val1;
@@ -172,7 +172,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         // optional mask
         //
         IMGID imgCPAmask = mkIMGID_from_name("modesCPAmask");
-        resolveIMGID(&imgCPAmask, ERRMODE_WARN);
+        resolveIMGID(&imgCPAmask, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
 
         linopt_imtools_makeCPAmodes(&imgoutm,
                                     msizex,
@@ -190,8 +190,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                                    );
     }
 
-    ID0    = image_ID("CPAmodes");
-    IDfreq = image_ID("cpamodesfreq");
+    ID0    = image_ID("CPAmodes", data.image, data.NB_MAX_IMAGE);
+    IDfreq = image_ID("cpamodesfreq", data.image, data.NB_MAX_IMAGE);
 
     printf("  %u %u %ld\n",
            msizex,
@@ -240,7 +240,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
             k++)
     {
         /// Remove excluded modes
-        long IDeModes = image_ID("emodes");
+        long IDeModes = image_ID("emodes", data.image, data.NB_MAX_IMAGE);
         if(IDeModes != -1)
         {
             create_2Dimage_ID("tmpmode", msizex, msizey, &IDtm);
@@ -257,7 +257,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                                           NULL);
             linopt_imtools_image_construct("emodes", "lcoeff", "em00", NULL);
             delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
-            IDem = image_ID("em00");
+            IDem = image_ID("em00", data.image, data.NB_MAX_IMAGE);
 
             coeff = 1.0 - exp(-pow(1.0 * k / kelim, 6.0));
             if(k > 2.0 * kelim)
@@ -345,7 +345,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                          "modeg",
                          4.0 * pow(1.0 * (NBciter - citer) / NBciter, 0.5),
                          kernsize);
-            IDg = image_ID("modeg");
+            IDg = image_ID("modeg", data.image, data.NB_MAX_IMAGE);
             for(uint32_t k = 0; k < data.image[ID].md[0].size[2]; k++)
             {
                 for(uint64_t ii = 0; ii < msizex * msizey; ii++)
@@ -358,8 +358,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
     }
 
     /// SLAVED ACTUATORS
-    IDslaved = image_ID("dmslaved");
-    ID       = image_ID(ID_name);
+    IDslaved = image_ID("dmslaved", data.image, data.NB_MAX_IMAGE);
+    ID       = image_ID(ID_name, data.image, data.NB_MAX_IMAGE);
     if((IDslaved != -1) && (IDmask != -1))
     {
         imageID IDtmp;
@@ -454,7 +454,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                       {
                           sigma = 0.5*NBconviter/(1.0+conviter);
                           gauss_filter("_tmpinterpol", "_tmpinterpolg", 1.0, 2);
-                          IDtmpg = image_ID("_tmpinterpolg");
+                          IDtmpg = image_ID("_tmpinterpolg", data.image, data.NB_MAX_IMAGE);
                           for(ii=0; ii<msizex*msizey; ii++)
                           {
                               if((data.image[IDmask].array.F[ii]>0.5)&&(data.image[IDslaved].array.F[ii]<0.5))

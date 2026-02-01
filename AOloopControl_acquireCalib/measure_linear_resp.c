@@ -1100,17 +1100,17 @@ static errno_t compute_function()
 
     // connect to input space
     IMGID imgin = mkIMGID_from_name(streamin);
-    resolveIMGID(&imgin, ERRMODE_ABORT);
+    resolveIMGID(&imgin, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("input  space size : %u %u\n", imgin.md->size[0], imgin.md->size[1]);
 
     // connect to output space
     IMGID imgout = mkIMGID_from_name(streamout);
-    resolveIMGID(&imgout, ERRMODE_ABORT);
+    resolveIMGID(&imgout, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("output space size : %u %u\n", imgout.md->size[0], imgout.md->size[1]);
 
     load_fits(inmodeC, "inmodeC", LOADFITS_ERRMODE_WARNING, NULL);
     IMGID imginmodeC = mkIMGID_from_name("inmodeC");
-    resolveIMGID(&imginmodeC, ERRMODE_ABORT);
+    resolveIMGID(&imginmodeC, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("input modes size : %u %u %u\n", imginmodeC.md->size[0],
            imginmodeC.md->size[1], imginmodeC.md->size[2]);
 

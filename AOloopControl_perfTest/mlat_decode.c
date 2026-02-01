@@ -112,7 +112,7 @@ errno_t mlat_diffseq_decode(
 {
     DEBUG_TRACE_FSTART();
 
-    resolveIMGID(&inimg, ERRMODE_ABORT);
+    resolveIMGID(&inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
 
@@ -398,7 +398,7 @@ errno_t mlat_diffseq_decode(
         compute_SVD(imgtmat, &imgU, &imgS, &imgV, Vdim0, svdlim, maxNBmode, GPUdev, 6, "SVDunmodes", "SVDvnmodes");
 
         IMGID imgpsinv = mkIMGID_from_name("psinv");
-        resolveIMGID(&imgpsinv, ERRMODE_ABORT);
+        resolveIMGID(&imgpsinv, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
 
@@ -531,7 +531,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID inimg = mkIMGID_from_name(diffseqname);
-    resolveIMGID(&inimg, ERRMODE_ABORT);
+    resolveIMGID(&inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
     IMGID outimg = mkIMGID_from_name(outseqname);

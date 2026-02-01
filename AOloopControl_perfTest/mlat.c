@@ -307,19 +307,19 @@ static errno_t compute_function()
 
     // connect to DM
     IMGID imgdm = mkIMGID_from_name(dmstream);
-    resolveIMGID(&imgdm, ERRMODE_ABORT);
+    resolveIMGID(&imgdm, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("DM size : %u %u\n", imgdm.md->size[0], imgdm.md->size[1]);
     uint32_t dmxsize = imgdm.md->size[0];
     uint32_t dmysize = imgdm.md->size[1];
 
     // connect to WFS
     IMGID imgwfs = mkIMGID_from_name(wfsstream);
-    resolveIMGID(&imgwfs, ERRMODE_ABORT);
+    resolveIMGID(&imgwfs, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("WFS size : %u %u\n", imgwfs.md->size[0], imgwfs.md->size[1]);
 
     // connect to optional pokemap
     IMGID imgpokemap = mkIMGID_from_name(pokemap);
-    resolveIMGID(&imgpokemap, ERRMODE_WARN);
+    resolveIMGID(&imgpokemap, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
     if(imgpokemap.ID != -1)
     {
         printf("pokemap size : %u %u\n", imgpokemap.md->size[0],

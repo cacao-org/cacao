@@ -215,21 +215,21 @@ AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
 
     printf("amplimit = %f um\n", amplimitum);
 
-    IDdmmodes = image_ID(IDdmmodes_name);
+    IDdmmodes = image_ID(IDdmmodes_name, data.image, data.NB_MAX_IMAGE);
     dmxsize   = data.image[IDdmmodes].md[0].size[0];
     dmysize   = data.image[IDdmmodes].md[0].size[1];
     NBmodes   = data.image[IDdmmodes].md[0].size[2];
     dmxysize  = dmxsize * dmysize;
 
-    IDdmmask = image_ID(IDdmmask_name);
+    IDdmmask = image_ID(IDdmmask_name, data.image, data.NB_MAX_IMAGE);
 
-    IDwfsref  = image_ID(IDwfsref_name);
+    IDwfsref  = image_ID(IDwfsref_name, data.image, data.NB_MAX_IMAGE);
     wfsxsize  = data.image[IDwfsref].md[0].size[0];
     wfsysize  = data.image[IDwfsref].md[0].size[1];
     wfsxysize = wfsxsize * wfsysize;
 
-    IDwfsresp = image_ID(IDwfsresp_name);
-    IDwfsmask = image_ID(IDwfsmask_name);
+    IDwfsresp = image_ID(IDwfsresp_name, data.image, data.NB_MAX_IMAGE);
+    IDwfsmask = image_ID(IDwfsmask_name, data.image, data.NB_MAX_IMAGE);
 
     wfsreftot = 0.0;
     for(ii = 0; ii < wfsxysize; ii++)

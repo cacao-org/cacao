@@ -103,9 +103,9 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
     imageID IDDMmap, IDWFSmap, IDdm;
 
     // DECODE MAPS (IF REQUIRED)
-    IDzrm = image_ID(IDzrespm0_name);
-    if((image_ID("RMmat") != -1) &&
-            (image_ID("pixindexim") != -1)) // start decoding
+    IDzrm = image_ID(IDzrespm0_name, data.image, data.NB_MAX_IMAGE);
+    if((image_ID("RMmat", data.image, data.NB_MAX_IMAGE) != -1) &&
+            (image_ID("pixindexim", data.image, data.NB_MAX_IMAGE) != -1)) // start decoding
     {
         // save_fits(IDzrespm0_name, "zrespm_Hadamard.fits");
 
@@ -113,9 +113,9 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
                 "RMmat",
                 "pixindexim",
                 IDzrespm_name);
-        IDzrm = image_ID(IDzrespm_name);
+        IDzrm = image_ID(IDzrespm_name, data.image, data.NB_MAX_IMAGE);
 
-        if(image_ID("RMpokeC") != -1)
+        if(image_ID("RMpokeC", data.image, data.NB_MAX_IMAGE) != -1)
         {
             AOloopControl_computeCalib_Hadamard_decodeRM("RMpokeC",
                     "RMmat",
@@ -140,7 +140,7 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    IDdm             = read_sharedmem_image(name);
+    IDdm             = read_sharedmem_image(name, data.image, data.NB_MAX_IMAGE);
     uint32_t sizexDM = data.image[IDdm].md[0].size[0];
     uint32_t sizeyDM = data.image[IDdm].md[0].size[1];
 
@@ -180,7 +180,7 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
     fflush(stdout);
 
     /*
-    IDWFSmask = image_ID("wfsmask");
+    IDWFSmask = image_ID("wfsmask", data.image, data.NB_MAX_IMAGE);
 
 
     // normalize wfsref with wfsmask
@@ -540,7 +540,7 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
 
     // DECODE MAPS (IF REQUIRED)
 
-    if((image_ID("Hmat") != -1) && (image_ID("pixindexim") != -1))
+    if((image_ID("Hmat", data.image, data.NB_MAX_IMAGE) != -1) && (image_ID("pixindexim", data.image, data.NB_MAX_IMAGE) != -1))
     {
         chname_image_ID(zrespm_name, "tmprm");
         save_fits("tmprm", "zrespm_Hadamard.fits");
@@ -551,9 +551,9 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
                 zrespm_name);
         delete_image_ID("tmprm", DELETE_IMAGE_ERRMODE_WARNING);
 
-        IDzrm = image_ID(zrespm_name);
+        IDzrm = image_ID(zrespm_name, data.image, data.NB_MAX_IMAGE);
 
-        if(image_ID("RMpokeC") != -1)
+        if(image_ID("RMpokeC", data.image, data.NB_MAX_IMAGE) != -1)
         {
             AOloopControl_computeCalib_Hadamard_decodeRM("RMpokeC",
                     "Hmat",
@@ -582,7 +582,7 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     // printf("========== STEP 000 ============\n");
     //	fflush(stdout);
 
-    IDWFSmask = image_ID("wfsmask");
+    IDWFSmask = image_ID("wfsmask", data.image, data.NB_MAX_IMAGE);
     //	printf("ID   %ld %ld\n", IDWFSmask, IDWFSref);
 
     // normalize wfsref with wfsmask
@@ -827,7 +827,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
         //"./mkmodestmp/VTmat.fits");
 
         // save as 3D cube
-        imageID ID_VTmat = image_ID("VTmat");
+        imageID ID_VTmat = image_ID("VTmat", data.image, data.NB_MAX_IMAGE);
         imageID ID_DMmodes;
         uint32_t DMxsize = atoi(getenv("CACAO_DMxsize"));
         uint32_t DMysize = atoi(getenv("CACAO_DMysize"));
@@ -850,7 +850,7 @@ errno_t AOloopControl_computeCalib_mkCM_RUN()
         uint32_t WFSxsize;
         uint32_t WFSysize;
 
-        imageID IDrespM = image_ID("respM");
+        imageID IDrespM = image_ID("respM", data.image, data.NB_MAX_IMAGE);
         WFSxsize = data.image[IDrespM].md->size[0];
         WFSysize = data.image[IDrespM].md->size[1];
 
@@ -958,7 +958,7 @@ long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name,
     long  ii1min, ii1max, jj1min, jj1max;
     float dx, dy, r;
 
-    IDmaskRM = image_ID(IDmaskRM_name);
+    IDmaskRM = image_ID(IDmaskRM_name, data.image, data.NB_MAX_IMAGE);
     xsize    = data.image[IDmaskRM].md[0].size[0];
     ysize    = data.image[IDmaskRM].md[0].size[1];
 

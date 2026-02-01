@@ -404,13 +404,13 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 static errno_t compute_function()
 {
     IMGID inpsfimg = mkIMGID_from_name(selinput);
-    resolveIMGID(&inpsfimg, ERRMODE_ABORT);
+    resolveIMGID(&inpsfimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     IMGID inwfsimg;
     if ( strcmp(wfsinput, "null") )
     {
         inwfsimg = mkIMGID_from_name(wfsinput);
-        resolveIMGID(&inwfsimg, ERRMODE_ABORT);
+        resolveIMGID(&inwfsimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
     {
@@ -422,7 +422,7 @@ static errno_t compute_function()
     if ( strcmp(dminput, "null") )
     {
         indmimg = mkIMGID_from_name(dminput);
-        resolveIMGID(&indmimg, ERRMODE_ABORT);
+        resolveIMGID(&indmimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
     {

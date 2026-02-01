@@ -184,7 +184,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
 
     double mediansim0, mediansim1;
 
-    IDstream0 = image_ID(IDname_stream0);
+    IDstream0 = image_ID(IDname_stream0, data.image, data.NB_MAX_IMAGE);
     xsize0    = data.image[IDstream0].md[0].size[0];
     ysize0    = data.image[IDstream0].md[0].size[1];
     xysize0   = xsize0 * ysize0;
@@ -198,14 +198,14 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
            (unsigned long long)(NBframe0 - 1) / 2,
            NBpairMax);
 
-    IDstream1 = image_ID(IDname_stream1);
+    IDstream1 = image_ID(IDname_stream1, data.image, data.NB_MAX_IMAGE);
     xsize1    = data.image[IDstream1].md[0].size[0];
     ysize1    = data.image[IDstream1].md[0].size[1];
     xysize1   = xsize1 * ysize1;
     NBframe1  = data.image[IDstream1].md[0].size[2];
 
-    IDsimM0 = image_ID(IDname_simM0);
-    IDsimM1 = image_ID(IDname_simM1);
+    IDsimM0 = image_ID(IDname_simM0, data.image, data.NB_MAX_IMAGE);
+    IDsimM1 = image_ID(IDname_simM1, data.image, data.NB_MAX_IMAGE);
 
     // a few checks before proceeding
     if(NBframe0 != NBframe1)
@@ -661,8 +661,8 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     double *evalarray;
     long   *indexarray;
 
-    IDwfs = image_ID(IDnameWFS);
-    IDpsf = image_ID(IDnamePSF);
+    IDwfs = image_ID(IDnameWFS, data.image, data.NB_MAX_IMAGE);
+    IDpsf = image_ID(IDnamePSF, data.image, data.NB_MAX_IMAGE);
 
     xsizewfs  = data.image[IDwfs].md[0].size[0];
     ysizewfs  = data.image[IDwfs].md[0].size[1];
@@ -714,7 +714,7 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     printf("WINDOW: %ld - %ld     %ld -%ld\n", x0t, x1t, y0t, y1t);
 
     long kk;
-    IDpsfmask = image_ID("PSFmask");
+    IDpsfmask = image_ID("PSFmask", data.image, data.NB_MAX_IMAGE);
     if(IDpsfmask != -1)
     {
         for(kk = 0; kk < NBframe; kk++)

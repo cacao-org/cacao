@@ -188,8 +188,8 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    IDinb0 = read_sharedmem_image(imnameb0);
-    IDinb1 = read_sharedmem_image(imnameb1);
+    IDinb0 = read_sharedmem_image(imnameb0, data.image, data.NB_MAX_IMAGE);
+    IDinb1 = read_sharedmem_image(imnameb1, data.image, data.NB_MAX_IMAGE);
 
     cnt0_old = data.image[IDinb0].md[0].cnt0;
     cnt1_old = data.image[IDinb1].md[0].cnt0;

@@ -553,7 +553,7 @@ static errno_t compute_function()
     // connect to control stream
     //
     IMGID imgctrl = mkIMGID_from_name(ctrlsname);
-    resolveIMGID(&imgctrl, ERRMODE_ABORT);
+    resolveIMGID(&imgctrl, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     uint32_t ctrlxsize = imgctrl.md->size[0];
     uint32_t ctrlysize = imgctrl.md->size[1];
@@ -565,7 +565,7 @@ static errno_t compute_function()
     if ( strcmp(sensref0, "null") )
     {
         imgctrlamp = mkIMGID_from_name(ctrlampmap);
-        resolveIMGID(&imgctrlamp, ERRMODE_ABORT);
+        resolveIMGID(&imgctrlamp, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
     {
@@ -579,7 +579,7 @@ static errno_t compute_function()
     // connect to sensing stream
     //
     IMGID imgsens = mkIMGID_from_name(senssname);
-    resolveIMGID(&imgsens, ERRMODE_ABORT);
+    resolveIMGID(&imgsens, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     uint32_t sensxsize = imgsens.md->size[0];
     uint32_t sensysize = imgsens.md->size[1];
@@ -607,7 +607,7 @@ static errno_t compute_function()
     if ( strcmp(sensref0, "null") )
     {
         imgsensref0 = mkIMGID_from_name(sensref0);
-        resolveIMGID(&imgsensref0, ERRMODE_ABORT);
+        resolveIMGID(&imgsensref0, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
     {
@@ -618,7 +618,7 @@ static errno_t compute_function()
     if ( strcmp(sensmask0, "null") )
     {
         imgsensmask0 = mkIMGID_from_name(sensmask0);
-        resolveIMGID(&imgsensmask0, ERRMODE_ABORT);
+        resolveIMGID(&imgsensmask0, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
     {
@@ -629,7 +629,7 @@ static errno_t compute_function()
     if ( strcmp(sensref1, "null") )
     {
         imgsensref1 = mkIMGID_from_name(sensref1);
-        resolveIMGID(&imgsensref1, ERRMODE_ABORT);
+        resolveIMGID(&imgsensref1, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
     {
@@ -640,7 +640,7 @@ static errno_t compute_function()
     if ( strcmp(sensmask1, "null") )
     {
         imgsensmask1 = mkIMGID_from_name(sensmask1);
-        resolveIMGID(&imgsensmask1, ERRMODE_ABORT);
+        resolveIMGID(&imgsensmask1, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
     {

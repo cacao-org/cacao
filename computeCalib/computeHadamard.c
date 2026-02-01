@@ -129,7 +129,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     imageID   IDindex;
     uint32_t *sizearray;
 
-    imageID  IDmask = image_ID(DMmask_name);
+    imageID  IDmask = image_ID(DMmask_name, data.image, data.NB_MAX_IMAGE);
     uint32_t xsize  = data.image[IDmask].md[0].size[0];
     uint32_t ysize  = data.image[IDmask].md[0].size[1];
     uint64_t xysize = xsize * ysize;
@@ -280,15 +280,15 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(
     long     kk, kk1, ii;
     uint32_t zsizeout;
 
-    IDin     = image_ID(inname);
+    IDin     = image_ID(inname, data.image, data.NB_MAX_IMAGE);
     sizexwfs = data.image[IDin].md[0].size[0];
     sizeywfs = data.image[IDin].md[0].size[1];
     sizewfs  = sizexwfs * sizeywfs;
     NBframes = data.image[IDin].md[0].size[2];
 
-    IDindex = image_ID(indexname);
+    IDindex = image_ID(indexname, data.image, data.NB_MAX_IMAGE);
 
-    IDhad = image_ID(Hmatname);
+    IDhad = image_ID(Hmatname, data.image, data.NB_MAX_IMAGE);
     if((data.image[IDhad].md[0].size[0] != NBframes) ||
             (data.image[IDhad].md[0].size[1] != NBframes))
     {

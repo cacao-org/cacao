@@ -235,14 +235,14 @@ static errno_t compute_function()
     // connect to input mode values array and get number of modes
     //
     IMGID imgmvalDM = mkIMGID_from_name(mvalDM);
-    resolveIMGID(&imgmvalDM, ERRMODE_ABORT);
+    resolveIMGID(&imgmvalDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("%u modes\n", imgmvalDM.md->size[0]);
     uint32_t NBmode = imgmvalDM.md->size[0];
 
     // Connect to mvalWFS
     //
     IMGID imgmvalWFS = mkIMGID_from_name(mvalWFS);
-    resolveIMGID(&imgmvalWFS, ERRMODE_ABORT);
+    resolveIMGID(&imgmvalWFS, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
 

@@ -227,7 +227,7 @@ static errno_t compute_function()
     list_image_ID();
 
 
-    imageID IDzrm = image_ID(zrespWFS);
+    imageID IDzrm = image_ID(zrespWFS, data.image, data.NB_MAX_IMAGE);
     printf("IDzrm = %ld\n", IDzrm);
     uint32_t sizexWFS = data.image[IDzrm].md[0].size[0];
     uint32_t sizeyWFS = data.image[IDzrm].md[0].size[1];
@@ -287,7 +287,7 @@ static errno_t compute_function()
 
         // pre-filtering
         // gauss_filter(DMmap_name, "dmmapg", 5.0, 8);
-        // IDDMmap1 = image_ID("dmmapg");
+        // IDDMmap1 = image_ID("dmmapg", data.image, data.NB_MAX_IMAGE);
 
         // (map/map1)*pow(map,0.25)
 

@@ -371,7 +371,7 @@ static errno_t mk_ZernikeFourier_modal_basis(
         // optional mask
         //
         IMGID imgmask = mkIMGID_from_name("modesZFmask");
-        resolveIMGID(&imgmask, ERRMODE_WARN);
+        resolveIMGID(&imgmask, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
 
         linopt_imtools_makeCPAmodes(&imgoutm,
                                     msizex,
@@ -389,9 +389,9 @@ static errno_t mk_ZernikeFourier_modal_basis(
                                    );
     }
 
-    imageID ID0 = image_ID("CPAmodes");
+    imageID ID0 = image_ID("CPAmodes", data.image, data.NB_MAX_IMAGE);
 
-    imageID IDfreq = image_ID("cpamodesfreq");
+    imageID IDfreq = image_ID("cpamodesfreq", data.image, data.NB_MAX_IMAGE);
 
     printf("  %u %u %ld\n",
            msizex,
@@ -776,10 +776,10 @@ static errno_t compute_function()
 
 
     /*IMGID inimg = makeIMGID(inimname);
-    resolveIMGID(&inimg, ERRMODE_ABORT);
+    resolveIMGID(&inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     IMGID outimg = makeIMGID(outimname);
-    resolveIMGID(&outimg, ERRMODE_ABORT);
+    resolveIMGID(&outimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     */
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
@@ -805,14 +805,14 @@ static errno_t compute_function()
         //
         load_fits(fname_DMmaskCTRL, "DMmaskCTRL", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgDMmaskCTRL = mkIMGID_from_name("DMmaskCTRL");
-        resolveIMGID(&imgDMmaskCTRL, ERRMODE_ABORT);
+        resolveIMGID(&imgDMmaskCTRL, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
         // DM actuators to be extrapolated from neighbors
         // this is a subset of DMmaskCTRL
         //
         load_fits(fname_DMmaskEXTR, "DMmaskEXTR", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgDMmaskEXTR = mkIMGID_from_name("DMmaskEXTR");
-        resolveIMGID(&imgDMmaskEXTR, ERRMODE_ABORT);
+        resolveIMGID(&imgDMmaskEXTR, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
 
@@ -900,7 +900,7 @@ static errno_t compute_function()
         // zonal response matrix
         load_fits(fname_zrespM, "zrespM", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgzrespM = mkIMGID_from_name("zrespM");
-        resolveIMGID(&imgzrespM, ERRMODE_ABORT);
+        resolveIMGID(&imgzrespM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
         // COMPUTE WFS RESPONSE TO MODES
@@ -984,10 +984,10 @@ static errno_t compute_function()
 
 
             IMGID imgloRM = mkIMGID_from_name("loRM");
-            resolveIMGID(&imgloRM, ERRMODE_ABORT);
+            resolveIMGID(&imgloRM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
             IMGID imgloDMmodes = mkIMGID_from_name("loDMmodes");
-            resolveIMGID(&imgloDMmodes, ERRMODE_ABORT);
+            resolveIMGID(&imgloDMmodes, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
             printf("Using low-order modal response [%ld %ld]\n",

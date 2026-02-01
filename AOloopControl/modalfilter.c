@@ -467,7 +467,7 @@ static errno_t help_function() {
 
 static errno_t compute_function()
 {
-    IMGID imginWFS = mkIMGID_from_name(inmval_ptr); resolveIMGID(&imginWFS, ERRMODE_ABORT);
+    IMGID imginWFS = mkIMGID_from_name(inmval_ptr); resolveIMGID(&imginWFS, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t NBmode = imginWFS.md[0].size[0];
     IMGID imgout = stream_connect_create_2Df32(outmval_ptr, NBmode, 1);
     

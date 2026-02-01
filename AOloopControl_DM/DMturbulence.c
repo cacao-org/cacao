@@ -166,7 +166,7 @@ static errno_t make_seed_turbulence_screen(
     // f [1/pix] * size = sqrt(dx*dx+dy*dy)
 
     make_rnd("tmpg", size, size, "-gauss");
-    ID = image_ID("tmpg");
+    ID = image_ID("tmpg", data.image, data.NB_MAX_IMAGE);
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
         {
@@ -185,7 +185,7 @@ static errno_t make_seed_turbulence_screen(
 
     {
         IMGID imgtmpamp = mkIMGID_from_name("tmpamp");
-        resolveIMGID(&imgtmpamp, ERRMODE_ABORT);
+        resolveIMGID(&imgtmpamp, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
         image_set_2Dpix(imgtmpamp, 0.0, size / 2, size / 2);
     }
 
@@ -200,7 +200,7 @@ static errno_t make_seed_turbulence_screen(
 
     /* compute the scaling factor in the power law of the structure function */
     fft_structure_function("tmpo1", "strf");
-    ID    = image_ID("strf");
+    ID    = image_ID("strf", data.image, data.NB_MAX_IMAGE);
     value = 0.0;
     cnt   = 0;
     for(uint32_t ii = 1; ii < Dlim; ii++)
@@ -215,7 +215,7 @@ static errno_t make_seed_turbulence_screen(
     C1 = pow(10.0, value / cnt);
 
     fft_structure_function("tmpo2", "strf");
-    ID    = image_ID("strf");
+    ID    = image_ID("strf", data.image, data.NB_MAX_IMAGE);
     value = 0.0;
     cnt   = 0;
     for(uint32_t ii = 1; ii < Dlim; ii++)
@@ -270,7 +270,7 @@ static DMTURB_STATE* dmturb_init() {
     
     // Connect to DM stream
     state->imgDM = mkIMGID_from_name(dmstream_ptr);
-    resolveIMGID(&state->imgDM, ERRMODE_ABORT);
+    resolveIMGID(&state->imgDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("%u x %u actuator\n", state->imgDM.md->size[0], state->imgDM.md->size[1]);
     
     uint32_t xsize = state->imgDM.md->size[0];
