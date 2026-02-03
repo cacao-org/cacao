@@ -123,13 +123,13 @@ errno_t mlat_diffseq_decode(
     long xysize = xsize * ysize;
 
     // output
-    copyIMGID(&inimg, outimg);
+    imgid_copy(&inimg, outimg);
     createimagefromIMGID(outimg);
 
 
     // reconstructed input
-    IMGID imgrec  = mkIMGID_from_name("imrec");
-    copyIMGID(&inimg, &imgrec);
+    IMGID imgrec  = imgid_make_from_name("imrec");
+    imgid_copy(&inimg, &imgrec);
     createimagefromIMGID(&imgrec);
 
 
@@ -326,7 +326,7 @@ errno_t mlat_diffseq_decode(
 
         // Construct timing matrix
         IMGID imgtmat;
-        imgtmat = makeIMGID_2D("mlattimingmat",
+        imgtmat = imgid_make_from_name_2D("mlattimingmat",
                                n,
                                m);
         createimagefromIMGID(&imgtmat);
@@ -392,12 +392,12 @@ errno_t mlat_diffseq_decode(
         float svdlim = 0.0001;
         int maxNBmode = 1000;
 
-        IMGID imgU  = mkIMGID_from_name("outU");
-        IMGID imgS  = mkIMGID_from_name("outS");
-        IMGID imgV  = mkIMGID_from_name("outV");
+        IMGID imgU  = imgid_make_from_name("outU");
+        IMGID imgS  = imgid_make_from_name("outS");
+        IMGID imgV  = imgid_make_from_name("outV");
         compute_SVD(imgtmat, &imgU, &imgS, &imgV, Vdim0, svdlim, maxNBmode, GPUdev, 6, "SVDunmodes", "SVDvnmodes");
 
-        IMGID imgpsinv = mkIMGID_from_name("psinv");
+        IMGID imgpsinv = imgid_make_from_name("psinv");
         resolveIMGID(&imgpsinv, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
@@ -406,13 +406,13 @@ errno_t mlat_diffseq_decode(
 
         double loopgain = 0.1;
 
-        IMGID imgrec  = mkIMGID_from_name("recinput");
+        IMGID imgrec  = imgid_make_from_name("recinput");
 
-        IMGID imgres  = mkIMGID_from_name("loopres");
-        copyIMGID(&inimg, &imgres);
+        IMGID imgres  = imgid_make_from_name("loopres");
+        imgid_copy(&inimg, &imgres);
         createimagefromIMGID(&imgres);
 
-        IMGID imgoutres  = mkIMGID_from_name("loopoutres");
+        IMGID imgoutres  = imgid_make_from_name("loopoutres");
 
 
         long NBloopiter = 100;
@@ -530,11 +530,11 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
-    IMGID inimg = mkIMGID_from_name(diffseqname);
+    IMGID inimg = imgid_make_from_name(diffseqname);
     resolveIMGID(&inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
-    IMGID outimg = mkIMGID_from_name(outseqname);
+    IMGID outimg = imgid_make_from_name(outseqname);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 

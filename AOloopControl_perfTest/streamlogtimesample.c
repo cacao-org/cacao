@@ -902,7 +902,7 @@ static errno_t compute_function()
 
 
 
-            IMGID imgout = makeIMGID_blank();
+            IMGID imgout = imgid_make();
 
             for(int idatfile = 0; idatfile < NBdatFiles; idatfile++)
             {
@@ -1077,7 +1077,7 @@ static errno_t compute_function()
 
                     if(ouputimginit == 0)
                     {
-                        imgout = makeIMGID_3D(sname[sindex], xsize, ysize, zsizeout);
+                        imgout = imgid_make_from_name_3D(sname[sindex], xsize, ysize, zsizeout);
                         createimagefromIMGID(&imgout);
                         ouputimginit = 1;
                     }

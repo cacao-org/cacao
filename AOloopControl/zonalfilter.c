@@ -119,7 +119,7 @@ static CLICMDDATA CLIcmddata = { "zonalfilter", "zonal filtering", CLICMD_FIELDS
 
 static errno_t compute_function()
 {
-    IMGID imginDM = mkIMGID_from_name(inzval); resolveIMGID(&imginDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    IMGID imginDM = imgid_make_from_name(inzval); resolveIMGID(&imginDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t dmxsize = imginDM.md->size[0], dmysize = imginDM.md->size[1], dmxysize = dmxsize * dmysize;
     zvalDMc = (float *) calloc(dmxysize, sizeof(float));
     IMGID imgout = stream_connect_create_2Df32(outzval, dmxsize, dmysize);
@@ -154,7 +154,7 @@ FPS_MAKE_STANDALONE_CONFSTOP(zonalfilter)
 FPS_MAKE_STANDALONE_RUNSTOP(zonalfilter)
 int FPSRUN_zonalfilter(const char *fps_name) {
     FUNCTION_PARAMETER_STRUCT fps; FPS_RUN_STD_PREAMBLE(fps_name, fps, { AOloopindex = functionparameter_GetParamPtr_UINT64(&fps, ".AOloopindex"); inzval = functionparameter_GetParamPtr_STRING(&fps, ".inzval"); outzval = functionparameter_GetParamPtr_STRING(&fps, ".outzval"); loopON = functionparameter_GetParamPtr_INT64(&fps, ".loopON"); loopNBstep = functionparameter_GetParamPtr_INT64(&fps, ".loopNBstep"); loopZERO = functionparameter_GetParamPtr_INT64(&fps, ".loopZERO"); loopgain = functionparameter_GetParamPtr_FLOAT32(&fps, ".loopgain"); loopmult = functionparameter_GetParamPtr_FLOAT32(&fps, ".loopmult"); looplimit = functionparameter_GetParamPtr_FLOAT32(&fps, ".looplimit"); });
-    IMGID imginDM = mkIMGID_from_name(inzval); resolveIMGID(&imginDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    IMGID imginDM = imgid_make_from_name(inzval); resolveIMGID(&imginDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t dmxsize = imginDM.md->size[0], dmysize = imginDM.md->size[1], dmxysize = dmxsize * dmysize; zvalDMc = (float *) calloc(dmxysize, sizeof(float));
     IMGID imgout = stream_connect_create_2Df32(outzval, dmxsize, dmysize);
     char name[STRINGMAXLEN_STREAMNAME];

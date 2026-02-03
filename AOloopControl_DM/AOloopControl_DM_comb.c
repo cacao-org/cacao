@@ -135,7 +135,7 @@ static errno_t DMdisp_add_disp_from_circular_buffer(DMCOMB_STATE *state)
         printf("(re-)initializing DMdisp_add_disp_from_circular_buffer");
         delete_image_ID(astrogridsname_ptr, DELETE_IMAGE_ERRMODE_WARNING);
         read_sharedmem_image(astrogridsname_ptr, data.image, data.NB_MAX_IMAGE);
-        state->ag_imgdispbuffer = mkIMGID_from_name(astrogridsname_ptr);
+        state->ag_imgdispbuffer = imgid_make_from_name(astrogridsname_ptr);
         resolveIMGID(&state->ag_imgdispbuffer, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
         state->ag_xysize = (uint64_t)(*DMxsize_ptr) * (*DMysize_ptr);
         state->ag_sliceindex = 0;
@@ -398,7 +398,7 @@ static DMCOMB_STATE* dmcomb_init()
 
     if((*voltmode_ptr) & FPFLAG_ONOFF) {
         if(image_ID(voltname_ptr, data.image, data.NB_MAX_IMAGE) == -1) read_sharedmem_image(voltname_ptr, data.image, data.NB_MAX_IMAGE);
-        state->imgdmvolt = mkIMGID_from_name(voltname_ptr);
+        state->imgdmvolt = imgid_make_from_name(voltname_ptr);
         resolveIMGID(&state->imgdmvolt, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
 

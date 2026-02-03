@@ -234,14 +234,14 @@ static errno_t compute_function()
     // Connect to mvalDM
     // connect to input mode values array and get number of modes
     //
-    IMGID imgmvalDM = mkIMGID_from_name(mvalDM);
+    IMGID imgmvalDM = imgid_make_from_name(mvalDM);
     resolveIMGID(&imgmvalDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("%u modes\n", imgmvalDM.md->size[0]);
     uint32_t NBmode = imgmvalDM.md->size[0];
 
     // Connect to mvalWFS
     //
-    IMGID imgmvalWFS = mkIMGID_from_name(mvalWFS);
+    IMGID imgmvalWFS = imgid_make_from_name(mvalWFS);
     resolveIMGID(&imgmvalWFS, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
@@ -264,12 +264,12 @@ static errno_t compute_function()
 
     // mvalDM buffer
     uint32_t mvalDMbuff_tindex = 0;
-    IMGID imgmvalDMbuff = makeIMGID_2D("mvalDMbuff", NBmode, NBdelaystep);
+    IMGID imgmvalDMbuff = imgid_make_from_name_2D("mvalDMbuff", NBmode, NBdelaystep);
     createimagefromIMGID(&imgmvalDMbuff);
 
     // mvalOUT buffer
     uint32_t mvalCbuff_tindex = 0;
-    IMGID imgmvalCbuff = makeIMGID_2D("mvalCbuff", NBmode, NBdelaystep);
+    IMGID imgmvalCbuff = imgid_make_from_name_2D("mvalCbuff", NBmode, NBdelaystep);
     createimagefromIMGID(&imgmvalCbuff);
 
 

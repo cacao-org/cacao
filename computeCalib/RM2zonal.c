@@ -204,10 +204,10 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
 
-    IMGID imgRMDM = mkIMGID_from_name(RMmodesDM);
+    IMGID imgRMDM = imgid_make_from_name(RMmodesDM);
     resolveIMGID(&imgRMDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
-    IMGID imgRMWFS = mkIMGID_from_name(RMmodesWFS);
+    IMGID imgRMWFS = imgid_make_from_name(RMmodesWFS);
     resolveIMGID(&imgRMWFS, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     struct timespec t0, t1, t2, t3, t4, t5;
@@ -313,11 +313,11 @@ static errno_t compute_function()
 
 
         // create eigenvectors array
-        IMGID imgmV = makeIMGID_2D("mV", Ndim, Ndim);
+        IMGID imgmV = imgid_make_from_name_2D("mV", Ndim, Ndim);
         createimagefromIMGID(&imgmV);
 
         // create eigenvalues array
-        IMGID imgeval = makeIMGID_2D("eigenval", Ndim, 1);
+        IMGID imgeval = imgid_make_from_name_2D("eigenval", Ndim, 1);
         createimagefromIMGID(&imgeval);
 
 
@@ -328,7 +328,7 @@ static errno_t compute_function()
             // create ATA
             // note that this is AAT if nbmode > nbact
             //
-            IMGID imgATA = makeIMGID_2D("ATA", Ndim, Ndim);
+            IMGID imgATA = imgid_make_from_name_2D("ATA", Ndim, Ndim);
             createimagefromIMGID(&imgATA);
 
             {
@@ -451,7 +451,7 @@ static errno_t compute_function()
 
         // create mU (only non-zero part allocated)
         //
-        IMGID imgmU = makeIMGID_2D("mU", Mdim, Ndim);
+        IMGID imgmU = imgid_make_from_name_2D("mU", Mdim, Ndim);
         createimagefromIMGID(&imgmU);
 
         clock_gettime(CLOCK_MILK, &t5);
@@ -532,8 +532,8 @@ static errno_t compute_function()
 
 
 
-        //IMGID imgmAinv = makeIMGID_2D("mAinv", Ndim, Mdim);
-        IMGID imgmAinv = makeIMGID_2D("mAinv", nbmode, nbact);
+        //IMGID imgmAinv = imgid_make_from_name_2D("mAinv", Ndim, Mdim);
+        IMGID imgmAinv = imgid_make_from_name_2D("mAinv", nbmode, nbact);
         createimagefromIMGID(&imgmAinv);
 
         float evalmax = imgeval.im->array.F[Ndim - 1];
@@ -548,7 +548,7 @@ static errno_t compute_function()
             // transpose U -> UT (UT truncated to number of eivenvals)
             // multiply lines of UT by inv(eigenval)
             //
-            IMGID imgmUT = makeIMGID_2D("mUT", Ndim, Mdim);
+            IMGID imgmUT = imgid_make_from_name_2D("mUT", Ndim, Mdim);
             createimagefromIMGID(&imgmUT);
 
             for(uint32_t ii = 0; ii < Ndim; ii++)
@@ -584,7 +584,7 @@ static errno_t compute_function()
             // Compute pseudo inverse
             // multiply V (=mU) and UT (=Transpose(mV))
             //
-            IMGID imgmUi = makeIMGID_2D("mUi", Mdim, Ndim);
+            IMGID imgmUi = imgid_make_from_name_2D("mUi", Mdim, Ndim);
             createimagefromIMGID(&imgmUi);
 
             for(uint32_t jj = 0; jj < Ndim; jj++)
@@ -628,7 +628,7 @@ static errno_t compute_function()
 
         // Test Ainv x A
 
-        IMGID imgmAinvA = makeIMGID_2D("mAinvA", nbmode, nbmode);
+        IMGID imgmAinvA = imgid_make_from_name_2D("mAinvA", nbmode, nbmode);
         createimagefromIMGID(&imgmAinvA);
 
 
@@ -637,7 +637,7 @@ static errno_t compute_function()
 
         // Test A x Ainv
 
-        IMGID imgmAAinv = makeIMGID_2D("mAAinv", nbact, nbact);
+        IMGID imgmAAinv = imgid_make_from_name_2D("mAAinv", nbact, nbact);
         createimagefromIMGID(&imgmAAinv);
 
         cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
@@ -653,7 +653,7 @@ static errno_t compute_function()
 
         // multiply RMwfs x Ainv -> RMzwfs
 
-        IMGID imgRMWFSz = makeIMGID_3D(RMmodesWFSz,  imgRMWFS.md->size[0], imgRMWFS.md->size[1], nbact);
+        IMGID imgRMWFSz = imgid_make_from_name_3D(RMmodesWFSz,  imgRMWFS.md->size[0], imgRMWFS.md->size[1], nbact);
         createimagefromIMGID(&imgRMWFSz);
 
         cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
@@ -663,7 +663,7 @@ static errno_t compute_function()
 
         // multiply RMdm x Ainv -> RMzdm
 
-        IMGID imgRMDMz = makeIMGID_2D(RMmodesDMz,  imgRMDM.md->size[0] * imgRMDM.md->size[1], nbact);
+        IMGID imgRMDMz = imgid_make_from_name_2D(RMmodesDMz,  imgRMDM.md->size[0] * imgRMDM.md->size[1], nbact);
         createimagefromIMGID(&imgRMDMz);
 
         cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
@@ -677,7 +677,7 @@ static errno_t compute_function()
 
         // RMzwfs x RMDM -> RMwfsm
 
-        IMGID imgRMWFSm = makeIMGID_3D("RMwfsm",  imgRMWFS.md->size[0], imgRMWFS.md->size[1], nbmode);
+        IMGID imgRMWFSm = imgid_make_from_name_3D("RMwfsm",  imgRMWFS.md->size[0], imgRMWFS.md->size[1], nbmode);
         createimagefromIMGID(&imgRMWFSm);
 
         cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,

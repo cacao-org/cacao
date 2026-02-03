@@ -552,7 +552,7 @@ static errno_t compute_function()
 
     // connect to control stream
     //
-    IMGID imgctrl = mkIMGID_from_name(ctrlsname);
+    IMGID imgctrl = imgid_make_from_name(ctrlsname);
     resolveIMGID(&imgctrl, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     uint32_t ctrlxsize = imgctrl.md->size[0];
@@ -564,7 +564,7 @@ static errno_t compute_function()
     IMGID imgctrlamp;
     if ( strcmp(sensref0, "null") )
     {
-        imgctrlamp = mkIMGID_from_name(ctrlampmap);
+        imgctrlamp = imgid_make_from_name(ctrlampmap);
         resolveIMGID(&imgctrlamp, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
@@ -578,13 +578,13 @@ static errno_t compute_function()
 
     // connect to sensing stream
     //
-    IMGID imgsens = mkIMGID_from_name(senssname);
+    IMGID imgsens = imgid_make_from_name(senssname);
     resolveIMGID(&imgsens, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     uint32_t sensxsize = imgsens.md->size[0];
     uint32_t sensysize = imgsens.md->size[1];
     uint32_t sensxysize = sensxsize*sensysize;
-    IMGID imgacc = makeIMGID_2D("imacc", sensxsize, sensysize);
+    IMGID imgacc = imgid_make_from_name_2D("imacc", sensxsize, sensysize);
     createimagefromIMGID(&imgacc);
 
     // output of image processing
@@ -606,7 +606,7 @@ static errno_t compute_function()
     IMGID imgsensref0;
     if ( strcmp(sensref0, "null") )
     {
-        imgsensref0 = mkIMGID_from_name(sensref0);
+        imgsensref0 = imgid_make_from_name(sensref0);
         resolveIMGID(&imgsensref0, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
@@ -617,7 +617,7 @@ static errno_t compute_function()
     IMGID imgsensmask0;
     if ( strcmp(sensmask0, "null") )
     {
-        imgsensmask0 = mkIMGID_from_name(sensmask0);
+        imgsensmask0 = imgid_make_from_name(sensmask0);
         resolveIMGID(&imgsensmask0, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
@@ -628,7 +628,7 @@ static errno_t compute_function()
     IMGID imgsensref1;
     if ( strcmp(sensref1, "null") )
     {
-        imgsensref1 = mkIMGID_from_name(sensref1);
+        imgsensref1 = imgid_make_from_name(sensref1);
         resolveIMGID(&imgsensref1, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
@@ -639,7 +639,7 @@ static errno_t compute_function()
     IMGID imgsensmask1;
     if ( strcmp(sensmask1, "null") )
     {
-        imgsensmask1 = mkIMGID_from_name(sensmask1);
+        imgsensmask1 = imgid_make_from_name(sensmask1);
         resolveIMGID(&imgsensmask1, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
@@ -652,10 +652,10 @@ static errno_t compute_function()
 
     // prepare image cube buffers
 
-    IMGID imgsenscube = makeIMGID_3D("imsenscube", sensxsize, sensysize, *nbpoke);
+    IMGID imgsenscube = imgid_make_from_name_3D("imsenscube", sensxsize, sensysize, *nbpoke);
     createimagefromIMGID(&imgsenscube);
 
-    IMGID imgctrlcube = makeIMGID_3D("imctrlcube", ctrlxsize, ctrlysize, *nbpoke);
+    IMGID imgctrlcube = imgid_make_from_name_3D("imctrlcube", ctrlxsize, ctrlysize, *nbpoke);
     createimagefromIMGID(&imgctrlcube);
 
 

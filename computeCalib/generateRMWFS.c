@@ -112,7 +112,7 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
-    IMGID imgzRM = mkIMGID_from_name(zrespWFS);
+    IMGID imgzRM = imgid_make_from_name(zrespWFS);
     resolveIMGID(&imgzRM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t wfsxsize = imgzRM.md->size[0];
     uint32_t wfsysize = imgzRM.md->size[1];
@@ -121,7 +121,7 @@ static errno_t compute_function()
     printf("wfssize = %lu\n", wfssize);
 
 
-    IMGID imDMmodesC = mkIMGID_from_name(DMmodesC);
+    IMGID imDMmodesC = imgid_make_from_name(DMmodesC);
     resolveIMGID(&imDMmodesC, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t dmxsize = imDMmodesC.md->size[0];
     uint32_t dmysize = imDMmodesC.md->size[1];
@@ -133,7 +133,7 @@ static errno_t compute_function()
     printf("%u modes\n", NBmodes);
 
 
-    IMGID imgoutWFSc = makeIMGID_3D(outWFSmodesC, wfsxsize, wfsysize, NBmodes);
+    IMGID imgoutWFSc = imgid_make_from_name_3D(outWFSmodesC, wfsxsize, wfsysize, NBmodes);
     createimagefromIMGID(&imgoutWFSc);
 
 

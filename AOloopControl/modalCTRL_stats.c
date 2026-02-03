@@ -344,17 +344,17 @@ static errno_t compute_function()
 
         WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
         read_sharedmem_image(name, data.image, data.NB_MAX_IMAGE);
-        imgtbuff_mvalDM = mkIMGID_from_name(name);
+        imgtbuff_mvalDM = imgid_make_from_name(name);
         resolveIMGID(&imgtbuff_mvalDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
         WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
         read_sharedmem_image(name, data.image, data.NB_MAX_IMAGE);
-        imgtbuff_mvalWFS = mkIMGID_from_name(name);
+        imgtbuff_mvalWFS = imgid_make_from_name(name);
         resolveIMGID(&imgtbuff_mvalWFS, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
         read_sharedmem_image(name, data.image, data.NB_MAX_IMAGE);
-        imgtbuff_mvalOL = mkIMGID_from_name(name);
+        imgtbuff_mvalOL = imgid_make_from_name(name);
         resolveIMGID(&imgtbuff_mvalOL, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
         NBmode   = imgtbuff_mvalOL.md->size[0];

@@ -22,7 +22,7 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
 
     imcreatelikewiseIMGID(imgoutmodes, &imgmodes);
 
-    IMGID imgpixmdist = mkIMGID_from_name("pmindist");
+    IMGID imgpixmdist = imgid_make_from_name("pmindist");
     imcreatelikewiseIMGID(&imgpixmdist, &imgmask);
 
     uint32_t xsize  = imgmodes.size[0];

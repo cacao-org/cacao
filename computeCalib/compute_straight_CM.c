@@ -343,11 +343,11 @@ static errno_t compute_function()
 
 
         // create eigenvectors array
-        IMGID imgevec = makeIMGID_2D("eigenvec", nbmode, nbmode);
+        IMGID imgevec = imgid_make_from_name_2D("eigenvec", nbmode, nbmode);
         createimagefromIMGID(&imgevec);
 
         // create eigenvalues array
-        IMGID imgeval = makeIMGID_2D("eigenval", nbmode, 1);
+        IMGID imgeval = imgid_make_from_name_2D("eigenval", nbmode, 1);
         createimagefromIMGID(&imgeval);
 
 
@@ -357,7 +357,7 @@ static errno_t compute_function()
         {
             processinfo_WriteMessage(processinfo, "Create ATA");
             // create ATA
-            IMGID imgATA = makeIMGID_2D("ATA", nbmode, nbmode);
+            IMGID imgATA = imgid_make_from_name_2D("ATA", nbmode, nbmode);
             createimagefromIMGID(&imgATA);
 
             {
@@ -463,7 +463,7 @@ static errno_t compute_function()
 
         processinfo_WriteMessage(processinfo, "create CM WFS");
 
-        IMGID imgCMWFSall = makeIMGID_3D("CMmodesWFSall",
+        IMGID imgCMWFSall = imgid_make_from_name_3D("CMmodesWFSall",
                                          imgRMWFS.md->size[0],
                                          imgRMWFS.md->size[1],
                                          imgRMDM.md->size[2]);
@@ -548,7 +548,7 @@ static errno_t compute_function()
 
         // create CM DM
         processinfo_WriteMessage(processinfo, "create CM DM");
-        IMGID imgCMDMall = makeIMGID_3D("CMmodesDMall", imgRMDM.md->size[0], imgRMDM.md->size[1], imgRMDM.md->size[2]);
+        IMGID imgCMDMall = imgid_make_from_name_3D("CMmodesDMall", imgRMDM.md->size[0], imgRMDM.md->size[1], imgRMDM.md->size[2]);
         createimagefromIMGID(&imgCMDMall);
 
 
@@ -702,13 +702,13 @@ static errno_t compute_function()
         processinfo_WriteMessage(processinfo, "create CMWFS and CMDM");
 
 
-        IMGID imgCMWFS = makeIMGID_3D("CMmodesWFS",
+        IMGID imgCMWFS = imgid_make_from_name_3D("CMmodesWFS",
                                       imgRMWFS.md->size[0],
                                       imgRMWFS.md->size[1],
                                       ecnt);
         createimagefromIMGID(&imgCMWFS);
 
-        IMGID imgCMDM = makeIMGID_3D("CMmodesDM",
+        IMGID imgCMDM = imgid_make_from_name_3D("CMmodesDM",
                                      imgRMDM.md->size[0],
                                      imgRMDM.md->size[1],
                                      ecnt);

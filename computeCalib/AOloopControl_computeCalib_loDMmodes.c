@@ -167,11 +167,11 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
 
 
     {
-        IMGID imgoutm = mkIMGID_from_name("CPAmodes");
+        IMGID imgoutm = imgid_make_from_name("CPAmodes");
 
         // optional mask
         //
-        IMGID imgCPAmask = mkIMGID_from_name("modesCPAmask");
+        IMGID imgCPAmask = imgid_make_from_name("modesCPAmask");
         resolveIMGID(&imgCPAmask, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
 
         linopt_imtools_makeCPAmodes(&imgoutm,

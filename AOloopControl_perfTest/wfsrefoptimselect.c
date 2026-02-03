@@ -242,7 +242,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 
     // create 3D outputs
     //
-    IMGID imgpsfsorted  = makeIMGID_3D("psf_sorted", psfxsize, psfysize, zsize);
+    IMGID imgpsfsorted  = imgid_make_from_name_3D("psf_sorted", psfxsize, psfysize, zsize);
     createimagefromIMGID(&imgpsfsorted);
 
 
@@ -278,7 +278,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         uint64_t wfsxysize = wfsxsize * wfsysize;
         uint32_t wfszsize  = wfsimg.md->size[2];
 
-        IMGID imgwfssorted  = makeIMGID_3D("wfs_sorted", wfsxsize, wfsysize, wfszsize);
+        IMGID imgwfssorted  = imgid_make_from_name_3D("wfs_sorted", wfsxsize, wfsysize, wfszsize);
         createimagefromIMGID(&imgwfssorted);
 
         for(uint32_t frame=0; frame < wfszsize; frame++)
@@ -301,7 +301,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
                             "wfsrefopt%d",
                             lambdai);
 
-            IMGID imgwfsrefopt  = makeIMGID_2D(imgname, wfsxsize, wfsysize);
+            IMGID imgwfsrefopt  = imgid_make_from_name_2D(imgname, wfsxsize, wfsysize);
             createimagefromIMGID(&imgwfsrefopt);
 
             double sumcoeff = 0.0;
@@ -337,7 +337,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
         uint64_t dmxysize = dmxsize * dmysize;
         uint32_t dmzsize  = dmimg.md->size[2];
 
-        IMGID imgdmsorted  = makeIMGID_3D("dm_sorted", dmxsize, dmysize, dmzsize);
+        IMGID imgdmsorted  = imgid_make_from_name_3D("dm_sorted", dmxsize, dmysize, dmzsize);
         createimagefromIMGID(&imgdmsorted);
 
 
@@ -362,7 +362,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
                             "dmrefopt%d",
                             lambdai);
 
-            IMGID imgdmrefopt  = makeIMGID_2D(imgname, dmxsize, dmysize);
+            IMGID imgdmrefopt  = imgid_make_from_name_2D(imgname, dmxsize, dmysize);
             createimagefromIMGID(&imgdmrefopt);
 
             double sumcoeff = 0.0;
@@ -403,13 +403,13 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 
 static errno_t compute_function()
 {
-    IMGID inpsfimg = mkIMGID_from_name(selinput);
+    IMGID inpsfimg = imgid_make_from_name(selinput);
     resolveIMGID(&inpsfimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     IMGID inwfsimg;
     if ( strcmp(wfsinput, "null") )
     {
-        inwfsimg = mkIMGID_from_name(wfsinput);
+        inwfsimg = imgid_make_from_name(wfsinput);
         resolveIMGID(&inwfsimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else
@@ -421,7 +421,7 @@ static errno_t compute_function()
     IMGID indmimg;
     if ( strcmp(dminput, "null") )
     {
-        indmimg = mkIMGID_from_name(dminput);
+        indmimg = imgid_make_from_name(dminput);
         resolveIMGID(&indmimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     }
     else

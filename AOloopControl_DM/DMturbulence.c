@@ -184,7 +184,7 @@ static errno_t make_seed_turbulence_screen(
     delete_image_ID("tmpd1", DELETE_IMAGE_ERRMODE_WARNING);
 
     {
-        IMGID imgtmpamp = mkIMGID_from_name("tmpamp");
+        IMGID imgtmpamp = imgid_make_from_name("tmpamp");
         resolveIMGID(&imgtmpamp, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
         image_set_2Dpix(imgtmpamp, 0.0, size / 2, size / 2);
     }
@@ -269,7 +269,7 @@ static DMTURB_STATE* dmturb_init() {
     DMTURB_STATE *state = (DMTURB_STATE*) calloc(1, sizeof(DMTURB_STATE));
     
     // Connect to DM stream
-    state->imgDM = mkIMGID_from_name(dmstream_ptr);
+    state->imgDM = imgid_make_from_name(dmstream_ptr);
     resolveIMGID(&state->imgDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("%u x %u actuator\n", state->imgDM.md->size[0], state->imgDM.md->size[1]);
     

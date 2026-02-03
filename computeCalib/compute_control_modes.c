@@ -366,11 +366,11 @@ static errno_t mk_ZernikeFourier_modal_basis(
     // Here we create simple Fourier modes
 
     {
-        IMGID imgoutm = mkIMGID_from_name("CPAmodes");
+        IMGID imgoutm = imgid_make_from_name("CPAmodes");
 
         // optional mask
         //
-        IMGID imgmask = mkIMGID_from_name("modesZFmask");
+        IMGID imgmask = imgid_make_from_name("modesZFmask");
         resolveIMGID(&imgmask, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
 
         linopt_imtools_makeCPAmodes(&imgoutm,
@@ -804,14 +804,14 @@ static errno_t compute_function()
         // full set of DM actuators to be controlled
         //
         load_fits(fname_DMmaskCTRL, "DMmaskCTRL", LOADFITS_ERRMODE_ERROR, NULL);
-        IMGID imgDMmaskCTRL = mkIMGID_from_name("DMmaskCTRL");
+        IMGID imgDMmaskCTRL = imgid_make_from_name("DMmaskCTRL");
         resolveIMGID(&imgDMmaskCTRL, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
         // DM actuators to be extrapolated from neighbors
         // this is a subset of DMmaskCTRL
         //
         load_fits(fname_DMmaskEXTR, "DMmaskEXTR", LOADFITS_ERRMODE_ERROR, NULL);
-        IMGID imgDMmaskEXTR = mkIMGID_from_name("DMmaskEXTR");
+        IMGID imgDMmaskEXTR = imgid_make_from_name("DMmaskEXTR");
         resolveIMGID(&imgDMmaskEXTR, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
@@ -820,7 +820,7 @@ static errno_t compute_function()
         // Zernike modes are centered on (alignCX, alignCY)
         // output : imgDMmodesZF ("DMmodesZF")
         //
-        IMGID imgDMmodesZF = mkIMGID_from_name("DMmodesZF");
+        IMGID imgDMmodesZF = imgid_make_from_name("DMmodesZF");
         mk_ZernikeFourier_modal_basis(*DMxsize,
                                       *DMysize,
                                       *CPAmax,
@@ -843,8 +843,8 @@ static errno_t compute_function()
         // EXTRAPOLATE DM MODES
         // output : imgDMmodesZFe
         //
-        IMGID imgDMmodesZFe = mkIMGID_from_name("DMmodesZFe");
-        IMGID imgcpa      = mkIMGID_from_name("modesfreqcpa");
+        IMGID imgDMmodesZFe = imgid_make_from_name("DMmodesZFe");
+        IMGID imgcpa      = imgid_make_from_name("modesfreqcpa");
 
         modes_spatial_extrapolate(
             imgDMmodesZF,
@@ -899,7 +899,7 @@ static errno_t compute_function()
 
         // zonal response matrix
         load_fits(fname_zrespM, "zrespM", LOADFITS_ERRMODE_ERROR, NULL);
-        IMGID imgzrespM = mkIMGID_from_name("zrespM");
+        IMGID imgzrespM = imgid_make_from_name("zrespM");
         resolveIMGID(&imgzrespM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
@@ -910,7 +910,7 @@ static errno_t compute_function()
         uint32_t wfssizey = imgzrespM.size[1];
         uint64_t wfssizexy = wfssizex;
         wfssizexy *= wfssizey;
-        IMGID imgWFSmodesZFe = makeIMGID_3D("WFSmodesZFe", wfssizex, wfssizey,
+        IMGID imgWFSmodesZFe = imgid_make_from_name_3D("WFSmodesZFe", wfssizex, wfssizey,
                                             imgDMmodesZFe.size[2]);
         createimagefromIMGID(&imgWFSmodesZFe);
 
@@ -983,10 +983,10 @@ static errno_t compute_function()
 
 
 
-            IMGID imgloRM = mkIMGID_from_name("loRM");
+            IMGID imgloRM = imgid_make_from_name("loRM");
             resolveIMGID(&imgloRM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
-            IMGID imgloDMmodes = mkIMGID_from_name("loDMmodes");
+            IMGID imgloDMmodes = imgid_make_from_name("loDMmodes");
             resolveIMGID(&imgloDMmodes, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 

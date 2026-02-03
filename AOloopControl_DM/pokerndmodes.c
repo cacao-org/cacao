@@ -188,10 +188,10 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
-    IMGID outimg = mkIMGID_from_name(outsname);
+    IMGID outimg = imgid_make_from_name(outsname);
     resolveIMGID(&outimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
-    IMGID modecimg = mkIMGID_from_name(modecsname);
+    IMGID modecimg = imgid_make_from_name(modecsname);
     resolveIMGID(&modecimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     printf(" COMPUTE Flags = %ld\n", CLIcmddata.cmdsettings->flags);

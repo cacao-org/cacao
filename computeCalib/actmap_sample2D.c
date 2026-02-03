@@ -135,7 +135,7 @@ static IMGID load_actmapcoord2D(
 
 
 
-    IMGID imgout = makeIMGID_2D(outim, NBact, 2);
+    IMGID imgout = imgid_make_from_name_2D(outim, NBact, 2);
     createimagefromIMGID(&imgout);
 
 
@@ -171,7 +171,7 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
-    IMGID imgWF2D = mkIMGID_from_name(inWF2D);
+    IMGID imgWF2D = imgid_make_from_name(inWF2D);
     resolveIMGID(&imgWF2D, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     uint32_t wfxsize = imgWF2D.md->size[0];
     uint32_t wfysize = imgWF2D.md->size[1];
@@ -180,7 +180,7 @@ static errno_t compute_function()
     printf("wfsize = %lu\n", wfsize);
 
 
-    IMGID imgmap2D = mkIMGID_from_name(map2D);
+    IMGID imgmap2D = imgid_make_from_name(map2D);
     resolveIMGID(&imgmap2D, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
     if(imgmap2D.ID == -1)
     {
@@ -198,7 +198,7 @@ static errno_t compute_function()
     printf("%u slice\n", NBslice);
 
 
-    IMGID imgoutWF1D = makeIMGID_3D(outWF1D, mapsize, 1, NBslice);
+    IMGID imgoutWF1D = imgid_make_from_name_3D(outWF1D, mapsize, 1, NBslice);
     createimagefromIMGID(&imgoutWF1D);
 
 

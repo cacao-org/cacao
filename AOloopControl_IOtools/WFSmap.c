@@ -277,10 +277,10 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
-    IMGID wfsinimg = mkIMGID_from_name(wfsinsname);
+    IMGID wfsinimg = imgid_make_from_name(wfsinsname);
     resolveIMGID(&wfsinimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
-    IMGID mapimg = mkIMGID_from_name(mapsname);
+    IMGID mapimg = imgid_make_from_name(mapsname);
     resolveIMGID(&mapimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 

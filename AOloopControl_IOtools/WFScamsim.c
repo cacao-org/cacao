@@ -188,7 +188,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
 
-    IMGID wfssignalimg = mkIMGID_from_name(wfssignal_in);
+    IMGID wfssignalimg = imgid_make_from_name(wfssignal_in);
     resolveIMGID(&wfssignalimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     uint32_t sizexWFS = wfssignalimg.size[0];
@@ -197,11 +197,11 @@ static errno_t compute_function()
     uint64_t sizeWFS = (uint64_t) sizexWFS;
     sizeWFS *= sizeyWFS;
 
-    IMGID wfsdarkimg = mkIMGID_from_name(wfsdark);
+    IMGID wfsdarkimg = imgid_make_from_name(wfsdark);
 
     resolveIMGID(&wfsdarkimg, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
 
-    IMGID imcamtmpimg = makeIMGID_2D("imcamtmp", sizexWFS, sizeyWFS);
+    IMGID imcamtmpimg = imgid_make_from_name_2D("imcamtmp", sizexWFS, sizeyWFS);
     createimagefromIMGID(&imcamtmpimg);
 
     // Create output

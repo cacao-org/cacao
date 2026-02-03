@@ -523,7 +523,7 @@ static errno_t Measure_Linear_Response_Modal(
     DEBUG_TRACEPOINT("duplicaate each mode to positive and negative amplitude");
     //
     long NBmode2 = NBmode * 2;
-    IMGID imginmodeC2 = makeIMGID_3D("pokemodeC2", sizexin, sizeyin, NBmode2);
+    IMGID imginmodeC2 = imgid_make_from_name_3D("pokemodeC2", sizexin, sizeyin, NBmode2);
     createimagefromIMGID(&imginmodeC2);
 
     DEBUG_TRACEPOINT("sizexyin %lu", sizexyin);
@@ -658,7 +658,7 @@ static errno_t Measure_Linear_Response_Modal(
     //
     // Output array is created and initialized to hold the WFS response to each poke mode.
     //
-    IMGID imgoutC2 = makeIMGID_3D("tmpmoderespraw", sizexout, sizeyout, NBmode2);
+    IMGID imgoutC2 = imgid_make_from_name_3D("tmpmoderespraw", sizexout, sizeyout, NBmode2);
     createimagefromIMGID(&imgoutC2);
 
     for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
@@ -1047,7 +1047,7 @@ static errno_t Measure_Linear_Response_Modal(
 
 
             WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.ave.iter%04d.fits", outdir, iter);
-            IMGID imgmoderespC = makeIMGID_3D("moderespC", sizexout, sizeyout, NBmode);
+            IMGID imgmoderespC = imgid_make_from_name_3D("moderespC", sizexout, sizeyout, NBmode);
             createimagefromIMGID(&imgmoderespC);
 
             for(int mode = 0; mode < NBmode; mode++)
@@ -1099,17 +1099,17 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     // connect to input space
-    IMGID imgin = mkIMGID_from_name(streamin);
+    IMGID imgin = imgid_make_from_name(streamin);
     resolveIMGID(&imgin, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("input  space size : %u %u\n", imgin.md->size[0], imgin.md->size[1]);
 
     // connect to output space
-    IMGID imgout = mkIMGID_from_name(streamout);
+    IMGID imgout = imgid_make_from_name(streamout);
     resolveIMGID(&imgout, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("output space size : %u %u\n", imgout.md->size[0], imgout.md->size[1]);
 
     load_fits(inmodeC, "inmodeC", LOADFITS_ERRMODE_WARNING, NULL);
-    IMGID imginmodeC = mkIMGID_from_name("inmodeC");
+    IMGID imginmodeC = imgid_make_from_name("inmodeC");
     resolveIMGID(&imginmodeC, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
     printf("input modes size : %u %u %u\n", imginmodeC.md->size[0],
            imginmodeC.md->size[1], imginmodeC.md->size[2]);
