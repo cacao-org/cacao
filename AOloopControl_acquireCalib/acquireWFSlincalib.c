@@ -126,7 +126,7 @@ static CLICMDARGDEF farg[] =
         ".AOloopindex",
         "loop index",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &AOloopindex,
         NULL
     },
@@ -135,7 +135,7 @@ static CLICMDARGDEF farg[] =
         ".dmstream",
         "DM stream",
         "NULL",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &dmstream,
         &fpi_dmstream
     },
@@ -144,7 +144,7 @@ static CLICMDARGDEF farg[] =
         ".ampl",
         "RM poke amplitude",
         "0.01",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &pokeampl,
         NULL
     },
@@ -154,8 +154,8 @@ static CLICMDARGDEF farg[] =
         ".timing.FPS_mlat",
         "hardware latency",
         "NULL",
-        CLICMDARG_FLAG_NOCLI,
-        FPTYPE_FPSNAME,
+
+
         FPFLAG_DEFAULT_INPUT,
         (void **) &FPS_mlat,
         &fpi_FPS_mlat
@@ -165,7 +165,7 @@ static CLICMDARGDEF farg[] =
         ".timing.upmlat",
         "update latency from FPS",
         "OFF",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &update_mlat,
         &fpi_update_mlat
     },
@@ -174,7 +174,7 @@ static CLICMDARGDEF farg[] =
         ".timing.WFSfrequ",
         "WFS frame rate [Hz]",
         "1000",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &WFSfrequ,
         NULL
     },
@@ -183,7 +183,7 @@ static CLICMDARGDEF farg[] =
         ".timing.hardwlatfr",
         "hardware latency [fr]",
         "1000",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &hardwlatfr,
         NULL
     },
@@ -192,7 +192,7 @@ static CLICMDARGDEF farg[] =
         ".timing.autoTiming",
         "Auto Timing",
         "ON",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &autotiming,
         &fpi_autotiming
     },
@@ -201,7 +201,7 @@ static CLICMDARGDEF farg[] =
         ".timing.delayfr",
         "frame delay, whole part",
         "2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &delayfr,
         NULL
     },
@@ -210,7 +210,7 @@ static CLICMDARGDEF farg[] =
         ".timing.delayRM1us",
         "Sub-frame delay [us]",
         "100",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &delayRM1us,
         NULL
     },
@@ -219,7 +219,7 @@ static CLICMDARGDEF farg[] =
         ".timing.NBave",
         "Number of frames averaged for a single poke measurement",
         "5",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &NBave,
         NULL
     },
@@ -228,7 +228,7 @@ static CLICMDARGDEF farg[] =
         ".timing.NBexcl",
         "Number of frames excluded",
         "1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &NBexcl,
         NULL
     },
@@ -237,7 +237,7 @@ static CLICMDARGDEF farg[] =
         ".timing.NBcycle",
         "Number of measurement cycles to be repeated",
         "10",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &NBcycle,
         NULL
     },
@@ -247,7 +247,7 @@ static CLICMDARGDEF farg[] =
         "Number of inner cycles (how many consecutive times should a single +/- "
         "poke be repeated)",
         "10",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &NBinnerCycle,
         NULL
     },
@@ -256,7 +256,7 @@ static CLICMDARGDEF farg[] =
         ".timing.upmlat",
         "update latency from FPS",
         "OFF",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &update_mlat,
         &fpi_update_mlat
     },
@@ -266,7 +266,7 @@ static CLICMDARGDEF farg[] =
         ".RMDMmask.FPS_DMcomb",
         "DM control process",
         "NULL",
-        CLICMDARG_FLAG_NOCLI, FPTYPE_FPSNAME, FPFLAG_DEFAULT_INPUT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &FPS_DMcomb,
         &fpi_FPS_DMcomb
     },
@@ -275,7 +275,7 @@ static CLICMDARGDEF farg[] =
         ".RMDMmask.DMMODE",
         "0:spatial, 1:modal",
         "1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &DMMODE,
         &fpi_DMMODE
     },
@@ -284,7 +284,7 @@ static CLICMDARGDEF farg[] =
         ".RMDMmask.Cx",
         "X center",
         "10.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &RMDMmaskCx,
         NULL
     },
@@ -293,7 +293,7 @@ static CLICMDARGDEF farg[] =
         ".RMDMmask.Cy",
         "Y center",
         "10.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &RMDMmaskCy,
         NULL
     },
@@ -302,7 +302,7 @@ static CLICMDARGDEF farg[] =
         ".RMDMmask.R",
         "radius",
         "10.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &RMDMmaskR,
         NULL
     },
@@ -311,7 +311,7 @@ static CLICMDARGDEF farg[] =
         ".RMDMmask.upmlat",
         "update RMDMmask from FPS",
         "OFF",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &update_RMDMmask,
         &fpi_update_RMDMmask
     },
@@ -321,7 +321,7 @@ static CLICMDARGDEF farg[] =
         ".MaskMode",
         "Mask mode, DM and WFS",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &MaskMode,
         NULL
     },
@@ -330,7 +330,7 @@ static CLICMDARGDEF farg[] =
         ".DMmask.RMp0",
         "DM mask, point0 percentile point",
         "0.2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &maskDMp0,
         NULL
     },
@@ -339,7 +339,7 @@ static CLICMDARGDEF farg[] =
         ".DMmask.RMc0",
         "DM mask, point0 coefficient",
         "1.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &maskDMc0,
         NULL
     },
@@ -348,7 +348,7 @@ static CLICMDARGDEF farg[] =
         ".DMmask.RMp1",
         "DM mask, point1 percentile point",
         "0.2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &maskDMp1,
         NULL
     },
@@ -357,7 +357,7 @@ static CLICMDARGDEF farg[] =
         ".DMmask.RMc1",
         "DM mask, point1 coefficient",
         "1.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &maskDMc1,
         NULL
     },
@@ -366,7 +366,7 @@ static CLICMDARGDEF farg[] =
         ".DMmask.proxrad",
         "DM actuator proximity radius",
         "2.5",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &DMproxrad,
         NULL
     },
@@ -375,7 +375,7 @@ static CLICMDARGDEF farg[] =
         ".WFSmask.RMp0",
         "WFS mask, point0 percentile point",
         "0.2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &maskWFSp0,
         NULL
     },
@@ -384,7 +384,7 @@ static CLICMDARGDEF farg[] =
         ".WFSmask.RMc0",
         "WFS mask, point0 coefficient",
         "1.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &maskWFSc0,
         NULL
     },
@@ -393,7 +393,7 @@ static CLICMDARGDEF farg[] =
         ".WFSmask.RMp1",
         "WFS mask, point1 percentile point",
         "0.2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &maskWFSp1,
         NULL
     },
@@ -402,7 +402,7 @@ static CLICMDARGDEF farg[] =
         ".WFSmask.RMc1",
         "WFS mask, point1 coefficient",
         "1.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &maskWFSc1,
         NULL
     },
@@ -411,7 +411,7 @@ static CLICMDARGDEF farg[] =
         ".fn_pokeC",
         "Poke sequence cube",
         "null",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &fn_pokeC,
         NULL
     },
@@ -420,7 +420,7 @@ static CLICMDARGDEF farg[] =
         ".fn_RMDMmask",
         "RM active DM actuators mask",
         "null",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &fn_RMDMmask,
         NULL
     },
@@ -429,7 +429,7 @@ static CLICMDARGDEF farg[] =
         ".normalize",
         "Normalize WFS frames",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &normalize,
         NULL
     },
@@ -438,7 +438,7 @@ static CLICMDARGDEF farg[] =
         ".Hpoke",
         "Hadamard poke mode",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &Hpokemode,
         &fpi_Hpokemode
     },
@@ -447,7 +447,7 @@ static CLICMDARGDEF farg[] =
         ".compPokeMat",
         "(re)compute poke matrix",
         "1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &compPokeMat,
         &fpi_compPokeMat
     },
@@ -457,7 +457,7 @@ static CLICMDARGDEF farg[] =
         ".exec.RMdecode",
         "RM decode script",
         "NULL",
-        CLICMDARG_FLAG_NOCLI, FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+        FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
         (void **) &exec_post_RMdecode,
         &fpi_exec_post_RMdecode
     },
@@ -466,7 +466,7 @@ static CLICMDARGDEF farg[] =
         ".exec.mkDMWFSmasks",
         "Make DM and WFS masks",
         "NULL",
-        CLICMDARG_FLAG_NOCLI, FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+        FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
         (void **) &exec_post_mkDMWFSmasks,
         &fpi_exec_post_mkDMWFSmasks
     },
@@ -475,7 +475,7 @@ static CLICMDARGDEF farg[] =
         ".exec.mkDMslaveact",
         "Make DM slaved actuators",
         "NULL",
-        CLICMDARG_FLAG_NOCLI, FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+        FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
         (void **) &exec_post_mkDMslaveact,
         &fpi_exec_post_mkDMslaveact
     },
@@ -484,7 +484,7 @@ static CLICMDARGDEF farg[] =
         ".exec.mkLODMmodes",
         "Make DM low order modes",
         "NULL",
-        CLICMDARG_FLAG_NOCLI, FPTYPE_EXECFILENAME, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
+        FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
         (void **) &exec_post_mkLODMmodes,
         &fpi_exec_post_mkLODMmodes
     }

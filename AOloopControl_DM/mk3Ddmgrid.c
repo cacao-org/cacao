@@ -33,7 +33,7 @@ static CLICMDARGDEF farg[] = {{
         ".outname",
         "output image name",
         "DMgridc",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &outname,
         NULL
     },
@@ -42,7 +42,7 @@ static CLICMDARGDEF farg[] = {{
         ".xsize",
         "x size",
         "50",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &xsize,
         NULL
     },
@@ -51,7 +51,7 @@ static CLICMDARGDEF farg[] = {{
         ".ysize",
         "y size",
         "50",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &ysize,
         NULL
     },
@@ -60,7 +60,7 @@ static CLICMDARGDEF farg[] = {{
         ".XYpattern",
         "grid pattern",
         "3",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &XYpattern,
         NULL
     },
@@ -69,7 +69,7 @@ static CLICMDARGDEF farg[] = {{
         ".binfact",
         "binning factor",
         "2",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &binfactor,
         NULL
     }

@@ -132,7 +132,7 @@ long         fpi_lintiming[4];
         ".s"#INDEX"name",\
         "stream "#INDEX" name",\
         "null",\
-        CLIARG_HIDDEN_DEFAULT,\
+        FPFLAG_DEFAULT_INPUT,\
         (void **) &sname[INDEX],\
         &fpi_sname[INDEX]\
     },\
@@ -141,7 +141,7 @@ long         fpi_lintiming[4];
         ".s"#INDEX"tag",\
         "stream "#INDEX" tag",\
         "",\
-        CLIARG_HIDDEN_DEFAULT,\
+        FPFLAG_DEFAULT_INPUT,\
         (void **) &stag[INDEX],\
         &fpi_stag[INDEX]\
     },\
@@ -150,7 +150,7 @@ long         fpi_lintiming[4];
         ".s"#INDEX"latency",\
         "stream "#INDEX" latency [float]",\
         "0.0",\
-        CLIARG_HIDDEN_DEFAULT,\
+        FPFLAG_DEFAULT_INPUT,\
         (void **) &slatency[INDEX],\
         &fpi_slatency[INDEX]\
     },\
@@ -159,7 +159,7 @@ long         fpi_lintiming[4];
         ".s"#INDEX"lint",\
         "stream "#INDEX" linearize timing",\
         "1",\
-        CLIARG_HIDDEN_DEFAULT,\
+        FPFLAG_DEFAULT_INPUT,\
         (void **) &lintiming[INDEX],\
         &fpi_lintiming[INDEX]\
     }
@@ -175,7 +175,7 @@ static CLICMDARGDEF farg[] = {
         ".tstartsec",
         "tstartsec",
         "1728797840",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &tstartsec,
         &fpi_tstartsec
     },
@@ -184,7 +184,7 @@ static CLICMDARGDEF farg[] = {
         ".tstartnsec",
         "tstartnsec",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &tstartnsec,
         &fpi_tstartnsec
     },
@@ -193,7 +193,7 @@ static CLICMDARGDEF farg[] = {
         ".tendsec",
         "tendsec",
         "1728797850",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &tendsec,
         &fpi_tendsec
     },
@@ -202,7 +202,7 @@ static CLICMDARGDEF farg[] = {
         ".tendnsec",
         "tendnsec",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &tendnsec,
         &fpi_tendnsec
     },
@@ -211,7 +211,7 @@ static CLICMDARGDEF farg[] = {
         ".timingmode",
         "timing mode (0+: inherit from stream)",
         "-1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &timingmode,
         &fpi_timingmode
     },
@@ -220,7 +220,7 @@ static CLICMDARGDEF farg[] = {
         ".timingdt",
         "output frame interval",
         "0.001",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &timingdt,
         &fpi_timingdt
     },
@@ -229,7 +229,7 @@ static CLICMDARGDEF farg[] = {
         ".logdir",
         "log directory",
         ".",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &logdir,
         &fpi_logdir
     },

@@ -78,7 +78,7 @@ static CLICMDARGDEF farg[] =
         ".AOloopindex",
         "AO loop index",
         "0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &AOloopindex,
         NULL
     },
@@ -87,7 +87,7 @@ static CLICMDARGDEF farg[] =
         ".svdlim",
         "SVD limit",
         "0.01",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &svdlim,
         NULL
     },
@@ -96,7 +96,7 @@ static CLICMDARGDEF farg[] =
         ".CPAmax",
         "max cycles per aperture (CPA)",
         "20.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &CPAmax,
         NULL
     },
@@ -105,7 +105,7 @@ static CLICMDARGDEF farg[] =
         ".deltaCPA",
         "CPA increment",
         "0.8",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &deltaCPA,
         NULL
     },
@@ -114,7 +114,7 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.align.CX",
         "beam X center on DM",
         "10.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &alignCX,
         NULL
     },
@@ -123,7 +123,7 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.align.CY",
         "beam Y center on DM",
         "10.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &alignCY,
         NULL
     },
@@ -132,7 +132,7 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.align.ID",
         "beam inner diameter",
         "5.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &alignID,
         NULL
     },
@@ -141,7 +141,7 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.align.OD",
         "beam outer diameter",
         "10.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &alignOD,
         NULL
     },
@@ -150,7 +150,7 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.DMxsize",
         "DM x size",
         "32",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &DMxsize,
         NULL
     },
@@ -159,7 +159,7 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.DMysize",
         "DM y size",
         "32",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &DMysize,
         NULL
     },
@@ -168,8 +168,8 @@ static CLICMDARGDEF farg[] =
         ".FPS_zRMacqu",
         "FPS zonal RM acquisition",
         "NULL",
-        CLICMDARG_FLAG_NOCLI,
-        FPTYPE_FPSNAME,
+
+
         FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
         (void **) &FPS_zRMacqu,
         &fpi_FPS_zRMacqu
@@ -179,8 +179,8 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.FPS_DMcomb",
         "FPS DM comb",
         "NULL",
-        CLICMDARG_FLAG_NOCLI,
-        FPTYPE_FPSNAME,
+
+
         FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
         (void **) &FPS_DMcomb,
         &fpi_FPS_DMcomb
@@ -190,7 +190,7 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.DMmaskCTRL",
         "DM actuators controlled",
         "NULL",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &fname_DMmaskCTRL,
         &fpi_fname_DMmaskCTRL
     },
@@ -199,7 +199,7 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.DMmaskEXTR",
         "DM actuators extrapolated",
         "NULL",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &fname_DMmaskEXTR,
         &fpi_fname_DMmaskEXTR
     },
@@ -208,7 +208,7 @@ static CLICMDARGDEF farg[] =
         ".zrespM",
         "zonal response matrix",
         "NULL",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &fname_zrespM,
         &fpi_fname_zrespM
     },
@@ -217,7 +217,7 @@ static CLICMDARGDEF farg[] =
         ".WFSmask",
         "WFS mask",
         "NULL",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &fname_WFSmask,
         &fpi_fname_WFSmask
     },
@@ -227,8 +227,8 @@ static CLICMDARGDEF farg[] =
         ".auxRM.FPS_loRMacqu",
         "FPS low order modal RM acquisition",
         "NULL",
-        CLICMDARG_FLAG_NOCLI,
-        FPTYPE_FPSNAME,
+
+
         FPFLAG_DEFAULT_INPUT,
         (void **) &FPS_loRMacqu,
         &fpi_FPS_loRMacqu
@@ -238,7 +238,7 @@ static CLICMDARGDEF farg[] =
         ".auxRM.loRM",
         "low order modal response matrix",
         "NULL",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &fname_loRM,
         &fpi_fname_loRM
     },
@@ -247,7 +247,7 @@ static CLICMDARGDEF farg[] =
         ".auxRM.loRMmodes",
         "low order RM modes",
         "NULL",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &fname_loRMmodes,
         &fpi_fname_loRMmodes
     },
@@ -256,7 +256,7 @@ static CLICMDARGDEF farg[] =
         ".upRMfiles",
         "update RM files from FPSs",
         "OFF",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &update_RMfiles,
         &fpi_update_RMfiles
     },
@@ -265,7 +265,7 @@ static CLICMDARGDEF farg[] =
         ".DMgeom.upAlign",
         "update default align (if no DMmaskRM)",
         "OFF",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &update_align,
         &fpi_update_align
     }
@@ -399,10 +399,10 @@ static errno_t mk_ZernikeFourier_modal_basis(
            (long)(data.image[ID0].md[0].size[2] - 1));
 
 
-    imgZFmodes->naxis   = 3;
-    imgZFmodes->size[0] = msizex;
-    imgZFmodes->size[1] = msizey;
-    imgZFmodes->size[2] = data.image[ID0].md[0].size[2] - 1 + NBZ;
+    imgZFmodes->mdt->naxis   = 3;
+    imgZFmodes->mdt->size[0] = msizex;
+    imgZFmodes->mdt->size[1] = msizey;
+    imgZFmodes->mdt->size[2] = data.image[ID0].md[0].size[2] - 1 + NBZ;
     createimagefromIMGID(imgZFmodes);
 
     imageID IDmfcpa;
@@ -466,11 +466,11 @@ static errno_t modes_mask_normalize(IMGID imgmodeC, IMGID imgmask)
 
     FILE *fp = fopen("rmscomp.dat", "w");
 
-    uint32_t sizex  = imgmodeC.size[0];
-    uint32_t sizey  = imgmodeC.size[1];
+    uint32_t sizex  = imgmodeC.md->size[0];
+    uint32_t sizey  = imgmodeC.md->size[1];
     uint64_t sizexy = (uint64_t) sizex * sizey;
 
-    for(uint32_t k = 0; k < imgmodeC.size[2]; k++)
+    for(uint32_t k = 0; k < imgmodeC.md->size[2]; k++)
     {
         // set RMS = 1 over mask
         double rms     = 0.0;
@@ -867,13 +867,13 @@ static errno_t compute_function()
         // set pixels to zero if neither part of DMmaskCTRL or DMmaskEXT
         // output (in-place) : imgDMmodesZFe
 
-        uint32_t msizex = imgDMmaskCTRL.size[0];
-        uint32_t msizey = imgDMmaskCTRL.size[1];
+        uint32_t msizex = imgDMmaskCTRL.md->size[0];
+        uint32_t msizey = imgDMmaskCTRL.md->size[1];
         uint64_t msizexy = (uint64_t) msizex;
         msizexy *= msizey;
         printf("size %ld %ld %ld\n", (long) msizex, (long) msizey,
-               (long) imgDMmodesZFe.size[2]);
-        for(uint32_t kk = 0; kk < imgDMmodesZFe.size[2]; kk++)
+               (long) imgDMmodesZFe.md->size[2]);
+        for(uint32_t kk = 0; kk < imgDMmodesZFe.md->size[2]; kk++)
         {
             for(uint64_t ii = 0; ii < msizexy; ii++)
             {
@@ -906,12 +906,12 @@ static errno_t compute_function()
         // COMPUTE WFS RESPONSE TO MODES
         // output : imgWFSmodesZFe
         //
-        uint32_t wfssizex = imgzrespM.size[0];
-        uint32_t wfssizey = imgzrespM.size[1];
+        uint32_t wfssizex = imgzrespM.md->size[0];
+        uint32_t wfssizey = imgzrespM.md->size[1];
         uint64_t wfssizexy = wfssizex;
         wfssizexy *= wfssizey;
         IMGID imgWFSmodesZFe = imgid_make_from_name_3D("WFSmodesZFe", wfssizex, wfssizey,
-                                            imgDMmodesZFe.size[2]);
+                                            imgDMmodesZFe.md->size[2]);
         createimagefromIMGID(&imgWFSmodesZFe);
 
 
@@ -925,11 +925,11 @@ static errno_t compute_function()
             #pragma omp parallel for private(m, m1, act, act1, act2, wfselem)
 #endif
 
-            for(m = 0; m < imgDMmodesZFe.size[2]; m++)
+            for(m = 0; m < imgDMmodesZFe.md->size[2]; m++)
             {
                 m1 = m * wfssizexy;
 
-                printf("\r %5u / %5u   ", m, imgDMmodesZFe.size[2]);
+                printf("\r %5u / %5u   ", m, imgDMmodesZFe.md->size[2]);
                 fflush(stdout);
                 for(act = 0; act < msizexy; act++)
                 {
@@ -994,7 +994,7 @@ static errno_t compute_function()
                    IDloRM,
                    IDloDMmodes);
 
-            uint32_t linfitsize = imgloDMmodes.size[2];
+            uint32_t linfitsize = imgloDMmodes.md->size[2];
 
             imageID IDRMM_coeff = -1;
             create_2Dimage_ID("linfitcoeff", linfitsize, 1, &IDRMM_coeff);
@@ -1005,17 +1005,17 @@ static errno_t compute_function()
             imageID IDcoeffmat = -1;
             create_2Dimage_ID("imfitmat",
                               linfitsize,
-                              imgWFSmodesZFe.size[2],
+                              imgWFSmodesZFe.md->size[2],
                               &IDcoeffmat);
 
             // Reconstructed DM modes from aux
             //
             imageID IDauxDMmodesrec = -1;
-            create_3Dimage_ID("auxDMmodesrec", msizex, msizey, imgDMmodesZFe.size[2],
+            create_3Dimage_ID("auxDMmodesrec", msizex, msizey, imgDMmodesZFe.md->size[2],
                               &IDauxDMmodesrec);
             // null space (complement of above)
             imageID IDauxDMmodesnull = -1;
-            create_3Dimage_ID("auxDMmodesnull", msizex, msizey, imgDMmodesZFe.size[2],
+            create_3Dimage_ID("auxDMmodesnull", msizex, msizey, imgDMmodesZFe.md->size[2],
                               &IDauxDMmodesnull);
 
 
@@ -1031,7 +1031,7 @@ static errno_t compute_function()
             fprintf(fpLOcoeff, "# col3   Fit vector power (squared morm)\n");
             fprintf(fpLOcoeff,
                     "# col4   Mixing fraction (a): new mode equal to a x aux + (1-a) x previous\n");
-            for(uint32_t m = 0; m < imgDMmodesZFe.size[2]; m++)
+            for(uint32_t m = 0; m < imgDMmodesZFe.md->size[2]; m++)
             {
 
                 //printf("processing mode %u / %u\n", m, imgDMmodesZFe.size[2]);
@@ -1182,6 +1182,8 @@ static errno_t compute_function()
             delete_image_ID("imfitmat", DELETE_IMAGE_ERRMODE_WARNING);
 
             fclose(fpLOcoeff);
+            imgid_free(&imgloRM);
+            imgid_free(&imgloDMmodes);
         }
 
 
@@ -1191,8 +1193,13 @@ static errno_t compute_function()
         //
         fps_write_RUNoutput_image(data.fpsptr, "WFSmodesZFe", "WFSmodesZFec");
 
-
-
+        imgid_free(&imgDMmaskCTRL);
+        imgid_free(&imgDMmaskEXTR);
+        imgid_free(&imgDMmodesZF);
+        imgid_free(&imgDMmodesZFe);
+        imgid_free(&imgcpa);
+        imgid_free(&imgzrespM);
+        imgid_free(&imgWFSmodesZFe);
 
 
         //list_image_ID();

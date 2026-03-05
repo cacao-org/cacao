@@ -173,7 +173,7 @@ static CLICMDARGDEF farg[] =
         ".ctrlsname",
         "control stream",
         "ctrl",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &ctrlsname,
         &fpi_ctrlsname
     },
@@ -182,7 +182,7 @@ static CLICMDARGDEF farg[] =
         ".nbpoke",
         "number of pokes",
         "1000",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &nbpoke,
         &fpi_nbpoke
     },
@@ -191,7 +191,7 @@ static CLICMDARGDEF farg[] =
         ".ctrlamp",
         "control amplitude",
         "0.01",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &ctrlamp,
         &fpi_ctrlamp
     },
@@ -200,7 +200,7 @@ static CLICMDARGDEF farg[] =
         ".ctrlampmap",
         "control stream amplitude map",
         "null",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &ctrlampmap,
         &fpi_ctrlampmap
     },
@@ -209,7 +209,7 @@ static CLICMDARGDEF farg[] =
         ".senssname",
         "sensing stream",
         "sens",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &senssname,
         &fpi_senssname
     },
@@ -218,7 +218,7 @@ static CLICMDARGDEF farg[] =
         ".sensprocout",
         "processed image output",
         "null",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &sensproc,
         NULL
     },
@@ -227,7 +227,7 @@ static CLICMDARGDEF farg[] =
         ".sproc.sensref0",
         "sensing reference 0",
         "null",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &sensref0,
         NULL
     },
@@ -236,7 +236,7 @@ static CLICMDARGDEF farg[] =
         ".sproc.sensmask0",
         "sensing mask 0 (float)",
         "null",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &sensmask0,
         NULL
     },
@@ -245,7 +245,7 @@ static CLICMDARGDEF farg[] =
         ".sproc.sensnorm0",
         "normalization 0 on/off",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &sensnorm0,
         &fpi_sensnorm0
     },
@@ -254,7 +254,7 @@ static CLICMDARGDEF farg[] =
         ".sproc.sensref1",
         "sensing reference 1",
         "null",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &sensref1,
         NULL
     },
@@ -263,7 +263,7 @@ static CLICMDARGDEF farg[] =
         ".sproc.sensmask1",
         "sensing mask 1 (float)",
         "null",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &sensmask1,
         NULL
     },
@@ -272,7 +272,7 @@ static CLICMDARGDEF farg[] =
         ".sproc.sensnorm1",
         "normalization 1 on/off",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &sensnorm1,
         &fpi_sensnorm1
     },
@@ -281,7 +281,7 @@ static CLICMDARGDEF farg[] =
         ".optm.opttype",
         "1:min, 2:max, 3:absmin, 4:absmax",
         "2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &opttype,
         &fpi_opttype
     },
@@ -290,7 +290,7 @@ static CLICMDARGDEF farg[] =
         ".optm.optcomp",
         "1:tot, 2:norma, 3:tota, 4:percr",
         "1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &optcomp,
         &fpi_optcomp
     },
@@ -299,7 +299,7 @@ static CLICMDARGDEF farg[] =
         ".optm.optparam0",
         "optimization parameter 0",
         "0.01",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &optparam0,
         &fpi_optparam0
     },
@@ -308,7 +308,7 @@ static CLICMDARGDEF farg[] =
         ".optm.optparam1",
         "optimization parameter 1",
         "0.01",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &optparam1,
         &fpi_optparam1
     },
@@ -317,7 +317,7 @@ static CLICMDARGDEF farg[] =
         ".twaitsec",
         "time to wait after poke before measurement",
         "2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &twaitframe,
         &fpi_twaitframe
     },
@@ -326,7 +326,7 @@ static CLICMDARGDEF farg[] =
         ".tintframe",
         "number of frames to integrate per measurement",
         "3",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &tintframe,
         &fpi_tintframe
     }

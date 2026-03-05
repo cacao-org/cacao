@@ -1,299 +1,167 @@
-#include "ImageStreamIO/ImageStruct.h"
-/**
- * @file    acquireWFS.c
- * @brief   acquire and preprocess WFS image
- *
- */
-
 
 #include <math.h>
 
 #include "CommandLineInterface/CLIcore.h"
 
-// Local variables pointers
 
-static char *insname;
-long fpi_insname;
+/* ================================================================
+ * 1.  FPS COMPONENT IDENTITY
+ * ============================================================= */
 
-static uint32_t *AOloopindex;
-static long      fpi_AOloopindex;
-
-static uint32_t *semindex;
-static long      fpi_semindex;
-
-static float *fluxtotal;
-static long   fpi_fluxtotal;
-
-static float *GPUalpha;
-static long   fpi_GPUalpha;
-
-static float *GPUbeta;
-static long   fpi_GPUbeta;
-
-static float *WFSnormfloor;
-static long   fpi_WFSnormfloor;
-
-static float *WFStaveragegain;
-static long   fpi_WFStaveragegain;
-
-static float *WFStaveragemult;
-static long   fpi_WFStaveragemult;
-
-static float *WFSrefcgain;
-static long   fpi_WFSrefcgain;
-
-static float *WFSrefcmult;
-static long   fpi_WFSrefcmult;
-
-static int64_t *compWFSsubdark;
-static long     fpi_compWFSsubdark;
-
-static int64_t *compWFSnormalize;
-static long     fpi_compWFSnormalize;
-
-static int64_t *compWFSmask;
-static long     fpi_compWFSmask;
-
-static int64_t *compWFSrefsub;
-static long     fpi_compWFSrefsub;
-
-static int64_t *compWFSsigav;
-static long     fpi_compWFSsigav;
-
-// compute corrected WFS reference
-static int64_t *compWFSrefc;
-static long     fpi_compWFSrefc;
-
-// reset aolX_wfsrefc to aolX_wfsref
-static int64_t *resetWFSrefc;
-static long     fpi_resetWFSrefc;
-
-
-static char *wfszposname;
-static long  fpi_wfszposname;
-
-
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_STREAM,
-        ".insname",
-        "input stream name",
-        "inV",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &insname,
-        &fpi_insname
-    },
-    {
-        CLIARG_UINT32,
-        ".AOloopindex",
-        "loop index",
-        "0",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &AOloopindex,
-        &fpi_AOloopindex
-    },
-    {
-        CLIARG_UINT32,
-        ".semindex",
-        "input semaphore index",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &semindex,
-        &fpi_semindex
-    },
-    {
-        CLIARG_FLOAT32,
-        ".WFStaveragegain",
-        "tmult*(1-tgain)*imwfs3 + tgain*imwfs2 -> imwfs3",
-        "0.01",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &WFStaveragegain,
-        &fpi_WFStaveragegain
-    },
-    {
-        CLIARG_FLOAT32,
-        ".WFStaveragemult",
-        "tmult*(1-tgain)*imwfs3 + tgain*imwfs2 -> imwfs3",
-        "0.999",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &WFStaveragemult,
-        &fpi_WFStaveragemult
-    },
-    {
-        CLIARG_FLOAT32,
-        ".WFSrefcmult",
-        "mult*(wfsref-wfszpo)+(1-mult)*wfsrefc -> wfsrefc",
-        "1.0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &WFSrefcmult,
-        &fpi_WFSrefcmult
-    },
-    {
-        CLIARG_FLOAT32,
-        ".WFSrefcgain",
-        "wfsrefc + gain*imwfs3 -> wfsrefc",
-        "0.00",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &WFSrefcgain,
-        &fpi_WFSrefcgain
-    },
-    {
-        CLIARG_FLOAT32,
-        ".out.fluxtotal",
-        "total flux",
-        "0.0",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &fluxtotal,
-        &fpi_fluxtotal
-    },
-    {
-        CLIARG_FLOAT32,
-        ".out.GPUalpha",
-        "GPU alpha coefficient",
-        "0.0",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &GPUalpha,
-        &fpi_GPUalpha
-    },
-    {
-        CLIARG_FLOAT32,
-        ".out.GPUbeta",
-        "GPU beta coefficient",
-        "0.0",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &GPUbeta,
-        &fpi_GPUbeta
-    },
-    {
-        CLIARG_FLOAT32,
-        ".WFSnormfloor",
-        "WFS flux floor for normalize",
-        "0.0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &WFSnormfloor,
-        &fpi_WFSnormfloor
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.darksub",
-        "- aolX_wfsdark,  x aolX_wfsmult -> imWFS0",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compWFSsubdark,
-        &fpi_compWFSsubdark
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.WFSnormalize",
-        "normalize over wfsmask, x wfsmask -> imWFS1",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compWFSnormalize,
-        &fpi_compWFSnormalize
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.compWFSmask",
-        " x wfsmask ?",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compWFSmask,
-        &fpi_compWFSmask
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.WFSrefsub",
-        "subtract WFS reference aolX_wfsrefc -> imWFS2",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compWFSrefsub,
-        &fpi_compWFSrefsub
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.WFSsigav",
-        "average WFS signal",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compWFSsigav,
-        &fpi_compWFSsigav
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.WFSrefc",
-        "WFS reference correction",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &compWFSrefc,
-        &fpi_compWFSrefc
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.resetWFSrefc",
-        "reset WFS reference correction",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &resetWFSrefc,
-        &fpi_resetWFSrefc
-    },
-    {
-        CLIARG_STREAM,
-        ".wfszpo",
-        "Wavefront sensor zero point offset",
-        "aolX_wfszpo",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &wfszposname,
-        &fpi_wfszposname
-    }
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "acquireWFS",
+    .cmdkey      = "acquireWFS",
+    .description = "acquire WFS image"
 };
 
 
+/* ================================================================
+ * 2.  LOCAL PARAMETER VARIABLES
+ * ============================================================= */
 
-// Optional custom configuration setup.
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
-    if(data.fpsptr != NULL)
-    {
-        data.fpsptr->parray[fpi_insname].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+static char     *insname          = NULL;
+static uint32_t *AOloopindex      = NULL;
+static uint32_t *semindex         = NULL;
+static float    *fluxtotal        = NULL;
+static float    *GPUalpha         = NULL;
+static float    *GPUbeta          = NULL;
+static float    *WFSnormfloor     = NULL;
+static float    *WFStaveragegain  = NULL;
+static float    *WFStaveragemult  = NULL;
+static float    *WFSrefcgain      = NULL;
+static float    *WFSrefcmult      = NULL;
+static int64_t  *compWFSsubdark   = NULL;
+static int64_t  *compWFSnormalize = NULL;
+static int64_t  *compWFSmask      = NULL;
+static int64_t  *compWFSrefsub    = NULL;
+static int64_t  *compWFSsigav     = NULL;
+static int64_t  *compWFSrefc      = NULL;
+static int64_t  *resetWFSrefc     = NULL;
+static char     *wfszposname      = NULL;
 
 
-        data.fpsptr->parray[fpi_WFStaveragegain].fpflag  |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_WFStaveragemult].fpflag  |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_WFSnormfloor].fpflag     |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compWFSsubdark].fpflag   |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compWFSnormalize].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compWFSmask].fpflag      |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compWFSrefsub].fpflag    |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compWFSsigav].fpflag     |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compWFSrefc].fpflag      |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_resetWFSrefc].fpflag     |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_WFSrefcgain].fpflag      |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_WFSrefcmult].fpflag      |= FPFLAG_WRITERUN;
+/* ================================================================
+ * 3.  UNIFIED PARAMETER TABLE (X-Macro)
+ * ============================================================= */
 
-        // reset WFS ave at startup
-        data.fpsptr->parray[fpi_resetWFSrefc].fpflag |= FPFLAG_ONOFF;
-    }
+#define FPS_PARAMS(X) \
+    X(".insname", &insname, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "input stream name") \
+    X(".AOloopindex", &AOloopindex, \
+      FPTYPE_UINT32, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "loop index") \
+    X(".semindex", &semindex, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "input semaphore index") \
+    X(".WFStaveragegain", &WFStaveragegain, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "tmlt*(1-tg)*imwfs3+tg*imwfs2") \
+    X(".WFStaveragemult", &WFStaveragemult, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "tmlt*(1-tg)*imwfs3+tg*imwfs2") \
+    X(".WFSrefcmult", &WFSrefcmult, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "mlt*(wfsref-zpo)+(1-m)*refc") \
+    X(".WFSrefcgain", &WFSrefcgain, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "wfsrefc+gain*imwfs3->wfsrefc") \
+    X(".out.fluxtotal", &fluxtotal, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "total flux") \
+    X(".out.GPUalpha", &GPUalpha, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "GPU alpha coefficient") \
+    X(".out.GPUbeta", &GPUbeta, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "GPU beta coefficient") \
+    X(".WFSnormfloor", &WFSnormfloor, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "WFS flux floor for normalize") \
+    X(".comp.darksub", &compWFSsubdark, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "-wfsdark, x wfsmult->imWFS0") \
+    X(".comp.WFSnormalize", &compWFSnormalize, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "normalize over wfsmask->imWFS1") \
+    X(".comp.compWFSmask", &compWFSmask, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "x wfsmask ?") \
+    X(".comp.WFSrefsub", &compWFSrefsub, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "subtract WFS ref ->imWFS2") \
+    X(".comp.WFSsigav", &compWFSsigav, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "average WFS signal") \
+    X(".comp.WFSrefc", &compWFSrefc, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "WFS reference correction") \
+    X(".comp.resetWFSrefc", &resetWFSrefc, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "reset WFS reference correction") \
+    X(".wfszpo", &wfszposname, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "WFS zero point offset")
 
-    return RETURN_SUCCESS;
-}
 
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
-    return RETURN_SUCCESS;
-}
+/* ================================================================
+ * 5.  BINDINGS, FARG, AND CLI DATA
+ * ============================================================= */
 
-static CLICMDDATA CLIcmddata =
-{
-    "acquireWFS", "acquire WFS image", CLICMD_FIELDS_DEFAULTS
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
+
+static const int nb_bindings =
+    sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "", "", CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 // detailed help
 static errno_t help_function()
@@ -475,7 +343,8 @@ static errno_t compute_function()
         // check if wfsmult to be applied
         //int status_wfsmult = 0;
 
-        if(data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF &&
+        if(functionparameter_GetParamValue_ONOFF(
+                data.fpsptr, ".comp.darksub") == 1 &&
                 imgwfsdark.ID != -1)
         {
             status_darksub = 1;
@@ -597,7 +466,8 @@ static errno_t compute_function()
         }
         imgimWFS1.md->write = 1;
 
-        if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
+        if(functionparameter_GetParamValue_ONOFF(
+                data.fpsptr, ".comp.WFSnormalize") == 1)
         {
             status_normalize = 1;
 
@@ -638,7 +508,8 @@ static errno_t compute_function()
 
 
             if((imgwfsmask.ID != -1)
-                    && (data.fpsptr->parray[fpi_compWFSmask].fpflag & FPFLAG_ONOFF))
+                    && (functionparameter_GetParamValue_ONOFF(
+                        data.fpsptr, ".comp.compWFSmask") == 1))
             {
                 for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
@@ -694,7 +565,8 @@ static errno_t compute_function()
         {
             clock_gettime(CLOCK_MILK, &time1);
         }
-        if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF)
+        if(functionparameter_GetParamValue_ONOFF(
+                data.fpsptr, ".comp.WFSrefsub") == 1)
         {
             // subtract reference
             status_refsub = 1;
@@ -738,7 +610,8 @@ static errno_t compute_function()
         {
             clock_gettime(CLOCK_MILK, &time1);
         }
-        if(data.fpsptr->parray[fpi_compWFSsigav].fpflag & FPFLAG_ONOFF)
+        if(functionparameter_GetParamValue_ONOFF(
+                data.fpsptr, ".comp.WFSsigav") == 1)
         {
             status_ave = 1;
             imgimWFS3.md->write = 1;
@@ -782,7 +655,8 @@ static errno_t compute_function()
 
         // Reset imWFS3, wfsrefc and wfszpo to zero
         //
-        if(data.fpsptr->parray[fpi_resetWFSrefc].fpflag & FPFLAG_ONOFF)
+        if(functionparameter_GetParamValue_ONOFF(
+                data.fpsptr, ".comp.resetWFSrefc") == 1)
         {
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
@@ -792,10 +666,12 @@ static errno_t compute_function()
             }
 
             // toggle back to OFF
-            data.fpsptr->parray[fpi_resetWFSrefc].fpflag &= ~FPFLAG_ONOFF;
+            functionparameter_SetParamValue_ONOFF(
+                data.fpsptr, ".comp.resetWFSrefc", 0);
         }
 
-        if(data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
+        if(functionparameter_GetParamValue_ONOFF(
+                data.fpsptr, ".comp.WFSrefc") == 1)
         {
             status_wfsrefc = 1;
             imgwfsrefc.md->write = 1;
@@ -825,7 +701,8 @@ static errno_t compute_function()
             }
 
             // normalize
-            if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
+            if(functionparameter_GetParamValue_ONOFF(
+                    data.fpsptr, ".comp.WFSnormalize") == 1)
             {
                 // Compute image total
                 double imtotal = 0.0;
@@ -893,21 +770,37 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
+/* ================================================================
+ * 7.  MILK MODULE REGISTRATION
+ * ============================================================= */
 
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
-INSERT_STD_FPSCLIfunctions
-
-
-
-
-// Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_IOtools__acquireWFSim()
 {
-
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+    safe_fps_fill_farg_examples(
+        farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
-
     return RETURN_SUCCESS;
 }
+#endif
+
+
+/* ================================================================
+ * 8.  STANDALONE ENTRY POINT
+ * ============================================================= */
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function)
+#endif

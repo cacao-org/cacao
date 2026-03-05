@@ -45,7 +45,7 @@ static CLICMDARGDEF farg[] = {{
         ".AOloopindex",
         "AO loop index",
         "0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &AOloopindex,
         NULL
     }

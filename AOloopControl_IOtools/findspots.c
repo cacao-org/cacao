@@ -39,7 +39,7 @@ static CLICMDARGDEF farg[] =
         ".in_name",
         "input image",
         "im1",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &inimname,
         NULL
     },
@@ -48,7 +48,7 @@ static CLICMDARGDEF farg[] =
         ".spotsize",
         "approximate spot size",
         "3.0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &spotsize,
         &fpi_spotsize
     },
@@ -57,7 +57,7 @@ static CLICMDARGDEF farg[] =
         ".spotexcldist",
         "exclusion distance",
         "10.0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &spotexcldist,
         &fpi_spotexcldist
     },
@@ -66,7 +66,7 @@ static CLICMDARGDEF farg[] =
         ".maxnbspot",
         "max number of spots",
         "19",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &maxnbspot,
         &fpi_maxnbspot
     },
@@ -75,7 +75,7 @@ static CLICMDARGDEF farg[] =
         ".outmapc",
         "output mapping cube",
         "mapc",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &outmapcname,
         NULL
     }
@@ -146,8 +146,8 @@ static errno_t find_image_spots(
 
 
     // get image size
-    uint32_t xsize = inimg.size[0];
-    uint32_t ysize = inimg.size[1];
+    uint32_t xsize = inimg.md->size[0];
+    uint32_t ysize = inimg.md->size[1];
     uint64_t xysize = (uint64_t) xsize;
     xysize *= ysize;
 
@@ -364,6 +364,8 @@ static errno_t find_image_spots(
     free(spotxarray);
     free(spotyarray);
     free(spotvarray);
+    imgid_free(&spotoutimg);
+    imgid_free(&mapcimg);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
@@ -388,6 +390,8 @@ static errno_t compute_function()
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    imgid_free(&inimg);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;

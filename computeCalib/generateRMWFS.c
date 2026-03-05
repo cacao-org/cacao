@@ -30,7 +30,7 @@ static CLICMDARGDEF farg[] =
         ".zrespWFS",
         "input zonal response matrix",
         "zrespM",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &zrespWFS,
         &fpi_zrespWFS
     },
@@ -39,7 +39,7 @@ static CLICMDARGDEF farg[] =
         ".DMmodesC",
         "input DM modes",
         "DMmodesC",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &DMmodesC,
         &fpi_DMmodesC
     },
@@ -48,7 +48,7 @@ static CLICMDARGDEF farg[] =
         ".outWFSmodesC",
         "output WFS modes",
         "modesWFS",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &outWFSmodesC,
         &fpi_outWFSmodesC
     }

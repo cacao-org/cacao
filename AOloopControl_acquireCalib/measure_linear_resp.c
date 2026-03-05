@@ -1,9 +1,3 @@
-#include "ImageStreamIO/ImageStruct.h"
-/**
- * @file    measure_linear_respm.c
- * @brief   Measure linear response to perturbation
- *
- */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -19,286 +13,148 @@
 // Holds info for each poke frame
 // A poke frame starts with a stream read.
 // The input stream may is poked during the pokeframe.
-// If so, it is done with a time delay from the start of the pokeframe (= stream read)
+// If so, it is done with a time delay from the start of
+// the pokeframe (= stream read)
 //
-// The PokeInfo structure contains the following information
-//
-// Measurement :
-// - [PokeIndexMEAS]        Mode index being measured (-1 if none). This increments during the sequence.
-// - [PokeIndexMEAS_Mapped] Original mode to to which PokeIndexMEAS maps. This generally does not increase monotically.
-// - [aveindex]             Average index. If averaging 3 frames per measurement, this will increment from 0 to 2. If >2, discard frame
-//
-// Control
-// - [PokeIndexCTRL]        Mode to be poked during the poke frame. This increments during the sequence.
-// - [PokeIndexCTRL_Mapped] Original mode to to which PokeIndexCTRL maps. This generally does not increase monotically.
-// - [pokedelayns]          Delay [ns] from poke frame start to poking
-//
-// Timing log
-// - [tstart]               Start of poke frame
-// - [tpoke]                Time at which poke was completed
-//
-// The sequence of PokeIndexMEAS and PokeIndexCTRL values follows the same pattern, but offset in time to account for latency between the streams.
-// The integer offset bettween the sequences, and the pokedelayns value, are derived from the framerate and latency between streams.
-// We follow here the latency convention that if the poke responds instantaneously and the read is at full duty cycle, the latency is 0.5 frame.
-//
-// [lantencyfr] Latency in unit of frame
-// [framerateHz]  Frame rate in Hz
-// [Nexcl]      Number of excluded frames
-//
-// We define the start of a poke cycle as the arrival of the first frame (aveindex=0)
-// This is followed by a number of measurement frames to be included (aveindex=1, 2, ... NBave-1) and excluded (aveindex = NBave ... NBave-Nexcl)
-//
-// The time offset between poke actuation and start of poke cycle is :
-// dt1 [fr] = (latencyfr-0.5) + Nexcl/2
-// positive value indicates the DM poke occurs before cycle start
-//
-// dt1 is then split into an integer offset [RMdelayfr] and the pokedelayns [delayMR1ns] :
-//
-// RMdelayfr = ceil(dt1)
-// delayMR1ns = (RMdelayfr-dt1) * (1/framerateHz)*1000000.0
-//
-
-
 typedef struct
 {
-    // Poke mode being measured
     int PokeIndexMEAS;
-
-    // Current poke mode on input
     int PokeIndexCTRL;
-
-    // Poke mode being measured, index in poke cube
     int PokeIndexMEAS_Mapped;
-
-    // Current poke mode on DM, index in poke cube
     int PokeIndexCTRL_Mapped;
-
-    // frame index within poke mode acquisition
-    // -1 if not part of signal
     int aveindex;
-
-    // Time delay between start of pokeframe and poke actuation command, unit: nanosec
     int pokedelayns;
-
     struct timespec tstart;
     struct timespec tpoke;
-
 } PokeInfo;
 
 static PokeInfo *pkinfarray;
 
 
+/* ================================================================
+ * 1.  FPS COMPONENT IDENTITY
+ * ============================================================= */
 
-
-
-
-// Local variables pointers
-
-
-// input stream
-static char *streamin;
-static long  fpi_streamin;
-
-
-// output stream
-static char *streamout;
-static long  fpi_streamout;
-
-
-// input mode cube
-static char *inmodeC;
-static long  fpi_inmodeC;
-
-// output mode cube
-static char *outmodeC;
-static long  fpi_outmodeC;
-
-
-static float *pokeampl;
-long          fpi_pokeampl;
-
-
-
-// TIMING
-
-// Frame rate [Hz]
-static float *timing_framerateHz;
-long fpi_timing_framerateHz;
-
-// Latency in unit of WFS frame
-static float *timing_latencyfr;
-long fpi_timing_latencyfr;
-
-static uint32_t *NBave;
-static uint32_t *NBexcl;
-static uint32_t *NBinnerCycle;
-
-
-// Logging
-
-// save all intermediate files
-static int64_t *saveALL;
-static long     fpi_saveALL;
-
-
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_STREAM,
-        ".streamin",
-        "input (perturbation) stream",
-        "NULL",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &streamin,
-        &fpi_streamin
-    },
-    {
-        CLIARG_STREAM,
-        ".streamout",
-        "output (signal) stream",
-        "NULL",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &streamout,
-        &fpi_streamout
-    },
-    {
-        CLIARG_FITSFILENAME,
-        ".inmodes",
-        "input modes",
-        "NULL",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &inmodeC,
-        &fpi_inmodeC
-    },
-    {
-        CLIARG_FITSFILENAME,
-        ".outmodes",
-        "output modes",
-        "NULL",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &outmodeC,
-        &fpi_outmodeC
-    },
-    {
-        CLIARG_FLOAT32,
-        ".ampl",
-        "RM poke amplitude",
-        "0.01",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &pokeampl,
-        &fpi_pokeampl
-    },
-    // ============= TIMING =========================
-    {
-        CLIARG_FLOAT32,
-        ".timing.WFSfrequ",
-        "WFS frame rate [Hz]",
-        "1000",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &timing_framerateHz,
-        &fpi_timing_framerateHz
-    },
-    {
-        CLIARG_FLOAT32,
-        ".timing.hardwlatfr",
-        "hardware latency [fr]",
-        "1000",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &timing_latencyfr,
-        &fpi_timing_latencyfr
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.NBave",
-        "Number of frames averaged for a single poke measurement",
-        "5",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &NBave,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.NBexcl",
-        "Number of frames excluded",
-        "1",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &NBexcl,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.NBinnerCycle",
-        "Number of inner cycles (how many consecutive times should a single +/- "
-        "poke be repeated)",
-        "10",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &NBinnerCycle,
-        NULL
-    },
-    {
-        CLIARG_ONOFF,
-        ".saveALL",
-        "save intermediate files",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &saveALL,
-        &fpi_saveALL
-    }
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "measlinresp",
+    .cmdkey      = "measlinresp",
+    .description =
+        "measure linear response of one stream to another"
 };
 
 
-// Optional custom configuration setup.
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
+/* ================================================================
+ * 2.  LOCAL PARAMETER VARIABLES
+ * ============================================================= */
 
-    if(data.fpsptr != NULL)
-    {
-        data.fpsptr->parray[fpi_streamin].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
-        data.fpsptr->parray[fpi_streamout].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
-
-        data.fpsptr->parray[fpi_inmodeC].fpflag |=
-            FPFLAG_FILE_RUN_REQUIRED;
-
-        data.fpsptr->parray[fpi_pokeampl].fpflag |= FPFLAG_WRITERUN;
-    }
-
-    return RETURN_SUCCESS;
-}
+static char     *streamin           = NULL;
+static char     *streamout          = NULL;
+static char     *inmodeC            = NULL;
+static char     *outmodeC           = NULL;
+static float    *pokeampl           = NULL;
+static float    *timing_framerateHz = NULL;
+static float    *timing_latencyfr   = NULL;
+static uint32_t *NBave              = NULL;
+static uint32_t *NBexcl             = NULL;
+static uint32_t *NBinnerCycle       = NULL;
+static int64_t  *saveALL            = NULL;
 
 
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
+/* ================================================================
+ * 3.  UNIFIED PARAMETER TABLE (X-Macro)
+ * ============================================================= */
 
-    if(data.fpsptr != NULL)
-    {
-    }
+#define FPS_PARAMS(X) \
+    X(".streamin", &streamin, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "input (perturbation) stream") \
+    X(".streamout", &streamout, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "output (signal) stream") \
+    X(".inmodes", &inmodeC, \
+      FPTYPE_FITSFILENAME, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "input modes") \
+    X(".outmodes", &outmodeC, \
+      FPTYPE_FITSFILENAME, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "output modes") \
+    X(".ampl", &pokeampl, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "RM poke amplitude") \
+    X(".timing.WFSfrequ", &timing_framerateHz, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "WFS frame rate [Hz]") \
+    X(".timing.hardwlatfr", &timing_latencyfr, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "hardware latency [fr]") \
+    X(".timing.NBave", &NBave, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Frames averaged per poke") \
+    X(".timing.NBexcl", &NBexcl, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Number of frames excluded") \
+    X(".timing.NBinnerCycle", &NBinnerCycle, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Number of inner cycles") \
+    X(".saveALL", &saveALL, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "save intermediate files")
 
-    return RETURN_SUCCESS;
-}
 
+/* ================================================================
+ * 5.  BINDINGS, FARG, AND CLI DATA
+ * ============================================================= */
 
-
-
-static CLICMDDATA CLIcmddata =
-{
-    "measlinresp", "measure linear response of one stream to another", CLICMD_FIELDS_DEFAULTS
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
 
+static const int nb_bindings =
+    sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "", "", CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 // detailed help
 static errno_t help_function()
 {
-
-
     return RETURN_SUCCESS;
 }
 
@@ -1146,19 +1002,36 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
+/* ================================================================
+ * 7.  MILK MODULE REGISTRATION
+ * ============================================================= */
 
-
-
-INSERT_STD_FPSCLIfunctions
-
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 errno_t CLIADDCMD_AOloopControl__measure_linear_resp()
 {
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+    safe_fps_fill_farg_examples(
+        farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
-
     return RETURN_SUCCESS;
 }
+#endif
+
+
+/* ================================================================
+ * 8.  STANDALONE ENTRY POINT
+ * ============================================================= */
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function)
+#endif

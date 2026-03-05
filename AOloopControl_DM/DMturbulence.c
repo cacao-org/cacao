@@ -25,47 +25,106 @@
 #include "processinfo.h"
 #include "processtools.h"
 
-/* =============================================================================================== */
-/* PARAMETERS DEFINITION                                                                           */
-/* =============================================================================================== */
+/* ================================================================
+ * 1.  FPS COMPONENT IDENTITY
+ * ============================================================= */
 
-#define DMTURB_PARAMS(X) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".turbON", "turbulence on/off (off=freeze)", "ON", turbON_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".turbZERO", "turbulence zero", "OFF", turbZERO_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".seedZERO", "set seed pos to zero", "OFF", seedZERO_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN) \
-    X(CLIARG_VISIBLE_DEFAULT, FPTYPE_STREAMNAME, char*, ".dmstream", "output DM turbulence stream", "dm00disp09", dmstream_ptr, GetParamPtr_STRING, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT | FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".DMpixscale", "DM pixel scale [m/pix]", "0.2", DMpixscale_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".wspeed", "wind speed [m/s]", "10.0", turbwspeed_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".wangle", "wind angle [rad]", "1.2", turbwangle_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".ampl", "amplitude across aperture [um]", "0.2", turbampl_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".turbseed.comp", "(re)compute turbulence seed screen", "OFF", compTurbSeed_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".turbseed.size", "screen seed size", "1024", turbseedsize_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".turbseed.pixscale", "screen pixel scale [m/pix]", "0.1", turbseedpixscale_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".turbseed.innerscale", "screen inner scale [m]", "0.01", turbseedinnerscale_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT) \
-    X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".turbseed.outerscale", "screen outer scale [m]", "20", turbseedouterscale_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "dmturb",
+    .cmdkey      = "atmturbulence",
+    .description = "DM turbulence simulation"
+};
 
-/* Global parameter pointers */
-#define X_PTR_DECL(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...) \
-    static c_type ptr_name = NULL;
-DMTURB_PARAMS(X_PTR_DECL)
-#undef X_PTR_DECL
 
-/* FPI indices for customCONFcheck */
-static uint64_t fpi_turbON;
-static uint64_t fpi_turbZERO;
-static uint64_t fpi_seedZERO;
-static uint64_t fpi_dmstream;
-static uint64_t fpi_DMpixscale;
-static uint64_t fpi_turbwspeed;
-static uint64_t fpi_turbwangle;
-static uint64_t fpi_turbampl;
-static uint64_t fpi_compTurbSeed;
-static uint64_t fpi_turbseedsize;
-static uint64_t fpi_turbseedpixscale;
-static uint64_t fpi_turbseedinnerscale;
-static uint64_t fpi_turbseedouterscale;
+/* ================================================================
+ * 2.  LOCAL PARAMETER VARIABLES
+ * ============================================================= */
+
+static uint64_t *turbON_ptr              = NULL;
+static uint64_t *turbZERO_ptr            = NULL;
+static uint64_t *seedZERO_ptr            = NULL;
+static char     *dmstream_ptr            = NULL;
+static float    *DMpixscale_ptr          = NULL;
+static float    *turbwspeed_ptr          = NULL;
+static float    *turbwangle_ptr          = NULL;
+static float    *turbampl_ptr            = NULL;
+static uint64_t *compTurbSeed_ptr        = NULL;
+static uint32_t *turbseedsize_ptr        = NULL;
+static float    *turbseedpixscale_ptr    = NULL;
+static float    *turbseedinnerscale_ptr  = NULL;
+static float    *turbseedouterscale_ptr  = NULL;
 
 static uint64_t processinfo_change_cnt_local = 0;
+
+
+/* ================================================================
+ * 3.  UNIFIED PARAMETER TABLE (X-Macro)
+ * ============================================================= */
+
+#define FPS_PARAMS(X) \
+    X(".turbON", &turbON_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, \
+      "turbulence on/off (off=freeze)") \
+    X(".turbZERO", &turbZERO_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
+          | FPFLAG_VISIBLE, \
+      "turbulence zero") \
+    X(".seedZERO", &seedZERO_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
+          | FPFLAG_VISIBLE, \
+      "set seed pos to zero") \
+    X(".dmstream", &dmstream_ptr, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_STREAM_RUN_REQUIRED \
+          | FPFLAG_CHECKSTREAM \
+          | FPFLAG_PRIMARY_CLI_INPUT, \
+      "output DM turbulence stream") \
+    X(".DMpixscale", &DMpixscale_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
+      "DM pixel scale [m/pix]") \
+    X(".wspeed", &turbwspeed_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
+          | FPFLAG_VISIBLE, \
+      "wind speed [m/s]") \
+    X(".wangle", &turbwangle_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
+          | FPFLAG_VISIBLE, \
+      "wind angle [rad]") \
+    X(".ampl", &turbampl_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
+          | FPFLAG_VISIBLE, \
+      "amplitude across aperture [um]") \
+    X(".turbseed.comp", &compTurbSeed_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "(re)compute turbulence seed") \
+    X(".turbseed.size", &turbseedsize_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
+      "screen seed size") \
+    X(".turbseed.pixscale", \
+      &turbseedpixscale_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
+      "screen pixel scale [m/pix]") \
+    X(".turbseed.innerscale", \
+      &turbseedinnerscale_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
+      "screen inner scale [m]") \
+    X(".turbseed.outerscale", \
+      &turbseedouterscale_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
+      "screen outer scale [m]")
 
 typedef struct {
     IMGID imgDM;
@@ -186,7 +245,10 @@ static errno_t make_seed_turbulence_screen(
     {
         IMGID imgtmpamp = imgid_make_from_name("tmpamp");
         resolveIMGID(&imgtmpamp, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
-        image_set_2Dpix(imgtmpamp, 0.0, size / 2, size / 2);
+        uint32_t cx = (uint32_t)(size / 2);
+        uint32_t cy = (uint32_t)(size / 2);
+        uint32_t w = imgtmpamp.md->size[0];
+        imgtmpamp.im->array.F[cy * w + cx] = 0.0f;
     }
 
     mk_complex_from_amph("tmpamp", "tmppha1", "tmpc", 0);
@@ -402,145 +464,97 @@ static void dmturb_validate() {
     if (turbseedsize_ptr && *turbseedsize_ptr == 0) *turbseedsize_ptr = 1024;
 }
 
-#ifndef FPS_STANDALONE
+
+/* ================================================================
+ * 5.  BINDINGS, FARG, AND CLI DATA
+ * ============================================================= */
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+
+static const int nb_bindings =
+    sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
 static CLICMDARGDEF farg[] = {
-    { CLIARG_ONOFF, ".turbON", "turbulence on/off (off=freeze)", "ON", CLIARG_HIDDEN_DEFAULT, (void **) &turbON_ptr, (long*)&fpi_turbON },
-    { CLIARG_ONOFF, ".turbZERO", "turbulence zero", "OFF", CLIARG_HIDDEN_DEFAULT, (void **) &turbZERO_ptr, (long*)&fpi_turbZERO },
-    { CLIARG_ONOFF, ".seedZERO", "set seed pos to zero", "OFF", CLIARG_HIDDEN_DEFAULT, (void **) &seedZERO_ptr, (long*)&fpi_seedZERO },
-    { CLIARG_STREAM, ".dmstream", "output DM turbulence stream", "dm00disp09", CLIARG_VISIBLE_DEFAULT, (void **) &dmstream_ptr, (long*)&fpi_dmstream },
-    { CLIARG_FLOAT32, ".DMpixscale", "DM pixel scale [m/pix]", "0.2", CLIARG_HIDDEN_DEFAULT, (void **) &DMpixscale_ptr, (long*)&fpi_DMpixscale },
-    { CLIARG_FLOAT32, ".wspeed", "wind speed [m/s]", "10.0", CLIARG_HIDDEN_DEFAULT, (void **) &turbwspeed_ptr, (long*)&fpi_turbwspeed },
-    { CLIARG_FLOAT32, ".wangle", "wind angle [rad]", "1.2", CLIARG_HIDDEN_DEFAULT, (void **) &turbwangle_ptr, (long*)&fpi_turbwangle },
-    { CLIARG_FLOAT32, ".ampl", "amplitude across aperture [um]", "0.2", CLIARG_HIDDEN_DEFAULT, (void **) &turbampl_ptr, (long*)&fpi_turbampl },
-    { CLIARG_ONOFF, ".turbseed.comp", "(re)compute turbulence seed screen", "OFF", CLIARG_HIDDEN_DEFAULT, (void **) &compTurbSeed_ptr, (long*)&fpi_compTurbSeed },
-    { CLIARG_UINT32, ".turbseed.size", "screen seed size", "1024", CLIARG_HIDDEN_DEFAULT, (void **) &turbseedsize_ptr, (long*)&fpi_turbseedsize },
-    { CLIARG_FLOAT32, ".turbseed.pixscale", "screen pixel scale [m/pix]", "0.1", CLIARG_HIDDEN_DEFAULT, (void **) &turbseedpixscale_ptr, (long*)&fpi_turbseedpixscale },
-    { CLIARG_FLOAT32, ".turbseed.innerscale", "screen inner scale [m]", "0.01", CLIARG_HIDDEN_DEFAULT, (void **) &turbseedinnerscale_ptr, (long*)&fpi_turbseedinnerscale },
-    { CLIARG_FLOAT32, ".turbseed.outerscale", "screen outer scale [m]", "20", CLIARG_HIDDEN_DEFAULT, (void **) &turbseedouterscale_ptr, (long*)&fpi_turbseedouterscale }
+    FPS_PARAMS(FPS_X_FARG)
 };
 
-static CLICMDDATA CLIcmddata = { 
-    "dmturb", "DM turbulence", "", 
-    sizeof(farg) / sizeof(CLICMDARGDEF), farg, 
-    CLICMDFLAG_FPS, NULL, NULL, NULL 
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
 };
 
-static errno_t customCONFsetup() {
-    if(data.fpsptr != NULL) {
-        data.fpsptr->parray[fpi_turbON].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_turbZERO].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_seedZERO].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_dmstream].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
-        data.fpsptr->parray[fpi_turbwspeed].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_turbwangle].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_turbampl].fpflag |= FPFLAG_WRITERUN;
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
     }
-    return RETURN_SUCCESS;
 }
 
-static errno_t customCONFcheck() {
-    if(data.fpsptr != NULL) check_recompute_seed();
-    return RETURN_SUCCESS;
-}
 
-static errno_t help_function() {
-    return RETURN_SUCCESS;
-}
+/* ================================================================
+ * 6.  COMPUTE WRAPPER
+ * ============================================================= */
 
-static errno_t compute_function() {
+static errno_t compute_function()
+{
     DMTURB_STATE *state = dmturb_init();
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
-    dmturb_step(processinfo, data.fpsptr, state);
+    dmturb_step(processinfo, data.fpsptr,
+                state);
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
     dmturb_cleanup(state);
     return RETURN_SUCCESS;
 }
 
-#define INSERT_STD_FPSCONFfunction_local                                       \
-    static errno_t FPSCONFfunction()                                           \
-    {                                                                          \
-        FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);                       \
-        if (CLIcmddata.flags & CLICMDFLAG_PROCINFO)                            \
-        {                                                                      \
-            fps_add_processinfo_entries(&fps);                                 \
-        }                                                                      \
-        data.fpsptr = &fps;                                                    \
-        CMDargs_to_FPSparams_create(&fps);                                     \
-        if (CLIcmddata.FPS_customCONFsetup != NULL)                            \
-        {                                                                      \
-            CLIcmddata.FPS_customCONFsetup();                                  \
-        }                                                                      \
-        FPS_CONFLOOP_START                                                     \
-        if (CLIcmddata.FPS_customCONFcheck != NULL)                            \
-            CLIcmddata.FPS_customCONFcheck();                                  \
-        FPS_CONFLOOP_END                                                       \
-        data.fpsptr = NULL;                                                    \
-        return RETURN_SUCCESS;                                                 \
-    }
 
-INSERT_STD_FPSCONFfunction_local
-INSERT_STD_FPSRUNfunction
-INSERT_STD_FPSCLIfunction
+/* ================================================================
+ * 7.  MILK MODULE REGISTRATION
+ * ============================================================= */
 
-errno_t CLIADDCMD_AOloopControl_DM__atmturbulence() {
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
+
+errno_t
+CLIADDCMD_AOloopControl_DM__atmturbulence()
+{
+    safe_fps_fill_farg_examples(
+        farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
     return RETURN_SUCCESS;
 }
-
 #endif
 
+
+/* ================================================================
+ * 8.  STANDALONE ENTRY POINT
+ * ============================================================= */
+
 #ifdef FPS_STANDALONE
-
-int FPSINIT_AOloopControl_DM_atmturbulence(const char *fps_name, const char *keywords, const char *description) {
-    FUNCTION_PARAMETER_STRUCT fps;
-    FPS_INIT_STD_PREAMBLE(fps, fps_name, keywords, description, "DM Turbulence");
-    FPS_INIT_PROCINFO_DEFAULTS(fps, "dm00disp09", 10);
-    #define X_FPS_INIT(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...) \
-    { \
-        if(fps_type == FPTYPE_FLOAT32) { float val = (float)atof(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); } \
-        else if(fps_type == FPTYPE_UINT32) { uint32_t val = (uint32_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); } \
-        else if(fps_type == FPTYPE_UINT64) { uint64_t val = (uint64_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); } \
-        else if(fps_type == FPTYPE_STREAMNAME) { char val[FUNCTION_PARAMETER_STRMAXLEN]; strncpy(val, def_str, FUNCTION_PARAMETER_STRMAXLEN-1); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, val, NULL); } \
-        else if(fps_type == FPTYPE_STRING) { char val[FUNCTION_PARAMETER_STRMAXLEN]; strncpy(val, def_str, FUNCTION_PARAMETER_STRMAXLEN-1); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, val, NULL); } \
-        else { function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, NULL, NULL); } \
-    }
-    DMTURB_PARAMS(X_FPS_INIT)
-    #undef X_FPS_INIT
-    
-    fps_add_processinfo_entries(&fps); function_parameter_FPCONFexit(&fps); return 0;
-}
-
-#define X_FPS_MAP(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...) \
-            ptr_name = (c_type)functionparameter_##get_func(&fps, key);
-
-int FPSCONF_AOloopControl_DM_atmturbulence(const char *fps_name, int loop) {
-    FPS_CONF_STD_BODY(fps_name, loop, { DMTURB_PARAMS(X_FPS_MAP) }, { dmturb_validate(); check_recompute_seed(); });
-    return 0;
-}
-FPS_MAKE_STANDALONE_CONFSTOP(AOloopControl_DM_atmturbulence)
-FPS_MAKE_STANDALONE_RUNSTOP(AOloopControl_DM_atmturbulence)
-
-int FPSRUN_AOloopControl_DM_atmturbulence(const char *fps_name) {
-    FUNCTION_PARAMETER_STRUCT fps;
-    FPS_RUN_STD_PREAMBLE(fps_name, fps, { DMTURB_PARAMS(X_FPS_MAP) });
-    
-    DMTURB_STATE *state = dmturb_init();
-    PROCESSINFO *pinfo;
-    FPS_RUN_PROCESSINFO_SETUP(pinfo, fps_name, "Run", "Looping", state->imgDM.im, fps);
-    
-    while(processinfo_loopstep(pinfo)) {
-        processinfo_exec_start(pinfo);
-        dmturb_step(pinfo, &fps, state);
-        processinfo_exec_end(pinfo);
-        usleep(100); 
-    }
-    
-    dmturb_cleanup(state);
-    processinfo_cleanExit(pinfo); function_parameter_struct_disconnect(&fps); return 0;
-}
-
-FPS_MAIN_STANDALONE("dmturb", AOloopControl_DM_atmturbulence, "DM Turbulence", DMTURB_PARAMS)
+FPS_MAIN_STANDALONE_V2(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function)
 #endif

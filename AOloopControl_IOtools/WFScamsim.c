@@ -64,7 +64,7 @@ static CLICMDARGDEF farg[] =
         ".wfssignal",
         "Wavefront sensor input signal",
         "aol9_wfssignal",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &wfssignal_in,
         &fpi_wfssignal_in
     },
@@ -73,7 +73,7 @@ static CLICMDARGDEF farg[] =
         ".wfscamim",
         "Wavefront sensor ouput image",
         "aol9_wfsim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &wfsim_out,
         &fpi_wfsim_out
     },
@@ -82,7 +82,7 @@ static CLICMDARGDEF farg[] =
         ".compdarkadd",
         "subtract dark",
         "1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &compdarkadd,
         &fpi_compdarkadd
     },
@@ -91,7 +91,7 @@ static CLICMDARGDEF farg[] =
         ".camdark",
         "camera dark frame",
         "aol9_wfsdark",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &wfsdark,
         &fpi_wfsdark
     },
@@ -100,7 +100,7 @@ static CLICMDARGDEF farg[] =
         ".fluxtotal",
         "total output flux [phe-], <0 if no scaling",
         "1000.0",
-        CLIARG_OUTPUT_DEFAULT,
+        FPFLAG_DEFAULT_OUTPUT,
         (void **) &fluxtotal,
         &fpi_fluxtotal
     },
@@ -109,7 +109,7 @@ static CLICMDARGDEF farg[] =
         ".camgain",
         "camera gain [e- / ADU]",
         "2.0",
-        CLIARG_OUTPUT_DEFAULT,
+        FPFLAG_DEFAULT_OUTPUT,
         (void **) &camgain,
         &fpi_camgain
     },
@@ -118,7 +118,7 @@ static CLICMDARGDEF farg[] =
         ".compphnoise",
         "compute photon noise",
         "1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &compphnoise,
         &fpi_compphnoise
     },
@@ -127,7 +127,7 @@ static CLICMDARGDEF farg[] =
         ".camRON",
         "camera readout noise [e-] (neg = 0)",
         "-1.0",
-        CLIARG_OUTPUT_DEFAULT,
+        FPFLAG_DEFAULT_OUTPUT,
         (void **) &camRON,
         &fpi_camRON
     }
@@ -191,8 +191,8 @@ static errno_t compute_function()
     IMGID wfssignalimg = imgid_make_from_name(wfssignal_in);
     resolveIMGID(&wfssignalimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
-    uint32_t sizexWFS = wfssignalimg.size[0];
-    uint32_t sizeyWFS = wfssignalimg.size[1];
+    uint32_t sizexWFS = wfssignalimg.md->size[0];
+    uint32_t sizeyWFS = wfssignalimg.md->size[1];
 
     uint64_t sizeWFS = (uint64_t) sizexWFS;
     sizeWFS *= sizeyWFS;
@@ -325,6 +325,11 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, wfsoutimg.im, NULL);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    imgid_free(&wfssignalimg);
+    imgid_free(&wfsdarkimg);
+    imgid_free(&imcamtmpimg);
+    imgid_free(&wfsoutimg);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;

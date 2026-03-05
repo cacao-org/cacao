@@ -63,3 +63,5 @@ install(PROGRAMS
 	DESTINATION bin)
 
 add_cacao_standalone(cacaopt-compRMsens compRMsensitivity.c)
+add_cacao_standalone(cacaopt-mlat mlat.c)
+target_link_libraries(cacao-fpsexec-cacaopt-mlat PUBLIC milkstatistic)

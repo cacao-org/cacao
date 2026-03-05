@@ -100,7 +100,7 @@ static CLICMDARGDEF farg[] =
         ".RMmodesDM",
         "input response matrix DM modes",
         "RMmodesDM.fits",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &RMmodesDMfname,
         &fpi_RMmodesDMfname
     },
@@ -110,7 +110,7 @@ static CLICMDARGDEF farg[] =
         ".RMmodesWFS",
         "input response matrix WFS modes",
         "RMmodesWFS.fits",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &RMmodesWFSfname,
         &fpi_RMmodesWFSfname
     },
@@ -120,7 +120,7 @@ static CLICMDARGDEF farg[] =
         ".dmmask",
         "DM mask for normalization",
         "dmmask.fits",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &DMmaskfname,
         &fpi_DMmaskfname
     },
@@ -130,7 +130,7 @@ static CLICMDARGDEF farg[] =
         ".wfsmask",
         "WFS mask for normalization",
         "wfsmask.fits",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &WFSmaskfname,
         &fpi_WFSmaskfname
     },
@@ -140,7 +140,7 @@ static CLICMDARGDEF farg[] =
         ".CMmodesDM",
         "output control matrix DM modes",
         "CMmodesDM",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &CMmodesDMfname,
         &fpi_CMmodesDMfname
     },
@@ -150,7 +150,7 @@ static CLICMDARGDEF farg[] =
         ".CMmodesWFS",
         "output control matrix WFS modes",
         "CMmodesWFS",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &CMmodesWFSfname,
         &fpi_CMmodesWFSfname
     },
@@ -160,7 +160,7 @@ static CLICMDARGDEF farg[] =
         ".svdlim",
         "SVD limit",
         "0.01",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &svdlim,
         &fpi_svdlim
     },
@@ -170,7 +170,7 @@ static CLICMDARGDEF farg[] =
         ".GPUdevice",
         "GPU device, 99 for CPU",
         "-1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &GPUdevice,
         &fpi_GPUdevice
     }

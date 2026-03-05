@@ -63,7 +63,7 @@ static CLICMDARGDEF farg[] =
         ".zrespM",
         "input zonal WFS RM",
         "zrespWFS",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &zrespWFS,
         &fpi_zrespWFS
     },
@@ -73,7 +73,7 @@ static CLICMDARGDEF farg[] =
         ".dmxsize",
         "DM x size",
         "50",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &dmxsize,
         &fpi_dmxsize
     },
@@ -83,7 +83,7 @@ static CLICMDARGDEF farg[] =
         ".dmysize",
         "DM y size",
         "50",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &dmysize,
         &fpi_dmysize
     },
@@ -93,7 +93,7 @@ static CLICMDARGDEF farg[] =
         ".dmmask.perc0",
         "DM mask percentile 0",
         "0.2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &dmmaskperc0,
         &fpi_dmmaskperc0
     },
@@ -103,7 +103,7 @@ static CLICMDARGDEF farg[] =
         ".dmmask.coeff0",
         "DM mask coefficient 0",
         "0.5",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &dmmaskcoeff0,
         &fpi_dmmaskcoeff0
     },
@@ -113,7 +113,7 @@ static CLICMDARGDEF farg[] =
         ".dmmask.perc1",
         "DM mask percentile 1",
         "0.8",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &dmmaskperc1,
         &fpi_dmmaskperc1
     },
@@ -123,7 +123,7 @@ static CLICMDARGDEF farg[] =
         ".dmmask.coeff1",
         "DM mask coefficient 1",
         "0.5",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &dmmaskcoeff1,
         &fpi_dmmaskcoeff1
     },
@@ -133,7 +133,7 @@ static CLICMDARGDEF farg[] =
         ".wfsmask.perc0",
         "WFS mask percentile 0",
         "0.2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &wfsmaskperc0,
         &fpi_wfsmaskperc0
     },
@@ -143,7 +143,7 @@ static CLICMDARGDEF farg[] =
         ".wfsmask.coeff0",
         "WFS mask coefficient 0",
         "0.5",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &wfsmaskcoeff0,
         &fpi_wfsmaskcoeff0
     },
@@ -153,7 +153,7 @@ static CLICMDARGDEF farg[] =
         ".wfsmask.perc1",
         "WFS mask percentile 1",
         "0.8",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &wfsmaskperc1,
         &fpi_wfsmaskperc1
     },
@@ -163,7 +163,7 @@ static CLICMDARGDEF farg[] =
         ".wfsmask.coeff1",
         "WFS mask coefficient 1",
         "0.5",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &wfsmaskcoeff1,
         &fpi_wfsmaskcoeff1
     }

@@ -1,15 +1,5 @@
-#include "ImageStreamIO/ImageStruct.h"
-/**
- * @file    mlat.c
- * @brief   measure hardware latency
- *
- * Measure latency between DM and WFS
- *
- *
- */
 
 #include <math.h>
-
 #include <time.h>
 
 #include "CommandLineInterface/CLIcore.h"
@@ -19,283 +9,159 @@
 #include "COREMOD_tools/COREMOD_tools.h" // quicksort
 #include "statistic/statistic.h"         // ran1()
 
-// Local variables pointers
-static char *dmstream;
-long         fpi_dmstream;
 
-static char *wfsstream;
-long         fpi_wfsstream;
+/* ================================================================
+ * 1.  FPS COMPONENT IDENTITY
+ * ============================================================= */
 
-static float *frameratewait;
-long          fpi_frameratewait;
-
-static float *OPDamp;
-long          fpi_OPDamp;
-
-static char *pokemap;
-long         fpi_pokemap;
-
-static float *CPA;
-long          fpi_CPA;
-
-static uint32_t *NBiter;
-long             fpi_NBiter;
-
-static uint32_t *wfsNBframemax;
-long             fpi_wfsNBframemax;
-
-static float *wfsdt;
-long          fpi_wfsdt;
-
-static float *twaitus;
-long          fpi_twaitus;
-
-static float *refdtoffset;
-long          fpi_refdtoffset;
-
-static float *dtoffset;
-long          fpi_dtoffset;
-
-static float *framerateHz;
-long          fpi_framerateHz;
-
-static float *latencyfr;
-long          fpi_latencyfr;
-
-static int64_t *saveraw;
-long            fpi_saveraw;
-
-static int64_t *saveseq;
-long            fpi_saveseq;
-
-static uint32_t *seqNBframe;
-long             fpi_seqNBframe;
-
-static float *seqdtframe;
-long          fpi_seqdtframe;
-
-
-
-static CLICMDARGDEF farg[] = {{
-        CLIARG_STREAM,
-        ".dmstream",
-        "DM stream",
-        "null",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &dmstream,
-        &fpi_dmstream
-    },
-    {
-        CLIARG_STREAM,
-        ".wfsstream",
-        "WFS stream",
-        "null",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &wfsstream,
-        &fpi_wfsstream
-    },
-    {
-        CLIARG_FLOAT32,
-        ".OPDamp",
-        "poke amplitude [um]",
-        "0.1",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &OPDamp,
-        &fpi_OPDamp
-    },
-    {
-        CLIARG_STREAM,
-        ".pokemap",
-        "optional DM poke map, use if exists",
-        "null",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &pokemap,
-        &fpi_pokemap
-    },
-    {
-        CLIARG_FLOAT32,
-        ".CPA",
-        "Cycles/aperture [float]",
-        "20",
-        CLIARG_VISIBLE_DEFAULT,
-        (void **) &CPA,
-        &fpi_CPA
-    },
-    {
-        CLIARG_FLOAT32,
-        ".frameratewait",
-        "time period for frame rate measurement",
-        "5",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &frameratewait,
-        &fpi_frameratewait
-    },
-    {
-        CLIARG_UINT32,
-        ".NBiter",
-        "Number of iteration",
-        "100",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &NBiter,
-        &fpi_NBiter
-    },
-    {
-        CLIARG_UINT32,
-        ".wfsNBframemax",
-        "Number frames in measurement sequence",
-        "50",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &wfsNBframemax,
-        &fpi_wfsNBframemax
-    },
-    {
-        CLIARG_FLOAT32,
-        ".status.wfsdt",
-        "WFS frame interval",
-        "0",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &wfsdt,
-        &fpi_wfsdt
-    },
-    {
-        CLIARG_FLOAT32,
-        ".status.twaitus",
-        "initial wait [us]",
-        "0",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &twaitus,
-        &fpi_twaitus
-    },
-    {
-        CLIARG_FLOAT32,
-        ".status.refdtoffset",
-        "baseline time offset to poke",
-        "0",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &refdtoffset,
-        &fpi_refdtoffset
-    },
-    {
-        CLIARG_FLOAT32,
-        ".status.dtoffset",
-        "actual time offset to poke",
-        "0",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &dtoffset,
-        &fpi_dtoffset
-    },
-    {
-        CLIARG_FLOAT32,
-        ".out.framerateHz",
-        "WFS frame rate [Hz]",
-        "0",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &framerateHz,
-        &fpi_framerateHz
-    },
-    {
-        CLIARG_FLOAT32,
-        ".out.latencyfr",
-        "hardware latency [frame]",
-        "0",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &latencyfr,
-        &fpi_latencyfr
-    },
-    {
-        CLIARG_ONOFF,
-        ".option.saveraw",
-        "Save raw image cubes",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &saveraw,
-        &fpi_saveraw
-    },
-    {
-        CLIARG_ONOFF,
-        ".option.saveseq",
-        "Save sequence image cube",
-        "0",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &saveseq,
-        &fpi_saveseq
-    },
-    {
-        CLIARG_UINT32,
-        ".option.seqNBframe",
-        "Number of frames in seq cube",
-        "100",
-        CLIARG_HIDDEN_DEFAULT,
-        (void **) &seqNBframe,
-        &fpi_seqNBframe
-    },
-    {
-        CLIARG_FLOAT32,
-        ".option.seqdtfr",
-        "seq cube time resolution [fr]",
-        "0.1",
-        CLIARG_OUTPUT_DEFAULT,
-        (void **) &seqdtframe,
-        &fpi_seqdtframe
-    }
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "mlat",
+    .cmdkey      = "mlat",
+    .description = "measure latency between DM and WFS"
 };
 
 
+/* ================================================================
+ * 2.  LOCAL PARAMETER VARIABLES
+ * ============================================================= */
 
-// Optional custom configuration setup.
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
-    if(data.fpsptr != NULL)
-    {
-        data.fpsptr->parray[fpi_dmstream].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
-        data.fpsptr->parray[fpi_wfsstream].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+static char     *dmstream       = NULL;
+static char     *wfsstream      = NULL;
+static float    *frameratewait  = NULL;
+static float    *OPDamp         = NULL;
+static char     *pokemap        = NULL;
+static float    *CPA            = NULL;
+static uint32_t *NBiter         = NULL;
+static uint32_t *wfsNBframemax  = NULL;
+static float    *wfsdt          = NULL;
+static float    *twaitus        = NULL;
+static float    *refdtoffset    = NULL;
+static float    *dtoffset       = NULL;
+static float    *framerateHz    = NULL;
+static float    *latencyfr      = NULL;
+static int64_t  *saveraw        = NULL;
+static int64_t  *saveseq        = NULL;
+static uint32_t *seqNBframe     = NULL;
+static float    *seqdtframe     = NULL;
 
-        data.fpsptr->parray[fpi_saveraw].fpflag |= FPFLAG_WRITERUN;
-    }
 
-    return RETURN_SUCCESS;
-}
+/* ================================================================
+ * 3.  UNIFIED PARAMETER TABLE (X-Macro)
+ * ============================================================= */
 
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
+#define FPS_PARAMS(X) \
+    X(".dmstream", &dmstream, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "DM stream") \
+    X(".wfsstream", &wfsstream, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "WFS stream") \
+    X(".OPDamp", &OPDamp, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "poke amplitude [um]") \
+    X(".pokemap", &pokemap, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "optional DM poke map") \
+    X(".CPA", &CPA, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Cycles/aperture [float]") \
+    X(".frameratewait", &frameratewait, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "time for frame rate measurement") \
+    X(".NBiter", &NBiter, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Number of iteration") \
+    X(".wfsNBframemax", &wfsNBframemax, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Number frames in meas sequence") \
+    X(".status.wfsdt", &wfsdt, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "WFS frame interval") \
+    X(".status.twaitus", &twaitus, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "initial wait [us]") \
+    X(".status.refdtoffset", &refdtoffset, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "baseline time offset to poke") \
+    X(".status.dtoffset", &dtoffset, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "actual time offset to poke") \
+    X(".out.framerateHz", &framerateHz, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "WFS frame rate [Hz]") \
+    X(".out.latencyfr", &latencyfr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "hardware latency [frame]") \
+    X(".option.saveraw", &saveraw, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Save raw image cubes") \
+    X(".option.saveseq", &saveseq, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Save sequence image cube") \
+    X(".option.seqNBframe", &seqNBframe, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Number of frames in seq cube") \
+    X(".option.seqdtfr", &seqdtframe, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_OUTPUT, \
+      "seq cube time resolution [fr]")
 
-    if(data.fpsptr != NULL)
-    {}
 
-    return RETURN_SUCCESS;
-}
+/* ================================================================
+ * 5.  BINDINGS, FARG, AND CLI DATA
+ * ============================================================= */
 
-static CLICMDDATA CLIcmddata =
-{
-    "mlat", "measure latency between DM and WFS", CLICMD_FIELDS_DEFAULTS
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
 
+static const int nb_bindings =
+    sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
 
-// detailed help
-static errno_t help_function()
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "", "", CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
 {
-    printf("Measure latency between two streams\n");
-
-    printf(
-        "Convention\n"
-        "Latency is defined haere as the time offset between:\n"
-        "- Time at which input stream is perturbed\n"
-        "- Average arrival time between the two output frames experiencing the maximum change\n"
-        "\n"
-        "For example, if the output stream is a camera with full duty cycle (frame rate = 1/ exposure time),\n"
-        "and there is no delay between the input and output spaces,\n"
-        "then the latency will be 0.5 frame, capturing only the 1/2 frame latency inherent to the output temporal sampling\n"
-    );
-
-    return RETURN_SUCCESS;
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
 }
 
 
@@ -337,7 +203,7 @@ static errno_t compute_function()
         create_image_ID("_testwfsc",
                         3,
                         naxes,
-                        imgwfs.datatype,
+                        imgwfs.md->datatype,
                         0,
                         0,
                         0,
@@ -650,18 +516,17 @@ static errno_t compute_function()
                     wfscnt0 = imgwfs.md->cnt0;
 
 
-                    // Copy output (WFS) image to storage cube, into slide # wfsframe
-                    //
-                    wfsslice = 0;
-                    int   datatype_size = ImageStreamIO_typesize(imgwfs.datatype);
-                    char *ptr0          = ImageStreamIO_get_image_d_ptr(imgwfs.im);
-                    ptr0 += datatype_size * wfsslice * wfssize;
-
-                    char *ptr = ImageStreamIO_get_image_d_ptr(&data.image[IDwfsc]);
-                    ptr += datatype_size * wfsframe * wfssize;
-
-                    memcpy(ptr, ptr0, datatype_size * wfssize);
-
+                                    // Copy output (WFS) image to storage cube, into slide # wfsframe
+                                    //
+                                    wfsslice = 0;
+                                    int   datatype_size = ImageStreamIO_typesize(imgwfs.md->datatype);
+                                    char *ptr0          = ImageStreamIO_get_image_d_ptr(imgwfs.im);
+                                    ptr0 += datatype_size * wfsslice * wfssize;
+                    
+                                    char *ptr = ImageStreamIO_get_image_d_ptr(&data.image[IDwfsc]);
+                                    ptr += datatype_size * wfsframe * wfssize;
+                    
+                                    memcpy(ptr, ptr0, datatype_size * wfssize);
                     // Record time
                     // store in dtarray
                     //
@@ -738,7 +603,8 @@ static errno_t compute_function()
                 dmstate = 0;
 
 
-                if(data.fpsptr->parray[fpi_saveraw].fpflag & FPFLAG_ONOFF)
+                if(functionparameter_GetParamValue_ONOFF(
+                    data.fpsptr, ".option.saveraw") == 1)
                 {
                     // Save each datacube
                     //
@@ -787,7 +653,7 @@ static errno_t compute_function()
                 {
                     valarray[kk] = 0.0;
 
-                    switch(imgwfs.datatype)
+                    switch(imgwfs.md->datatype)
                     {
                     case _DATATYPE_FLOAT:
                         IMAGE_SUMMING_CASE(F);
@@ -929,7 +795,8 @@ static errno_t compute_function()
             }
             // Save imgdiffseq
             //
-            if(data.fpsptr->parray[fpi_saveseq].fpflag & FPFLAG_ONOFF)
+            if(functionparameter_GetParamValue_ONOFF(
+                    data.fpsptr, ".option.saveseq") == 1)
             {
                 char ffnameC[STRINGMAXLEN_FULLFILENAME];
                 WRITE_FULLFILENAME(ffnameC,
@@ -1098,22 +965,46 @@ static errno_t compute_function()
 
     free(diffseqkkcnt);
 
+    imgid_free(&imgdm);
+    imgid_free(&imgwfs);
+    imgid_free(&imgpokemap);
+    imgid_free(&imgdiffseq);
+
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
+/* ================================================================
+ * 7.  MILK MODULE REGISTRATION
+ * ============================================================= */
 
-INSERT_STD_FPSCLIfunctions
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
-
-// Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_perfTest__mlat()
 {
-
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+    safe_fps_fill_farg_examples(
+        farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
-
     return RETURN_SUCCESS;
 }
+#endif
+
+
+/* ================================================================
+ * 8.  STANDALONE ENTRY POINT
+ * ============================================================= */
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function)
+#endif

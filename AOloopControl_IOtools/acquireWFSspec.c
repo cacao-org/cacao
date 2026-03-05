@@ -41,7 +41,7 @@ static CLICMDARGDEF farg[] =
         ".wfsin",
         "Wavefront sensor input",
         "wfsin",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &input_shm_name,
         &fpi_inputshmname
     },
@@ -50,7 +50,7 @@ static CLICMDARGDEF farg[] =
         ".wfsmask",
         "wfs spectral extraction mask",
         "wfsspecmask",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &specmask_shm_name,
         &fpi_specmaskshmname
     },
@@ -59,7 +59,7 @@ static CLICMDARGDEF farg[] =
         ".binning",
         "spectral trace binning",
         "1",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &binning,
         &fpi_binning
     },
@@ -68,7 +68,7 @@ static CLICMDARGDEF farg[] =
         ".AOloopindex",
         "loop index",
         "0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &AOloopindex,
         &fpi_AOloopindex
     },
@@ -77,7 +77,7 @@ static CLICMDARGDEF farg[] =
         ".semindex",
         "input semaphore index",
         "1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &semindex,
         &fpi_semindex
     },
@@ -86,7 +86,7 @@ static CLICMDARGDEF farg[] =
         ".comp.darksub",
         "sub aolX_wfsdark -> imWFS0",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &compWFSsubdark,
         &fpi_compWFSsubdark
     },
@@ -95,7 +95,7 @@ static CLICMDARGDEF farg[] =
         ".comp.WFSnormalize",
         "normalize WFS frames -> imWFS1",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &compWFSnormalize,
         &fpi_compWFSnormalize
     },
@@ -104,7 +104,7 @@ static CLICMDARGDEF farg[] =
         ".comp.WFSrefsub",
         "subtract WFS reference aolX_wfsref -> imWFS2",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &compWFSrefsub,
         &fpi_compWFSrefsub
     },
@@ -157,15 +157,15 @@ static errno_t extract_traces(
 {
     DEBUG_TRACE_FSTART();
 
-    uint32_t sizeWFSx = wfsin.size[0];
-    uint32_t sizeWFSy = wfsin.size[1];
+    uint32_t sizeWFSx = wfsin.md->size[0];
+    uint32_t sizeWFSy = wfsin.md->size[1];
     uint64_t sizeWFSraw  = sizeWFSx * sizeWFSy;
 
     uint32_t sizeWFSoutx = sizeWFSx / binning;
 
     uint8_t  WFSatype = wfsin.md->datatype;
 
-    uint32_t numtraces = specmask.size[2];
+    uint32_t numtraces = specmask.md->size[2];
     uint64_t sizeWFSout  = sizeWFSoutx * numtraces;
 
     for(uint32_t k = 0; k < numtraces; k++)
@@ -221,7 +221,7 @@ static errno_t dark_sub(
 )
 {
     uint8_t  darkWFSatype = wfsdark.md->datatype;
-    uint64_t sizeWFS = wfsin.size[0] * wfsin.size[1];
+    uint64_t sizeWFS = wfsin.md->size[0] * wfsin.md->size[1];
 
     // dark subtraction
     for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
@@ -249,6 +249,7 @@ static errno_t dark_sub(
             break;
         }
     }
+    return RETURN_SUCCESS;
 }
 
 static errno_t spec_norm(
@@ -257,8 +258,8 @@ static errno_t spec_norm(
 )
 {
     uint32_t j;
-    uint32_t sizeWFSx = wfsin.size[0];
-    uint32_t numtraces = wfsin.size[1];
+    uint32_t sizeWFSx = wfsin.md->size[0];
+    uint32_t numtraces = wfsin.md->size[1];
 
     for(uint_fast32_t i = 0; i < sizeWFSx; i++)
     {
@@ -278,6 +279,7 @@ static errno_t spec_norm(
                                                    normval;
         }
     }
+    return RETURN_SUCCESS;
 }
 
 static errno_t compute_function()
@@ -287,14 +289,14 @@ static errno_t compute_function()
     IMGID wfsin = imgid_make_from_name(input_shm_name); // input raw wfs image
     resolveIMGID(&wfsin, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
-    uint32_t sizeWFSx = wfsin.size[0];
-    uint32_t sizeWFSy = wfsin.size[1];
+    uint32_t sizeWFSx = wfsin.md->size[0];
+    uint32_t sizeWFSy = wfsin.md->size[1];
     uint64_t sizeWFSraw  = sizeWFSx * sizeWFSy;
     uint8_t  WFSatype = wfsin.md->datatype;
 
     IMGID specmask = imgid_make_from_name(specmask_shm_name);
     resolveIMGID(&specmask, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
-    uint32_t numtraces = specmask.size[2];
+    uint32_t numtraces = specmask.md->size[2];
     uint64_t sizeWFS  = sizeWFSx * numtraces;
     uint32_t sizeWFSoutx = sizeWFSx / *binning;
 
@@ -426,6 +428,15 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, imgimWFS2.im, NULL);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    imgid_free(&wfsin);
+    imgid_free(&specmask);
+    imgid_free(&imgimWFSm);
+    imgid_free(&imgimWFS0);
+    imgid_free(&imgimWFS1);
+    imgid_free(&imgimWFS2);
+    imgid_free(&imgwfsref);
+    imgid_free(&imgWFSdark);
 
     DEBUG_TRACE_FEXIT();
 

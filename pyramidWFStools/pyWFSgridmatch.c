@@ -62,7 +62,7 @@ static CLICMDARGDEF farg[] =
         ".in_name",
         "input image",
         "im1",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &inimname,
         NULL
     },
@@ -71,7 +71,7 @@ static CLICMDARGDEF farg[] =
         ".spotsize",
         "spot size",
         "3.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &spotsize,
         &fpi_spotsize
     },
@@ -80,7 +80,7 @@ static CLICMDARGDEF farg[] =
         ".dmxsize",
         "DM x size",
         "50",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &dmxsize,
         &fpi_dmxsize
     },
@@ -89,7 +89,7 @@ static CLICMDARGDEF farg[] =
         ".dmysize",
         "DM y size",
         "50",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &dmysize,
         &fpi_dmysize
     }

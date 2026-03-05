@@ -42,7 +42,7 @@ static CLICMDARGDEF farg[] =
         ".inmodeC",
         "input modes",
         "inmodeC",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &inmodeC,
         &fpi_inmodeC
     },
@@ -51,7 +51,7 @@ static CLICMDARGDEF farg[] =
         ".maskim",
         "input mask",
         "maskim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &maskim,
         &fpi_maskim
     },
@@ -60,7 +60,7 @@ static CLICMDARGDEF farg[] =
         ".extmaskim",
         "extended input mask",
         "extmaskim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &extmaskim,
         &fpi_extmaskim
     },
@@ -69,7 +69,7 @@ static CLICMDARGDEF farg[] =
         ".outmodeC",
         "output modes",
         "outmodeC",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &outmodeC,
         &fpi_outmodeC
     },
@@ -78,7 +78,7 @@ static CLICMDARGDEF farg[] =
         ".edgeapo",
         "edge apodization strength",
         "1.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &edgeapo,
         NULL
     }

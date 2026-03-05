@@ -25,8 +25,8 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
     IMGID imgpixmdist = imgid_make_from_name("pmindist");
     imcreatelikewiseIMGID(&imgpixmdist, &imgmask);
 
-    uint32_t xsize  = imgmodes.size[0];
-    uint32_t ysize  = imgmodes.size[1];
+    uint32_t xsize  = imgmodes.md->size[0];
+    uint32_t ysize  = imgmodes.md->size[1];
     uint64_t xysize = ((uint64_t) xsize) * ysize;
 
     for(uint32_t ii = 0; ii < xsize; ii++)
@@ -66,7 +66,7 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
     // save_fits("pmindist", "pmindist.fits");
 
 
-    for(uint32_t kk = 0; kk < imgmodes.size[2]; kk++)
+    for(uint32_t kk = 0; kk < imgmodes.md->size[2]; kk++)
     {
         for(uint32_t ii = 0; ii < xsize; ii++)
         {
@@ -89,6 +89,7 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
     }
 
     delete_image(&imgpixmdist, ERRMODE_WARN);
+    imgid_free(&imgpixmdist);
 
 
     DEBUG_TRACE_FEXIT();

@@ -50,7 +50,7 @@ static CLICMDARGDEF farg[] = {
         ".selinput",
         "selection input (PSF)",
         "psfim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &selinput,
         NULL
     },
@@ -59,7 +59,7 @@ static CLICMDARGDEF farg[] = {
         ".wfsinput",
         "WFS input",
         "wfsim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &wfsinput,
         NULL
     },
@@ -68,7 +68,7 @@ static CLICMDARGDEF farg[] = {
         ".dminput",
         "DM input",
         "dmim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &dminput,
         NULL
     },
@@ -77,7 +77,7 @@ static CLICMDARGDEF farg[] = {
         ".optmode",
         "1 maxn, 2 maxf, 3 minf",
         "1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &optmode,
         NULL
     },
@@ -86,7 +86,7 @@ static CLICMDARGDEF farg[] = {
         ".selnormplaw",
         "selection norm power law",
         "1.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &selnormplaw,
         &fpi_selnormplaw
     }

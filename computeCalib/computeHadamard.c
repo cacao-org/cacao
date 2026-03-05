@@ -45,7 +45,7 @@ static CLICMDARGDEF farg[] =
         ".inmask",
         "pixel mask (0 and 1 vals)",
         "imm",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &inmask,
         &fpi_inmask
     },
@@ -54,7 +54,7 @@ static CLICMDARGDEF farg[] =
         ".outHcube",
         "output Hadamard cube",
         "Hcube",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &outHcube,
         &fpi_outHcube
     }

@@ -30,7 +30,7 @@ static CLICMDARGDEF farg[] =
         ".wfsin",
         "Wavefront sensor input",
         "wfsim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &wfsinsname,
         &fpi_wfsinsname
     },
@@ -39,7 +39,7 @@ static CLICMDARGDEF farg[] =
         ".map",
         "WFS mapping",
         "mapim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &mapsname,
         &fpi_mapsname
     },
@@ -48,7 +48,7 @@ static CLICMDARGDEF farg[] =
         ".wfsout",
         "Wavefront sensor output",
         "wfsim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &wfsoutsname,
         &fpi_wfsoutsname
     }
@@ -111,15 +111,15 @@ errno_t image_pixremap(
     {
         float eps = 1.0e-6;
 
-        //uint32_t *mapNBpix = (uint32_t *) malloc(sizeof(mapNBpix) * mapimg.size[2]);
-        printf("%u output pixels\n", mapimg.size[2]);
+        //uint32_t *mapNBpix = (uint32_t *) malloc(sizeof(mapNBpix) * mapimg.md->size[2]);
+        printf("%u output pixels\n", mapimg.md->size[2]);
 
 
         // scan map to count pixels
         mapNBpix = 0;
-        uint64_t xysize = (uint64_t) mapimg.size[0];
-        xysize *= mapimg.size[1];
-        for(uint64_t ii = 0; ii < mapimg.size[0]*mapimg.size[1]*mapimg.size[2]; ii++)
+        uint64_t xysize = (uint64_t) mapimg.md->size[0];
+        xysize *= mapimg.md->size[1];
+        for(uint64_t ii = 0; ii < (uint64_t)mapimg.md->size[0]*mapimg.md->size[1]*mapimg.md->size[2]; ii++)
         {
             if(fabs(mapimg.im->array.F[ii]) > eps)
             {
@@ -138,11 +138,11 @@ errno_t image_pixremap(
 
 
 
-        for(uint32_t kk = 0; kk < mapimg.size[2]; kk++)
+        for(uint32_t kk = 0; kk < mapimg.md->size[2]; kk++)
         {
-            for(uint64_t ii = 0; ii < mapimg.size[0]*mapimg.size[1]; ii++)
+            for(uint64_t ii = 0; ii < (uint64_t)mapimg.md->size[0]*mapimg.md->size[1]; ii++)
             {
-                uint64_t pixindex = kk * mapimg.size[0] * mapimg.size[1] + ii;
+                uint64_t pixindex = (uint64_t)kk * mapimg.md->size[0] * mapimg.md->size[1] + ii;
                 if(fabs(mapimg.im->array.F[pixindex]) > eps)
                 {
                     map_inpixindex[mappix] = ii;
@@ -160,10 +160,10 @@ errno_t image_pixremap(
         initialize = 0;
     }
 
-    DEBUG_TRACEPOINT("Initializing output array, size %u", mapimg.size[2]);
+    DEBUG_TRACEPOINT("Initializing output array, size %u", mapimg.md->size[2]);
 
-    double *tmpvarray = (double *) malloc(sizeof(double) * mapimg.size[2]);
-    for(uint32_t kk = 0; kk < mapimg.size[2]; kk++)
+    double *tmpvarray = (double *) malloc(sizeof(double) * mapimg.md->size[2]);
+    for(uint32_t kk = 0; kk < mapimg.md->size[2]; kk++)
     {
         tmpvarray[kk] = 0.0;
     }
@@ -171,7 +171,7 @@ errno_t image_pixremap(
     DEBUG_TRACEPOINT("Applying mapping, %lu pixels", mapNBpix);
 
 
-    switch(inimg.datatype)
+    switch(inimg.md->datatype)
     {
 
     case _DATATYPE_FLOAT :
@@ -250,7 +250,7 @@ errno_t image_pixremap(
 
     }
 
-    for(uint32_t kk = 0; kk < mapimg.size[2]; kk++)
+    for(uint32_t kk = 0; kk < mapimg.md->size[2]; kk++)
     {
         outimg.im->array.F[kk] = (float) tmpvarray[kk];
     }
@@ -284,7 +284,7 @@ static errno_t compute_function()
     resolveIMGID(&mapimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
 
-    uint32_t sizeout = mapimg.size[2];
+    uint32_t sizeout = mapimg.md->size[2];
 
     // Create output
     //
@@ -301,6 +301,10 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, wfsoutimg.im, NULL);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    imgid_free(&wfsinimg);
+    imgid_free(&mapimg);
+    imgid_free(&wfsoutimg);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;

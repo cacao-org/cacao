@@ -82,7 +82,7 @@ static CLICMDARGDEF farg[] =
         ".AOloopindex",
         "AO loop index",
         "0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &AOloopindex,
         NULL
     },
@@ -91,7 +91,7 @@ static CLICMDARGDEF farg[] =
         ".mvalDM",
         "input mode values - DM control",
         "aol0_mfiltt_mvalDM",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &mvalDM,
         &fpi_mvalDM
     },
@@ -100,7 +100,7 @@ static CLICMDARGDEF farg[] =
         ".mvalWFS",
         "output mode values to WFS",
         "aol0_mfiltt_mvalWFS",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &mvalWFS,
         &fpi_mvalWFS
     },
@@ -109,7 +109,7 @@ static CLICMDARGDEF farg[] =
         ".minPrate",
         "min phase rate [rad/tstep]",
         "0.1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &minPrate,
         &fpi_minPrate
     },
@@ -118,7 +118,7 @@ static CLICMDARGDEF farg[] =
         ".maxPrate",
         "max phase rate [rad/tstep]",
         "2.0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &maxPrate,
         &fpi_maxPrate
     },
@@ -130,7 +130,7 @@ static CLICMDARGDEF farg[] =
         ".noiseamp",
         "noise amplitude",
         "0.1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &noiseamp,
         &fpi_noiseamp
     },
@@ -142,7 +142,7 @@ static CLICMDARGDEF farg[] =
         ".multfact",
         "multiplicative factor",
         "0.99",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &multfact,
         &fpi_multfact
     },
@@ -152,7 +152,7 @@ static CLICMDARGDEF farg[] =
         ".WFSlatency",
         "WFS latency [frame]",
         "2.7",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &WFSlatency,
         &fpi_WFSlatency
     },
@@ -162,7 +162,7 @@ static CLICMDARGDEF farg[] =
         ".DMlatency",
         "DM latency [frame]",
         "0.8",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &DMlatency,
         &fpi_DMlatency
     }

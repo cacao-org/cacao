@@ -37,7 +37,7 @@ static CLICMDARGDEF farg[] =
         ".diffseqname",
         "input difference sequence cube",
         "diffseq",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &diffseqname,
         NULL
     },
@@ -46,7 +46,7 @@ static CLICMDARGDEF farg[] =
         ".outseq",
         "output time seq cube",
         "im0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &outseqname,
         NULL
     },
@@ -55,7 +55,7 @@ static CLICMDARGDEF farg[] =
         ".oversamp",
         "samples per frame exposure time",
         "10",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &oversamp,
         &fpi_oversamp
     },
@@ -64,7 +64,7 @@ static CLICMDARGDEF farg[] =
         ".nb0start",
         "samples set to zero at start",
         "10",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &nb0start,
         &fpi_nb0start
     },
@@ -73,7 +73,7 @@ static CLICMDARGDEF farg[] =
         ".nb0end",
         "samples set to zero at end",
         "30",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &nb0end,
         &fpi_nb0end
     }
@@ -117,9 +117,9 @@ errno_t mlat_diffseq_decode(
 
 
     // m: number of samples in diffseq
-    long xsize = inimg.size[0];
-    long ysize = inimg.size[1];
-    long zsize = inimg.size[2];
+    long xsize = inimg.md->size[0];
+    long ysize = inimg.md->size[1];
+    long zsize = inimg.md->size[2];
     long xysize = xsize * ysize;
 
     // output
@@ -314,7 +314,7 @@ errno_t mlat_diffseq_decode(
 
     if(0)
     {
-        long m = inimg.size[2];
+        long m = inimg.md->size[2];
         // n: number of samples in reconstructed seq
         long n = (m - 1) + 2 * samplingfactor; // - framezero_start - framezero_end;
 
@@ -406,7 +406,7 @@ errno_t mlat_diffseq_decode(
 
         double loopgain = 0.1;
 
-        IMGID imgrec  = imgid_make_from_name("recinput");
+        IMGID imgrec_alt  = imgid_make_from_name("recinput");
 
         IMGID imgres  = imgid_make_from_name("loopres");
         imgid_copy(&inimg, &imgres);
@@ -482,16 +482,16 @@ errno_t mlat_diffseq_decode(
 
             // Recompute input from solution
             //
-            computeSGEMM(*outimg, imgtmat, &imgrec, 0, 0, GPUdev);
+            computeSGEMM(*outimg, imgtmat, &imgrec_alt, 0, 0, GPUdev);
 
             // Residual = input - rec
 
             {
                 double resval = 0.0;
-                for(long ii = 0; ii < imgrec.md->size[0]*imgrec.md->size[1]*imgrec.md->size[2];
+                for(long ii = 0; ii < imgrec_alt.md->size[0]*imgrec_alt.md->size[1]*imgrec_alt.md->size[2];
                         ii++)
                 {
-                    double v = inimg.im->array.F[ii] - imgrec.im->array.F[ii];
+                    double v = inimg.im->array.F[ii] - imgrec_alt.im->array.F[ii];
                     imgres.im->array.F[ii] = v;
                     resval += v * v;
                 }
@@ -514,7 +514,16 @@ errno_t mlat_diffseq_decode(
                 }
             }
         }
+        imgid_free(&imgtmat);
+        imgid_free(&imgU);
+        imgid_free(&imgS);
+        imgid_free(&imgV);
+        imgid_free(&imgpsinv);
+        imgid_free(&imgrec_alt);
+        imgid_free(&imgres);
+        imgid_free(&imgoutres);
     }
+    imgid_free(&imgrec);
 
 
     DEBUG_TRACE_FEXIT();
@@ -553,6 +562,9 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, outimg.im, NULL);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    imgid_free(&inimg);
+    imgid_free(&outimg);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;

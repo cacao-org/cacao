@@ -30,7 +30,7 @@ static CLICMDARGDEF farg[] =
         ".inwf2D",
         "input 2D wavefront",
         "inwf2D",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &inWF2D,
         &fpi_inWF2D
     },
@@ -39,7 +39,7 @@ static CLICMDARGDEF farg[] =
         ".mapfile",
         "mapping file, can be read from mapcoord2D.txt",
         "mapfile",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &map2D,
         &fpi_map2D
     },
@@ -48,7 +48,7 @@ static CLICMDARGDEF farg[] =
         ".outWF1D",
         "output WF 1D",
         "outWF1D",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &outWF1D,
         &fpi_outWF1D
     }

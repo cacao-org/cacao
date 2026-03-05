@@ -32,7 +32,7 @@ static CLICMDARGDEF farg[] =
         ".wfsin",
         "Wavefront sensor input",
         "wfsim",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &apd_mat_name,
         &fpi_wfsinsname
     }
@@ -255,7 +255,7 @@ static errno_t compute_function()
     memset(apd_integrator, 0, NUM_APD_HOWFS * sizeof(float));
 
     int kw_idx_CURVSGN = -1; // TODO also make a friggin function.
-    for(int k = 0; k < apd_mat_in.NBkw; ++k)
+    for(int k = 0; k < apd_mat_in.md->NBkw; ++k)
     {
         if(strcmp("_CURVSGN", apd_mat_in.im->kw[k].name) == 0)
         {
@@ -267,6 +267,7 @@ static errno_t compute_function()
     {
         printf("Fatal: must have _CURVSGN keyword in apd SHM.\n");
         fflush(stdout);
+        imgid_free(&apd_mat_in);
         return EXIT_FAILURE;
     }
 
@@ -302,7 +303,7 @@ static errno_t compute_function()
     {
         int curv_sign = apd_mat_in.im->kw[kw_idx_CURVSGN].value.numl;
 
-        int16_t *apd_ptr = apd_mat_in.im->array.SI16 + curv_sign * apd_mat_in.size[0];
+        int16_t *apd_ptr = apd_mat_in.im->array.SI16 + curv_sign * apd_mat_in.md->size[0];
         int16_t *apd_lowfs_ptr = apd_ptr + NUM_APD_HOWFS;
 
         // Computations for safety
@@ -371,6 +372,11 @@ static errno_t compute_function()
 
     // We should probably clean close the SHMs?
     // Why doesn't anything in milk ever call ImageStreamIO_closeIm?
+    imgid_free(&apd_mat_in);
+    imgid_free(&curv_1k_doublesided);
+    imgid_free(&curv_2k_doublesided);
+    imgid_free(&curv_2k_singlesided);
+    imgid_free(&lowfs_info);
 
     DEBUG_TRACE_FEXIT();
 

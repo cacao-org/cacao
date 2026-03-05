@@ -93,7 +93,7 @@ static CLICMDARGDEF farg[] =
         ".RMmodesDM",
         "input response matrix DM modes",
         "RMmodesDM",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &RMmodesDM,
         &fpi_RMmodesDM
     },
@@ -103,7 +103,7 @@ static CLICMDARGDEF farg[] =
         ".RMmodesWFS",
         "input response matrix WFS modes",
         "RMmodesWFS",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &RMmodesWFS,
         &fpi_RMmodesWFS
     },
@@ -113,7 +113,7 @@ static CLICMDARGDEF farg[] =
         ".RMmodesDMz",
         "output zonal response matrix DM modes",
         "RMmodesDMz",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &RMmodesDMz,
         &fpi_RMmodesDMz
     },
@@ -123,7 +123,7 @@ static CLICMDARGDEF farg[] =
         ".RMmodesWFSz",
         "output zonal response matrix WFS modes",
         "RMmodesWFSz",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &RMmodesWFSz,
         &fpi_RMmodesWFSz
     },
@@ -133,7 +133,7 @@ static CLICMDARGDEF farg[] =
         ".svdlim",
         "SVD limit",
         "0.01",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &svdlim,
         &fpi_svdlim
     },
@@ -143,7 +143,7 @@ static CLICMDARGDEF farg[] =
         ".GPUdevice",
         "GPU device, 99 for CPU",
         "-1",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &GPUdevice,
         &fpi_GPUdevice
     }

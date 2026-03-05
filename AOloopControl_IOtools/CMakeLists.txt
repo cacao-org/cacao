@@ -72,3 +72,5 @@ install(PROGRAMS
 install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 
 install(PROGRAMS ${SCRIPTS} DESTINATION bin)
+
+add_cacao_standalone(cacaoiot-acquireWFS acquireWFSim.c)

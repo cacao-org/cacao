@@ -57,7 +57,7 @@ static CLICMDARGDEF farg[] =
         ".insname",
         "input image",
         "im1",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &inimname,
         NULL
     },
@@ -66,7 +66,7 @@ static CLICMDARGDEF farg[] =
         ".indark_name",
         "input image dark (optional)",
         "imdark",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &indarkname,
         NULL
     },
@@ -75,7 +75,7 @@ static CLICMDARGDEF farg[] =
         ".spotsize",
         "approximate spot size [pix]",
         "3.0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &spotsize,
         &fpi_spotsize
     },
@@ -84,7 +84,7 @@ static CLICMDARGDEF farg[] =
         ".spotx0",
         "approx spot location x",
         "100.0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &spotx0,
         &fpi_spotx0
     },
@@ -93,7 +93,7 @@ static CLICMDARGDEF farg[] =
         ".spoty0",
         "approx spot location y",
         "60.0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &spoty0,
         &fpi_spoty0
     },
@@ -102,7 +102,7 @@ static CLICMDARGDEF farg[] =
         ".searchrad",
         "search radius",
         "10",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &searchrad,
         &fpi_searchrad
     },
@@ -111,7 +111,7 @@ static CLICMDARGDEF farg[] =
         ".outspotpos",
         "output spot position data",
         "ttdat",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &outspotpos,
         NULL
     },
@@ -120,7 +120,7 @@ static CLICMDARGDEF farg[] =
         ".mappingXX",
         "mapping XX coeff",
         "1.0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &mappingXX,
         &fpi_mappingXX
     },
@@ -129,7 +129,7 @@ static CLICMDARGDEF farg[] =
         ".mappingYY",
         "mapping YY coeff",
         "1.0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &mappingYY,
         &fpi_mappingYY
     },
@@ -138,7 +138,7 @@ static CLICMDARGDEF farg[] =
         ".mappingXY",
         "mapping XY coeff",
         "0.0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &mappingXY,
         &fpi_mappingXY
     },
@@ -147,7 +147,7 @@ static CLICMDARGDEF farg[] =
         ".mappingYX",
         "mapping YX coeff",
         "0.0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &mappingYX,
         &fpi_mappingYX
     },
@@ -156,7 +156,7 @@ static CLICMDARGDEF farg[] =
         ".outTTvec",
         "output 2D TT vector (control TT)",
         "ttvec",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &outTTvec,
         NULL
     }
@@ -244,8 +244,8 @@ static errno_t spot_position(
     resolveIMGID(inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
 
     // get image size
-    uint32_t xsize = inimg->size[0];
-    uint32_t ysize = inimg->size[1];
+    uint32_t xsize = inimg->md->size[0];
+    uint32_t ysize = inimg->md->size[1];
     uint64_t xysize = (uint64_t) xsize;
     xysize *= ysize;
 
@@ -400,6 +400,11 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, outTTvecimg.im, NULL); // outTTvecimg
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
+
+    imgid_free(&inimg);
+    imgid_free(&indarkimg);
+    imgid_free(&outposimg);
+    imgid_free(&outTTvecimg);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;

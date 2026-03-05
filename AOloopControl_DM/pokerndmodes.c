@@ -33,7 +33,7 @@ static CLICMDARGDEF farg[] =
         ".outsname",
         "output stream",
         "dm00disp10",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &outsname,
         NULL
     },
@@ -42,7 +42,7 @@ static CLICMDARGDEF farg[] =
         ".mode cube",
         "modes to be poked",
         "modec",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &modecsname,
         NULL
     },
@@ -51,7 +51,7 @@ static CLICMDARGDEF farg[] =
         ".pokeampl",
         "poke amplitude",
         "0.1",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &pokeampl,
         &fpi_pokeampl
     },
@@ -60,7 +60,7 @@ static CLICMDARGDEF farg[] =
         ".pokefreq",
         "poke frequency",
         "0.001",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &pokefreq,
         &fpi_pokefreq
     }

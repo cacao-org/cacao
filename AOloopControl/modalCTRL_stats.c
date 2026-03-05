@@ -80,7 +80,7 @@ static CLICMDARGDEF farg[] = {{
         ".AOloopindex",
         "AO loop index",
         "0",
-        CLIARG_VISIBLE_DEFAULT,
+        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
         (void **) &AOloopindex,
         NULL
     },
@@ -89,7 +89,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk0NBmode",
         "block 0 number of modes",
         "2",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block0NBmode,
         &fpi_block0NBmode
     },
@@ -98,7 +98,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk0NBsample",
         "block 0 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block0NBsample,
         &fpi_block0NBsample
     },
@@ -108,7 +108,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk1NBmode",
         "block 1 number of modes",
         "256",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block1NBmode,
         &fpi_block1NBmode
     },
@@ -117,7 +117,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk1NBsample",
         "block 1 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block1NBsample,
         &fpi_block1NBsample
     },
@@ -127,7 +127,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk2NBmode",
         "block 2 number of modes",
         "256",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block2NBmode,
         &fpi_block2NBmode
     },
@@ -136,7 +136,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk2NBsample",
         "block 2 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block2NBsample,
         &fpi_block2NBsample
     },
@@ -146,7 +146,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk3NBmode",
         "block 3 number of modes",
         "256",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block3NBmode,
         &fpi_block3NBmode
     },
@@ -155,7 +155,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk3NBsample",
         "block 3 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block3NBsample,
         &fpi_block3NBsample
     },
@@ -165,7 +165,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk4NBmode",
         "block 4 number of modes",
         "256",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block4NBmode,
         &fpi_block4NBmode
     },
@@ -174,7 +174,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk4NBsample",
         "block 4 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block4NBsample,
         &fpi_block4NBsample
     },
@@ -183,7 +183,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk5NBmode",
         "block 5 number of modes",
         "256",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block5NBmode,
         &fpi_block5NBmode
     },
@@ -192,7 +192,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk5NBsample",
         "block 5 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block5NBsample,
         &fpi_block5NBsample
     },
@@ -201,7 +201,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk6NBmode",
         "block 6 number of modes",
         "256",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block6NBmode,
         &fpi_block6NBmode
     },
@@ -210,7 +210,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk6NBsample",
         "block 6 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block6NBsample,
         &fpi_block6NBsample
     },
@@ -219,7 +219,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk7NBmode",
         "block 7 number of modes",
         "256",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block7NBmode,
         &fpi_block7NBmode
     },
@@ -228,7 +228,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk7NBsample",
         "block 7 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block7NBsample,
         &fpi_block7NBsample
     },
@@ -237,7 +237,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk8NBmode",
         "block 8 number of modes",
         "256",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block8NBmode,
         &fpi_block8NBmode
     },
@@ -246,7 +246,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk8NBsample",
         "block 8 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block8NBsample,
         &fpi_block8NBsample
     },
@@ -255,7 +255,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk9NBmode",
         "block 9 number of modes",
         "256",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block9NBmode,
         &fpi_block9NBmode
     },
@@ -264,7 +264,7 @@ static CLICMDARGDEF farg[] = {{
         ".block.blk9NBsample",
         "block 9 number of samples",
         "30000",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &block9NBsample,
         &fpi_block9NBsample
     },
@@ -273,7 +273,7 @@ static CLICMDARGDEF farg[] = {{
         ".comp.statswrite",
         "Write stats to file",
         "0",
-        CLIARG_HIDDEN_DEFAULT,
+        FPFLAG_DEFAULT_INPUT,
         (void **) &compstatswrite,
         &fpi_compstatswrite
     }

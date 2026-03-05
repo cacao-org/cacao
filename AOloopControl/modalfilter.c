@@ -21,25 +21,72 @@
 
 #include "modalfilter.h"
 
-/* =============================================================================================== */
-/* PARAMETERS DEFINITION                                                                           */
-/* =============================================================================================== */
+/* ================================================================
+ * 1.  FPS COMPONENT IDENTITY
+ * ============================================================= */
 
-#define MFILT_PARAMS(X)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_STREAMNAME, char*, ".inmval", "input mode values from WFS", "aol0_modevalWFS", inmval_ptr, GetParamPtr_STRING, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_STREAMNAME, char*, ".outmval", "output mode values to DM", "aol0_modevalDM", outmval_ptr, GetParamPtr_STRING, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_FLOAT32, float*, ".loopgain", "loop gain", "0.01", loopgain_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_FLOAT32, float*, ".loopmult", "loop mult", "0.95", loopmult_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_FLOAT32, float*, ".looplimit", "loop limit", "1.0", looplimit_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".loopZERO", "loop zero", "OFF", loopZERO_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_VISIBLE_DEFAULT, FPTYPE_UINT64, uint64_t*, ".AOloopindex", "AO loop index", "0", AOloopindex_ptr, GetParamPtr_UINT64, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".loopON", "loop on/off (off=freeze)", "ON", loopON_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_INT64, int64_t*, ".loopNBstep", "loop nb steps (-1 = inf)", "-1", loopNBstep_ptr, GetParamPtr_INT64, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".comp.OLmodes", "compute open loop modes", "OFF", compOL_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.WFSfact", "amplitude correction factor on WFS", "0.893", psol_WFSfact_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.latencyhardwfr", "hardware DM to WFS latency [frame]", "1.7", latencyhardwfr_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.latencysoftwfr", "software latency [frame]", "1.5", latencysoftwfr_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".comp.tbuff", "compute telemetry buffer(s)", "OFF", comptbuff_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".comp.autolim", "automatic modal limits", "OFF", autolim_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.autolimprobegain", "sigma measurement gain", "0.1", autolimprobegain_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".comp.autolimsigmafact", "autolimit sigma clipping factor", "2.0", autolimsigmafact_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".comp.tbuffsize", "buffer time size", "512", tbuffsize_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".auxDMmval.enable", "mixing aux DM mode vals", "OFF", auxDMmvalenable_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".auxDMmval.mixfact", "mixing multiplicative factor", "1.0", auxDMmvalmixfact_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".auxDMmval.modulate", "modulate auxDM temporally ?", "OFF", auxDMmvalmodulate_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".auxDMmval.modperiod", "auxDM modulation period [frame]", "20.0", auxDMmvalmodperiod_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".PF.enable", "enable predictive filter", "OFF", enablePF_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".PF.NBblock", "number of blocks to wait from", "0", PF_NBblock_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".PF.maxwaitus", "maximum wait time for blocks [us]", "500", PF_maxwaitus_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".PF.mixcoeff", "mixing coeff", "0.3", PFmixcoeff_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".autoloop.enable", "autoloop self-test", "OFF", autoloopenable_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".autoloop.sleep", "loop sleep time", "0.001", autoloopsleep_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".selfRM.enable", "Start self response matrix measurement", "OFF", selfRMenable_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".selfRM.NBmode", "number of mode poked", "32", selfRMnbmode_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".selfRM.pokeampl", "poke amplitude", "0.01", selfRMpokeampl_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".selfRM.zsize", "number of time steps recorded", "20", selfRMzsize_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".selfRM.nbiter", "number of iterations averaged", "8", selfRMnbiter_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".selfRM.nbsettle", "number of loop iteration to settle", "1", selfRMnbsettlestep_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".testOL.enable", "OL reconstruction test ON/OFF", "OFF", testOL_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".testOL.loop", "run inloop", "OFF", testOLloop_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".testOL.updategain", "update gain", "0.1", testOLupdategain_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".testOL.mode", "mode index", "0", testOLmode_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".testOL.ampl", "amplitude", "0.01", testOLampl_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".testOL.nbsample", "number of samples", "1000", testOLnbsample_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".testOL.cnt", "samples count", "0", testOLcnt_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".offload.enable", "offload output ON/OFF", "OFF", offload_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".offload.loopgain", "offload loop gain", "0.01", offloadloopgain_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".offload.loopmult", "offload loop mult", "0.95", offloadloopmult_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_FLOAT32, float*, ".offload.looplimit", "offload loop limit", "1.0", offloadlooplimit_ptr, GetParamPtr_FLOAT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_ONOFF, uint64_t*, ".rec.enable", "telemetry ASCII file burt write", "OFF", recburst_ptr, GetParamPtr_fpflag, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".rec.mode", "mode index", "5", recburst_mode_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)     X(CLIARG_HIDDEN_DEFAULT, FPTYPE_UINT32, uint32_t*, ".rec.nbstep", "number of steps recorded", "1000", recburst_nbsample_ptr, GetParamPtr_UINT32, CLICMDARG_FLAG_DEFAULT, FPTYPE_AUTO, FPFLAG_DEFAULT_INPUT)
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "mfilt",
+    .cmdkey      = "modalfilter",
+    .description =
+        "Modal Filtering AO processing"
+};
 
-/* Global parameter pointers */
-#define X_PTR_DECL(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...)     static c_type ptr_name = NULL;
-MFILT_PARAMS(X_PTR_DECL)
-#undef X_PTR_DECL
+
+/* ================================================================
+ * 2.  LOCAL PARAMETER VARIABLES
+ * ============================================================= */
+
+static char     *inmval_ptr             = NULL;
+static char     *outmval_ptr            = NULL;
+static float    *loopgain_ptr           = NULL;
+static float    *loopmult_ptr           = NULL;
+static float    *looplimit_ptr          = NULL;
+static uint64_t *loopZERO_ptr           = NULL;
+static uint64_t *AOloopindex_ptr        = NULL;
+static uint64_t *loopON_ptr             = NULL;
+static int64_t  *loopNBstep_ptr         = NULL;
+static uint64_t *compOL_ptr             = NULL;
+static float    *psol_WFSfact_ptr       = NULL;
+static float    *latencyhardwfr_ptr     = NULL;
+static float    *latencysoftwfr_ptr     = NULL;
+static uint64_t *comptbuff_ptr          = NULL;
+static uint64_t *autolim_ptr            = NULL;
+static float    *autolimprobegain_ptr   = NULL;
+static float    *autolimsigmafact_ptr   = NULL;
+static uint32_t *tbuffsize_ptr          = NULL;
+static uint64_t *auxDMmvalenable_ptr    = NULL;
+static float    *auxDMmvalmixfact_ptr   = NULL;
+static uint64_t *auxDMmvalmodulate_ptr  = NULL;
+static float    *auxDMmvalmodperiod_ptr = NULL;
+static uint64_t *enablePF_ptr           = NULL;
+static uint32_t *PF_NBblock_ptr         = NULL;
+static uint32_t *PF_maxwaitus_ptr       = NULL;
+static float    *PFmixcoeff_ptr         = NULL;
+static uint64_t *autoloopenable_ptr     = NULL;
+static float    *autoloopsleep_ptr      = NULL;
+static uint64_t *selfRMenable_ptr       = NULL;
+static uint32_t *selfRMnbmode_ptr       = NULL;
+static float    *selfRMpokeampl_ptr     = NULL;
+static uint32_t *selfRMzsize_ptr        = NULL;
+static uint32_t *selfRMnbiter_ptr       = NULL;
+static uint32_t *selfRMnbsettlestep_ptr = NULL;
+static uint64_t *testOL_ptr             = NULL;
+static uint64_t *testOLloop_ptr         = NULL;
+static float    *testOLupdategain_ptr   = NULL;
+static uint32_t *testOLmode_ptr         = NULL;
+static float    *testOLampl_ptr         = NULL;
+static uint32_t *testOLnbsample_ptr     = NULL;
+static uint32_t *testOLcnt_ptr          = NULL;
+static uint64_t *offload_ptr            = NULL;
+static float    *offloadloopgain_ptr    = NULL;
+static float    *offloadloopmult_ptr    = NULL;
+static float    *offloadlooplimit_ptr   = NULL;
+static uint64_t *recburst_ptr           = NULL;
+static uint32_t *recburst_mode_ptr      = NULL;
+static uint32_t *recburst_nbsample_ptr  = NULL;
 
 static uint64_t processinfo_change_cnt_local = 0;
-
-static uint64_t fpi_inmval;
-static uint64_t fpi_outmval;
-static uint64_t fpi_loopZERO;
-static uint64_t fpi_loopgain;
-static uint64_t fpi_loopmult;
-static uint64_t fpi_looplimit;
 
 typedef struct {
     float *mvalDMc;
@@ -442,113 +489,346 @@ static void modalfilter_validate() {
     if (looplimit_ptr && *looplimit_ptr < 0) *looplimit_ptr = 0;
 }
 
-#ifndef FPS_STANDALONE
+
+/* ================================================================
+ * 3.  UNIFIED PARAMETER TABLE (X-Macro)
+ * ============================================================= */
+
+#define FPS_PARAMS(X) \
+    X(".inmval", &inmval_ptr, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_PRIMARY_CLI_INPUT \
+          | FPFLAG_STREAM_RUN_REQUIRED \
+          | FPFLAG_CHECKSTREAM, \
+      "input mode values from WFS") \
+    X(".outmval", &outmval_ptr, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_PRIMARY_CLI_INPUT, \
+      "output mode values to DM") \
+    X(".loopgain", &loopgain_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_CLI_INPUT \
+          | FPFLAG_WRITERUN, \
+      "loop gain") \
+    X(".loopmult", &loopmult_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_CLI_INPUT \
+          | FPFLAG_WRITERUN, \
+      "loop mult") \
+    X(".looplimit", &looplimit_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_CLI_INPUT \
+          | FPFLAG_WRITERUN, \
+      "loop limit") \
+    X(".loopZERO", &loopZERO_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_CLI_INPUT \
+          | FPFLAG_WRITERUN, \
+      "loop zero") \
+    X(".AOloopindex", &AOloopindex_ptr, \
+      FPTYPE_UINT64, 1, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_PRIMARY_CLI_INPUT, \
+      "AO loop index") \
+    X(".loopON", &loopON_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_CLI_INPUT \
+          | FPFLAG_WRITERUN, \
+      "loop on/off (off=freeze)") \
+    X(".loopNBstep", &loopNBstep_ptr, \
+      FPTYPE_INT64, 0, \
+      FPFLAG_DEFAULT_INPUT \
+          | FPFLAG_CLI_INPUT \
+          | FPFLAG_WRITERUN, \
+      "loop nb steps (-1 = inf)") \
+    X(".comp.OLmodes", &compOL_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "compute open loop modes") \
+    X(".comp.WFSfact", &psol_WFSfact_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "ampl correction factor WFS") \
+    X(".comp.latencyhardwfr", \
+      &latencyhardwfr_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "hw DM-to-WFS latency [fr]") \
+    X(".comp.latencysoftwfr", \
+      &latencysoftwfr_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "sw latency [frame]") \
+    X(".comp.tbuff", &comptbuff_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "compute telemetry buffers") \
+    X(".comp.autolim", &autolim_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "automatic modal limits") \
+    X(".comp.autolimprobegain", \
+      &autolimprobegain_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "sigma measurement gain") \
+    X(".comp.autolimsigmafact", \
+      &autolimsigmafact_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "autolimit sigma clip factor") \
+    X(".comp.tbuffsize", &tbuffsize_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "buffer time size") \
+    X(".auxDMmval.enable", \
+      &auxDMmvalenable_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "mixing aux DM mode vals") \
+    X(".auxDMmval.mixfact", \
+      &auxDMmvalmixfact_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "mixing mult factor") \
+    X(".auxDMmval.modulate", \
+      &auxDMmvalmodulate_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "modulate auxDM temporally") \
+    X(".auxDMmval.modperiod", \
+      &auxDMmvalmodperiod_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "auxDM mod period [frame]") \
+    X(".PF.enable", &enablePF_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "enable predictive filter") \
+    X(".PF.NBblock", &PF_NBblock_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "nb blocks to wait from") \
+    X(".PF.maxwaitus", &PF_maxwaitus_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "max wait time blks [us]") \
+    X(".PF.mixcoeff", &PFmixcoeff_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "mixing coeff") \
+    X(".autoloop.enable", \
+      &autoloopenable_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "autoloop self-test") \
+    X(".autoloop.sleep", \
+      &autoloopsleep_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "loop sleep time") \
+    X(".selfRM.enable", &selfRMenable_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "start self RM measurement") \
+    X(".selfRM.NBmode", &selfRMnbmode_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "number of mode poked") \
+    X(".selfRM.pokeampl", \
+      &selfRMpokeampl_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "poke amplitude") \
+    X(".selfRM.zsize", &selfRMzsize_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "nb time steps recorded") \
+    X(".selfRM.nbiter", &selfRMnbiter_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "nb iterations averaged") \
+    X(".selfRM.nbsettle", \
+      &selfRMnbsettlestep_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "nb loop iter to settle") \
+    X(".testOL.enable", &testOL_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "OL reconstruction test") \
+    X(".testOL.loop", &testOLloop_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "run inloop") \
+    X(".testOL.updategain", \
+      &testOLupdategain_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "update gain") \
+    X(".testOL.mode", &testOLmode_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "mode index") \
+    X(".testOL.ampl", &testOLampl_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "amplitude") \
+    X(".testOL.nbsample", \
+      &testOLnbsample_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "number of samples") \
+    X(".testOL.cnt", &testOLcnt_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "samples count") \
+    X(".offload.enable", &offload_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "offload output ON/OFF") \
+    X(".offload.loopgain", \
+      &offloadloopgain_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "offload loop gain") \
+    X(".offload.loopmult", \
+      &offloadloopmult_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "offload loop mult") \
+    X(".offload.looplimit", \
+      &offloadlooplimit_ptr, \
+      FPTYPE_FLOAT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "offload loop limit") \
+    X(".rec.enable", &recburst_ptr, \
+      FPTYPE_ONOFF, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "telemetry burt write") \
+    X(".rec.mode", &recburst_mode_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "mode index") \
+    X(".rec.nbstep", \
+      &recburst_nbsample_ptr, \
+      FPTYPE_UINT32, 0, \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "number of steps recorded")
+
+
+/* ================================================================
+ * 5.  BINDINGS, FARG, AND CLI DATA
+ * ============================================================= */
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+
+static const int nb_bindings =
+    sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
 static CLICMDARGDEF farg[] = {
-    { CLIARG_UINT64, ".AOloopindex", "AO loop index", "0", CLIARG_VISIBLE_DEFAULT, (void **) &AOloopindex_ptr, NULL },
-    { CLIARG_STREAM, ".inmval", "input mode values from WFS", "aol0_modevalWFS", CLIARG_VISIBLE_DEFAULT, (void **) &inmval_ptr, (long*) &fpi_inmval },
-    { CLIARG_STREAM, ".outmval", "output mode values to DM", "aol0_modevalDM", CLIARG_VISIBLE_DEFAULT, (void **) &outmval_ptr, (long*) &fpi_outmval },
-    { CLIARG_FLOAT32, ".loopgain", "loop gain", "0.01", CLIARG_VISIBLE_DEFAULT, (void **) &loopgain_ptr, (long*) &fpi_loopgain },
-    { CLIARG_FLOAT32, ".loopmult", "loop mult", "0.95", CLIARG_VISIBLE_DEFAULT, (void **) &loopmult_ptr, (long*) &fpi_loopmult },
-    { CLIARG_FLOAT32, ".looplimit", "loop limit", "1.0", CLIARG_VISIBLE_DEFAULT, (void **) &looplimit_ptr, (long*) &fpi_looplimit },
-    { CLIARG_ONOFF, ".loopZERO", "loop zero", "OFF", CLIARG_VISIBLE_DEFAULT, (void **) &loopZERO_ptr, (long*) &fpi_loopZERO }
+    FPS_PARAMS(FPS_X_FARG)
 };
 
-static CLICMDDATA CLIcmddata = { 
-    "modalfilter", "modal filtering", "", 
-    sizeof(farg) / sizeof(CLICMDARGDEF), farg, 
-    CLICMDFLAG_FPS, NULL, NULL, NULL 
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
 };
 
-static errno_t help_function() {
-    printf("Modal gain for adaptive optics control\n");
-    return RETURN_SUCCESS;
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
 }
+
+
+/* ================================================================
+ * 6.  COMPUTE WRAPPER
+ * ============================================================= */
 
 static errno_t compute_function()
 {
-    IMGID imginWFS = imgid_make_from_name(inmval_ptr); resolveIMGID(&imginWFS, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    IMGID imginWFS =
+        imgid_make_from_name(inmval_ptr);
+    resolveIMGID(&imginWFS, ERRMODE_ABORT,
+        data.image, data.NB_MAX_IMAGE);
+
     uint32_t NBmode = imginWFS.md[0].size[0];
-    IMGID imgout = stream_connect_create_2Df32(outmval_ptr, NBmode, 1);
-    
-    MFILT_STATE *state = modal_filter_init(NBmode);
+
+    IMGID imgout =
+        stream_connect_create_2Df32(
+            outmval_ptr, NBmode, 1);
+
+    MFILT_STATE *state =
+        modal_filter_init(NBmode);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
-    modal_filter_step(processinfo, data.fpsptr, imginWFS.im, imgout.im, state);
+    modal_filter_step(
+        processinfo, data.fpsptr,
+        imginWFS.im, imgout.im, state);
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
-    
+
     modal_filter_cleanup(state);
     return RETURN_SUCCESS;
 }
 
-static errno_t customCONFsetup() {
-    if(data.fpsptr != NULL) {
-        data.fpsptr->parray[fpi_inmval].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
-    }
-    return RETURN_SUCCESS;
+
+/* ================================================================
+ * 7.  MILK MODULE REGISTRATION
+ * ============================================================= */
+
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
 }
 
-static errno_t customCONFcheck() { return RETURN_SUCCESS; }
-
-#define INSERT_STD_FPSCONFfunction_local                                           static errno_t FPSCONFfunction()                                               {                                                                                  FPS_SETUP_INIT(data.FPS_name, data.FPS_CMDCODE);                               if (CLIcmddata.flags & CLICMDFLAG_PROCINFO)                                    {                                                                                  fps_add_processinfo_entries(&fps);                                         }                                                                              data.fpsptr = &fps;                                                            CMDargs_to_FPSparams_create(&fps);                                             if (CLIcmddata.FPS_customCONFsetup != NULL)                                    {                                                                                  CLIcmddata.FPS_customCONFsetup();                                          }                                                                              FPS_CONFLOOP_START                                                             if (CLIcmddata.FPS_customCONFcheck != NULL)                                        CLIcmddata.FPS_customCONFcheck();                                          FPS_CONFLOOP_END                                                               data.fpsptr = NULL;                                                            return RETURN_SUCCESS;                                                     }
-
-INSERT_STD_FPSCONFfunction_local
-INSERT_STD_FPSRUNfunction
-INSERT_STD_FPSCLIfunction
-
-errno_t CLIADDCMD_AOloopControl__modalfilter() {
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+errno_t
+CLIADDCMD_AOloopControl__modalfilter()
+{
+    safe_fps_fill_farg_examples(
+        farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
     return RETURN_SUCCESS;
 }
-
 #endif
 
+
+/* ================================================================
+ * 8.  STANDALONE ENTRY POINT
+ * ============================================================= */
+
 #ifdef FPS_STANDALONE
-
-int FPSINIT_modalfilter(const char *fps_name, const char *keywords, const char *description) {
-    FUNCTION_PARAMETER_STRUCT fps;
-    FPS_INIT_STD_PREAMBLE(fps, fps_name, keywords, description, "Modal Filtering AO processing");
-    FPS_INIT_PROCINFO_DEFAULTS(fps, "aol0_modevalWFS", 10);
-#define X_FPS_INIT(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...)     {         if(fps_type == FPTYPE_FLOAT32) { float val = (float)atof(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); }         else if(fps_type == FPTYPE_UINT64) { uint64_t val = (uint64_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); }         else if(fps_type == FPTYPE_INT64) { int64_t val = (int64_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); }         else if(fps_type == FPTYPE_UINT32) { uint32_t val = (uint32_t)atoll(def_str); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, &val, NULL); }         else if(fps_type == FPTYPE_STREAMNAME) { char val[FUNCTION_PARAMETER_STRMAXLEN]; strncpy(val, def_str, FUNCTION_PARAMETER_STRMAXLEN-1); function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, val, NULL); }         else { function_parameter_add_entry(&fps, key, descr, fps_type, FPFLAG_DEFAULT_INPUT, NULL, NULL); }     }
-    MFILT_PARAMS(X_FPS_INIT)
-#undef X_FPS_INIT
-    fps_add_processinfo_entries(&fps); function_parameter_FPCONFexit(&fps); return 0;
-}
-
-#define X_FPS_MAP(cli_type, fps_type, c_type, key, descr, def_str, ptr_name, get_func, ...)             ptr_name = (c_type)functionparameter_##get_func(&fps, key);
-
-int FPSCONF_modalfilter(const char *fps_name, int loop) {
-    FPS_CONF_STD_BODY(fps_name, loop, { MFILT_PARAMS(X_FPS_MAP) }, { modalfilter_validate(); });
-    return 0;
-}
-FPS_MAKE_STANDALONE_CONFSTOP(modalfilter)
-FPS_MAKE_STANDALONE_RUNSTOP(modalfilter)
-int FPSRUN_modalfilter(const char *fps_name) {
-    FUNCTION_PARAMETER_STRUCT fps;
-    FPS_RUN_STD_PREAMBLE(fps_name, fps, { MFILT_PARAMS(X_FPS_MAP) });
-    IMAGE imginWFS;
-    if (ImageStreamIO_read_sharedmem_image_toIMAGE(inmval_ptr, &imginWFS) != 0) return 1;
-    uint32_t NBmode = imginWFS.md[0].size[0];
-    IMAGE imgout;
-    uint32_t dims[2] = {NBmode, 1};
-    if (ImageStreamIO_createIm_gpu(&imgout, outmval_ptr, 2, dims, _DATATYPE_FLOAT, -1, 1, 10, 0, 0, 0) != 0) return 1;
-    
-    MFILT_STATE *state = modal_filter_init(NBmode);
-    
-    PROCESSINFO *pinfo;
-    FPS_RUN_PROCESSINFO_SETUP(pinfo, fps_name, "Run", "Looping", &imginWFS, fps);
-    while(processinfo_loopstep(pinfo)) {
-        processinfo_waitoninputstream(pinfo);
-        if (pinfo->triggerstatus == PROCESSINFO_TRIGGERSTATUS_TIMEDOUT) continue;
-        processinfo_exec_start(pinfo);
-        modal_filter_step(pinfo, &fps, &imginWFS, &imgout, state);
-        processinfo_exec_end(pinfo);
-        processinfo_update_output_stream(pinfo, &imgout, &imginWFS);
-    }
-    modal_filter_cleanup(state);
-    processinfo_cleanExit(pinfo); function_parameter_struct_disconnect(&fps); return 0;
-}
-FPS_MAIN_STANDALONE("mfilt", modalfilter, "Modal Filtering AO processing", MFILT_PARAMS)
+FPS_MAIN_STANDALONE_V2(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function)
 #endif
