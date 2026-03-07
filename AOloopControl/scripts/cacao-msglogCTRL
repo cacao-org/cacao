@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 
-MSdescr="launch cacao message logging"
+MSdescr="launch cacao-cli message logging"
 
-MSextdescr="launch cacao message logging
+MSextdescr="launch cacao-cli message logging
 
 Launch at beginning of each UT day.
 
@@ -22,8 +22,8 @@ MESSAGE LOG fpsctrl.CACAO_LOOPNAME.log
 	Written by script cacao-fpsctrl-log running within tmux session fpsCTRLlog-proc-CACAO_LOOPNAME
 	OUTPUT in tmux session fpsCTRLlog-out-CACAO_LOOPNAME
 
-MESSAGE LOG cacao.CACAO_LOOPNAME.log
-	High level log from cacao scripts and msglogCLI instances
+MESSAGE LOG cacao-cli.CACAO_LOOPNAME.log
+	High level log from cacao-cli scripts and msglogCLI instances
 
 
 ACTIONS:
@@ -43,7 +43,7 @@ source cacao-check-cacaovars
 MSarg+=( "action:string:action (start/stop/terms)" )
 
 
-RequiredCommands=( cacao tmux )
+RequiredCommands=( cacao-cli tmux )
 RequiredPipes=()
 RequiredFiles=()
 RequiredDirs=()
@@ -117,7 +117,7 @@ if [ ${ACTION} == "terms" ]; then
 	logdname="logdir"
 	echo "LOG DIRNAME = ${logdname}"
 	mkdir -p ${logdname}
-	logfname="${logdname}/cacao.${CACAO_LOOPNAME}.log"
+	logfname="${logdname}/cacao-cli.${CACAO_LOOPNAME}.log"
 	if [ ! -f ${logfname} ]; then
 		echo "Creating file ${logfname}"
 		touch ${logfname}

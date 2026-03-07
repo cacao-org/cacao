@@ -4,7 +4,7 @@
 pnameFull=`echo "$0" | sed "s/\.\///g"`
 pname=$( basename $pnameFull )
 
-MSdescr="Manage cacao deployment tasts"
+MSdescr="Manage cacao-cli deployment tasts"
 
 source milk-script-std-config
 
@@ -133,7 +133,7 @@ echo "EXECMODE     : ${EXECMODE}"
 echo "LASTTASK     : ${LASTTASK}"
 
 
-# cacao task script executed outside of cacaotask environment
+# cacao-cli task script executed outside of cacaotask environment
 CACAOTASK_EXITCODE_NOTCACAOTASK=64
 CACAOTASK_RUN_SUCCESS=0
 CACAOTASK_RUN_FAIL=1

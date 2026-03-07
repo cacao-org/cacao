@@ -62,323 +62,51 @@ struct optimizationmode {
 
 // Local variables pointers
 
-
-
-// input control stream
-static char *ctrlsname;
-long fpi_ctrlsname;
-
-
+static char     *ctrlsname;
 static uint32_t *nbpoke;
-long fpi_nbpoke;
+static float    *ctrlamp;
+static char     *ctrlampmap;
+static char     *senssname;
+static char     *sensproc;
+static char     *sensref0;
+static char     *sensmask0;
+static int32_t  *sensnorm0;
+static char     *sensref1;
+static char     *sensmask1;
+static int32_t  *sensnorm1;
+static uint32_t *opttype;
+static uint32_t *optcomp;
+static float    *optparam0;
+static float    *optparam1;
+static float    *twaitframe;
+static uint32_t *tintframe;
 
-
-// actuation amplitude map
-// actuation will be from -val to +val
-static char *ctrlampmap;
-long fpi_ctrlampmap;
-
-// actuation amplitude
-static float  *ctrlamp;
-static long fpi_ctrlamp;
-
-
-
-// sensing stream
-static char *senssname;
-long fpi_senssname;
-
-
-// output of image processing performed in this function
-static char *sensproc;
-long fpi_sensproc;
-
-
-// Processing steps on sensing stream (optional)
-
-// sensing stream reference
-// will subtract if not "null"
-// here this is before any masking or normalization
-// for example, dark subtrzction
-//
-static char *sensref0;
-long fpi_sensref0;
-
-// sensing stream mask
-// will apply if not "null"
-static char *sensmask0;
-long fpi_sensmask0;
-
-// sensing stream normalize
-// flag
-//
-static int64_t *sensnorm0;
-static long     fpi_sensnorm0;
-
-
-
-// sensing stream reference
-// will subtract if not "null"
-static char *sensref1;
-long fpi_sensref1;
-
-// sensing stream mask
-// will apply if not "null"
-static char *sensmask1;
-long fpi_sensmask1;
-
-// sensing stream normalize
-// flag
-static int64_t *sensnorm1;
-static long     fpi_sensnorm1;
-
-
-
-// Optimization metric
-//
-static int64_t *opttype;
-static long     fpi_opttype;
-
-static int64_t *optcomp;
-static long     fpi_optcomp;
-
-
-// optimization parameters
-// meaning is spectific to optimizatoin comp modes
-//
-static float  *optparam0;
-static long fpi_optparam0;
-
-static float  *optparam1;
-static long fpi_optparam1;
-
-
-// Timing
-
-// wait number of frames after actuation
-float *twaitframe;
-static long     fpi_twaitframe;
-
-// integrate sensing signal for number of frames
-uint32_t *tintframe;
-static long     fpi_tintframe;;
-
-
-
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_STR,
-        ".ctrlsname",
-        "control stream",
-        "ctrl",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &ctrlsname,
-        &fpi_ctrlsname
-    },
-    {
-        CLIARG_UINT32,
-        ".nbpoke",
-        "number of pokes",
-        "1000",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &nbpoke,
-        &fpi_nbpoke
-    },
-    {
-        CLIARG_FLOAT32,
-        ".ctrlamp",
-        "control amplitude",
-        "0.01",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &ctrlamp,
-        &fpi_ctrlamp
-    },
-    {
-        CLIARG_STR,
-        ".ctrlampmap",
-        "control stream amplitude map",
-        "null",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &ctrlampmap,
-        &fpi_ctrlampmap
-    },
-    {
-        CLIARG_STR,
-        ".senssname",
-        "sensing stream",
-        "sens",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &senssname,
-        &fpi_senssname
-    },
-    {
-        CLIARG_STR,
-        ".sensprocout",
-        "processed image output",
-        "null",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &sensproc,
-        NULL
-    },
-    {
-        CLIARG_STR,
-        ".sproc.sensref0",
-        "sensing reference 0",
-        "null",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &sensref0,
-        NULL
-    },
-    {
-        CLIARG_STR,
-        ".sproc.sensmask0",
-        "sensing mask 0 (float)",
-        "null",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &sensmask0,
-        NULL
-    },
-    {
-        CLIARG_ONOFF,
-        ".sproc.sensnorm0",
-        "normalization 0 on/off",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &sensnorm0,
-        &fpi_sensnorm0
-    },
-    {
-        CLIARG_STR,
-        ".sproc.sensref1",
-        "sensing reference 1",
-        "null",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &sensref1,
-        NULL
-    },
-    {
-        CLIARG_STR,
-        ".sproc.sensmask1",
-        "sensing mask 1 (float)",
-        "null",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &sensmask1,
-        NULL
-    },
-    {
-        CLIARG_ONOFF,
-        ".sproc.sensnorm1",
-        "normalization 1 on/off",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &sensnorm1,
-        &fpi_sensnorm1
-    },
-    {
-        CLIARG_UINT32,
-        ".optm.opttype",
-        "1:min, 2:max, 3:absmin, 4:absmax",
-        "2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &opttype,
-        &fpi_opttype
-    },
-    {
-        CLIARG_UINT32,
-        ".optm.optcomp",
-        "1:tot, 2:norma, 3:tota, 4:percr",
-        "1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &optcomp,
-        &fpi_optcomp
-    },
-    {
-        CLIARG_FLOAT32,
-        ".optm.optparam0",
-        "optimization parameter 0",
-        "0.01",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &optparam0,
-        &fpi_optparam0
-    },
-    {
-        CLIARG_FLOAT32,
-        ".optm.optparam1",
-        "optimization parameter 1",
-        "0.01",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &optparam1,
-        &fpi_optparam1
-    },
-    {
-        CLIARG_FLOAT32,
-        ".twaitsec",
-        "time to wait after poke before measurement",
-        "2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &twaitframe,
-        &fpi_twaitframe
-    },
-    {
-        CLIARG_UINT32,
-        ".tintframe",
-        "number of frames to integrate per measurement",
-        "3",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &tintframe,
-        &fpi_tintframe
-    }
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "zoptsearch",
+    .cmdkey      = "zoptsearch",
+    .description = "stream zonal control optimize search",
+    
 };
 
-
-
-// Optional custom configuration setup.
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
-    if(data.fpsptr != NULL)
-    {
-        data.fpsptr->parray[fpi_ctrlsname].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
-        data.fpsptr->parray[fpi_senssname].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
-
-        data.fpsptr->parray[fpi_sensnorm0].fpflag     |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_sensnorm1].fpflag     |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_optparam0].fpflag     |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_optparam1].fpflag     |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_twaitframe].fpflag    |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_tintframe].fpflag     |= FPFLAG_WRITERUN;
-    }
-
-    return RETURN_SUCCESS;
-}
-
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
-    return RETURN_SUCCESS;
-}
-
-static CLICMDDATA CLIcmddata =
-{
-    "zoptsearch", "stream zonal control optimize search", CLICMD_FIELDS_DEFAULTS
-};
-
-// detailed help
-static errno_t help_function()
-{
-    return RETURN_SUCCESS;
-}
-
-
-
-
+#define FPS_PARAMS(X) \
+    X(".ctrlsname",       &ctrlsname,       FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM, "control stream") \
+    X(".nbpoke",          &nbpoke,          FPTYPE_UINT32,     1, FPFLAG_DEFAULT_INPUT, "number of pokes") \
+    X(".ctrlamp",         &ctrlamp,         FPTYPE_FLOAT32,    1, FPFLAG_DEFAULT_INPUT, "control amplitude") \
+    X(".ctrlampmap",      &ctrlampmap,      FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "control stream amplitude map") \
+    X(".senssname",       &senssname,       FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM, "sensing stream") \
+    X(".sensprocout",     &sensproc,        FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "processed image output") \
+    X(".sproc.sensref0",  &sensref0,        FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "sensing reference 0") \
+    X(".sproc.sensmask0", &sensmask0,       FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "sensing mask 0 (float)") \
+    X(".sproc.sensnorm0", &sensnorm0,       FPTYPE_ONOFF,      0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "normalization 0 on/off") \
+    X(".sproc.sensref1",  &sensref1,        FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "sensing reference 1") \
+    X(".sproc.sensmask1", &sensmask1,       FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "sensing mask 1 (float)") \
+    X(".sproc.sensnorm1", &sensnorm1,       FPTYPE_ONOFF,      0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "normalization 1 on/off") \
+    X(".optm.opttype",    &opttype,         FPTYPE_UINT32,     0, FPFLAG_DEFAULT_INPUT, "1:min, 2:max, 3:absmin, 4:absmax") \
+    X(".optm.optcomp",    &optcomp,         FPTYPE_UINT32,     0, FPFLAG_DEFAULT_INPUT, "1:tot, 2:norma, 3:tota, 4:percr") \
+    X(".optm.optparam0",  &optparam0,       FPTYPE_FLOAT32,    0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "optimization parameter 0") \
+    X(".optm.optparam1",  &optparam1,       FPTYPE_FLOAT32,    0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "optimization parameter 1") \
+    X(".twaitsec",        &twaitframe,      FPTYPE_FLOAT32,    0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "time to wait after poke before measurement") \
+    X(".tintframe",       &tintframe,       FPTYPE_UINT32,     0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "number of frames to integrate per measurement")
 // Returns optimization metric value
 //
 static double image_optvalue(
@@ -545,6 +273,17 @@ static double image_optvalue(
 
 
 
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+static int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+static CLICMDDATA CLIcmddata = { "zoptsearch", "stream zonal control optimize search", CLICMD_FIELDS_DEFAULTS };
 
 static errno_t compute_function()
 {
@@ -806,19 +545,29 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
 
 
 
+
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_perfTest__zoptsearch()
 {
-
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
-
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
+#endif

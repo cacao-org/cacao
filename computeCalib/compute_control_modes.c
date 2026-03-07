@@ -21,6 +21,12 @@
 
 
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "compctrlmodes",
+    .cmdkey      = "compctrlmodes",
+    .description = "compute AO control modes in WFS and DM space"
+};
+
 // Local variables pointers
 
 static uint32_t *AOloopindex;
@@ -37,247 +43,80 @@ static float *alignOD; // Outer diameter
 static uint32_t *DMxsize;
 static uint32_t *DMysize;
 
-
-static long                      fpi_FPS_zRMacqu = 0;
 static FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
-
-static long                      fpi_FPS_loRMacqu = 0;
 static FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
-
-static long                      fpi_FPS_DMcomb = 0;
 static FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
 
-
 static char *fname_DMmaskCTRL;
-static long  fpi_fname_DMmaskCTRL;
 static char *fname_DMmaskEXTR;
-static long  fpi_fname_DMmaskEXTR;
-
 static char *fname_zrespM;
-static long fpi_fname_zrespM;
 static char *fname_WFSmask;
-static long fpi_fname_WFSmask;
 static char *fname_loRM;
-static long fpi_fname_loRM;
 static char *fname_loRMmodes;
-static long fpi_fname_loRMmodes;
 
 // Toggles
 static int64_t *update_RMfiles;
-static long     fpi_update_RMfiles;
-
 static int64_t *update_align;
-static long     fpi_update_align;
 
+#define FPS_PARAMS(X) \
+    X(".AOloopindex", &AOloopindex, FPTYPE_INT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "AO loop index") \
+    X(".svdlim", &svdlim, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "SVD limit") \
+    X(".CPAmax", &CPAmax, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "max cycles per aperture (CPA)") \
+    X(".deltaCPA", &deltaCPA, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "CPA increment") \
+    X(".DMgeom.align.CX", &alignCX, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "beam X center on DM") \
+    X(".DMgeom.align.CY", &alignCY, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "beam Y center on DM") \
+    X(".DMgeom.align.ID", &alignID, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "beam inner diameter") \
+    X(".DMgeom.align.OD", &alignOD, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "beam outer diameter") \
+    X(".DMgeom.DMxsize", &DMxsize, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "DM x size") \
+    X(".DMgeom.DMysize", &DMysize, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "DM y size") \
+    X(".FPS_zRMacqu", &FPS_zRMacqu, FPTYPE_FPSNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED), "FPS zonal RM acquisition") \
+    X(".DMgeom.FPS_DMcomb", &FPS_DMcomb, FPTYPE_FPSNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED), "FPS DM comb") \
+    X(".DMgeom.DMmaskCTRL", &fname_DMmaskCTRL, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM actuators controlled") \
+    X(".DMgeom.DMmaskEXTR", &fname_DMmaskEXTR, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM actuators extrapolated") \
+    X(".zrespM", &fname_zrespM, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "zonal response matrix") \
+    X(".WFSmask", &fname_WFSmask, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "WFS mask") \
+    X(".auxRM.FPS_loRMacqu", &FPS_loRMacqu, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT, "FPS low order modal RM acquisition") \
+    X(".auxRM.loRM", &fname_loRM, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "low order modal response matrix") \
+    X(".auxRM.loRMmodes", &fname_loRMmodes, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "low order RM modes") \
+    X(".upRMfiles", &update_RMfiles, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "update RM files from FPSs") \
+    X(".DMgeom.upAlign", &update_align, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "update default align (if no DMmaskRM)")
 
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_INT32,
-        ".AOloopindex",
-        "AO loop index",
-        "0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &AOloopindex,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".svdlim",
-        "SVD limit",
-        "0.01",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &svdlim,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".CPAmax",
-        "max cycles per aperture (CPA)",
-        "20.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &CPAmax,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".deltaCPA",
-        "CPA increment",
-        "0.8",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &deltaCPA,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".DMgeom.align.CX",
-        "beam X center on DM",
-        "10.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &alignCX,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".DMgeom.align.CY",
-        "beam Y center on DM",
-        "10.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &alignCY,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".DMgeom.align.ID",
-        "beam inner diameter",
-        "5.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &alignID,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".DMgeom.align.OD",
-        "beam outer diameter",
-        "10.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &alignOD,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".DMgeom.DMxsize",
-        "DM x size",
-        "32",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &DMxsize,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".DMgeom.DMysize",
-        "DM y size",
-        "32",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &DMysize,
-        NULL
-    },
-    {
-        CLIARG_FPSNAME,
-        ".FPS_zRMacqu",
-        "FPS zonal RM acquisition",
-        "NULL",
-
-
-        FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
-        (void **) &FPS_zRMacqu,
-        &fpi_FPS_zRMacqu
-    },
-    {
-        CLIARG_FPSNAME,
-        ".DMgeom.FPS_DMcomb",
-        "FPS DM comb",
-        "NULL",
-
-
-        FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED,
-        (void **) &FPS_DMcomb,
-        &fpi_FPS_DMcomb
-    },
-    {
-        CLIARG_FITSFILENAME,
-        ".DMgeom.DMmaskCTRL",
-        "DM actuators controlled",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &fname_DMmaskCTRL,
-        &fpi_fname_DMmaskCTRL
-    },
-    {
-        CLIARG_FITSFILENAME,
-        ".DMgeom.DMmaskEXTR",
-        "DM actuators extrapolated",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &fname_DMmaskEXTR,
-        &fpi_fname_DMmaskEXTR
-    },
-    {
-        CLIARG_STR,
-        ".zrespM",
-        "zonal response matrix",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &fname_zrespM,
-        &fpi_fname_zrespM
-    },
-    {
-        CLIARG_STR,
-        ".WFSmask",
-        "WFS mask",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &fname_WFSmask,
-        &fpi_fname_WFSmask
-    },
-// aux low-order RM
-    {
-        CLIARG_FPSNAME,
-        ".auxRM.FPS_loRMacqu",
-        "FPS low order modal RM acquisition",
-        "NULL",
-
-
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &FPS_loRMacqu,
-        &fpi_FPS_loRMacqu
-    },
-    {
-        CLIARG_STR,
-        ".auxRM.loRM",
-        "low order modal response matrix",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &fname_loRM,
-        &fpi_fname_loRM
-    },
-    {
-        CLIARG_FITSFILENAME,
-        ".auxRM.loRMmodes",
-        "low order RM modes",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &fname_loRMmodes,
-        &fpi_fname_loRMmodes
-    },
-    {
-        CLIARG_ONOFF,
-        ".upRMfiles",
-        "update RM files from FPSs",
-        "OFF",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &update_RMfiles,
-        &fpi_update_RMfiles
-    },
-    {
-        CLIARG_ONOFF,
-        ".DMgeom.upAlign",
-        "update default align (if no DMmaskRM)",
-        "OFF",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &update_align,
-        &fpi_update_align
-    }
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
 
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
-static CLICMDDATA CLIcmddata =
-{
-    "compctrlmodes",
-    "compute AO control modes in WFS and DM space",
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
     CLICMD_FIELDS_DEFAULTS
 };
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -553,19 +392,19 @@ static errno_t customCONFsetup()
     {
         // FPS are not required
 
-        data.fpsptr->parray[fpi_fname_zrespM].fpflag &=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".zrespM")].fpflag &=
             ~FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_fname_WFSmask].fpflag &=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".WFSmask")].fpflag &=
             ~FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_FPS_loRMacqu].fpflag &=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".auxRM.FPS_loRMacqu")].fpflag &=
             ~FPFLAG_FPS_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_FPS_zRMacqu].fpflag &=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".FPS_zRMacqu")].fpflag &=
             ~FPFLAG_FPS_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_FPS_DMcomb].fpflag &=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.FPS_DMcomb")].fpflag &=
             ~FPFLAG_FPS_RUN_REQUIRED;
 
     }
@@ -582,10 +421,10 @@ static errno_t customCONFcheck()
     if(data.fpsptr != NULL)
     {
 
-        data.fpsptr->parray[fpi_fname_zrespM].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".zrespM")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_fname_WFSmask].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".WFSmask")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
 
@@ -593,27 +432,27 @@ static errno_t customCONFcheck()
         if(FPS_zRMacqu.SMfd < 1)
         {
             functionparameter_ConnectExternalFPS(data.fpsptr,
-                                                 fpi_FPS_zRMacqu,
+                                                 functionparameter_GetParamIndex(data.fpsptr, ".FPS_zRMacqu"),
                                                  &FPS_zRMacqu);
         }
 
         if(FPS_loRMacqu.SMfd < 1)
         {
             functionparameter_ConnectExternalFPS(data.fpsptr,
-                                                 fpi_FPS_loRMacqu,
+                                                 functionparameter_GetParamIndex(data.fpsptr, ".auxRM.FPS_loRMacqu"),
                                                  &FPS_loRMacqu);
         }
 
         if(FPS_DMcomb.SMfd < 1)
         {
             functionparameter_ConnectExternalFPS(data.fpsptr,
-                                                 fpi_FPS_DMcomb,
+                                                 functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.FPS_DMcomb"),
                                                  &FPS_DMcomb);
         }
 
 
         // Update RM files
-        if(data.fpsptr->parray[fpi_update_RMfiles].fpflag & FPFLAG_ONOFF)
+        if(data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".upRMfiles")].fpflag & FPFLAG_ONOFF)
         {
 
             if(FPS_zRMacqu.SMfd > 0)
@@ -687,12 +526,12 @@ static errno_t customCONFcheck()
             }
 
             // set back to OFF
-            data.fpsptr->parray[fpi_update_RMfiles].fpflag &= ~FPFLAG_ONOFF;
+            data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".upRMfiles")].fpflag &= ~FPFLAG_ONOFF;
         }
 
 
         // update align params for auto mask
-        if(data.fpsptr->parray[fpi_update_align].fpflag & FPFLAG_ONOFF)
+        if(data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.upAlign")].fpflag & FPFLAG_ONOFF)
         {
             if(FPS_DMcomb.SMfd > 0)
             {
@@ -728,13 +567,13 @@ static errno_t customCONFcheck()
                                                         ".DMgeom.align.ID",
                                                         id);
             }
-            data.fpsptr->parray[fpi_update_align].fpflag &= ~FPFLAG_ONOFF;
+            data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.upAlign")].fpflag &= ~FPFLAG_ONOFF;
         }
 
 
-        data.fpsptr->parray[fpi_fname_DMmaskCTRL].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.DMmaskCTRL")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
-        data.fpsptr->parray[fpi_fname_DMmaskEXTR].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.DMmaskEXTR")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
     }
 
@@ -1217,18 +1056,34 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_cacao_computeCalib__compute_control_modes()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
+
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+
+    customCONFcheck)
+#endif

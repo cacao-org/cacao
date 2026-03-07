@@ -37,99 +37,70 @@ typedef struct
 
 
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "pyWFSgridmatch",
+    .cmdkey      = "pyWFSgridmatch",
+    .description = "Match pyramid WFS zrespM to grid"
+};
+
 static char *inimname;
-
-// kernel size for actuator response
 static double *spotsize;
-static long      fpi_spotsize = -1;
-
-
-// DM array x size
 static uint32_t *dmxsize;
-static long fpi_dmxsize;
-
-// DM array y size
 static uint32_t *dmysize;
-static long fpi_dmysize;
 
+#define FPS_PARAMS(X) \
+    X(".in_name", &inimname, \
+      FPTYPE_STREAMNAME, 1, \
+      FPFLAG_DEFAULT_INPUT, "input image") \
+    X(".spotsize", &spotsize, \
+      FPTYPE_FLOAT64, 1, \
+      FPFLAG_DEFAULT_INPUT, "spot size") \
+    X(".dmxsize", &dmxsize, \
+      FPTYPE_UINT32, 1, \
+      FPFLAG_DEFAULT_INPUT, "DM x size") \
+    X(".dmysize", &dmysize, \
+      FPTYPE_UINT32, 1, \
+      FPFLAG_DEFAULT_INPUT, "DM y size")
 
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
 
+static const int nb_bindings =
+    sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_IMG,
-        ".in_name",
-        "input image",
-        "im1",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &inimname,
-        NULL
-    },
-    {
-        CLIARG_FLOAT64,
-        ".spotsize",
-        "spot size",
-        "3.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &spotsize,
-        &fpi_spotsize
-    },
-    {   // DM x size
-        CLIARG_UINT32,
-        ".dmxsize",
-        "DM x size",
-        "50",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &dmxsize,
-        &fpi_dmxsize
-    },
-    {   // DM y size
-        CLIARG_UINT32,
-        ".dmysize",
-        "DM y size",
-        "50",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &dmysize,
-        &fpi_dmysize
-    }
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
 };
 
 
 
-// Optional custom configuration setup.
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
-    if(data.fpsptr != NULL)
-    {
-
-    }
-
-    return RETURN_SUCCESS;
-}
-
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
-    return RETURN_SUCCESS;
-}
-
-static CLICMDDATA CLIcmddata =
-{
-    "pyWFSgridmatch", "Match pyramid WFS zrespM to grid", CLICMD_FIELDS_DEFAULTS
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
 };
 
-// detailed help
-static errno_t help_function()
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
 {
-    return RETURN_SUCCESS;
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
 }
-
-
 
 // compute spot positions from grid params
 static int compute_grid_spotpos(
@@ -851,19 +822,31 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_cacao_pyramidWFStools__pyWFSgridmatch()
 {
+    safe_fps_fill_farg_examples(
+        farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function)
+#endif

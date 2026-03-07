@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacaocc.compsCM"
+fpsfcall="cacao-fpsexec-cacaocc-compstrcm"
 
 # short description
 fpsdescr="Compute straight control matrix"

@@ -2,17 +2,17 @@
 
 # Setup script
 
-MSdescr="cacao loop setup"
+MSdescr="cacao-cli loop setup"
 
 source milk-script-std-config
 
 
 MSextdescr="
-Initial setup for cacao instance.
+Initial setup for cacao-cli instance.
 Run this script from loop rootdir.
 
 Creates work directory (rundir), install scripts and start conf processes in tmux sessions.
-Each cacao loop has a unique ASCII name, referred to as <loopname> in this manual.
+Each cacao-cli loop has a unique ASCII name, referred to as <loopname> in this manual.
 
 Main steps performed by cacao-setup:
 
@@ -692,7 +692,7 @@ fi
 
 # Write in this file FPS-compatible processes that will be used
 # col1: FPS name as it should appear in FPS
-# col2: function to be called in cacao to launch process
+# col2: function to be called in cacao-cli to launch process
 # col3: optional arg to ensure uniqueness and pass argument to process
 
 # for example:
@@ -735,11 +735,11 @@ cd ${CACAO_LOOPRUNDIR_FULLPATH}
 
 
 
-# SETUP ALL (-C) FPS, using cacao as executable (-e cacao)
+# SETUP ALL (-C) FPS, using cacao-cli as executable (-e cacao-cli)
 # this will create FPS shared mems and tmux sessions
 #
 export FPS_KEYWORDARRAY=":cacao-setup:${CACAO_LOOPNAME}:aol${CACAO_LOOPNUMBER}_:"
-milk-fpsinit -e cacao -C
+milk-fpsinit -e cacao-cli -C
 
 # list of new FPS written in fpsinit.newFPS.log
 
@@ -860,7 +860,7 @@ fi
 
 echo ""
 echo ""
-echolog  "cacao setup complete"
+echolog  "cacao-cli setup complete"
 echo ""
 echo "Processes :"
 echo ""

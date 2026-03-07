@@ -6,9 +6,9 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="list cacao loops on system"
+MSdescr="list cacao-cli loops on system"
 
-MSextdescr="List cacao loops
+MSextdescr="List cacao-cli loops
 
 This script can run from anywhere on system
 "
@@ -19,7 +19,7 @@ source milk-script-std-config
 source milk-argparse
 
 echo ""
-echo "cacao loops on system :"
+echo "cacao-cli loops on system :"
 echo ""
 
 for LOOP in {1..100}

@@ -11,78 +11,61 @@
 
 
 
-// Input modes to be masked/extrapolated
-//
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "maskextrapolate",
+    .cmdkey      = "maskextrapolate",
+    .description = "mask and extrapolate modes"
+};
+
 static char *inmodeC;
-static long  fpi_inmodeC;
-
-// mask image
-//
 static char *maskim;
-static long  fpi_maskim;
-
-
-// extended mask image
-//
 static char *extmaskim;
-static long  fpi_extmaskim;
-
-
 static char *outmodeC;
-static long  fpi_outmodeC;
-
-
 static float *edgeapo;
 
+#define FPS_PARAMS(X) \
+    X(".inmodeC", &inmodeC, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input modes") \
+    X(".maskim", &maskim, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input mask") \
+    X(".extmaskim", &extmaskim, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "extended input mask") \
+    X(".outmodeC", &outmodeC, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output modes") \
+    X(".edgeapo", &edgeapo, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "edge apodization strength")
 
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_IMG,
-        ".inmodeC",
-        "input modes",
-        "inmodeC",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &inmodeC,
-        &fpi_inmodeC
-    },
-    {
-        CLIARG_IMG,
-        ".maskim",
-        "input mask",
-        "maskim",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &maskim,
-        &fpi_maskim
-    },
-    {
-        CLIARG_IMG,
-        ".extmaskim",
-        "extended input mask",
-        "extmaskim",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &extmaskim,
-        &fpi_extmaskim
-    },
-    {
-        CLIARG_STR,
-        ".outmodeC",
-        "output modes",
-        "outmodeC",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &outmodeC,
-        &fpi_outmodeC
-    },
-    {
-        CLIARG_FLOAT32,
-        ".edgeapo",
-        "edge apodization strength",
-        "1.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &edgeapo,
-        NULL
-    }
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -114,10 +97,7 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata =
-{
-    "maskextrapolate", "mask and extrapolate modes", CLICMD_FIELDS_DEFAULTS
-};
+
 
 
 
@@ -291,14 +271,20 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_computeCalib__maskextrapolate()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
@@ -306,3 +292,13 @@ CLIADDCMD_AOloopControl_computeCalib__maskextrapolate()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+
+    customCONFcheck)
+#endif

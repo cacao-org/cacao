@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacaoio.acquireWFS"
+fpsfcall="cacao-fpsexec-cacaoiot-acquireWFS"
 
 # short description
 fpsdescr="WFS acquire frames"

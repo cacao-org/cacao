@@ -59,7 +59,7 @@ target_link_libraries(${LIBNAME} PUBLIC CLIcore milklinoptimtools)
 install(TARGETS ${LIBNAME} DESTINATION lib)
 
 install(PROGRAMS scripts/cacao-setup
-	scripts/cacao
+	scripts/cacao-cli
 	scripts/cacaofuncs-log
 	scripts/cacao-check-cacaovars
 	scripts/cacao-commands
@@ -149,6 +149,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/aorun/cacao-aorun-140-applyPF
 	scripts/aorun/cacao-aorun-200-mfiltturbrec
 	scripts/aorun/cacao-aorun-300-wfsrefoptpsf
+	scripts/cacao-fpsexec-list
 	DESTINATION bin)
 
 install(FILES ${SRCNAME}.h DESTINATION include/${SRCNAME})

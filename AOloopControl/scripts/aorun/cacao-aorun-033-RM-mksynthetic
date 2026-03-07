@@ -268,7 +268,7 @@ if [ $CACAO_DMysize -eq 1 ]; then
   # link to 2D pos file
   ln -sf $(pwd)/data/act2Dpos.txt mapcoord2D.txt
 
-cacao << EOF
+cacao-cli << EOF
 loadfits "conf/RMmodesDM/RMsyn_modesDM2D.fits" RMsyn_modesDM2D
 cacaocc.sample2DWF RMsyn_modesDM2D map2D RMsyn_modesDM1D
 listim
@@ -290,7 +290,7 @@ cp $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMsyn_modesDM.fits
 # Compute WFS response of synthetic modes
 #
 
-cacao << EOF
+cacao-cli << EOF
 loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
 loadfits "conf/RMmodesDM/RMsyn_modesDM.fits" dmC
 cacaocc.generateRMWFS zrespM dmC wfsC

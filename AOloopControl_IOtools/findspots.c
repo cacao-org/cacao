@@ -11,75 +11,61 @@
 // quicksort
 #include "COREMOD_tools/COREMOD_tools.h"
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "findspots",
+    .cmdkey      = "findspots",
+    .description = "find spots in inmage"
+};
+
 static char *inimname;
-
-// approximate spot size
-//
 static float *spotsize;
-static long      fpi_spotsize = -1;
-
-// exclusion distance
-// minimum distance between spots
-//
 static float *spotexcldist;
-static long      fpi_spotexcldist = -1;
-
-// max number of spots
-//
 static uint32_t *maxnbspot;
-static long      fpi_maxnbspot = -1;
-
-
 static char *outmapcname;
 
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_IMG,
-        ".in_name",
-        "input image",
-        "im1",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &inimname,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".spotsize",
-        "approximate spot size",
-        "3.0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &spotsize,
-        &fpi_spotsize
-    },
-    {
-        CLIARG_FLOAT32,
-        ".spotexcldist",
-        "exclusion distance",
-        "10.0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &spotexcldist,
-        &fpi_spotexcldist
-    },
-    {
-        CLIARG_UINT32,
-        ".maxnbspot",
-        "max number of spots",
-        "19",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &maxnbspot,
-        &fpi_maxnbspot
-    },
-    {
-        CLIARG_STR,
-        ".outmapc",
-        "output mapping cube",
-        "mapc",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &outmapcname,
-        NULL
-    }
+#define FPS_PARAMS(X) \
+    X(".in_name", &inimname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input image") \
+    X(".spotsize", &spotsize, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "approximate spot size") \
+    X(".spotexcldist", &spotexcldist, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "exclusion distance") \
+    X(".maxnbspot", &maxnbspot, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "max number of spots") \
+    X(".outmapc", &outmapcname, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output mapping cube")
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -113,13 +99,6 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
-
-static CLICMDDATA CLIcmddata =
-{
-    "findspots",
-    "find spots in inmage",
-    CLICMD_FIELDS_DEFAULTS
-};
 
 
 
@@ -398,15 +377,21 @@ static errno_t compute_function()
 }
 
 
-
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_IOtools__findspots()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
+
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
 
@@ -414,3 +399,13 @@ CLIADDCMD_AOloopControl_IOtools__findspots()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+    customCONFsetup,
+    customCONFcheck)
+#endif

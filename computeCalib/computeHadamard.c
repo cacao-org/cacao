@@ -26,39 +26,55 @@
 
 // Local variables pointers
 
-static char *inmask;
-static long  fpi_inmask;
-
-static char *outHcube;
-static long  fpi_outHcube;
-
-
-
-
-
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        // AO loop index. Used for naming streams aolX_
-        CLIARG_STR,
-        ".inmask",
-        "pixel mask (0 and 1 vals)",
-        "imm",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &inmask,
-        &fpi_inmask
-    },
-    {
-        CLIARG_STR,
-        ".outHcube",
-        "output Hadamard cube",
-        "Hcube",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &outHcube,
-        &fpi_outHcube
-    }
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "mkHadamard",
+    .cmdkey      = "mkHadamard",
+    .description = "make Hadamard modes"
 };
+
+static char *inmask;
+static char *outHcube;
+
+#define FPS_PARAMS(X) \
+    X(".inmask", &inmask, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "pixel mask (0 and 1 vals)") \
+    X(".outHcube", &outHcube, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output Hadamard cube")
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 static errno_t customCONFsetup()
@@ -89,10 +105,6 @@ static errno_t customCONFcheck()
 
 
 
-static CLICMDDATA CLIcmddata =
-{
-    "mkHadamard", "make Hadamard modes", CLICMD_FIELDS_DEFAULTS
-};
 
 
 
@@ -364,17 +376,34 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_computeCalib__mkHadamard()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
+
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+
+    customCONFcheck)
+#endif

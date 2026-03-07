@@ -13,75 +13,75 @@
 
 
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "mk3Ddmgrid",
+    .cmdkey      = "mk3Ddmgrid",
+    .description = "create DM calibration pattern sequence"
+};
+
 // Local variables pointers
 
 // output img name
 static char *outname;
-
 static uint32_t *xsize;
 static uint32_t *ysize;
-
 static uint32_t *XYpattern;
-
 static uint32_t *binfactor;
 
+#define FPS_PARAMS(X) \
+    X(".outname", &outname, \
+      FPTYPE_STRING, 1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output image name") \
+    X(".xsize", &xsize, \
+      FPTYPE_UINT32, 1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "x size") \
+    X(".ysize", &ysize, \
+      FPTYPE_UINT32, 1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "y size") \
+    X(".XYpattern", &XYpattern, \
+      FPTYPE_UINT32, 1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "grid pattern") \
+    X(".binfact", &binfactor, \
+      FPTYPE_UINT32, 1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "binning factor")
 
-
-
-static CLICMDARGDEF farg[] = {{
-        CLIARG_STR_NOT_IMG,
-        ".outname",
-        "output image name",
-        "DMgridc",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &outname,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".xsize",
-        "x size",
-        "50",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &xsize,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".ysize",
-        "y size",
-        "50",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &ysize,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".XYpattern",
-        "grid pattern",
-        "3",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &XYpattern,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".binfact",
-        "binning factor",
-        "2",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &binfactor,
-        NULL
-    }
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
 
+static const int nb_bindings =
+    sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
 
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
 
-static CLICMDDATA CLIcmddata = {"mk3Ddmgrid",
-                                "create DM calibration pattern sequence",
-                                CLICMD_FIELDS_DEFAULTS
-                               };
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -247,11 +247,21 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 errno_t
 CLIADDCMD_AOloopControl_DM__mk3Ddmgrid()
 {
+    safe_fps_fill_farg_examples(
+        farg, my_bindings, nb_bindings);
+
     INSERT_STD_CLIREGISTERFUNC
 
     // Optional custom settings for this function can be included
@@ -259,3 +269,11 @@ CLIADDCMD_AOloopControl_DM__mk3Ddmgrid()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function)
+#endif

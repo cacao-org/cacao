@@ -21,24 +21,53 @@ static float CURVATURE_REGZ = 1.0;
 static float SHACK_CENTROID_REGZ = 1.0;
 static float one_sided_curv_integrator_gain = 0.01; // TODO FPS
 
-// Local variables pointers
-static char *apd_mat_name;
-static long  fpi_wfsinsname;
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_IMG,
-        ".wfsin",
-        "Wavefront sensor input",
-        "wfsim",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &apd_mat_name,
-        &fpi_wfsinsname
-    }
-
-    // TODO time-downsample factor for LOWFS.
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "ao188preproc",
+    .cmdkey      = "ao188preproc",
+    .description = "AO188 APD Preprocessor"
 };
+
+static char *apd_mat_name;
+
+#define FPS_PARAMS(X) \
+    X(".wfsin", &apd_mat_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input")
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 /*
 Temp utility to detect what causes STDIN to become closed
@@ -78,11 +107,6 @@ static errno_t customCONFcheck()
 {
     return RETURN_SUCCESS;
 }
-
-static CLICMDDATA CLIcmddata =
-{
-    "ao188preproc", "AO188 APD Preprocessor", CLICMD_FIELDS_DEFAULTS
-};
 
 // detailed help
 static errno_t help_function()
@@ -383,20 +407,38 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
-INSERT_STD_FPSCLIfunctions
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_IOtools__AO188Preproc()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+
     INSERT_STD_CLIREGISTERFUNC
 
     return RETURN_SUCCESS;
 }
+#endif
 
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+    customCONFsetup,
+    customCONFcheck)
+#endif
 
 /*
 cacao << EOF

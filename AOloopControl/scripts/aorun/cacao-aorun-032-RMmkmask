@@ -149,7 +149,7 @@ cacaomsglog "START"
 
 #loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
 
-cacao << EOF
+cacao-cli << EOF
 loadfits "${RMfname}" zrespM
 
 cacaocc.compmasksWFSDM .dmmask.perc0 ${DMmaskRMp0}

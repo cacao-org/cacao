@@ -9,106 +9,68 @@
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_tools/COREMOD_tools.h"
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "acquire_spectra",
+    .cmdkey      = "acquire_spectra",
+    .description = "acquire spectra"
+};
+
 // Local variables pointers
 static char *input_shm_name; // input shared memory
-static long  fpi_inputshmname;
-
 static char *specmask_shm_name; // mask shared memory
-static long  fpi_specmaskshmname;
-
 static uint32_t *binning;
-static long     fpi_binning;
-
 static uint32_t *AOloopindex;
-static long      fpi_AOloopindex;
-
 static uint32_t *semindex;
-static long      fpi_semindex;
+static uint64_t *compWFSsubdark;
+static uint64_t *compWFSnormalize;
+static uint64_t *compWFSrefsub;
 
-static int64_t *compWFSsubdark;
-static long     fpi_compWFSsubdark;
+#define FPS_PARAMS(X) \
+    X(".wfsin", &input_shm_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input") \
+    X(".wfsmask", &specmask_shm_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "wfs spectral extraction mask") \
+    X(".binning", &binning, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "spectral trace binning") \
+    X(".AOloopindex", &AOloopindex, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "loop index") \
+    X(".semindex", &semindex, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "input semaphore index") \
+    X(".comp.darksub", &compWFSsubdark, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "sub aolX_wfsdark -> imWFS0") \
+    X(".comp.WFSnormalize", &compWFSnormalize, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "normalize WFS frames -> imWFS1") \
+    X(".comp.WFSrefsub", &compWFSrefsub, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "subtract WFS reference aolX_wfsref -> imWFS2")
 
-static int64_t *compWFSnormalize;
-static long     fpi_compWFSnormalize;
-
-static int64_t *compWFSrefsub;
-static long     fpi_compWFSrefsub;
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_IMG,
-        ".wfsin",
-        "Wavefront sensor input",
-        "wfsin",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &input_shm_name,
-        &fpi_inputshmname
-    },
-    {
-        CLIARG_IMG,
-        ".wfsmask",
-        "wfs spectral extraction mask",
-        "wfsspecmask",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &specmask_shm_name,
-        &fpi_specmaskshmname
-    },
-    {
-        CLIARG_UINT32,
-        ".binning",
-        "spectral trace binning",
-        "1",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &binning,
-        &fpi_binning
-    },
-    {
-        CLIARG_UINT32,
-        ".AOloopindex",
-        "loop index",
-        "0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &AOloopindex,
-        &fpi_AOloopindex
-    },
-    {
-        CLIARG_UINT32,
-        ".semindex",
-        "input semaphore index",
-        "1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &semindex,
-        &fpi_semindex
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.darksub",
-        "sub aolX_wfsdark -> imWFS0",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &compWFSsubdark,
-        &fpi_compWFSsubdark
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.WFSnormalize",
-        "normalize WFS frames -> imWFS1",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &compWFSnormalize,
-        &fpi_compWFSnormalize
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.WFSrefsub",
-        "subtract WFS reference aolX_wfsref -> imWFS2",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &compWFSrefsub,
-        &fpi_compWFSrefsub
-    },
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 // Optional custom configuration setup.
 // Runs once at conf startup
@@ -117,12 +79,17 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_inputshmname].fpflag |=
+        long fpi_inputshmname = functionparameter_GetParamIndex(data.fpsptr, ".wfsin");
+        long fpi_compWFSsubdark = functionparameter_GetParamIndex(data.fpsptr, ".comp.darksub");
+        long fpi_compWFSnormalize = functionparameter_GetParamIndex(data.fpsptr, ".comp.WFSnormalize");
+        long fpi_compWFSrefsub = functionparameter_GetParamIndex(data.fpsptr, ".comp.WFSrefsub");
+
+        if(fpi_inputshmname > -1) data.fpsptr->parray[fpi_inputshmname].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
-        data.fpsptr->parray[fpi_compWFSsubdark].fpflag   |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compWFSnormalize].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compWFSrefsub].fpflag    |= FPFLAG_WRITERUN;
+        if(fpi_compWFSsubdark > -1) data.fpsptr->parray[fpi_compWFSsubdark].fpflag   |= FPFLAG_WRITERUN;
+        if(fpi_compWFSnormalize > -1) data.fpsptr->parray[fpi_compWFSnormalize].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_compWFSrefsub > -1) data.fpsptr->parray[fpi_compWFSrefsub].fpflag    |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -135,12 +102,6 @@ static errno_t customCONFcheck()
 {
     return RETURN_SUCCESS;
 }
-
-static CLICMDDATA CLIcmddata =
-{
-    "acquire_spectra", "acquire spectra", CLICMD_FIELDS_DEFAULTS
-};
-
 
 // detailed help
 static errno_t help_function()
@@ -360,7 +321,8 @@ static errno_t compute_function()
         // STEP 2: DARK SUB -> aolx_imWFS0
         // check wfsdark is to be subtracted
         int status_darksub = 0;
-        if(data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF)
+        long fpi_compWFSsubdark = functionparameter_GetParamIndex(data.fpsptr, ".comp.darksub");
+        if(fpi_compWFSsubdark > -1 && (data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF))
         {
             if(imgWFSdark.ID != -1)
             {
@@ -388,7 +350,8 @@ static errno_t compute_function()
         int status_normalize = 0;
         imgimWFS1.md->write = 1;
 
-        if(data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF)
+        long fpi_compWFSnormalize = functionparameter_GetParamIndex(data.fpsptr, ".comp.WFSnormalize");
+        if(fpi_compWFSnormalize > -1 && (data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF))
         {
             status_normalize = 1;
             spec_norm(imgimWFS0, imgimWFS1);
@@ -405,7 +368,8 @@ static errno_t compute_function()
 
         int status_refsub = 0;
         imgimWFS2.md->write = 1;
-        if(data.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF)
+        long fpi_compWFSrefsub = functionparameter_GetParamIndex(data.fpsptr, ".comp.WFSrefsub");
+        if(fpi_compWFSrefsub > -1 && (data.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF))
         {
             // subtract reference
             status_refsub = 1;
@@ -444,15 +408,34 @@ static errno_t compute_function()
 }
 
 
-INSERT_STD_FPSCLIfunctions
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t CLIADDCMD_AOloopControl_IOtools__acquirespectra()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+
     INSERT_STD_CLIREGISTERFUNC
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+    customCONFsetup,
+    customCONFcheck)
+#endif

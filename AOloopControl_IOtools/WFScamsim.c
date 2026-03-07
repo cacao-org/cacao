@@ -10,128 +10,68 @@
 
 #include "statistic/statistic.h"
 
-// Local variables pointers
-
-// input signal stream
-static char *wfssignal_in;
-static long  fpi_wfssignal_in;
-
-
-// output WFS image
-static char *wfsim_out;
-static long  fpi_wfsim_out;
-
-
-
-// compute flag: dark subtract
-static int64_t *compdarkadd;
-static long     fpi_compdarkadd;
-
-// dark frame
-static char *wfsdark;
-static long  fpi_wfsdark;
-
-
-
-static float *fluxtotal;
-static long   fpi_fluxtotal;
-
-// Camera gain e-/ADU
-static float *camgain;
-static long   fpi_camgain;
-
-
-// compute flag: apply photon noise
-static int64_t *compphnoise;
-static long     fpi_compphnoise;
-
-// Readout noise
-// negative value if no RON
-static float *camRON;
-static long   fpi_camRON;
-
-
-
-
-
-
-
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_STREAM,
-        ".wfssignal",
-        "Wavefront sensor input signal",
-        "aol9_wfssignal",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &wfssignal_in,
-        &fpi_wfssignal_in
-    },
-    {
-        CLIARG_STREAM,
-        ".wfscamim",
-        "Wavefront sensor ouput image",
-        "aol9_wfsim",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &wfsim_out,
-        &fpi_wfsim_out
-    },
-    {
-        CLIARG_ONOFF,
-        ".compdarkadd",
-        "subtract dark",
-        "1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &compdarkadd,
-        &fpi_compdarkadd
-    },
-    {
-        CLIARG_STREAM,
-        ".camdark",
-        "camera dark frame",
-        "aol9_wfsdark",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &wfsdark,
-        &fpi_wfsdark
-    },
-    {
-        CLIARG_FLOAT32,
-        ".fluxtotal",
-        "total output flux [phe-], <0 if no scaling",
-        "1000.0",
-        FPFLAG_DEFAULT_OUTPUT,
-        (void **) &fluxtotal,
-        &fpi_fluxtotal
-    },
-    {
-        CLIARG_FLOAT32,
-        ".camgain",
-        "camera gain [e- / ADU]",
-        "2.0",
-        FPFLAG_DEFAULT_OUTPUT,
-        (void **) &camgain,
-        &fpi_camgain
-    },
-    {
-        CLIARG_ONOFF,
-        ".compphnoise",
-        "compute photon noise",
-        "1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &compphnoise,
-        &fpi_compphnoise
-    },
-    {
-        CLIARG_FLOAT32,
-        ".camRON",
-        "camera readout noise [e-] (neg = 0)",
-        "-1.0",
-        FPFLAG_DEFAULT_OUTPUT,
-        (void **) &camRON,
-        &fpi_camRON
-    }
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "WFScamsim",
+    .cmdkey      = "WFScamsim",
+    .description = "simulate WFS camera"
 };
+
+// Local variables pointers
+static char *wfssignal_in;
+static char *wfsim_out;
+static uint64_t *compdarkadd;
+static char *wfsdark;
+static float *fluxtotal;
+static float *camgain;
+static uint64_t *compphnoise;
+static float *camRON;
+
+#define FPS_PARAMS(X) \
+    X(".wfssignal", &wfssignal_in, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input signal") \
+    X(".wfscamim", &wfsim_out, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor ouput image") \
+    X(".compdarkadd", &compdarkadd, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "subtract dark") \
+    X(".camdark", &wfsdark, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "camera dark frame") \
+    X(".fluxtotal", &fluxtotal, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT, "total output flux [phe-], <0 if no scaling") \
+    X(".camgain", &camgain, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT, "camera gain [e- / ADU]") \
+    X(".compphnoise", &compphnoise, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "compute photon noise") \
+    X(".camRON", &camRON, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT, "camera readout noise [e-] (neg = 0)")
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -145,11 +85,17 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_compdarkadd].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_fluxtotal].fpflag   |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_camgain].fpflag     |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_compphnoise].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_camRON].fpflag      |= FPFLAG_WRITERUN;
+        long fpi_compdarkadd = functionparameter_GetParamIndex(data.fpsptr, ".compdarkadd");
+        long fpi_fluxtotal   = functionparameter_GetParamIndex(data.fpsptr, ".fluxtotal");
+        long fpi_camgain     = functionparameter_GetParamIndex(data.fpsptr, ".camgain");
+        long fpi_compphnoise = functionparameter_GetParamIndex(data.fpsptr, ".compphnoise");
+        long fpi_camRON      = functionparameter_GetParamIndex(data.fpsptr, ".camRON");
+
+        if(fpi_compdarkadd > -1) data.fpsptr->parray[fpi_compdarkadd].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_fluxtotal > -1) data.fpsptr->parray[fpi_fluxtotal].fpflag   |= FPFLAG_WRITERUN;
+        if(fpi_camgain > -1) data.fpsptr->parray[fpi_camgain].fpflag     |= FPFLAG_WRITERUN;
+        if(fpi_compphnoise > -1) data.fpsptr->parray[fpi_compphnoise].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_camRON > -1) data.fpsptr->parray[fpi_camRON].fpflag      |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -162,11 +108,6 @@ static errno_t customCONFcheck()
 {
     return RETURN_SUCCESS;
 }
-
-static CLICMDDATA CLIcmddata =
-{
-    "WFScamsim", "simulate WFS camera", CLICMD_FIELDS_DEFAULTS
-};
 
 
 
@@ -246,7 +187,8 @@ static errno_t compute_function()
         //
         if(*fluxtotal >= 0.0)
         {
-            if(data.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF)
+            long fpi_compphnoise = functionparameter_GetParamIndex(data.fpsptr, ".compphnoise");
+            if(fpi_compphnoise > -1 && (data.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF))
             {
                 for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
@@ -335,16 +277,35 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
-INSERT_STD_FPSCLIfunctions
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_IOtools__WFScamsim()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+
     INSERT_STD_CLIREGISTERFUNC
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+    customCONFsetup,
+    customCONFcheck)
+#endif

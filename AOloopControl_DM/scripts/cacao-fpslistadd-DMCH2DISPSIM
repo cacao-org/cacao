@@ -16,7 +16,7 @@ fpsarg0="${CACAO_DMSIMINDEX}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacaodm.DMcomb"
+fpsfcall="cacao-fpsexec-dmcomb"
 
 # short description
 fpsdescr="DM channels combination"

@@ -17,7 +17,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacao.modalCTRLstats"
+fpsfcall="cacao-cli.modalCTRLstats"
 
 # short description
 fpsdescr="Modal control stats"

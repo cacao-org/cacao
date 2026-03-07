@@ -34,183 +34,127 @@
 
 
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "mfilttest",
+    .cmdkey      = "mfilttest",
+    .description = "test input for modal filter"
+};
+
 #define SNAMEPREFIX "tseqPF"
 
-
 static uint64_t *AOloopindex;
-
 static char *mvalDM;
-static long  fpi_mvalDM;
-
 static char *mvalWFS;
-static long  fpi_mvalWFS;
-
-
-
 static float *minPrate;
-static long   fpi_minPrate;
-
 static float *maxPrate;
-static long   fpi_maxPrate;
-
-
-
 static float *noiseamp;
-static long   fpi_noiseamp;
-
 static float *multfact;
-static long   fpi_multfact;
-
-
 static float *WFSlatency;
-static long   fpi_WFSlatency;
-
 static float *DMlatency;
-static long   fpi_DMlatency;
 
+#define FPS_PARAMS(X) \
+    X(".AOloopindex", &AOloopindex, \
+      FPTYPE_UINT64, 1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "AO loop index") \
+    X(".mvalDM", &mvalDM, \
+      FPTYPE_STREAMNAME, 1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input mode values - DM control") \
+    X(".mvalWFS", &mvalWFS, \
+      FPTYPE_STREAMNAME, 1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output mode values to WFS") \
+    X(".minPrate", &minPrate, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, "min phase rate [rad/tstep]") \
+    X(".maxPrate", &maxPrate, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, "max phase rate [rad/tstep]") \
+    X(".noiseamp", &noiseamp, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, "noise amplitude") \
+    X(".multfact", &multfact, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, "multiplicative factor") \
+    X(".WFSlatency", &WFSlatency, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, "WFS latency [frame]") \
+    X(".DMlatency", &DMlatency, \
+      FPTYPE_FLOAT32, 1, \
+      FPFLAG_DEFAULT_INPUT, "DM latency [frame]")
 
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
 
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
-
-
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        // AO loop index. Used for naming streams aolX_
-        CLIARG_UINT64,
-        ".AOloopindex",
-        "AO loop index",
-        "0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &AOloopindex,
-        NULL
-    },
-    {
-        CLIARG_STREAM,
-        ".mvalDM",
-        "input mode values - DM control",
-        "aol0_mfiltt_mvalDM",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &mvalDM,
-        &fpi_mvalDM
-    },
-    {
-        CLIARG_STREAM,
-        ".mvalWFS",
-        "output mode values to WFS",
-        "aol0_mfiltt_mvalWFS",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &mvalWFS,
-        &fpi_mvalWFS
-    },
-    {
-        CLIARG_FLOAT32,
-        ".minPrate",
-        "min phase rate [rad/tstep]",
-        "0.1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &minPrate,
-        &fpi_minPrate
-    },
-    {
-        CLIARG_FLOAT32,
-        ".maxPrate",
-        "max phase rate [rad/tstep]",
-        "2.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &maxPrate,
-        &fpi_maxPrate
-    },
-    {
-        // Random noise amplitude
-        // injected at each iteration
-        // drives mval to random walk
-        CLIARG_FLOAT32,
-        ".noiseamp",
-        "noise amplitude",
-        "0.1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &noiseamp,
-        &fpi_noiseamp
-    },
-    {
-        // Mult factor
-        // multiplied to ouput at each iteration
-        // drives back toward zero
-        CLIARG_FLOAT32,
-        ".multfact",
-        "multiplicative factor",
-        "0.99",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &multfact,
-        &fpi_multfact
-    },
-    {
-        // WFS latency\ [frame]
-        CLIARG_FLOAT32,
-        ".WFSlatency",
-        "WFS latency [frame]",
-        "2.7",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &WFSlatency,
-        &fpi_WFSlatency
-    },
-    {
-        // DM latency\ [frame]
-        CLIARG_FLOAT32,
-        ".DMlatency",
-        "DM latency [frame]",
-        "0.8",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &DMlatency,
-        &fpi_DMlatency
-    }
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
 };
 
 
-// Optional custom configuration setup. comptbuff
-// Runs once at conf startup
-//
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
+
 static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_mvalDM].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+        long fpi;
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".mvalDM");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
-        data.fpsptr->parray[fpi_mvalWFS].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".mvalWFS");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".minPrate");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
 
-        data.fpsptr->parray[fpi_minPrate].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_multfact].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_maxPrate].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_noiseamp].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_DMlatency].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_WFSlatency].fpflag |= FPFLAG_WRITERUN;
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".multfact");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".maxPrate");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".noiseamp");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".DMlatency");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".WFSlatency");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
     }
-
     return RETURN_SUCCESS;
 }
 
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
 static errno_t customCONFcheck()
 {
-
-    if(data.fpsptr != NULL)
-    {
-    }
-
     return RETURN_SUCCESS;
 }
-
-static CLICMDDATA CLIcmddata =
-{
-    "mfilttest", "test input for modal filter", CLICMD_FIELDS_DEFAULTS
-};
 
 
 
@@ -429,14 +373,20 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl__modalfilter_test()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
@@ -444,3 +394,13 @@ CLIADDCMD_AOloopControl__modalfilter_test()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+    customCONFsetup,
+    customCONFcheck)
+#endif

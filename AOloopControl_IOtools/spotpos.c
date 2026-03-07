@@ -12,24 +12,26 @@
 // quicksort
 #include "COREMOD_tools/COREMOD_tools.h"
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "spotpos",
+    .cmdkey      = "spotpos",
+    .description = "measure spot position, photocenter"
+};
+
 static char *inimname;
 static char *indarkname;
 
 // approximate spot size
 //
 static float *spotsize;
-static long      fpi_spotsize = -1;
 
 // approximate spot location
 // search will be centered around this coords
 static float *spotx0;
-static long      fpi_spotx0 = -1;
 static float *spoty0;
-static long      fpi_spoty0 = -1;
 
 // Search radius around spotx0, spoty0
 static float *searchrad;
-static long      fpi_searchrad = -1;
 
 // position data
 // xrel, yrel, xabs, yabs, flux, pixcnt
@@ -38,129 +40,63 @@ static char *outspotpos;
 
 // 2D transformation matrix between pixel pos and TT value
 static float *mappingXX;
-static long      fpi_mappingXX = -1;
 static float *mappingYY;
-static long      fpi_mappingYY = -1;
 static float *mappingXY;
-static long      fpi_mappingXY = -1;
 static float *mappingYX;
-static long      fpi_mappingYX = -1;
 
 // 2D position vector matching control TT
 static char *outTTvec;
 
+#define FPS_PARAMS(X) \
+    X(".insname", &inimname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input image") \
+    X(".indark_name", &indarkname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "input image dark (optional)") \
+    X(".spotsize", &spotsize, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "approximate spot size [pix]") \
+    X(".spotx0", &spotx0, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "approx spot location x") \
+    X(".spoty0", &spoty0, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "approx spot location y") \
+    X(".searchrad", &searchrad, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "search radius") \
+    X(".outspotpos", &outspotpos, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "output spot position data") \
+    X(".mappingXX", &mappingXX, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping XX coeff") \
+    X(".mappingYY", &mappingYY, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping YY coeff") \
+    X(".mappingXY", &mappingXY, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping XY coeff") \
+    X(".mappingYX", &mappingYX, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping YX coeff") \
+    X(".outTTvec", &outTTvec, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "output 2D TT vector (control TT)")
 
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_IMG,
-        ".insname",
-        "input image",
-        "im1",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &inimname,
-        NULL
-    },
-    {
-        CLIARG_IMG,
-        ".indark_name",
-        "input image dark (optional)",
-        "imdark",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &indarkname,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".spotsize",
-        "approximate spot size [pix]",
-        "3.0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &spotsize,
-        &fpi_spotsize
-    },
-    {
-        CLIARG_FLOAT32,
-        ".spotx0",
-        "approx spot location x",
-        "100.0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &spotx0,
-        &fpi_spotx0
-    },
-    {
-        CLIARG_FLOAT32,
-        ".spoty0",
-        "approx spot location y",
-        "60.0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &spoty0,
-        &fpi_spoty0
-    },
-    {
-        CLIARG_FLOAT32,
-        ".searchrad",
-        "search radius",
-        "10",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &searchrad,
-        &fpi_searchrad
-    },
-    {
-        CLIARG_STR,
-        ".outspotpos",
-        "output spot position data",
-        "ttdat",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &outspotpos,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".mappingXX",
-        "mapping XX coeff",
-        "1.0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &mappingXX,
-        &fpi_mappingXX
-    },
-    {
-        CLIARG_FLOAT32,
-        ".mappingYY",
-        "mapping YY coeff",
-        "1.0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &mappingYY,
-        &fpi_mappingYY
-    },
-    {
-        CLIARG_FLOAT32,
-        ".mappingXY",
-        "mapping XY coeff",
-        "0.0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &mappingXY,
-        &fpi_mappingXY
-    },
-    {
-        CLIARG_FLOAT32,
-        ".mappingYX",
-        "mapping YX coeff",
-        "0.0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &mappingYX,
-        &fpi_mappingYX
-    },
-    {
-        CLIARG_STR,
-        ".outTTvec",
-        "output 2D TT vector (control TT)",
-        "ttvec",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &outTTvec,
-        NULL
-    }
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -189,30 +125,29 @@ static errno_t customCONFcheck()
 {
     if(data.fpsptr != NULL)
     {
-        // allow for change of parameter during runtime
-        data.fpsptr->parray[fpi_mappingXX].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_mappingYY].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_mappingXY].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_mappingYX].fpflag |= FPFLAG_WRITERUN;
+        long fpi_mappingXX = functionparameter_GetParamIndex(data.fpsptr, ".mappingXX");
+        long fpi_mappingYY = functionparameter_GetParamIndex(data.fpsptr, ".mappingYY");
+        long fpi_mappingXY = functionparameter_GetParamIndex(data.fpsptr, ".mappingXY");
+        long fpi_mappingYX = functionparameter_GetParamIndex(data.fpsptr, ".mappingYX");
+        long fpi_spotx0 = functionparameter_GetParamIndex(data.fpsptr, ".spotx0");
+        long fpi_spoty0 = functionparameter_GetParamIndex(data.fpsptr, ".spoty0");
+        long fpi_searchrad = functionparameter_GetParamIndex(data.fpsptr, ".searchrad");
+        long fpi_spotsize = functionparameter_GetParamIndex(data.fpsptr, ".spotsize");
 
-        data.fpsptr->parray[fpi_spotx0].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_spoty0].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_searchrad].fpflag |= FPFLAG_WRITERUN;
-        data.fpsptr->parray[fpi_spotsize].fpflag |= FPFLAG_WRITERUN;
+        // allow for change of parameter during runtime
+        if(fpi_mappingXX > -1) data.fpsptr->parray[fpi_mappingXX].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_mappingYY > -1) data.fpsptr->parray[fpi_mappingYY].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_mappingXY > -1) data.fpsptr->parray[fpi_mappingXY].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_mappingYX > -1) data.fpsptr->parray[fpi_mappingYX].fpflag |= FPFLAG_WRITERUN;
+
+        if(fpi_spotx0 > -1) data.fpsptr->parray[fpi_spotx0].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_spoty0 > -1) data.fpsptr->parray[fpi_spoty0].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_searchrad > -1) data.fpsptr->parray[fpi_searchrad].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_spotsize > -1) data.fpsptr->parray[fpi_spotsize].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
 }
-
-
-static CLICMDDATA CLIcmddata =
-{
-    "spotpos",
-    "measure spot position, photocenter",
-    CLICMD_FIELDS_DEFAULTS
-};
-
-
 
 // detailed help
 static errno_t help_function()
@@ -412,14 +347,21 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_IOtools__spotpos()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
+
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
 
@@ -427,3 +369,13 @@ CLIADDCMD_AOloopControl_IOtools__spotpos()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+    customCONFsetup,
+    customCONFcheck)
+#endif

@@ -11,7 +11,7 @@
 
 
 # script 1-line description
-MSdescr="Register cacao processes to fpslist file"
+MSdescr="Register cacao-cli processes to fpslist file"
 
 
 

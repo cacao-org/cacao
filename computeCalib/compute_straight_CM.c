@@ -65,116 +65,68 @@
 
 
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "compsCM",
+    .cmdkey      = "compsCM",
+    .description = "compute straight control matrix"
+};
+
 static char *RMmodesDMfname;
-static long  fpi_RMmodesDMfname;
-
 static char *RMmodesWFSfname;
-static long  fpi_RMmodesWFSfname;
-
 static char *DMmaskfname;
-static long  fpi_DMmaskfname;
-
 static char *WFSmaskfname;
-static long  fpi_WFSmaskfname;
-
 static char *CMmodesDMfname;
-static long  fpi_CMmodesDMfname;
-
 static char *CMmodesWFSfname;
-static long  fpi_CMmodesWFSfname;
-
 
 static float *svdlim;
-static long   fpi_svdlim;
-
 static int32_t *GPUdevice;
-static long     fpi_GPUdevice;
 
+#define FPS_PARAMS(X) \
+    X(".RMmodesDM", &RMmodesDMfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : DM modes") \
+    X(".RMmodesWFS", &RMmodesWFSfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : WFS modes") \
+    X(".dmmask", &DMmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM mask for normalization") \
+    X(".wfsmask", &WFSmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "WFS mask for normalization") \
+    X(".CMmodesDM", &CMmodesDMfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output CM : DM modes") \
+    X(".CMmodesWFS", &CMmodesWFSfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output CM : WFS modes") \
+    X(".svdlim", &svdlim, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "SVD limit") \
+    X(".GPUdevice", &GPUdevice, FPTYPE_INT32, 1, FPFLAG_DEFAULT_INPUT, "using GPU (99 : no GPU, otherwise GPU device)")
 
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        // input RM : DM modes
-        CLIARG_FILENAME,
-        ".RMmodesDM",
-        "input response matrix DM modes",
-        "RMmodesDM.fits",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &RMmodesDMfname,
-        &fpi_RMmodesDMfname
-    },
-    {
-        // input RM : WFS modes
-        CLIARG_FILENAME,
-        ".RMmodesWFS",
-        "input response matrix WFS modes",
-        "RMmodesWFS.fits",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &RMmodesWFSfname,
-        &fpi_RMmodesWFSfname
-    },
-    {
-        // input RM : DM mask
-        CLIARG_FILENAME,
-        ".dmmask",
-        "DM mask for normalization",
-        "dmmask.fits",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &DMmaskfname,
-        &fpi_DMmaskfname
-    },
-    {
-        // input RM : WFS mask
-        CLIARG_FILENAME,
-        ".wfsmask",
-        "WFS mask for normalization",
-        "wfsmask.fits",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &WFSmaskfname,
-        &fpi_WFSmaskfname
-    },
-    {
-        // output CM : DM modes
-        CLIARG_FILENAME,
-        ".CMmodesDM",
-        "output control matrix DM modes",
-        "CMmodesDM",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &CMmodesDMfname,
-        &fpi_CMmodesDMfname
-    },
-    {
-        // output CM : WFS modes
-        CLIARG_FILENAME,
-        ".CMmodesWFS",
-        "output control matrix WFS modes",
-        "CMmodesWFS",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &CMmodesWFSfname,
-        &fpi_CMmodesWFSfname
-    },
-    {
-        // Singular Value Decomposition limit
-        CLIARG_FLOAT32,
-        ".svdlim",
-        "SVD limit",
-        "0.01",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &svdlim,
-        &fpi_svdlim
-    },
-    {
-        // using GPU (99 : no GPU, otherwise GPU device)
-        CLIARG_INT32,
-        ".GPUdevice",
-        "GPU device, 99 for CPU",
-        "-1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &GPUdevice,
-        &fpi_GPUdevice
-    }
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -186,16 +138,16 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_RMmodesDMfname].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".RMmodesDM")].fpflag |=
             FPFLAG_FILE_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_RMmodesWFSfname].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".RMmodesWFS")].fpflag |=
             FPFLAG_FILE_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_DMmaskfname].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".dmmask")].fpflag |=
             FPFLAG_FILE_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_WFSmaskfname].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".wfsmask")].fpflag |=
             FPFLAG_FILE_RUN_REQUIRED;
     }
 
@@ -217,10 +169,7 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata =
-{
-    "compsCM", "compute straight control matrix", CLICMD_FIELDS_DEFAULTS
-};
+
 
 
 
@@ -865,14 +814,20 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_computeCalib__compsCM()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
@@ -880,3 +835,13 @@ CLIADDCMD_AOloopControl_computeCalib__compsCM()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+
+    customCONFcheck)
+#endif

@@ -9,52 +9,60 @@
 
 
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "generateRMWFS",
+    .cmdkey      = "generateRMWFS",
+    .description = "generate RM WFS modes"
+};
+
 // zonal WFS response
 //
 static char *zrespWFS;
-static long  fpi_zrespWFS;
-
-
 static char *DMmodesC;
-static long  fpi_DMmodesC;
-
-
 static char *outWFSmodesC;
-static long  fpi_outWFSmodesC;
 
-static CLICMDARGDEF farg[] =
-{
-    {
-        // zonal RM WFS
-        CLIARG_IMG,
-        ".zrespWFS",
-        "input zonal response matrix",
-        "zrespM",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &zrespWFS,
-        &fpi_zrespWFS
-    },
-    {
-        CLIARG_IMG,
-        ".DMmodesC",
-        "input DM modes",
-        "DMmodesC",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &DMmodesC,
-        &fpi_DMmodesC
-    },
-    {
-        CLIARG_STR,
-        ".outWFSmodesC",
-        "output WFS modes",
-        "modesWFS",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &outWFSmodesC,
-        &fpi_outWFSmodesC
-    }
+
+#define FPS_PARAMS(X) \
+    X(".zrespWFS", &zrespWFS, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input zonal response matrix") \
+    X(".DMmodesC", &DMmodesC, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input DM modes") \
+    X(".outWFSmodesC", &outWFSmodesC, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output WFS modes")
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
 
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 // Optional custom configuration setup. comptbuff
@@ -64,10 +72,10 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_zrespWFS].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".zrespWFS")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_DMmodesC].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMmodesC")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
     }
 
@@ -89,10 +97,6 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata =
-{
-    "generateRMWFS", "generate RM WFS modes", CLICMD_FIELDS_DEFAULTS
-};
 
 
 
@@ -170,14 +174,20 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_computeCalib__generateRMWFS()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
@@ -185,3 +195,13 @@ CLIADDCMD_AOloopControl_computeCalib__generateRMWFS()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+
+    customCONFcheck)
+#endif

@@ -26,7 +26,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="larpf.mkPF"
+fpsfcall="milk-fpsexec-linpred-buildlinPF"
 
 # short description
 fpsdescr="Build Predictive Filter ${BLKindex}"

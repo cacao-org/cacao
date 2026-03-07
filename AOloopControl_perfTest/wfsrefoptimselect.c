@@ -40,104 +40,25 @@ static char *dminput;
 static uint32_t *optmode;
 
 static float *selnormplaw;
-static long      fpi_selnormplaw = -1;
 
 
 
-static CLICMDARGDEF farg[] = {
-    {
-        CLIARG_IMG,
-        ".selinput",
-        "selection input (PSF)",
-        "psfim",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &selinput,
-        NULL
-    },
-    {
-        CLIARG_STR,
-        ".wfsinput",
-        "WFS input",
-        "wfsim",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &wfsinput,
-        NULL
-    },
-    {
-        CLIARG_STR,
-        ".dminput",
-        "DM input",
-        "dmim",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &dminput,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".optmode",
-        "1 maxn, 2 maxf, 3 minf",
-        "1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &optmode,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".selnormplaw",
-        "selection norm power law",
-        "1.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &selnormplaw,
-        &fpi_selnormplaw
-    }
+
+
+
+
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "wfsroptsel",
+    .cmdkey      = "wfsroptsel",
+    .description = "WFS ref optimize by PSF selection"
 };
 
-
-
-// Optional custom configuration setup.
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
-    if(data.fpsptr != NULL)
-    {
-
-    }
-
-    return RETURN_SUCCESS;
-}
-
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
-
-    if(data.fpsptr != NULL)
-    {}
-
-    return RETURN_SUCCESS;
-}
-
-static CLICMDDATA CLIcmddata =
-{
-    "wfsroptsel", "WFS ref optimize by PSF selectionk", CLICMD_FIELDS_DEFAULTS
-};
-
-
-// detailed help
-static errno_t help_function()
-{
-    printf("resample streams to common clock\n");
-
-    printf(
-        "Convention\n"
-    );
-
-    return RETURN_SUCCESS;
-}
-
-
+#define FPS_PARAMS(X) \
+    X(".selinput",   &selinput,   FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "selection input (PSF)") \
+    X(".wfsinput",   &wfsinput,   FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "WFS input") \
+    X(".dminput",    &dminput,    FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "DM input") \
+    X(".optmode",    &optmode,    FPTYPE_UINT32,     0, FPFLAG_DEFAULT_INPUT, "1 maxn, 2 maxf, 3 minf") \
+    X(".selnormplaw",&selnormplaw,FPTYPE_FLOAT32,    0, FPFLAG_DEFAULT_INPUT, "selection norm power law")
 
 static errno_t WFSref_optimizeWFS_PSFselect(
     IMGID psfimg,
@@ -401,6 +322,19 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 
 
 
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+static int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+static CLICMDDATA CLIcmddata = {
+    "wfsroptsel", "WFS ref optimize by PSF selection", CLICMD_FIELDS_DEFAULTS
+};
+
 static errno_t compute_function()
 {
     IMGID inpsfimg = imgid_make_from_name(selinput);
@@ -451,17 +385,20 @@ static errno_t compute_function()
 }
 
 
-INSERT_STD_FPSCLIfunctions
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction() {
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings, compute_function);
+}
 
 // Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl_perfTest__WFSref_optimize_PSFselection()
+errno_t CLIADDCMD_AOloopControl_perfTest__WFSref_optimize_PSFselection()
 {
-
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
-
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
+#endif

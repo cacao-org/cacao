@@ -5,7 +5,7 @@
 
 
 # script 1-line description
-MSdescr="Deploy a cacao loop example from source code"
+MSdescr="Deploy a cacao-cli loop example from source code"
 
 
 
@@ -13,7 +13,7 @@ MSdescr="Deploy a cacao loop example from source code"
 conflist=$( ls $MILK_ROOT/plugins/cacao-src/AOloopControl/examples | grep "\-conf" | sed 's/\-[^-]*$//')
 
 
-MSextdescr="Configuration is loaded from cacao source code
+MSextdescr="Configuration is loaded from cacao-cli source code
 
 
 Import configuration from source code (-c) and run it (-r).
@@ -40,7 +40,7 @@ source milk-script-std-config
 
 # prerequisites
 #
-RequiredCommands=( milk tmux cacao )
+RequiredCommands=( milk tmux cacao-cli )
 RequiredFiles=()
 RequiredDirs=( ${MILK_ROOT} )
 
@@ -172,7 +172,7 @@ echo "${nbtask} TASKS"
 
 
 
-# Run cacao task manager
+# Run cacao-cli task manager
 
 
 cacao-task-manager -X ${nbtask} ${cacaoconfname}

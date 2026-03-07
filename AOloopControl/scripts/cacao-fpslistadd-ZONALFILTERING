@@ -18,7 +18,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacao.zonalfilter"
+fpsfcall="cacao-fpsexec-cacao-zonalfilter"
 
 # short description
 fpsdescr="Zonal filtering"

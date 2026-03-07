@@ -66,34 +66,27 @@ typedef struct
 
 // Start time: sec, nanosec
 static uint32_t *tstartsec;
-long          fpi_tstartsec;
 
 static uint32_t *tstartnsec;
-long          fpi_tstartnsec;
 
 
 // End time: sec, nanosec
 static uint32_t *tendsec;
-long          fpi_tendsec;
 
 static uint32_t *tendnsec;
-long          fpi_tendnsec;
 
 
 
 // Synchro mode
 // -1: adopt custom timing
 // 0+ : inherit timing from stream
-static int64_t *timingmode;
-long            fpi_timingmode;
+static int32_t *timingmode;
 
 // time interval
 static float *timingdt;
-long          fpi_timingdt;
 
 // logging directory
 static char *logdir;
-long         fpi_logdir;
 
 
 
@@ -102,13 +95,11 @@ long         fpi_logdir;
 // name
 // NULL if inactive
 static char *(sname[4]);
-long         fpi_sname[4];
 
 // name tag
 // allows for processed copy of cubes to be ingested
 // for example, tag could be ".crop.darksub" for cropped dark subtracted image
 static char *(stag[4]);
-long         fpi_stag[4];
 
 // FUll name
 // FITS   : ./<LOGDIR>/UTDATE/<SNAME>/<SNAME>_HH:MM:SS.sssssssss<TAG>.fits
@@ -117,176 +108,49 @@ long         fpi_stag[4];
 // convention: positive if frames arrive late
 // real time = reported time - latency
 static float *(slatency[4]);
-long         fpi_slatency[4];
 
 // Force linear timing
 // Assumes input stream is acquired with regular timing
-static int64_t *(lintiming[4]);
-long         fpi_lintiming[4];
-
-
-
-#define CLISTREAMLOGENTRY(INDEX) \
-    {\
-        CLIARG_STR,\
-        ".s"#INDEX"name",\
-        "stream "#INDEX" name",\
-        "null",\
-        FPFLAG_DEFAULT_INPUT,\
-        (void **) &sname[INDEX],\
-        &fpi_sname[INDEX]\
-    },\
-    {\
-        CLIARG_STR,\
-        ".s"#INDEX"tag",\
-        "stream "#INDEX" tag",\
-        "",\
-        FPFLAG_DEFAULT_INPUT,\
-        (void **) &stag[INDEX],\
-        &fpi_stag[INDEX]\
-    },\
-    {\
-        CLIARG_FLOAT32,\
-        ".s"#INDEX"latency",\
-        "stream "#INDEX" latency [float]",\
-        "0.0",\
-        FPFLAG_DEFAULT_INPUT,\
-        (void **) &slatency[INDEX],\
-        &fpi_slatency[INDEX]\
-    },\
-    {\
-        CLIARG_ONOFF,\
-        ".s"#INDEX"lint",\
-        "stream "#INDEX" linearize timing",\
-        "1",\
-        FPFLAG_DEFAULT_INPUT,\
-        (void **) &lintiming[INDEX],\
-        &fpi_lintiming[INDEX]\
-    }
+static int32_t *(lintiming[4]);
 
 
 
 
 
 
-static CLICMDARGDEF farg[] = {
-    {
-        CLIARG_UINT32,
-        ".tstartsec",
-        "tstartsec",
-        "1728797840",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &tstartsec,
-        &fpi_tstartsec
-    },
-    {
-        CLIARG_UINT32,
-        ".tstartnsec",
-        "tstartnsec",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &tstartnsec,
-        &fpi_tstartnsec
-    },
-    {
-        CLIARG_UINT32,
-        ".tendsec",
-        "tendsec",
-        "1728797850",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &tendsec,
-        &fpi_tendsec
-    },
-    {
-        CLIARG_UINT32,
-        ".tendnsec",
-        "tendnsec",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &tendnsec,
-        &fpi_tendnsec
-    },
-    {
-        CLIARG_INT32,
-        ".timingmode",
-        "timing mode (0+: inherit from stream)",
-        "-1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &timingmode,
-        &fpi_timingmode
-    },
-    {
-        CLIARG_FLOAT32,
-        ".timingdt",
-        "output frame interval",
-        "0.001",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &timingdt,
-        &fpi_timingdt
-    },
-    {
-        CLIARG_STR,
-        ".logdir",
-        "log directory",
-        ".",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &logdir,
-        &fpi_logdir
-    },
-    CLISTREAMLOGENTRY(0),
-    CLISTREAMLOGENTRY(1),
-    CLISTREAMLOGENTRY(2),
-    CLISTREAMLOGENTRY(3)
+
+
+
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "slogtsample",
+    .cmdkey      = "slogtsample",
+    .description = "resample streams to common clock",
 };
 
-
-
-// Optional custom configuration setup.
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
-    if(data.fpsptr != NULL)
-    {
-
-    }
-
-    return RETURN_SUCCESS;
-}
-
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
-
-    if(data.fpsptr != NULL)
-    {}
-
-    return RETURN_SUCCESS;
-}
-
-static CLICMDDATA CLIcmddata =
-{
-    "slogtsample", "resample streams to common clock", CLICMD_FIELDS_DEFAULTS
-};
-
-
-// detailed help
-static errno_t help_function()
-{
-    printf("resample streams to common clock\n");
-
-    printf(
-        "Convention\n"
-    );
-
-    return RETURN_SUCCESS;
-}
-
-
-
-
+#define FPS_PARAMS(X) \
+    X(".tstartsec", &tstartsec, FPTYPE_UINT32,  1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "tstartsec (1728797840)") \
+    X(".tstartnsec",&tstartnsec,FPTYPE_UINT32,  0, FPFLAG_DEFAULT_INPUT, "tstartnsec") \
+    X(".tendsec",   &tendsec,   FPTYPE_UINT32,  1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "tendsec (1728797850)") \
+    X(".tendnsec",  &tendnsec,  FPTYPE_UINT32,  0, FPFLAG_DEFAULT_INPUT, "tendnsec") \
+    X(".timingmode",&timingmode,FPTYPE_INT32,   0, FPFLAG_DEFAULT_INPUT, "timing mode (0+: inherit from stream)") \
+    X(".timingdt",  &timingdt,  FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "output frame interval (0.001)") \
+    X(".logdir",    &logdir,    FPTYPE_DIRNAME, 0, FPFLAG_DEFAULT_INPUT, "log directory") \
+    X(".s0name",    &sname[0],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 0 name") \
+    X(".s0tag",     &stag[0],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 0 tag") \
+    X(".s0latency", &slatency[0],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 0 latency [float]") \
+    X(".s0lint",    &lintiming[0],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 0 linearize timing") \
+    X(".s1name",    &sname[1],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 1 name") \
+    X(".s1tag",     &stag[1],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 1 tag") \
+    X(".s1latency", &slatency[1],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 1 latency [float]") \
+    X(".s1lint",    &lintiming[1],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 1 linearize timing") \
+    X(".s2name",    &sname[2],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 2 name") \
+    X(".s2tag",     &stag[2],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 2 tag") \
+    X(".s2latency", &slatency[2],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 2 latency [float]") \
+    X(".s2lint",    &lintiming[2],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 2 linearize timing") \
+    X(".s3name",    &sname[3],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 3 name") \
+    X(".s3tag",     &stag[3],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 3 tag") \
+    X(".s3latency", &slatency[3],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 3 latency [float]") \
+    X(".s3lint",    &lintiming[3],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 3 linearize timing")
 
 static char *remove_ext(
     char *mystr,
@@ -664,6 +528,19 @@ static errno_t processTimingFile(
 
 
 
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+static int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+static CLICMDDATA CLIcmddata = {
+    "slogtsample", "resample streams to common clock", CLICMD_FIELDS_DEFAULTS
+};
 
 static errno_t compute_function()
 {
@@ -1274,17 +1151,22 @@ static errno_t compute_function()
 }
 
 
-INSERT_STD_FPSCLIfunctions
 
+
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction() {
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings, compute_function);
+}
 
 // Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl_perfTest__streamlogtimesample()
+errno_t CLIADDCMD_AOloopControl_perfTest__streamlogtimesample()
 {
-
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
-
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
+#endif

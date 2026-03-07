@@ -10,7 +10,7 @@ source milk-script-std-config
 
 # check and load cacaovars
 source cacao-check-cacaovars
-RequiredCommands=( cacao )
+RequiredCommands=( cacao-cli )
 RequiredPipes=()
 RequiredFiles=()
 RequiredDirs=()
@@ -47,11 +47,11 @@ echo "readshmim aol${CACAO_LOOPNUMBER}_mvalDMrms" >> $SF
 echo "readshmim aol${CACAO_LOOPNUMBER}_mvalOLave" >> $SF
 echo "readshmim aol${CACAO_LOOPNUMBER}_mvalOLrms" >> $SF
 echo "listim" >> $SF
-echo "cacao.modalstatsTUI ${CACAO_LOOPNUMBER}" >> $SF
+echo "cacao-cli.modalstatsTUI ${CACAO_LOOPNUMBER}" >> $SF
 echo "exitCLI" >> $SF
 
-MILK_QUIET=1 cacao -n ${pname} -f ${fifoname} -s $SF
+MILK_QUIET=1 cacao-cli -n ${pname} -f ${fifoname} -s $SF
 
 
-# cacao.modalstatsTUI
-# cacao.modalCTRLstats
+# cacao-cli.modalstatsTUI
+# cacao-cli.modalCTRLstats

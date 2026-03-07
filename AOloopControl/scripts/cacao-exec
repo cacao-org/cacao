@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 
-MSdescr="Execute cacao command"
+MSdescr="Execute cacao-cli command"
 
-MSextdescr="Execute command string within cacao command line interface (CLI)
+MSextdescr="Execute command string within cacao-cli command line interface (CLI)
 
 Multiple commands separated by ;
 For example, \"listim;listim\" will run listim command twice
@@ -49,6 +49,6 @@ done
 echo "exitCLI" >> ${SF}
 
 echo "SF = ${SF}"
-cacao -n ${pname} -f -s ${SF}
+cacao-cli -n ${pname} -f -s ${SF}
 
 rm ${SF}

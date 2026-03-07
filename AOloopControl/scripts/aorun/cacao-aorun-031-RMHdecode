@@ -55,7 +55,7 @@ source milk-argparse
 
 cacaomsglog "START"
 
-cacao << EOF
+cacao-cli << EOF
 loadfits "${FILE_Hipixindex}" pixiind
 loadfits "${FILE_Hmat}" Hmat
 loadfits "${FILE_HpokeC}" HpokeC

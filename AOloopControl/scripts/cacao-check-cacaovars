@@ -116,7 +116,7 @@ fi
 fpsCTRLtmuxname=""
 fpsCTRLfifo=""
 if [ $errstatus == "1" ]; then
-	echo "           Note: This script needs to run in a cacao rootdir directory"
+	echo "           Note: This script needs to run in a cacao-cli rootdir directory"
 	echo "           Check that cacaovar file includes variables definitions"
 	echo "           -> Cannot proceed"
 	# Setting EXITSTATUS to 1 informs milk-argparse that we should exit on error
@@ -176,7 +176,7 @@ datestr="$(date -u +'%Y%m%d')"
 #
 CACAO_LOGDIR="../logdir-${CACAO_LOOPNAME}/${datestr}"
 mkdir -p ${CACAO_LOGDIR}
-CACAO_MSGLOGFILE="${CACAO_LOGDIR}/cacao.${CACAO_LOOPNAME}.log"
+CACAO_MSGLOGFILE="${CACAO_LOGDIR}/cacao-cli.${CACAO_LOOPNAME}.log"
 
 function cacaomsglog {
 	printf "\x1B[0;105m LOGGING \x1B[0m %s\n" "$1"

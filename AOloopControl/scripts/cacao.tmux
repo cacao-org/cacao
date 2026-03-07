@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 
-MSdescr="cacao control TUI within tmux"
+MSdescr="cacao-cli control TUI within tmux"
 
 
 MSextdescr="
-START cacao ASCII GUI
+START cacao-cli ASCII GUI
 
 Starts AO control screen in tmux session
 Connects to session
@@ -131,7 +131,7 @@ fi
 
 # -fa 'Monospace' -fs 14
 # 3x4 6x8 9x12 12x16
-xterm -fn 12x16 -fg white -bg black -geometry ${wXsize}x${wYsize} -xrm 'XTerm.vt100.allowTitleOps: false' -T "cacao CTRL screen - loop ${CACAO_LOOPNAME}" -e "tmux a -t $SESSION" &
+xterm -fn 12x16 -fg white -bg black -geometry ${wXsize}x${wYsize} -xrm 'XTerm.vt100.allowTitleOps: false' -T "cacao-cli CTRL screen - loop ${CACAO_LOOPNAME}" -e "tmux a -t $SESSION" &
 
 
 
@@ -282,18 +282,18 @@ if [ "$STARTPROC" = "1" ]; then
 
 
     # START monitor
-    #tmux send-keys -t $SESSION:0.$SCREEN_MONITOR "cacao" C-m
+    #tmux send-keys -t $SESSION:0.$SCREEN_MONITOR "cacao-cli" C-m
     #tmux send-keys -t $SESSION:0.$SCREEN_MONITOR "aolmon" C-m
     sleep $tdelay
 
 
     # START RT logging
-    #tmux send-keys -t $SESSION:0.$SCREEN_RTLOGGING "cacao" C-m
+    #tmux send-keys -t $SESSION:0.$SCREEN_RTLOGGING "cacao-cli" C-m
     #tmux send-keys -t $SESSION:0.$SCREEN_RTLOGGING "aolrtlogGUI" C-m
     sleep $tdelay
 
     # START process control
-    #tmux send-keys -t $SESSION:0.$SCREEN_PROCCTRL "cacao" C-m
+    #tmux send-keys -t $SESSION:0.$SCREEN_PROCCTRL "cacao-cli" C-m
     tmux send-keys -t $SESSION:0.$SCREEN_PROCCTRL "milk-procCTRL" C-m
     sleep $tdelay
 

@@ -17,7 +17,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="linalg.MVMmextrmodes"
+fpsfcall="milk-fpsexec-linalg-MVMextract"
 
 # short description
 fpsdescr="Zero point offsetting"

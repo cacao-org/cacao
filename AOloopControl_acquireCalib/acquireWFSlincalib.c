@@ -15,39 +15,30 @@
 #include "image_gen/image_gen.h"
 
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "acqWFSlincal",
+    .cmdkey      = "acqWFSlincal",
+    .description = "acquire linear WFS calibration"
+};
+
 // Local variables pointers
 static uint32_t *AOloopindex;
 static float    *pokeampl;
 
-
-
 static char *dmstream;
-static long fpi_dmstream;
-
-
 
 // timing params
-
-static long                      fpi_FPS_mlat = 0;
 static FUNCTION_PARAMETER_STRUCT FPS_mlat;
 
-
 // Toggles
-static int64_t *update_mlat;
-static long     fpi_update_mlat;
-
-
-static int64_t *update_RMDMmask;
-static long     fpi_update_RMDMmask;
-
-
+static uint64_t *update_mlat;
+static uint64_t *update_RMDMmask;
 
 // WFS frame rate [Hz]
 static float *WFSfrequ;
 
 // Hardware latency in unit of WFS frame
 static float *hardwlatfr;
-
 
 static uint32_t *delayfr;
 static uint32_t *delayRM1us;
@@ -56,20 +47,11 @@ static uint32_t *NBexcl;
 static uint32_t *NBcycle;
 static uint32_t *NBinnerCycle;
 
-
-
-
-
-
 static uint64_t *MaskMode;
 
-
-
-static long                      fpi_FPS_DMcomb = 0;
 static FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
 
 static uint32_t *DMMODE;
-static long fpi_DMMODE;
 
 static float *maskDMp0;
 static float *maskDMc0;
@@ -86,417 +68,102 @@ static float *maskWFSc1;
 static char *fn_pokeC;
 static char *fn_RMDMmask;
 
-static uint32_t *RMDMmaskCx;
-static uint32_t *RMDMmaskCy;
-static uint32_t *RMDMmaskR;
+static float *RMDMmaskCx;
+static float *RMDMmaskCy;
+static float *RMDMmaskR;
 
 static uint64_t *normalize;
 
 static uint64_t *Hpokemode;
-static long fpi_Hpokemode;
 
 static uint64_t *autotiming;
-static long fpi_autotiming;
-
 
 static uint64_t *compPokeMat;
-static long fpi_compPokeMat;
-
 
 // executable scripts
-
 static char *exec_post_RMdecode;
-static long fpi_exec_post_RMdecode;
-
 static char *exec_post_mkDMWFSmasks;
-static long fpi_exec_post_mkDMWFSmasks;
-
 static char *exec_post_mkDMslaveact;
-static long fpi_exec_post_mkDMslaveact;
-
 static char *exec_post_mkLODMmodes;
-static long fpi_exec_post_mkLODMmodes;
+
+#define FPS_PARAMS(X) \
+    X(".AOloopindex", &AOloopindex, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "loop index") \
+    X(".dmstream", &dmstream, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM stream") \
+    X(".ampl", &pokeampl, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "RM poke amplitude") \
+    X(".timing.FPS_mlat", &FPS_mlat, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT, "hardware latency") \
+    X(".timing.upmlat", &update_mlat, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "update latency from FPS") \
+    X(".timing.WFSfrequ", &WFSfrequ, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "WFS frame rate [Hz]") \
+    X(".timing.hardwlatfr", &hardwlatfr, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "hardware latency [fr]") \
+    X(".timing.autoTiming", &autotiming, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "Auto Timing") \
+    X(".timing.delayfr", &delayfr, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "frame delay, whole part") \
+    X(".timing.delayRM1us", &delayRM1us, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "Sub-frame delay [us]") \
+    X(".timing.NBave", &NBave, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "Number of frames averaged for a single poke measurement") \
+    X(".timing.NBexcl", &NBexcl, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "Number of frames excluded") \
+    X(".timing.NBcycle", &NBcycle, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "Number of measurement cycles to be repeated") \
+    X(".timing.NBinnerCycle", &NBinnerCycle, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "Number of inner cycles") \
+    X(".RMDMmask.FPS_DMcomb", &FPS_DMcomb, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT, "DM control process") \
+    X(".RMDMmask.DMMODE", &DMMODE, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "0:spatial, 1:modal") \
+    X(".RMDMmask.Cx", &RMDMmaskCx, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "X center") \
+    X(".RMDMmask.Cy", &RMDMmaskCy, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "Y center") \
+    X(".RMDMmask.R", &RMDMmaskR, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "radius") \
+    X(".RMDMmask.upmlat", &update_RMDMmask, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "update RMDMmask from FPS") \
+    X(".MaskMode", &MaskMode, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "Mask mode, DM and WFS") \
+    X(".DMmask.RMp0", &maskDMp0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask, point0 percentile point") \
+    X(".DMmask.RMc0", &maskDMc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask, point0 coefficient") \
+    X(".DMmask.RMp1", &maskDMp1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask, point1 percentile point") \
+    X(".DMmask.RMc1", &maskDMc1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask, point1 coefficient") \
+    X(".DMmask.proxrad", &DMproxrad, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM actuator proximity radius") \
+    X(".WFSmask.RMp0", &maskWFSp0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask, point0 percentile point") \
+    X(".WFSmask.RMc0", &maskWFSc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask, point0 coefficient") \
+    X(".WFSmask.RMp1", &maskWFSp1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask, point1 percentile point") \
+    X(".WFSmask.RMc1", &maskWFSc1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask, point1 coefficient") \
+    X(".fn_pokeC", &fn_pokeC, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "Poke sequence cube") \
+    X(".fn_RMDMmask", &fn_RMDMmask, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "RM active DM actuators mask") \
+    X(".normalize", &normalize, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "Normalize WFS frames") \
+    X(".Hpoke", &Hpokemode, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "Hadamard poke mode") \
+    X(".compPokeMat", &compPokeMat, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "(re)compute poke matrix") \
+    X(".exec.RMdecode", &exec_post_RMdecode, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "RM decode script") \
+    X(".exec.mkDMWFSmasks", &exec_post_mkDMWFSmasks, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM and WFS masks") \
+    X(".exec.mkDMslaveact", &exec_post_mkDMslaveact, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM slaved actuators") \
+    X(".exec.mkLODMmodes", &exec_post_mkLODMmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM low order modes")
 
 
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
 
-static CLICMDARGDEF farg[] =
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
 {
-    {
-        CLIARG_UINT32,
-        ".AOloopindex",
-        "loop index",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &AOloopindex,
-        NULL
-    },
-    {
-        CLIARG_STREAM,
-        ".dmstream",
-        "DM stream",
-        "NULL",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &dmstream,
-        &fpi_dmstream
-    },
-    {
-        CLIARG_FLOAT32,
-        ".ampl",
-        "RM poke amplitude",
-        "0.01",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &pokeampl,
-        NULL
-    },
-    // ============= TIMING =========================
-    {
-        CLIARG_FPSNAME,
-        ".timing.FPS_mlat",
-        "hardware latency",
-        "NULL",
-
-
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &FPS_mlat,
-        &fpi_FPS_mlat
-    },
-    {
-        CLIARG_ONOFF,
-        ".timing.upmlat",
-        "update latency from FPS",
-        "OFF",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &update_mlat,
-        &fpi_update_mlat
-    },
-    {
-        CLIARG_FLOAT32,
-        ".timing.WFSfrequ",
-        "WFS frame rate [Hz]",
-        "1000",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &WFSfrequ,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".timing.hardwlatfr",
-        "hardware latency [fr]",
-        "1000",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &hardwlatfr,
-        NULL
-    },
-    {
-        CLIARG_ONOFF,
-        ".timing.autoTiming",
-        "Auto Timing",
-        "ON",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &autotiming,
-        &fpi_autotiming
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.delayfr",
-        "frame delay, whole part",
-        "2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &delayfr,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.delayRM1us",
-        "Sub-frame delay [us]",
-        "100",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &delayRM1us,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.NBave",
-        "Number of frames averaged for a single poke measurement",
-        "5",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &NBave,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.NBexcl",
-        "Number of frames excluded",
-        "1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &NBexcl,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.NBcycle",
-        "Number of measurement cycles to be repeated",
-        "10",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &NBcycle,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".timing.NBinnerCycle",
-        "Number of inner cycles (how many consecutive times should a single +/- "
-        "poke be repeated)",
-        "10",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &NBinnerCycle,
-        NULL
-    },
-    {
-        CLIARG_ONOFF,
-        ".timing.upmlat",
-        "update latency from FPS",
-        "OFF",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &update_mlat,
-        &fpi_update_mlat
-    },
-    // ============= RM DM MASK ======================
-    {
-        CLIARG_FPSNAME,
-        ".RMDMmask.FPS_DMcomb",
-        "DM control process",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &FPS_DMcomb,
-        &fpi_FPS_DMcomb
-    },
-    {
-        CLIARG_UINT32,
-        ".RMDMmask.DMMODE",
-        "0:spatial, 1:modal",
-        "1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &DMMODE,
-        &fpi_DMMODE
-    },
-    {
-        CLIARG_FLOAT32,
-        ".RMDMmask.Cx",
-        "X center",
-        "10.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &RMDMmaskCx,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".RMDMmask.Cy",
-        "Y center",
-        "10.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &RMDMmaskCy,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".RMDMmask.R",
-        "radius",
-        "10.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &RMDMmaskR,
-        NULL
-    },
-    {
-        CLIARG_ONOFF,
-        ".RMDMmask.upmlat",
-        "update RMDMmask from FPS",
-        "OFF",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &update_RMDMmask,
-        &fpi_update_RMDMmask
-    },
-    // ============= MASKiNG =========================
-    {
-        CLIARG_ONOFF,
-        ".MaskMode",
-        "Mask mode, DM and WFS",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &MaskMode,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".DMmask.RMp0",
-        "DM mask, point0 percentile point",
-        "0.2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &maskDMp0,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".DMmask.RMc0",
-        "DM mask, point0 coefficient",
-        "1.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &maskDMc0,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".DMmask.RMp1",
-        "DM mask, point1 percentile point",
-        "0.2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &maskDMp1,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".DMmask.RMc1",
-        "DM mask, point1 coefficient",
-        "1.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &maskDMc1,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".DMmask.proxrad",
-        "DM actuator proximity radius",
-        "2.5",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &DMproxrad,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".WFSmask.RMp0",
-        "WFS mask, point0 percentile point",
-        "0.2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &maskWFSp0,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".WFSmask.RMc0",
-        "WFS mask, point0 coefficient",
-        "1.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &maskWFSc0,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".WFSmask.RMp1",
-        "WFS mask, point1 percentile point",
-        "0.2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &maskWFSp1,
-        NULL
-    },
-    {
-        CLIARG_FLOAT32,
-        ".WFSmask.RMc1",
-        "WFS mask, point1 coefficient",
-        "1.0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &maskWFSc1,
-        NULL
-    },
-    {
-        CLIARG_FITSFILENAME,
-        ".fn_pokeC",
-        "Poke sequence cube",
-        "null",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &fn_pokeC,
-        NULL
-    },
-    {
-        CLIARG_FITSFILENAME,
-        ".fn_RMDMmask",
-        "RM active DM actuators mask",
-        "null",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &fn_RMDMmask,
-        NULL
-    },
-    {
-        CLIARG_ONOFF,
-        ".normalize",
-        "Normalize WFS frames",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &normalize,
-        NULL
-    },
-    {
-        CLIARG_ONOFF,
-        ".Hpoke",
-        "Hadamard poke mode",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &Hpokemode,
-        &fpi_Hpokemode
-    },
-    {
-        CLIARG_ONOFF,
-        ".compPokeMat",
-        "(re)compute poke matrix",
-        "1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &compPokeMat,
-        &fpi_compPokeMat
-    },
-    // ============== executables ====================
-    {
-        CLIARG_FILENAME,
-        ".exec.RMdecode",
-        "RM decode script",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
-        (void **) &exec_post_RMdecode,
-        &fpi_exec_post_RMdecode
-    },
-    {
-        CLIARG_FILENAME,
-        ".exec.mkDMWFSmasks",
-        "Make DM and WFS masks",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
-        (void **) &exec_post_mkDMWFSmasks,
-        &fpi_exec_post_mkDMWFSmasks
-    },
-    {
-        CLIARG_FILENAME,
-        ".exec.mkDMslaveact",
-        "Make DM slaved actuators",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
-        (void **) &exec_post_mkDMslaveact,
-        &fpi_exec_post_mkDMslaveact
-    },
-    {
-        CLIARG_FILENAME,
-        ".exec.mkLODMmodes",
-        "Make DM low order modes",
-        "NULL",
-        FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED,
-        (void **) &exec_post_mkLODMmodes,
-        &fpi_exec_post_mkLODMmodes
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
     }
-};
-
-
-
-
-static CLICMDDATA CLIcmddata =
-{
-    "acqWFSlincal", "acquire linear WFS calibration", CLICMD_FIELDS_DEFAULTS
-};
+}
 
 
 
@@ -505,12 +172,17 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
+        long fpi;
+
         // DM stream is required
-        data.fpsptr->parray[fpi_dmstream].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".dmstream");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_FPS_mlat].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".timing.FPS_mlat");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
 
-        data.fpsptr->parray[fpi_FPS_DMcomb].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".RMDMmask.FPS_DMcomb");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
     }
 
     return RETURN_SUCCESS;
@@ -548,13 +220,21 @@ static errno_t customCONFcheck()
     if(data.fpsptr != NULL)
     {
 
+        long fpi_FPS_mlat = functionparameter_GetParamIndex(data.fpsptr, ".timing.FPS_mlat");
+        long fpi_FPS_DMcomb = functionparameter_GetParamIndex(data.fpsptr, ".RMDMmask.FPS_DMcomb");
+        long fpi_update_mlat = functionparameter_GetParamIndex(data.fpsptr, ".timing.upmlat");
+        long fpi_autotiming = functionparameter_GetParamIndex(data.fpsptr, ".timing.autoTiming");
+
         if(FPS_mlat.SMfd < 1)
         {
             printf("Connecting to mlat FPS\n");
 
-            functionparameter_ConnectExternalFPS(data.fpsptr,
-                                                 fpi_FPS_mlat,
-                                                 &FPS_mlat);
+            if(fpi_FPS_mlat > -1)
+            {
+                functionparameter_ConnectExternalFPS(data.fpsptr,
+                                                     fpi_FPS_mlat,
+                                                     &FPS_mlat);
+            }
         }
 
 
@@ -562,15 +242,18 @@ static errno_t customCONFcheck()
         {
             printf("Connecting to DMcomb FPS\n");
 
-            functionparameter_ConnectExternalFPS(data.fpsptr,
-                                                 fpi_FPS_DMcomb,
-                                                 &FPS_DMcomb);
+            if(fpi_FPS_DMcomb > -1)
+            {
+                functionparameter_ConnectExternalFPS(data.fpsptr,
+                                                     fpi_FPS_DMcomb,
+                                                     &FPS_DMcomb);
+            }
         }
 
 
         // update hardware latency
         //
-        if(data.fpsptr->parray[fpi_update_mlat].fpflag & FPFLAG_ONOFF)
+        if(fpi_update_mlat > -1 && (data.fpsptr->parray[fpi_update_mlat].fpflag & FPFLAG_ONOFF))
         {
             printf("Updating from mlat FPS\n");
 
@@ -595,7 +278,7 @@ static errno_t customCONFcheck()
 
         // Auto timing
         //
-        if(data.fpsptr->parray[fpi_autotiming].fpflag & FPFLAG_ONOFF)  // ON state
+        if(fpi_autotiming > -1 && (data.fpsptr->parray[fpi_autotiming].fpflag & FPFLAG_ONOFF))  // ON state
         {
             printf("UPDATE TIMING >>>>>>>>>\n");
 
@@ -644,7 +327,8 @@ static errno_t customCONFcheck()
 
             // update RM DM mask
             //
-            if(data.fpsptr->parray[fpi_update_RMDMmask].fpflag & FPFLAG_ONOFF)
+            long fpi_update_RMDMmask = functionparameter_GetParamIndex(data.fpsptr, ".RMDMmask.upmlat");
+            if(fpi_update_RMDMmask > -1 && (data.fpsptr->parray[fpi_update_RMDMmask].fpflag & FPFLAG_ONOFF))
             {
                 printf("Updating RM DM mask\n");
 
@@ -753,7 +437,8 @@ static errno_t customCONFcheck()
             //
             // Compute action: make Spoke and Hpoke
             //
-            if(data.fpsptr->parray[fpi_compPokeMat].fpflag & FPFLAG_ONOFF)
+            long fpi_compPokeMat = functionparameter_GetParamIndex(data.fpsptr, ".compPokeMat");
+            if(fpi_compPokeMat > -1 && (data.fpsptr->parray[fpi_compPokeMat].fpflag & FPFLAG_ONOFF))
             {
 
                 imageID IDdmRM = image_ID(dmstream, data.image, data.NB_MAX_IMAGE);
@@ -761,7 +446,8 @@ static errno_t customCONFcheck()
                 if(IDdmRM != -1)
                 {
 
-                    if(data.fpsptr->parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF)
+                    long fpi_Hpokemode = functionparameter_GetParamIndex(data.fpsptr, ".Hpoke");
+                    if(fpi_Hpokemode > -1 && (data.fpsptr->parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF))
                     {
 
                         AOloopControl_computeCalib_mkHadamardModes(
@@ -888,15 +574,21 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_milk_AOloopControl_acquireCalib__acquireWFSlincalib()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
+
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
 
@@ -904,3 +596,13 @@ CLIADDCMD_milk_AOloopControl_acquireCalib__acquireWFSlincalib()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+    customCONFsetup,
+    customCONFcheck)
+#endif

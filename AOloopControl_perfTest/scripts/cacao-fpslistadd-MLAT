@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacaopt.mlat"
+fpsfcall="cacao-fpsexec-cacaopt-mlat"
 
 # short description
 fpsdescr="Measure Latency"

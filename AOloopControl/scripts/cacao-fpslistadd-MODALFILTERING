@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacao.modalfilter"
+fpsfcall="cacao-cli.modalfilter"
 
 # short description
 fpsdescr="Modal filtering"

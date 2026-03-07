@@ -11,273 +11,109 @@
 
 #include "CommandLineInterface/CLIcore.h"
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "modalCTRLstats",
+    .cmdkey      = "modalCTRLstats",
+    .description = "compute modal control stats"
+};
+
 // Local variables pointers
 static uint64_t *AOloopindex;
 
-
-
 // blocks sizes
-
 static uint32_t *block0NBmode;
-static long      fpi_block0NBmode;
 static uint32_t *block0NBsample;
-static long      fpi_block0NBsample;
 
 static uint32_t *block1NBmode;
-static long      fpi_block1NBmode;
 static uint32_t *block1NBsample;
-static long      fpi_block1NBsample;
 
 static uint32_t *block2NBmode;
-static long      fpi_block2NBmode;
 static uint32_t *block2NBsample;
-static long      fpi_block2NBsample;
 
 static uint32_t *block3NBmode;
-static long      fpi_block3NBmode;
 static uint32_t *block3NBsample;
-static long      fpi_block3NBsample;
 
 static uint32_t *block4NBmode;
-static long      fpi_block4NBmode;
 static uint32_t *block4NBsample;
-static long      fpi_block4NBsample;
 
 static uint32_t *block5NBmode;
-static long      fpi_block5NBmode;
 static uint32_t *block5NBsample;
-static long      fpi_block5NBsample;
 
 static uint32_t *block6NBmode;
-static long      fpi_block6NBmode;
 static uint32_t *block6NBsample;
-static long      fpi_block6NBsample;
 
 static uint32_t *block7NBmode;
-static long      fpi_block7NBmode;
 static uint32_t *block7NBsample;
-static long      fpi_block7NBsample;
 
 static uint32_t *block8NBmode;
-static long      fpi_block8NBmode;
 static uint32_t *block8NBsample;
-static long      fpi_block8NBsample;
 
 static uint32_t *block9NBmode;
-static long      fpi_block9NBmode;
 static uint32_t *block9NBsample;
-static long      fpi_block9NBsample;
 
 static uint64_t *compstatswrite;
-static long      fpi_compstatswrite;
 
+#define FPS_PARAMS(X) \
+    X(".AOloopindex", &AOloopindex, FPTYPE_UINT64, 1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "AO loop index") \
+    X(".block.blk0NBmode", &block0NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 0 number of modes") \
+    X(".block.blk0NBsample", &block0NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 0 number of samples") \
+    X(".block.blk1NBmode", &block1NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 1 number of modes") \
+    X(".block.blk1NBsample", &block1NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 1 number of samples") \
+    X(".block.blk2NBmode", &block2NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 2 number of modes") \
+    X(".block.blk2NBsample", &block2NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 2 number of samples") \
+    X(".block.blk3NBmode", &block3NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 3 number of modes") \
+    X(".block.blk3NBsample", &block3NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 3 number of samples") \
+    X(".block.blk4NBmode", &block4NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 4 number of modes") \
+    X(".block.blk4NBsample", &block4NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 4 number of samples") \
+    X(".block.blk5NBmode", &block5NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 5 number of modes") \
+    X(".block.blk5NBsample", &block5NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 5 number of samples") \
+    X(".block.blk6NBmode", &block6NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 6 number of modes") \
+    X(".block.blk6NBsample", &block6NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 6 number of samples") \
+    X(".block.blk7NBmode", &block7NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 7 number of modes") \
+    X(".block.blk7NBsample", &block7NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 7 number of samples") \
+    X(".block.blk8NBmode", &block8NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 8 number of modes") \
+    X(".block.blk8NBsample", &block8NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 8 number of samples") \
+    X(".block.blk9NBmode", &block9NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 9 number of modes") \
+    X(".block.blk9NBsample", &block9NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 9 number of samples") \
+    X(".comp.statswrite", &compstatswrite, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "Write stats to file")
 
-
-
-
-static CLICMDARGDEF farg[] = {{
-        CLIARG_UINT64,
-        ".AOloopindex",
-        "AO loop index",
-        "0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &AOloopindex,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk0NBmode",
-        "block 0 number of modes",
-        "2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block0NBmode,
-        &fpi_block0NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk0NBsample",
-        "block 0 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block0NBsample,
-        &fpi_block0NBsample
-    },
-
-    {
-        CLIARG_UINT32,
-        ".block.blk1NBmode",
-        "block 1 number of modes",
-        "256",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block1NBmode,
-        &fpi_block1NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk1NBsample",
-        "block 1 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block1NBsample,
-        &fpi_block1NBsample
-    },
-
-    {
-        CLIARG_UINT32,
-        ".block.blk2NBmode",
-        "block 2 number of modes",
-        "256",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block2NBmode,
-        &fpi_block2NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk2NBsample",
-        "block 2 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block2NBsample,
-        &fpi_block2NBsample
-    },
-
-    {
-        CLIARG_UINT32,
-        ".block.blk3NBmode",
-        "block 3 number of modes",
-        "256",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block3NBmode,
-        &fpi_block3NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk3NBsample",
-        "block 3 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block3NBsample,
-        &fpi_block3NBsample
-    },
-
-    {
-        CLIARG_UINT32,
-        ".block.blk4NBmode",
-        "block 4 number of modes",
-        "256",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block4NBmode,
-        &fpi_block4NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk4NBsample",
-        "block 4 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block4NBsample,
-        &fpi_block4NBsample
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk5NBmode",
-        "block 5 number of modes",
-        "256",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block5NBmode,
-        &fpi_block5NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk5NBsample",
-        "block 5 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block5NBsample,
-        &fpi_block5NBsample
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk6NBmode",
-        "block 6 number of modes",
-        "256",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block6NBmode,
-        &fpi_block6NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk6NBsample",
-        "block 6 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block6NBsample,
-        &fpi_block6NBsample
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk7NBmode",
-        "block 7 number of modes",
-        "256",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block7NBmode,
-        &fpi_block7NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk7NBsample",
-        "block 7 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block7NBsample,
-        &fpi_block7NBsample
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk8NBmode",
-        "block 8 number of modes",
-        "256",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block8NBmode,
-        &fpi_block8NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk8NBsample",
-        "block 8 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block8NBsample,
-        &fpi_block8NBsample
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk9NBmode",
-        "block 9 number of modes",
-        "256",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block9NBmode,
-        &fpi_block9NBmode
-    },
-    {
-        CLIARG_UINT32,
-        ".block.blk9NBsample",
-        "block 9 number of samples",
-        "30000",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &block9NBsample,
-        &fpi_block9NBsample
-    },
-    {
-        CLIARG_ONOFF,
-        ".comp.statswrite",
-        "Write stats to file",
-        "0",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &compstatswrite,
-        &fpi_compstatswrite
-    }
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -288,7 +124,9 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_compstatswrite].fpflag |= FPFLAG_WRITERUN;
+        long fpi;
+        fpi = functionparameter_GetParamIndex(data.fpsptr, ".comp.statswrite");
+        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -307,10 +145,7 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata =
-{
-    "modalCTRLstats", "compute modal control stats", CLICMD_FIELDS_DEFAULTS
-};
+
 
 
 
@@ -802,14 +637,20 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl__modalCTRL_stats()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
@@ -817,3 +658,13 @@ CLIADDCMD_AOloopControl__modalCTRL_stats()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+    customCONFsetup,
+    customCONFcheck)
+#endif

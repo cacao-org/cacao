@@ -4,9 +4,9 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="cacao control"
+MSdescr="cacao-cli control"
 
-MSextdescr="cacao control
+MSextdescr="cacao-cli control
 interface to fpsCTRL
 
 Examples:

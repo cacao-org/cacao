@@ -9,50 +9,57 @@
 
 
 
-// sample 2D WF to 1D actuator geometry
-//
-static char *inWF2D;
-static long  fpi_inWF2D;
-
-
-static char *map2D;
-static long  fpi_map2D;
-
-
-static char *outWF1D;
-static long  fpi_outWF1D;
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        // Input WF or cube
-        CLIARG_IMG,
-        ".inwf2D",
-        "input 2D wavefront",
-        "inwf2D",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &inWF2D,
-        &fpi_inWF2D
-    },
-    {
-        CLIARG_STR,
-        ".mapfile",
-        "mapping file, can be read from mapcoord2D.txt",
-        "mapfile",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &map2D,
-        &fpi_map2D
-    },
-    {
-        CLIARG_STR,
-        ".outWF1D",
-        "output WF 1D",
-        "outWF1D",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &outWF1D,
-        &fpi_outWF1D
-    }
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "sample2DWF",
+    .cmdkey      = "sample2DWF",
+    .description = "sample 2D WF to act pos"
 };
+
+static char *inWF2D;
+static char *map2D;
+static char *outWF1D;
+
+#define FPS_PARAMS(X) \
+    X(".inwf2D", &inWF2D, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input 2D wavefront") \
+    X(".mapfile", &map2D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping file, can be read from mapcoord2D.txt") \
+    X(".outWF1D", &outWF1D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output WF 1D")
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -64,10 +71,10 @@ static errno_t customCONFsetup()
 {
     if(data.fpsptr != NULL)
     {
-        data.fpsptr->parray[fpi_inWF2D].fpflag |=
+        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".inwf2D")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
-        //data.fpsptr->parray[fpi_map2D].fpflag |=
+        //data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".mapfile")].fpflag |=
         //    FPFLAG_STREAM_RUN_REQUIRED;
     }
 
@@ -89,10 +96,6 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata =
-{
-    "sample2DWF", "sample 2D WF to act pos", CLICMD_FIELDS_DEFAULTS
-};
 
 
 
@@ -274,14 +277,20 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_computeCalib__sample2D()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
@@ -289,3 +298,13 @@ CLIADDCMD_AOloopControl_computeCalib__sample2D()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+
+    customCONFcheck)
+#endif

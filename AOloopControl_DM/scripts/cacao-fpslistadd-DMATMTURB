@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacaodm.dmturb"
+fpsfcall="cacao-fpsexec-dmturb"
 
 # short description
 fpsdescr="DM atmospheric turbulence"

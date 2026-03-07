@@ -56,7 +56,7 @@ EOF
 
 
 
-cacao << EOF
+cacao-cli << EOF
 loadfits "${CACAO_WFSSTREAM}_wfsref.fits" im
 cacaoio.findspots im 4 20 19 mapc
 saveFITS spotscan "spotscan.fits"

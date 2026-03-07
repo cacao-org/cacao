@@ -18,7 +18,7 @@ then
 fi
 
 
-cacao << EOF
+cacao-cli << EOF
 readshmim dm$1disp$2
 imzero dm$1disp$2
 exit

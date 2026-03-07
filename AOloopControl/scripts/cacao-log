@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MSdescr="CLI for logging cacao messages"
+MSdescr="CLI for logging cacao-cli messages"
 
 
 MSextdescr="
@@ -77,7 +77,7 @@ datestr="$(date -u +'%Y%m%d')"
 CACAO_MSGLOGDIR="../logdir-${CACAO_LOOPNAME}/${datestr}"
 mkdir -p ${CACAO_MSGLOGDIR}
 
-CACAO_MSGLOGFILE="${CACAO_MSGLOGDIR}/cacao.${CACAO_LOOPNAME}.log"
+CACAO_MSGLOGFILE="${CACAO_MSGLOGDIR}/cacao-cli.${CACAO_LOOPNAME}.log"
 
 #echo "logging to $CACAO_MSGLOGFILE"
 

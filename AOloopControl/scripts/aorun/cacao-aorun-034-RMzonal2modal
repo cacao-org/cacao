@@ -64,7 +64,7 @@ cacaomsglog "START"
 # Compute WFS response of synthetic modes
 #
 mkdir -p ${CACAO_CONFWDIR}/RMmodesWFS
-cacao << EOF
+cacao-cli << EOF
 loadfits "${CACAO_CONFWDIR}/zrespM.fits" zrespM
 loadfits "${CACAO_CONFWDIR}/RMmodesDM/${DMmodeCname}.fits" dmC
 cacaocc.generateRMWFS zrespM dmC wfsC

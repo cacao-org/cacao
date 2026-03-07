@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-MILKCLI_APPNAME="cacao" MILKCLI_ADD_LIBS="$MILKCLI_ADD_LIBS;cacaoAOloopControl,cacaoAOloopControlIOtools,cacaoAOloopControlcompTools,cacaoAOloopControlacquireCalib,cacaocomputeCalib,cacaoAOloopControlDM,cacaoAOloopControlperfTest,cacaoAOloopControlPredictiveControl" milk "$@"

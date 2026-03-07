@@ -13,7 +13,7 @@ With argument sname, the script will :
 - Upload calibration file conf/sname.fits to aolX_sname
 - Copy conf/sname.fits to conf/shmim.sname.fits to reflect current shared memory content
 - Archive copy of conf/sname.fits to logdir
-- Record the operation in the cacao message log
+- Record the operation in the cacao-cli message log
 "
 
 source milk-script-std-config

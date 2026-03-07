@@ -4,9 +4,9 @@
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
 # script 1-line description
-MSdescr="cacao start conf process"
+MSdescr="cacao-cli start conf process"
 
-MSextdescr="cacao start conf process
+MSextdescr="cacao-cli start conf process
 interface to fpsCTRL
 
 Example:

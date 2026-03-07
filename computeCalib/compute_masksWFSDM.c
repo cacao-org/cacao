@@ -13,161 +13,75 @@
 
 #include "info/info.h"
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "compmasksWFSDM",
+    .cmdkey      = "compmasksWFSDM",
+    .description = "compute WFS and DM masks"
+};
+
 static char *zrespWFS;
-static long  fpi_zrespWFS;
-
 static uint32_t *dmxsize;
-static long fpi_dmxsize;
-
 static uint32_t *dmysize;
-static long fpi_dmysize;
-
-
 
 static float *dmmaskperc0;
-static long fpi_dmmaskperc0;
-
 static float *dmmaskcoeff0;
-static long fpi_dmmaskcoeff0;
-
 static float *dmmaskperc1;
-static long fpi_dmmaskperc1;
-
 static float *dmmaskcoeff1;
-static long fpi_dmmaskcoeff1;
-
-
-
 
 static float *wfsmaskperc0;
-static long fpi_wfsmaskperc0;
-
 static float *wfsmaskcoeff0;
-static long fpi_wfsmaskcoeff0;
-
 static float *wfsmaskperc1;
-static long fpi_wfsmaskperc1;
-
 static float *wfsmaskcoeff1;
-static long fpi_wfsmaskcoeff1;
 
+#define FPS_PARAMS(X) \
+    X(".zrespM", &zrespWFS, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input zonal WFS RM") \
+    X(".dmxsize", &dmxsize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM x size") \
+    X(".dmysize", &dmysize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM y size") \
+    X(".dmmask.perc0", &dmmaskperc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask percentile 0") \
+    X(".dmmask.coeff0", &dmmaskcoeff0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask coefficient 0") \
+    X(".dmmask.perc1", &dmmaskperc1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask percentile 1") \
+    X(".dmmask.coeff1", &dmmaskcoeff1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask coefficient 1") \
+    X(".wfsmask.perc0", &wfsmaskperc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask percentile 0") \
+    X(".wfsmask.coeff0", &wfsmaskcoeff0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask coefficient 0") \
+    X(".wfsmask.perc1", &wfsmaskperc1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask percentile 1") \
+    X(".wfsmask.coeff1", &wfsmaskcoeff1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask coefficient 1")
 
-
-
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        // input zonal WFS RM
-        CLIARG_STR,
-        ".zrespM",
-        "input zonal WFS RM",
-        "zrespWFS",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &zrespWFS,
-        &fpi_zrespWFS
-    },
-    {
-        // DM x size
-        CLIARG_UINT32,
-        ".dmxsize",
-        "DM x size",
-        "50",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &dmxsize,
-        &fpi_dmxsize
-    },
-    {
-        // DM y size
-        CLIARG_UINT32,
-        ".dmysize",
-        "DM y size",
-        "50",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &dmysize,
-        &fpi_dmysize
-    },
-    {
-        // DM mask - percentile 0
-        CLIARG_FLOAT32,
-        ".dmmask.perc0",
-        "DM mask percentile 0",
-        "0.2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &dmmaskperc0,
-        &fpi_dmmaskperc0
-    },
-    {
-        // DM mask - coefficient 0
-        CLIARG_FLOAT32,
-        ".dmmask.coeff0",
-        "DM mask coefficient 0",
-        "0.5",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &dmmaskcoeff0,
-        &fpi_dmmaskcoeff0
-    },
-    {
-        // DM mask - percentile 0
-        CLIARG_FLOAT32,
-        ".dmmask.perc1",
-        "DM mask percentile 1",
-        "0.8",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &dmmaskperc1,
-        &fpi_dmmaskperc1
-    },
-    {
-        // DM mask - coefficient 1
-        CLIARG_FLOAT32,
-        ".dmmask.coeff1",
-        "DM mask coefficient 1",
-        "0.5",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &dmmaskcoeff1,
-        &fpi_dmmaskcoeff1
-    },
-    {
-        // WFS mask - percentile 0
-        CLIARG_FLOAT32,
-        ".wfsmask.perc0",
-        "WFS mask percentile 0",
-        "0.2",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &wfsmaskperc0,
-        &fpi_wfsmaskperc0
-    },
-    {
-        // WFS mask - coefficient 0
-        CLIARG_FLOAT32,
-        ".wfsmask.coeff0",
-        "WFS mask coefficient 0",
-        "0.5",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &wfsmaskcoeff0,
-        &fpi_wfsmaskcoeff0
-    },
-    {
-        // WFS mask - percentile 0
-        CLIARG_FLOAT32,
-        ".wfsmask.perc1",
-        "WFS mask percentile 1",
-        "0.8",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &wfsmaskperc1,
-        &fpi_wfsmaskperc1
-    },
-    {
-        // WFS mask - coefficient 1
-        CLIARG_FLOAT32,
-        ".wfsmask.coeff1",
-        "WFS mask coefficient 1",
-        "0.5",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &wfsmaskcoeff1,
-        &fpi_wfsmaskcoeff1
-    }
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -200,10 +114,6 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata =
-{
-    "compmasksWFSDM", "compute WFS and DM masks", CLICMD_FIELDS_DEFAULTS
-};
 
 
 
@@ -358,14 +268,20 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_computeCalib__compmasksWFSDM()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
@@ -373,3 +289,13 @@ CLIADDCMD_AOloopControl_computeCalib__compmasksWFSDM()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+
+    customCONFcheck)
+#endif

@@ -19,88 +19,31 @@ static char *outseqname;
 
 
 static uint32_t *oversamp;
-static long      fpi_oversamp = -1;
 
 static uint32_t *nb0start;
-static long      fpi_nb0start = -1;
 
 static uint32_t *nb0end;
-static long      fpi_nb0end = -1;
 
 
 
 
-static CLICMDARGDEF farg[] =
-{
-    {
-        CLIARG_IMG,
-        ".diffseqname",
-        "input difference sequence cube",
-        "diffseq",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &diffseqname,
-        NULL
-    },
-    {
-        CLIARG_STR,
-        ".outseq",
-        "output time seq cube",
-        "im0",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &outseqname,
-        NULL
-    },
-    {
-        CLIARG_UINT32,
-        ".oversamp",
-        "samples per frame exposure time",
-        "10",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &oversamp,
-        &fpi_oversamp
-    },
-    {
-        CLIARG_UINT32,
-        ".nb0start",
-        "samples set to zero at start",
-        "10",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &nb0start,
-        &fpi_nb0start
-    },
-    {
-        CLIARG_UINT32,
-        ".nb0end",
-        "samples set to zero at end",
-        "30",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &nb0end,
-        &fpi_nb0end
-    }
+
+
+
+
+
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "mlatdsdecode",
+    .cmdkey      = "mlatdsdecode",
+    .description = "mlat diff sequence decode"
 };
 
-
-
-
-static CLICMDDATA CLIcmddata =
-{
-    "mlatdsdecode",
-    "mlat diff sequence decode",
-    CLICMD_FIELDS_DEFAULTS
-};
-
-
-
-// detailed help
-static errno_t help_function()
-{
-    printf("Decode mlat diff sequence into time series\n");
-
-    return RETURN_SUCCESS;
-}
-
-
-
+#define FPS_PARAMS(X) \
+    X(".diffseqname", &diffseqname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "input difference sequence cube") \
+    X(".outseq",      &outseqname,  FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "output time seq cube") \
+    X(".oversamp",    &oversamp,    FPTYPE_UINT32,     1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "samples per frame exposure time") \
+    X(".nb0start",    &nb0start,    FPTYPE_UINT32,     1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "samples set to zero at start") \
+    X(".nb0end",      &nb0end,      FPTYPE_UINT32,     1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "samples set to zero at end")
 
 errno_t mlat_diffseq_decode(
     IMGID inimg,
@@ -535,6 +478,19 @@ errno_t mlat_diffseq_decode(
 
 
 
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+static int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+static CLICMDDATA CLIcmddata = {
+    "mlatdsdecode", "mlat diff sequence decode", CLICMD_FIELDS_DEFAULTS
+};
+
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
@@ -572,18 +528,22 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
 
 
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction() {
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings, compute_function);
+}
 
 // Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl_perfTest__mlat_decode()
+errno_t CLIADDCMD_AOloopControl_perfTest__mlat_decode()
 {
-    //CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    //CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
-
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
+#endif

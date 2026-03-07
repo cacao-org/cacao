@@ -17,7 +17,7 @@
 #define MODULE_DESCRIPTION "pyramid WFS tools"
 
 // Application to which module belongs
-#define MODULE_APPLICATION "cacao"
+#define MODULE_APPLICATION "cacao-cli"
 
 #define _GNU_SOURCE
 

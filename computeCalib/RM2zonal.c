@@ -64,90 +64,64 @@
 
 
 
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "RM2zonal",
+    .cmdkey      = "RM2zonal",
+    .description = "convert arbitrary response matrix to zonal"
+};
+
 static char *RMmodesDM;
-static long  fpi_RMmodesDM;
-
 static char *RMmodesWFS;
-static long  fpi_RMmodesWFS;
-
 static char *RMmodesDMz;
-static long  fpi_RMmodesDMz;
-
 static char *RMmodesWFSz;
-static long  fpi_RMmodesWFSz;
-
 
 static float *svdlim;
-static long   fpi_svdlim;
-
 static int32_t *GPUdevice;
-static long     fpi_GPUdevice;
 
+#define FPS_PARAMS(X) \
+    X(".RMmodesDM", &RMmodesDM, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : DM modes") \
+    X(".RMmodesWFS", &RMmodesWFS, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : WFS modes") \
+    X(".RMmodesDMz", &RMmodesDMz, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output zonal RM : DM modes") \
+    X(".RMmodesWFSz", &RMmodesWFSz, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output zonal RM : WFS modes") \
+    X(".svdlim", &svdlim, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "SVD limit") \
+    X(".GPUdevice", &GPUdevice, FPTYPE_INT32, 1, FPFLAG_DEFAULT_INPUT, "using GPU (99 : no GPU, otherwise GPU device)")
 
-
-static CLICMDARGDEF farg[] =
-{
-    {
-        // input RM : DM modes
-        CLIARG_IMG,
-        ".RMmodesDM",
-        "input response matrix DM modes",
-        "RMmodesDM",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &RMmodesDM,
-        &fpi_RMmodesDM
-    },
-    {
-        // input RM : WFS modes
-        CLIARG_IMG,
-        ".RMmodesWFS",
-        "input response matrix WFS modes",
-        "RMmodesWFS",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &RMmodesWFS,
-        &fpi_RMmodesWFS
-    },
-    {
-        // output zonal RM : DM modes
-        CLIARG_STR,
-        ".RMmodesDMz",
-        "output zonal response matrix DM modes",
-        "RMmodesDMz",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &RMmodesDMz,
-        &fpi_RMmodesDMz
-    },
-    {
-        // output zonal RM : WFS modes
-        CLIARG_STR,
-        ".RMmodesWFSz",
-        "output zonal response matrix WFS modes",
-        "RMmodesWFSz",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &RMmodesWFSz,
-        &fpi_RMmodesWFSz
-    },
-    {
-        // Singular Value Decomposition limit
-        CLIARG_FLOAT32,
-        ".svdlim",
-        "SVD limit",
-        "0.01",
-        (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),
-        (void **) &svdlim,
-        &fpi_svdlim
-    },
-    {
-        // using GPU (99 : no GPU, otherwise GPU device)
-        CLIARG_INT32,
-        ".GPUdevice",
-        "GPU device, 99 for CPU",
-        "-1",
-        FPFLAG_DEFAULT_INPUT,
-        (void **) &GPUdevice,
-        &fpi_GPUdevice
-    }
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
 };
+
+static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
+{
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description) - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
+}
 
 
 
@@ -180,10 +154,7 @@ static errno_t customCONFcheck()
     return RETURN_SUCCESS;
 }
 
-static CLICMDDATA CLIcmddata =
-{
-    "RM2zonal", "convert arbitrary response matrix to zonal", CLICMD_FIELDS_DEFAULTS
-};
+
 
 
 
@@ -698,14 +669,20 @@ static errno_t compute_function()
 
 
 
-INSERT_STD_FPSCLIfunctions
-
-
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
+{
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info, farg, &CLIcmddata,
+        my_bindings, nb_bindings,
+        compute_function);
+}
 
 // Register function in CLI
 errno_t
 CLIADDCMD_AOloopControl_computeCalib__RM2zonal()
 {
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
@@ -713,3 +690,13 @@ CLIADDCMD_AOloopControl_computeCalib__RM2zonal()
 
     return RETURN_SUCCESS;
 }
+#endif
+
+#ifdef FPS_STANDALONE
+FPS_MAIN_STANDALONE_V2_CONFCHECK(
+    FPS_app_info,
+    FPS_PARAMS,
+    compute_function,
+
+    customCONFcheck)
+#endif

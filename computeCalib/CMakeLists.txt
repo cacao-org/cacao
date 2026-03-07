@@ -131,5 +131,26 @@ target_include_directories(${LIBNAME} PRIVATE ${PROJECT_SOURCE_DIR}/.. ${CMAKE_C
 target_link_libraries(${LIBNAME} PRIVATE ${LINKLIBS})
 
 install(TARGETS ${LIBNAME} DESTINATION lib)
-install(FILES ${SRCNAME}.h ${INCLUDEFILES} DESTINATION include/${SRCNAME})
-install(PROGRAMS ${SCRIPTFILES} DESTINATION bin)
+add_cacao_standalone(cacaocc-maskextrapolate maskextrapolate.c)
+target_link_libraries(cacao-fpsexec-cacaocc-maskextrapolate PUBLIC ${LINKLIBS})
+
+add_cacao_standalone(cacaocc-actsamp2d actmap_sample2D.c)
+target_link_libraries(cacao-fpsexec-cacaocc-actsamp2d PUBLIC ${LINKLIBS})
+
+add_cacao_standalone(cacaocc-rm2zonal RM2zonal.c)
+target_link_libraries(cacao-fpsexec-cacaocc-rm2zonal PUBLIC ${LINKLIBS})
+
+add_cacao_standalone(cacaocc-comphadamard computeHadamard.c)
+target_link_libraries(cacao-fpsexec-cacaocc-comphadamard PUBLIC ${LINKLIBS})
+
+add_cacao_standalone(cacaocc-compstrcm compute_straight_CM.c)
+target_link_libraries(cacao-fpsexec-cacaocc-compstrcm PUBLIC ${LINKLIBS})
+
+add_cacao_standalone(cacaocc-genrmwfs generateRMWFS.c)
+target_link_libraries(cacao-fpsexec-cacaocc-genrmwfs PUBLIC ${LINKLIBS})
+
+add_cacao_standalone(cacaocc-compmaskwfsdm compute_masksWFSDM.c)
+target_link_libraries(cacao-fpsexec-cacaocc-compmaskwfsdm PUBLIC ${LINKLIBS} milkstatistic)
+
+add_cacao_standalone(cacaocc-compctrlmodes compute_control_modes.c)
+target_link_libraries(cacao-fpsexec-cacaocc-compctrlmodes PUBLIC ${LINKLIBS} milklinoptimtools milkZernikePolyn)

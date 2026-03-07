@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacaoac.measlinresp"
+fpsfcall="cacao-fpsexec-cacaoac-measlinresp"
 
 # short description
 fpsdescr="Measure linear response"

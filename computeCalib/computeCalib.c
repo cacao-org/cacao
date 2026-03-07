@@ -17,7 +17,7 @@
 #define MODULE_DESCRIPTION "AO loop control compute calibration"
 
 // Application to which module belongs
-#define MODULE_APPLICATION "cacao"
+#define MODULE_APPLICATION "cacao-cli"
 
 #define _GNU_SOURCE
 

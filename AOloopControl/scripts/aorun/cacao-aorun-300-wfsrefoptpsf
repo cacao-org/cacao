@@ -483,7 +483,7 @@ fi
 
 echo "exitCLI" >> $SF
 
-MILK_QUIET=1 cacao -n ${pname} -f ${fifoname} -s ${SF}
+MILK_QUIET=1 cacao-cli -n ${pname} -f ${fifoname} -s ${SF}
 
 rm ${SF}
 
@@ -554,7 +554,7 @@ fi
 
 
 echo "exitCLI" >> $SF
-MILK_QUIET=1 cacao -n ${pname} -f ${fifoname} -s ${SF}
+MILK_QUIET=1 cacao-cli -n ${pname} -f ${fifoname} -s ${SF}
 rm ${SF}
 
 # exit loop
