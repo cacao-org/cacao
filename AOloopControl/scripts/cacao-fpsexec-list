@@ -7,6 +7,31 @@ SKIP_LIST="cacao-fpsexec-list"
 
 SEARCH_TERM="${1:-}"
 
+if [ "$SEARCH_TERM" = "-h" ] || [ "$SEARCH_TERM" = "--help" ]; then
+    echo "Usage: cacao-fpsexec-list [SEARCH_TERM]"
+    echo ""
+    echo "List all installed cacao-fpsexec-* standalone executables"
+    echo "with their one-line descriptions."
+    echo ""
+    echo "These executables are compute units that can run independently"
+    echo "or be managed by the FPS (Function Parameter Synchronization) system."
+    echo ""
+    echo "Arguments:"
+    echo "  SEARCH_TERM    Optional. Filter the list of executables to only show"
+    echo "                 those whose name or description matches this term."
+    echo "                 The search supports Extended Regular Expressions (regex)"
+    echo "                 and is case-insensitive."
+    echo "                 If omitted, all executables are listed."
+    echo ""
+    echo "Examples:"
+    echo "  cacao-fpsexec-list             # List all cacao fpsexec executables"
+    echo "  cacao-fpsexec-list filter      # List executables containing 'filter'"
+    echo "  cacao-fpsexec-list \"filter|cm\" # List executables containing 'filter' or 'cm'"
+    echo "  cacao-fpsexec-list \"^cacao\"    # List executables starting with 'cacao'"
+    echo "  cacao-fpsexec-list -h          # Print this help message"
+    exit 0
+fi
+
 col_name=45
 
 printf "\033[1;34m%-${col_name}s %s\033[0m\n" \
@@ -35,7 +60,7 @@ for cmd in $(compgen -c cacao-fpsexec- | sort -u); do
     fi
 
     if [ -n "$SEARCH_TERM" ]; then
-        if ! echo "$line" | grep -qi "$SEARCH_TERM"; then
+        if ! echo "$line" | grep -E -qi -e "$SEARCH_TERM"; then
             continue
         fi
     fi

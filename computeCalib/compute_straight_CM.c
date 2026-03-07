@@ -7,6 +7,7 @@
 
 #include "CommandLineInterface/CLIcore.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
+#include "fps.h"
 
 #include "timeutils.h"
 
@@ -82,10 +83,10 @@ static float *svdlim;
 static int32_t *GPUdevice;
 
 #define FPS_PARAMS(X) \
-    X(".RMmodesDM", &RMmodesDMfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : DM modes") \
-    X(".RMmodesWFS", &RMmodesWFSfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : WFS modes") \
-    X(".dmmask", &DMmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM mask for normalization") \
-    X(".wfsmask", &WFSmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "WFS mask for normalization") \
+    X(".RMmodesDM", &RMmodesDMfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "input RM : DM modes") \
+    X(".RMmodesWFS", &RMmodesWFSfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "input RM : WFS modes") \
+    X(".dmmask", &DMmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "DM mask for normalization") \
+    X(".wfsmask", &WFSmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "WFS mask for normalization") \
     X(".CMmodesDM", &CMmodesDMfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output CM : DM modes") \
     X(".CMmodesWFS", &CMmodesWFSfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output CM : WFS modes") \
     X(".svdlim", &svdlim, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "SVD limit") \
@@ -127,49 +128,6 @@ void init_cmdsettings(void)
             &default_cmdsettings;
     }
 }
-
-
-
-
-// Optional custom configuration setup. comptbuff
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
-    if(data.fpsptr != NULL)
-    {
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".RMmodesDM")].fpflag |=
-            FPFLAG_FILE_RUN_REQUIRED;
-
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".RMmodesWFS")].fpflag |=
-            FPFLAG_FILE_RUN_REQUIRED;
-
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".dmmask")].fpflag |=
-            FPFLAG_FILE_RUN_REQUIRED;
-
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".wfsmask")].fpflag |=
-            FPFLAG_FILE_RUN_REQUIRED;
-    }
-
-    return RETURN_SUCCESS;
-}
-
-
-
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
-
-    if(data.fpsptr != NULL)
-    {
-    }
-
-    return RETURN_SUCCESS;
-}
-
-
 
 
 
@@ -829,8 +787,6 @@ CLIADDCMD_AOloopControl_computeCalib__compsCM()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC
 
     return RETURN_SUCCESS;
@@ -838,10 +794,8 @@ CLIADDCMD_AOloopControl_computeCalib__compsCM()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(
+FPS_MAIN_STANDALONE_V2(
     FPS_app_info,
     FPS_PARAMS,
-    compute_function,
-
-    customCONFcheck)
+    compute_function)
 #endif
