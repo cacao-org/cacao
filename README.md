@@ -25,10 +25,10 @@ cacao is a computation engine for adaptive optics control.
 **Compute Performance**: Uses multi-core CPUs and GPGPUs for [high computing throughput](https://github.com/cacao-org/cacao/wiki/Compute-Performance-Benchmarks). Written in C, optimized for performance. Holds images in RAM, with image stream support (shared memory with low-latency IPC support). cacao uses [milk](https://github.com/milk-org/milk).
 
 
-**User input**: Executable launches a [command line interface (CLI)](https://cacao-org.github.io/cacao/page_userinput.html) from which functions are accessible. Type "help" in the CLI to get started.
+**User input**: Executable launches a [command line interface (CLI)](https://github.com/milk-org/milk/blob/master/docs/cli/CLIcore.md) from which functions are accessible. Type "help" in the CLI to get started.
 
 
-**Modular**, [easy to add functions](https://cacao-org.github.io/cacao/page_LoadingModules.html), loaded at runtime as shared objects.
+**Modular**, [easy to add functions](https://github.com/milk-org/milk/blob/master/docs/developer/plugins.md), loaded at runtime as shared objects.
 
 
 
@@ -39,9 +39,9 @@ cacao is a computation engine for adaptive optics control.
 
 Topic                        |  Chat room                             |  Documentation             |
 -----------------------------|----------------------------------------|--------------------|
-How to use cacao ?           | [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community)  Community | [Online documentation]( http://cacao-org.github.io/docs )  |
+How to use cacao ?           | [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community)  Community | [Online documentation](docs/index.md)  |
 Configuring computer system  | [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig)  Hardware / OS setup | [RTC setup]( https://github.com/cacao-org/cacao/wiki/Seeting-up-a-RTC-system ) |
-Software development         | [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev)      Developers | [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html ) and  [Online documentation]( http://CACAO-org.github.io/cacao/index.html )|
+Software development         | [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev)      Developers | [coding standards](https://github.com/milk-org/milk/blob/master/docs/developer/coding_standards.md) and  [API Reference](https://cacao-org.github.io/cacao/index.html)|
 
 
 
