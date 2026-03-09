@@ -1,20 +1,26 @@
+# ═══════════════════════════════════════════
+#  cacaocomputeCalib — Calibration computation
+# ═══════════════════════════════════════════
+
 set(LIBNAME "cacaocomputeCalib")
 project(lib_${LIBNAME}_project)
 
-# list source files (.c) other than modulename.c
+# ── Source files ─────────────────────────────────
+# Dual-mode files: compiled into ${LIBNAME} for CLI
+# AND as standalone executables (add_cacao_standalone).
 set(SOURCEFILES
-	actmap_sample2D.c
+	actmap_sample2D.c                          # → cacaocc-actsamp2d
 	AOloopControl_computeCalib_dm.c
-	computeHadamard.c
+	computeHadamard.c                          # → cacaocc-comphadamard
 	AOloopControl_computeCalib_loDMmodes.c
 	AOloopControl_computeCalib_processRM.c
-	compute_straight_CM.c
-	compute_control_modes.c
-	compute_masksWFSDM.c
-	generateRMWFS.c
-	maskextrapolate.c
+	compute_straight_CM.c                      # → cacaocc-compstrcm
+	compute_control_modes.c                    # → cacaocc-compctrlmodes
+	compute_masksWFSDM.c                       # → cacaocc-compmaskwfsdm
+	generateRMWFS.c                            # → cacaocc-genrmwfs
+	maskextrapolate.c                          # → cacaocc-maskextrapolate
 	modes_spatial_extrapolate.c
-	RM2zonal.c
+	RM2zonal.c                                 # → cacaocc-rm2zonal
 )
 
 
