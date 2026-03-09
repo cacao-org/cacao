@@ -15,7 +15,7 @@
 #include "zonalfilter.h"
 #include "fps.h"
 #include "processinfo.h"
-#include "ImageStreamIO.h"
+#include "ImageStreamIO/ImageStreamIO.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
