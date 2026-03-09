@@ -1,4 +1,9 @@
 /**
+ * @file RM2zonal.h
+ * @brief Rm2zonal module
+ */
+
+/**
  * @file compute_straight_CM.h
  *
  */

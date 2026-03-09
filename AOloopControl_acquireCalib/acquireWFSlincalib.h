@@ -1,5 +1,10 @@
 /**
  * @file acquireWFSlincalib.h
+ * @brief Acquirewfslincalib module
+ */
+
+/**
+ * @file acquireWFSlincalib.h
  *
  */
 

@@ -1,5 +1,10 @@
 /**
  * @file compute_masksWFSDM.h
+ * @brief Compute maskswfsdm module
+ */
+
+/**
+ * @file compute_masksWFSDM.h
  *
  */
 

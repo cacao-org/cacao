@@ -1,3 +1,8 @@
+/**
+ * @file compRMsensitivity.h
+ * @brief Comprmsensitivity module
+ */
+
 #ifndef AOLOOPCONTROL_PERFTEST_COMPRMSENSITIVITY_H
 #define AOLOOPCONTROL_PERFTEST_COMPRMSENSITIVITY_H
 

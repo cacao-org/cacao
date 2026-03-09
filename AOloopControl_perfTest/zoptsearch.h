@@ -1,3 +1,8 @@
+/**
+ * @file zoptsearch.h
+ * @brief Zoptsearch module
+ */
+
 #ifndef AOLOOPCONTROL_PERFTEST_ZOPTSEARCH_H
 #define AOLOOPCONTROL_PERFTEST_ZOPTSEARCH_H
 

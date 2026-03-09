@@ -1,3 +1,8 @@
+/**
+ * @file mlat_decode.h
+ * @brief Mlat decode module
+ */
+
 #ifndef AOLOOPCONTROL_PERFTEST_MLAT_DECODE_H
 #define AOLOOPCONTROL_PERFTEST_MLAT_DECODE_H
 

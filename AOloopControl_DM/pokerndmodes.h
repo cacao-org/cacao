@@ -1,3 +1,8 @@
+/**
+ * @file pokerndmodes.h
+ * @brief Pokerndmodes module
+ */
+
 #ifndef AOLOOPCONTROL_DM_POKERNDMODES_H
 #define AOLOOPCONTROL_DM_POKERNDMODES_H
 

@@ -1,3 +1,8 @@
+/**
+ * @file streamlogtimesample.h
+ * @brief Streamlogtimesample module
+ */
+
 #ifndef AOLOOPCONTROL_PERFTEST_STREAMLOGTIMESAMPLE_H
 #define AOLOOPCONTROL_PERFTEST_STREAMLOGTIMESAMPLE_H
 

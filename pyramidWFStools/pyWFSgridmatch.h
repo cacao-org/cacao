@@ -1,3 +1,8 @@
+/**
+ * @file pyWFSgridmatch.h
+ * @brief Pywfsgridmatch module
+ */
+
 #ifndef PYRAMIDWFSTOOLS_PYWFSGRIDMATCH_H
 #define PYRAMIDWFSTOOLS_PYWFSGRIDMATCH_H
 

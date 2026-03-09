@@ -9,7 +9,7 @@ Module responsible for `AOloopControl_DM` functionality.
 | `AOloopControl_DM_comb.c` | DM control - Combine DM channels |
 | `DMturbulence.c` | DM turbulence simulation |
 | `mk3Ddmgrid.c` | Create DM grid patterns for calibrations |
-| `pokerndmodes.c` | No description available. |
+| `pokerndmodes.c` | poke mode values |
 
 ## Standalone Executables
 

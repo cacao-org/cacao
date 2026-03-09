@@ -1,3 +1,8 @@
+/**
+ * @file wfsrefoptimselect.h
+ * @brief Wfsrefoptimselect module
+ */
+
 #ifndef AOLOOPCONTROL_PERFTEST_WFSREFOPTIMSELECT_H
 #define AOLOOPCONTROL_PERFTEST_WFSREFOPTIMSELECT_H
 

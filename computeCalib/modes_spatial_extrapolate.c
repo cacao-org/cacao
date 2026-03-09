@@ -1,3 +1,8 @@
+/**
+ * @file modes_spatial_extrapolate.c
+ * @brief Modes spatial extrapolate module
+ */
+
 #include <math.h>
 
 #include "CLIcore/CLIcore.h"

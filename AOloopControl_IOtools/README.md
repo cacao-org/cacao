@@ -8,7 +8,7 @@ Module responsible for `AOloopControl_IOtools` functionality.
 |------|-------------|
 | `WFScamsim.c` | camera simulation for WFS |
 | `WFSmap.c` | remap WFS image |
-| `acquireWFSim.c` | No description available. |
+| `acquireWFSim.c` | Acquirewfsim module |
 | `acquireWFSspec.c` | acquire spectra - a stripped-down version of acquireWFSim for dispersed WFS |
 | `ao188_preprocessor.c` | Convert ao188 APD data into curvature + SH data |
 | `findspots.c` | Find spots in WFS image |
@@ -18,7 +18,7 @@ Module responsible for `AOloopControl_IOtools` functionality.
 
 | Executable | Source File | Description |
 |------------|-------------|-------------|
-| `cacao-fpsexec-cacaoiot-acquireWFS` | `acquireWFSim.c` | No description available. |
+| `cacao-fpsexec-cacaoiot-acquireWFS` | `acquireWFSim.c` | Acquirewfsim module |
 
 ## Dependencies
 - Implicit standard: `milkdata`, `ImageStreamIO`, `CLIcore`

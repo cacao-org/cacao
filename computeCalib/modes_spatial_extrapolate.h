@@ -1,3 +1,8 @@
+/**
+ * @file modes_spatial_extrapolate.h
+ * @brief Modes spatial extrapolate module
+ */
+
 #ifndef CACAO_COMPUTECALIB_MODES_SPATIAL_EXTRAPOLATE_H
 #define CACAO_COMPUTECALIB_MODES_SPATIAL_EXTRAPOLATE_H
 

@@ -1,3 +1,8 @@
+/**
+ * @file modalstatsTUI.h
+ * @brief errno_t AOloopControl_modalstatsTUI(int loopindex);
+ */
+
 #ifndef AOLOOPCONTROL_MODALSTATSTUI_H
 #define AOLOOPCONTROL_MODALSTATSTUI_H
 

@@ -1,4 +1,9 @@
 /**
+ * @file actmap_sample2D.c
+ * @brief Actmap sample2d module
+ */
+
+/**
  * @file CLIADDCMD_AOloopControl_computeCalib__sample2D
  *
  */

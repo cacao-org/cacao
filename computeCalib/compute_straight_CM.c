@@ -1,5 +1,10 @@
 /**
  * @file compute_straight_CM.c
+ * @brief Compute straight cm module
+ */
+
+/**
+ * @file compute_straight_CM.c
  *
  */
 

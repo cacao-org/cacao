@@ -1,3 +1,8 @@
+/**
+ * @file measure_linear_resp.c
+ * @brief Measure linear resp module
+ */
+
 
 #include <stdlib.h>
 #include <stdio.h>

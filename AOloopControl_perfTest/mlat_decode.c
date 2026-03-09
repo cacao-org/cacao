@@ -1,3 +1,8 @@
+/**
+ * @file mlat_decode.c
+ * @brief Mlat decode module
+ */
+
 #include "ImageStreamIO/ImageStruct.h"
 /**
  * @file mlat_decode.c

@@ -1,3 +1,8 @@
+/**
+ * @file mlat.c
+ * @brief Mlat module
+ */
+
 
 #include <math.h>
 #include <time.h>

@@ -1,3 +1,8 @@
+/**
+ * @file computeHadamard.h
+ * @brief Computehadamard module
+ */
+
 
 #ifndef AOLOOPCONTROL_COMPUTECALIB_HADAMARD_H
 #define AOLOOPCONTROL_COMPUTECALIB_HADAMARD_H

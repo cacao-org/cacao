@@ -1,4 +1,9 @@
 /**
+ * @file actmap_sample2D.h
+ * @brief Actmap sample2d module
+ */
+
+/**
  * @file generateRMWFS.h
  *
  */

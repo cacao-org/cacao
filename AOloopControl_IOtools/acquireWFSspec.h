@@ -1,3 +1,8 @@
+/**
+ * @file acquireWFSspec.h
+ * @brief Acquirewfsspec module
+ */
+
 #ifndef AOLOOPCONTROL_IOTOOLS_ACQUIRESPECTRA_H
 #define AOLOOPCONTROL_IOTOOLS_ACQUIRESPECTRA_H
 

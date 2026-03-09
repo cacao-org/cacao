@@ -1,5 +1,10 @@
 /**
  * @file generateRMWFS.h
+ * @brief Generatermwfs module
+ */
+
+/**
+ * @file generateRMWFS.h
  *
  */
 

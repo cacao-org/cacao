@@ -1,3 +1,8 @@
+/**
+ * @file modalCTRL_stats.h
+ * @brief Modalctrl stats module
+ */
+
 #ifndef AOLOOPCONTROL_MODALCTRL_STATS_H
 #define AOLOOPCONTROL_MODALCTRL_STATS_H
 

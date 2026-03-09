@@ -1,3 +1,8 @@
+/**
+ * @file WFScamsim.h
+ * @brief Wfscamsim module
+ */
+
 #ifndef AOLOOPCONTROL_IOTOOLS_WFSCAMSIM_H
 #define AOLOOPCONTROL_IOTOOLS_WFSCAMSIM_H
 

@@ -1,3 +1,8 @@
+/**
+ * @file compute_control_modes.h
+ * @brief Compute control modes module
+ */
+
 #ifndef _CACAO_COMPUTECALIB__COMPUTE_CONTROL_MODES_H
 #define _CACAO_COMPUTECALIB__COMPUTE_CONTROL_MODES_H
 

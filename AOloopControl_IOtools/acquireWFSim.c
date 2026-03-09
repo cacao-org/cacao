@@ -1,3 +1,8 @@
+/**
+ * @file acquireWFSim.c
+ * @brief Acquirewfsim module
+ */
+
 
 #include <math.h>
 

@@ -1,4 +1,9 @@
 /**
+ * @file compute_masksWFSDM.c
+ * @brief Compute maskswfsdm module
+ */
+
+/**
  * @file compute_straight_CM.c
  *
  */

@@ -1,3 +1,8 @@
+/**
+ * @file pokerndmodes.c
+ * @brief poke mode values
+ */
+
 #include "ImageStreamIO/ImageStruct.h"
 #include <math.h>
 

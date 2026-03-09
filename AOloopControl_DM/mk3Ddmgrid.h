@@ -1,3 +1,8 @@
+/**
+ * @file mk3Ddmgrid.h
+ * @brief Mk3ddmgrid module
+ */
+
 #ifndef AOLOOPCONTROL_DM_MK3DGRID_H
 #define AOLOOPCONTROL_DM_MK3DGRID_H
 

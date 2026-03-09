@@ -1,5 +1,10 @@
 /**
  * @file maskextrapolate.c
+ * @brief Maskextrapolate module
+ */
+
+/**
+ * @file maskextrapolate.c
  *
  */
 

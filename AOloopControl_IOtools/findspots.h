@@ -1,3 +1,8 @@
+/**
+ * @file findspots.h
+ * @brief Findspots module
+ */
+
 #ifndef AOLOOPCONTROL_IOTOOLS_FINDSPOTS_H
 #define AOLOOPCONTROL_IOTOOLS_FINDSPOTS_H
 

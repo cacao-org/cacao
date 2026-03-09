@@ -1,3 +1,8 @@
+/**
+ * @file DMturbulence.h
+ * @brief Dmturbulence module
+ */
+
 #ifndef AOLOOPCONTROL_DM_ATMTURBULENCE_H
 #define AOLOOPCONTROL_DM_ARMTURBULENCE_H
 
