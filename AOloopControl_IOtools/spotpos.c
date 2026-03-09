@@ -123,27 +123,27 @@ static errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
-        long fpi_mappingXX = functionparameter_GetParamIndex(data.fpsptr, ".mappingXX");
-        long fpi_mappingYY = functionparameter_GetParamIndex(data.fpsptr, ".mappingYY");
-        long fpi_mappingXY = functionparameter_GetParamIndex(data.fpsptr, ".mappingXY");
-        long fpi_mappingYX = functionparameter_GetParamIndex(data.fpsptr, ".mappingYX");
-        long fpi_spotx0 = functionparameter_GetParamIndex(data.fpsptr, ".spotx0");
-        long fpi_spoty0 = functionparameter_GetParamIndex(data.fpsptr, ".spoty0");
-        long fpi_searchrad = functionparameter_GetParamIndex(data.fpsptr, ".searchrad");
-        long fpi_spotsize = functionparameter_GetParamIndex(data.fpsptr, ".spotsize");
+        long fpi_mappingXX = functionparameter_GetParamIndex(data.core.fpsptr, ".mappingXX");
+        long fpi_mappingYY = functionparameter_GetParamIndex(data.core.fpsptr, ".mappingYY");
+        long fpi_mappingXY = functionparameter_GetParamIndex(data.core.fpsptr, ".mappingXY");
+        long fpi_mappingYX = functionparameter_GetParamIndex(data.core.fpsptr, ".mappingYX");
+        long fpi_spotx0 = functionparameter_GetParamIndex(data.core.fpsptr, ".spotx0");
+        long fpi_spoty0 = functionparameter_GetParamIndex(data.core.fpsptr, ".spoty0");
+        long fpi_searchrad = functionparameter_GetParamIndex(data.core.fpsptr, ".searchrad");
+        long fpi_spotsize = functionparameter_GetParamIndex(data.core.fpsptr, ".spotsize");
 
         // allow for change of parameter during runtime
-        if(fpi_mappingXX > -1) data.fpsptr->parray[fpi_mappingXX].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_mappingYY > -1) data.fpsptr->parray[fpi_mappingYY].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_mappingXY > -1) data.fpsptr->parray[fpi_mappingXY].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_mappingYX > -1) data.fpsptr->parray[fpi_mappingYX].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_mappingXX > -1) data.core.fpsptr->parray[fpi_mappingXX].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_mappingYY > -1) data.core.fpsptr->parray[fpi_mappingYY].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_mappingXY > -1) data.core.fpsptr->parray[fpi_mappingXY].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_mappingYX > -1) data.core.fpsptr->parray[fpi_mappingYX].fpflag |= FPFLAG_WRITERUN;
 
-        if(fpi_spotx0 > -1) data.fpsptr->parray[fpi_spotx0].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_spoty0 > -1) data.fpsptr->parray[fpi_spoty0].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_searchrad > -1) data.fpsptr->parray[fpi_searchrad].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_spotsize > -1) data.fpsptr->parray[fpi_spotsize].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_spotx0 > -1) data.core.fpsptr->parray[fpi_spotx0].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_spoty0 > -1) data.core.fpsptr->parray[fpi_spoty0].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_searchrad > -1) data.core.fpsptr->parray[fpi_searchrad].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_spotsize > -1) data.core.fpsptr->parray[fpi_spotsize].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -176,7 +176,7 @@ static errno_t spot_position(
     // custom stream process function code
 
     // check input image exists
-    resolveIMGID(inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(inimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     // get image size
     uint32_t xsize = inimg->md->size[0];
@@ -186,12 +186,12 @@ static errno_t spot_position(
 
 
     // check if dark image exists
-    resolveIMGID(indarkimg, ERRMODE_NULL, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(indarkimg, ERRMODE_NULL, data.core.image, data.core.NB_MAX_IMAGE);
 
     // Checko output
     //
-    resolveIMGID(outdatimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
-    resolveIMGID(outvecimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(outdatimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(outvecimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
 
     float xstart = spot_x0 - spot_searchrad;
@@ -287,11 +287,11 @@ static errno_t compute_function()
 
     // resolve image and create IMGID
     IMGID inimg = imgid_make_from_name(inimname);
-    resolveIMGID(&inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&inimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     // resolve dark image and create IMGID (optional)
     IMGID indarkimg = imgid_make_from_name(indarkname);
-    resolveIMGID(&indarkimg, ERRMODE_NULL, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&indarkimg, ERRMODE_NULL, data.core.image, data.core.NB_MAX_IMAGE);
 
     // Create output
     //

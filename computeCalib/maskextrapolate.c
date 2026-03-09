@@ -75,7 +75,7 @@ void init_cmdsettings(void)
 //
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
     }
 
@@ -90,7 +90,7 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
     }
 
@@ -118,7 +118,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID imginmodeC = imgid_make_from_name(inmodeC);
-    resolveIMGID(&imginmodeC, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imginmodeC, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     uint32_t xsize = imginmodeC.md->size[0];
     uint32_t ysize = imginmodeC.md->size[1];
     uint64_t xysize = xsize;
@@ -127,10 +127,10 @@ static errno_t compute_function()
     printf("%u modes\n", NBmodes);
 
     IMGID imgmask = imgid_make_from_name(maskim);
-    resolveIMGID(&imgmask, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgmask, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     IMGID imgextmask = imgid_make_from_name(extmaskim);
-    resolveIMGID(&imgextmask, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgextmask, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
 
 

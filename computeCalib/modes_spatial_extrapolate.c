@@ -16,9 +16,9 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
 
     printf("extrapolate ...\n");
 
-    resolveIMGID(&imgmodes, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
-    resolveIMGID(&imgmask, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
-    resolveIMGID(&imgcpa, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgmodes, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(&imgmask, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(&imgcpa, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     imcreatelikewiseIMGID(imgoutmodes, &imgmodes);
 

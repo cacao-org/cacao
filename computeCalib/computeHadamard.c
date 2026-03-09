@@ -79,7 +79,7 @@ void init_cmdsettings(void)
 
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
     }
 
@@ -94,7 +94,7 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
     }
 
@@ -141,9 +141,9 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     imageID   IDindex;
     uint32_t *sizearray;
 
-    imageID  IDmask = image_ID(DMmask_name, data.image, data.NB_MAX_IMAGE);
-    uint32_t xsize  = data.image[IDmask].md[0].size[0];
-    uint32_t ysize  = data.image[IDmask].md[0].size[1];
+    imageID  IDmask = image_ID(DMmask_name, data.core.image, data.core.NB_MAX_IMAGE);
+    uint32_t xsize  = data.core.image[IDmask].md[0].size[0];
+    uint32_t ysize  = data.core.image[IDmask].md[0].size[1];
     uint64_t xysize = xsize * ysize;
 
     sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
@@ -166,7 +166,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
 
     cnt = 0;
     for(uint64_t ii = 0; ii < xysize; ii++)
-        if(data.image[IDmask].array.F[ii] > 0.5)
+        if(data.core.image[IDmask].array.F[ii] > 0.5)
         {
             cnt++;
         }
@@ -185,7 +185,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
 
     for(uint64_t ii = 0; ii < xysize; ii++)
     {
-        data.image[IDindex].array.F[ii] = -10.0;
+        data.core.image[IDindex].array.F[ii] = -10.0;
     }
 
     index = 0;
@@ -201,13 +201,13 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
         indexarray[k] = -1;
     }
     for(uint64_t ii = 0; ii < xysize; ii++)
-        if((data.image[IDmask].array.F[ii] > 0.5) && (index < Hsize))
+        if((data.core.image[IDmask].array.F[ii] > 0.5) && (index < Hsize))
         {
 
             indexarray[index] = ii;
             // printf("(%ld %ld)  ", index, ii);
 
-            data.image[IDindex].array.F[ii] = 1.0 * index;
+            data.core.image[IDindex].array.F[ii] = 1.0 * index;
 
             index++;
         }
@@ -245,7 +245,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     for(uint32_t ii = 0; ii < Hsize; ii++)
         for(uint32_t jj = 0; jj < Hsize; jj++)
         {
-            data.image[IDmat].array.F[jj * Hsize + ii] = Hmat[jj * Hsize + ii];
+            data.core.image[IDmat].array.F[jj * Hsize + ii] = Hmat[jj * Hsize + ii];
         }
 
     //    save_fits("Htest", "./conf/Hmat.fits");
@@ -263,7 +263,7 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
             if(ii >= 0)
             {
                 DEBUG_TRACEPOINT("%u %u %ld", k, index, indexarray[index]);
-                data.image[IDout].array.F[k * xysize + ii] =
+                data.core.image[IDout].array.F[k * xysize + ii] =
                     Hmat[k * Hsize + index];
             }
         }
@@ -292,29 +292,29 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(
     long     kk, kk1, ii;
     uint32_t zsizeout;
 
-    IDin     = image_ID(inname, data.image, data.NB_MAX_IMAGE);
-    sizexwfs = data.image[IDin].md[0].size[0];
-    sizeywfs = data.image[IDin].md[0].size[1];
+    IDin     = image_ID(inname, data.core.image, data.core.NB_MAX_IMAGE);
+    sizexwfs = data.core.image[IDin].md[0].size[0];
+    sizeywfs = data.core.image[IDin].md[0].size[1];
     sizewfs  = sizexwfs * sizeywfs;
-    NBframes = data.image[IDin].md[0].size[2];
+    NBframes = data.core.image[IDin].md[0].size[2];
 
-    IDindex = image_ID(indexname, data.image, data.NB_MAX_IMAGE);
+    IDindex = image_ID(indexname, data.core.image, data.core.NB_MAX_IMAGE);
 
-    IDhad = image_ID(Hmatname, data.image, data.NB_MAX_IMAGE);
-    if((data.image[IDhad].md[0].size[0] != NBframes) ||
-            (data.image[IDhad].md[0].size[1] != NBframes))
+    IDhad = image_ID(Hmatname, data.core.image, data.core.NB_MAX_IMAGE);
+    if((data.core.image[IDhad].md[0].size[0] != NBframes) ||
+            (data.core.image[IDhad].md[0].size[1] != NBframes))
     {
         printf(
             "ERROR: size of Hadamard matrix [%ld x %ld] does not match "
             "available number of frames [%ld]\n",
-            (long) data.image[IDhad].md[0].size[0],
-            (long) data.image[IDhad].md[0].size[1],
+            (long) data.core.image[IDhad].md[0].size[0],
+            (long) data.core.image[IDhad].md[0].size[1],
             NBframes);
         exit(0);
     }
 
     zsizeout =
-        data.image[IDindex].md[0].size[0] * data.image[IDindex].md[0].size[1];
+        data.core.image[IDindex].md[0].size[0] * data.core.image[IDindex].md[0].size[1];
     create_3Dimage_ID(outname, sizexwfs, sizeywfs, zsizeout, &IDout);
 
     long kk0;
@@ -323,7 +323,7 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(
 #endif
     for(kk = 0; kk < zsizeout; kk++)  // output frame
     {
-        kk0 = (long)(data.image[IDindex].array.F[kk] + 0.1);
+        kk0 = (long)(data.core.image[IDindex].array.F[kk] + 0.1);
         if(kk0 > -1)
         {
             printf("\r  frame %5ld / %5ld     ", kk0, NBframes);
@@ -331,9 +331,9 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(
             for(kk1 = 0; kk1 < NBframes; kk1++)
             {
                 for(ii = 0; ii < sizewfs; ii++)
-                    data.image[IDout].array.F[kk * sizewfs + ii] +=
-                        data.image[IDin].array.F[kk1 * sizewfs + ii] *
-                        data.image[IDhad].array.F[kk0 * NBframes + kk1];
+                    data.core.image[IDout].array.F[kk * sizewfs + ii] +=
+                        data.core.image[IDin].array.F[kk1 * sizewfs + ii] *
+                        data.core.image[IDhad].array.F[kk0 * NBframes + kk1];
             }
         }
     }
@@ -342,7 +342,7 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(
     {
         for(ii = 0; ii < sizewfs; ii++)
         {
-            data.image[IDout].array.F[kk * sizewfs + ii] /= NBframes;
+            data.core.image[IDout].array.F[kk * sizewfs + ii] /= NBframes;
         }
     }
 

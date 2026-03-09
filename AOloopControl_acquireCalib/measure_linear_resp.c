@@ -526,7 +526,7 @@ static errno_t Measure_Linear_Response_Modal(
             imgoutC2.im->array.F[PokeIndex * sizexyout + ii] = 0.0;
             for(uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
             {
-                data.image[IDoutCstep[AveStep]].array.F[PokeIndex * sizexyout + ii] = 0.0;
+                data.core.image[IDoutCstep[AveStep]].array.F[PokeIndex * sizexyout + ii] = 0.0;
             }
         }
     }
@@ -700,7 +700,7 @@ static errno_t Measure_Linear_Response_Modal(
             {
                 {
                     char *ptr = (char *)
-                                data.image[IDoutCstep[pkinfarray[pokeframe].aveindex]].array.F;
+                                data.core.image[IDoutCstep[pkinfarray[pokeframe].aveindex]].array.F;
                     ptr += sizeof(float) * pkinfarray[pokeframe].PokeIndexMEAS_Mapped * sizexyout;
                     memcpy(ptr,
                            imgout.im->array.F,
@@ -745,7 +745,7 @@ static errno_t Measure_Linear_Response_Modal(
                 for(uint64_t ii = 0; ii < sizexyout; ii++)
                 {
                     imgoutC2.im->array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout + ii] +=
-                    data.image[IDoutCstep[AveStep]].array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout +
+                    data.core.image[IDoutCstep[AveStep]].array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout +
                                                             ii];
                 }
             }
@@ -956,17 +956,17 @@ static errno_t compute_function()
 
     // connect to input space
     IMGID imgin = imgid_make_from_name(streamin);
-    resolveIMGID(&imgin, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgin, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     printf("input  space size : %u %u\n", imgin.md->size[0], imgin.md->size[1]);
 
     // connect to output space
     IMGID imgout = imgid_make_from_name(streamout);
-    resolveIMGID(&imgout, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgout, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     printf("output space size : %u %u\n", imgout.md->size[0], imgout.md->size[1]);
 
     load_fits(inmodeC, "inmodeC", LOADFITS_ERRMODE_WARNING, NULL);
     IMGID imginmodeC = imgid_make_from_name("inmodeC");
-    resolveIMGID(&imginmodeC, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imginmodeC, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     printf("input modes size : %u %u %u\n", imginmodeC.md->size[0],
            imginmodeC.md->size[1], imginmodeC.md->size[2]);
 

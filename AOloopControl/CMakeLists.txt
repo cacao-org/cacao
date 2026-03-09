@@ -103,6 +103,7 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-msglogCTRL
 	scripts/cacao-logstreamsFITS
 	scripts/cacao-loop-deploy
+	scripts/cacao-fps-deploy-v2
 	scripts/cacao-setDMnolink
 	scripts/cacao-wfsref-setflat
 	scripts/cacaotask-check

@@ -5,32 +5,180 @@
 
 SKIP_LIST="cacao-fpsexec-list"
 
-SEARCH_TERM="${1:-}"
+FUZZY=0
+declare -a SEARCH_TERMS=()
 
-if [ "$SEARCH_TERM" = "-h" ] || [ "$SEARCH_TERM" = "--help" ]; then
-    echo "Usage: cacao-fpsexec-list [SEARCH_TERM]"
-    echo ""
-    echo "List all installed cacao-fpsexec-* standalone executables"
-    echo "with their one-line descriptions."
-    echo ""
-    echo "These executables are compute units that can run independently"
-    echo "or be managed by the FPS (Function Parameter Synchronization) system."
-    echo ""
-    echo "Arguments:"
-    echo "  SEARCH_TERM    Optional. Filter the list of executables to only show"
-    echo "                 those whose name or description matches this term."
-    echo "                 The search supports Extended Regular Expressions (regex)"
-    echo "                 and is case-insensitive."
-    echo "                 If omitted, all executables are listed."
-    echo ""
-    echo "Examples:"
-    echo "  cacao-fpsexec-list             # List all cacao fpsexec executables"
-    echo "  cacao-fpsexec-list filter      # List executables containing 'filter'"
-    echo "  cacao-fpsexec-list \"filter|cm\" # List executables containing 'filter' or 'cm'"
-    echo "  cacao-fpsexec-list \"^cacao\"    # List executables starting with 'cacao'"
-    echo "  cacao-fpsexec-list -h          # Print this help message"
-    exit 0
-fi
+# Parse arguments
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help)
+            cat <<'EOF'
+Usage: cacao-fpsexec-list [OPTIONS] [SEARCH_TERM ...]
+
+List all installed cacao-fpsexec-* standalone executables
+with their one-line descriptions.
+
+These executables are compute units that can run independently
+or be managed by the FPS (Function Parameter Synchronization)
+system.
+
+Options:
+  -f, --fuzzy    Use fuzzy subsequence matching instead of
+                 regex. Characters in each SEARCH_TERM must
+                 appear in order, but not necessarily
+                 adjacent. Results are ranked by match
+                 quality.
+  -h, --help     Print this help message.
+
+Arguments:
+  SEARCH_TERM    Optional. One or more search terms to
+                 filter the list.
+                 Default mode: Extended Regular Expression
+                 (case-insensitive). Only the first term
+                 is used.
+                 With -f: fuzzy subsequence match. Multiple
+                 terms are scored independently and their
+                 scores are summed. All terms must match
+                 for an entry to appear.
+                 If omitted, all executables are listed.
+
+Fuzzy score (shown as [score] in -f mode):
+  Each matched character scores 10 points, with
+  bonuses for consecutive matches (+5), matches at
+  word boundaries after - _ or space (+8), and
+  matches at the start of the string (+3).
+  When multiple terms are given, the total score is
+  the sum of scores for each term. Matched characters
+  from all terms are highlighted.
+  Results are sorted best-match-first.
+
+Examples:
+  cacao-fpsexec-list               # List all
+  cacao-fpsexec-list filter        # Regex match
+  cacao-fpsexec-list "filter|cm"   # Regex: or
+  cacao-fpsexec-list -f fltcm      # Fuzzy: one term
+  cacao-fpsexec-list -f flt cm     # Fuzzy: two terms
+  cacao-fpsexec-list -f modal 2d   # Fuzzy: two terms
+  cacao-fpsexec-list -h            # This help
+EOF
+            exit 0
+            ;;
+        -f|--fuzzy)
+            FUZZY=1
+            shift
+            ;;
+        *)
+            SEARCH_TERMS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# ANSI codes for highlighting matched characters
+_HI="\033[1;33m"   # bold yellow
+_RS="\033[0m"       # reset
+
+# -------------------------------------------------------
+# fuzzy_match QUERY ORIGINAL_LINE
+#   Subsequence match with scoring.
+#   Outputs: SCORE<TAB>MATCHED_POSITIONS (space-separated)
+#   Score 0 means no match.
+#
+#   Scoring:
+#     +10  per matched character
+#     +5   bonus for consecutive matches
+#     +8   bonus for match at word boundary
+#     +3   bonus for match at start of string
+# -------------------------------------------------------
+fuzzy_match() {
+    local query="$1"
+    local original="$2"
+    local qlen=${#query}
+    local tlen=${#original}
+
+    local qlower="${query,,}"
+    local tlower="${original,,}"
+
+    local -a match_pos=()
+    local qi=0
+    local score=0
+    local prev_match=-2
+
+    for (( ti=0; ti<tlen && qi<qlen; ti++ )); do
+        if [ "${tlower:$ti:1}" \
+            = "${qlower:$qi:1}" ]; then
+            match_pos+=($ti)
+            score=$(( score + 10 ))
+
+            if [ $(( prev_match + 1 )) -eq $ti ]
+            then
+                score=$(( score + 5 ))
+            fi
+
+            if [ $ti -eq 0 ]; then
+                score=$(( score + 3 ))
+            else
+                local pc="${tlower:$((ti-1)):1}"
+                if [ "$pc" = "-" ] \
+                || [ "$pc" = "_" ] \
+                || [ "$pc" = " " ]; then
+                    score=$(( score + 8 ))
+                fi
+            fi
+
+            prev_match=$ti
+            qi=$(( qi + 1 ))
+        fi
+    done
+
+    if [ $qi -lt $qlen ]; then
+        printf "0\t\n"
+    else
+        printf "%d\t%s\n" "$score" "${match_pos[*]}"
+    fi
+}
+
+# -------------------------------------------------------
+# highlight_line ORIGINAL_LINE POS1 POS2 ...
+#   Build an ANSI-highlighted version of the line.
+#   Positions are highlighted in bold yellow.
+# -------------------------------------------------------
+highlight_line() {
+    local original="$1"
+    shift
+    local tlen=${#original}
+
+    # Build a set of positions to highlight
+    local -A hl_set=()
+    for p in "$@"; do
+        hl_set[$p]=1
+    done
+
+    local out=""
+    local in_hl=0
+
+    for (( ti=0; ti<tlen; ti++ )); do
+        local ch="${original:$ti:1}"
+        if [ "${hl_set[$ti]+_}" ]; then
+            if [ $in_hl -eq 0 ]; then
+                out+="${_HI}"
+                in_hl=1
+            fi
+            out+="$ch"
+        else
+            if [ $in_hl -eq 1 ]; then
+                out+="${_RS}"
+                in_hl=0
+            fi
+            out+="$ch"
+        fi
+    done
+    if [ $in_hl -eq 1 ]; then
+        out+="${_RS}"
+    fi
+
+    printf "%s" "$out"
+}
 
 col_name=45
 
@@ -39,6 +187,10 @@ printf "\033[1;34m%-${col_name}s %s\033[0m\n" \
 printf "%-${col_name}s %s\n" \
     "$(printf '%0.s-' $(seq 1 $col_name))" \
     "$(printf '%0.s-' $(seq 1 40))"
+
+# Collect lines (with optional fuzzy scores)
+declare -a result_lines=()
+declare -a result_scores=()
 
 for cmd in $(compgen -c cacao-fpsexec- | sort -u); do
     # Skip utility commands
@@ -54,15 +206,67 @@ for cmd in $(compgen -c cacao-fpsexec- | sort -u); do
     desc=$("$cmd" -h1 2>/dev/null)
     rc=$?
     if [ $rc -eq 0 ] && [ -n "$desc" ]; then
-        line=$(printf "%-${col_name}s %s" "$cmd" "$desc")
+        line=$(printf "%-${col_name}s %s" \
+            "$cmd" "$desc")
     else
-        line=$(printf "%-${col_name}s %s" "$cmd" "(no description)")
+        line=$(printf "%-${col_name}s %s" \
+            "$cmd" "(no description)")
     fi
 
-    if [ -n "$SEARCH_TERM" ]; then
-        if ! echo "$line" | grep -E -qi -e "$SEARCH_TERM"; then
-            continue
+    if [ ${#SEARCH_TERMS[@]} -gt 0 ]; then
+        if [ $FUZZY -eq 1 ]; then
+            total_score=0
+            all_positions=""
+            matched=1
+
+            for term in "${SEARCH_TERMS[@]}"; do
+                IFS=$'\t' read -r sc pos \
+                    < <(fuzzy_match "$term" "$line")
+                if [ "$sc" -eq 0 ]; then
+                    matched=0
+                    break
+                fi
+                total_score=$(( total_score + sc ))
+                if [ -n "$pos" ]; then
+                    all_positions+=" $pos"
+                fi
+            done
+
+            if [ $matched -eq 0 ]; then
+                continue
+            fi
+
+            # shellcheck disable=SC2086
+            hl=$(highlight_line "$line" $all_positions)
+            result_lines+=("$hl")
+            result_scores+=("$total_score")
+        else
+            if ! echo "$line" | grep -E -qi \
+                -e "${SEARCH_TERMS[0]}"; then
+                continue
+            fi
+            echo "$line"
         fi
+    else
+        echo "$line"
     fi
-    echo "$line"
 done
+
+# For fuzzy mode, sort by score descending then print
+if [ $FUZZY -eq 1 ] \
+&& [ ${#result_lines[@]} -gt 0 ]; then
+    {
+        for i in "${!result_lines[@]}"; do
+            printf "%d\t%s\n" \
+                "${result_scores[$i]}" \
+                "${result_lines[$i]}"
+        done
+    } | sort -t$'\t' -k1 -rn \
+      | while IFS=$'\t' read -r sc ln
+    do
+        printf "[%3d] %b\n" "$sc" "$ln"
+    done
+elif [ $FUZZY -eq 1 ] \
+&& [ ${#SEARCH_TERMS[@]} -gt 0 ]; then
+    echo "No matches found for '${SEARCH_TERMS[*]}'"
+fi

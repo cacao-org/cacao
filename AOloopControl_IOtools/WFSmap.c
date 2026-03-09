@@ -67,7 +67,7 @@ void init_cmdsettings(void)
 //
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
 
     }
@@ -281,10 +281,10 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID wfsinimg = imgid_make_from_name(wfsinsname);
-    resolveIMGID(&wfsinimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&wfsinimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     IMGID mapimg = imgid_make_from_name(mapsname);
-    resolveIMGID(&mapimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&mapimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
 
     uint32_t sizeout = mapimg.md->size[2];

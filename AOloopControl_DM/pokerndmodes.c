@@ -171,10 +171,10 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID outimg = imgid_make_from_name(outsname);
-    resolveIMGID(&outimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&outimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     IMGID modecimg = imgid_make_from_name(modecsname);
-    resolveIMGID(&modecimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&modecimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     printf(" COMPUTE Flags = %ld\n", CLIcmddata.cmdsettings->flags);
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT

@@ -173,19 +173,19 @@ static errno_t compute_function()
 
     // connect to DM
     IMGID imgdm = imgid_make_from_name(dmstream);
-    resolveIMGID(&imgdm, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgdm, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     printf("DM size : %u %u\n", imgdm.md->size[0], imgdm.md->size[1]);
     uint32_t dmxsize = imgdm.md->size[0];
     uint32_t dmysize = imgdm.md->size[1];
 
     // connect to WFS
     IMGID imgwfs = imgid_make_from_name(wfsstream);
-    resolveIMGID(&imgwfs, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgwfs, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     printf("WFS size : %u %u\n", imgwfs.md->size[0], imgwfs.md->size[1]);
 
     // connect to optional pokemap
     IMGID imgpokemap = imgid_make_from_name(pokemap);
-    resolveIMGID(&imgpokemap, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgpokemap, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
     if(imgpokemap.ID != -1)
     {
         printf("pokemap size : %u %u\n", imgpokemap.md->size[0],
@@ -259,11 +259,11 @@ static errno_t compute_function()
             {
                 float x = (2.0 * ii - 1.0 * dmxsize) / dmxsize;
                 float y = (2.0 * jj - 1.0 * dmxsize) / dmysize;
-                data.image[IDdm0].array.F[jj * dmxsize + ii] = 0.0;
-                data.image[IDdm1].array.F[jj * dmxsize + ii] =
+                data.core.image[IDdm0].array.F[jj * dmxsize + ii] = 0.0;
+                data.core.image[IDdm1].array.F[jj * dmxsize + ii] =
                     (*OPDamp) * (sin(*CPA * x) * sin(*CPA * y));
-                RMStot += data.image[IDdm1].array.F[jj * dmxsize + ii] *
-                          data.image[IDdm1].array.F[jj * dmxsize + ii];
+                RMStot += data.core.image[IDdm1].array.F[jj * dmxsize + ii] *
+                          data.core.image[IDdm1].array.F[jj * dmxsize + ii];
             }
         RMStot = sqrt(RMStot / dmxsize / dmysize);
 
@@ -272,12 +272,12 @@ static errno_t compute_function()
         for(uint32_t ii = 0; ii < dmxsize; ii++)
             for(uint32_t jj = 0; jj < dmysize; jj++)
             {
-                data.image[IDdm1].array.F[jj * dmxsize + ii] *=
+                data.core.image[IDdm1].array.F[jj * dmxsize + ii] *=
                     (*OPDamp) / RMStot;
             }
 
         // save output
-        fps_write_RUNoutput_image(data.fpsptr, "_mlattestdm", "mlatpokeDM");
+        fps_write_RUNoutput_image(data.core.fpsptr, "_mlattestdm", "mlatpokeDM");
     }
 
 
@@ -398,7 +398,7 @@ static errno_t compute_function()
             }
 
             FILE *fphwlat =
-                fps_write_RUNoutput_file(data.fpsptr, "hardwlatency", "dat");
+                fps_write_RUNoutput_file(data.core.fpsptr, "hardwlatency", "dat");
 
             struct timespec tnow;
             clock_gettime(CLOCK_MILK, &tnow);
@@ -523,7 +523,7 @@ static errno_t compute_function()
                                     char *ptr0          = ImageStreamIO_get_image_d_ptr(imgwfs.im);
                                     ptr0 += datatype_size * wfsslice * wfssize;
                     
-                                    char *ptr = ImageStreamIO_get_image_d_ptr(&data.image[IDwfsc]);
+                                    char *ptr = ImageStreamIO_get_image_d_ptr(&data.core.image[IDwfsc]);
                                     ptr += datatype_size * wfsframe * wfssize;
                     
                                     memcpy(ptr, ptr0, datatype_size * wfssize);
@@ -604,14 +604,14 @@ static errno_t compute_function()
 
 
                 if(functionparameter_GetParamValue_ONOFF(
-                    data.fpsptr, ".option.saveraw") == 1)
+                    data.core.fpsptr, ".option.saveraw") == 1)
                 {
                     // Save each datacube
                     //
                     char ffnameC[STRINGMAXLEN_FULLFILENAME];
                     WRITE_FULLFILENAME(ffnameC,
                                        "mlat-testC-%04d", iter);
-                    fps_write_RUNoutput_image(data.fpsptr, "_testwfsc", ffnameC);
+                    fps_write_RUNoutput_image(data.core.fpsptr, "_testwfsc", ffnameC);
                 }
 
                 // Computing difference between consecutive images
@@ -641,8 +641,8 @@ static errno_t compute_function()
         for (uint64_t ii = 0; ii < wfssize; ii++)                                  \
         {                                                                          \
             double tmp =                                                           \
-                1.0*data.image[IDwfsc].array.IMG_PTR_ID[kk * wfssize + ii] -       \
-                1.0*data.image[IDwfsc].array.IMG_PTR_ID[(kk - 1) * wfssize + ii];  \
+                1.0*data.core.image[IDwfsc].array.IMG_PTR_ID[kk * wfssize + ii] -       \
+                1.0*data.core.image[IDwfsc].array.IMG_PTR_ID[(kk - 1) * wfssize + ii];  \
             valarray[kk] += 1.0 * tmp * tmp;                                       \
             diffseqvalarray[ii] = tmp;                                             \
         }                                                                          \
@@ -796,12 +796,12 @@ static errno_t compute_function()
             // Save imgdiffseq
             //
             if(functionparameter_GetParamValue_ONOFF(
-                    data.fpsptr, ".option.saveseq") == 1)
+                    data.core.fpsptr, ".option.saveseq") == 1)
             {
                 char ffnameC[STRINGMAXLEN_FULLFILENAME];
                 WRITE_FULLFILENAME(ffnameC,
                                    "mlat-diffseq");
-                fps_write_RUNoutput_image(data.fpsptr, imgdiffseq.name, ffnameC);
+                fps_write_RUNoutput_image(data.core.fpsptr, imgdiffseq.name, ffnameC);
             }
 
 
@@ -836,7 +836,7 @@ static errno_t compute_function()
             double dt = tdouble_end - tdouble_start;
             printf("FRAME RATE = %.3f Hz\n", 1.0 * (wfscntend - wfscntstart) / dt);
             *framerateHz = 1.0 * (wfscntend - wfscntstart) / dt;
-            functionparameter_SaveParam2disk(data.fpsptr, ".out.framerateHz");
+            functionparameter_SaveParam2disk(data.core.fpsptr, ".out.framerateHz");
 
 
 
@@ -849,7 +849,7 @@ static errno_t compute_function()
 
             {
                 FILE *fpout;
-                fpout = fps_write_RUNoutput_file(data.fpsptr, "hardwlatencypts", "dat");
+                fpout = fps_write_RUNoutput_file(data.core.fpsptr, "hardwlatencypts", "dat");
                 int iimin = 0;
                 int iimax = 0;
                 float dtrange = 0.5 / (*framerateHz); // in sec
@@ -927,12 +927,12 @@ static errno_t compute_function()
 
             *latencyfr = latencymeaspeakdt * (*framerateHz);
             printf("latency = %f frame\n", *latencyfr);
-            functionparameter_SaveParam2disk(data.fpsptr, ".out.latencyfr");
+            functionparameter_SaveParam2disk(data.core.fpsptr, ".out.latencyfr");
 
             {
                 FILE *fpout;
                 fpout =
-                    fps_write_RUNoutput_file(data.fpsptr, "param_hardwlatency", "txt");
+                    fps_write_RUNoutput_file(data.core.fpsptr, "param_hardwlatency", "txt");
                 fprintf(fpout, "%8.6f", 1.01);
                 fclose(fpout);
             }
@@ -945,7 +945,7 @@ static errno_t compute_function()
                 // file will be sourced by cacao-check-cacaovars
                 //
                 char ffname[STRINGMAXLEN_FULLFILENAME];
-                WRITE_FULLFILENAME(ffname, "%s/cacaovars.bash", data.fpsptr->md->datadir);
+                WRITE_FULLFILENAME(ffname, "%s/cacaovars.bash", data.core.fpsptr->md->datadir);
 
                 printf("SAVING TO %s\n", ffname);
 

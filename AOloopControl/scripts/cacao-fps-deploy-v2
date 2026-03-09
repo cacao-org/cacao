@@ -1,0 +1,188 @@
+#!/usr/bin/env bash
+
+# cacao-fps-deploy-v2
+# Prototype for simplified Cacao deployment using FPS primitives natively.
+# Bypasses cacao-task-manager and cacaotask-* scripts entirely.
+
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    echo "Usage: cacao-fps-deploy-v2 [LOOPNAME] [LOOPNUMBER]"
+    echo ""
+    echo "Deploys a Cacao AO loop using FPS primitives natively."
+    echo "Bypasses cacao-task-manager and cacaotask-* scripts entirely."
+    echo "If no fpslist.txt is found, a default one for a basic AO loop is created."
+    echo ""
+    echo "Arguments:"
+    echo "  LOOPNAME      Name of the loop (default: testloop)"
+    echo "  LOOPNUMBER    Number of the loop (default: 0)"
+    echo ""
+    echo "Options:"
+    echo "  -h, --help    Show this help message"
+    exit 0
+fi
+
+LOOPNAME=${1:-"testloop"}
+LOOPNUMBER=${2:-0}
+MILK_SHM_DIR=${MILK_SHM_DIR:-"/tmp"}
+TMUX_SESSION="${LOOPNAME}_fpsCTRL"
+
+echo "Deploying Cacao using FPS for loop ${LOOPNAME}..."
+
+# 1. Start fpsCTRL in a tmux session
+echo "Starting milk-fpsCTRL in tmux session: ${TMUX_SESSION}"
+tmux new-session -d -s ${TMUX_SESSION} 2>/dev/null || :
+
+# Send kill just in case it was already running something, then restart it
+tmux send-keys -t ${TMUX_SESSION} "x" C-m
+sleep 0.5
+# Start milk-fpsCTRL in the background
+FIFO="${MILK_SHM_DIR}/${TMUX_SESSION}.fifo"
+tmux send-keys -t ${TMUX_SESSION} "milk-fpsCTRL -s -f ${FIFO}" C-m
+
+# Wait for FIFO to exist
+echo -n "Waiting for FPS FIFO: ${FIFO} "
+until [ -p "${FIFO}" ]; do
+    sleep 0.1
+    echo -n "."
+done
+echo " FIFO found."
+
+# 2. Deploy FPS configuration natively using runstart and confstart
+# Read fpslist.txt (if it exists) to dynamically find all processes to start
+FPSLIST_FILE="${MILK_SHM_DIR}/fpslist.txt"
+
+# Provide fallback if fpslist.txt is directly deployed in loop run dir
+if [ ! -f "${FPSLIST_FILE}" ]; then
+    FPSLIST_FILE="${HOME}/.cacao/loopruns/${LOOPNAME}/fpslist.txt"
+fi
+
+# Fallback to current directory and generate default if not found
+if [ ! -f "${FPSLIST_FILE}" ]; then
+    FPSLIST_FILE="./fpslist.txt"
+    if [ ! -f "${FPSLIST_FILE}" ]; then
+        echo "Creating default basic AO loop fpslist.txt in current directory..."
+        cat << 'EOF' > "${FPSLIST_FILE}"
++ fpslist header
+wfsrefoptpsf      cacao-aorun-300-wfsrefoptpsf     00
+wfs2cmval         milk-fpsexec-linalg-MVMextract   00
+mfilt             cacao-fpsexec-mfilt              00
+cmval2dm          milk-fpsexec-linalg-MVMextract   00
+dmcomb            cacao-fpsexec-dmcomb             01
+dmturb            cacao-fpsexec-dmturb             00
+EOF
+    fi
+fi
+
+FPS_CONF_DIR=$(dirname "${FPSLIST_FILE}")/fps.conf
+
+if [ -f "${FPSLIST_FILE}" ]; then
+    echo "Found FPS list: ${FPSLIST_FILE}"
+    
+    # Initialize FPS processes (starts the executables in background tmux sessions)
+    echo "Initializing and starting FPS processes in tmux..."
+    while IFS= read -r line; do
+        # Skip empty lines and comments
+        if [[ -z "$line" ]] || [[ "$line" == \#* ]] || [[ "$line" == \+* ]]; then
+            continue
+        fi
+
+        # Parse line: fpsrootname command [args...]
+        read -r -a array <<< "$line"
+        fpsrootname="${array[0]}"
+        executable="${array[1]}"
+        
+        # Build fpsname
+        fpsname="$fpsrootname"
+        args=""
+        for (( i=2; i<${#array[@]}; i++ )); do
+            fpsname="${fpsname}-${array[$i]}"
+            args="${args} ${array[$i]}"
+        done
+
+        # Launch process based on whether it is a compiled standalone binary or a legacy cacao-cli module load
+        if [[ "$executable" == *"fpsexec"* ]]; then
+            echo "  [Standalone] $fpsname ($executable)"
+            $executable -n $fpsname fpsinit -procinfo > /dev/null 2>&1 || true
+            if [[ ! -z "${args// /}" ]]; then
+                $executable -n $fpsname set $args > /dev/null 2>&1 || true
+            fi
+            $executable -n $fpsname -tmux > /dev/null 2>&1 || true
+        else
+            echo "  [Legacy CLI] $fpsname ($executable)"
+            MILK_FPSPROCINFO=1 cacao-exec -n "$fpsname" "$executable _FPSINIT_ $args" > /dev/null 2>&1 || true
+            cacao-exec -n "$fpsname" "$executable _TMUXSTART_ $args" > /dev/null 2>&1 || true
+        fi
+    done < "${FPSLIST_FILE}"
+    sleep 0.5
+    
+    if [ -d "${FPS_CONF_DIR}" ]; then
+        echo "Found FPS conf directory: ${FPS_CONF_DIR}"
+    else
+        echo "WARNING: FPS conf directory not found at ${FPS_CONF_DIR}"
+    fi
+
+    FPS_ROOT_DIR=$(dirname "${FPSLIST_FILE}")
+    
+    # Source cacaovars if available to get DMINDEX, etc.
+    if [ -f "${FPS_ROOT_DIR}/cacaovars.${LOOPNAME}.bash" ]; then
+        echo "Sourcing ${FPS_ROOT_DIR}/cacaovars.${LOOPNAME}.bash to load loop variables..."
+        source "${FPS_ROOT_DIR}/cacaovars.${LOOPNAME}.bash"
+    fi
+
+    # Apply fpssetup.setval configurations
+    echo "Applying FPS setval configurations to FIFO..."
+    if [ -f "${FPS_ROOT_DIR}/fpssetup.setval.conf" ]; then
+        cat "${FPS_ROOT_DIR}/fpssetup.setval.conf" >> "${FIFO}"
+    fi
+
+    if [ -f "${FPS_ROOT_DIR}/fpssetup.setval.${LOOPNAME}.conf" ]; then
+        echo "  -> Loading specific config: fpssetup.setval.${LOOPNAME}.conf"
+        # Replace variables and pipe to FIFO, defaulting unmatched variables to 0
+        sed -e "s/LOOPNUMBER/${LOOPNUMBER}/g" \
+            -e "s/DMINDEX/${CACAO_DMINDEX:-0}/g" \
+            -e "s/DMSIMINDEX/${CACAO_DMSIMINDEX:-0}/g" \
+            "${FPS_ROOT_DIR}/fpssetup.setval.${LOOPNAME}.conf" >> "${FIFO}"
+    fi
+
+    while IFS='' read -r line || [[ -n "$line" ]]; do
+        # Ignore comments and empty lines
+        if [[ -z "$line" ]] || [[ "$line" == \#* ]] || [[ "${line::1}" == "+" ]]; then
+            continue
+        fi
+
+        # Parse fpsname from line (skipping index 1 which is the CLI command)
+        read -r -a array <<< "$line"
+        fpsname="${array[0]}"
+        for (( i=2; i<${#array[@]}; i++ )); do
+            fpsname="${fpsname}-${array[$i]}"
+        done
+
+        if [ ! -z "$fpsname" ]; then
+            echo "Commanding FPSCTRL for ${fpsname}..."
+            
+            # 1. Feed the setup configuration file natively into the fifo if it exists
+            fpssetup_conf="${FPS_CONF_DIR}/fpssetup.confstart.${fpsname}.conf"
+            if [ -f "${fpssetup_conf}" ]; then
+                echo "  -> Loading config: ${fpssetup_conf}"
+                cat "${fpssetup_conf}" >> "${FIFO}"
+            fi
+
+            # 2. Also check for a cacaosetup-confstart specific file
+            fpssetup_cacaosetup_conf="${FPS_CONF_DIR}/fpssetup.cacaosetup-confstart.${fpsname}.conf"
+            if [ -f "${fpssetup_cacaosetup_conf}" ]; then
+                echo "  -> Loading cacaosetup config: ${fpssetup_cacaosetup_conf}"
+                cat "${fpssetup_cacaosetup_conf}" >> "${FIFO}"
+            fi
+
+            # 3. Start the process
+            echo "confstart ${fpsname}" >> "${FIFO}"
+            sleep 0.1
+            echo "runstart ${fpsname}" >> "${FIFO}"
+        fi
+    done < "${FPSLIST_FILE}"
+    echo "Deployment via FPS primitives complete for all processes in fpslist.txt."
+else
+    echo "WARNING: fpslist.txt not found! Could not deploy any FPS processes natively."
+    echo "Expected location: ${FPSLIST_FILE}"
+fi
+
+echo "You can check the status by attaching to tmux: tmux a -t ${TMUX_SESSION}"

@@ -131,7 +131,7 @@ void init_cmdsettings(void)
 //
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
 
     }
@@ -147,7 +147,7 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
     }
 
@@ -176,10 +176,10 @@ static errno_t compute_function()
 
 
     IMGID imgRMDM = imgid_make_from_name(RMmodesDM);
-    resolveIMGID(&imgRMDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgRMDM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     IMGID imgRMWFS = imgid_make_from_name(RMmodesWFS);
-    resolveIMGID(&imgRMWFS, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgRMWFS, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     struct timespec t0, t1, t2, t3, t4, t5;
 
@@ -211,7 +211,7 @@ static errno_t compute_function()
 
 
 
-        //ID = image_ID("VTmat", data.image, data.NB_MAX_IMAGE);
+        //ID = image_ID("VTmat", data.core.image, data.core.NB_MAX_IMAGE);
         //IMGID imgVT = makesetIMGID("VTmat", ID);
 
         int nbmode;

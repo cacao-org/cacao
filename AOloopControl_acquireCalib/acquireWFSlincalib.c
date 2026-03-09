@@ -170,19 +170,19 @@ void init_cmdsettings(void)
 
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
         long fpi;
 
         // DM stream is required
-        fpi = functionparameter_GetParamIndex(data.fpsptr, ".dmstream");
-        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
+        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".dmstream");
+        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
 
-        fpi = functionparameter_GetParamIndex(data.fpsptr, ".timing.FPS_mlat");
-        if(fpi > -1) data.fpsptr->parray[fpi].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
+        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".timing.FPS_mlat");
+        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
 
-        fpi = functionparameter_GetParamIndex(data.fpsptr, ".RMDMmask.FPS_DMcomb");
-        if(fpi > -1) data.fpsptr->parray[fpi].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
+        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".RMDMmask.FPS_DMcomb");
+        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
     }
 
     return RETURN_SUCCESS;
@@ -206,7 +206,7 @@ static imageID mkSimpleZpokeM(uint32_t dmxsize,
 
     for(uint64_t kk = 0; kk < dmxysize; kk++)
     {
-        data.image[IDout].array.F[kk * dmxysize + kk] = 1.0;
+        data.core.image[IDout].array.F[kk * dmxysize + kk] = 1.0;
     }
 
     return IDout;
@@ -217,13 +217,13 @@ static imageID mkSimpleZpokeM(uint32_t dmxsize,
 
 static errno_t customCONFcheck()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
 
-        long fpi_FPS_mlat = functionparameter_GetParamIndex(data.fpsptr, ".timing.FPS_mlat");
-        long fpi_FPS_DMcomb = functionparameter_GetParamIndex(data.fpsptr, ".RMDMmask.FPS_DMcomb");
-        long fpi_update_mlat = functionparameter_GetParamIndex(data.fpsptr, ".timing.upmlat");
-        long fpi_autotiming = functionparameter_GetParamIndex(data.fpsptr, ".timing.autoTiming");
+        long fpi_FPS_mlat = functionparameter_GetParamIndex(data.core.fpsptr, ".timing.FPS_mlat");
+        long fpi_FPS_DMcomb = functionparameter_GetParamIndex(data.core.fpsptr, ".RMDMmask.FPS_DMcomb");
+        long fpi_update_mlat = functionparameter_GetParamIndex(data.core.fpsptr, ".timing.upmlat");
+        long fpi_autotiming = functionparameter_GetParamIndex(data.core.fpsptr, ".timing.autoTiming");
 
         if(FPS_mlat.SMfd < 1)
         {
@@ -231,7 +231,7 @@ static errno_t customCONFcheck()
 
             if(fpi_FPS_mlat > -1)
             {
-                functionparameter_ConnectExternalFPS(data.fpsptr,
+                functionparameter_ConnectExternalFPS(data.core.fpsptr,
                                                      fpi_FPS_mlat,
                                                      &FPS_mlat);
             }
@@ -244,7 +244,7 @@ static errno_t customCONFcheck()
 
             if(fpi_FPS_DMcomb > -1)
             {
-                functionparameter_ConnectExternalFPS(data.fpsptr,
+                functionparameter_ConnectExternalFPS(data.core.fpsptr,
                                                      fpi_FPS_DMcomb,
                                                      &FPS_DMcomb);
             }
@@ -253,7 +253,7 @@ static errno_t customCONFcheck()
 
         // update hardware latency
         //
-        if(fpi_update_mlat > -1 && (data.fpsptr->parray[fpi_update_mlat].fpflag & FPFLAG_ONOFF))
+        if(fpi_update_mlat > -1 && (data.core.fpsptr->parray[fpi_update_mlat].fpflag & FPFLAG_ONOFF))
         {
             printf("Updating from mlat FPS\n");
 
@@ -265,20 +265,20 @@ static errno_t customCONFcheck()
                 float latencyfr = functionparameter_GetParamValue_FLOAT32(&FPS_mlat,
                                   ".latencyfr");
 
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                functionparameter_SetParamValue_FLOAT32(data.core.fpsptr,
                                                         ".timing.WFSfrequ",
                                                         WFSfrequ);
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                functionparameter_SetParamValue_FLOAT32(data.core.fpsptr,
                                                         ".timing.hardwlatfr",
                                                         latencyfr);
             }
-            data.fpsptr->parray[fpi_update_mlat].fpflag &= ~FPFLAG_ONOFF;
+            data.core.fpsptr->parray[fpi_update_mlat].fpflag &= ~FPFLAG_ONOFF;
         }
 
 
         // Auto timing
         //
-        if(fpi_autotiming > -1 && (data.fpsptr->parray[fpi_autotiming].fpflag & FPFLAG_ONOFF))  // ON state
+        if(fpi_autotiming > -1 && (data.core.fpsptr->parray[fpi_autotiming].fpflag & FPFLAG_ONOFF))  // ON state
         {
             printf("UPDATE TIMING >>>>>>>>>\n");
 
@@ -317,18 +317,18 @@ static errno_t customCONFcheck()
 
 
 
-        imageID IDdmRM = image_ID(dmstream, data.image, data.NB_MAX_IMAGE);
+        imageID IDdmRM = image_ID(dmstream, data.core.image, data.core.NB_MAX_IMAGE);
         if(IDdmRM != -1)
         {
-            uint32_t DMxsize = data.image[IDdmRM].md->size[0];
-            uint32_t DMysize = data.image[IDdmRM].md->size[1];
+            uint32_t DMxsize = data.core.image[IDdmRM].md->size[0];
+            uint32_t DMysize = data.core.image[IDdmRM].md->size[1];
             printf("DM size : %u x %u\n", DMxsize, DMysize);
 
 
             // update RM DM mask
             //
-            long fpi_update_RMDMmask = functionparameter_GetParamIndex(data.fpsptr, ".RMDMmask.upmlat");
-            if(fpi_update_RMDMmask > -1 && (data.fpsptr->parray[fpi_update_RMDMmask].fpflag & FPFLAG_ONOFF))
+            long fpi_update_RMDMmask = functionparameter_GetParamIndex(data.core.fpsptr, ".RMDMmask.upmlat");
+            if(fpi_update_RMDMmask > -1 && (data.core.fpsptr->parray[fpi_update_RMDMmask].fpflag & FPFLAG_ONOFF))
             {
                 printf("Updating RM DM mask\n");
 
@@ -342,14 +342,14 @@ static errno_t customCONFcheck()
 
                 // Update values
                 //
-                functionparameter_SetParamValue_UINT32(data.fpsptr, ".RMDMmask.DMMODE",
+                functionparameter_SetParamValue_UINT32(data.core.fpsptr, ".RMDMmask.DMMODE",
                                                        DMMODEin);
 
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr, ".RMDMmask.Cx",
+                functionparameter_SetParamValue_FLOAT32(data.core.fpsptr, ".RMDMmask.Cx",
                                                         0.5 * DMxsize);
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr, ".RMDMmask.Cy",
+                functionparameter_SetParamValue_FLOAT32(data.core.fpsptr, ".RMDMmask.Cy",
                                                         0.5 * DMysize);
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr, ".RMDMmask.R",
+                functionparameter_SetParamValue_FLOAT32(data.core.fpsptr, ".RMDMmask.R",
                                                         0.5 * DMxsize + 0.6);
 
                 // load or create RMDMmask
@@ -359,7 +359,7 @@ static errno_t customCONFcheck()
                     char fnameRMDMmask[FUNCTION_PARAMETER_STRMAXLEN];
 
                     strncpy(fnameRMDMmask,
-                            functionparameter_GetParamPtr_STRING(data.fpsptr, ".sn_RMDMmask"),
+                            functionparameter_GetParamPtr_STRING(data.core.fpsptr, ".sn_RMDMmask"),
                             FUNCTION_PARAMETER_STRMAXLEN);
 
                     imageID ID_RMDMmask;
@@ -394,17 +394,17 @@ static errno_t customCONFcheck()
                                 &ID);
                             for(uint64_t ii = 0; ii < DMxsize * DMysize; ii++)
                             {
-                                data.image[ID].array.F[ii] = 1.0;
+                                data.core.image[ID].array.F[ii] = 1.0;
                             }
                         }
-                        fps_write_RUNoutput_image(data.fpsptr, "RMDMmask", "RMDMmask");
+                        fps_write_RUNoutput_image(data.core.fpsptr, "RMDMmask", "RMDMmask");
                     }
 
                     char fname_RMDMmask[STRINGMAXLEN_FULLFILENAME];
                     WRITE_FULLFILENAME(fname_RMDMmask,
                                        "./%s/RMDMmask.fits",
-                                       data.fpsptr->md->datadir);
-                    functionparameter_SetParamValue_STRING(data.fpsptr,
+                                       data.core.fpsptr->md->datadir);
+                    functionparameter_SetParamValue_STRING(data.core.fpsptr,
                                                            ".fn_RMDMmask",
                                                            fname_RMDMmask);
                 }
@@ -417,14 +417,14 @@ static errno_t customCONFcheck()
                     float latencyfr = functionparameter_GetParamValue_FLOAT32(&FPS_mlat,
                                       ".latencyfr");
 
-                    functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                    functionparameter_SetParamValue_FLOAT32(data.core.fpsptr,
                                                             ".timing.WFSfrequ",
                                                             WFSfrequ);
-                    functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                    functionparameter_SetParamValue_FLOAT32(data.core.fpsptr,
                                                             ".timing.hardwlatfr",
                                                             latencyfr);
                 }
-                data.fpsptr->parray[fpi_update_RMDMmask].fpflag &= ~FPFLAG_ONOFF;
+                data.core.fpsptr->parray[fpi_update_RMDMmask].fpflag &= ~FPFLAG_ONOFF;
             }
 
 
@@ -437,36 +437,36 @@ static errno_t customCONFcheck()
             //
             // Compute action: make Spoke and Hpoke
             //
-            long fpi_compPokeMat = functionparameter_GetParamIndex(data.fpsptr, ".compPokeMat");
-            if(fpi_compPokeMat > -1 && (data.fpsptr->parray[fpi_compPokeMat].fpflag & FPFLAG_ONOFF))
+            long fpi_compPokeMat = functionparameter_GetParamIndex(data.core.fpsptr, ".compPokeMat");
+            if(fpi_compPokeMat > -1 && (data.core.fpsptr->parray[fpi_compPokeMat].fpflag & FPFLAG_ONOFF))
             {
 
-                imageID IDdmRM = image_ID(dmstream, data.image, data.NB_MAX_IMAGE);
+                imageID IDdmRM = image_ID(dmstream, data.core.image, data.core.NB_MAX_IMAGE);
 
                 if(IDdmRM != -1)
                 {
 
-                    long fpi_Hpokemode = functionparameter_GetParamIndex(data.fpsptr, ".Hpoke");
-                    if(fpi_Hpokemode > -1 && (data.fpsptr->parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF))
+                    long fpi_Hpokemode = functionparameter_GetParamIndex(data.core.fpsptr, ".Hpoke");
+                    if(fpi_Hpokemode > -1 && (data.core.fpsptr->parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF))
                     {
 
                         AOloopControl_computeCalib_mkHadamardModes(
                             "RMDMmask",
                             "Hpoke");
 
-                        fps_write_RUNoutput_image(data.fpsptr, "Hpoke", "Hpoke");
+                        fps_write_RUNoutput_image(data.core.fpsptr, "Hpoke", "Hpoke");
 
-                        fps_write_RUNoutput_image(data.fpsptr, "Hpixindex", "Hpixindex");
+                        fps_write_RUNoutput_image(data.core.fpsptr, "Hpixindex", "Hpixindex");
 
-                        fps_write_RUNoutput_image(data.fpsptr, "Hmat", "Hmat");
+                        fps_write_RUNoutput_image(data.core.fpsptr, "Hmat", "Hmat");
 
                         // create compressed files
                         EXECUTE_SYSTEM_COMMAND("gzip -kf ./%s/Hmat.fits",
-                                               data.fpsptr->md->datadir);
+                                               data.core.fpsptr->md->datadir);
                         EXECUTE_SYSTEM_COMMAND("gzip -kf ./%s/Hpixindex.fits",
-                                               data.fpsptr->md->datadir);
+                                               data.core.fpsptr->md->datadir);
                         EXECUTE_SYSTEM_COMMAND("gzip -kf ./%s/Hpoke.fits",
-                                               data.fpsptr->md->datadir);
+                                               data.core.fpsptr->md->datadir);
 
 
                         {
@@ -475,8 +475,8 @@ static errno_t customCONFcheck()
                             char fname_Hpoke[STRINGMAXLEN_FULLFILENAME];
                             WRITE_FULLFILENAME(fname_Hpoke,
                                                "./%s/Hpoke.fits",
-                                               data.fpsptr->md->datadir);
-                            functionparameter_SetParamValue_STRING(data.fpsptr,
+                                               data.core.fpsptr->md->datadir);
+                            functionparameter_SetParamValue_STRING(data.core.fpsptr,
                                                                    ".fn_pokeC",
                                                                    fname_Hpoke);
                         }
@@ -491,7 +491,7 @@ static errno_t customCONFcheck()
                         mkSimpleZpokeM(DMxsize,
                                        DMysize,
                                        "Spoke");
-                        fps_write_RUNoutput_image(data.fpsptr, "Spoke", "Spoke");
+                        fps_write_RUNoutput_image(data.core.fpsptr, "Spoke", "Spoke");
 
                         {
                             // update poke file entry
@@ -499,15 +499,15 @@ static errno_t customCONFcheck()
                             char fname_Spoke[STRINGMAXLEN_FULLFILENAME];
                             WRITE_FULLFILENAME(fname_Spoke,
                                                "./%s/Spoke.fits",
-                                               data.fpsptr->md->datadir);
-                            functionparameter_SetParamValue_STRING(data.fpsptr,
+                                               data.core.fpsptr->md->datadir);
+                            functionparameter_SetParamValue_STRING(data.core.fpsptr,
                                                                    ".fn_pokeC",
                                                                    fname_Spoke);
                         }
                     }
                 }
 
-                data.fpsptr->parray[fpi_compPokeMat].fpflag &= ~FPFLAG_ONOFF;
+                data.core.fpsptr->parray[fpi_compPokeMat].fpflag &= ~FPFLAG_ONOFF;
             }
         }
     }
@@ -548,12 +548,12 @@ static errno_t compute_function()
         {
             printf("Computing Poke Matrix\n");
 
-            imageID IDdmRM = image_ID(dmstream, data.image, data.NB_MAX_IMAGE);
+            imageID IDdmRM = image_ID(dmstream, data.core.image, data.core.NB_MAX_IMAGE);
 
             if(IDdmRM != -1)
             {
-                uint32_t DMxsize = data.image[IDdmRM].md->size[0];
-                uint32_t DMysize = data.image[IDdmRM].md->size[1];
+                uint32_t DMxsize = data.core.image[IDdmRM].md->size[0];
+                uint32_t DMysize = data.core.image[IDdmRM].md->size[1];
                 printf("DM size : %u x %u\n", DMxsize, DMysize);
             }
             else

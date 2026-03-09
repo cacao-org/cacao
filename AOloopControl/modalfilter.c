@@ -776,7 +776,7 @@ static errno_t compute_function()
     IMGID imginWFS =
         imgid_make_from_name(inmval_ptr);
     resolveIMGID(&imginWFS, ERRMODE_ABORT,
-        data.image, data.NB_MAX_IMAGE);
+        data.core.image, data.core.NB_MAX_IMAGE);
 
     uint32_t NBmode = imginWFS.md[0].size[0];
 
@@ -789,7 +789,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     modal_filter_step(
-        processinfo, data.fpsptr,
+        processinfo, data.core.fpsptr,
         imginWFS.im, imgout.im, state);
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

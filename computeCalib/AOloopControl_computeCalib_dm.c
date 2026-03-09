@@ -96,9 +96,9 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
               0,  0,  2, -2,  2, -2,  2, -2,
               2, -2,  2, -2,  1,  1, -1, -1 };
 
-    IDmaskRM = image_ID(IDmaskRM_name, data.image, data.NB_MAX_IMAGE);
-    xsize    = data.image[IDmaskRM].md[0].size[0];
-    ysize    = data.image[IDmaskRM].md[0].size[1];
+    IDmaskRM = image_ID(IDmaskRM_name, data.core.image, data.core.NB_MAX_IMAGE);
+    xsize    = data.core.image[IDmaskRM].md[0].size[0];
+    ysize    = data.core.image[IDmaskRM].md[0].size[1];
 
     create_2Dimage_ID(IDout_name, xsize, ysize, &IDout);
 
@@ -107,7 +107,7 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
         {
             val1 = 0.0;
             // Access the mask value once per pixel
-            float mask_val = data.image[IDmaskRM].array.F[jj * xsize + ii];
+            float mask_val = data.core.image[IDmaskRM].array.F[jj * xsize + ii];
             if(mask_val > 0.5)
             {
                 for(int k = 0; k < 24; ++k)
@@ -115,11 +115,11 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
                     int ni = ii + dx[k];
                     int nj = jj + dy[k];
                     // Access neighbor mask value once
-                    if(data.image[IDmaskRM].array.F[nj * xsize + ni] < 0.5)
+                    if(data.core.image[IDmaskRM].array.F[nj * xsize + ni] < 0.5)
                         val1 += 1.0f; // Use float literal for consistency
                 }
             }
-            data.image[IDout].array.F[jj * xsize + ii] = (val1 > 4.9f) ? 1.0f : 0.0f; // Use float literals
+            data.core.image[IDout].array.F[jj * xsize + ii] = (val1 > 4.9f) ? 1.0f : 0.0f; // Use float literals
         }
 
     return IDout;
@@ -150,15 +150,15 @@ long AOloopControl_computeCalib_DMextrapolateModes(
     const char *IDcpa_name,
     const char *IDout_name)
 {
-    imageID IDin = image_ID(IDin_name, data.image, data.NB_MAX_IMAGE);
-    long xsize = data.image[IDin].md[0].size[0];
-    long ysize = data.image[IDin].md[0].size[1];
+    imageID IDin = image_ID(IDin_name, data.core.image, data.core.NB_MAX_IMAGE);
+    long xsize = data.core.image[IDin].md[0].size[0];
+    long ysize = data.core.image[IDin].md[0].size[1];
     long zsize;
     imageID IDout = -1; // Initialize to -1 to indicate no image created yet
 
-    if(data.image[IDin].md[0].naxis == 3)
+    if(data.core.image[IDin].md[0].naxis == 3)
     {
-        zsize = data.image[IDin].md[0].size[2];
+        zsize = data.core.image[IDin].md[0].size[2];
         create_3Dimage_ID(IDout_name, xsize, ysize, zsize, &IDout);
     }
     else
@@ -168,8 +168,8 @@ long AOloopControl_computeCalib_DMextrapolateModes(
     }
     long xysize = xsize * ysize;
 
-    imageID IDmask = image_ID(IDmask_name, data.image, data.NB_MAX_IMAGE); // Scope: used only in this function
-    imageID IDcpa  = image_ID(IDcpa_name, data.image, data.NB_MAX_IMAGE);  // Scope: used only in this function
+    imageID IDmask = image_ID(IDmask_name, data.core.image, data.core.NB_MAX_IMAGE); // Scope: used only in this function
+    imageID IDcpa  = image_ID(IDcpa_name, data.core.image, data.core.NB_MAX_IMAGE);  // Scope: used only in this function
 
     // Measure pixel distance to the active region of the mask
     long IDpixdist = -1; // Scope: used only in this function
@@ -183,7 +183,7 @@ long AOloopControl_computeCalib_DMextrapolateModes(
             {
                 for(long jj1 = 0; jj1 < ysize; jj1++)
                 {
-                    if(data.image[IDmask].array.F[jj1 * xsize + ii1] > 0.5)
+                    if(data.core.image[IDmask].array.F[jj1 * xsize + ii1] > 0.5)
                     {
                         long dii  = ii1 - ii;
                         long djj  = jj1 - jj;
@@ -197,7 +197,7 @@ long AOloopControl_computeCalib_DMextrapolateModes(
                     }
                 }
             }
-            data.image[IDpixdist].array.F[jj * xsize + ii] = dist;
+            data.core.image[IDpixdist].array.F[jj * xsize + ii] = dist;
         }
     }
 
@@ -210,11 +210,11 @@ long AOloopControl_computeCalib_DMextrapolateModes(
             {
                 long index = jj * xsize + ii;
                 // Calculate a coefficient based on pixel distance and CPA
-                // The CPA value (data.image[IDcpa].array.F[kk]) influences the effective "radius"
+                // The CPA value (data.core.image[IDcpa].array.F[kk]) influences the effective "radius"
                 // for extrapolation. Smaller CPA means a larger effective radius, leading to
                 // more aggressive extrapolation.
-                float coeff = data.image[IDpixdist].array.F[index] /
-                        ((1.0 * xsize / (data.image[IDcpa].array.F[kk] + 0.1)) *
+                float coeff = data.core.image[IDpixdist].array.F[index] /
+                        ((1.0 * xsize / (data.core.image[IDcpa].array.F[kk] + 0.1)) *
                          0.8);
 
                 // Transform the coefficient using an exponential function.
@@ -224,8 +224,8 @@ long AOloopControl_computeCalib_DMextrapolateModes(
                 {
                     coeff = 0.0;
                 }
-                data.image[IDout].array.F[kk * xysize + index] =
-                    coeff * data.image[IDin].array.F[kk * xysize + index] *
+                data.core.image[IDout].array.F[kk * xysize + index] =
+                    coeff * data.core.image[IDin].array.F[kk * xysize + index] *
                     coeff;
             }
         }
@@ -245,9 +245,9 @@ long AOloopControl_computeCalib_DMslaveExt(
     const char *IDout_name,
     float       r0)
 {
-    long IDin = image_ID(IDin_name, data.image, data.NB_MAX_IMAGE);
-    long xsize = data.image[IDin].md[0].size[0];
-    long ysize = data.image[IDin].md[0].size[1];
+    long IDin = image_ID(IDin_name, data.core.image, data.core.NB_MAX_IMAGE);
+    long xsize = data.core.image[IDin].md[0].size[0];
+    long ysize = data.core.image[IDin].md[0].size[1];
     long zsize;
     long index; // Declare index here
     long kk;    // Declare kk here
@@ -261,9 +261,9 @@ long AOloopControl_computeCalib_DMslaveExt(
     float valr;
 
     long IDout;
-    if(data.image[IDin].md[0].naxis == 3)
+    if(data.core.image[IDin].md[0].naxis == 3)
     {
-        zsize = data.image[IDin].md[0].size[2];
+        zsize = data.core.image[IDin].md[0].size[2];
         create_3Dimage_ID(IDout_name, xsize, ysize, zsize, &IDout);
     }
     else
@@ -273,28 +273,28 @@ long AOloopControl_computeCalib_DMslaveExt(
     }
     long xysize = xsize * ysize;
 
-    long IDmask = image_ID(IDmask_name, data.image, data.NB_MAX_IMAGE); // IDmask is local to this function
-    long IDsl = image_ID(IDsl_name, data.image, data.NB_MAX_IMAGE);     // IDsl is local to this function
+    long IDmask = image_ID(IDmask_name, data.core.image, data.core.NB_MAX_IMAGE); // IDmask is local to this function
+    long IDsl = image_ID(IDsl_name, data.core.image, data.core.NB_MAX_IMAGE);     // IDsl is local to this function
 
     for(long ii = 0; ii < xsize; ii++)
         for(long jj = 0; jj < ysize; jj++)
         {
             index = jj * xsize + ii;
-            if (data.image[IDmask].array.F[index] > 0.5)
+            if (data.core.image[IDmask].array.F[index] > 0.5)
             {
                 for(kk = 0; kk < zsize; kk++)
                 {
-                    data.image[IDout].array.F[kk * xysize + index] =
-                        data.image[IDin].array.F[kk * xysize + index];
+                    data.core.image[IDout].array.F[kk * xysize + index] =
+                        data.core.image[IDin].array.F[kk * xysize + index];
                 }
             }
-            else if (data.image[IDsl].array.F[index] > 0.5)
+            else if (data.core.image[IDsl].array.F[index] > 0.5)
             {
                 for (kk = 0; kk < zsize; kk++)
                 {
                     val1    = 0.0;
                     val1cnt = 0.0;
-                    pixrad  = (rfactor * data.image[IDsl].array.F[index] + 1.0);
+                    pixrad  = (rfactor * data.core.image[IDsl].array.F[index] + 1.0);
                     pixradl = (long) pixrad + 1;
 
                     ii1min = ii - pixradl;
@@ -320,14 +320,14 @@ long AOloopControl_computeCalib_DMslaveExt(
                             dy = 1.0 * (jj - jj1);
                             r  = sqrt(dx * dx + dy * dy);
                             if ((r < pixrad) &&
-                                (data.image[IDmask].array.F[jj1 * xsize + ii1] >
+                                (data.core.image[IDmask].array.F[jj1 * xsize + ii1] >
                                  0.5))
                             {
                                 r1    = r / pixrad;
                                 coeff = exp(-10.0 * r1 * r1);
                                 valr += r * coeff;
                                 val1 +=
-                                    data.image[IDin]
+                                    data.core.image[IDin]
                                     .array
                                     .F[kk * xysize + jj1 * xsize + ii1] *
                                     coeff;
@@ -338,7 +338,7 @@ long AOloopControl_computeCalib_DMslaveExt(
                     valr /= val1cnt;
                     if (val1cnt > 0.0001)
                     {
-                        data.image[IDout].array.F[kk * xysize + index] =
+                        data.core.image[IDout].array.F[kk * xysize + index] =
                             (val1 / val1cnt) * exp(-(valr / r0) * (valr / r0));
                     }
                 }
@@ -347,7 +347,7 @@ long AOloopControl_computeCalib_DMslaveExt(
             {
                 for (kk = 0; kk < zsize; kk++)
                 {
-                    data.image[IDout].array.F[kk * xysize + index] = 0.0;
+                    data.core.image[IDout].array.F[kk * xysize + index] = 0.0;
                 }
             }
         }

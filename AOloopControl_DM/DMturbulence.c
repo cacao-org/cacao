@@ -170,7 +170,7 @@ static errno_t make_seed_turbulence_screen(
     /*  IDv = variable_ID("OUTERSCALE");
     if(IDv!=-1)
       {
-        outerscale = data.variable[IDv].value.f;
+        outerscale = data.core.variable[IDv].value.f;
         printf("Outer scale = %f pix\n", outerscale);
       }
     */
@@ -179,7 +179,7 @@ static errno_t make_seed_turbulence_screen(
     if(IDv != -1)
     {
         RLIMMODE = 1;
-        rlim     = data.variable[IDv].value.f;
+        rlim     = data.core.variable[IDv].value.f;
         printf("R limit = %f pix\n", rlim);
     }
 
@@ -204,35 +204,35 @@ static errno_t make_seed_turbulence_screen(
                 r = sqrt(dx * dx + dy * dy);
                 if(r < rlim)
                 {
-                    data.image[ID].array.F[jj * size + ii] = 0.0;
+                    data.core.image[ID].array.F[jj * size + ii] = 0.0;
                 }
                 else
                 {
-                    data.image[ID].array.F[jj * size + ii] =
+                    data.core.image[ID].array.F[jj * size + ii] =
                         sqrt(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
                 }
             }
             else
             {
-                data.image[ID].array.F[jj * size + ii] =
+                data.core.image[ID].array.F[jj * size + ii] =
                     sqrt(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
             }
         }
-    //  data.image[ID].array.F[size/2*size+size/2+10] = 1.0;
+    //  data.core.image[ID].array.F[size/2*size+size/2+10] = 1.0;
 
     // period [pix] = size/sqrt(dx*dx+dy*dy)
     // f [1/pix] = sqrt(dx*dx+dy*dy)/size
     // f [1/pix] * size = sqrt(dx*dx+dy*dy)
 
     make_rnd("tmpg", size, size, "-gauss");
-    ID = image_ID("tmpg", data.image, data.NB_MAX_IMAGE);
+    ID = image_ID("tmpg", data.core.image, data.core.NB_MAX_IMAGE);
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
         {
             dx      = 1.0 * ii - size / 2;
             dy      = 1.0 * jj - size / 2;
             iscoeff = exp(-(dx * dx + dy * dy) / INNERscale_f0 / INNERscale_f0);
-            data.image[ID].array.F[jj * size + ii] *=
+            data.core.image[ID].array.F[jj * size + ii] *=
                 sqrt(iscoeff); // power -> amplitude : sqrt
         }
 
@@ -244,7 +244,7 @@ static errno_t make_seed_turbulence_screen(
 
     {
         IMGID imgtmpamp = imgid_make_from_name("tmpamp");
-        resolveIMGID(&imgtmpamp, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&imgtmpamp, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
         uint32_t cx = (uint32_t)(size / 2);
         uint32_t cy = (uint32_t)(size / 2);
         uint32_t w = imgtmpamp.md->size[0];
@@ -262,13 +262,13 @@ static errno_t make_seed_turbulence_screen(
 
     /* compute the scaling factor in the power law of the structure function */
     fft_structure_function("tmpo1", "strf");
-    ID    = image_ID("strf", data.image, data.NB_MAX_IMAGE);
+    ID    = image_ID("strf", data.core.image, data.core.NB_MAX_IMAGE);
     value = 0.0;
     cnt   = 0;
     for(uint32_t ii = 1; ii < Dlim; ii++)
         for(uint32_t jj = 1; jj < Dlim; jj++)
         {
-            value += log10(data.image[ID].array.F[jj * size + ii]) -
+            value += log10(data.core.image[ID].array.F[jj * size + ii]) -
                      5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
             cnt++;
         }
@@ -277,13 +277,13 @@ static errno_t make_seed_turbulence_screen(
     C1 = pow(10.0, value / cnt);
 
     fft_structure_function("tmpo2", "strf");
-    ID    = image_ID("strf", data.image, data.NB_MAX_IMAGE);
+    ID    = image_ID("strf", data.core.image, data.core.NB_MAX_IMAGE);
     value = 0.0;
     cnt   = 0;
     for(uint32_t ii = 1; ii < Dlim; ii++)
         for(uint32_t jj = 1; jj < Dlim; jj++)
         {
-            value += log10(data.image[ID].array.F[jj * size + ii]) -
+            value += log10(data.core.image[ID].array.F[jj * size + ii]) -
                      5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
             cnt++;
         }
@@ -332,7 +332,7 @@ static DMTURB_STATE* dmturb_init() {
     
     // Connect to DM stream
     state->imgDM = imgid_make_from_name(dmstream_ptr);
-    resolveIMGID(&state->imgDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&state->imgDM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     printf("%u x %u actuator\n", state->imgDM.md->size[0], state->imgDM.md->size[1]);
     
     uint32_t xsize = state->imgDM.md->size[0];
@@ -402,8 +402,8 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
         state->x0m += dt * (*turbwspeed_ptr) * cos(*turbwangle_ptr);
         state->y0m += dt * (*turbwspeed_ptr) * sin(*turbwangle_ptr);
         
-        uint32_t Sxsize = data.image[state->IDts0].md->size[0];
-        uint32_t Sysize = data.image[state->IDts0].md->size[1];
+        uint32_t Sxsize = data.core.image[state->IDts0].md->size[0];
+        uint32_t Sysize = data.core.image[state->IDts0].md->size[1];
         double seedscreensizem = (*turbseedpixscale_ptr) * Sxsize;
         
         while(state->x0m < 0) state->x0m += seedscreensizem;
@@ -428,10 +428,10 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
                 ypix0 = ypix0 % (*turbseedsize_ptr);
                 uint32_t ypix1 = (ypix0 + 1) % Sysize;
                 
-                double v00 = data.image[state->IDts0].array.F[ypix0 * Sxsize + xpix0];
-                double v10 = data.image[state->IDts0].array.F[ypix0 * Sxsize + xpix1];
-                double v01 = data.image[state->IDts0].array.F[ypix1 * Sxsize + xpix0];
-                double v11 = data.image[state->IDts0].array.F[ypix1 * Sxsize + xpix1];
+                double v00 = data.core.image[state->IDts0].array.F[ypix0 * Sxsize + xpix0];
+                double v10 = data.core.image[state->IDts0].array.F[ypix0 * Sxsize + xpix1];
+                double v01 = data.core.image[state->IDts0].array.F[ypix1 * Sxsize + xpix0];
+                double v11 = data.core.image[state->IDts0].array.F[ypix1 * Sxsize + xpix1];
                 
                 float val = v00 * (1.0-xfrac)*(1.0-yfrac) + v10*xfrac*(1.0-yfrac) + v01*(1.0-xfrac)*yfrac + v11*xfrac*yfrac;
                 val *= state->amplcoeff;
@@ -516,7 +516,7 @@ static errno_t compute_function()
 {
     DMTURB_STATE *state = dmturb_init();
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
-    dmturb_step(processinfo, data.fpsptr,
+    dmturb_step(processinfo, data.core.fpsptr,
                 state);
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
     dmturb_cleanup(state);

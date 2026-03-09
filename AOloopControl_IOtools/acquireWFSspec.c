@@ -77,19 +77,19 @@ void init_cmdsettings(void)
 //
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
-        long fpi_inputshmname = functionparameter_GetParamIndex(data.fpsptr, ".wfsin");
-        long fpi_compWFSsubdark = functionparameter_GetParamIndex(data.fpsptr, ".comp.darksub");
-        long fpi_compWFSnormalize = functionparameter_GetParamIndex(data.fpsptr, ".comp.WFSnormalize");
-        long fpi_compWFSrefsub = functionparameter_GetParamIndex(data.fpsptr, ".comp.WFSrefsub");
+        long fpi_inputshmname = functionparameter_GetParamIndex(data.core.fpsptr, ".wfsin");
+        long fpi_compWFSsubdark = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.darksub");
+        long fpi_compWFSnormalize = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.WFSnormalize");
+        long fpi_compWFSrefsub = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.WFSrefsub");
 
-        if(fpi_inputshmname > -1) data.fpsptr->parray[fpi_inputshmname].fpflag |=
+        if(fpi_inputshmname > -1) data.core.fpsptr->parray[fpi_inputshmname].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
-        if(fpi_compWFSsubdark > -1) data.fpsptr->parray[fpi_compWFSsubdark].fpflag   |= FPFLAG_WRITERUN;
-        if(fpi_compWFSnormalize > -1) data.fpsptr->parray[fpi_compWFSnormalize].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_compWFSrefsub > -1) data.fpsptr->parray[fpi_compWFSrefsub].fpflag    |= FPFLAG_WRITERUN;
+        if(fpi_compWFSsubdark > -1) data.core.fpsptr->parray[fpi_compWFSsubdark].fpflag   |= FPFLAG_WRITERUN;
+        if(fpi_compWFSnormalize > -1) data.core.fpsptr->parray[fpi_compWFSnormalize].fpflag |= FPFLAG_WRITERUN;
+        if(fpi_compWFSrefsub > -1) data.core.fpsptr->parray[fpi_compWFSrefsub].fpflag    |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -248,7 +248,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID wfsin = imgid_make_from_name(input_shm_name); // input raw wfs image
-    resolveIMGID(&wfsin, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&wfsin, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     uint32_t sizeWFSx = wfsin.md->size[0];
     uint32_t sizeWFSy = wfsin.md->size[1];
@@ -256,7 +256,7 @@ static errno_t compute_function()
     uint8_t  WFSatype = wfsin.md->datatype;
 
     IMGID specmask = imgid_make_from_name(specmask_shm_name);
-    resolveIMGID(&specmask, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&specmask, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     uint32_t numtraces = specmask.md->size[2];
     uint64_t sizeWFS  = sizeWFSx * numtraces;
     uint32_t sizeWFSoutx = sizeWFSx / *binning;
@@ -321,8 +321,8 @@ static errno_t compute_function()
         // STEP 2: DARK SUB -> aolx_imWFS0
         // check wfsdark is to be subtracted
         int status_darksub = 0;
-        long fpi_compWFSsubdark = functionparameter_GetParamIndex(data.fpsptr, ".comp.darksub");
-        if(fpi_compWFSsubdark > -1 && (data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF))
+        long fpi_compWFSsubdark = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.darksub");
+        if(fpi_compWFSsubdark > -1 && (data.core.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF))
         {
             if(imgWFSdark.ID != -1)
             {
@@ -350,8 +350,8 @@ static errno_t compute_function()
         int status_normalize = 0;
         imgimWFS1.md->write = 1;
 
-        long fpi_compWFSnormalize = functionparameter_GetParamIndex(data.fpsptr, ".comp.WFSnormalize");
-        if(fpi_compWFSnormalize > -1 && (data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF))
+        long fpi_compWFSnormalize = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.WFSnormalize");
+        if(fpi_compWFSnormalize > -1 && (data.core.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF))
         {
             status_normalize = 1;
             spec_norm(imgimWFS0, imgimWFS1);
@@ -368,8 +368,8 @@ static errno_t compute_function()
 
         int status_refsub = 0;
         imgimWFS2.md->write = 1;
-        long fpi_compWFSrefsub = functionparameter_GetParamIndex(data.fpsptr, ".comp.WFSrefsub");
-        if(fpi_compWFSrefsub > -1 && (data.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF))
+        long fpi_compWFSrefsub = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.WFSrefsub");
+        if(fpi_compWFSrefsub > -1 && (data.core.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF))
         {
             // subtract reference
             status_refsub = 1;

@@ -92,7 +92,7 @@ static errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
     }
 
@@ -358,7 +358,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID inimg = imgid_make_from_name(inimname);
-    resolveIMGID(&inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&inimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 

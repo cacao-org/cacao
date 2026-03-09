@@ -114,7 +114,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     PROCESSINFO *processinfo;
 
-    if(data.processinfo == 1)
+    if(data.core.processinfo == 1)
     {
         // CREATE PROCESSINFO ENTRY
         // see processtools.c in module CommandLineInterface for details
@@ -141,37 +141,37 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     // CATCH SIGNALS
 
-    if(sigaction(SIGTERM, &data.sigact, NULL) == -1)
+    if(sigaction(SIGTERM, &data.core.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGTERM\n");
     }
 
-    if(sigaction(SIGINT, &data.sigact, NULL) == -1)
+    if(sigaction(SIGINT, &data.core.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGINT\n");
     }
 
-    if(sigaction(SIGABRT, &data.sigact, NULL) == -1)
+    if(sigaction(SIGABRT, &data.core.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGABRT\n");
     }
 
-    if(sigaction(SIGBUS, &data.sigact, NULL) == -1)
+    if(sigaction(SIGBUS, &data.core.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGBUS\n");
     }
 
-    if(sigaction(SIGSEGV, &data.sigact, NULL) == -1)
+    if(sigaction(SIGSEGV, &data.core.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGSEGV\n");
     }
 
-    if(sigaction(SIGHUP, &data.sigact, NULL) == -1)
+    if(sigaction(SIGHUP, &data.core.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGHUP\n");
     }
 
-    if(sigaction(SIGPIPE, &data.sigact, NULL) == -1)
+    if(sigaction(SIGPIPE, &data.core.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGPIPE\n");
     }
@@ -188,18 +188,18 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    IDinb0 = read_sharedmem_image(imnameb0, data.image, data.NB_MAX_IMAGE);
-    IDinb1 = read_sharedmem_image(imnameb1, data.image, data.NB_MAX_IMAGE);
+    IDinb0 = read_sharedmem_image(imnameb0, data.core.image, data.core.NB_MAX_IMAGE);
+    IDinb1 = read_sharedmem_image(imnameb1, data.core.image, data.core.NB_MAX_IMAGE);
 
-    cnt0_old = data.image[IDinb0].md[0].cnt0;
-    cnt1_old = data.image[IDinb1].md[0].cnt0;
+    cnt0_old = data.core.image[IDinb0].md[0].cnt0;
+    cnt1_old = data.core.image[IDinb1].md[0].cnt0;
 
-    xsize    = data.image[IDinb0].md[0].size[0];
-    ysize    = data.image[IDinb0].md[0].size[1];
+    xsize    = data.core.image[IDinb0].md[0].size[0];
+    ysize    = data.core.image[IDinb0].md[0].size[1];
     xysize   = xsize * ysize;
-    zsizein  = data.image[IDinb0].md[0].size[2];
-    zsize    = data.image[IDinb0].md[0].size[2] * NBbuff;
-    datatype = data.image[IDinb0].md[0].datatype;
+    zsizein  = data.core.image[IDinb0].md[0].size[2];
+    zsize    = data.core.image[IDinb0].md[0].size[2] * NBbuff;
+    datatype = data.core.image[IDinb0].md[0].datatype;
 
     list_image_ID();
 
@@ -213,11 +213,11 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     create_2Dimage_ID(inmaskname, xysize, 1, &IDinmask);
     for(ii = 0; ii < xysize; ii++)
     {
-        data.image[IDinmask].array.F[ii] = 0.0;
+        data.core.image[IDinmask].array.F[ii] = 0.0;
     }
     for(ii = PFblockStart; ii < PFblockEnd; ii++)
     {
-        data.image[IDinmask].array.F[ii] = 1.0;
+        data.core.image[IDinmask].array.F[ii] = 1.0;
     }
 
     if(sprintf(inmaskfname, "./PredictiveControl/inmaskPF%ld.fits", PFblock) <
@@ -263,7 +263,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     printf("Done\n");
     fflush(stdout);
 
-    if(data.processinfo == 1)
+    if(data.core.processinfo == 1)
         processinfo->loopstat =
             1; // Notify processinfo that we are entering loop
 
@@ -276,7 +276,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     while(loopOK == 1)
     {
 
-        if(data.processinfo == 1)
+        if(data.core.processinfo == 1)
         {
             while(processinfo->CTRLval == 1)  // pause
             {
@@ -294,8 +294,8 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
             }
         }
 
-        cnt0 = data.image[IDinb0].md[0].cnt0;
-        cnt1 = data.image[IDinb1].md[0].cnt0;
+        cnt0 = data.core.image[IDinb0].md[0].cnt0;
+        cnt1 = data.core.image[IDinb1].md[0].cnt0;
 
         if(cnt0 != cnt0_old)
         {
@@ -315,17 +315,17 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
         if(Tupdate == 1)
         {
-            data.image[IDout].md[0].write = 1;
+            data.core.image[IDout].md[0].write = 1;
             long kkin;
             for(kkin = 0; kkin < zsizein; kkin++)
             {
                 kk = buffindex * zsizein + kkin;
                 for(ii = 0; ii < PFblockSize; ii++)
-                    data.image[IDout].array.F[kk * PFblockSize + ii] =
-                        data.image[IDinb]
+                    data.core.image[IDout].array.F[kk * PFblockSize + ii] =
+                        data.core.image[IDinb]
                         .array.F[kkin * xysize + (ii + PFblockStart)];
             }
-            data.image[IDout].md[0].write = 0;
+            data.core.image[IDout].md[0].write = 0;
 
             printf("[%3ld/%3ld  %d]\n", buffindex, NBbuff, cube);
             Tupdate = 0;
@@ -345,25 +345,25 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
                 timenow.tv_nsec,
                 outcnt);
 
-            data.image[IDout].md[0].write = 1;
+            data.core.image[IDout].md[0].write = 1;
             for(ii = 0; ii < PFblockSize; ii++)  // Remove time averaged value
             {
                 ave = 0.0;
                 for(kk = 0; kk < zsize; kk++)
                 {
-                    ave += data.image[IDout].array.F[kk * PFblockSize + ii];
+                    ave += data.core.image[IDout].array.F[kk * PFblockSize + ii];
                 }
 
                 ave /= zsize;
                 for(kk = 0; kk < zsize; kk++)
                 {
-                    data.image[IDout].array.F[kk * PFblockSize + ii] -= ave;
+                    data.core.image[IDout].array.F[kk * PFblockSize + ii] -= ave;
                 }
             }
 
             COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
-            data.image[IDout].md[0].cnt0++;
-            data.image[IDout].md[0].write = 0;
+            data.core.image[IDout].md[0].cnt0++;
+            data.core.image[IDout].md[0].write = 0;
 
             buffindex = 0;
             outcnt++;
@@ -373,77 +373,77 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
         // process signals
 
-        if(data.signal_TERM == 1)
+        if(data.core.signal_TERM == 1)
         {
             loopOK = 0;
-            if(data.processinfo == 1)
+            if(data.core.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGTERM);
             }
         }
 
-        if(data.signal_INT == 1)
+        if(data.core.signal_INT == 1)
         {
             loopOK = 0;
-            if(data.processinfo == 1)
+            if(data.core.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGINT);
             }
         }
 
-        if(data.signal_ABRT == 1)
+        if(data.core.signal_ABRT == 1)
         {
             loopOK = 0;
-            if(data.processinfo == 1)
+            if(data.core.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGABRT);
             }
         }
 
-        if(data.signal_BUS == 1)
+        if(data.core.signal_BUS == 1)
         {
             loopOK = 0;
-            if(data.processinfo == 1)
+            if(data.core.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGBUS);
             }
         }
 
-        if(data.signal_SEGV == 1)
+        if(data.core.signal_SEGV == 1)
         {
             loopOK = 0;
-            if(data.processinfo == 1)
+            if(data.core.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGSEGV);
             }
         }
 
-        if(data.signal_HUP == 1)
+        if(data.core.signal_HUP == 1)
         {
             loopOK = 0;
-            if(data.processinfo == 1)
+            if(data.core.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGHUP);
             }
         }
 
-        if(data.signal_PIPE == 1)
+        if(data.core.signal_PIPE == 1)
         {
             loopOK = 0;
-            if(data.processinfo == 1)
+            if(data.core.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGPIPE);
             }
         }
 
         loopcnt++;
-        if(data.processinfo == 1)
+        if(data.core.processinfo == 1)
         {
             processinfo->loopcnt = loopcnt;
         }
     }
 
-    if(data.processinfo == 1)
+    if(data.core.processinfo == 1)
     {
         processinfo_cleanExit(processinfo);
     }

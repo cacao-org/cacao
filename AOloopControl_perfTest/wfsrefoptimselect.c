@@ -338,13 +338,13 @@ static CLICMDDATA CLIcmddata = {
 static errno_t compute_function()
 {
     IMGID inpsfimg = imgid_make_from_name(selinput);
-    resolveIMGID(&inpsfimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&inpsfimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     IMGID inwfsimg;
     if ( strcmp(wfsinput, "null") )
     {
         inwfsimg = imgid_make_from_name(wfsinput);
-        resolveIMGID(&inwfsimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&inwfsimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     }
     else
     {
@@ -356,7 +356,7 @@ static errno_t compute_function()
     if ( strcmp(dminput, "null") )
     {
         indmimg = imgid_make_from_name(dminput);
-        resolveIMGID(&indmimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&indmimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     }
     else
     {

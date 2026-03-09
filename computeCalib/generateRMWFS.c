@@ -70,12 +70,12 @@ void init_cmdsettings(void)
 //
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".zrespWFS")].fpflag |=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".zrespWFS")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMmodesC")].fpflag |=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".DMmodesC")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
     }
 
@@ -90,7 +90,7 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
     }
 
@@ -117,7 +117,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID imgzRM = imgid_make_from_name(zrespWFS);
-    resolveIMGID(&imgzRM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgzRM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     uint32_t wfsxsize = imgzRM.md->size[0];
     uint32_t wfsysize = imgzRM.md->size[1];
     uint64_t wfssize = wfsxsize;
@@ -126,7 +126,7 @@ static errno_t compute_function()
 
 
     IMGID imDMmodesC = imgid_make_from_name(DMmodesC);
-    resolveIMGID(&imDMmodesC, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imDMmodesC, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     uint32_t dmxsize = imDMmodesC.md->size[0];
     uint32_t dmysize = imDMmodesC.md->size[1];
     uint64_t dmsize = dmxsize;

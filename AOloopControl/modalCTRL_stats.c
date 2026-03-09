@@ -122,11 +122,11 @@ void init_cmdsettings(void)
 //
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
         long fpi;
-        fpi = functionparameter_GetParamIndex(data.fpsptr, ".comp.statswrite");
-        if(fpi > -1) data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.statswrite");
+        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -138,7 +138,7 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
     }
 
@@ -178,19 +178,19 @@ static errno_t compute_function()
         char name[STRINGMAXLEN_STREAMNAME];
 
         WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
-        read_sharedmem_image(name, data.image, data.NB_MAX_IMAGE);
+        read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         imgtbuff_mvalDM = imgid_make_from_name(name);
-        resolveIMGID(&imgtbuff_mvalDM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&imgtbuff_mvalDM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
         WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
-        read_sharedmem_image(name, data.image, data.NB_MAX_IMAGE);
+        read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         imgtbuff_mvalWFS = imgid_make_from_name(name);
-        resolveIMGID(&imgtbuff_mvalWFS, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&imgtbuff_mvalWFS, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
-        read_sharedmem_image(name, data.image, data.NB_MAX_IMAGE);
+        read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         imgtbuff_mvalOL = imgid_make_from_name(name);
-        resolveIMGID(&imgtbuff_mvalOL, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&imgtbuff_mvalOL, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
         NBmode   = imgtbuff_mvalOL.md->size[0];
         NBsample = imgtbuff_mvalOL.md->size[1];

@@ -118,9 +118,9 @@ static errno_t DMdisp_add_disp_from_circular_buffer(DMCOMB_STATE *state)
     {
         printf("(re-)initializing DMdisp_add_disp_from_circular_buffer");
         delete_image_ID(astrogridsname_ptr, DELETE_IMAGE_ERRMODE_WARNING);
-        read_sharedmem_image(astrogridsname_ptr, data.image, data.NB_MAX_IMAGE);
+        read_sharedmem_image(astrogridsname_ptr, data.core.image, data.core.NB_MAX_IMAGE);
         state->ag_imgdispbuffer = imgid_make_from_name(astrogridsname_ptr);
-        resolveIMGID(&state->ag_imgdispbuffer, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&state->ag_imgdispbuffer, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
         state->ag_xysize = (uint64_t)(*DMxsize_ptr) * (*DMysize_ptr);
         state->ag_sliceindex = 0;
         state->ag_framecnt = 0;
@@ -359,7 +359,7 @@ static DMCOMB_STATE* dmcomb_init()
         printf("DEBUG: channel %d : %s\n", ch, name);
         fflush(stdout);
 
-        imageID IDch = read_sharedmem_image(name, data.image, data.NB_MAX_IMAGE);
+        imageID IDch = read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         printf("DEBUG: ID = %ld\n", IDch);
         fflush(stdout);
 
@@ -381,9 +381,9 @@ static DMCOMB_STATE* dmcomb_init()
     fflush(stdout);
 
     if((*voltmode_ptr) & FPFLAG_ONOFF) {
-        if(image_ID(voltname_ptr, data.image, data.NB_MAX_IMAGE) == -1) read_sharedmem_image(voltname_ptr, data.image, data.NB_MAX_IMAGE);
+        if(image_ID(voltname_ptr, data.core.image, data.core.NB_MAX_IMAGE) == -1) read_sharedmem_image(voltname_ptr, data.core.image, data.core.NB_MAX_IMAGE);
         state->imgdmvolt = imgid_make_from_name(voltname_ptr);
-        resolveIMGID(&state->imgdmvolt, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&state->imgdmvolt, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     }
 
     printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
@@ -800,7 +800,7 @@ static errno_t compute_function()
     DMCOMB_STATE *state = dmcomb_init();
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
-    dmcomb_step(processinfo, data.fpsptr,
+    dmcomb_step(processinfo, data.core.fpsptr,
         state);
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

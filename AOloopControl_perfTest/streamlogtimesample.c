@@ -946,9 +946,9 @@ static errno_t compute_function()
 
 
 
-                    uint32_t xsize = data.image[IDc].md->size[0];
-                    uint32_t ysize = data.image[IDc].md->size[1];
-                    uint32_t zsizein = data.image[IDc].md->size[2];
+                    uint32_t xsize = data.core.image[IDc].md->size[0];
+                    uint32_t ysize = data.core.image[IDc].md->size[1];
+                    uint32_t zsizein = data.core.image[IDc].md->size[2];
                     uint64_t xysize = xsize;
                     xysize *= ysize;
 
@@ -969,19 +969,19 @@ static errno_t compute_function()
                         if((mapping_dest[cmdindex]>-1)&&(mapping_dest[cmdindex]<zsizeout))
 
                             printf("mapping slice %5ld/%5d (%d x %d) to %5ld/%5ld (%d x %d)\n",
-                                   mapping_orig[cmdindex], zsizein, data.image[IDc].md->size[0], data.image[IDc].md->size[1],
+                                   mapping_orig[cmdindex], zsizein, data.core.image[IDc].md->size[0], data.core.image[IDc].md->size[1],
                                    mapping_dest[cmdindex], zsizeout, imgout.im->md->size[0], imgout.im->md->size[1] );
 
                         //printf("CMD %4ld / %4ld : %3ld -> %3ld\n", cmdindex, maxNBcmd, mapping_orig[cmdindex], mapping_dest[cmdindex]);
 
-                        switch(data.image[IDc].md->datatype)
+                        switch(data.core.image[IDc].md->datatype)
                         {
                         case _DATATYPE_UINT8:
                             for(uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.UI8[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.UI8[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -990,7 +990,7 @@ static errno_t compute_function()
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.SI8[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.SI8[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -999,7 +999,7 @@ static errno_t compute_function()
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.UI16[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.UI16[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -1008,7 +1008,7 @@ static errno_t compute_function()
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.SI16[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.SI16[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -1017,7 +1017,7 @@ static errno_t compute_function()
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.UI32[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.UI32[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -1026,7 +1026,7 @@ static errno_t compute_function()
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.SI32[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.SI32[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -1035,7 +1035,7 @@ static errno_t compute_function()
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.UI64[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.UI64[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -1044,7 +1044,7 @@ static errno_t compute_function()
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.SI64[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.SI64[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -1053,7 +1053,7 @@ static errno_t compute_function()
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.F[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.F[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -1062,7 +1062,7 @@ static errno_t compute_function()
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
-                                    data.image[IDc].array.D[xysize * mapping_orig[cmdindex] + ii];
+                                    data.core.image[IDc].array.D[xysize * mapping_orig[cmdindex] + ii];
                             }
                             break;
 
@@ -1071,7 +1071,7 @@ static errno_t compute_function()
                             PRINT_ERROR("datatype value not recognised");
                             printf("ID %ld  datatype = %d\n",
                                    IDc,
-                                   data.image[IDc].md[0].datatype);
+                                   data.core.image[IDc].md[0].datatype);
                             exit(0);
                             break;
                         }

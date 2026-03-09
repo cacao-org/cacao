@@ -69,12 +69,12 @@ void init_cmdsettings(void)
 //
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".inwf2D")].fpflag |=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".inwf2D")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
-        //data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".mapfile")].fpflag |=
+        //data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".mapfile")].fpflag |=
         //    FPFLAG_STREAM_RUN_REQUIRED;
     }
 
@@ -89,7 +89,7 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
     }
 
@@ -175,7 +175,7 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID imgWF2D = imgid_make_from_name(inWF2D);
-    resolveIMGID(&imgWF2D, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgWF2D, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     uint32_t wfxsize = imgWF2D.md->size[0];
     uint32_t wfysize = imgWF2D.md->size[1];
     uint64_t wfsize = wfxsize;
@@ -184,7 +184,7 @@ static errno_t compute_function()
 
 
     IMGID imgmap2D = imgid_make_from_name(map2D);
-    resolveIMGID(&imgmap2D, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&imgmap2D, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
     if(imgmap2D.ID == -1)
     {
         imgmap2D = load_actmapcoord2D("mapcoord2D.txt", map2D);

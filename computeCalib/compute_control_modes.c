@@ -210,7 +210,7 @@ static errno_t mk_ZernikeFourier_modal_basis(
         // optional mask
         //
         IMGID imgmask = imgid_make_from_name("modesZFmask");
-        resolveIMGID(&imgmask, ERRMODE_WARN, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&imgmask, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
 
         linopt_imtools_makeCPAmodes(&imgoutm,
                                     msizex,
@@ -228,25 +228,25 @@ static errno_t mk_ZernikeFourier_modal_basis(
                                    );
     }
 
-    imageID ID0 = image_ID("CPAmodes", data.image, data.NB_MAX_IMAGE);
+    imageID ID0 = image_ID("CPAmodes", data.core.image, data.core.NB_MAX_IMAGE);
 
-    imageID IDfreq = image_ID("cpamodesfreq", data.image, data.NB_MAX_IMAGE);
+    imageID IDfreq = image_ID("cpamodesfreq", data.core.image, data.core.NB_MAX_IMAGE);
 
     printf("  %u %u %ld\n",
            msizex,
            msizey,
-           (long)(data.image[ID0].md[0].size[2] - 1));
+           (long)(data.core.image[ID0].md[0].size[2] - 1));
 
 
     imgZFmodes->mdt->naxis   = 3;
     imgZFmodes->mdt->size[0] = msizex;
     imgZFmodes->mdt->size[1] = msizey;
-    imgZFmodes->mdt->size[2] = data.image[ID0].md[0].size[2] - 1 + NBZ;
+    imgZFmodes->mdt->size[2] = data.core.image[ID0].md[0].size[2] - 1 + NBZ;
     createimagefromIMGID(imgZFmodes);
 
     imageID IDmfcpa;
     create_2Dimage_ID("modesfreqcpa",
-                      data.image[ID0].md[0].size[2] - 1 + NBZ,
+                      data.core.image[ID0].md[0].size[2] - 1 + NBZ,
                       1,
                       &IDmfcpa);
 
@@ -256,7 +256,7 @@ static errno_t mk_ZernikeFourier_modal_basis(
     //
     for(int k = 0; k < NBZ; k++)
     {
-        data.image[IDmfcpa].array.F[k] = zcpa[k];
+        data.core.image[IDmfcpa].array.F[k] = zcpa[k];
         for(uint32_t ii = 0; ii < msizex; ii++)
             for(uint32_t jj = 0; jj < msizey; jj++)
             {
@@ -274,14 +274,14 @@ static errno_t mk_ZernikeFourier_modal_basis(
 
     // Copy Fourier modes into basis
     //
-    for(uint32_t k = 0; k < data.image[ID0].md[0].size[2] - 1; k++)
+    for(uint32_t k = 0; k < data.core.image[ID0].md[0].size[2] - 1; k++)
     {
-        data.image[IDmfcpa].array.F[k + NBZ] =
-            data.image[IDfreq].array.F[k + 1];
+        data.core.image[IDmfcpa].array.F[k + NBZ] =
+            data.core.image[IDfreq].array.F[k + 1];
         for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
             imgZFmodes->im->array.F[(k + NBZ) * msizex * msizey + ii] =
-                data.image[ID0].array.F[(k + 1) * msizex * msizey + ii];
+                data.core.image[ID0].array.F[(k + 1) * msizex * msizey + ii];
         }
     }
 
@@ -316,7 +316,7 @@ static errno_t modes_mask_normalize(IMGID imgmodeC, IMGID imgmask)
         double totmask = 0.0;
         for(uint64_t ii = 0; ii < sizexy; ii++)
         {
-            // data.image[ID].array.F[k*msizex*msizey+ii] -= offset/totm;
+            // data.core.image[ID].array.F[k*msizex*msizey+ii] -= offset/totm;
             rms += imgmodeC.im->array.F[ii] * imgmodeC.im->array.F[ii] *
                    imgmask.im->array.F[ii];
             totmask += imgmask.im->array.F[ii];
@@ -388,23 +388,23 @@ static errno_t modes_mask_normalize(IMGID imgmodeC, IMGID imgmask)
 
 static errno_t customCONFsetup()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
         // FPS are not required
 
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".zrespM")].fpflag &=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".zrespM")].fpflag &=
             ~FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".WFSmask")].fpflag &=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".WFSmask")].fpflag &=
             ~FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".auxRM.FPS_loRMacqu")].fpflag &=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".auxRM.FPS_loRMacqu")].fpflag &=
             ~FPFLAG_FPS_RUN_REQUIRED;
 
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".FPS_zRMacqu")].fpflag &=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".FPS_zRMacqu")].fpflag &=
             ~FPFLAG_FPS_RUN_REQUIRED;
 
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.FPS_DMcomb")].fpflag &=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".DMgeom.FPS_DMcomb")].fpflag &=
             ~FPFLAG_FPS_RUN_REQUIRED;
 
     }
@@ -418,41 +418,41 @@ static errno_t customCONFsetup()
 
 static errno_t customCONFcheck()
 {
-    if(data.fpsptr != NULL)
+    if(data.core.fpsptr != NULL)
     {
 
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".zrespM")].fpflag |=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".zrespM")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".WFSmask")].fpflag |=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".WFSmask")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
 
 
         if(FPS_zRMacqu.SMfd < 1)
         {
-            functionparameter_ConnectExternalFPS(data.fpsptr,
-                                                 functionparameter_GetParamIndex(data.fpsptr, ".FPS_zRMacqu"),
+            functionparameter_ConnectExternalFPS(data.core.fpsptr,
+                                                 functionparameter_GetParamIndex(data.core.fpsptr, ".FPS_zRMacqu"),
                                                  &FPS_zRMacqu);
         }
 
         if(FPS_loRMacqu.SMfd < 1)
         {
-            functionparameter_ConnectExternalFPS(data.fpsptr,
-                                                 functionparameter_GetParamIndex(data.fpsptr, ".auxRM.FPS_loRMacqu"),
+            functionparameter_ConnectExternalFPS(data.core.fpsptr,
+                                                 functionparameter_GetParamIndex(data.core.fpsptr, ".auxRM.FPS_loRMacqu"),
                                                  &FPS_loRMacqu);
         }
 
         if(FPS_DMcomb.SMfd < 1)
         {
-            functionparameter_ConnectExternalFPS(data.fpsptr,
-                                                 functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.FPS_DMcomb"),
+            functionparameter_ConnectExternalFPS(data.core.fpsptr,
+                                                 functionparameter_GetParamIndex(data.core.fpsptr, ".DMgeom.FPS_DMcomb"),
                                                  &FPS_DMcomb);
         }
 
 
         // Update RM files
-        if(data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".upRMfiles")].fpflag & FPFLAG_ONOFF)
+        if(data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".upRMfiles")].fpflag & FPFLAG_ONOFF)
         {
 
             if(FPS_zRMacqu.SMfd > 0)
@@ -469,7 +469,7 @@ static errno_t customCONFcheck()
                                FUNCTION_PARAMETER_STRMAXLEN,
                                "%s/dmslaved.fits",
                                datadir);
-                functionparameter_SetParamValue_STRING(data.fpsptr,
+                functionparameter_SetParamValue_STRING(data.core.fpsptr,
                                                        ".DMgeom.DMmaskEXTR",
                                                        fname);
 
@@ -477,7 +477,7 @@ static errno_t customCONFcheck()
                                FUNCTION_PARAMETER_STRMAXLEN,
                                "%s/zrespM_mn.fits",
                                datadir);
-                functionparameter_SetParamValue_STRING(data.fpsptr,
+                functionparameter_SetParamValue_STRING(data.core.fpsptr,
                                                        ".zrespM",
                                                        fname);
 
@@ -485,7 +485,7 @@ static errno_t customCONFcheck()
                                FUNCTION_PARAMETER_STRMAXLEN,
                                "%s/dmmask_mksl.fits",
                                datadir);
-                functionparameter_SetParamValue_STRING(data.fpsptr,
+                functionparameter_SetParamValue_STRING(data.core.fpsptr,
                                                        ".DMgeom.DMmaskCTRL",
                                                        fname);
 
@@ -493,7 +493,7 @@ static errno_t customCONFcheck()
                                FUNCTION_PARAMETER_STRMAXLEN,
                                "%s/wfsmask_mkm.fits",
                                datadir);
-                functionparameter_SetParamValue_STRING(data.fpsptr,
+                functionparameter_SetParamValue_STRING(data.core.fpsptr,
                                                        ".WFSmask",
                                                        fname);
             }
@@ -512,7 +512,7 @@ static errno_t customCONFcheck()
                                FUNCTION_PARAMETER_STRMAXLEN,
                                "%s/respM.fits",
                                datadir);
-                functionparameter_SetParamValue_STRING(data.fpsptr,
+                functionparameter_SetParamValue_STRING(data.core.fpsptr,
                                                        ".loRM",
                                                        fname);
 
@@ -520,18 +520,18 @@ static errno_t customCONFcheck()
                                FUNCTION_PARAMETER_STRMAXLEN,
                                "%s/RMpokeCube.fits",
                                datadir);
-                functionparameter_SetParamValue_STRING(data.fpsptr,
+                functionparameter_SetParamValue_STRING(data.core.fpsptr,
                                                        ".loRMmodes",
                                                        fname);
             }
 
             // set back to OFF
-            data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".upRMfiles")].fpflag &= ~FPFLAG_ONOFF;
+            data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".upRMfiles")].fpflag &= ~FPFLAG_ONOFF;
         }
 
 
         // update align params for auto mask
-        if(data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.upAlign")].fpflag & FPFLAG_ONOFF)
+        if(data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".DMgeom.upAlign")].fpflag & FPFLAG_ONOFF)
         {
             if(FPS_DMcomb.SMfd > 0)
             {
@@ -548,32 +548,32 @@ static errno_t customCONFcheck()
                 float od = 0.45 * DMxsize;
                 float id = 0.05 * DMxsize;
 
-                functionparameter_SetParamValue_INT64(data.fpsptr,
+                functionparameter_SetParamValue_INT64(data.core.fpsptr,
                                                       ".DMgeom.DMxsize",
                                                       DMxsize);
-                functionparameter_SetParamValue_INT64(data.fpsptr,
+                functionparameter_SetParamValue_INT64(data.core.fpsptr,
                                                       ".DMgeom.DMysize",
                                                       DMysize);
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                functionparameter_SetParamValue_FLOAT32(data.core.fpsptr,
                                                         ".DMgeom.align.CX",
                                                         cx);
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                functionparameter_SetParamValue_FLOAT32(data.core.fpsptr,
                                                         ".DMgeom.align.CY",
                                                         cy);
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                functionparameter_SetParamValue_FLOAT32(data.core.fpsptr,
                                                         ".DMgeom.align.OD",
                                                         od);
-                functionparameter_SetParamValue_FLOAT32(data.fpsptr,
+                functionparameter_SetParamValue_FLOAT32(data.core.fpsptr,
                                                         ".DMgeom.align.ID",
                                                         id);
             }
-            data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.upAlign")].fpflag &= ~FPFLAG_ONOFF;
+            data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".DMgeom.upAlign")].fpflag &= ~FPFLAG_ONOFF;
         }
 
 
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.DMmaskCTRL")].fpflag |=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".DMgeom.DMmaskCTRL")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
-        data.fpsptr->parray[functionparameter_GetParamIndex(data.fpsptr, ".DMgeom.DMmaskEXTR")].fpflag |=
+        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".DMgeom.DMmaskEXTR")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
     }
 
@@ -615,10 +615,10 @@ static errno_t compute_function()
 
 
     /*IMGID inimg = makeIMGID(inimname);
-    resolveIMGID(&inimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&inimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
     IMGID outimg = makeIMGID(outimname);
-    resolveIMGID(&outimg, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+    resolveIMGID(&outimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     */
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
@@ -644,14 +644,14 @@ static errno_t compute_function()
         //
         load_fits(fname_DMmaskCTRL, "DMmaskCTRL", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgDMmaskCTRL = imgid_make_from_name("DMmaskCTRL");
-        resolveIMGID(&imgDMmaskCTRL, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&imgDMmaskCTRL, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
         // DM actuators to be extrapolated from neighbors
         // this is a subset of DMmaskCTRL
         //
         load_fits(fname_DMmaskEXTR, "DMmaskEXTR", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgDMmaskEXTR = imgid_make_from_name("DMmaskEXTR");
-        resolveIMGID(&imgDMmaskEXTR, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&imgDMmaskEXTR, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
 
 
@@ -676,7 +676,7 @@ static errno_t compute_function()
         modes_mask_normalize(imgDMmodesZF, imgDMmaskCTRL);
 
         // save to disk
-        fps_write_RUNoutput_image(data.fpsptr, "DMmodesZF", "DMmodesZF");
+        fps_write_RUNoutput_image(data.core.fpsptr, "DMmodesZF", "DMmodesZF");
 
 
         // EXTRAPOLATE DM MODES
@@ -693,7 +693,7 @@ static errno_t compute_function()
         );
 
         // save to disk
-        fps_write_RUNoutput_image(data.fpsptr, "DMmodesZFe", "DMmodesZFe");
+        fps_write_RUNoutput_image(data.core.fpsptr, "DMmodesZFe", "DMmodesZFe");
 
 
 
@@ -701,7 +701,7 @@ static errno_t compute_function()
         // TAG LINE 889
 
 
-        fps_write_RUNoutput_image(data.fpsptr, "DMmaskCTRL", "DMmaskCTRL"); // test
+        fps_write_RUNoutput_image(data.core.fpsptr, "DMmaskCTRL", "DMmaskCTRL"); // test
 
         // set pixels to zero if neither part of DMmaskCTRL or DMmaskEXT
         // output (in-place) : imgDMmodesZFe
@@ -722,7 +722,7 @@ static errno_t compute_function()
             }
         }
         // save to disk
-        fps_write_RUNoutput_image(data.fpsptr, "DMmodesZFe", "DMmodesZFem");
+        fps_write_RUNoutput_image(data.core.fpsptr, "DMmodesZFe", "DMmodesZFem");
 
 
 
@@ -739,7 +739,7 @@ static errno_t compute_function()
         // zonal response matrix
         load_fits(fname_zrespM, "zrespM", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgzrespM = imgid_make_from_name("zrespM");
-        resolveIMGID(&imgzrespM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+        resolveIMGID(&imgzrespM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
 
         // COMPUTE WFS RESPONSE TO MODES
@@ -785,7 +785,7 @@ static errno_t compute_function()
         }
 
         // save to disk
-        fps_write_RUNoutput_image(data.fpsptr, "WFSmodesZFe", "WFSmodesZFe");
+        fps_write_RUNoutput_image(data.core.fpsptr, "WFSmodesZFe", "WFSmodesZFe");
 
 
 
@@ -802,7 +802,7 @@ static errno_t compute_function()
         imageID IDloDMmodes = -1;
         load_fits(fname_loRMmodes, "loDMmodes", LOADFITS_ERRMODE_WARNING, &IDloDMmodes);
 
-        fps_write_RUNoutput_image(data.fpsptr, "loDMmodes", "loDMmodes"); // test
+        fps_write_RUNoutput_image(data.core.fpsptr, "loDMmodes", "loDMmodes"); // test
 
 
 
@@ -811,7 +811,7 @@ static errno_t compute_function()
             FILE   *fpLOcoeff;
             {
                 char ffname[STRINGMAXLEN_FULLFILENAME];
-                WRITE_FULLFILENAME(ffname, "./%s/LOcoeff.txt", data.fpsptr->md->datadir);
+                WRITE_FULLFILENAME(ffname, "./%s/LOcoeff.txt", data.core.fpsptr->md->datadir);
                 fpLOcoeff = fopen(ffname, "w");
                 if(fpLOcoeff == NULL)
                 {
@@ -823,10 +823,10 @@ static errno_t compute_function()
 
 
             IMGID imgloRM = imgid_make_from_name("loRM");
-            resolveIMGID(&imgloRM, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+            resolveIMGID(&imgloRM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
             IMGID imgloDMmodes = imgid_make_from_name("loDMmodes");
-            resolveIMGID(&imgloDMmodes, ERRMODE_ABORT, data.image, data.NB_MAX_IMAGE);
+            resolveIMGID(&imgloDMmodes, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
 
 
             printf("Using low-order modal response [%ld %ld]\n",
@@ -880,14 +880,14 @@ static errno_t compute_function()
                 //
                 for(uint64_t ii = 0; ii < msizexy; ii++)
                 {
-                    data.image[ID_imfit].array.F[ii] =
+                    data.core.image[ID_imfit].array.F[ii] =
                         imgDMmodesZFe.im->array.F[m * msizexy + ii];
                 }
 
                 {
                     char fnameimout[STRINGMAXLEN_FILENAME];
                     WRITE_FILENAME(fnameimout, "linfit_input.%04d", m);
-                    fps_write_RUNoutput_image(data.fpsptr, "imfitim", fnameimout);
+                    fps_write_RUNoutput_image(data.core.fpsptr, "imfitim", fnameimout);
                 }
 
                 // Decompose DM mode m input (imfitim) as a linear sum (linfitcoeff) of modal modes (loDMmodes)
@@ -907,8 +907,8 @@ static errno_t compute_function()
                 //
                 for(uint32_t jj = 0; jj < linfitsize; jj++)
                 {
-                    data.image[IDcoeffmat].array.F[m * linfitsize + jj] =
-                        data.image[IDRMM_coeff].array.F[jj];
+                    data.core.image[IDcoeffmat].array.F[m * linfitsize + jj] =
+                        data.core.image[IDRMM_coeff].array.F[jj];
                 }
 
 
@@ -918,17 +918,17 @@ static errno_t compute_function()
                 {
                     for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                     {
-                        data.image[IDauxDMmodesrec].array.F[m * msizex * msizey + ii] +=
-                            data.image[IDRMM_coeff].array.F[jj] *
+                        data.core.image[IDauxDMmodesrec].array.F[m * msizex * msizey + ii] +=
+                            data.core.image[IDRMM_coeff].array.F[jj] *
                             imgloDMmodes.im->array.F[jj * msizex * msizey + ii];
                     }
                 }
                 // ... and it complement (null)
                 for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                 {
-                    data.image[IDauxDMmodesnull].array.F[m * msizex * msizey + ii] =
-                        data.image[ID_imfit].array.F[ii]
-                        - data.image[IDauxDMmodesrec].array.F[m * msizex * msizey + ii];
+                    data.core.image[IDauxDMmodesnull].array.F[m * msizex * msizey + ii] =
+                        data.core.image[ID_imfit].array.F[ii]
+                        - data.core.image[IDauxDMmodesrec].array.F[m * msizex * msizey + ii];
                 }
 
 
@@ -940,9 +940,9 @@ static errno_t compute_function()
                 double resn = 0.0;
                 for(uint64_t ii = 0; ii < msizex * msizey; ii++)
                 {
-                    float v0 = data.image[IDauxDMmodesrec].array.F[m * msizex * msizey + ii] -
-                               data.image[ID_imfit].array.F[ii];
-                    float vn = data.image[ID_imfit].array.F[ii];
+                    float v0 = data.core.image[IDauxDMmodesrec].array.F[m * msizex * msizey + ii] -
+                               data.core.image[ID_imfit].array.F[ii];
+                    float vn = data.core.image[ID_imfit].array.F[ii];
                     float mcoeff = imgDMmaskCTRL.im->array.F[ii];
                     res += v0 * v0 * mcoeff;
                     resn += vn * vn * mcoeff;
@@ -954,8 +954,8 @@ static errno_t compute_function()
                 double res1 = 0.0;
                 for(uint32_t jj = 0; jj < linfitsize; jj++)
                 {
-                    res1 += data.image[IDRMM_coeff].array.F[jj] *
-                            data.image[IDRMM_coeff].array.F[jj];
+                    res1 += data.core.image[IDRMM_coeff].array.F[jj] *
+                            data.core.image[IDRMM_coeff].array.F[jj];
                 }
 
 
@@ -983,20 +983,20 @@ static errno_t compute_function()
                     // construct linear fit (WFS space)
                     for(uint64_t wfselem = 0; wfselem < wfssizexy; wfselem++)
                     {
-                        data.image[IDwfstmp].array.F[wfselem] = 0.0;
+                        data.core.image[IDwfstmp].array.F[wfselem] = 0.0;
                     }
                     for(uint32_t jj = 0; jj < linfitsize; jj++)
                         for(uint64_t wfselem = 0; wfselem < wfssizexy; wfselem++)
                         {
-                            data.image[IDwfstmp].array.F[wfselem] +=
-                                data.image[IDRMM_coeff].array.F[jj] *
+                            data.core.image[IDwfstmp].array.F[wfselem] +=
+                                data.core.image[IDRMM_coeff].array.F[jj] *
                                 imgloRM.im->array.F[jj * wfssizexy + wfselem];
                         }
 
                     for(uint64_t wfselem = 0; wfselem < wfssizexy; wfselem++)
                     {
                         imgWFSmodesZFe.im->array.F[m * wfssizexy + wfselem] =
-                            LOcoeff * data.image[IDwfstmp].array.F[wfselem] +
+                            LOcoeff * data.core.image[IDwfstmp].array.F[wfselem] +
                             (1.0 - LOcoeff) *
                             imgWFSmodesZFe.im->array.F[m * wfssizexy + wfselem];
                     }
@@ -1009,12 +1009,12 @@ static errno_t compute_function()
 
             // save to disk
 
-            fps_write_RUNoutput_image(data.fpsptr, "imfitmat", "imfitmat");
+            fps_write_RUNoutput_image(data.core.fpsptr, "imfitmat", "imfitmat");
 
-            fps_write_RUNoutput_image(data.fpsptr, "auxDMmodesrec", "auxDMmodesrec");
+            fps_write_RUNoutput_image(data.core.fpsptr, "auxDMmodesrec", "auxDMmodesrec");
             delete_image_ID("auxDMmodesrec", DELETE_IMAGE_ERRMODE_WARNING);
 
-            fps_write_RUNoutput_image(data.fpsptr, "auxDMmodesnull", "auxDMmodesnull");
+            fps_write_RUNoutput_image(data.core.fpsptr, "auxDMmodesnull", "auxDMmodesnull");
             delete_image_ID("auxDMmodesnull", DELETE_IMAGE_ERRMODE_WARNING);
 
             //save_fits("imfitmat", "imfitmat.fits");
@@ -1030,7 +1030,7 @@ static errno_t compute_function()
 
         // save to disk
         //
-        fps_write_RUNoutput_image(data.fpsptr, "WFSmodesZFe", "WFSmodesZFec");
+        fps_write_RUNoutput_image(data.core.fpsptr, "WFSmodesZFe", "WFSmodesZFec");
 
         imgid_free(&imgDMmaskCTRL);
         imgid_free(&imgDMmaskEXTR);

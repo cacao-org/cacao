@@ -56,10 +56,10 @@ AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name,
     float   v0;
     // float    NoiseAmpl = 0.02;
 
-    IDtrace = image_ID(IDtrace_name, data.image, data.NB_MAX_IMAGE);
+    IDtrace = image_ID(IDtrace_name, data.core.image, data.core.NB_MAX_IMAGE);
 
-    NBtraceVec = data.image[IDtrace].md[0].size[0];
-    NBch       = data.image[IDtrace].md[0].size[1];
+    NBtraceVec = data.core.image[IDtrace].md[0].size[0];
+    NBch       = data.core.image[IDtrace].md[0].size[1];
 
     NBmvec = NBtraceVec - filtsize - (long)(delayfr + 1.0);
 
@@ -74,13 +74,13 @@ AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name,
             fp,
             "%5ld %f\n",
             m,
-            data.image[IDtrace].array.F[NBtraceVec * modeout + m + filtsize]);
+            data.core.image[IDtrace].array.F[NBtraceVec * modeout + m + filtsize]);
         for(l = 0; l < filtsize; l++)
             for(ch = 0; ch < NBch; ch++)
             {
                 l1 = ch * filtsize + l;
-                data.image[IDmatA].array.F[l1 * NBmvec + m] =
-                    data.image[IDtrace].array.F[NBtraceVec * ch + (m + l)];
+                data.core.image[IDmatA].array.F[l1 * NBmvec + m] =
+                    data.core.image[IDtrace].array.F[NBtraceVec * ch + (m + l)];
             }
     }
     fclose(fp);
@@ -99,17 +99,17 @@ AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name,
     for(m = 0; m < NBmvec; m++)
     {
         marray[m] =
-            data.image[IDtrace].array.F[NBtraceVec * modeout +
+            data.core.image[IDtrace].array.F[NBtraceVec * modeout +
                                         (m + filtsize + delayfr_int)] *
             (1.0 - delayfr_x) +
-            data.image[IDtrace].array.F[NBtraceVec * modeout +
+            data.core.image[IDtrace].array.F[NBtraceVec * modeout +
                                         (m + filtsize + delayfr_int + 1)] *
             delayfr_x;
         fprintf(
             fp,
             "%5ld %f %f\n",
             m,
-            data.image[IDtrace].array.F[NBtraceVec * modeout + m + filtsize],
+            data.core.image[IDtrace].array.F[NBtraceVec * modeout + m + filtsize],
             marray[m]);
     }
     fclose(fp);
@@ -123,7 +123,7 @@ AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name,
 
     save_fits("WFPmatA", "WFPmatA.fits");
     save_fits("WFPmatC", "WFPmatC.fits");
-    IDmatC = image_ID("WFPmatC", data.image, data.NB_MAX_IMAGE);
+    IDmatC = image_ID("WFPmatC", data.core.image, data.core.NB_MAX_IMAGE);
 
     create_2Dimage_ID(IDfilt_name, filtsize, NBch, &IDfilt);
     for(l = 0; l < filtsize; l++)
@@ -131,10 +131,10 @@ AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name,
         {
             tmpv = 0.0;
             for(m = 0; m < NBmvec; m++)
-                tmpv += data.image[IDmatC]
+                tmpv += data.core.image[IDmatC]
                         .array.F[(ch * filtsize + l) * NBmvec + m] *
                         marray[m];
-            data.image[IDfilt].array.F[ch * filtsize + l] = tmpv;
+            data.core.image[IDfilt].array.F[ch * filtsize + l] = tmpv;
         }
 
     fp   = fopen("filt.txt", "w");
@@ -142,12 +142,12 @@ AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name,
     for(l = 0; l < filtsize; l++)
         for(ch = 0; ch < NBch; ch++)
         {
-            tmpv += data.image[IDfilt].array.F[ch * filtsize + l];
+            tmpv += data.core.image[IDfilt].array.F[ch * filtsize + l];
             fprintf(fp,
                     "%3ld %3ld %f %f\n",
                     ch,
                     l,
-                    data.image[IDfilt].array.F[l],
+                    data.core.image[IDfilt].array.F[l],
                     tmpv);
         }
     fclose(fp);
@@ -167,21 +167,21 @@ AOloopControl_PredictiveControl_testPredictiveFilter(const char *IDtrace_name,
         tmpv = 0.0;
         for(l = 0; l < filtsize; l++)
             for(ch = 0; ch < NBch; ch++)
-                tmpv += data.image[IDfilt].array.F[ch * filtsize + l] *
-                        data.image[IDtrace]
+                tmpv += data.core.image[IDfilt].array.F[ch * filtsize + l] *
+                        data.core.image[IDtrace]
                         .array.F[NBtraceVec * ch + (m - filtsize + l)];
 
         fprintf(fp,
                 "%5ld %20f %20f %20f\n",
                 m,
-                data.image[IDtrace].array.F[NBtraceVec * modeout + m],
+                data.core.image[IDtrace].array.F[NBtraceVec * modeout + m],
                 tmpv,
                 marray[m - filtsize]);
 
         v0 = tmpv - marray[m - filtsize];
         err0 += v0 * v0;
 
-        v0 = data.image[IDtrace].array.F[NBtraceVec * modeout + m] -
+        v0 = data.core.image[IDtrace].array.F[NBtraceVec * modeout + m] -
              marray[m - filtsize];
         err1 += v0 * v0;
     }

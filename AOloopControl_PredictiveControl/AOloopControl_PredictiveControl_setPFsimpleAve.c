@@ -34,9 +34,9 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
     float  *coeff;
     float   total;
 
-    IDPF        = image_ID(IDPF_name, data.image, data.NB_MAX_IMAGE);
-    xsize       = data.image[IDPF].md[0].size[0];
-    ysize       = data.image[IDPF].md[0].size[1];
+    IDPF        = image_ID(IDPF_name, data.core.image, data.core.NB_MAX_IMAGE);
+    xsize       = data.core.image[IDPF].md[0].size[0];
+    ysize       = data.core.image[IDPF].md[0].size[1];
     FilterOrder = xsize / ysize;
 
     coeff = (float *) malloc(sizeof(float) * FilterOrder);
@@ -65,11 +65,11 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
         for(ii = 0; ii < ysize; ii++)
             for(jj = 0; jj < ysize; jj++)
             {
-                data.image[IDPF].array.F[jj * xsize + ii + kk * ysize] = 0.0;
+                data.core.image[IDPF].array.F[jj * xsize + ii + kk * ysize] = 0.0;
             }
         for(ii = 0; ii < ysize; ii++)
         {
-            data.image[IDPF].array.F[ii * xsize + ii + kk * ysize] = coeff[kk];
+            data.core.image[IDPF].array.F[ii * xsize + ii + kk * ysize] = coeff[kk];
         }
     }
 
