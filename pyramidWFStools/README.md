@@ -1,22 +1,12 @@
-# pyramidWFStools
+# Module: pyramidWFStools
 
 Pyramid wavefront sensor processing tools for cacao.
 
-## Purpose
+## Source Files
 
-Provides algorithms for pyramid WFS image decomposition,
-pupil extraction, and modal reconstruction.
+| File | Description |
+|------|-------------|
+| `pyWFSgridmatch.c` | acquire and preprocess WFS image |
 
 ## Dependencies
-
-- `CLIcore` — CLI integration
-- `milkinfo` — Stream monitoring
-- `cacaoAOloopControl` — AO loop framework
-- `lapacke` (optional) — Linear algebra
-
-## Key Files
-
-| File | Purpose |
-|------|---------|
-| `pyramidWFStools.c` | Module init and registration |
-| `pyramidWFStools.h` | Public API |
+- Implicit standard: `milkdata`, `ImageStreamIO`, `CLIcore`
