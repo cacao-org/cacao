@@ -7,7 +7,7 @@
 
 #include <math.h>
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 #include "linalgebra/SingularValueDecomp.h"
 #include "linalgebra/SGEMM.h"

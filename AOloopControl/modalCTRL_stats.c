@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "modalCTRLstats",

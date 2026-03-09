@@ -11,7 +11,7 @@
 #include <sys/socket.h> // For APD emergency shudown.
 #include <arpa/inet.h> // For APD emergency shudown.
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 static long NUM_APD_TOTAL = 216;
 static long NUM_APD_HOWFS = 188;

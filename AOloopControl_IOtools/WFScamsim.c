@@ -5,7 +5,7 @@
  *
  */
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 
 #include "statistic/statistic.h"

@@ -10,7 +10,7 @@
 
 #define _GNU_SOURCE
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 #include "COREMOD_memory/COREMOD_memory.h"
 

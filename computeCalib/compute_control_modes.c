@@ -7,7 +7,7 @@
 
 #include <math.h>
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "linopt_imtools/linopt_imtools.h"

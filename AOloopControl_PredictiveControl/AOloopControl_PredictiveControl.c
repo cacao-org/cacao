@@ -37,7 +37,7 @@
 /* ===============================================================================================
  */
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"

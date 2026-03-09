@@ -37,7 +37,7 @@
 
 
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 
 #include "modalfilter.h"

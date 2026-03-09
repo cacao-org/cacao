@@ -7,7 +7,7 @@
  */
 #include <float.h>
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 // quicksort
 #include "COREMOD_tools/COREMOD_tools.h"

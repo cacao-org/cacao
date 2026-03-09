@@ -9,7 +9,7 @@
 #include <math.h>
 #include <ncurses.h>
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 #include "TUItools.h"
 
 

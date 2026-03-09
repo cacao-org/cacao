@@ -6,7 +6,7 @@
  */
 
 #include <math.h>
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 #include "COREMOD_tools/COREMOD_tools.h"
 
 static FPS_APP_INFO FPS_app_info = {

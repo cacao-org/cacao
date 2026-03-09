@@ -27,7 +27,7 @@
 
 #include <math.h>
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 // for random noise
 #include "statistic/statistic.h"

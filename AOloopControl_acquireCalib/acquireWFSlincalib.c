@@ -4,7 +4,7 @@
  *
  */
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 

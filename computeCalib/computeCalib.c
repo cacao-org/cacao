@@ -23,7 +23,7 @@
 
 
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 #include "actmap_sample2D.h"
 #include "compute_control_modes.h"

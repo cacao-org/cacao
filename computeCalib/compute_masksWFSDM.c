@@ -4,7 +4,7 @@
  */
 
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 
 #include "COREMOD_arith/COREMOD_arith.h"

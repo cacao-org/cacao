@@ -28,7 +28,7 @@
 
 
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 
 #include "computeCalib/computeCalib.h"

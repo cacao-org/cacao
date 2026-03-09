@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 
 #include "statistic/statistic.h" // ran1, gauss, gauss_trc
 #include "quicksort.h"

@@ -10,7 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "CommandLineInterface/CLIcore.h"
+#include "CLIcore/CLIcore.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_arith/COREMOD_arith.h"
