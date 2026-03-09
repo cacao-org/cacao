@@ -150,7 +150,7 @@ add_cacao_standalone(cacaocc-genrmwfs generateRMWFS.c)
 target_link_libraries(cacao-fpsexec-cacaocc-genrmwfs PUBLIC ${LIBNAME} ${LINKLIBS})
 
 add_cacao_standalone(cacaocc-compmaskwfsdm compute_masksWFSDM.c)
-target_link_libraries(cacao-fpsexec-cacaocc-compmaskwfsdm PUBLIC ${LIBNAME} ${LINKLIBS} milkstatistic)
+target_link_libraries(cacao-fpsexec-cacaocc-compmaskwfsdm PUBLIC ${LIBNAME} ${LINKLIBS} milkstatistic_compute)
 
 add_cacao_standalone_plugins(cacaocc-compctrlmodes compute_control_modes.c)
 target_link_libraries(cacao-fpsexec-cacaocc-compctrlmodes PUBLIC ${LIBNAME} ${LINKLIBS} milklinoptimtools milkZernikePolyn)
