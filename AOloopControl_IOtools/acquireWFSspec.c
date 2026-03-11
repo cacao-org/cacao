@@ -15,19 +15,19 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "acquire spectra"
 };
 
-// Local variables pointers
-static char *input_shm_name; // input shared memory
-static char *specmask_shm_name; // mask shared memory
-static uint32_t *binning;
-static uint32_t *AOloopindex;
-static uint32_t *semindex;
-static uint64_t *compWFSsubdark;
-static uint64_t *compWFSnormalize;
-static uint64_t *compWFSrefsub;
+// Local variables
+static char input_shm_name[FUNCTION_PARAMETER_STRMAXLEN];
+static char specmask_shm_name[FUNCTION_PARAMETER_STRMAXLEN];
+static uint32_t binning;
+static uint32_t AOloopindex;
+static uint32_t semindex;
+static uint64_t compWFSsubdark;
+static uint64_t compWFSnormalize;
+static uint64_t compWFSrefsub;
 
 #define FPS_PARAMS(X) \
-    X(".wfsin", &input_shm_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input") \
-    X(".wfsmask", &specmask_shm_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "wfs spectral extraction mask") \
+    X(".wfsin", input_shm_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input") \
+    X(".wfsmask", specmask_shm_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "wfs spectral extraction mask") \
     X(".binning", &binning, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "spectral trace binning") \
     X(".AOloopindex", &AOloopindex, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "loop index") \
     X(".semindex", &semindex, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "input semaphore index") \
@@ -259,7 +259,7 @@ static errno_t compute_function()
     resolveIMGID(&specmask, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
     uint32_t numtraces = specmask.md->size[2];
     uint64_t sizeWFS  = sizeWFSx * numtraces;
-    uint32_t sizeWFSoutx = sizeWFSx / *binning;
+    uint32_t sizeWFSoutx = sizeWFSx / binning;
 
 
     // size is  (image shape) * z, z is # of traces
@@ -275,36 +275,36 @@ static errno_t compute_function()
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
-        WRITE_IMAGENAME(name, "aol%u_imWFSm", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_imWFSm", AOloopindex);
         imgimWFSm = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS0", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_imWFS0", AOloopindex);
         imgimWFS0 = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS1", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_imWFS1", AOloopindex);
         imgimWFS1 = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS2", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_imWFS2", AOloopindex);
         imgimWFS2 = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
 
-        WRITE_IMAGENAME(name, "aol%u_wfsref", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_wfsref", AOloopindex);
         imgwfsref = stream_connect_create_2Df32(name, sizeWFSoutx, numtraces);
     }
 
     list_image_ID();
 
     int wfsim_semwaitindex =
-        ImageStreamIO_getsemwaitindex(wfsin.im, *semindex);
+        ImageStreamIO_getsemwaitindex(wfsin.im, semindex);
     if(wfsim_semwaitindex > -1)
     {
-        *semindex = wfsim_semwaitindex;
+        semindex = wfsim_semwaitindex;
     }
 
     // LOAD DARK
     IMGID imgWFSdark;
     {
         char wfsdarkname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloopindex);
+        WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", AOloopindex);
         imgWFSdark = stream_connect(wfsdarkname);
     }
 
@@ -313,7 +313,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
     {
         // STEP 1: extract spectra -> aolx_imWFSm
-        extract_traces(wfsin, specmask, imgimWFSm, *binning);
+        extract_traces(wfsin, specmask, imgimWFSm, binning);
 
         // Done and post downstream.
         processinfo_update_output_stream(processinfo, imgimWFSm.im, NULL);

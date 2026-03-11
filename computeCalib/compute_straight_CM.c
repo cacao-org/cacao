@@ -77,23 +77,23 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "compute straight control matrix"
 };
 
-static char *RMmodesDMfname;
-static char *RMmodesWFSfname;
-static char *DMmaskfname;
-static char *WFSmaskfname;
-static char *CMmodesDMfname;
-static char *CMmodesWFSfname;
+static char RMmodesDMfname[FUNCTION_PARAMETER_STRMAXLEN];
+static char RMmodesWFSfname[FUNCTION_PARAMETER_STRMAXLEN];
+static char DMmaskfname[FUNCTION_PARAMETER_STRMAXLEN];
+static char WFSmaskfname[FUNCTION_PARAMETER_STRMAXLEN];
+static char CMmodesDMfname[FUNCTION_PARAMETER_STRMAXLEN];
+static char CMmodesWFSfname[FUNCTION_PARAMETER_STRMAXLEN];
 
-static float *svdlim;
-static int32_t *GPUdevice;
+static float svdlim;
+static int32_t GPUdevice;
 
 #define FPS_PARAMS(X) \
-    X(".RMmodesDM", &RMmodesDMfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "input RM : DM modes") \
-    X(".RMmodesWFS", &RMmodesWFSfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "input RM : WFS modes") \
-    X(".dmmask", &DMmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "DM mask for normalization") \
-    X(".wfsmask", &WFSmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "WFS mask for normalization") \
-    X(".CMmodesDM", &CMmodesDMfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output CM : DM modes") \
-    X(".CMmodesWFS", &CMmodesWFSfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output CM : WFS modes") \
+    X(".RMmodesDM", RMmodesDMfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "input RM : DM modes") \
+    X(".RMmodesWFS", RMmodesWFSfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "input RM : WFS modes") \
+    X(".dmmask", DMmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "DM mask for normalization") \
+    X(".wfsmask", WFSmaskfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_FILE_RUN_REQUIRED), "WFS mask for normalization") \
+    X(".CMmodesDM", CMmodesDMfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output CM : DM modes") \
+    X(".CMmodesWFS", CMmodesWFSfname, FPTYPE_FILENAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output CM : WFS modes") \
     X(".svdlim", &svdlim, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "SVD limit") \
     X(".GPUdevice", &GPUdevice, FPTYPE_INT32, 1, FPFLAG_DEFAULT_INPUT, "using GPU (99 : no GPU, otherwise GPU device)")
 
@@ -250,8 +250,8 @@ static errno_t compute_function()
         EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");
 
         printf("=============================\n");
-        printf("GPU device = %d\n", (int)(*GPUdevice));
-        printf("SVD limit  = %f\n", *svdlim);
+        printf("GPU device = %d\n", (int)(GPUdevice));
+        printf("SVD limit  = %f\n", svdlim);
 
 
         // create eigenvectors array
@@ -274,10 +274,10 @@ static errno_t compute_function()
 
             {
                 int SGEMMcomputed = 0;
-                if((*GPUdevice >= 0) && (*GPUdevice <= 99))
+                if((GPUdevice >= 0) && (GPUdevice <= 99))
                 {
 #ifdef HAVE_CUDA
-                    printf("Running SGEMM 1 on GPU device %d\n", *GPUdevice);
+                    printf("Running SGEMM 1 on GPU device %d\n", GPUdevice);
                     fflush(stdout);
 
                     const float alf = 1;
@@ -392,10 +392,10 @@ static errno_t compute_function()
 
         {
             int SGEMMcomputed = 0;
-            if((*GPUdevice >= 0) && (*GPUdevice <= 99))
+            if((GPUdevice >= 0) && (GPUdevice <= 99))
             {
 #ifdef HAVE_CUDA
-                printf("Running SGEMM 2 on GPU device %d\n", *GPUdevice);
+                printf("Running SGEMM 2 on GPU device %d\n", GPUdevice);
                 fflush(stdout);
 
                 const float alf = 1;
@@ -471,10 +471,10 @@ static errno_t compute_function()
         //
         {
             int SGEMMcomputed = 0;
-            if((*GPUdevice >= 0) && (*GPUdevice <= 99))
+            if((GPUdevice >= 0) && (GPUdevice <= 99))
             {
 #ifdef HAVE_CUDA
-                printf("Running SGEMM 3 on GPU device %d\n", *GPUdevice);
+                printf("Running SGEMM 3 on GPU device %d\n", GPUdevice);
                 fflush(stdout);
 
                 const float alf = 1;
@@ -597,7 +597,7 @@ static errno_t compute_function()
         // select modes
         float evalmax = imgeval.im->array.F[nbmode - 1];
         int ecnt = 0;
-        float evlim = *svdlim * *svdlim;
+        float evlim = svdlim * svdlim;
         {
             int mi = 0;
             while(imgeval.im->array.F[mi] < evalmax * evlim)

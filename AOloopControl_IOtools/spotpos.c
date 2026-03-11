@@ -18,48 +18,48 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "measure spot position, photocenter"
 };
 
-static char *inimname;
-static char *indarkname;
+static char inimname[FUNCTION_PARAMETER_STRMAXLEN];
+static char indarkname[FUNCTION_PARAMETER_STRMAXLEN];
 
 // approximate spot size
 //
-static float *spotsize;
+static float spotsize;
 
 // approximate spot location
 // search will be centered around this coords
-static float *spotx0;
-static float *spoty0;
+static float spotx0;
+static float spoty0;
 
 // Search radius around spotx0, spoty0
-static float *searchrad;
+static float searchrad;
 
 // position data
 // xrel, yrel, xabs, yabs, flux, pixcnt
-static char *outspotpos;
+static char outspotpos[FUNCTION_PARAMETER_STRMAXLEN];
 
 
 // 2D transformation matrix between pixel pos and TT value
-static float *mappingXX;
-static float *mappingYY;
-static float *mappingXY;
-static float *mappingYX;
+static float mappingXX;
+static float mappingYY;
+static float mappingXY;
+static float mappingYX;
 
 // 2D position vector matching control TT
-static char *outTTvec;
+static char outTTvec[FUNCTION_PARAMETER_STRMAXLEN];
 
 #define FPS_PARAMS(X) \
-    X(".insname", &inimname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input image") \
-    X(".indark_name", &indarkname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "input image dark (optional)") \
+    X(".insname", inimname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input image") \
+    X(".indark_name", indarkname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "input image dark (optional)") \
     X(".spotsize", &spotsize, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "approximate spot size [pix]") \
     X(".spotx0", &spotx0, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "approx spot location x") \
     X(".spoty0", &spoty0, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "approx spot location y") \
     X(".searchrad", &searchrad, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "search radius") \
-    X(".outspotpos", &outspotpos, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "output spot position data") \
+    X(".outspotpos", outspotpos, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "output spot position data") \
     X(".mappingXX", &mappingXX, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping XX coeff") \
     X(".mappingYY", &mappingYY, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping YY coeff") \
     X(".mappingXY", &mappingXY, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping XY coeff") \
     X(".mappingYX", &mappingYX, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping YX coeff") \
-    X(".outTTvec", &outTTvec, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "output 2D TT vector (control TT)")
+    X(".outTTvec", outTTvec, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "output 2D TT vector (control TT)")
 
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)
@@ -317,15 +317,15 @@ static errno_t compute_function()
         spot_position(
             &inimg,
             &indarkimg,
-            *spotsize,
-            *spotx0,
-            *spoty0,
-            *searchrad,
+            spotsize,
+            spotx0,
+            spoty0,
+            searchrad,
             &outposimg,
-            *mappingXX,
-            *mappingYY,
-            *mappingXY,
-            *mappingYX,
+            mappingXX,
+            mappingYY,
+            mappingXY,
+            mappingYX,
             &outTTvecimg
         );
 

@@ -16,21 +16,21 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "simulate WFS camera"
 };
 
-// Local variables pointers
-static char *wfssignal_in;
-static char *wfsim_out;
-static uint64_t *compdarkadd;
-static char *wfsdark;
-static float *fluxtotal;
-static float *camgain;
-static uint64_t *compphnoise;
-static float *camRON;
+// Local variables
+static char wfssignal_in[FUNCTION_PARAMETER_STRMAXLEN];
+static char wfsim_out[FUNCTION_PARAMETER_STRMAXLEN];
+static uint64_t compdarkadd;
+static char wfsdark[FUNCTION_PARAMETER_STRMAXLEN];
+static float fluxtotal;
+static float camgain;
+static uint64_t compphnoise;
+static float camRON;
 
 #define FPS_PARAMS(X) \
-    X(".wfssignal", &wfssignal_in, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input signal") \
-    X(".wfscamim", &wfsim_out, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor ouput image") \
+    X(".wfssignal", wfssignal_in, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input signal") \
+    X(".wfscamim", wfsim_out, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor ouput image") \
     X(".compdarkadd", &compdarkadd, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "subtract dark") \
-    X(".camdark", &wfsdark, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "camera dark frame") \
+    X(".camdark", wfsdark, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "camera dark frame") \
     X(".fluxtotal", &fluxtotal, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT, "total output flux [phe-], <0 if no scaling") \
     X(".camgain", &camgain, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT, "camera gain [e- / ADU]") \
     X(".compphnoise", &compphnoise, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "compute photon noise") \
@@ -162,7 +162,7 @@ static errno_t compute_function()
         // scale flux
         // ensure there is no negative value
         //
-        if(*fluxtotal < 0.0)
+        if(fluxtotal < 0.0)
         {
             // do not scale
             memcpy(imcamtmpimg.im->array.F, wfssignalimg.im->array.F,
@@ -174,7 +174,7 @@ static errno_t compute_function()
             {
                 if(wfssignalimg.im->array.F[ii] > 0.0)
                 {
-                    imcamtmpimg.im->array.F[ii] = (*fluxtotal) * wfssignalimg.im->array.F[ii];
+                    imcamtmpimg.im->array.F[ii] = fluxtotal * wfssignalimg.im->array.F[ii];
                 }
                 else
                 {
@@ -185,7 +185,7 @@ static errno_t compute_function()
 
         // add photon noise
         //
-        if(*fluxtotal >= 0.0)
+        if(fluxtotal >= 0.0)
         {
             long fpi_compphnoise = functionparameter_GetParamIndex(data.core.fpsptr, ".compphnoise");
             if(fpi_compphnoise > -1 && (data.core.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF))
@@ -199,31 +199,31 @@ static errno_t compute_function()
 
         // add readout noise
         //
-        if(*fluxtotal >= 0.0)
+        if(fluxtotal >= 0.0)
         {
-            if(*camRON > 0.0)
+            if(camRON > 0.0)
             {
                 for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
-                    imcamtmpimg.im->array.F[ii] += (*camRON) * gauss();
+                    imcamtmpimg.im->array.F[ii] += camRON * gauss();
                 }
             }
         }
 
         // convert to ADU
         //
-        if(*fluxtotal >= 0.0)
+        if(fluxtotal >= 0.0)
         {
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
-                imcamtmpimg.im->array.F[ii] /= (*camgain);
+                imcamtmpimg.im->array.F[ii] /= camgain;
             }
         }
 
 
         // add dark
         //
-        if(*fluxtotal >= 0.0)
+        if(fluxtotal >= 0.0)
         {
             if(wfsdarkimg.ID != -1)
             {
