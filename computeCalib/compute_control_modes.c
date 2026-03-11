@@ -27,36 +27,36 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "compute AO control modes in WFS and DM space"
 };
 
-// Local variables pointers
+// Local variables
 
-static uint32_t *AOloopindex;
+static uint32_t AOloopindex;
 
-static float *svdlim;
-static float *CPAmax;
-static float *deltaCPA;
+static float svdlim;
+static float CPAmax;
+static float deltaCPA;
 
-static float *alignCX; // X center
-static float *alignCY; // Y center
-static float *alignID; // Inner diameter
-static float *alignOD; // Outer diameter
+static float alignCX; // X center
+static float alignCY; // Y center
+static float alignID; // Inner diameter
+static float alignOD; // Outer diameter
 
-static uint32_t *DMxsize;
-static uint32_t *DMysize;
+static uint32_t DMxsize;
+static uint32_t DMysize;
 
 static FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
 static FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
 static FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
 
-static char *fname_DMmaskCTRL;
-static char *fname_DMmaskEXTR;
-static char *fname_zrespM;
-static char *fname_WFSmask;
-static char *fname_loRM;
-static char *fname_loRMmodes;
+static char fname_DMmaskCTRL[FUNCTION_PARAMETER_STRMAXLEN];
+static char fname_DMmaskEXTR[FUNCTION_PARAMETER_STRMAXLEN];
+static char fname_zrespM[FUNCTION_PARAMETER_STRMAXLEN];
+static char fname_WFSmask[FUNCTION_PARAMETER_STRMAXLEN];
+static char fname_loRM[FUNCTION_PARAMETER_STRMAXLEN];
+static char fname_loRMmodes[FUNCTION_PARAMETER_STRMAXLEN];
 
 // Toggles
-static int64_t *update_RMfiles;
-static int64_t *update_align;
+static int64_t update_RMfiles;
+static int64_t update_align;
 
 #define FPS_PARAMS(X) \
     X(".AOloopindex", &AOloopindex, FPTYPE_INT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "AO loop index") \
@@ -71,13 +71,13 @@ static int64_t *update_align;
     X(".DMgeom.DMysize", &DMysize, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "DM y size") \
     X(".FPS_zRMacqu", &FPS_zRMacqu, FPTYPE_FPSNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED), "FPS zonal RM acquisition") \
     X(".DMgeom.FPS_DMcomb", &FPS_DMcomb, FPTYPE_FPSNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED), "FPS DM comb") \
-    X(".DMgeom.DMmaskCTRL", &fname_DMmaskCTRL, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM actuators controlled") \
-    X(".DMgeom.DMmaskEXTR", &fname_DMmaskEXTR, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM actuators extrapolated") \
-    X(".zrespM", &fname_zrespM, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "zonal response matrix") \
-    X(".WFSmask", &fname_WFSmask, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "WFS mask") \
+    X(".DMgeom.DMmaskCTRL", fname_DMmaskCTRL, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM actuators controlled") \
+    X(".DMgeom.DMmaskEXTR", fname_DMmaskEXTR, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM actuators extrapolated") \
+    X(".zrespM", fname_zrespM, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "zonal response matrix") \
+    X(".WFSmask", fname_WFSmask, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "WFS mask") \
     X(".auxRM.FPS_loRMacqu", &FPS_loRMacqu, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT, "FPS low order modal RM acquisition") \
-    X(".auxRM.loRM", &fname_loRM, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "low order modal response matrix") \
-    X(".auxRM.loRMmodes", &fname_loRMmodes, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "low order RM modes") \
+    X(".auxRM.loRM", fname_loRM, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "low order modal response matrix") \
+    X(".auxRM.loRMmodes", fname_loRMmodes, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "low order RM modes") \
     X(".upRMfiles", &update_RMfiles, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "update RM files from FPSs") \
     X(".DMgeom.upAlign", &update_align, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "update default align (if no DMmaskRM)")
 
@@ -660,14 +660,14 @@ static errno_t compute_function()
         // output : imgDMmodesZF ("DMmodesZF")
         //
         IMGID imgDMmodesZF = imgid_make_from_name("DMmodesZF");
-        mk_ZernikeFourier_modal_basis(*DMxsize,
-                                      *DMysize,
-                                      *CPAmax,
-                                      *deltaCPA,
-                                      *alignCX,
-                                      *alignCY,
-                                      *alignID,
-                                      *alignOD,
+        mk_ZernikeFourier_modal_basis(DMxsize,
+                                      DMysize,
+                                      CPAmax,
+                                      deltaCPA,
+                                      alignCX,
+                                      alignCY,
+                                      alignID,
+                                      alignOD,
                                       &imgDMmodesZF);
 
         // Adjust mode amplitude to have RMS=1 over DMmaskCTRL

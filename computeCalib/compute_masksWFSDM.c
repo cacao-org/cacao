@@ -24,22 +24,22 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "compute WFS and DM masks"
 };
 
-static char *zrespWFS;
-static uint32_t *dmxsize;
-static uint32_t *dmysize;
+static char zrespWFS[FUNCTION_PARAMETER_STRMAXLEN];
+static uint32_t dmxsize;
+static uint32_t dmysize;
 
-static float *dmmaskperc0;
-static float *dmmaskcoeff0;
-static float *dmmaskperc1;
-static float *dmmaskcoeff1;
+static float dmmaskperc0;
+static float dmmaskcoeff0;
+static float dmmaskperc1;
+static float dmmaskcoeff1;
 
-static float *wfsmaskperc0;
-static float *wfsmaskcoeff0;
-static float *wfsmaskperc1;
-static float *wfsmaskcoeff1;
+static float wfsmaskperc0;
+static float wfsmaskcoeff0;
+static float wfsmaskperc1;
+static float wfsmaskcoeff1;
 
 #define FPS_PARAMS(X) \
-    X(".zrespM", &zrespWFS, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input zonal WFS RM") \
+    X(".zrespM", zrespWFS, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input zonal WFS RM") \
     X(".dmxsize", &dmxsize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM x size") \
     X(".dmysize", &dmysize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM y size") \
     X(".dmmask.perc0", &dmmaskperc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask percentile 0") \
@@ -156,13 +156,13 @@ static errno_t compute_function()
     create_2Dimage_ID("wfsmap", sizexWFS, sizeyWFS, &IDWFSmap);
 
     imageID IDDMmap;
-    create_2Dimage_ID("dmmap", *dmxsize, *dmysize, &IDDMmap);
+    create_2Dimage_ID("dmmap", dmxsize, dmysize, &IDDMmap);
 
     imageID IDWFSmask;
     create_2Dimage_ID("wfsmask", sizexWFS, sizeyWFS, &IDWFSmask);
 
     imageID IDDMmask;
-    create_2Dimage_ID("dmmask", *dmxsize, *dmysize, &IDDMmask);
+    create_2Dimage_ID("dmmask", dmxsize, dmysize, &IDDMmask);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
@@ -207,15 +207,15 @@ static errno_t compute_function()
         // (map/map1)*pow(map,0.25)
 
         // DMmask: select pixels
-        double lim0 = (*dmmaskcoeff0) * img_percentile("dmmap", (*dmmaskperc0));
+        double lim0 = dmmaskcoeff0 * img_percentile("dmmap", dmmaskperc0);
 
         imageID IDtmp;
-        create_2Dimage_ID("_tmpdmmap", (*dmxsize), (*dmysize), &IDtmp);
-        for(uint64_t ii = 0; ii < (*dmxsize) * (*dmysize); ii++)
+        create_2Dimage_ID("_tmpdmmap", dmxsize, dmysize, &IDtmp);
+        for(uint64_t ii = 0; ii < dmxsize * dmysize; ii++)
         {
             data.core.image[IDtmp].array.F[ii] = data.core.image[IDDMmap].array.F[ii] - lim0;
         }
-        double lim = (*dmmaskcoeff1) * img_percentile("_tmpdmmap", (*dmmaskperc1));
+        double lim = dmmaskcoeff1 * img_percentile("_tmpdmmap", dmmaskperc1);
 
         for(uint32_t poke = 0; poke < NBpoke; poke++)
         {
@@ -236,13 +236,13 @@ static errno_t compute_function()
         printf("Preparing WFS mask ... ");
         fflush(stdout);
 
-        lim0 = (*wfsmaskcoeff0) * img_percentile("wfsmap", (*wfsmaskperc0));
+        lim0 = wfsmaskcoeff0 * img_percentile("wfsmap", wfsmaskperc0);
         create_2Dimage_ID("_tmpwfsmap", sizexWFS, sizeyWFS, &IDtmp);
         for(uint64_t ii = 0; ii < sizexWFS *sizeyWFS; ii++)
         {
             data.core.image[IDtmp].array.F[ii] = data.core.image[IDWFSmap].array.F[ii] - lim0;
         }
-        lim = (*wfsmaskcoeff1) * img_percentile("_tmpwfsmap", (*wfsmaskperc1));
+        lim = wfsmaskcoeff1 * img_percentile("_tmpwfsmap", wfsmaskperc1);
 
         for(uint64_t ii = 0; ii < sizeWFS; ii++)
         {

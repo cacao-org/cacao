@@ -75,19 +75,19 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "convert arbitrary response matrix to zonal"
 };
 
-static char *RMmodesDM;
-static char *RMmodesWFS;
-static char *RMmodesDMz;
-static char *RMmodesWFSz;
+static char RMmodesDM[FUNCTION_PARAMETER_STRMAXLEN];
+static char RMmodesWFS[FUNCTION_PARAMETER_STRMAXLEN];
+static char RMmodesDMz[FUNCTION_PARAMETER_STRMAXLEN];
+static char RMmodesWFSz[FUNCTION_PARAMETER_STRMAXLEN];
 
-static float *svdlim;
-static int32_t *GPUdevice;
+static float svdlim;
+static int32_t GPUdevice;
 
 #define FPS_PARAMS(X) \
-    X(".RMmodesDM", &RMmodesDM, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : DM modes") \
-    X(".RMmodesWFS", &RMmodesWFS, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : WFS modes") \
-    X(".RMmodesDMz", &RMmodesDMz, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output zonal RM : DM modes") \
-    X(".RMmodesWFSz", &RMmodesWFSz, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output zonal RM : WFS modes") \
+    X(".RMmodesDM", RMmodesDM, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : DM modes") \
+    X(".RMmodesWFS", RMmodesWFS, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input RM : WFS modes") \
+    X(".RMmodesDMz", RMmodesDMz, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output zonal RM : DM modes") \
+    X(".RMmodesWFSz", RMmodesWFSz, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output zonal RM : WFS modes") \
     X(".svdlim", &svdlim, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "SVD limit") \
     X(".GPUdevice", &GPUdevice, FPTYPE_INT32, 1, FPFLAG_DEFAULT_INPUT, "using GPU (99 : no GPU, otherwise GPU device)")
 
@@ -251,8 +251,8 @@ static errno_t compute_function()
         EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");
 
         printf("=============================\n");
-        printf("GPU device = %d\n", (int)(*GPUdevice));
-        printf("SVD limit  = %f\n", *svdlim);
+        printf("GPU device = %d\n", (int)(GPUdevice));
+        printf("SVD limit  = %f\n", svdlim);
 
 
 
@@ -309,10 +309,10 @@ static errno_t compute_function()
 
             {
                 int SGEMMcomputed = 0;
-                if((*GPUdevice >= 0) && (*GPUdevice <= 99))
+                if((GPUdevice >= 0) && (GPUdevice <= 99))
                 {
 #ifdef HAVE_CUDA
-                    printf("Running SGEMM 1 on GPU device %d\n", *GPUdevice);
+                    printf("Running SGEMM 1 on GPU device %d\n", GPUdevice);
                     fflush(stdout);
 
                     const float alf = 1;
@@ -438,10 +438,10 @@ static errno_t compute_function()
 
         {
             int SGEMMcomputed = 0;
-            if((*GPUdevice >= 0) && (*GPUdevice <= 99))
+            if((GPUdevice >= 0) && (GPUdevice <= 99))
             {
 #ifdef HAVE_CUDA
-                printf("Running SGEMM 2 on GPU device %d\n", *GPUdevice);
+                printf("Running SGEMM 2 on GPU device %d\n", GPUdevice);
                 fflush(stdout);
 
                 const float alf = 1;
@@ -533,7 +533,7 @@ static errno_t compute_function()
                 float evalnorm = imgeval.im->array.F[ii] / evalmax;
 
 
-                if(evalnorm > *svdlim)
+                if(evalnorm > svdlim)
                 {
                     mcolcoeff = 1.0 / imgeval.im->array.F[ii];
                     modecnt ++;
@@ -569,7 +569,7 @@ static errno_t compute_function()
                 float evalnorm = imgeval.im->array.F[jj] / evalmax;
 
 
-                if(evalnorm > *svdlim)
+                if(evalnorm > svdlim)
                 {
                     mcolcoeff = 1.0 / imgeval.im->array.F[jj];
                     modecnt ++;
