@@ -39,7 +39,6 @@ struct optimizationmode {
 #define OPTMODE_TYPE_ABSMAX 4
 
 
-
 // Total flux
 #define OPTMODE_COMP_TOTFLUX 1
 
@@ -55,9 +54,6 @@ struct optimizationmode {
 // optparam0: percmin
 // optparam1: percmax
 #define OPTMODE_COMP_PERCRANGE 4
-
-
-
 
 
 // Local variables pointers
@@ -199,7 +195,6 @@ static double image_optvalue(
     }
 
 
-
     // COMPUTING OPTIMIZATION METRIC
 
     double optval = 0.0;
@@ -271,9 +266,6 @@ static double image_optvalue(
 }
 
 
-
-
-
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)
 };
@@ -292,7 +284,10 @@ static errno_t compute_function()
     // connect to control stream
     //
     IMGID imgctrl = imgid_make_from_name(ctrlsname);
-    resolveIMGID(&imgctrl, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgctrl, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     uint32_t ctrlxsize = imgctrl.md->size[0];
     uint32_t ctrlysize = imgctrl.md->size[1];
@@ -304,7 +299,10 @@ static errno_t compute_function()
     if ( strcmp(sensref0, "null") )
     {
         imgctrlamp = imgid_make_from_name(ctrlampmap);
-        resolveIMGID(&imgctrlamp, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgctrlamp, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
     else
     {
@@ -312,13 +310,13 @@ static errno_t compute_function()
     }
 
 
-
-
-
     // connect to sensing stream
     //
     IMGID imgsens = imgid_make_from_name(senssname);
-    resolveIMGID(&imgsens, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgsens, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     uint32_t sensxsize = imgsens.md->size[0];
     uint32_t sensysize = imgsens.md->size[1];
@@ -330,14 +328,14 @@ static errno_t compute_function()
     IMGID imgsensproc;
     if ( strcmp(sensproc, "null") )
     {
-        imgsensproc = stream_connect_create_2Df32(sensproc, sensxsize, sensysize);
+        imgsensproc = stream_connect_create_2Df32(sensproc,
+            sensxsize,
+            sensysize);
     }
     else
     {
         imgsensproc.ID = -1;
     }
-
-
 
 
     // connect to optional masks and references
@@ -346,7 +344,10 @@ static errno_t compute_function()
     if ( strcmp(sensref0, "null") )
     {
         imgsensref0 = imgid_make_from_name(sensref0);
-        resolveIMGID(&imgsensref0, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgsensref0, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
     else
     {
@@ -357,7 +358,10 @@ static errno_t compute_function()
     if ( strcmp(sensmask0, "null") )
     {
         imgsensmask0 = imgid_make_from_name(sensmask0);
-        resolveIMGID(&imgsensmask0, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgsensmask0, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
     else
     {
@@ -368,7 +372,10 @@ static errno_t compute_function()
     if ( strcmp(sensref1, "null") )
     {
         imgsensref1 = imgid_make_from_name(sensref1);
-        resolveIMGID(&imgsensref1, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgsensref1, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
     else
     {
@@ -379,14 +386,15 @@ static errno_t compute_function()
     if ( strcmp(sensmask1, "null") )
     {
         imgsensmask1 = imgid_make_from_name(sensmask1);
-        resolveIMGID(&imgsensmask1, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgsensmask1, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
     else
     {
         imgsensmask1.ID = -1;
     }
-
-
 
 
     // prepare image cube buffers
@@ -396,8 +404,6 @@ static errno_t compute_function()
 
     IMGID imgctrlcube = imgid_make_from_name_3D("imctrlcube", ctrlxsize, ctrlysize, *nbpoke);
     createimagefromIMGID(&imgctrlcube);
-
-
 
 
     list_image_ID();
@@ -542,11 +548,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
-
-
-
 
 
 #ifndef FPS_STANDALONE

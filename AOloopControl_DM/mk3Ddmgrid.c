@@ -11,8 +11,6 @@
 #include "CLIcore/CLIcore.h"
 
 
-
-
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mk3Ddmgrid",
     .cmdkey      = "mk3Ddmgrid",
@@ -49,15 +47,11 @@ static uint32_t binfactor = 1;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
 
 
 //
@@ -186,8 +180,6 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
 }
 
 
-
-
 /**
  * @brief Wrapper function, used by all CLI calls
  *
@@ -209,8 +201,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

@@ -10,8 +10,6 @@
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
 
-
-
 errno_t modes_spatial_extrapolate(IMGID imgmodes,
                                   IMGID imgmask,
                                   IMGID imgcpa,
@@ -21,9 +19,18 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
 
     printf("extrapolate ...\n");
 
-    resolveIMGID(&imgmodes, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
-    resolveIMGID(&imgmask, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
-    resolveIMGID(&imgcpa, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgmodes, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgmask, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgcpa, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     imcreatelikewiseIMGID(imgoutmodes, &imgmodes);
 
@@ -47,8 +54,8 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
                 {
                     if(imgmask.im->array.F[jj1 * xsize + ii1] > 0.5)
                     {
-                        double dii = 1.0 * ii1 - 1.0 * ii;
-                        double djj = 1.0 * jj1 - 1.0 * jj;
+                        double dii = (double) ii1 - (double) ii;
+                        double djj = (double) jj1 - (double) jj;
 
                         double dii2 = dii * dii;
                         double djj2 = djj * djj;

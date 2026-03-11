@@ -30,13 +30,6 @@ static uint32_t *nb0start;
 static uint32_t *nb0end;
 
 
-
-
-
-
-
-
-
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mlatdsdecode",
     .cmdkey      = "mlatdsdecode",
@@ -60,8 +53,10 @@ errno_t mlat_diffseq_decode(
 {
     DEBUG_TRACE_FSTART();
 
-    resolveIMGID(&inimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
-
+    resolveIMGID(
+        &inimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
 
     // m: number of samples in diffseq
@@ -86,8 +81,6 @@ errno_t mlat_diffseq_decode(
     {
         imgrec.im->array.F[ii] = inimg.im->array.F[ii];
     }
-
-
 
 
     // build timing kernel
@@ -163,7 +156,6 @@ errno_t mlat_diffseq_decode(
                 outimg->im->array.F[(zsize-1)*xysize + ii] = (1.0-loopgaintconv)*varray[zsize-1] + loopgaintconv*varray[zsize-2];*/
 
 
-
                 for(int kk = 0; kk < zsize; kk++)
                 {
                     outimg->im->array.F[kk * xysize + ii] *= loopgainmult;
@@ -172,7 +164,6 @@ errno_t mlat_diffseq_decode(
 
             free(varray);
         }
-
 
 
         // Reconstruct input
@@ -230,34 +221,8 @@ errno_t mlat_diffseq_decode(
     }
 
 
-
-
     free(imv);
     free(tkern);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     if(0)
@@ -265,7 +230,6 @@ errno_t mlat_diffseq_decode(
         long m = inimg.md->size[2];
         // n: number of samples in reconstructed seq
         long n = (m - 1) + 2 * samplingfactor; // - framezero_start - framezero_end;
-
 
 
         printf("m = %ld\n", m);
@@ -333,8 +297,6 @@ errno_t mlat_diffseq_decode(
         }
 
 
-
-
         int GPUdev = 0;
         uint32_t Vdim0 = 0;
         float svdlim = 0.0001;
@@ -346,10 +308,10 @@ errno_t mlat_diffseq_decode(
         compute_SVD(imgtmat, &imgU, &imgS, &imgV, Vdim0, svdlim, maxNBmode, GPUdev, 6, "SVDunmodes", "SVDvnmodes");
 
         IMGID imgpsinv = imgid_make_from_name("psinv");
-        resolveIMGID(&imgpsinv, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
-
-
-
+        resolveIMGID(
+            &imgpsinv, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
 
         double loopgain = 0.1;
@@ -479,10 +441,6 @@ errno_t mlat_diffseq_decode(
 }
 
 
-
-
-
-
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)
 };
@@ -501,7 +459,10 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID inimg = imgid_make_from_name(diffseqname);
-    resolveIMGID(&inimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &inimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
 
     IMGID outimg = imgid_make_from_name(outseqname);
@@ -530,9 +491,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
-
 
 
 #ifndef FPS_STANDALONE

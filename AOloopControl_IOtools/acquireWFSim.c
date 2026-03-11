@@ -194,7 +194,6 @@ static errno_t compute_function()
     }
 
 
-
     if(imgwfsmask.md->creatorPID == getpid())
     {
         // if wfsmask created here, initialize it to 1
@@ -204,7 +203,6 @@ static errno_t compute_function()
             imgwfsmask.im->array.F[ii] = 1.0;
         }
     }
-
 
 
     list_image_ID();
@@ -237,7 +235,6 @@ static errno_t compute_function()
     }
 
 
-
     // LOAD WFS MULT
     IMGID imgwfsmult;
     {
@@ -245,8 +242,6 @@ static errno_t compute_function()
         WRITE_IMAGENAME(wfsmultname, "aol%u_wfsmult", *AOloopindex);
         imgwfsmult = stream_connect(wfsmultname);
     }
-
-
 
 
     // WFS zero point offset
@@ -423,10 +418,6 @@ static errno_t compute_function()
         DEBUG_TRACEPOINT(" ");
 
 
-
-
-
-
         // ===========================================
         // NORMALIZE imWFS0 -> imWFS1
         // ===========================================
@@ -477,8 +468,6 @@ static errno_t compute_function()
             double totalinv       = 1.0 / (*fluxtotal + *WFSnormfloor * sizeWFS);
 
 
-
-
             if((imgwfsmask.ID != -1)
                     && (functionparameter_GetParamValue_ONOFF(
                         data.core.fpsptr, ".comp.compWFSmask") == 1))
@@ -525,7 +514,6 @@ static errno_t compute_function()
             clock_gettime(CLOCK_MILK, &time2);
             printf("Renorm to imWFS1: %f us\n", timespec_diff_double(time1, time2) * 1e6);
         }
-
 
 
         // ===========================================

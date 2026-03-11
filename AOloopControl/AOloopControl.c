@@ -35,8 +35,6 @@
 #define _GNU_SOURCE
 
 
-
-
 #include "CLIcore/CLIcore.h"
 
 
@@ -50,10 +48,6 @@
 
 
 INIT_MODULE_LIB(AOloopControl)
-
-
-
-
 
 
 static errno_t init_module_CLI()

@@ -39,7 +39,6 @@
 #endif
 
 
-
 #include "linopt_imtools/compute_SVDpseudoInverse.h"
 
 #ifdef HAVE_CUDA
@@ -50,7 +49,6 @@
 #include <device_types.h>
 #include <pthread.h>
 #endif
-
 
 
 // CPU mode: Use MKL if available
@@ -67,8 +65,6 @@
 #define BLASLIB "OpenBLAS"
 #endif
 #endif
-
-
 
 
 static FPS_APP_INFO FPS_app_info = {
@@ -100,9 +96,6 @@ static int32_t GPUdevice;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
-
 // detailed help
 static errno_t help_function()
 {
@@ -110,8 +103,6 @@ static errno_t help_function()
 
     return RETURN_SUCCESS;
 }
-
-
 
 
 static errno_t compute_function()
@@ -160,16 +151,11 @@ static errno_t compute_function()
     }
 
 
-
-
-
-
     struct timespec t0, t1, t2, t3, t4, t5, t6, t7, t8, t9;
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-
 
 
 #ifdef HAVE_OPENBLAS
@@ -190,7 +176,6 @@ static errno_t compute_function()
 #else
         printf("CUDA       NO\n");
 #endif
-
 
 
         printf("Number of modes    : %d\n", imgRMDM.md->size[2]);
@@ -252,12 +237,14 @@ static errno_t compute_function()
                     const float *beta = &bet;
 
                     float *d_RMWFS;
-                    cudaMalloc((void **)&d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
+                    cudaMalloc((void **)&d_RMWFS,
+                        imgRMWFS.md->nelement * sizeof(float));
                     cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float),
                                cudaMemcpyHostToDevice);
 
                     float *d_ATA;
-                    cudaMalloc((void **)&d_ATA, imgATA.md->nelement * sizeof(float));
+                    cudaMalloc((void **)&d_ATA,
+                        imgATA.md->nelement * sizeof(float));
 
                     cublasHandle_t handle;
                     cublasCreate(&handle);
@@ -290,7 +277,6 @@ static errno_t compute_function()
             }
 
 
-
             clock_gettime(CLOCK_MILK, &t1);
             //save_fits("ATA", "compstrCM-ATA.fits");
 
@@ -306,12 +292,24 @@ static errno_t compute_function()
             mkl_set_interface_layer(MKL_INTERFACE_LP64);
 #endif
 
-            LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, (float *) imgATA.im->array.F, nbmode, d, e, t);
+            LAPACKE_ssytrd(LAPACK_COL_MAJOR,
+                'U',
+                nbmode,
+                (float *) imgATA.im->array.F,
+                nbmode,
+                d,
+                e,
+                t);
 
             clock_gettime(CLOCK_MILK, &t2);
 
             // Assemble Q matrix
-            LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, t);
+            LAPACKE_sorgtr(LAPACK_COL_MAJOR,
+                'U',
+                nbmode,
+                imgATA.im->array.F,
+                nbmode,
+                t);
 
 
             clock_gettime(CLOCK_MILK, &t3);
@@ -319,8 +317,16 @@ static errno_t compute_function()
 
             processinfo_WriteMessage(processinfo, "comp eigenv");
 
-            memcpy(imgevec.im->array.F, imgATA.im->array.F, sizeof(float)*nbmode * nbmode);
-            LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
+            memcpy(imgevec.im->array.F,
+                imgATA.im->array.F,
+                sizeof(float)*nbmode * nbmode);
+            LAPACKE_ssteqr(LAPACK_COL_MAJOR,
+                'V',
+                nbmode,
+                d,
+                e,
+                imgevec.im->array.F,
+                nbmode);
             memcpy(imgeval.im->array.F, d, sizeof(float)*nbmode);
 
             clock_gettime(CLOCK_MILK, &t4);
@@ -331,10 +337,6 @@ static errno_t compute_function()
 
             //save_fits("eigenvec", "./mkmodestmp/eigenvec.fits");
         }
-
-
-
-
 
 
         // create CM WFS
@@ -348,8 +350,6 @@ static errno_t compute_function()
         createimagefromIMGID(&imgCMWFSall);
 
         clock_gettime(CLOCK_MILK, &t5);
-
-
 
 
         // Compute WFS modes
@@ -370,17 +370,20 @@ static errno_t compute_function()
                 const float *beta = &bet;
 
                 float *d_RMWFS;
-                cudaMalloc((void **)&d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
+                cudaMalloc((void **)&d_RMWFS,
+                    imgRMWFS.md->nelement * sizeof(float));
                 cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float),
                            cudaMemcpyHostToDevice);
 
                 float *d_evec;
-                cudaMalloc((void **)&d_evec, imgevec.md->nelement * sizeof(float));
+                cudaMalloc((void **)&d_evec,
+                    imgevec.md->nelement * sizeof(float));
                 cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float),
                            cudaMemcpyHostToDevice);
 
                 float *d_CMWFSall;
-                cudaMalloc((void **)&d_CMWFSall, imgCMWFSall.md->nelement * sizeof(float));
+                cudaMalloc((void **)&d_CMWFSall,
+                    imgCMWFSall.md->nelement * sizeof(float));
                 //cudaMemcpy(d_RMWFS,imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
 
                 // Create a handle for CUBLAS
@@ -420,16 +423,12 @@ static errno_t compute_function()
         }
 
 
-
-
         clock_gettime(CLOCK_MILK, &t6);
 
         // create CM DM
         processinfo_WriteMessage(processinfo, "create CM DM");
         IMGID imgCMDMall = imgid_make_from_name_3D("CMmodesDMall", imgRMDM.md->size[0], imgRMDM.md->size[1], imgRMDM.md->size[2]);
         createimagefromIMGID(&imgCMDMall);
-
-
 
 
         // Compute DM modes
@@ -449,17 +448,20 @@ static errno_t compute_function()
                 const float *beta = &bet;
 
                 float *d_RMDM;
-                cudaMalloc((void **)&d_RMDM, imgRMDM.md->nelement * sizeof(float));
+                cudaMalloc((void **)&d_RMDM,
+                    imgRMDM.md->nelement * sizeof(float));
                 cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float),
                            cudaMemcpyHostToDevice);
 
                 float *d_evec;
-                cudaMalloc((void **)&d_evec, imgevec.md->nelement * sizeof(float));
+                cudaMalloc((void **)&d_evec,
+                    imgevec.md->nelement * sizeof(float));
                 cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float),
                            cudaMemcpyHostToDevice);
 
                 float *d_CMDMall;
-                cudaMalloc((void **)&d_CMDMall, imgCMDMall.md->nelement * sizeof(float));
+                cudaMalloc((void **)&d_CMDMall,
+                    imgCMDMall.md->nelement * sizeof(float));
 
                 // Create a handle for CUBLAS
                 cublasHandle_t handle;
@@ -494,7 +496,6 @@ static errno_t compute_function()
                             nbmode, 0.0, imgCMDMall.im->array.F, nbact);
             }
         }
-
 
 
         clock_gettime(CLOCK_MILK, &t7);
@@ -540,7 +541,6 @@ static errno_t compute_function()
                     }
                     n2cmWFS[mi] = sqrt(WFSnorm / WFSnormcnt);
                 }
-
 
 
                 //ptr = (void *) imgCMDMall.im->array.F;
@@ -596,7 +596,6 @@ static errno_t compute_function()
         clock_gettime(CLOCK_MILK, &t9);
 
 
-
         //
         // Modes are normalized to RMS=1 in DM space
         //
@@ -621,7 +620,6 @@ static errno_t compute_function()
             }
 
         }
-
 
 
         {
@@ -666,9 +664,6 @@ static errno_t compute_function()
             }
             fclose(fp);
         }
-
-
-
 
 
         free(n2cmDM);
@@ -720,8 +715,6 @@ static errno_t compute_function()
     double t89d  = 1.0 * tdiff.tv_sec + 1.0e-9 * tdiff.tv_nsec;
 
 
-
-
 //    printf("GSL         %5.3f s\n", t01d);
     printf("total       %5.3f s\n",
            t01d + t12d + t23d + t34d + t45d + t56d + t67d + t78d + t89d);
@@ -739,8 +732,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

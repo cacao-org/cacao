@@ -22,16 +22,12 @@
 #define _GNU_SOURCE
 
 
-
 #include "CLIcore/CLIcore.h"
 
 #include "pyWFSgridmatch.h"
 
 
-
-
 INIT_MODULE_LIB(pyramidWFStools)
-
 
 
 static errno_t init_module_CLI()

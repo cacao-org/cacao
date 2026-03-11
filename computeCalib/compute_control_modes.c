@@ -1,9 +1,9 @@
-#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file compute_control_modes.c
  * @brief Compute AO control modes in both input (WFS) and output (DM) space
  *
  */
+#include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
 
@@ -16,9 +16,6 @@
 
 
 #include "modes_spatial_extrapolate.h"
-
-
-
 
 
 static FPS_APP_INFO FPS_app_info = {
@@ -82,13 +79,6 @@ static int64_t update_align;
     X(".DMgeom.upAlign", &update_align, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "update default align (if no DMmaskRM)")
 
 FPS_V2_SECTION5(FPS_PARAMS)
-
-
-
-
-
-
-
 
 
 /**
@@ -176,7 +166,10 @@ static errno_t mk_ZernikeFourier_modal_basis(
         // optional mask
         //
         IMGID imgmask = imgid_make_from_name("modesZFmask");
-        resolveIMGID(&imgmask, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgmask, ERRMODE_WARN,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
         linopt_imtools_makeCPAmodes(&imgoutm,
                                     msizex,
@@ -226,8 +219,8 @@ static errno_t mk_ZernikeFourier_modal_basis(
         for(uint32_t ii = 0; ii < msizex; ii++)
             for(uint32_t jj = 0; jj < msizey; jj++)
             {
-                double x = 1.0 * ii - xc;
-                double y = 1.0 * jj - yc;
+                double x = (double) ii - xc;
+                double y = (double) jj - yc;
                 double r = sqrt(x * x + y * y) / r1;
                 double PA  = atan2(y, x);
 
@@ -256,15 +249,17 @@ static errno_t mk_ZernikeFourier_modal_basis(
 }
 
 
-
-
-
-
-
-
-
-
-
+/**
+ * modes_mask_normalize() - normalize modal basis
+ *                          over a mask
+ * @imgmodeC: 3D mode cube (xsize x ysize x nmodes),
+ *            modified in-place
+ * @imgmask:  2D mask defining active region
+ *
+ * For each mode slice: removes the DC offset over
+ * the mask, then scales to RMS = 1 over the mask.
+ * Writes per-mode RMS values to "rmscomp.dat".
+ */
 static errno_t modes_mask_normalize(IMGID imgmodeC, IMGID imgmask)
 {
     DEBUG_TRACE_FSTART();
@@ -343,15 +338,6 @@ static errno_t modes_mask_normalize(IMGID imgmodeC, IMGID imgmask)
 }
 
 
-
-
-
-
-
-
-
-
-
 static errno_t customCONFsetup()
 {
     if(data.core.fpsptr != NULL)
@@ -379,9 +365,6 @@ static errno_t customCONFsetup()
 }
 
 
-
-
-
 static errno_t customCONFcheck()
 {
     if(data.core.fpsptr != NULL)
@@ -392,7 +375,6 @@ static errno_t customCONFcheck()
 
         data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".WFSmask")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
-
 
 
         if(FPS_zRMacqu.SMfd < 1)
@@ -547,11 +529,6 @@ static errno_t customCONFcheck()
 }
 
 
-
-
-
-
-
 // detailed help
 static errno_t help_function()
 {
@@ -572,19 +549,22 @@ static errno_t help_function()
 }
 
 
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
 
-
     /*IMGID inimg = makeIMGID(inimname);
-    resolveIMGID(&inimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &inimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     IMGID outimg = makeIMGID(outimname);
-    resolveIMGID(&outimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &outimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     */
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
@@ -610,15 +590,20 @@ static errno_t compute_function()
         //
         load_fits(fname_DMmaskCTRL, "DMmaskCTRL", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgDMmaskCTRL = imgid_make_from_name("DMmaskCTRL");
-        resolveIMGID(&imgDMmaskCTRL, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgDMmaskCTRL, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
         // DM actuators to be extrapolated from neighbors
         // this is a subset of DMmaskCTRL
         //
         load_fits(fname_DMmaskEXTR, "DMmaskEXTR", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgDMmaskEXTR = imgid_make_from_name("DMmaskEXTR");
-        resolveIMGID(&imgDMmaskEXTR, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
-
+        resolveIMGID(
+            &imgDMmaskEXTR, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
 
         // CREATE ZERNIKE+FOURIER DM MODES BASIS
@@ -662,8 +647,6 @@ static errno_t compute_function()
         fps_write_RUNoutput_image(data.core.fpsptr, "DMmodesZFe", "DMmodesZFe");
 
 
-
-
         // TAG LINE 889
 
 
@@ -691,7 +674,6 @@ static errno_t compute_function()
         fps_write_RUNoutput_image(data.core.fpsptr, "DMmodesZFe", "DMmodesZFem");
 
 
-
         // TAG LINE 934
 
         // TODO Remove modes
@@ -699,13 +681,13 @@ static errno_t compute_function()
         // TAG LINE 1040
 
 
-
-
-
         // zonal response matrix
         load_fits(fname_zrespM, "zrespM", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgzrespM = imgid_make_from_name("zrespM");
-        resolveIMGID(&imgzrespM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgzrespM, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
 
         // COMPUTE WFS RESPONSE TO MODES
@@ -754,10 +736,7 @@ static errno_t compute_function()
         fps_write_RUNoutput_image(data.core.fpsptr, "WFSmodesZFe", "WFSmodesZFe");
 
 
-
-
         // TAG LINE 1102
-
 
 
         // APPLY MODAL (AUX) RESPONSE MATRIX IF IT EXISTS
@@ -769,7 +748,6 @@ static errno_t compute_function()
         load_fits(fname_loRMmodes, "loDMmodes", LOADFITS_ERRMODE_WARNING, &IDloDMmodes);
 
         fps_write_RUNoutput_image(data.core.fpsptr, "loDMmodes", "loDMmodes"); // test
-
 
 
         if((IDloRM != -1) && (IDloDMmodes != -1))
@@ -787,12 +765,17 @@ static errno_t compute_function()
             }
 
 
-
             IMGID imgloRM = imgid_make_from_name("loRM");
-            resolveIMGID(&imgloRM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+            resolveIMGID(
+                &imgloRM, ERRMODE_ABORT,
+                data.core.image,
+                data.core.NB_MAX_IMAGE);
 
             IMGID imgloDMmodes = imgid_make_from_name("loDMmodes");
-            resolveIMGID(&imgloDMmodes, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+            resolveIMGID(
+                &imgloDMmodes, ERRMODE_ABORT,
+                data.core.image,
+                data.core.NB_MAX_IMAGE);
 
 
             printf("Using low-order modal response [%ld %ld]\n",
@@ -1019,7 +1002,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
 
 
 #ifndef FPS_STANDALONE

@@ -21,13 +21,11 @@
 #define MODULE_APPLICATION "cacao-cli"
 
 
-
 #include <string.h>
 
 #include "CLIcore/CLIcore.h"
 
 #include "AOloopControl_DM/AOloopControl_DM.h"
-
 
 
 #include "AOloopControl_DM_comb.h"
@@ -37,15 +35,10 @@
 #include "pokerndmodes.h"
 
 
-
-
 // Module initialization macro in CLIcore.h
 // macro argument defines module name for bindings
 //
 INIT_MODULE_LIB(AOloopControl_DM)
-
-
-
 
 
 static errno_t init_module_CLI()

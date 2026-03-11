@@ -67,7 +67,6 @@
 #define MaxNBdatFiles 100000
 
 
-
 typedef struct
 {
     char   name[500];
@@ -77,17 +76,11 @@ typedef struct
 } StreamDataFile;
 
 
-
 INIT_MODULE_LIB(AOloopControl_perfTest)
-
-
-
 
 
 static errno_t init_module_CLI()
 {
-
-
 
 
     CLIADDCMD_AOloopControl_perfTest__compRMsensitivity();
@@ -102,23 +95,6 @@ static errno_t init_module_CLI()
 
     return RETURN_SUCCESS;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -184,7 +160,9 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
 
     double mediansim0, mediansim1;
 
-    IDstream0 = image_ID(IDname_stream0, data.core.image, data.core.NB_MAX_IMAGE);
+    IDstream0 = image_ID(IDname_stream0,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     xsize0    = data.core.image[IDstream0].md[0].size[0];
     ysize0    = data.core.image[IDstream0].md[0].size[1];
     xysize0   = xsize0 * ysize0;
@@ -198,7 +176,9 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
            (unsigned long long)(NBframe0 - 1) / 2,
            NBpairMax);
 
-    IDstream1 = image_ID(IDname_stream1, data.core.image, data.core.NB_MAX_IMAGE);
+    IDstream1 = image_ID(IDname_stream1,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     xsize1    = data.core.image[IDstream1].md[0].size[0];
     ysize1    = data.core.image[IDstream1].md[0].size[1];
     xysize1   = xsize1 * ysize1;
@@ -613,8 +593,6 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
     return RETURN_SUCCESS;
 }
 */
-
-
 
 
 /**

@@ -12,8 +12,6 @@
 #include "CLIcore/CLIcore.h"
 
 
-
-
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "sample2DWF",
     .cmdkey      = "sample2DWF",
@@ -30,9 +28,6 @@ static char outWF1D[FUNCTION_PARAMETER_STRMAXLEN];
     X(".outWF1D", outWF1D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output WF 1D")
 
 FPS_V2_SECTION5(FPS_PARAMS)
-
-
-
 
 
 // Optional custom configuration setup. comptbuff
@@ -53,7 +48,6 @@ static errno_t customCONFsetup()
 }
 
 
-
 // Optional custom configuration checks.
 // Runs at every configuration check loop iteration
 //
@@ -68,9 +62,6 @@ static errno_t customCONFcheck()
 }
 
 
-
-
-
 // detailed help
 static errno_t help_function()
 {
@@ -78,7 +69,6 @@ static errno_t help_function()
 
     return RETURN_SUCCESS;
 }
-
 
 
 static IMGID load_actmapcoord2D(
@@ -106,7 +96,6 @@ static IMGID load_actmapcoord2D(
         NBact++;
     }
     fclose(fp);
-
 
 
     IMGID imgout = imgid_make_from_name_2D(outim, NBact, 2);
@@ -139,14 +128,15 @@ static IMGID load_actmapcoord2D(
 }
 
 
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     IMGID imgWF2D = imgid_make_from_name(inWF2D);
-    resolveIMGID(&imgWF2D, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgWF2D, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     uint32_t wfxsize = imgWF2D.md->size[0];
     uint32_t wfysize = imgWF2D.md->size[1];
     uint64_t wfsize = wfxsize;
@@ -155,7 +145,10 @@ static errno_t compute_function()
 
 
     IMGID imgmap2D = imgid_make_from_name(map2D);
-    resolveIMGID(&imgmap2D, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgmap2D, ERRMODE_WARN,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     if(imgmap2D.ID == -1)
     {
         imgmap2D = load_actmapcoord2D("mapcoord2D.txt", map2D);
@@ -164,8 +157,6 @@ static errno_t compute_function()
     // mapsizedim should be 2: x and y coord
     // uint32_t mapsizedim = imgmap2D.md->size[1];
     printf("mapsize = %u\n", mapsize);
-
-
 
 
     uint32_t NBslice = imgWF2D.md->size[2];
@@ -221,9 +212,6 @@ static errno_t compute_function()
     }
 
 
-
-
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
         for(uint32_t slice = 0; slice < NBslice; slice++)
@@ -244,8 +232,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

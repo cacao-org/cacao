@@ -37,7 +37,6 @@
 #endif
 
 
-
 #include "linopt_imtools/compute_SVDpseudoInverse.h"
 
 #ifdef HAVE_CUDA
@@ -48,7 +47,6 @@
 #include <device_types.h>
 #include <pthread.h>
 #endif
-
 
 
 // CPU mode: Use MKL if available
@@ -65,8 +63,6 @@
 #define BLASLIB "OpenBLAS"
 #endif
 #endif
-
-
 
 
 static FPS_APP_INFO FPS_app_info = {
@@ -94,9 +90,6 @@ static int32_t GPUdevice;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
-
 // Optional custom configuration setup. comptbuff
 // Runs once at conf startup
 //
@@ -109,7 +102,6 @@ static errno_t customCONFsetup()
 
     return RETURN_SUCCESS;
 }
-
 
 
 // Optional custom configuration checks.
@@ -126,10 +118,6 @@ static errno_t customCONFcheck()
 }
 
 
-
-
-
-
 // detailed help
 static errno_t help_function()
 {
@@ -139,25 +127,28 @@ static errno_t help_function()
 }
 
 
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
 
     IMGID imgRMDM = imgid_make_from_name(RMmodesDM);
-    resolveIMGID(&imgRMDM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgRMDM, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     IMGID imgRMWFS = imgid_make_from_name(RMmodesWFS);
-    resolveIMGID(&imgRMWFS, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgRMWFS, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     struct timespec t0, t1, t2, t3, t4, t5;
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-
 
 
 #ifdef HAVE_OPENBLAS
@@ -178,8 +169,6 @@ static errno_t compute_function()
 #else
         printf("CUDA       NO\n");
 #endif
-
-
 
 
         //ID = image_ID("VTmat", data.core.image, data.core.NB_MAX_IMAGE);
@@ -210,22 +199,11 @@ static errno_t compute_function()
         int nbwfspix = imgRMWFS.md->size[0] * imgRMWFS.md->size[1];
 
 
-
-
-
-
         EXECUTE_SYSTEM_COMMAND("mkdir -p mkmodestmp");
 
         printf("=============================\n");
         printf("GPU device = %d\n", (int)(GPUdevice));
         printf("SVD limit  = %f\n", svdlim);
-
-
-
-
-
-
-
 
 
         enum matrix_shape{longaxis_act, longaxis_mode} mshape;
@@ -287,12 +265,14 @@ static errno_t compute_function()
                     const float *beta = &bet;
 
                     float *d_RMDM;
-                    cudaMalloc((void **)&d_RMDM, imgRMDM.md->nelement * sizeof(float));
+                    cudaMalloc((void **)&d_RMDM,
+                        imgRMDM.md->nelement * sizeof(float));
                     cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float),
                                cudaMemcpyHostToDevice);
 
                     float *d_ATA;
-                    cudaMalloc((void **)&d_ATA, imgATA.md->nelement * sizeof(float));
+                    cudaMalloc((void **)&d_ATA,
+                        imgATA.md->nelement * sizeof(float));
 
                     // Create a handle for CUBLAS
                     cublasHandle_t handle;
@@ -342,12 +322,10 @@ static errno_t compute_function()
             }
 
 
-
             clock_gettime(CLOCK_MILK, &t1);
 
 
             //save_fits("ATA", "mATA.fits");
-
 
 
             float *d = (float *) malloc(sizeof(float) * Ndim);
@@ -359,12 +337,24 @@ static errno_t compute_function()
             mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 #endif
 
-            LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', Ndim, (float *) imgATA.im->array.F, Ndim, d, e, t);
+            LAPACKE_ssytrd(LAPACK_COL_MAJOR,
+                'U',
+                Ndim,
+                (float *) imgATA.im->array.F,
+                Ndim,
+                d,
+                e,
+                t);
 
             clock_gettime(CLOCK_MILK, &t2);
 
             // Assemble Q matrix
-            LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', Ndim, imgATA.im->array.F, Ndim, t);
+            LAPACKE_sorgtr(LAPACK_COL_MAJOR,
+                'U',
+                Ndim,
+                imgATA.im->array.F,
+                Ndim,
+                t);
 
 
             clock_gettime(CLOCK_MILK, &t3);
@@ -372,8 +362,16 @@ static errno_t compute_function()
 
             // compute all eigenvalues and eivenvectors -> imgV
             //
-            memcpy(imgmV.im->array.F, imgATA.im->array.F, sizeof(float)*Ndim * Ndim);
-            LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', Ndim, d, e, imgmV.im->array.F, Ndim);
+            memcpy(imgmV.im->array.F,
+                imgATA.im->array.F,
+                sizeof(float)*Ndim * Ndim);
+            LAPACKE_ssteqr(LAPACK_COL_MAJOR,
+                'V',
+                Ndim,
+                d,
+                e,
+                imgmV.im->array.F,
+                Ndim);
             memcpy(imgeval.im->array.F, d, sizeof(float)*Ndim);
 
             clock_gettime(CLOCK_MILK, &t4);
@@ -386,9 +384,6 @@ static errno_t compute_function()
             // this is matV
             //save_fits("mV", "mV.fits");
         }
-
-
-
 
 
         // create mU (only non-zero part allocated)
@@ -416,7 +411,8 @@ static errno_t compute_function()
                 const float *beta = &bet;
 
                 float *d_RMDM;
-                cudaMalloc((void **)&d_RMDM, imgRMDM.md->nelement * sizeof(float));
+                cudaMalloc((void **)&d_RMDM,
+                    imgRMDM.md->nelement * sizeof(float));
                 cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float),
                            cudaMemcpyHostToDevice);
 
@@ -469,9 +465,6 @@ static errno_t compute_function()
 
             }
         }
-
-
-
 
 
         //IMGID imgmAinv = imgid_make_from_name_2D("mAinv", Ndim, Mdim);
@@ -565,7 +558,6 @@ static errno_t compute_function()
 
 
         /*
-        printf("==============TESTING =============\n");
         fflush(stdout);
 
         // Test Ainv x A
@@ -588,30 +580,27 @@ static errno_t compute_function()
         */
 
 
-
-
-
-
-
         // multiply RMwfs x Ainv -> RMzwfs
 
-        IMGID imgRMWFSz = imgid_make_from_name_3D(RMmodesWFSz,  imgRMWFS.md->size[0], imgRMWFS.md->size[1], nbact);
+        IMGID imgRMWFSz = imgid_make_from_name_3D(RMmodesWFSz,
+            imgRMWFS.md->size[0],
+            imgRMWFS.md->size[1],
+            nbact);
         createimagefromIMGID(&imgRMWFSz);
 
         cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
                     nbwfspix, nbact, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix, imgmAinv.im->array.F, nbmode, 0.0, imgRMWFSz.im->array.F, nbwfspix);
 
 
-
         // multiply RMdm x Ainv -> RMzdm
 
-        IMGID imgRMDMz = imgid_make_from_name_2D(RMmodesDMz,  imgRMDM.md->size[0] * imgRMDM.md->size[1], nbact);
+        IMGID imgRMDMz = imgid_make_from_name_2D(RMmodesDMz,
+            imgRMDM.md->size[0] * imgRMDM.md->size[1],
+            nbact);
         createimagefromIMGID(&imgRMDMz);
 
         cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
                     nbact, nbact, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgmAinv.im->array.F, nbmode, 0.0, imgRMDMz.im->array.F, nbact);
-
-
 
 
         /*
@@ -632,12 +621,9 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
 
-
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

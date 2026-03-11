@@ -21,24 +21,17 @@
 #define _GNU_SOURCE
 
 
-
 #include "CLIcore/CLIcore.h"
 
 
 #include "AOloopControl_compTools/AOloopControl_compTools.h"
 
 
-
-
-
-
 INIT_MODULE_LIB(AOloopControl_compTools)
-
 
 
 static errno_t init_module_CLI()
 {
-
 
 
     return RETURN_SUCCESS;

@@ -1,9 +1,9 @@
-#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    acquireWFSspec.c
  * @brief   acquire spectra - a stripped-down version of acquireWFSim for dispersed WFS
  *
  */
+#include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
 #include "CLIcore/CLIcore.h"
@@ -45,17 +45,34 @@ static errno_t customCONFsetup()
 {
     if(data.core.fpsptr != NULL)
     {
-        long fpi_inputshmname = functionparameter_GetParamIndex(data.core.fpsptr, ".wfsin");
-        long fpi_compWFSsubdark = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.darksub");
-        long fpi_compWFSnormalize = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.WFSnormalize");
-        long fpi_compWFSrefsub = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.WFSrefsub");
+        long fpi_inputshmname = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".wfsin");
+        long fpi_compWFSsubdark = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".comp.darksub");
+        long fpi_compWFSnormalize = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".comp.WFSnormalize");
+        long fpi_compWFSrefsub = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".comp.WFSrefsub");
 
         if(fpi_inputshmname > -1) data.core.fpsptr->parray[fpi_inputshmname].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
-        if(fpi_compWFSsubdark > -1) data.core.fpsptr->parray[fpi_compWFSsubdark].fpflag   |= FPFLAG_WRITERUN;
-        if(fpi_compWFSnormalize > -1) data.core.fpsptr->parray[fpi_compWFSnormalize].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_compWFSrefsub > -1) data.core.fpsptr->parray[fpi_compWFSrefsub].fpflag    |= FPFLAG_WRITERUN;
+        if(fpi_compWFSsubdark > -1)
+            data.core.fpsptr
+                ->parray[fpi_compWFSsubdark]
+                .fpflag |= FPFLAG_WRITERUN;
+        if(fpi_compWFSnormalize > -1)
+            data.core.fpsptr
+                ->parray[fpi_compWFSnormalize]
+                .fpflag |= FPFLAG_WRITERUN;
+        if(fpi_compWFSrefsub > -1)
+            data.core.fpsptr
+                ->parray[fpi_compWFSrefsub]
+                .fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -75,6 +92,21 @@ static errno_t help_function()
     return RETURN_SUCCESS; // no help for you
 }
 
+/**
+ * extract_traces() - extract spectral traces from a
+ *                    WFS image
+ * @wfsin:   input WFS image
+ * @specmask: 3D spectral extraction mask
+ *            (xsize x ysize x numtraces)
+ * @wfsout:  output extracted spectra
+ *            (xsize/binning x numtraces)
+ * @binning: spectral binning factor
+ *
+ * Multiplies each WFS pixel by the corresponding
+ * mask slice and sums along the spatial axis with
+ * @binning-pixel bins.  Supports UINT16, INT16,
+ * FLOAT, and UINT32 input types.
+ */
 static errno_t extract_traces(
     IMGID wfsin,
     IMGID specmask,
@@ -141,6 +173,15 @@ static errno_t extract_traces(
     return RETURN_SUCCESS;
 }
 
+/**
+ * dark_sub() - subtract dark frame from WFS image
+ * @wfsin:   input WFS image (float)
+ * @wfsdark: dark frame (any supported type)
+ * @wfsout:  output dark-subtracted image (float)
+ *
+ * Subtracts the dark frame pixel-by-pixel, handling
+ * UINT16, INT16, FLOAT, and UINT32 dark types.
+ */
 static errno_t dark_sub(
     IMGID wfsin,
     IMGID wfsdark,
@@ -179,6 +220,15 @@ static errno_t dark_sub(
     return RETURN_SUCCESS;
 }
 
+/**
+ * spec_norm() - normalize spectral traces
+ * @wfsin:  input spectra (xsize x numtraces)
+ * @wfsout: output normalized spectra
+ *
+ * For each spectral bin (column), divides each
+ * trace value by the sum of all traces at that
+ * bin, producing fractional flux values.
+ */
 static errno_t spec_norm(
     IMGID wfsin,
     IMGID wfsout
@@ -214,7 +264,10 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID wfsin = imgid_make_from_name(input_shm_name); // input raw wfs image
-    resolveIMGID(&wfsin, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &wfsin, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     uint32_t sizeWFSx = wfsin.md->size[0];
     uint32_t sizeWFSy = wfsin.md->size[1];
@@ -222,7 +275,10 @@ static errno_t compute_function()
     uint8_t  WFSatype = wfsin.md->datatype;
 
     IMGID specmask = imgid_make_from_name(specmask_shm_name);
-    resolveIMGID(&specmask, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &specmask, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     uint32_t numtraces = specmask.md->size[2];
     uint64_t sizeWFS  = sizeWFSx * numtraces;
     uint32_t sizeWFSoutx = sizeWFSx / binning;
@@ -287,7 +343,9 @@ static errno_t compute_function()
         // STEP 2: DARK SUB -> aolx_imWFS0
         // check wfsdark is to be subtracted
         int status_darksub = 0;
-        long fpi_compWFSsubdark = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.darksub");
+        long fpi_compWFSsubdark = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".comp.darksub");
         if(fpi_compWFSsubdark > -1 && (data.core.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF))
         {
             if(imgWFSdark.ID != -1)
@@ -303,7 +361,9 @@ static errno_t compute_function()
             // no dark subtraction, pass through
             for(uint_fast64_t ii = 0; ii < sizeWFS; ii++)
             {
-                memcpy(imgimWFS0.im->array.F, imgimWFSm.im->array.F, sizeof(float) * sizeWFS);
+                memcpy(imgimWFS0.im->array.F,
+                    imgimWFSm.im->array.F,
+                    sizeof(float) * sizeWFS);
             }
         }
         else
@@ -316,7 +376,9 @@ static errno_t compute_function()
         int status_normalize = 0;
         imgimWFS1.md->write = 1;
 
-        long fpi_compWFSnormalize = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.WFSnormalize");
+        long fpi_compWFSnormalize = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".comp.WFSnormalize");
         if(fpi_compWFSnormalize > -1 && (data.core.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF))
         {
             status_normalize = 1;
@@ -334,7 +396,9 @@ static errno_t compute_function()
 
         int status_refsub = 0;
         imgimWFS2.md->write = 1;
-        long fpi_compWFSrefsub = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.WFSrefsub");
+        long fpi_compWFSrefsub = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".comp.WFSrefsub");
         if(fpi_compWFSrefsub > -1 && (data.core.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF))
         {
             // subtract reference

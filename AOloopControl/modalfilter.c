@@ -213,7 +213,9 @@ static MFILT_STATE* modal_filter_init(uint32_t NBmode) {
     
     int PFcbuff_size = 20;
     WRITE_IMAGENAME(name, "aol%lu_modevalPF_cbuff", *AOloopindex_ptr);
-    state->imgcbuff_mvalPF = stream_connect_create_2Df32(name, PFcbuff_size, NBmode);
+    state->imgcbuff_mvalPF = stream_connect_create_2Df32(name,
+        PFcbuff_size,
+        NBmode);
     
     state->mvalPFres = (double*) calloc(NBmode, sizeof(double));
     state->mvalPFold = (double*) calloc(NBmode, sizeof(double));
@@ -292,15 +294,27 @@ static MFILT_STATE* modal_filter_init(uint32_t NBmode) {
 
     // Telemetry Buffers
     WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex_ptr);
-    state->imgtbuff_mvalDM = stream_connect_create_3Df32(name, NBmode, *tbuffsize_ptr, 2);
+    state->imgtbuff_mvalDM = stream_connect_create_3Df32(name,
+        NBmode,
+        *tbuffsize_ptr,
+        2);
     WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex_ptr);
-    state->imgtbuff_mvalWFS = stream_connect_create_3Df32(name, NBmode, *tbuffsize_ptr, 2);
+    state->imgtbuff_mvalWFS = stream_connect_create_3Df32(name,
+        NBmode,
+        *tbuffsize_ptr,
+        2);
     WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex_ptr);
-    state->imgtbuff_mvalOL = stream_connect_create_3Df32(name, NBmode, *tbuffsize_ptr, 2);
+    state->imgtbuff_mvalOL = stream_connect_create_3Df32(name,
+        NBmode,
+        *tbuffsize_ptr,
+        2);
     
     // SelfRM
     WRITE_IMAGENAME(name, "aol%lu_mfiltselfRM", *AOloopindex_ptr);
-    state->imgselfRM = stream_connect_create_3Df32(name, NBmode, NBmode, *selfRMzsize_ptr);
+    state->imgselfRM = stream_connect_create_3Df32(name,
+        NBmode,
+        NBmode,
+        *selfRMzsize_ptr);
     state->selfRMpokecmd = (float*) calloc(NBmode, sizeof(float));
     state->selfRMpokesign = 1.0;
     
@@ -433,7 +447,9 @@ static void modal_filter_step(
 
         // Output to stream if PF not enabled
         if(*enablePF_ptr == 0) {
-            memcpy(imgout->array.F, state->mvaloutapply, sizeof(float) * NBmode);
+            memcpy(imgout->array.F,
+                state->mvaloutapply,
+                sizeof(float) * NBmode);
         }
 
         // Offload Loop
@@ -451,7 +467,9 @@ static void modal_filter_step(
                  if(val < -limit) val = -limit;
                  state->imgmvaloffloadDM.im->array.F[mi] = val;
             }
-            processinfo_update_output_stream(processinfo, state->imgmvaloffloadDM.im, NULL);
+            processinfo_update_output_stream(processinfo,
+                state->imgmvaloffloadDM.im,
+                NULL);
         }
 
         // Compute OL
@@ -474,7 +492,9 @@ static void modal_filter_step(
                 float tmpmWFSval = imginWFS->array.F[mi];
                 state->imgOLmval.im->array.F[mi] = (*psol_WFSfact_ptr) * tmpmWFSval - state->mvalDMOL[mi];
             }
-            processinfo_update_output_stream(processinfo, state->imgOLmval.im, NULL);
+            processinfo_update_output_stream(processinfo,
+                state->imgOLmval.im,
+                NULL);
         }
     }
 }
@@ -729,7 +749,6 @@ static void modalfilter_validate() {
  * ============================================================= */
 
 FPS_V2_SECTION5(FPS_PARAMS)
-
 
 
 /* ================================================================

@@ -1,4 +1,3 @@
-#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    ao188_preprocessor.c
  * @brief   Convert ao188 APD data into curvature + SH data
@@ -6,6 +5,7 @@
  * Templated upon the RTS19 code.
  *
  */
+#include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
 #include <sys/socket.h> // For APD emergency shudown.
@@ -81,6 +81,14 @@ static errno_t help_function()
 }
 
 
+/**
+ * apd_safety_execute() - execute APD safety check
+ * @lowfs_howfs: selector for LOWFS vs HOWFS path
+ *
+ * Performs safety checks on APD detector signals
+ * and takes protective action if thresholds are
+ * exceeded.
+ */
 static errno_t apd_safety_execute(int lowfs_howfs)
 {
     int sockfd;
@@ -239,7 +247,10 @@ static errno_t compute_function()
 
     // Since it's a fps PARAM_IMG, it's expected to be already loaded.
     IMGID apd_mat_in = imgid_make_from_name(apd_mat_name);
-    resolveIMGID(&apd_mat_in, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &apd_mat_in, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     float apd_integrator[NUM_APD_HOWFS];
     memset(apd_integrator, 0, NUM_APD_HOWFS * sizeof(float));
@@ -273,7 +284,6 @@ static errno_t compute_function()
     IMGID curv_2k_singlesided = stream_connect_create_2D("curv_2ksingle",
                                 size_curvature, 1,
                                 _DATATYPE_FLOAT);
-
 
 
     IMGID lowfs_info = stream_connect_create_2D("lowfs_data", 11, 1,
@@ -336,8 +346,13 @@ static errno_t compute_function()
         // HOWFS curvature computations
         // TODO Pass keywords through. Or don't?
         curv_2k_doublesided.im->md->write = 1;
-        two_sided_curvature_compute(curv_2k_doublesided.im->array.F, apd_mat_in.im->array.SI16, NUM_APD_TOTAL, NUM_APD_HOWFS);
-        processinfo_update_output_stream(processinfo, curv_2k_doublesided.im, NULL);
+        two_sided_curvature_compute(curv_2k_doublesided.im->array.F,
+            apd_mat_in.im->array.SI16,
+            NUM_APD_TOTAL,
+            NUM_APD_HOWFS);
+        processinfo_update_output_stream(processinfo,
+            curv_2k_doublesided.im,
+            NULL);
 
         // Post outputs
         if(curv_sign == 1)
@@ -345,17 +360,28 @@ static errno_t compute_function()
             curv_1k_doublesided.im->md->write = 1;
             memcpy(curv_1k_doublesided.im->array.F, curv_2k_doublesided.im->array.F,
                    NUM_APD_HOWFS * sizeof(float));
-            processinfo_update_output_stream(processinfo, curv_1k_doublesided.im, NULL);
+            processinfo_update_output_stream(processinfo,
+                curv_1k_doublesided.im,
+                NULL);
         }
 
         curv_2k_singlesided.im->md->write = 1;
         // Get the latest side of the APD 216x2 buffer. WARNING: Size may be 217 if the curvature tag is embedded!
         // apd_mat_in.size[0] = 216 or 217 =/= NUM_APD_HOWFS.
 
-        apd_integrator_update(apd_integrator, apd_ptr, one_sided_curv_integrator_gain, NUM_APD_HOWFS);
-        one_sided_curvature_compute(curv_2k_singlesided.im->array.F, apd_ptr, apd_integrator, NUM_APD_HOWFS, curv_sign);
+        apd_integrator_update(apd_integrator,
+            apd_ptr,
+            one_sided_curv_integrator_gain,
+            NUM_APD_HOWFS);
+        one_sided_curvature_compute(curv_2k_singlesided.im->array.F,
+            apd_ptr,
+            apd_integrator,
+            NUM_APD_HOWFS,
+            curv_sign);
 
-        processinfo_update_output_stream(processinfo, curv_2k_singlesided.im, NULL);
+        processinfo_update_output_stream(processinfo,
+            curv_2k_singlesided.im,
+            NULL);
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END

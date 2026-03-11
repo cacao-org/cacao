@@ -48,15 +48,11 @@ static float pokefreq = 0;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
-
 
 
 static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
@@ -90,7 +86,6 @@ static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
                 pokemval[m] *= *pokemult;
             }
         }*/
-
 
 
     for(int m = 0; m < NBmode; m++)
@@ -136,18 +131,21 @@ static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
 }
 
 
-
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     IMGID outimg = imgid_make_from_name(outsname);
-    resolveIMGID(&outimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &outimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     IMGID modecimg = imgid_make_from_name(modecsname);
-    resolveIMGID(&modecimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &modecimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     printf(" COMPUTE Flags = %ld\n", CLIcmddata.cmdsettings->flags);
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
@@ -169,7 +167,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
 
 
 #ifndef FPS_STANDALONE

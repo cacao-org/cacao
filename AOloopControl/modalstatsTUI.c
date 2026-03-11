@@ -22,7 +22,6 @@ static int MODALTUI_PF = 0;
 static int MODALTUI_DMfilt = 0;
 
 
-
 typedef struct
 {
     long modeindex;
@@ -30,9 +29,6 @@ typedef struct
     long pscaleindex;
     float pscale;
 } MODALSTATSTRUCT;
-
-
-
 
 
 static FPS_APP_INFO FPS_app_info = {
@@ -51,21 +47,11 @@ static uint64_t *AOloopindex;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
-
-
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
-
-
-
-
 
 
 static int modalstats_TUI_process_user_key(
@@ -150,8 +136,6 @@ static int modalstats_TUI_process_user_key(
 }
 
 
-
-
 inline static void printfixedlen(
     float val,
     MODALSTATSTRUCT *mstatstruct
@@ -190,10 +174,6 @@ inline static void printfixedlen_unsigned(
 }
 
 
-
-
-
-
 errno_t AOloopControl_modalstatsTUI(
     int loopindex
 )
@@ -213,13 +193,15 @@ errno_t AOloopControl_modalstatsTUI(
     uint32_t NBmode = 1;
 
 
-
     IMGID imgDMmodes;
     {
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_CMmodesDM", loopindex);
         imgDMmodes = imgid_make_from_name(name);
-        resolveIMGID(&imgDMmodes, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgDMmodes, ERRMODE_WARN,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
         NBmode = imgDMmodes.md->size[2];
     }
     mstatstruct.NBmode = NBmode;
@@ -230,7 +212,10 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_modevalWFS", loopindex);
         imgmodevalWFS = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalWFS, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgmodevalWFS, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
         NBmode = imgmodevalWFS.md->size[0];
     }
     mstatstruct.NBmode = NBmode;
@@ -241,7 +226,10 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_modevalDM", loopindex);
         imgmodevalDM = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalDM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgmodevalDM, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
 
     IMGID imgmodevalDMf;
@@ -249,7 +237,10 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_modevalDMf", loopindex);
         imgmodevalDMf = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalDMf, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgmodevalDMf, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
 
     IMGID imgmodevalOL;
@@ -257,7 +248,10 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_modevalOL", loopindex);
         imgmodevalOL = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalOL, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgmodevalOL, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
 
 
@@ -266,7 +260,10 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_mgain", loopindex);
         imgmgain = imgid_make_from_name(name);
-        resolveIMGID(&imgmgain, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgmgain, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
 
     IMGID imgmmult;
@@ -274,7 +271,10 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_mmult", loopindex);
         imgmmult = imgid_make_from_name(name);
-        resolveIMGID(&imgmmult, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgmmult, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
 
     IMGID imgmlimit;
@@ -282,7 +282,10 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_mlimit", loopindex);
         imgmlimit = imgid_make_from_name(name);
-        resolveIMGID(&imgmlimit, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgmlimit, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
 
 
@@ -292,7 +295,10 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_mlimitcntfrac", loopindex);
         imgmlimitcntfrac = imgid_make_from_name(name);
-        resolveIMGID(&imgmlimitcntfrac, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgmlimitcntfrac, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
 
 
@@ -340,8 +346,6 @@ errno_t AOloopControl_modalstatsTUI(
     }
 
 
-
-
     // ====================== Predictive Control ==================
     IMGID imgmPFmix;
     {
@@ -358,10 +362,6 @@ errno_t AOloopControl_modalstatsTUI(
     }
 
 
-
-
-
-
     double *WFSave = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
     double *WFSrms = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
 
@@ -370,11 +370,6 @@ errno_t AOloopControl_modalstatsTUI(
 
     double *OLave = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
     double *OLrms = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
-
-
-
-
-
 
 
     // Compute DMmodes norm
@@ -407,11 +402,9 @@ errno_t AOloopControl_modalstatsTUI(
     }
 
 
-
     // catch signals (CTRL-C etc)
     //
     //set_signal_catch();
-
 
 
     // default:     use ncurses
@@ -442,7 +435,6 @@ errno_t AOloopControl_modalstatsTUI(
     long mioffset = 0;
 
 
-
     while(loopOK == 1)
     {
 
@@ -456,11 +448,9 @@ errno_t AOloopControl_modalstatsTUI(
         loopOK = modalstats_TUI_process_user_key(ch, &mstatstruct);
 
 
-
         TUI_clearscreen(&wrow, &wcol);
 
         TUI_ncurses_erase();
-
 
 
         long mi = mstatstruct.modeindex;
@@ -512,8 +502,6 @@ errno_t AOloopControl_modalstatsTUI(
         }
 
 
-
-
         TUI_printfw(" PRESS x to exit, +/- change display scale, UP/DOWN PGUP PGDOWN");
         TUI_newline();
         TUI_printfw(" [P/p] Predictive filter [F/f] DM filtering");
@@ -528,9 +516,6 @@ errno_t AOloopControl_modalstatsTUI(
         TUI_newline();
         TUI_printfw("scale = %f", mstatstruct.pscale);
         TUI_newline();
-
-
-
 
 
         TUI_printfw("MODE [ gain  mult    lim  ]        WFS          |          DM       |");
@@ -581,12 +566,6 @@ errno_t AOloopControl_modalstatsTUI(
         }
 
 
-
-
-
-
-
-
         for(mi = mimin; mi < mimax; mi++)
         {
             if(mi == mstatstruct.modeindex)
@@ -605,10 +584,10 @@ errno_t AOloopControl_modalstatsTUI(
             //TUI_printfw("]   ");
 
 
-
             // WFS telemetry
             //
-            printfixedlen(imgmodevalWFS.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
+            printfixedlen(imgmodevalWFS.im->array.F[mi]*DMmodenorm[mi],
+                &mstatstruct);
             TUI_printfw(" ");
 
             {
@@ -628,11 +607,10 @@ errno_t AOloopControl_modalstatsTUI(
             TUI_printfw(" | ");
 
 
-
-
             // DM telemetry
             //
-            printfixedlen(imgmodevalDM.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
+            printfixedlen(imgmodevalDM.im->array.F[mi]*DMmodenorm[mi],
+                &mstatstruct);
             TUI_printfw(" ");
             {
                 int color = 0;
@@ -650,12 +628,12 @@ errno_t AOloopControl_modalstatsTUI(
             TUI_printfw(" | ");
 
 
-
             if(MODALTUI_DMfilt)
             {
                 // DMf telemetry
                 //
-                printfixedlen(imgmodevalDMf.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
+                printfixedlen(imgmodevalDMf.im->array.F[mi]*DMmodenorm[mi],
+                    &mstatstruct);
                 TUI_printfw(" ");
 
                 printfixedlen((imgmodevalDMf.im->array.F[mi] - imgmodevalDM.im->array.F[mi])
@@ -666,11 +644,10 @@ errno_t AOloopControl_modalstatsTUI(
             }
 
 
-
-
             // Open loop telemetry
             //
-            printfixedlen(imgmodevalOL.im->array.F[mi]*DMmodenorm[mi], &mstatstruct);
+            printfixedlen(imgmodevalOL.im->array.F[mi]*DMmodenorm[mi],
+                &mstatstruct);
             TUI_printfw(" ");
             {
                 int color = 0;
@@ -686,7 +663,6 @@ errno_t AOloopControl_modalstatsTUI(
             TUI_printfw(" ");
             printfixedlen_unsigned(OLrms[mi]*DMmodenorm[mi], &mstatstruct);
             TUI_printfw(" | ");
-
 
 
             // fraction of commands truncated by modal limit
@@ -768,7 +744,6 @@ errno_t AOloopControl_modalstatsTUI(
             }
 
 
-
             /*
                         screenprint_setcolor(0);
                         TUI_printfw("0");
@@ -819,7 +794,6 @@ errno_t AOloopControl_modalstatsTUI(
         }
 
 
-
         //screenprint_setcolor(9);
         //screenprint_unsetcolor(9);
 
@@ -844,7 +818,6 @@ errno_t AOloopControl_modalstatsTUI(
 }
 
 
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
@@ -856,9 +829,6 @@ static errno_t compute_function()
 
     return RETURN_SUCCESS;
 }
-
-
-
 
 
 #ifndef FPS_STANDALONE

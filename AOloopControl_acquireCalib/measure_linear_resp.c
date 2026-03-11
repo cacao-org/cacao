@@ -14,7 +14,6 @@
 #include "timeutils.h"
 
 
-
 // Holds info for each poke frame
 // A poke frame starts with a stream read.
 // The input stream may is poked during the pokeframe.
@@ -123,17 +122,11 @@ static int64_t  *saveALL            = NULL;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
-
-
-
 
 
 /**
@@ -322,7 +315,6 @@ static errno_t Measure_Linear_Response_Modal(
     DEBUG_TRACE_FSTART();
 
 
-
     // Convenient notations
 
     // Input space dimensions
@@ -345,7 +337,6 @@ static errno_t Measure_Linear_Response_Modal(
 
     // Current poke info, counters etc
     PokeInfo pkinf;
-
 
 
     DEBUG_TRACEPOINT("duplicaate each mode to positive and negative amplitude");
@@ -373,10 +364,6 @@ static errno_t Measure_Linear_Response_Modal(
     }
 
 
-
-
-
-
     printf("    input  space size : %u %u\n", sizexin, sizeyin);
     printf("    output space size : %u %u\n", sizexout, sizeyout);
     printf("    input modes size  : %u %u %u\n", imginmodeC.md->size[0],
@@ -387,7 +374,6 @@ static errno_t Measure_Linear_Response_Modal(
     printf("    timing_NBave      : %u\n", timing_NBave);
     printf("    timing_NBexcl     : %u\n", timing_NBexcl);
     printf("    SequInitMode      : %u\n", SequInitMode);
-
 
 
     // Compute timing parameters
@@ -445,12 +431,6 @@ static errno_t Measure_Linear_Response_Modal(
     }
 
 
-
-
-
-
-
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
     long timing_NBcycle = processinfo->loopcntMax;
@@ -461,7 +441,6 @@ static errno_t Measure_Linear_Response_Modal(
     * If timing_NBcycle is set to zero, then the process should run in an infinite loop.
     * The process will then run until receiving SIGINT.
     */
-
 
 
     // create one temporary array per time step
@@ -479,7 +458,6 @@ static errno_t Measure_Linear_Response_Modal(
                           NBmode2,
                           &(IDoutCstep[AveStep]));
     }
-
 
 
     // initialize arrays to zero
@@ -502,9 +480,6 @@ static errno_t Measure_Linear_Response_Modal(
             }
         }
     }
-
-
-
 
 
     // Poke sequence defines the sequence of mode poked for each iteration
@@ -541,8 +516,6 @@ static errno_t Measure_Linear_Response_Modal(
     int permut_offset = 0;
 
 
-
-
     char *ptr0      = (char *) imginmodeC2.im->array.F;
     size_t framesize   = sizeof(float) * sizexin * sizeyin;
 
@@ -551,7 +524,6 @@ static errno_t Measure_Linear_Response_Modal(
 
 
     int iter = 0;
-
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
@@ -563,8 +535,6 @@ static errno_t Measure_Linear_Response_Modal(
                                      iter,
                                      processinfo->loopcntMax
                                     );
-
-
 
 
         // swap pokes pairs
@@ -598,11 +568,6 @@ static errno_t Measure_Linear_Response_Modal(
         }
 
 
-
-
-
-
-
         for(uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe ++)
         {
 
@@ -627,14 +592,12 @@ static errno_t Measure_Linear_Response_Modal(
             }
 
 
-
             // Read stream
             //
             //printf("%5lu  waiting for frame\n", pokeframe);
 
             ImageStreamIO_semwait(imgout.im, semindexout);
             clock_gettime(CLOCK_MILK, &pkinfarray[pokeframe].tstart);
-
 
 
             // Wait for time delay
@@ -700,11 +663,6 @@ static errno_t Measure_Linear_Response_Modal(
         }
 
 
-
-
-
-
-
         printf("Combining results ... ");
         fflush(stdout);
 
@@ -727,7 +685,6 @@ static errno_t Measure_Linear_Response_Modal(
         fflush(stdout);
 
         DEBUG_TRACEPOINT(" ");
-
 
 
         EXECUTE_SYSTEM_COMMAND("mkdir -m775 -p %s", outdir);
@@ -776,9 +733,6 @@ static errno_t Measure_Linear_Response_Modal(
         }
 
 
-
-
-
         // print poke log
         {
             char tmpfname[STRINGMAXLEN_FULLFILENAME];
@@ -825,7 +779,6 @@ static errno_t Measure_Linear_Response_Modal(
         }
 
 
-
         {
             char tmpfname[STRINGMAXLEN_FULLFILENAME];
 
@@ -864,9 +817,6 @@ static errno_t Measure_Linear_Response_Modal(
         }
 
 
-
-
-
         // compile and save
         {
             char tmpoutfname[STRINGMAXLEN_FULLFILENAME];
@@ -900,9 +850,6 @@ static errno_t Measure_Linear_Response_Modal(
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
 
-
-
-
     free(IDoutCstep);
 
     free(array_PokeSequ);
@@ -915,30 +862,32 @@ static errno_t Measure_Linear_Response_Modal(
 }
 
 
-
-
-
-
-
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     // connect to input space
     IMGID imgin = imgid_make_from_name(streamin);
-    resolveIMGID(&imgin, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgin, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     printf("input  space size : %u %u\n", imgin.md->size[0], imgin.md->size[1]);
 
     // connect to output space
     IMGID imgout = imgid_make_from_name(streamout);
-    resolveIMGID(&imgout, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgout, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     printf("output space size : %u %u\n", imgout.md->size[0], imgout.md->size[1]);
 
     load_fits(inmodeC, "inmodeC", LOADFITS_ERRMODE_WARNING, NULL);
     IMGID imginmodeC = imgid_make_from_name("inmodeC");
-    resolveIMGID(&imginmodeC, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imginmodeC, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     printf("input modes size : %u %u %u\n", imginmodeC.md->size[0],
            imginmodeC.md->size[1], imginmodeC.md->size[2]);
 

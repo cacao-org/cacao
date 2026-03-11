@@ -136,28 +136,34 @@ static float    *seqdtframe     = NULL;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     // connect to DM
     IMGID imgdm = imgid_make_from_name(dmstream);
-    resolveIMGID(&imgdm, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgdm, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     printf("DM size : %u %u\n", imgdm.md->size[0], imgdm.md->size[1]);
     uint32_t dmxsize = imgdm.md->size[0];
     uint32_t dmysize = imgdm.md->size[1];
 
     // connect to WFS
     IMGID imgwfs = imgid_make_from_name(wfsstream);
-    resolveIMGID(&imgwfs, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgwfs, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     printf("WFS size : %u %u\n", imgwfs.md->size[0], imgwfs.md->size[1]);
 
     // connect to optional pokemap
     IMGID imgpokemap = imgid_make_from_name(pokemap);
-    resolveIMGID(&imgpokemap, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgpokemap, ERRMODE_WARN,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     if(imgpokemap.ID != -1)
     {
         printf("pokemap size : %u %u\n", imgpokemap.md->size[0],
@@ -216,8 +222,6 @@ static errno_t compute_function()
     createimagefromIMGID(&imgdiffseq);
 
 
-
-
     // Create DM patterns
     imageID IDdm0 = -1;
     imageID IDdm1 = -1;
@@ -251,9 +255,6 @@ static errno_t compute_function()
         // save output
         fps_write_RUNoutput_image(data.core.fpsptr, "_mlattestdm", "mlatpokeDM");
     }
-
-
-
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
@@ -404,17 +405,11 @@ static errno_t compute_function()
                                              *NBiter);
 
 
-
                 for(uint32_t ii = 0; ii < dmxsize * dmysize; ii++)
                 {
                     imgdm.im->array.F[ii] = 0.0;
                 }
                 processinfo_update_output_stream(processinfo, imgdm.im, NULL);
-
-
-
-
-
 
 
                 unsigned int dmstate = 0;
@@ -510,8 +505,6 @@ static errno_t compute_function()
                     dtarray[wfsframe] = dt;
 
 
-
-
                     // At roughly the half time, apply DM pattern #1
                     // This is only done once per sequence, using dmstate toggle from 0 to 1
                     //
@@ -546,7 +539,9 @@ static errno_t compute_function()
                             {
                                 imgdm.im->array.F[ii] = (*OPDamp) * imgpokemap.im->array.F[ii];
                             }
-                            processinfo_update_output_stream(processinfo, imgdm.im, NULL);
+                            processinfo_update_output_stream(processinfo,
+                                imgdm.im,
+                                NULL);
                         }
 
                         // Record time at which DM command is sent
@@ -570,7 +565,9 @@ static errno_t compute_function()
                     {
                         imgdm.im->array.F[ii] = (*OPDamp) * imgpokemap.im->array.F[ii];
                     }
-                    processinfo_update_output_stream(processinfo, imgdm.im, NULL);
+                    processinfo_update_output_stream(processinfo,
+                        imgdm.im,
+                        NULL);
                 }
                 dmstate = 0;
 
@@ -675,7 +672,6 @@ static errno_t compute_function()
                     }
 
 
-
                     // Look for maximum change between frames
                     //
                     // CONVENTION:
@@ -744,7 +740,6 @@ static errno_t compute_function()
             free(dtarray);
 
 
-
             // PROCESS RESULTS
             //
             processinfo_WriteMessage_fmt(processinfo, "Processing Data (%u iterations)",
@@ -773,10 +768,10 @@ static errno_t compute_function()
                 char ffnameC[STRINGMAXLEN_FULLFILENAME];
                 WRITE_FULLFILENAME(ffnameC,
                                    "mlat-diffseq");
-                fps_write_RUNoutput_image(data.core.fpsptr, imgdiffseq.name, ffnameC);
+                fps_write_RUNoutput_image(data.core.fpsptr,
+                    imgdiffseq.name,
+                    ffnameC);
             }
-
-
 
 
             copy_image_ID("_mlattestdm0", dmstream, 1);
@@ -809,8 +804,6 @@ static errno_t compute_function()
             printf("FRAME RATE = %.3f Hz\n", 1.0 * (wfscntend - wfscntstart) / dt);
             *framerateHz = 1.0 * (wfscntend - wfscntstart) / dt;
             functionparameter_SaveParam2disk(data.core.fpsptr, ".out.framerateHz");
-
-
 
 
             // Detect peak using all points
@@ -908,8 +901,6 @@ static errno_t compute_function()
                 fprintf(fpout, "%8.6f", 1.01);
                 fclose(fpout);
             }
-
-
 
 
             // write results as env variables

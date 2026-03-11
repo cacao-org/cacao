@@ -1,4 +1,3 @@
-#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    modaloptimize.c
  * @brief   Optimize modal control parameters
@@ -6,6 +5,7 @@
  *
  *
  */
+#include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
 
@@ -81,8 +81,6 @@ static uint64_t *compstatswrite;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
 // Optional custom configuration setup.
 // Runs once at conf startup
 //
@@ -112,17 +110,11 @@ static errno_t customCONFcheck()
 }
 
 
-
-
-
-
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
 
 
 static errno_t compute_function()
@@ -146,17 +138,26 @@ static errno_t compute_function()
         WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
         read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         imgtbuff_mvalDM = imgid_make_from_name(name);
-        resolveIMGID(&imgtbuff_mvalDM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgtbuff_mvalDM, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
         WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
         read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         imgtbuff_mvalWFS = imgid_make_from_name(name);
-        resolveIMGID(&imgtbuff_mvalWFS, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgtbuff_mvalWFS, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
         read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         imgtbuff_mvalOL = imgid_make_from_name(name);
-        resolveIMGID(&imgtbuff_mvalOL, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgtbuff_mvalOL, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
         NBmode   = imgtbuff_mvalOL.md->size[0];
         NBsample = imgtbuff_mvalOL.md->size[1];
@@ -166,7 +167,6 @@ static errno_t compute_function()
 
 
     list_image_ID();
-
 
 
     // how many blocks ?
@@ -244,7 +244,6 @@ static errno_t compute_function()
     *block9NBmode = blksize[9];
 
 
-
     // block buffers
     //
     IMGID imgmvalOLbuffblk[NBblk];
@@ -274,9 +273,7 @@ static errno_t compute_function()
     }
 
 
-
     list_image_ID();
-
 
 
     // allocate arrays
@@ -322,7 +319,9 @@ static errno_t compute_function()
         {
             imgblkmask[blki].im->array.SI8[mi] = 1;
         }
-        processinfo_update_output_stream(processinfo, imgblkmask[blki].im, NULL);
+        processinfo_update_output_stream(processinfo,
+            imgblkmask[blki].im,
+            NULL);
     }
 
 
@@ -454,9 +453,6 @@ static errno_t compute_function()
             }
 
 
-
-
-
             slice = imgtbuff_mvalOL.md->cnt1;
             for(uint32_t sample = 0; sample < NBsample; sample++)
             {
@@ -469,7 +465,6 @@ static errno_t compute_function()
                     mvalOL_rms2[mi] += tmpv * tmpv;
                 }
             }
-
 
 
             for(uint32_t mi = 0; mi < NBmode; mi++)
@@ -599,8 +594,6 @@ static errno_t compute_function()
 
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

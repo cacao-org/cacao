@@ -12,8 +12,6 @@
 #include "CLIcore/CLIcore.h"
 
 
-
-
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "generateRMWFS",
     .cmdkey      = "generateRMWFS",
@@ -35,7 +33,6 @@ static char outWFSmodesC[FUNCTION_PARAMETER_STRMAXLEN];
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
 // Optional custom configuration setup. comptbuff
 // Runs once at conf startup
 //
@@ -54,7 +51,6 @@ static errno_t customCONFsetup()
 }
 
 
-
 // Optional custom configuration checks.
 // Runs at every configuration check loop iteration
 //
@@ -69,9 +65,6 @@ static errno_t customCONFcheck()
 }
 
 
-
-
-
 // detailed help
 static errno_t help_function()
 {
@@ -81,14 +74,15 @@ static errno_t help_function()
 }
 
 
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     IMGID imgzRM = imgid_make_from_name(zrespWFS);
-    resolveIMGID(&imgzRM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgzRM, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     uint32_t wfsxsize = imgzRM.md->size[0];
     uint32_t wfsysize = imgzRM.md->size[1];
     uint64_t wfssize = wfsxsize;
@@ -97,7 +91,10 @@ static errno_t compute_function()
 
 
     IMGID imDMmodesC = imgid_make_from_name(DMmodesC);
-    resolveIMGID(&imDMmodesC, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imDMmodesC, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     uint32_t dmxsize = imDMmodesC.md->size[0];
     uint32_t dmysize = imDMmodesC.md->size[1];
     uint64_t dmsize = dmxsize;
@@ -108,7 +105,10 @@ static errno_t compute_function()
     printf("%u modes\n", NBmodes);
 
 
-    IMGID imgoutWFSc = imgid_make_from_name_3D(outWFSmodesC, wfsxsize, wfsysize, NBmodes);
+    IMGID imgoutWFSc = imgid_make_from_name_3D(outWFSmodesC,
+        wfsxsize,
+        wfsysize,
+        NBmodes);
     createimagefromIMGID(&imgoutWFSc);
 
 
@@ -141,8 +141,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

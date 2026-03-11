@@ -1,9 +1,9 @@
-#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    WFScamsim.c
  * @brief   camera simulation for WFS
  *
  */
+#include "ImageStreamIO/ImageStruct.h"
 
 #include "CLIcore/CLIcore.h"
 
@@ -39,11 +39,6 @@ static float camRON;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
-
-
-
 // Optional custom configuration setup.
 // Runs once at conf startup
 //
@@ -51,17 +46,36 @@ static errno_t customCONFsetup()
 {
     if(data.core.fpsptr != NULL)
     {
-        long fpi_compdarkadd = functionparameter_GetParamIndex(data.core.fpsptr, ".compdarkadd");
+        long fpi_compdarkadd = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".compdarkadd");
         long fpi_fluxtotal   = functionparameter_GetParamIndex(data.core.fpsptr, ".fluxtotal");
         long fpi_camgain     = functionparameter_GetParamIndex(data.core.fpsptr, ".camgain");
-        long fpi_compphnoise = functionparameter_GetParamIndex(data.core.fpsptr, ".compphnoise");
+        long fpi_compphnoise = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".compphnoise");
         long fpi_camRON      = functionparameter_GetParamIndex(data.core.fpsptr, ".camRON");
 
-        if(fpi_compdarkadd > -1) data.core.fpsptr->parray[fpi_compdarkadd].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_fluxtotal > -1) data.core.fpsptr->parray[fpi_fluxtotal].fpflag   |= FPFLAG_WRITERUN;
-        if(fpi_camgain > -1) data.core.fpsptr->parray[fpi_camgain].fpflag     |= FPFLAG_WRITERUN;
-        if(fpi_compphnoise > -1) data.core.fpsptr->parray[fpi_compphnoise].fpflag |= FPFLAG_WRITERUN;
-        if(fpi_camRON > -1) data.core.fpsptr->parray[fpi_camRON].fpflag      |= FPFLAG_WRITERUN;
+        if(fpi_compdarkadd > -1)
+            data.core.fpsptr
+                ->parray[fpi_compdarkadd]
+                .fpflag |= FPFLAG_WRITERUN;
+        if(fpi_fluxtotal > -1)
+            data.core.fpsptr
+                ->parray[fpi_fluxtotal]
+                .fpflag |= FPFLAG_WRITERUN;
+        if(fpi_camgain > -1)
+            data.core.fpsptr
+                ->parray[fpi_camgain]
+                .fpflag |= FPFLAG_WRITERUN;
+        if(fpi_compphnoise > -1)
+            data.core.fpsptr
+                ->parray[fpi_compphnoise]
+                .fpflag |= FPFLAG_WRITERUN;
+        if(fpi_camRON > -1)
+            data.core.fpsptr
+                ->parray[fpi_camRON]
+                .fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -76,18 +90,11 @@ static errno_t customCONFcheck()
 }
 
 
-
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
-
-
-
-
 
 
 static errno_t compute_function()
@@ -96,7 +103,10 @@ static errno_t compute_function()
 
 
     IMGID wfssignalimg = imgid_make_from_name(wfssignal_in);
-    resolveIMGID(&wfssignalimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &wfssignalimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     uint32_t sizexWFS = wfssignalimg.md->size[0];
     uint32_t sizeyWFS = wfssignalimg.md->size[1];
@@ -106,7 +116,10 @@ static errno_t compute_function()
 
     IMGID wfsdarkimg = imgid_make_from_name(wfsdark);
 
-    resolveIMGID(&wfsdarkimg, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &wfsdarkimg, ERRMODE_WARN,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     IMGID imcamtmpimg = imgid_make_from_name_2D("imcamtmp", sizexWFS, sizeyWFS);
     createimagefromIMGID(&imcamtmpimg);
@@ -115,11 +128,12 @@ static errno_t compute_function()
     //
     IMGID wfsoutimg;
     {
-        printf("CONNECTING / CREATING output stream\n");
         wfsoutimg =
-            stream_connect_create_2D(wfsim_out, sizexWFS, sizeyWFS, _DATATYPE_UINT16);
+            stream_connect_create_2D(wfsim_out,
+                sizexWFS,
+                sizeyWFS,
+                _DATATYPE_UINT16);
     }
-
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
@@ -153,7 +167,9 @@ static errno_t compute_function()
         //
         if(fluxtotal >= 0.0)
         {
-            long fpi_compphnoise = functionparameter_GetParamIndex(data.core.fpsptr, ".compphnoise");
+            long fpi_compphnoise = 
+                functionparameter_GetParamIndex(
+                    data.core.fpsptr, ".compphnoise");
             if(fpi_compphnoise > -1 && (data.core.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF))
             {
                 for(uint64_t ii = 0; ii < sizeWFS; ii++)

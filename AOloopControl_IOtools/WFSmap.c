@@ -1,9 +1,9 @@
-#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    WFSmap.c
  * @brief   remap WFS image
  *
  */
+#include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
 
@@ -25,7 +25,6 @@ static char wfsoutsname[FUNCTION_PARAMETER_STRMAXLEN];
     X(".wfsout", wfsoutsname, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor output")
 
 FPS_V2_SECTION5(FPS_PARAMS)
-
 
 
 // Optional custom configuration setup.
@@ -50,15 +49,11 @@ static errno_t customCONFcheck()
 }
 
 
-
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
-
 
 
 errno_t image_pixremap(
@@ -104,7 +99,6 @@ errno_t image_pixremap(
 
         // fill mapping arrays
         uint64_t mappix = 0;
-
 
 
         for(uint32_t kk = 0; kk < mapimg.md->size[2]; kk++)
@@ -239,18 +233,21 @@ errno_t image_pixremap(
 }
 
 
-
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     IMGID wfsinimg = imgid_make_from_name(wfsinsname);
-    resolveIMGID(&wfsinimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &wfsinimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     IMGID mapimg = imgid_make_from_name(mapsname);
-    resolveIMGID(&mapimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &mapimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
 
     uint32_t sizeout = mapimg.md->size[2];
@@ -260,8 +257,6 @@ static errno_t compute_function()
     IMGID wfsoutimg;
     wfsoutimg =
         stream_connect_create_2D(wfsoutsname, sizeout, 1, _DATATYPE_FLOAT);
-
-
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START

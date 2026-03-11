@@ -54,9 +54,6 @@ static float wfsmaskcoeff1;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
-
 // Optional custom configuration setup. comptbuff
 // Runs once at conf startup
 //
@@ -69,7 +66,6 @@ static errno_t customCONFsetup()
 
     return RETURN_SUCCESS;
 }
-
 
 
 // Optional custom configuration checks.
@@ -86,9 +82,6 @@ static errno_t customCONFcheck()
 }
 
 
-
-
-
 // detailed help
 static errno_t help_function()
 {
@@ -96,8 +89,6 @@ static errno_t help_function()
 
     return RETURN_SUCCESS;
 }
-
-
 
 
 static errno_t compute_function()
@@ -226,17 +217,13 @@ static errno_t compute_function()
         fflush(stdout);
 
 
-
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
-
 
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

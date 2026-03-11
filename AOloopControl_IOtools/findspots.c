@@ -35,8 +35,6 @@ static char outmapcname[
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
 // Optional custom configuration setup
 // Runs once at conf startup
 //
@@ -68,8 +66,6 @@ static errno_t customCONFcheck()
 }
 
 
-
-
 // detailed help
 static errno_t help_function()
 {
@@ -77,7 +73,24 @@ static errno_t help_function()
 }
 
 
-
+/**
+ * find_image_spots() - locate bright spots in an image
+ * @inimg:          input image to scan
+ * @spot_size:      approximate spot radius [pix]
+ * @spot_excl_dist: exclusion distance between found
+ *                  spots [pix]
+ * @nb_spot_max:    maximum number of spots to find
+ *
+ * Scans the input image using a median filter of
+ * radius @spot_size, then iteratively finds the
+ * brightest peak, records its position, and masks
+ * a region of @spot_excl_dist around it before
+ * searching for the next peak.
+ *
+ * Creates output streams "spotscan" (median-filtered)
+ * and the mapping cube specified by the outmapc FPS
+ * parameter.
+ */
 static errno_t find_image_spots(
     IMGID inimg,
     float spot_size,
@@ -89,7 +102,6 @@ static errno_t find_image_spots(
     // custom stream process function code
 
 
-    printf("Looking for spots ...\n");
 
 
     // get image size
@@ -97,7 +109,6 @@ static errno_t find_image_spots(
     uint32_t ysize = inimg.md->size[1];
     uint64_t xysize = (uint64_t) xsize;
     xysize *= ysize;
-
 
 
     // Create output
@@ -143,8 +154,8 @@ static errno_t find_image_spots(
             {
                 for(int jj1 = jj1min; jj1 < jj1max; jj1++)
                 {
-                    float dx = 1.0 * ii - ii1;
-                    float dy = 1.0 * jj - jj1;
+                    float dx = (double) ii - ii1;
+                    float dy = (double) jj - jj1;
                     float r2 = dx * dx + dy * dy;
                     if(r2 < spot_size * spot_size)
                     {
@@ -161,7 +172,6 @@ static errno_t find_image_spots(
         }
     }
     free(valarray);
-
 
 
     // Create output map cube
@@ -206,11 +216,9 @@ static errno_t find_image_spots(
         }
         // report spot
         printf("SPOT %2d   %4u x %4u    %f\n", spotindex, iipeak, jjpeak, vpeak);
-        spotxarray[spotindex] = 1.0 * iipeak;
-        spotyarray[spotindex] = 1.0 * jjpeak;
+        spotxarray[spotindex] = (double) iipeak;
+        spotyarray[spotindex] = (double) jjpeak;
         spotvarray[spotindex] = vpeak;
-
-
 
 
         // zero area around spot
@@ -240,8 +248,8 @@ static errno_t find_image_spots(
             {
                 for(int jj1 = jj1min; jj1 < jj1max; jj1++)
                 {
-                    float dx = 1.0 * iipeak - ii1;
-                    float dy = 1.0 * jjpeak - jj1;
+                    float dx = (double) iipeak - ii1;
+                    float dy = (double) jjpeak - jj1;
                     float r2 = dx * dx + dy * dy;
                     if(r2 < spot_excl_dist * spot_excl_dist)
                     {
@@ -250,7 +258,6 @@ static errno_t find_image_spots(
                 }
             }
         }
-
 
 
         // write mapc slice
@@ -282,8 +289,8 @@ static errno_t find_image_spots(
             {
                 for(int jj1 = jj1min; jj1 < jj1max; jj1++)
                 {
-                    float dx = 1.0 * iipeak - ii1;
-                    float dy = 1.0 * jjpeak - jj1;
+                    float dx = (double) iipeak - ii1;
+                    float dy = (double) jjpeak - jj1;
                     float r2 = dx * dx + dy * dy;
                     if(r2 < spot_size * spot_size)
                     {
@@ -306,8 +313,6 @@ static errno_t find_image_spots(
     }
 
 
-
-
     free(spotxarray);
     free(spotyarray);
     free(spotvarray);
@@ -319,14 +324,15 @@ static errno_t find_image_spots(
 }
 
 
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     IMGID inimg = imgid_make_from_name(inimname);
-    resolveIMGID(&inimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &inimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 

@@ -7,7 +7,6 @@
 #define _GNU_SOURCE
 
 
-
 #include "CLIcore/CLIcore.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -19,9 +18,6 @@
 #include <omp.h>
 #define OMP_NELEMENT_LIMIT 1000000
 #endif
-
-
-
 
 
 // Local variables pointers
@@ -42,7 +38,6 @@ static char outHcube[FUNCTION_PARAMETER_STRMAXLEN];
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
 static errno_t customCONFsetup()
 {
     if(data.core.fpsptr != NULL)
@@ -51,7 +46,6 @@ static errno_t customCONFsetup()
 
     return RETURN_SUCCESS;
 }
-
 
 
 // Optional custom configuration checks.
@@ -68,21 +62,11 @@ static errno_t customCONFcheck()
 }
 
 
-
-
-
-
-
-
-
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
-
 
 
 // output:
@@ -107,7 +91,9 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     imageID   IDindex;
     uint32_t *sizearray;
 
-    imageID  IDmask = image_ID(DMmask_name, data.core.image, data.core.NB_MAX_IMAGE);
+    imageID  IDmask = image_ID(DMmask_name,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     uint32_t xsize  = data.core.image[IDmask].md[0].size[0];
     uint32_t ysize  = data.core.image[IDmask].md[0].size[1];
     uint64_t xysize = xsize * ysize;
@@ -245,8 +231,6 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
 }
 
 
-
-
 imageID AOloopControl_computeCalib_Hadamard_decodeRM(
     const char *inname,
     const char *Hmatname,
@@ -318,7 +302,6 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(
 }
 
 
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
@@ -338,8 +321,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

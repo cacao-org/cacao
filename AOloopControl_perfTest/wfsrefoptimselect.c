@@ -19,14 +19,9 @@
 #include "COREMOD_tools/COREMOD_tools.h" // quicksort
 
 
-
-
 #define OPTMODE_MAXN 1
 #define OPTMODE_MAXF 2
 #define OPTMODE_MINF 3
-
-
-
 
 
 // Local variables pointers
@@ -40,11 +35,6 @@ static char *dminput;
 static uint32_t *optmode;
 
 static float *selnormplaw;
-
-
-
-
-
 
 
 static FPS_APP_INFO FPS_app_info = {
@@ -70,8 +60,6 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 {
     DEBUG_TRACE_FSTART();
     // custom stream process function code
-
-
 
 
     uint32_t psfxsize  = psfimg.md->size[0];
@@ -222,7 +210,9 @@ static errno_t WFSref_optimizeWFS_PSFselect(
                             "wfsrefopt%d",
                             lambdai);
 
-            IMGID imgwfsrefopt  = imgid_make_from_name_2D(imgname, wfsxsize, wfsysize);
+            IMGID imgwfsrefopt  = imgid_make_from_name_2D(imgname,
+                wfsxsize,
+                wfsysize);
             createimagefromIMGID(&imgwfsrefopt);
 
             double sumcoeff = 0.0;
@@ -283,7 +273,9 @@ static errno_t WFSref_optimizeWFS_PSFselect(
                             "dmrefopt%d",
                             lambdai);
 
-            IMGID imgdmrefopt  = imgid_make_from_name_2D(imgname, dmxsize, dmysize);
+            IMGID imgdmrefopt  = imgid_make_from_name_2D(imgname,
+                dmxsize,
+                dmysize);
             createimagefromIMGID(&imgdmrefopt);
 
             double sumcoeff = 0.0;
@@ -319,9 +311,6 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 }
 
 
-
-
-
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)
 };
@@ -338,13 +327,19 @@ static CLICMDDATA CLIcmddata = {
 static errno_t compute_function()
 {
     IMGID inpsfimg = imgid_make_from_name(selinput);
-    resolveIMGID(&inpsfimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &inpsfimg, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     IMGID inwfsimg;
     if ( strcmp(wfsinput, "null") )
     {
         inwfsimg = imgid_make_from_name(wfsinput);
-        resolveIMGID(&inwfsimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &inwfsimg, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
     else
     {
@@ -356,13 +351,15 @@ static errno_t compute_function()
     if ( strcmp(dminput, "null") )
     {
         indmimg = imgid_make_from_name(dminput);
-        resolveIMGID(&indmimg, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &indmimg, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
     }
     else
     {
         indmimg.ID = -1;
     }
-
 
 
     DEBUG_TRACE_FSTART();

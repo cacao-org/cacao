@@ -1,4 +1,3 @@
-#include "ImageStreamIO/ImageStruct.h"
 /**
  * @file    modalfilter_test.c
  * @brief   simulate sequence for modal filter test
@@ -24,6 +23,7 @@
  * - Apply correction: mvalIN+mvalDMd -> mvalC
  * - Apply time delay, wite ouput: mvalC (WFSdelay)-> outmval
  */
+#include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
 
@@ -31,7 +31,6 @@
 
 // for random noise
 #include "statistic/statistic.h"
-
 
 
 static FPS_APP_INFO FPS_app_info = {
@@ -92,10 +91,16 @@ static errno_t customCONFsetup()
     {
         long fpi;
         fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".mvalDM");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+        if(fpi > -1)
+            data.core.fpsptr
+                ->parray[fpi]
+                .fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
         fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".mvalWFS");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+        if(fpi > -1)
+            data.core.fpsptr
+                ->parray[fpi]
+                .fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
         fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".minPrate");
         if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
@@ -124,8 +129,6 @@ static errno_t customCONFcheck()
 }
 
 
-
-
 // detailed help
 static errno_t help_function()
 {
@@ -133,8 +136,6 @@ static errno_t help_function()
 
     return RETURN_SUCCESS;
 }
-
-
 
 
 static errno_t compute_function()
@@ -146,15 +147,20 @@ static errno_t compute_function()
     // connect to input mode values array and get number of modes
     //
     IMGID imgmvalDM = imgid_make_from_name(mvalDM);
-    resolveIMGID(&imgmvalDM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgmvalDM, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     printf("%u modes\n", imgmvalDM.md->size[0]);
     uint32_t NBmode = imgmvalDM.md->size[0];
 
     // Connect to mvalWFS
     //
     IMGID imgmvalWFS = imgid_make_from_name(mvalWFS);
-    resolveIMGID(&imgmvalWFS, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
-
+    resolveIMGID(
+        &imgmvalWFS, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
 
     // connect / create mvalC
@@ -162,11 +168,6 @@ static errno_t compute_function()
 
     // connect / create mvalout
     //IMGID imgmvalout = stream_connect_create_2Df32(mvaloutname, *NBmode, 1);
-
-
-
-
-
 
 
     // create input buffer holding recent input values to apply delays
@@ -184,10 +185,7 @@ static errno_t compute_function()
     createimagefromIMGID(&imgmvalCbuff);
 
 
-
     list_image_ID();
-
-
 
 
     float *mvalIN = (float*) malloc(sizeof(float)*NBmode);
@@ -272,7 +270,6 @@ static errno_t compute_function()
     }
 
 
-
     {
         // Grab new input mvalC
         char *ptr = (char *) imgmvalCbuff.im->array.F;
@@ -336,8 +333,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

@@ -34,8 +34,6 @@ typedef struct
 #define MaxNBdatFiles 100000
 
 
-
-
 // Resampled frame data
 // Keeps track of what has gone into the frame
 //
@@ -56,12 +54,6 @@ typedef struct
 #define PROCESSTIMINGFLAG_LINTIMING    0x00000004  // overwrite timings to force linear timing
 
 
-
-
-
-
-
-
 // Local variables pointers
 
 // Start time: sec, nanosec
@@ -76,7 +68,6 @@ static uint32_t *tendsec;
 static uint32_t *tendnsec;
 
 
-
 // Synchro mode
 // -1: adopt custom timing
 // 0+ : inherit timing from stream
@@ -87,7 +78,6 @@ static float *timingdt;
 
 // logging directory
 static char *logdir;
-
 
 
 // stream 0
@@ -112,13 +102,6 @@ static float *(slatency[4]);
 // Force linear timing
 // Assumes input stream is acquired with regular timing
 static int32_t *(lintiming[4]);
-
-
-
-
-
-
-
 
 
 static FPS_APP_INFO FPS_app_info = {
@@ -206,8 +189,6 @@ static char *remove_ext(
 }
 
 
-
-
 static void quicksort_StreamDataFile(
     StreamDataFile *datfile,
     long left,
@@ -264,10 +245,6 @@ static void quicksort_StreamDataFile(
         quicksort_StreamDataFile(datfile, i, right);
     }
 }
-
-
-
-
 
 
 static errno_t processTimingFile(
@@ -471,8 +448,6 @@ static errno_t processTimingFile(
         free(cnt0array);
 
 
-
-
         // write timing summary file
         if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_WRITE)
         {
@@ -512,23 +487,6 @@ static errno_t processTimingFile(
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)
 };
@@ -550,8 +508,6 @@ static errno_t compute_function()
     printf("START TIME = %u.%09u\n", *tstartsec, *tstartnsec);
     printf(" END  TIME = %u.%09u\n", *tendsec, *tendnsec);
     printf("\n");
-
-
 
 
     // loop over streams
@@ -579,7 +535,6 @@ static errno_t compute_function()
             }
 
 
-
             printf("Scanning directory : %s\n", datadirstream);
 
             StreamDataFile *datfile;
@@ -589,8 +544,6 @@ static errno_t compute_function()
                 PRINT_ERROR("malloc returns NULL pointer");
                 abort(); // or handle error in other ways
             }
-
-
 
 
             // Find timing files overlapping with time interval
@@ -638,7 +591,6 @@ static errno_t compute_function()
                                                "%s/%s.timing",
                                                datadirstream,
                                                tmpstring);
-
 
 
                             FILE *fp;
@@ -716,7 +668,8 @@ static errno_t compute_function()
                                     if(ret == 7)
                                     {
                                         // mkTiming = 0;
-                                        strcpy(datfile[NBdatFiles].name, tmpstring);
+                                        strcpy(datfile[NBdatFiles].name,
+                                            tmpstring);
                                         // printf("File %s : timing info found\n",
                                         // fname);
                                         scanOK = 0; // done reading
@@ -745,18 +698,12 @@ static errno_t compute_function()
             }
 
 
-
-
-
             printf("NBdatFiles = %d\n", NBdatFiles);
 
             if(NBdatFiles > 1)
             {
                 quicksort_StreamDataFile(datfile, 0, NBdatFiles - 1);
             }
-
-
-
 
 
             // prepare output frame array
@@ -776,7 +723,6 @@ static errno_t compute_function()
                 outframearray[tstep].etimesec  = 0.0;
                 outframearray[tstep].etimeframe = 0.0;
             }
-
 
 
             IMGID imgout = imgid_make();
@@ -810,10 +756,6 @@ static errno_t compute_function()
                 printf("    latency = %.9f sec  (%f frame)\n", *slatency[sindex], *slatency[sindex]/dtin);
 
 
-
-
-
-
                 // PREPARE MAPPING COMMANDS
                 //
 
@@ -837,11 +779,19 @@ static errno_t compute_function()
                                    datfile[idatfile].name);
                     if(*lintiming[sindex] == 1)
                     {
-                        processTimingFile(fnameTXT, fnameTXTout, sname[sindex], PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_LINTIMING|PROCESSTIMINGFLAG_WRITE, tarrayin);
+                        processTimingFile(fnameTXT,
+                            fnameTXTout,
+                            sname[sindex],
+                            PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_LINTIMING|PROCESSTIMINGFLAG_WRITE,
+                            tarrayin);
                     }
                     else
                     {
-                        processTimingFile(fnameTXT, fnameTXTout, sname[sindex], PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_WRITE, tarrayin);
+                        processTimingFile(fnameTXT,
+                            fnameTXTout,
+                            sname[sindex],
+                            PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_WRITE,
+                            tarrayin);
                     }
                 }
 
@@ -923,7 +873,6 @@ static errno_t compute_function()
                 printf("frameinmax = %ld\n", frameinmax);
 
 
-
                 // RUN MAPPING COMMANDS
                 //
                 if(NBinframeOK>0)
@@ -945,7 +894,6 @@ static errno_t compute_function()
                     load_fits(fnameFITS, "im0C", 1, &IDc);
 
 
-
                     uint32_t xsize = data.core.image[IDc].md->size[0];
                     uint32_t ysize = data.core.image[IDc].md->size[1];
                     uint32_t zsizein = data.core.image[IDc].md->size[2];
@@ -954,7 +902,10 @@ static errno_t compute_function()
 
                     if(ouputimginit == 0)
                     {
-                        imgout = imgid_make_from_name_3D(sname[sindex], xsize, ysize, zsizeout);
+                        imgout = imgid_make_from_name_3D(sname[sindex],
+                            xsize,
+                            ysize,
+                            zsizeout);
                         createimagefromIMGID(&imgout);
                         ouputimginit = 1;
                     }
@@ -1130,13 +1081,6 @@ static errno_t compute_function()
     }
 
 
-
-
-
-
-
-
-
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
 
@@ -1145,12 +1089,9 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
 
-
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

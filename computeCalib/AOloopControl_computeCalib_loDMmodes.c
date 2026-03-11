@@ -11,7 +11,6 @@
 #define _GNU_SOURCE
 
 
-
 #include <math.h>
 
 #include "CLIcore/CLIcore.h"
@@ -27,10 +26,7 @@
 #include "ZernikePolyn/zernike_value.h"
 
 
-
 #include "linalgebra/linalgebra.h"
-
-
 
 
 #define MAX_MBLOCK 20
@@ -112,8 +108,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         for(uint32_t ii = 0; ii < msizex; ii++)
             for(uint32_t jj = 0; jj < msizey; jj++)
             {
-                x    = 1.0 * ii - xc;
-                y    = 1.0 * jj - yc;
+                x    = (double) ii - xc;
+                y    = (double) jj - yc;
                 r    = sqrt(x * x + y * y) / r1;
                 val1 = 1.0 - exp(-pow(a1 * r, b1));
                 r    = sqrt(x * x + y * y) / r0;
@@ -132,8 +128,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         for(uint32_t ii = 0; ii < msizex; ii++)
             for(uint32_t jj = 0; jj < msizey; jj++)
             {
-                xc1 += 1.0 * ii * data.core.image[IDmask].array.F[jj * msizex + ii];
-                yc1 += 1.0 * jj * data.core.image[IDmask].array.F[jj * msizex + ii];
+                xc1 += (double) ii * data.core.image[IDmask].array.F[jj * msizex + ii];
+                yc1 += (double) jj * data.core.image[IDmask].array.F[jj * msizex + ii];
                 totm += data.core.image[IDmask].array.F[jj * msizex + ii];
             }
         // printf("xc1 yc1    %f  %f     %f\n", xc1, yc1, totm);
@@ -172,7 +168,10 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         // optional mask
         //
         IMGID imgCPAmask = imgid_make_from_name("modesCPAmask");
-        resolveIMGID(&imgCPAmask, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgCPAmask, ERRMODE_WARN,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
         linopt_imtools_makeCPAmodes(&imgoutm,
                                     msizex,
@@ -217,8 +216,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         for(uint32_t ii = 0; ii < msizex; ii++)
             for(uint32_t jj = 0; jj < msizey; jj++)
             {
-                x  = 1.0 * ii - xc1;
-                y  = 1.0 * jj - yc1;
+                x  = (double) ii - xc1;
+                y  = (double) jj - yc1;
                 r  = sqrt(x * x + y * y) / r1;
                 PA = atan2(y, x);
                 data.core.image[ID].array.F[k * msizex * msizey + jj * msizex + ii] =
@@ -259,7 +258,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
             delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
             IDem = image_ID("em00", data.core.image, data.core.NB_MAX_IMAGE);
 
-            coeff = 1.0 - exp(-pow(1.0 * k / kelim, 6.0));
+            coeff = 1.0 - exp(-pow((double) k / kelim, 6.0));
             if(k > 2.0 * kelim)
             {
                 coeff = 1.0;

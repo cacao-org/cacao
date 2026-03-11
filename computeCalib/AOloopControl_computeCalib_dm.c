@@ -62,8 +62,6 @@
 #include "linalgebra/linalgebra.h"
 
 
-
-
 /**
  * @brief      Detects the edge of a deformable mirror (DM) mask.
  *
@@ -124,9 +122,6 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
 
     return IDout;
 }
-
-
-
 
 
 /**
@@ -234,8 +229,6 @@ long AOloopControl_computeCalib_DMextrapolateModes(
 
     return (IDout);
 }
-
-
 
 
 long AOloopControl_computeCalib_DMslaveExt(

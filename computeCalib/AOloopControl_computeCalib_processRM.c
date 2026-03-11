@@ -114,7 +114,9 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
                 "RMmat",
                 "pixindexim",
                 IDzrespm_name);
-        IDzrm = image_ID(IDzrespm_name, data.core.image, data.core.NB_MAX_IMAGE);
+        IDzrm = image_ID(IDzrespm_name,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
 
         if(image_ID("RMpokeC", data.core.image, data.core.NB_MAX_IMAGE) != -1)
         {
@@ -141,7 +143,9 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    IDdm             = read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
+    IDdm             = read_sharedmem_image(name,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     uint32_t sizexDM = data.core.image[IDdm].md[0].size[0];
     uint32_t sizeyDM = data.core.image[IDdm].md[0].size[1];
 
@@ -271,7 +275,6 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     {
         loopnumber = atol(getenv("CACAO_LOOPNUMBER"));
     }
-
 
 
     if(sprintf(fname, "./zresptmp/%s_nbiter.txt", zrespm_name) < 1)
@@ -636,10 +639,6 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
 }
 
 
-
-
-
-
 /**
  * ====================================================
  * V2 FPS section: mkCM (make control matrix)
@@ -698,7 +697,6 @@ static char    mkCM_out_label[
       "output label")
 
 FPS_V2_SECTION5(FPS_PARAMS)
-
 
 
 // Section 4: compute function (merged CONF+RUN)

@@ -23,7 +23,6 @@
 #define _GNU_SOURCE
 
 
-
 #include "CLIcore/CLIcore.h"
 
 #include "AOloopControl/AOloopControl.h"
@@ -38,17 +37,10 @@
 #include "acquireWFSspec.h"
 
 
-
-
 // Module initialization macro in CLIcore.h
 // macro argument defines module name for bindings
 //
 INIT_MODULE_LIB(AOloopControl_IOtools)
-
-
-
-
-
 
 
 static errno_t init_module_CLI()

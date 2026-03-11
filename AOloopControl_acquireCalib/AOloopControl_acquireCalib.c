@@ -9,7 +9,6 @@
  */
 
 
-
 // module default short name
 // all CLI calls to this module functions will be <shortname>.<funcname>
 // if set to "", then calls use <funcname>
@@ -23,11 +22,6 @@
 #define _GNU_SOURCE
 
 
-
-
-
-
-
 #include "CLIcore/CLIcore.h"
 
 
@@ -37,11 +31,7 @@
 #include "measure_linear_resp.h"
 
 
-
 INIT_MODULE_LIB(AOloopControl_acquireCalib)
-
-
-
 
 
 /** @name AOloopControl_IOtools functions */

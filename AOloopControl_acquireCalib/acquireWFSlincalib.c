@@ -131,9 +131,6 @@ static char *exec_post_mkLODMmodes;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
-
 static errno_t customCONFsetup()
 {
     if(data.core.fpsptr != NULL)
@@ -142,20 +139,26 @@ static errno_t customCONFsetup()
 
         // DM stream is required
         fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".dmstream");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
+        if(fpi > -1)
+            data.core.fpsptr
+                ->parray[fpi]
+                .fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
 
         fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".timing.FPS_mlat");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
+        if(fpi > -1)
+            data.core.fpsptr
+                ->parray[fpi]
+                .fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
 
         fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".RMDMmask.FPS_DMcomb");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
+        if(fpi > -1)
+            data.core.fpsptr
+                ->parray[fpi]
+                .fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
     }
 
     return RETURN_SUCCESS;
 }
-
-
-
 
 
 // create simple poke matrix
@@ -179,17 +182,23 @@ static imageID mkSimpleZpokeM(uint32_t dmxsize,
 }
 
 
-
-
 static errno_t customCONFcheck()
 {
     if(data.core.fpsptr != NULL)
     {
 
-        long fpi_FPS_mlat = functionparameter_GetParamIndex(data.core.fpsptr, ".timing.FPS_mlat");
-        long fpi_FPS_DMcomb = functionparameter_GetParamIndex(data.core.fpsptr, ".RMDMmask.FPS_DMcomb");
-        long fpi_update_mlat = functionparameter_GetParamIndex(data.core.fpsptr, ".timing.upmlat");
-        long fpi_autotiming = functionparameter_GetParamIndex(data.core.fpsptr, ".timing.autoTiming");
+        long fpi_FPS_mlat = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".timing.FPS_mlat");
+        long fpi_FPS_DMcomb = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".RMDMmask.FPS_DMcomb");
+        long fpi_update_mlat = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".timing.upmlat");
+        long fpi_autotiming = 
+            functionparameter_GetParamIndex(
+                data.core.fpsptr, ".timing.autoTiming");
 
         if(FPS_mlat.SMfd < 1)
         {
@@ -278,12 +287,9 @@ static errno_t customCONFcheck()
         }
 
 
-
-
-
-
-
-        imageID IDdmRM = image_ID(dmstream, data.core.image, data.core.NB_MAX_IMAGE);
+        imageID IDdmRM = image_ID(dmstream,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
         if(IDdmRM != -1)
         {
             uint32_t DMxsize = data.core.image[IDdmRM].md->size[0];
@@ -293,7 +299,9 @@ static errno_t customCONFcheck()
 
             // update RM DM mask
             //
-            long fpi_update_RMDMmask = functionparameter_GetParamIndex(data.core.fpsptr, ".RMDMmask.upmlat");
+            long fpi_update_RMDMmask = 
+                functionparameter_GetParamIndex(
+                    data.core.fpsptr, ".RMDMmask.upmlat");
             if(fpi_update_RMDMmask > -1 && (data.core.fpsptr->parray[fpi_update_RMDMmask].fpflag & FPFLAG_ONOFF))
             {
                 printf("Updating RM DM mask\n");
@@ -394,25 +402,26 @@ static errno_t customCONFcheck()
             }
 
 
-
-
-
-
-
             // Poke cube
             //
             // Compute action: make Spoke and Hpoke
             //
-            long fpi_compPokeMat = functionparameter_GetParamIndex(data.core.fpsptr, ".compPokeMat");
+            long fpi_compPokeMat = 
+                functionparameter_GetParamIndex(
+                    data.core.fpsptr, ".compPokeMat");
             if(fpi_compPokeMat > -1 && (data.core.fpsptr->parray[fpi_compPokeMat].fpflag & FPFLAG_ONOFF))
             {
 
-                imageID IDdmRM = image_ID(dmstream, data.core.image, data.core.NB_MAX_IMAGE);
+                imageID IDdmRM = image_ID(dmstream,
+                    data.core.image,
+                    data.core.NB_MAX_IMAGE);
 
                 if(IDdmRM != -1)
                 {
 
-                    long fpi_Hpokemode = functionparameter_GetParamIndex(data.core.fpsptr, ".Hpoke");
+                    long fpi_Hpokemode = 
+                        functionparameter_GetParamIndex(
+                            data.core.fpsptr, ".Hpoke");
                     if(fpi_Hpokemode > -1 && (data.core.fpsptr->parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF))
                     {
 
@@ -482,21 +491,11 @@ static errno_t customCONFcheck()
 }
 
 
-
-
-
-
 // detailed help
 static errno_t help_function()
 {
     return RETURN_SUCCESS;
 }
-
-
-
-
-
-
 
 
 static errno_t compute_function()
@@ -514,7 +513,9 @@ static errno_t compute_function()
         {
             printf("Computing Poke Matrix\n");
 
-            imageID IDdmRM = image_ID(dmstream, data.core.image, data.core.NB_MAX_IMAGE);
+            imageID IDdmRM = image_ID(dmstream,
+                data.core.image,
+                data.core.NB_MAX_IMAGE);
 
             if(IDdmRM != -1)
             {
@@ -537,7 +538,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
 
 
 #ifndef FPS_STANDALONE

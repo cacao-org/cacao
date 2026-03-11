@@ -14,8 +14,6 @@
 #include "CLIcore/CLIcore.h"
 
 
-
-
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "maskextrapolate",
     .cmdkey      = "maskextrapolate",
@@ -42,9 +40,6 @@ static float edgeapo = 0;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
-
-
 // Optional custom configuration setup. comptbuff
 // Runs once at conf startup
 //
@@ -56,7 +51,6 @@ static errno_t customCONFsetup()
 
     return RETURN_SUCCESS;
 }
-
 
 
 // Optional custom configuration checks.
@@ -73,10 +67,6 @@ static errno_t customCONFcheck()
 }
 
 
-
-
-
-
 // detailed help
 static errno_t help_function()
 {
@@ -86,14 +76,15 @@ static errno_t help_function()
 }
 
 
-
-
 static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
     IMGID imginmodeC = imgid_make_from_name(inmodeC);
-    resolveIMGID(&imginmodeC, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imginmodeC, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     uint32_t xsize = imginmodeC.md->size[0];
     uint32_t ysize = imginmodeC.md->size[1];
     uint64_t xysize = xsize;
@@ -102,14 +93,22 @@ static errno_t compute_function()
     printf("%u modes\n", NBmodes);
 
     IMGID imgmask = imgid_make_from_name(maskim);
-    resolveIMGID(&imgmask, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgmask, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
     IMGID imgextmask = imgid_make_from_name(extmaskim);
-    resolveIMGID(&imgextmask, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(
+        &imgextmask, ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
 
 
-
-    IMGID imgoutmoudeC = imgid_make_from_name_3D(outmodeC, xsize, ysize, NBmodes);
+    IMGID imgoutmoudeC = imgid_make_from_name_3D(outmodeC,
+        xsize,
+        ysize,
+        NBmodes);
     createimagefromIMGID(&imgoutmoudeC);
 
 
@@ -152,8 +151,8 @@ static errno_t compute_function()
                         {
                             if(imgmask.im->array.F[jj1 * xsize + ii1] > 0.5)
                             {
-                                float dx = 1.0 * ii - ii1;
-                                float dy = 1.0 * jj - jj1;
+                                float dx = (double) ii - ii1;
+                                float dy = (double) jj - jj1;
                                 float dr2 = dx * dx + dy * dy;
 
                                 if(dr2 < nearest_dist2)
@@ -198,8 +197,8 @@ static errno_t compute_function()
                     {
                         for(int jj1 = jjmin; jj1 < jjmax; jj1++)
                         {
-                            float dx = 1.0 * ii - ii1;
-                            float dy = 1.0 * jj - jj1;
+                            float dx = (double) ii - ii1;
+                            float dy = (double) jj - jj1;
                             double dr2 = dx * dx + dy * dy;
 
                             //if(dr2 < nearest_dist2 + 0.2) // only consider nearest pixels
@@ -242,8 +241,6 @@ static errno_t compute_function()
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
-
-
 
 
 #ifndef FPS_STANDALONE

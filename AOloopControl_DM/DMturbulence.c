@@ -196,8 +196,8 @@ static errno_t make_seed_turbulence_screen(
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
         {
-            dx = 1.0 * ii - size / 2;
-            dy = 1.0 * jj - size / 2;
+            dx = (double) ii - size / 2;
+            dy = (double) jj - size / 2;
 
             if(RLIMMODE == 1)
             {
@@ -229,8 +229,8 @@ static errno_t make_seed_turbulence_screen(
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
         {
-            dx      = 1.0 * ii - size / 2;
-            dy      = 1.0 * jj - size / 2;
+            dx      = (double) ii - size / 2;
+            dy      = (double) jj - size / 2;
             iscoeff = exp(-(dx * dx + dy * dy) / INNERscale_f0 / INNERscale_f0);
             data.core.image[ID].array.F[jj * size + ii] *=
                 sqrt(iscoeff); // power -> amplitude : sqrt
@@ -244,7 +244,10 @@ static errno_t make_seed_turbulence_screen(
 
     {
         IMGID imgtmpamp = imgid_make_from_name("tmpamp");
-        resolveIMGID(&imgtmpamp, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+        resolveIMGID(
+            &imgtmpamp, ERRMODE_ABORT,
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
         uint32_t cx = (uint32_t)(size / 2);
         uint32_t cy = (uint32_t)(size / 2);
         uint32_t w = imgtmpamp.md->size[0];
@@ -332,7 +335,10 @@ static DMTURB_STATE* dmturb_init() {
     
     // Connect to DM stream
     state->imgDM = imgid_make_from_name(dmstream_ptr);
-    resolveIMGID(&state->imgDM, ERRMODE_ABORT, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(&state->imgDM,
+        ERRMODE_ABORT,
+        data.core.image,
+        data.core.NB_MAX_IMAGE);
     printf("%u x %u actuator\n", state->imgDM.md->size[0], state->imgDM.md->size[1]);
     
     uint32_t xsize = state->imgDM.md->size[0];
@@ -377,7 +383,9 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
     
     if(turbZERO_ptr && ((*turbZERO_ptr) & FPFLAG_ONOFF)) {
         for(uint64_t ii=0; ii<xsize*ysize; ii++) state->turbimarray[ii] = 0.0;
-        memcpy(state->imgDM.im->array.F, state->turbimarray, sizeof(float)*xsize*ysize);
+        memcpy(state->imgDM.im->array.F,
+            state->turbimarray,
+            sizeof(float)*xsize*ysize);
         processinfo_update_output_stream(processinfo, state->imgDM.im, NULL);
         *turbZERO_ptr &= ~FPFLAG_ONOFF;
     }
@@ -455,7 +463,9 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
             state->amplcoeff *= pow(10.0, amplloopgain * logdiff);
         }
         
-        memcpy(state->imgDM.im->array.F, state->turbimarray, sizeof(float)*xsize*ysize);
+        memcpy(state->imgDM.im->array.F,
+            state->turbimarray,
+            sizeof(float)*xsize*ysize);
         processinfo_update_output_stream(processinfo, state->imgDM.im, NULL);
     }
 }
@@ -470,7 +480,6 @@ static void dmturb_validate() {
  * ============================================================= */
 
 FPS_V2_SECTION5(FPS_PARAMS)
-
 
 
 /* ================================================================

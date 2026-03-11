@@ -326,7 +326,6 @@ AOloopControl_perfTest_computeRM_sensitivity(
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-
 /* ================================================================
  * 6.  COMPUTE WRAPPER
  * ============================================================= */
