@@ -22,15 +22,15 @@ static FPS_APP_INFO FPS_app_info = {
 
 // zonal WFS response
 //
-static char *zrespWFS;
-static char *DMmodesC;
-static char *outWFSmodesC;
+static char zrespWFS[FUNCTION_PARAMETER_STRMAXLEN];
+static char DMmodesC[FUNCTION_PARAMETER_STRMAXLEN];
+static char outWFSmodesC[FUNCTION_PARAMETER_STRMAXLEN];
 
 
 #define FPS_PARAMS(X) \
-    X(".zrespWFS", &zrespWFS, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input zonal response matrix") \
-    X(".DMmodesC", &DMmodesC, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input DM modes") \
-    X(".outWFSmodesC", &outWFSmodesC, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output WFS modes")
+    X(".zrespWFS", zrespWFS, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input zonal response matrix") \
+    X(".DMmodesC", DMmodesC, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input DM modes") \
+    X(".outWFSmodesC", outWFSmodesC, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output WFS modes")
 
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)

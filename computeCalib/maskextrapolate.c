@@ -22,17 +22,21 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "mask and extrapolate modes"
 };
 
-static char *inmodeC;
-static char *maskim;
-static char *extmaskim;
-static char *outmodeC;
-static float *edgeapo;
+static char inmodeC[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static char maskim[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static char extmaskim[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static char outmodeC[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static float edgeapo = 0;
 
 #define FPS_PARAMS(X) \
-    X(".inmodeC", &inmodeC, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input modes") \
-    X(".maskim", &maskim, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input mask") \
-    X(".extmaskim", &extmaskim, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "extended input mask") \
-    X(".outmodeC", &outmodeC, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output modes") \
+    X(".inmodeC", inmodeC, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input modes") \
+    X(".maskim", maskim, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input mask") \
+    X(".extmaskim", extmaskim, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "extended input mask") \
+    X(".outmodeC", outmodeC, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output modes") \
     X(".edgeapo", &edgeapo, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "edge apodization strength")
 
 static FPS_CLI_BINDING my_bindings[] = {
@@ -223,7 +227,7 @@ static errno_t compute_function()
                     //
                     long npixcnt = 0;
                     double coefftotal = 0.0;
-                    double alpha1 = 1.0 / (*edgeapo * nearest_dist2);
+                    double alpha1 = 1.0 / (edgeapo * nearest_dist2);
                     for(int ii1 = iimin; ii1 < iimax; ii1++)
                     {
                         for(int jj1 = jjmin; jj1 < jjmax; jj1++)

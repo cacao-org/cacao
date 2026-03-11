@@ -42,24 +42,26 @@ static FPS_APP_INFO FPS_app_info = {
 
 #define SNAMEPREFIX "tseqPF"
 
-static uint64_t *AOloopindex;
-static char *mvalDM;
-static char *mvalWFS;
-static float *minPrate;
-static float *maxPrate;
-static float *noiseamp;
-static float *multfact;
-static float *WFSlatency;
-static float *DMlatency;
+static uint64_t AOloopindex = 0;
+static char mvalDM[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static char mvalWFS[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static float minPrate = 0;
+static float maxPrate = 0;
+static float noiseamp = 0;
+static float multfact = 0;
+static float WFSlatency = 0;
+static float DMlatency = 0;
 
 #define FPS_PARAMS(X) \
     X(".AOloopindex", &AOloopindex, \
       FPTYPE_UINT64, 1, \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "AO loop index") \
-    X(".mvalDM", &mvalDM, \
+    X(".mvalDM", mvalDM, \
       FPTYPE_STREAMNAME, 1, \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input mode values - DM control") \
-    X(".mvalWFS", &mvalWFS, \
+    X(".mvalWFS", mvalWFS, \
       FPTYPE_STREAMNAME, 1, \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output mode values to WFS") \
     X(".minPrate", &minPrate, \
@@ -242,15 +244,15 @@ static errno_t compute_function()
     //
     for(uint32_t mi=0; mi < NBmode; mi++)
     {
-        float phastep = (*minPrate) + (1.0*mi / NBmode) * ((*maxPrate) - (*minPrate));
+        float phastep = (minPrate) + (1.0*mi / NBmode) * ((maxPrate) - (minPrate));
         mvalINpha[mi] += phastep;
 
         mvalIN[mi] = cos(mvalINpha[mi]);
 
         // add noise
-        mvalIN[mi] += (*noiseamp) * (1.0-2.0*ran1());
+        mvalIN[mi] += (noiseamp) * (1.0-2.0*ran1());
         // mult
-        mvalIN[mi] *= (*multfact);
+        mvalIN[mi] *= (multfact);
     }
 
     //printf("mi0:  %8.6f\n", mvalIN[0]);
@@ -262,8 +264,8 @@ static errno_t compute_function()
         ptr += SIZEOF_DATATYPE_FLOAT*NBmode*mvalDMbuff_tindex;
         memcpy( ptr, imgmvalDM.im->array.F, sizeof(float)*NBmode);
 
-        int latint = floor(*DMlatency);  // integer part
-        float latfrac = (*DMlatency) - latint;  // fractional part
+        int latint = floor(DMlatency);  // integer part
+        float latfrac = (DMlatency) - latint;  // fractional part
         int index0 = mvalDMbuff_tindex - latint;
         if(index0 < 0)
         {
@@ -312,8 +314,8 @@ static errno_t compute_function()
         ptr += SIZEOF_DATATYPE_FLOAT*NBmode*mvalCbuff_tindex;
         memcpy( ptr, mvalC, sizeof(float)*NBmode);
 
-        int latint = floor(*WFSlatency);  // integer part
-        float latfrac = (*WFSlatency) - latint;  // fractional part
+        int latint = floor(WFSlatency);  // integer part
+        float latfrac = (WFSlatency) - latint;  // fractional part
         int index0 = mvalCbuff_tindex - latint;
         if(index0 < 0)
         {

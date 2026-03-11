@@ -27,10 +27,10 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "AO188 APD Preprocessor"
 };
 
-static char *apd_mat_name;
+static char apd_mat_name[FUNCTION_PARAMETER_STRMAXLEN];
 
 #define FPS_PARAMS(X) \
-    X(".wfsin", &apd_mat_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input")
+    X(".wfsin", apd_mat_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input")
 
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)

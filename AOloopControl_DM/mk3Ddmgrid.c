@@ -22,14 +22,15 @@ static FPS_APP_INFO FPS_app_info = {
 // Local variables pointers
 
 // output img name
-static char *outname;
-static uint32_t *xsize;
-static uint32_t *ysize;
-static uint32_t *XYpattern;
-static uint32_t *binfactor;
+static char outname[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static uint32_t xsize = 0;
+static uint32_t ysize = 0;
+static uint32_t XYpattern = 0;
+static uint32_t binfactor = 1;
 
 #define FPS_PARAMS(X) \
-    X(".outname", &outname, \
+    X(".outname", outname, \
       FPTYPE_STRING, 1, \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output image name") \
     X(".xsize", &xsize, \
@@ -236,7 +237,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-        make_3Dgrid_DMsequ(outname, *xsize, *ysize, *XYpattern, *binfactor);
+        make_3Dgrid_DMsequ(outname, xsize, ysize, XYpattern, binfactor);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

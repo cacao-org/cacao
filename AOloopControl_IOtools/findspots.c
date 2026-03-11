@@ -17,18 +17,20 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "find spots in inmage"
 };
 
-static char *inimname;
-static float *spotsize;
-static float *spotexcldist;
-static uint32_t *maxnbspot;
-static char *outmapcname;
+static char inimname[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static float spotsize = 0;
+static float spotexcldist = 0;
+static uint32_t maxnbspot = 0;
+static char outmapcname[
+    FUNCTION_PARAMETER_STRMAXLEN];
 
 #define FPS_PARAMS(X) \
-    X(".in_name", &inimname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input image") \
+    X(".in_name", inimname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input image") \
     X(".spotsize", &spotsize, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "approximate spot size") \
     X(".spotexcldist", &spotexcldist, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "exclusion distance") \
     X(".maxnbspot", &maxnbspot, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "max number of spots") \
-    X(".outmapc", &outmapcname, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output mapping cube")
+    X(".outmapc", outmapcname, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output mapping cube")
 
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)
@@ -365,7 +367,7 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
     {
 
-        find_image_spots(inimg, *spotsize, *spotexcldist, *maxnbspot);
+        find_image_spots(inimg, spotsize, spotexcldist, maxnbspot);
 
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END

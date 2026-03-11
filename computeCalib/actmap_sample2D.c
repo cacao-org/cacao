@@ -20,14 +20,14 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "sample 2D WF to act pos"
 };
 
-static char *inWF2D;
-static char *map2D;
-static char *outWF1D;
+static char inWF2D[FUNCTION_PARAMETER_STRMAXLEN];
+static char map2D[FUNCTION_PARAMETER_STRMAXLEN];
+static char outWF1D[FUNCTION_PARAMETER_STRMAXLEN];
 
 #define FPS_PARAMS(X) \
-    X(".inwf2D", &inWF2D, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input 2D wavefront") \
-    X(".mapfile", &map2D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping file, can be read from mapcoord2D.txt") \
-    X(".outWF1D", &outWF1D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output WF 1D")
+    X(".inwf2D", inWF2D, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input 2D wavefront") \
+    X(".mapfile", map2D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping file, can be read from mapcoord2D.txt") \
+    X(".outWF1D", outWF1D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output WF 1D")
 
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)

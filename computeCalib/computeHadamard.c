@@ -32,12 +32,12 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "make Hadamard modes"
 };
 
-static char *inmask;
-static char *outHcube;
+static char inmask[FUNCTION_PARAMETER_STRMAXLEN];
+static char outHcube[FUNCTION_PARAMETER_STRMAXLEN];
 
 #define FPS_PARAMS(X) \
-    X(".inmask", &inmask, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "pixel mask (0 and 1 vals)") \
-    X(".outHcube", &outHcube, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output Hadamard cube")
+    X(".inmask", inmask, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "pixel mask (0 and 1 vals)") \
+    X(".outHcube", outHcube, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output Hadamard cube")
 
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)

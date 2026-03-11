@@ -15,14 +15,14 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "remap WFS image"
 };
 
-static char *wfsinsname;
-static char *mapsname;
-static char *wfsoutsname;
+static char wfsinsname[FUNCTION_PARAMETER_STRMAXLEN];
+static char mapsname[FUNCTION_PARAMETER_STRMAXLEN];
+static char wfsoutsname[FUNCTION_PARAMETER_STRMAXLEN];
 
 #define FPS_PARAMS(X) \
-    X(".wfsin", &wfsinsname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input") \
-    X(".map", &mapsname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "WFS mapping") \
-    X(".wfsout", &wfsoutsname, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor output")
+    X(".wfsin", wfsinsname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input") \
+    X(".map", mapsname, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "WFS mapping") \
+    X(".wfsout", wfsoutsname, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor output")
 
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)

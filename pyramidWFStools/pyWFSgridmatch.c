@@ -43,13 +43,14 @@ static FPS_APP_INFO FPS_app_info = {
     .description = "Match pyramid WFS zrespM to grid"
 };
 
-static char *inimname;
-static double *spotsize;
-static uint32_t *dmxsize;
-static uint32_t *dmysize;
+static char inimname[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static double spotsize = 0;
+static uint32_t dmxsize = 0;
+static uint32_t dmysize = 0;
 
 #define FPS_PARAMS(X) \
-    X(".in_name", &inimname, \
+    X(".in_name", inimname, \
       FPTYPE_STREAMNAME, 1, \
       FPFLAG_DEFAULT_INPUT, "input image") \
     X(".spotsize", &spotsize, \
@@ -236,7 +237,7 @@ static errno_t compute_function()
         float *imarray = (float *) malloc(sizeof(float) * xysize);
         float *imcarray = (float *) malloc(sizeof(float) * xysize);
 
-        int ksizeint = (int) *spotsize;
+        int ksizeint = (int) spotsize;
 
         double pixval2sum_max = 0.0;
         double *pixval2sum = (double *) malloc(sizeof(double) * zrmimg.md->size[2]);
@@ -264,20 +265,20 @@ static errno_t compute_function()
 
 
         // spot positions and values
-        float *spotpos_x = (float *) malloc(sizeof(float) * *dmxsize * *dmysize * 4);
-        float *spotpos_y = (float *) malloc(sizeof(float) * *dmxsize * *dmysize * 4);
-        float *spotval = (float*) malloc(sizeof(float) * *dmxsize * *dmysize * 4);
+        float *spotpos_x = (float *) malloc(sizeof(float) * dmxsize * dmysize * 4);
+        float *spotpos_y = (float *) malloc(sizeof(float) * dmxsize * dmysize * 4);
+        float *spotval = (float*) malloc(sizeof(float) * dmxsize * dmysize * 4);
 
 
 
         int sliceproc_cnt = 0;
         int sliceskip_cnt = 0;
 
-        for(uint32_t dmii=0; dmii<*dmysize; dmii++)
+        for(uint32_t dmii=0; dmii<dmysize; dmii++)
         {
-            for(uint32_t dmjj=0; dmjj<*dmysize; dmjj++)
+            for(uint32_t dmjj=0; dmjj<dmysize; dmjj++)
             {
-                uint32_t slice = dmjj * *dmxsize + dmii;
+                uint32_t slice = dmjj * dmxsize + dmii;
 
                 if(pixval2sum[slice] > 0.1*pixval2sum_max)
                 {
@@ -411,23 +412,23 @@ static errno_t compute_function()
                             double ysum = 0.0;
                             double wsum = 0.0;
 
-                            int ii1min = iipeak - (int)(*spotsize + 1);
+                            int ii1min = iipeak - (int)(spotsize + 1);
                             if(ii1min < 0)
                             {
                                 ii1min = 0;
                             }
-                            int ii1max = iipeak + (int)(*spotsize + 1);
+                            int ii1max = iipeak + (int)(spotsize + 1);
                             if(ii1max > (int) xsize)
                             {
                                 ii1max = xsize;
                             }
 
-                            int jj1min = jjpeak - (int)(*spotsize + 1);
+                            int jj1min = jjpeak - (int)(spotsize + 1);
                             if(jj1min < 0)
                             {
                                 jj1min = 0;
                             }
-                            int jj1max = jjpeak + (int)(*spotsize + 1);
+                            int jj1max = jjpeak + (int)(spotsize + 1);
                             if(jj1max > (int) ysize)
                             {
                                 jj1max = ysize;
@@ -442,7 +443,7 @@ static errno_t compute_function()
                                     float dx = 1.0 * iipeak - ii1;
                                     float dy = 1.0 * jjpeak - jj1;
                                     float r2 = dx * dx + dy * dy;
-                                    if (r2 < *spotsize * *spotsize)
+                                    if (r2 < spotsize * spotsize)
                                     {
                                         float val = imcarray[jj1 * xsize + ii1];
                                         xsum += val * ii1;
@@ -495,8 +496,8 @@ static errno_t compute_function()
         pyrWFSgrid gridbest;
         pyrWFSgrid gridstep;
 
-        grid.dmxsize = *dmxsize;
-        grid.dmysize = *dmysize;
+        grid.dmxsize = dmxsize;
+        grid.dmysize = dmysize;
 
 
         grid.pupsquare_xoffset = 0.4 * xsize;
@@ -505,8 +506,8 @@ static errno_t compute_function()
         grid.pupsquare_center_x = 0.5*xsize;
         grid.pupsquare_center_y = 0.5*ysize;
 
-        grid.actpitch_x = (0.4*xsize)/(*dmxsize);
-        grid.actpitch_y = (0.4*xsize)/(*dmxsize);
+        grid.actpitch_x = (0.4*xsize)/(dmxsize);
+        grid.actpitch_y = (0.4*xsize)/(dmxsize);
         grid.actpitch_angle = 0.0;
 
         // copy grid to gridbest

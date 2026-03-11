@@ -24,16 +24,18 @@ static FPS_APP_INFO FPS_app_info = {
 };
 
 // Local variables pointers
-static char *outsname;
-static char *modecsname;
-static float *pokeampl;
-static float *pokefreq;
+static char outsname[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static char modecsname[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static float pokeampl = 0;
+static float pokefreq = 0;
 
 #define FPS_PARAMS(X) \
-    X(".outsname", &outsname, \
+    X(".outsname", outsname, \
       FPTYPE_STREAMNAME, 1, \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output stream") \
-    X(".mode_cube", &modecsname, \
+    X(".mode_cube", modecsname, \
       FPTYPE_STREAMNAME, 1, \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "modes to be poked") \
     X(".pokeampl", &pokeampl, \
@@ -109,8 +111,8 @@ static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
 
         for(int m = 0; m < NBmode; m++)
         {
-            pokemval[m] = (*pokeampl) * (1.0 - 2.0 * ran1());
-            pokemfreq[m] = (*pokefreq) * (0.5 + 0.5 * ran1());
+            pokemval[m] = (pokeampl) * (1.0 - 2.0 * ran1());
+            pokemfreq[m] = (pokefreq) * (0.5 + 0.5 * ran1());
             pokempha[m] = 2.0 * M_PI * ran1();
         }
     }
@@ -128,16 +130,16 @@ static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
     for(int m = 0; m < NBmode; m++)
     {
         pokempha[m] += pokemfreq[m] * ran1();
-        pokemfreq[m] += (*pokefreq) * 0.01 * (1.0 - 2.0 * ran1());
+        pokemfreq[m] += (pokefreq) * 0.01 * (1.0 - 2.0 * ran1());
 
-        if(pokemfreq[m] < 0.5 * (*pokefreq))
+        if(pokemfreq[m] < 0.5 * (pokefreq))
         {
-            pokemfreq[m] = 0.5 * (*pokefreq);
+            pokemfreq[m] = 0.5 * (pokefreq);
         }
 
-        if(pokemfreq[m] > (*pokefreq))
+        if(pokemfreq[m] > (pokefreq))
         {
-            pokemfreq[m] = (*pokefreq);
+            pokemfreq[m] = (pokefreq);
         }
 
         while(pokempha[m] > 2.0 * M_PI)
@@ -145,7 +147,7 @@ static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
             pokempha[m] -= 2.0 * M_PI;
         }
 
-        pokemval[m] = (*pokeampl) * sin(pokempha[m]);
+        pokemval[m] = (pokeampl) * sin(pokempha[m]);
     }
 
     for(uint64_t ii = 0; ii < outimg.md->size[0]*outimg.md->size[1]; ii++)
