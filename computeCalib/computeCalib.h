@@ -68,9 +68,9 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     double      rmampl,
     int         normalize);
 
-errno_t AOloopControl_computeCalib_mkCM_FPCONF();
-errno_t AOloopControl_computeCalib_mkCM_RUN();
-errno_t AOloopControl_computeCalib_mkCM(const char *respm_name, float SVDlim);
+errno_t
+CLIADDCMD_AOloopControl_computeCalib__mkCMsvd();
+
 
 long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name,
         float       pixrad,

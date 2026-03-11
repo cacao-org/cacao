@@ -6,7 +6,6 @@ Module responsible for `AOloopControl_perfTest` functionality.
 
 | File | Description |
 |------|-------------|
-| `AOloopControl_perfTest_LinSim.c` | Adaptive Optics Control loop linear simulator |
 | `compRMsensitivity.c` | mcompute response matrix sensitivity |
 | `mlat.c` | Mlat module |
 | `mlat_decode.c` | Mlat decode module |

@@ -44,6 +44,7 @@
 #include <fitsio.h>
 
 #include "CLIcore/CLIcore.h"
+#include "fps.h"
 
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -639,308 +640,306 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
 
 
 
-errno_t AOloopControl_computeCalib_mkCM_FPCONF()
+/**
+ * ====================================================
+ * V2 FPS section: mkCM (make control matrix)
+ * ====================================================
+ */
+
+static FPS_APP_INFO FPS_app_info = {
+    .fps_name    = "mkCMsvd",
+    .cmdkey      = "mkCMsvd",
+    .description =
+        "compute SVD control matrix from RM"
+};
+
+// Section 2: Local variables for FPS parameters
+static int64_t mkCM_AOloopindex;
+static double  mkCM_SVDlim;
+static char    mkCM_fname_respM[
+    FUNCTION_PARAMETER_STRMAXLEN];
+static int64_t mkCM_GPUmode;
+static char    mkCM_out_label[
+    FUNCTION_PARAMETER_STRMAXLEN];
+
+// Section 3: FPS_PARAMS X-macro
+#define FPS_PARAMS(X) \
+    X(".AOloopindex", \
+      &mkCM_AOloopindex, \
+      FPTYPE_INT64, \
+      1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "loop index") \
+    X(".SVDlim", \
+      &mkCM_SVDlim, \
+      FPTYPE_FLOAT64, \
+      1, \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT \
+       | FPFLAG_MAXLIMIT), \
+      "SVD limit value") \
+    X(".fname_respM", \
+      mkCM_fname_respM, \
+      FPTYPE_FILENAME, \
+      1, \
+      (FPFLAG_DEFAULT_INPUT \
+       | FPFLAG_FILE_RUN_REQUIRED), \
+      "response matrix") \
+    X(".GPUmode", \
+      &mkCM_GPUmode, \
+      FPTYPE_INT64, \
+      1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "Using GPU ?") \
+    X(".out.label", \
+      mkCM_out_label, \
+      FPTYPE_STRING, \
+      1, \
+      FPFLAG_DEFAULT_INPUT, \
+      "output label")
+
+static FPS_CLI_BINDING my_bindings[] = {
+    FPS_PARAMS(FPS_X_BINDING)
+};
+
+static const int nb_bindings =
+    sizeof(my_bindings)
+    / sizeof(FPS_CLI_BINDING);
+
+static CLICMDARGDEF farg[] = {
+    FPS_PARAMS(FPS_X_FARG)
+};
+
+#ifdef FPS_STANDALONE
+CLICMDDATA CLIcmddata = {
+#else
+static CLICMDDATA CLIcmddata = {
+#endif
+    "",
+    "",
+    CLICMD_FIELDS_DEFAULTS
+};
+
+static CMDSETTINGS default_cmdsettings = {0};
+
+static __attribute__((constructor))
+void init_cmdsettings(void)
 {
-    // ===========================
-    // SETUP FPS
-    // ===========================
-    FPS_SETUP_INIT(data.core.FPS_name, data.core.FPS_CMDCODE);
-
-    //FPS2PROCINFOMAP fps2procinfo;
-    fps_add_processinfo_entries(&fps);
-
-    // ===========================
-    // ALLOCATE FPS ENTRIES
-    // ===========================
-
-    void    *pNull = NULL;
-    uint64_t FPFLAG;
-
-    long loop_default[4] = {0, 0, 10, 0};
-    // __attribute__((unused)) long fpi_loop =
-    function_parameter_add_entry(&fps,
-                                 ".AOloopindex",
-                                 "loop index",
-                                 FPTYPE_INT64,
-                                 FPFLAG_DEFAULT_INPUT,
-                                 &loop_default,
-                                 NULL);
-
-    double SVDlimdefault[4] = {0.001, 0.0, 1.0, 0.001};
-    FPFLAG                  = FPFLAG_DEFAULT_INPUT | FPFLAG_MINLIMIT |
-                              FPFLAG_MAXLIMIT; // required to enforce the min and max limits
-    //__attribute__((unused)) long fpi_SVDlim =
-    function_parameter_add_entry(&fps,
-                                 ".SVDlim",
-                                 "SVD limit value",
-                                 FPTYPE_FLOAT64,
-                                 FPFLAG,
-                                 &SVDlimdefault,
-                                 NULL);
-
-    // Input file name
-    FPFLAG = FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED;
-    // __attribute__((unused)) long fpi_filename_respm        =
-    function_parameter_add_entry(&fps,
-                                 ".fname_respM",
-                                 "response matrix",
-                                 FPTYPE_FILENAME,
-                                 FPFLAG,
-                                 pNull,
-                                 NULL);
-
-    long GPUmode_default[4] = {0, 0, 1, 0};
-    //  long fpi_GPUmode = 0;
-    function_parameter_add_entry(&fps,
-                                 ".GPUmode",
-                                 "Using GPU ?",
-                                 FPTYPE_INT64,
-                                 FPFLAG_DEFAULT_INPUT,
-                                 &GPUmode_default,
-                                 NULL);
-    //    (void) fpi_GPUmode;
-
-    // settings for output files and dir
-
-    /*   long fpi_out_dirname      =
-         function_parameter_add_entry(&fps, ".out.dirname",
-                                      "output directory",
-                                      FPTYPE_DIRNAME, FPFLAG_DEFAULT_INPUT,
-     pNull); (void) fpi_out_dirname;*/
-
-    //__attribute__((unused)) long fpi_out_label      =
-    function_parameter_add_entry(&fps,
-                                 ".out.label",
-                                 "output label",
-                                 FPTYPE_STRING,
-                                 FPFLAG_DEFAULT_INPUT,
-                                 pNull,
-                                 NULL);
-
-    long fpi_out_timestring = 0;
-    function_parameter_add_entry(&fps,
-                                 ".out.timestring",
-                                 "output timestring",
-                                 FPTYPE_STRING,
-                                 FPFLAG_DEFAULT_INPUT,
-                                 pNull,
-                                 &fpi_out_timestring);
-
-    // External scripts (post)
-    /*    long fpi_exec_logdata =
-          function_parameter_add_entry(&fps, ".log2fs",
-                                       "log to filesystem",
-                                       FPTYPE_EXECFILENAME,
-     FPFLAG_DEFAULT_INPUT, pNull); (void) fpi_exec_logdata;
-    */
-
-    // =====================================
-    // PARAMETER LOGIC AND UPDATE LOOP
-    // =====================================
-    FPS_CONFLOOP_START // macro in function_parameter.h
-
-    FPS_CONFLOOP_END // macro in function_parameter.h
-
-    return RETURN_SUCCESS;
+    strncpy(CLIcmddata.key,
+            FPS_app_info.cmdkey,
+            sizeof(CLIcmddata.key) - 1);
+    strncpy(CLIcmddata.description,
+            FPS_app_info.description,
+            sizeof(CLIcmddata.description)
+            - 1);
+    if (CLIcmddata.cmdsettings == NULL) {
+        CLIcmddata.cmdsettings =
+            &default_cmdsettings;
+    }
 }
 
 
-
-
-
-
-
-
-
-
-errno_t AOloopControl_computeCalib_mkCM_RUN()
+// Section 4: compute function (merged CONF+RUN)
+static errno_t compute_function_mkCM()
 {
-    FPS_CONNECT(data.core.FPS_name, FPSCONNECT_RUN);
+    DEBUG_TRACE_FSTART();
 
-    // Write time string
-    /*    char timestring[100];
-      mkUTtimestring_millisec_now(timestring);
-      functionparameter_SetParamValue_STRING(
-          &fps,
-          ".out.timestring",
-          timestring);
-    */
-
-    // ===============================
-    // GET FUNCTION PARAMETER VALUES
-    // ===============================
-
-    __attribute__((unused)) long loop =
-        functionparameter_GetParamValue_INT64(&fps, ".AOloopindex");
-
-    float SVDlim = functionparameter_GetParamValue_FLOAT64(&fps, ".SVDlim");
-
-    long GPUmode = functionparameter_GetParamValue_INT64(&fps, ".GPUmode");
-
-    char respMname[FUNCTION_PARAMETER_STRMAXLEN + 1];
-    strncpy(respMname,
-            functionparameter_GetParamPtr_STRING(&fps, ".fname_respM"),
-            FUNCTION_PARAMETER_STRMAXLEN);
-
+    // Get output directory from FPS
     char outdirname[FUNCTION_PARAMETER_STRMAXLEN];
     strncpy(outdirname,
-            functionparameter_GetParamPtr_STRING(&fps, ".conf.datadir"),
+            functionparameter_GetParamPtr_STRING(
+                data.core.fpsptr,
+                ".conf.datadir"),
             FUNCTION_PARAMETER_STRMAXLEN);
-    EXECUTE_SYSTEM_COMMAND("mkdir -p %s", outdirname);
+    EXECUTE_SYSTEM_COMMAND(
+        "mkdir -p %s", outdirname);
 
-    load_fits(respMname, "respM", 1, NULL);
+    load_fits(
+        mkCM_fname_respM, "respM", 1, NULL);
 
     char cm_name[] = "sCMat";
 
 #ifdef HAVE_MAGMA
-    if(GPUmode)
+    if(mkCM_GPUmode)
     {
-        LINALGEBRA_magma_compute_SVDpseudoInverse("respM",
-                cm_name,
-                SVDlim,
-                100000,
-                "VTmat",
-                0,
-                1,
-                64,
-                0, // GPU device
-                NULL);
+        LINALGEBRA_magma_compute_SVDpseudoInverse(
+            "respM",
+            cm_name,
+            mkCM_SVDlim,
+            100000,
+            "VTmat",
+            0,
+            1,
+            64,
+            0,
+            NULL);
     }
     else
     {
-#endif // HAVE_MAGMA
-        linopt_compute_SVDpseudoInverse("respM",
-                                        cm_name,
-                                        SVDlim,
-                                        10000,
-                                        "VTmat",
-                                        NULL);
+#endif
+        linopt_compute_SVDpseudoInverse(
+            "respM",
+            cm_name,
+            mkCM_SVDlim,
+            10000,
+            "VTmat",
+            NULL);
 #ifdef HAVE_MAGMA
     }
-#endif // HAVE_MAGMA
+#endif
 
     {
         char ffname[STRINGMAXLEN_FULLFILENAME];
 
-        WRITE_FULLFILENAME(ffname, "%s/VTmat.fits", outdirname);
+        WRITE_FULLFILENAME(ffname,
+                           "%s/VTmat.fits",
+                           outdirname);
         save_fits("VTmat", ffname);
-        //"./mkmodestmp/VTmat.fits");
 
-        // save as 3D cube
-        imageID ID_VTmat = image_ID("VTmat", data.core.image, data.core.NB_MAX_IMAGE);
+        imageID ID_VTmat = image_ID(
+            "VTmat",
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
         imageID ID_DMmodes;
-        uint32_t DMxsize = atoi(getenv("CACAO_DMxsize"));
-        uint32_t DMysize = atoi(getenv("CACAO_DMysize"));
+        uint32_t DMxsize =
+            atoi(getenv("CACAO_DMxsize"));
+        uint32_t DMysize =
+            atoi(getenv("CACAO_DMysize"));
         uint32_t DMxysize = DMxsize * DMysize;
-        create_3Dimage_ID("DMmodes", DMxsize, DMysize, DMxysize, &ID_DMmodes);
+        create_3Dimage_ID("DMmodes",
+                          DMxsize,
+                          DMysize,
+                          DMxysize,
+                          &ID_DMmodes);
         list_image_ID();
-        for(uint32_t kk = 0; kk < DMxysize; kk++)
+        for(uint32_t kk = 0;
+                kk < DMxysize; kk++)
         {
-            for(uint32_t ii = 0; ii < DMxysize; ii++)
+            for(uint32_t ii = 0;
+                    ii < DMxysize; ii++)
             {
-                data.core.image[ID_DMmodes].array.F[kk * DMxysize + ii] =
-                    data.core.image[ID_VTmat].array.F[ii * DMxysize + kk];
+                data.core.image[ID_DMmodes]
+                .array.F[
+                    kk * DMxysize + ii] =
+                    data.core.image[ID_VTmat]
+                    .array.F[
+                        ii * DMxysize + kk];
             }
         }
-        delete_image_ID("VTmat", DELETE_IMAGE_ERRMODE_WARNING);
-        WRITE_FULLFILENAME(ffname, "%s/DMmodes.fits", outdirname);
+        delete_image_ID(
+            "VTmat",
+            DELETE_IMAGE_ERRMODE_WARNING);
+        WRITE_FULLFILENAME(ffname,
+                           "%s/DMmodes.fits",
+                           outdirname);
         save_fits("DMmodes", ffname);
 
         imageID ID_WFSmodes;
         uint32_t WFSxsize;
         uint32_t WFSysize;
 
-        imageID IDrespM = image_ID("respM", data.core.image, data.core.NB_MAX_IMAGE);
-        WFSxsize = data.core.image[IDrespM].md->size[0];
-        WFSysize = data.core.image[IDrespM].md->size[1];
+        imageID IDrespM = image_ID(
+            "respM",
+            data.core.image,
+            data.core.NB_MAX_IMAGE);
+        WFSxsize =
+            data.core.image[IDrespM]
+            .md->size[0];
+        WFSysize =
+            data.core.image[IDrespM]
+            .md->size[1];
 
-        uint32_t WFSxysize = WFSxsize * WFSysize;
-        create_3Dimage_ID("WFSmodes", WFSxsize, WFSysize, DMxysize, &ID_WFSmodes);
+        uint32_t WFSxysize =
+            WFSxsize * WFSysize;
+        create_3Dimage_ID("WFSmodes",
+                          WFSxsize,
+                          WFSysize,
+                          DMxysize,
+                          &ID_WFSmodes);
         printf("Computing WFS modes ...\n");
         fflush(stdout);
         int mimax = 50;
         for(int mi = 0; mi < mimax; mi++)
         {
-            printf("Mode %5d / %5d\n", mi, DMxysize);
-            for(uint32_t ii = 0; ii < WFSxysize; ii++)
+            printf("Mode %5d / %5d\n",
+                   mi, DMxysize);
+            for(uint32_t ii = 0;
+                    ii < WFSxysize; ii++)
             {
-                data.core.image[ID_WFSmodes].array.F[mi * WFSxysize + ii] = 0.0;
-                for(uint32_t jj = 0; jj < DMxysize; jj++)
+                data.core.image[ID_WFSmodes]
+                .array.F[
+                    mi * WFSxysize + ii]
+                    = 0.0;
+                for(uint32_t jj = 0;
+                        jj < DMxysize; jj++)
                 {
-                    data.core.image[ID_WFSmodes].array.F[mi * WFSxysize + ii] +=
-                        data.core.image[ID_DMmodes].array.F[mi * DMxysize + jj]
-                        * data.core.image[IDrespM].array.F[jj * WFSxysize + ii];
+                    data.core.image
+                    [ID_WFSmodes]
+                    .array.F[
+                        mi * WFSxysize + ii]
+                        +=
+                        data.core.image
+                        [ID_DMmodes]
+                        .array.F[
+                            mi * DMxysize
+                            + jj]
+                        * data.core.image
+                        [IDrespM]
+                        .array.F[
+                            jj * WFSxysize
+                            + ii];
                 }
             }
         }
         printf(" DONE\n");
         fflush(stdout);
-        WRITE_FULLFILENAME(ffname, "%s/WFSmodes.fits", outdirname);
+        WRITE_FULLFILENAME(ffname,
+                           "%s/WFSmodes.fits",
+                           outdirname);
         save_fits("WFSmodes", ffname);
 
-
-
-        WRITE_FULLFILENAME(ffname, "%s/sCMat00.fits", outdirname);
+        WRITE_FULLFILENAME(ffname,
+                           "%s/sCMat00.fits",
+                           outdirname);
         save_fits(cm_name, ffname);
     }
 
-    functionparameter_SaveFPS2disk(&fps);
+    delete_image_ID(
+        cm_name,
+        DELETE_IMAGE_ERRMODE_WARNING);
 
-    //    functionparameter_SaveFPS2disk_dir(&fps, outdirname);
-    //    EXECUTE_SYSTEM_COMMAND("rm %s/loglist.dat 2> /dev/null", outdirname);
-    //    EXECUTE_SYSTEM_COMMAND("echo \"sCMat.fits\" >> %s/loglist.dat",
-    //    outdirname);
-
-    // create archive script
-    //    functionparameter_write_archivescript(&fps, "../aoldatadir");
-
-    function_parameter_RUNexit(&fps);
-    delete_image_ID(cm_name, DELETE_IMAGE_ERRMODE_WARNING);
-
+    DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-// make control matrix
-//
-errno_t AOloopControl_computeCalib_mkCM(__attribute__((unused))
-                                        const char *respm_name,
-                                        float       SVDlim)
+// Section 7: CLI registration
+#ifndef FPS_STANDALONE
+static errno_t CLIfunction(void)
 {
-    char fpsname[200];
+    return safe_fps_generic_CLIfunction(
+        &FPS_app_info,
+        farg,
+        &CLIcmddata,
+        my_bindings,
+        nb_bindings,
+        compute_function_mkCM);
+}
 
-    long pindex = (long)
-                  getpid(); // index used to differentiate multiple calls to function
-    // if we don't have anything more informative, we use PID
+errno_t
+CLIADDCMD_AOloopControl_computeCalib__mkCMsvd()
+{
+    safe_fps_fill_farg_examples(
+        farg,
+        my_bindings,
+        nb_bindings);
 
-    // int SMfd = -1;
-    FUNCTION_PARAMETER_STRUCT fps;
-
-    // create FPS
-    sprintf(data.core.FPS_name, "compsCM-%06ld", pindex);
-    data.core.FPS_CMDCODE = FPSCMDCODE_FPSINIT;
-    AOloopControl_computeCalib_mkCM_FPCONF();
-
-    function_parameter_struct_connect(fpsname, &fps, FPSCONNECT_SIMPLE);
-
-    functionparameter_SetParamValue_FLOAT64(&fps, ".SVDlim", SVDlim);
-
-    function_parameter_struct_disconnect(&fps);
-
-    AOloopControl_computeCalib_mkCM_RUN();
+    CLIcmddata.FPS_customCONFsetup = NULL;
+    CLIcmddata.FPS_customCONFcheck = NULL;
+    INSERT_STD_CLIREGISTERFUNC
 
     return RETURN_SUCCESS;
 }
+#endif
 
 //
 // make slave actuators from maskRM
