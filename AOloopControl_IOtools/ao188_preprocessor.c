@@ -32,42 +32,8 @@ static char apd_mat_name[FUNCTION_PARAMETER_STRMAXLEN];
 #define FPS_PARAMS(X) \
     X(".wfsin", apd_mat_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input")
 
-static FPS_CLI_BINDING my_bindings[] = {
-    FPS_PARAMS(FPS_X_BINDING)
-};
+FPS_V2_SECTION5(FPS_PARAMS)
 
-static const int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
-
-static CLICMDARGDEF farg[] = {
-    FPS_PARAMS(FPS_X_FARG)
-};
-
-#ifdef FPS_STANDALONE
-CLICMDDATA CLIcmddata = {
-#else
-static CLICMDDATA CLIcmddata = {
-#endif
-    "",
-    "",
-    CLICMD_FIELDS_DEFAULTS
-};
-
-static CMDSETTINGS default_cmdsettings = {0};
-
-static __attribute__((constructor))
-void init_cmdsettings(void)
-{
-    strncpy(CLIcmddata.key,
-            FPS_app_info.cmdkey,
-            sizeof(CLIcmddata.key) - 1);
-    strncpy(CLIcmddata.description,
-            FPS_app_info.description,
-            sizeof(CLIcmddata.description) - 1);
-    if (CLIcmddata.cmdsettings == NULL) {
-        CLIcmddata.cmdsettings =
-            &default_cmdsettings;
-    }
-}
 
 /*
 Temp utility to detect what causes STDIN to become closed
