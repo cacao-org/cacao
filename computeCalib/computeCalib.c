@@ -104,7 +104,7 @@ void init_cms(void)
     }
 }
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_function()
 {
     AOloopControl_computeCalib_Hadamard_decodeRM(
         p_inrm, p_hmat,

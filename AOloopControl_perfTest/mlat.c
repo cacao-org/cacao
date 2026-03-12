@@ -136,7 +136,7 @@ static float    *seqdtframe     = NULL;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 

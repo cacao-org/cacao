@@ -486,7 +486,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
  * 6.  COMPUTE WRAPPER
  * ============================================================= */
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_function()
 {
     DMTURB_STATE *state = dmturb_init();
     INSERT_STD_PROCINFO_COMPUTEFUNC_START

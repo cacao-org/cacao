@@ -241,7 +241,7 @@ static errno_t compute_lowfs_info(struct LOWFS_INFO_STRUCT *lowfs_struct,
     return EXIT_SUCCESS;
 }
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 

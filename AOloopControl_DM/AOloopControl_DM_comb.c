@@ -962,7 +962,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
  * 6.  COMPUTE WRAPPER
  * ============================================================= */
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_function()
 {
     DMCOMB_STATE *state = dmcomb_init();
 

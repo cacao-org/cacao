@@ -76,7 +76,7 @@ static errno_t help_function()
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 

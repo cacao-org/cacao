@@ -109,7 +109,7 @@ void init_cms(void)
     }
 }
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_function()
 {
     AOloopControl_PredictiveControl_builPFloop_WatchInput(
         p_loop, p_pfblock,

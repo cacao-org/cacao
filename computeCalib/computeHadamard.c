@@ -311,7 +311,7 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
