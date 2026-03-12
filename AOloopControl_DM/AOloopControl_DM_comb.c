@@ -13,9 +13,9 @@
 #include "CLIcore/CLIcore.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
-#include "timeutils.h"
-
-#include "fps.h"
+#include "COREMOD_tools/COREMOD_tools.h"
+#include "COREMOD_arith/COREMOD_arith.h"
+#include "libmilkdata/milk_compiler.h"
 #include "processinfo.h"
 #include "processtools.h"
 
@@ -147,8 +147,8 @@ static errno_t DMdisp_add_disp_from_circular_buffer(DMCOMB_STATE *state)
 
             uint32_t chan = *astrogridchan_ptr;
             if (chan < *NBchannel_ptr) {
-                float * MILK_RESTRICT outptr = state->imgch[chan].im->array.F;
-                const float * MILK_RESTRICT inptr = state->ag_imgdispbuffer.im->array.F;
+                float * MILK_RESTRICT outptr = MILK_ASSUME_ALIGNED(state->imgch[chan].im->array.F);
+                const float * MILK_RESTRICT inptr = MILK_ASSUME_ALIGNED(state->ag_imgdispbuffer.im->array.F);
                 uint64_t offset = state->ag_sliceindex * state->ag_xysize;
                 float mult = *astrogridmult_ptr;
                 
@@ -280,7 +280,7 @@ static errno_t update_dmdisp(
 
     for(uint32_t ch = 1; ch < *NBchannel_ptr; ch++)
     {
-        const float * MILK_RESTRICT inptr = imgch[ch].im->array.F;
+        const float * MILK_RESTRICT inptr = MILK_ASSUME_ALIGNED(imgch[ch].im->array.F);
         #pragma omp simd
         for(uint_fast64_t ii = 0; ii < size; ii++)
         {
@@ -320,7 +320,7 @@ static errno_t update_dmdispzpo(
     {
         if(zpoffset_channel[ch] == 1)
         {
-            const float * MILK_RESTRICT inptr = imgch[ch].im->array.F;
+            const float * MILK_RESTRICT inptr = MILK_ASSUME_ALIGNED(imgch[ch].im->array.F);
             #pragma omp simd
             for(uint_fast64_t ii = 0; ii < size; ii++)
             {
