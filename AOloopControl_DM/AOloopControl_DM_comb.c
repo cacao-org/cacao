@@ -147,11 +147,12 @@ static errno_t DMdisp_add_disp_from_circular_buffer(DMCOMB_STATE *state)
 
             uint32_t chan = *astrogridchan_ptr;
             if (chan < *NBchannel_ptr) {
-                float *outptr = state->imgch[chan].im->array.F;
-                float *inptr = state->ag_imgdispbuffer.im->array.F;
+                float * MILK_RESTRICT outptr = state->imgch[chan].im->array.F;
+                const float * MILK_RESTRICT inptr = state->ag_imgdispbuffer.im->array.F;
                 uint64_t offset = state->ag_sliceindex * state->ag_xysize;
                 float mult = *astrogridmult_ptr;
-                \
+                
+                #pragma omp simd
                 for(uint64_t ii = 0; ii < state->ag_xysize; ii++)
                 {
                     outptr[ii] = mult * inptr[offset + ii];
@@ -208,7 +209,7 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
     {
         for(uint64_t ii = 0; ii < xysize; ii++)
         {
-            float voltvalue = 100.0 * imgdisp.im->array.F[ii] / (*stroke100_ptr);
+            float voltvalue = 100.0f * imgdisp.im->array.F[ii] / (*stroke100_ptr);
             if(voltvalue > (*maxvolt_ptr)) voltvalue = (*maxvolt_ptr);
             if(voltvalue < -(*maxvolt_ptr)) voltvalue = -(*maxvolt_ptr);
             imgvolt.im->array.F[ii] = voltvalue;
@@ -220,19 +221,19 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
         {
             float val = imgdisp.im->array.F[ii];
             if (val < 0) val = 0;
-            float volt = 100.0 * sqrt(val / (*stroke100_ptr));
+            float volt = 100.0f * sqrtf(val / (*stroke100_ptr));
             if(volt > (*maxvolt_ptr)) volt = (*maxvolt_ptr);
-            imgvolt.im->array.UI16[ii] = (unsigned short int)(volt / 300.0 * 16384.0);
+            imgvolt.im->array.UI16[ii] = (unsigned short int)(volt / 300.0f * 16384.0f);
         }
     }
     else if((*volttype_ptr) == 3)
     {
         for(uint64_t ii = 0; ii < xysize; ii++)
         {
-            float volt = (imgdisp.im->array.F[ii] / (*stroke100_ptr)) + 0.5;
-            if(volt > (*maxvolt_ptr)) volt = remainder(volt, 1);
-            if(volt < 0) volt = remainder(volt, 1);
-            imgvolt.im->array.UI16[ii] = (unsigned short int)((volt) * 65535.0);
+            float volt = (imgdisp.im->array.F[ii] / (*stroke100_ptr)) + 0.5f;
+            if(volt > (*maxvolt_ptr)) volt = remainderf(volt, 1.0f);
+            if(volt < 0) volt = remainderf(volt, 1.0f);
+            imgvolt.im->array.UI16[ii] = (unsigned short int)((volt) * 65535.0f);
         }
     }
     else if((*volttype_ptr) == 0) // Type conversion
@@ -279,9 +280,11 @@ static errno_t update_dmdisp(
 
     for(uint32_t ch = 1; ch < *NBchannel_ptr; ch++)
     {
+        const float * MILK_RESTRICT inptr = imgch[ch].im->array.F;
+        #pragma omp simd
         for(uint_fast64_t ii = 0; ii < size; ii++)
         {
-            dmdisptmp[ii] += imgch[ch].im->array.F[ii];
+            dmdisptmp[ii] += inptr[ii];
         }
     }
 
@@ -317,9 +320,11 @@ static errno_t update_dmdispzpo(
     {
         if(zpoffset_channel[ch] == 1)
         {
+            const float * MILK_RESTRICT inptr = imgch[ch].im->array.F;
+            #pragma omp simd
             for(uint_fast64_t ii = 0; ii < size; ii++)
             {
-                dmdisptmp[ii] += imgch[ch].im->array.F[ii];
+                dmdisptmp[ii] += inptr[ii];
             }
         }
     }
@@ -345,35 +350,45 @@ static void dmcomb_cleanup(DMCOMB_STATE *state)
 
 static DMCOMB_STATE* dmcomb_init()
 {
-    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    fflush(stdout);
+    if (UNLIKELY(data.core.Debug > 0)) {
+        printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+        fflush(stdout);
+    }
 
     DMCOMB_STATE *state = (DMCOMB_STATE*) calloc(1, sizeof(DMCOMB_STATE));
 
-    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    fflush(stdout);
+    if (UNLIKELY(data.core.Debug > 0)) {
+        printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+        fflush(stdout);
+    }
 
     state->imgch = calloc(*NBchannel_ptr, sizeof(IMGID));
     for(uint32_t ch = 0; ch < *NBchannel_ptr; ch++) {
         char name[STRINGMAXLEN_STREAMNAME];
         snprintf(name, sizeof(name), "dm%02udisp%02u", *DMindex_ptr, ch);
 
-        printf("DEBUG: channel %d : %s\n", ch, name);
-        fflush(stdout);
+        if (UNLIKELY(data.core.Debug > 0)) {
+            printf("DEBUG: channel %d : %s\n", ch, name);
+            fflush(stdout);
+        }
 
         imageID IDch = read_sharedmem_image(name,
             data.core.image,
             data.core.NB_MAX_IMAGE);
-        printf("DEBUG: ID = %ld\n", IDch);
-        fflush(stdout);
+        if (UNLIKELY(data.core.Debug > 0)) {
+            printf("DEBUG: ID = %ld\n", IDch);
+            fflush(stdout);
+        }
 
         state->imgch[ch] = stream_connect_create_2Df32(name,
             *DMxsize_ptr,
             *DMysize_ptr);
     }
 
-    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    fflush(stdout);
+    if (UNLIKELY(data.core.Debug > 0)) {
+        printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+        fflush(stdout);
+    }
 
     state->imgdisp = stream_connect_create_2Df32(DMcombout_ptr,
         *DMxsize_ptr,
@@ -382,13 +397,17 @@ static DMCOMB_STATE* dmcomb_init()
         *DMxsize_ptr,
         *DMysize_ptr);
 
-    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    fflush(stdout);
+    if (UNLIKELY(data.core.Debug > 0)) {
+        printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+        fflush(stdout);
+    }
 
     state->dmdisptmp = malloc(sizeof(float) * (*DMxsize_ptr) * (*DMysize_ptr));
 
-    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    fflush(stdout);
+    if (UNLIKELY(data.core.Debug > 0)) {
+        printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+        fflush(stdout);
+    }
 
     if((*voltmode_ptr) & FPFLAG_ONOFF) {
         if(
@@ -402,8 +421,10 @@ static DMCOMB_STATE* dmcomb_init()
             data.core.NB_MAX_IMAGE);
     }
 
-    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    fflush(stdout);
+    if (UNLIKELY(data.core.Debug > 0)) {
+        printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+        fflush(stdout);
+    }
 
     return state;
 }
@@ -415,12 +436,14 @@ static void dmcomb_step(
     DMCOMB_STATE *state
 )
 {
-    printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
-    fflush(stdout);
+    if (UNLIKELY(data.core.Debug > 0)) {
+        printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
+        fflush(stdout);
+    }
 
     // Sync parameters
     if (fps) {
-        if(fps->md->processinfo_change_cnt != processinfo_change_cnt_local) {
+        if(UNLIKELY(fps->md->processinfo_change_cnt != processinfo_change_cnt_local)) {
             fps_to_processinfo(fps, processinfo);
             processinfo_change_cnt_local = fps->md->processinfo_change_cnt;
         }
@@ -481,7 +504,7 @@ static void dmcomb_step(
     }
     if(((*zpoffsetenable_ptr) & FPFLAG_ONOFF) && zpooffsetchange) DMupdatezpo = 1;
 
-    if(DMupdate) {
+    if(LIKELY(DMupdate)) {
         if(!((*astrogrid_ptr) & FPFLAG_ONOFF)) state->DMdisp_add_disp_from_circular_buffer_init = 0;
 
         if(((*astrogrid_ptr) & FPFLAG_ONOFF) && (*astrogridtdelay_ptr == 0)) {
@@ -529,7 +552,7 @@ static void dmcomb_step(
         }
     }
 
-    if(DMupdatezpo) {
+    if(UNLIKELY(DMupdatezpo)) {
         update_dmdispzpo(state->imgdispzpo,
             state->imgch,
             state->dmdisptmp,
