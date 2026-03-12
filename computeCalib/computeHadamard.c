@@ -106,14 +106,23 @@ imageID AOloopControl_computeCalib_mkHadamardModes(
     }
     sizearray[0] = xsize;
     sizearray[1] = ysize;
-    create_image_ID("Hpixindex",
-                    2,
-                    sizearray,
-                    _DATATYPE_FLOAT,
-                    0,
-                    0,
-                    0,
-                    &IDindex);
+    {
+        IMGID imghidx =
+            imgid_make_from_name(
+                "Hpixindex");
+        imghidx.mdt->naxis = 2;
+        imghidx.mdt->size[0] =
+            sizearray[0];
+        imghidx.mdt->size[1] =
+            sizearray[1];
+        imghidx.mdt->datatype =
+            _DATATYPE_FLOAT;
+        imghidx.im =
+            (IMAGE *) calloc(
+                1, sizeof(IMAGE));
+        imgid_mkimage(&imghidx);
+        IDindex = imghidx.ID;
+    }
     free(sizearray);
 
     cnt = 0;

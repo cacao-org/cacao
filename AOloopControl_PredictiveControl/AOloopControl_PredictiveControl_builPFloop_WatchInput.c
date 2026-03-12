@@ -261,7 +261,26 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
         PRINT_ERROR("sprintf wrote <1 char");
     }
 
-    create_image_ID(imnameout, 3, imsizearray, datatype, 1, 1, 0, &IDout);
+    {
+        IMGID imgout =
+            imgid_make_from_name(
+                imnameout);
+        imgout.mdt->naxis = 3;
+        imgout.mdt->size[0] =
+            imsizearray[0];
+        imgout.mdt->size[1] =
+            imsizearray[1];
+        imgout.mdt->size[2] =
+            imsizearray[2];
+        imgout.mdt->datatype = datatype;
+        imgout.mdt->shared = 1;
+        imgout.mdt->NBkw = 1;
+        imgout.im =
+            (IMAGE *) calloc(
+                1, sizeof(IMAGE));
+        imgid_mkimage(&imgout);
+        IDout = imgout.ID;
+    }
     free(imsizearray);
     COREMOD_MEMORY_image_set_semflush(imnameout, -1);
     printf("Done\n");

@@ -178,14 +178,25 @@ static errno_t compute_function()
         naxes[1] = imgwfs.md->size[1];
         naxes[2] = *wfsNBframemax;
 
-        create_image_ID("_testwfsc",
-                        3,
-                        naxes,
-                        imgwfs.md->datatype,
-                        0,
-                        0,
-                        0,
-                        &IDwfsc);
+        {
+            IMGID imgwfsc =
+                imgid_make_from_name(
+                    "_testwfsc");
+            imgwfsc.mdt->naxis = 3;
+            imgwfsc.mdt->size[0] =
+                naxes[0];
+            imgwfsc.mdt->size[1] =
+                naxes[1];
+            imgwfsc.mdt->size[2] =
+                naxes[2];
+            imgwfsc.mdt->datatype =
+                imgwfs.md->datatype;
+            imgwfsc.im =
+                (IMAGE *) calloc(
+                    1, sizeof(IMAGE));
+            imgid_mkimage(&imgwfsc);
+            IDwfsc = imgwfsc.ID;
+        }
     }
 
     float *latencyarray = (float *) malloc(sizeof(float) * *NBiter);
