@@ -91,6 +91,7 @@ typedef struct {
     IMGID imgdispzpo;
     IMGID imgdmvolt;
     float *dmdisptmp;
+    double *valarray;
 
     // ZPO state
     int zpoffset_channel[NB_ZEROPOINT_CH_MAX];
@@ -163,108 +164,252 @@ static errno_t DMdisp_add_disp_from_circular_buffer(DMCOMB_STATE *state)
     return RETURN_SUCCESS;
 }
 
-static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt)
+/**
+ * @brief Convert DM displacement to voltage
+ *
+ * Uses pre-allocated valarray from state to
+ * avoid per-call malloc. Specializes pow()
+ * for common exponents (0.5→sqrtf, 1.0→nop)
+ * to eliminate expensive transcendentals
+ * from the hot loop.
+ */
+static errno_t DM_displ2V(
+    IMGID imgdisp,
+    IMGID imgvolt,
+    DMCOMB_STATE *state)
 {
-    uint64_t xysize = (uint64_t)(*DMxsize_ptr) * (*DMysize_ptr);
-    double *valarray = (double *) malloc(sizeof(double) * xysize);
-    \
+    uint64_t xysize =
+        (uint64_t)(*DMxsize_ptr)
+        * (*DMysize_ptr);
+    double *valarray = state->valarray;
+
     if((*volttype_ptr) == 1)
     {
-        float inrange = (*maxvolt_ptr) * (*stroke100_ptr) / 100.0;
+        float inrange =
+            (*maxvolt_ptr)
+            * (*stroke100_ptr) / 100.0f;
         strcpy(outv_ftype_ptr, "float32");
-        *outv_exp_ptr = 1.0;
+        *outv_exp_ptr = 1.0f;
         *outv_inrange_min_ptr = -inrange;
         *outv_inrange_max_ptr = inrange;
-        *outv_outrange_min_ptr = -(*maxvolt_ptr);
-        *outv_outrange_max_ptr = -(*maxvolt_ptr);
-        \
+        *outv_outrange_min_ptr =
+            -(*maxvolt_ptr);
+        *outv_outrange_max_ptr =
+            -(*maxvolt_ptr);
     }
     else if((*volttype_ptr) == 2)
     {
-        float inrange = (*maxvolt_ptr) * (*stroke100_ptr) / 100.0;
+        float inrange =
+            (*maxvolt_ptr)
+            * (*stroke100_ptr) / 100.0f;
         strcpy(outv_ftype_ptr, "uint16");
-        *outv_exp_ptr = 0.5;
+        *outv_exp_ptr = 0.5f;
         *outv_inrange_min_ptr = -inrange;
         *outv_inrange_max_ptr = inrange;
-        *outv_outrange_min_ptr = 0.0;
-        *outv_outrange_max_ptr = (*maxvolt_ptr) / 300.0 * 16384.0;
+        *outv_outrange_min_ptr = 0.0f;
+        *outv_outrange_max_ptr =
+            (*maxvolt_ptr)
+            / 300.0f * 16384.0f;
     }
 
-    for(uint64_t ii = 0; ii < xysize; ii++)
     {
-        float inval = imgdisp.im->array.F[ii];
-        double x = inval - (*outv_inrange_min_ptr);
-        double range = *outv_inrange_max_ptr - *outv_inrange_min_ptr;
-        if (range != 0) x = x / range;
-        else x = 0;
-        \
-        if(x < 0.0) x = 0.0;
-        if(x > 1.0) x = 1.0;
+        float exp_val = *outv_exp_ptr;
+        float inmin = *outv_inrange_min_ptr;
+        float inmax = *outv_inrange_max_ptr;
+        float outmin = *outv_outrange_min_ptr;
+        float outmax = *outv_outrange_max_ptr;
+        float range = inmax - inmin;
+        float inv_range =
+            (range != 0.0f)
+            ? (1.0f / range) : 0.0f;
+        float outscale = outmax - outmin;
 
-        valarray[ii] = pow(x, *outv_exp_ptr);
-        valarray[ii] = (*outv_outrange_min_ptr) + valarray[ii] * (*outv_outrange_max_ptr - *outv_outrange_min_ptr);
+        /* Specialize pow() for common
+         * exponents to avoid expensive
+         * transcendental in inner loop */
+        if(fabsf(exp_val - 1.0f) < 1.0e-6f)
+        {
+            /* exp == 1.0: linear, no pow */
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+            {
+                float x =
+                    (imgdisp.im->array.F[ii]
+                     - inmin) * inv_range;
+                if(x < 0.0f) x = 0.0f;
+                if(x > 1.0f) x = 1.0f;
+                valarray[ii] =
+                    outmin + x * outscale;
+            }
+        }
+        else if(fabsf(exp_val - 0.5f)
+                < 1.0e-6f)
+        {
+            /* exp == 0.5: use sqrtf */
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+            {
+                float x =
+                    (imgdisp.im->array.F[ii]
+                     - inmin) * inv_range;
+                if(x < 0.0f) x = 0.0f;
+                if(x > 1.0f) x = 1.0f;
+                valarray[ii] =
+                    outmin
+                    + sqrtf(x) * outscale;
+            }
+        }
+        else
+        {
+            /* General exponent: use powf */
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+            {
+                float x =
+                    (imgdisp.im->array.F[ii]
+                     - inmin) * inv_range;
+                if(x < 0.0f) x = 0.0f;
+                if(x > 1.0f) x = 1.0f;
+                valarray[ii] =
+                    outmin
+                    + powf(x, exp_val)
+                      * outscale;
+            }
+        }
     }
 
     if((*volttype_ptr) == 1)
     {
-        for(uint64_t ii = 0; ii < xysize; ii++)
+        float scale =
+            100.0f / (*stroke100_ptr);
+        float maxv = *maxvolt_ptr;
+        for(uint64_t ii = 0;
+            ii < xysize; ii++)
         {
-            float voltvalue = 100.0f * imgdisp.im->array.F[ii] / (*stroke100_ptr);
-            if(voltvalue > (*maxvolt_ptr)) voltvalue = (*maxvolt_ptr);
-            if(voltvalue < -(*maxvolt_ptr)) voltvalue = -(*maxvolt_ptr);
-            imgvolt.im->array.F[ii] = voltvalue;
+            float v =
+                scale
+                * imgdisp.im->array.F[ii];
+            if(v > maxv) v = maxv;
+            if(v < -maxv) v = -maxv;
+            imgvolt.im->array.F[ii] = v;
         }
     }
     else if((*volttype_ptr) == 2)
     {
-        for(uint64_t ii = 0; ii < xysize; ii++)
+        float inv_s = 1.0f / (*stroke100_ptr);
+        float maxv = *maxvolt_ptr;
+        float vscale =
+            16384.0f / 300.0f;
+        for(uint64_t ii = 0;
+            ii < xysize; ii++)
         {
-            float val = imgdisp.im->array.F[ii];
-            if (val < 0) val = 0;
-            float volt = 100.0f * sqrtf(val / (*stroke100_ptr));
-            if(volt > (*maxvolt_ptr)) volt = (*maxvolt_ptr);
-            imgvolt.im->array.UI16[ii] = (unsigned short int)(volt / 300.0f * 16384.0f);
+            float val =
+                imgdisp.im->array.F[ii];
+            if(val < 0.0f) val = 0.0f;
+            float volt =
+                100.0f
+                * sqrtf(val * inv_s);
+            if(volt > maxv) volt = maxv;
+            imgvolt.im->array.UI16[ii] =
+                (unsigned short int)
+                (volt * vscale);
         }
     }
     else if((*volttype_ptr) == 3)
     {
-        for(uint64_t ii = 0; ii < xysize; ii++)
+        float inv_s = 1.0f / (*stroke100_ptr);
+        float maxv = *maxvolt_ptr;
+        for(uint64_t ii = 0;
+            ii < xysize; ii++)
         {
-            float volt = (imgdisp.im->array.F[ii] / (*stroke100_ptr)) + 0.5f;
-            if(volt > (*maxvolt_ptr)) volt = remainderf(volt, 1.0f);
-            if(volt < 0) volt = remainderf(volt, 1.0f);
-            imgvolt.im->array.UI16[ii] = (unsigned short int)((volt) * 65535.0f);
+            float volt =
+                imgdisp.im->array.F[ii]
+                * inv_s + 0.5f;
+            if(volt > maxv)
+                volt = remainderf(
+                    volt, 1.0f);
+            if(volt < 0.0f)
+                volt = remainderf(
+                    volt, 1.0f);
+            imgvolt.im->array.UI16[ii] =
+                (unsigned short int)
+                (volt * 65535.0f);
         }
     }
-    else if((*volttype_ptr) == 0) // Type conversion
+    else if((*volttype_ptr) == 0)
     {
-        if(strcmp(outv_ftype_ptr, "float64") == 0) {
-            for(uint64_t ii = 0; ii < xysize; ii++) imgvolt.im->array.D[ii] = valarray[ii];
+        if(strcmp(
+               outv_ftype_ptr,
+               "float64") == 0)
+        {
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+                imgvolt.im->array.D[ii] =
+                    valarray[ii];
         }
-        else if(strcmp(outv_ftype_ptr, "uint16") == 0) {
-            for(uint64_t ii = 0; ii < xysize; ii++) imgvolt.im->array.UI16[ii] = (uint16_t)(valarray[ii]);
+        else if(strcmp(
+                    outv_ftype_ptr,
+                    "uint16") == 0)
+        {
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+                imgvolt.im->array.UI16[ii] =
+                    (uint16_t)(valarray[ii]);
         }
-        else if(strcmp(outv_ftype_ptr, "uint32") == 0) {
-            for(uint64_t ii = 0; ii < xysize; ii++) imgvolt.im->array.UI32[ii] = (uint32_t)(valarray[ii]);
+        else if(strcmp(
+                    outv_ftype_ptr,
+                    "uint32") == 0)
+        {
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+                imgvolt.im->array.UI32[ii] =
+                    (uint32_t)(valarray[ii]);
         }
-        else if(strcmp(outv_ftype_ptr, "uint64") == 0) {
-            for(uint64_t ii = 0; ii < xysize; ii++) imgvolt.im->array.UI64[ii] = (uint64_t)(valarray[ii]);
+        else if(strcmp(
+                    outv_ftype_ptr,
+                    "uint64") == 0)
+        {
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+                imgvolt.im->array.UI64[ii] =
+                    (uint64_t)(valarray[ii]);
         }
-        else if(strcmp(outv_ftype_ptr, "int16") == 0) {
-            for(uint64_t ii = 0; ii < xysize; ii++) imgvolt.im->array.SI16[ii] = (int16_t)(valarray[ii]);
+        else if(strcmp(
+                    outv_ftype_ptr,
+                    "int16") == 0)
+        {
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+                imgvolt.im->array.SI16[ii] =
+                    (int16_t)(valarray[ii]);
         }
-        else if(strcmp(outv_ftype_ptr, "int32") == 0) {
-            for(uint64_t ii = 0; ii < xysize; ii++) imgvolt.im->array.SI32[ii] = (int32_t)(valarray[ii]);
+        else if(strcmp(
+                    outv_ftype_ptr,
+                    "int32") == 0)
+        {
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+                imgvolt.im->array.SI32[ii] =
+                    (int32_t)(valarray[ii]);
         }
-        else if(strcmp(outv_ftype_ptr, "int64") == 0) {
-            for(uint64_t ii = 0; ii < xysize; ii++) imgvolt.im->array.SI64[ii] = (int64_t)(valarray[ii]);
+        else if(strcmp(
+                    outv_ftype_ptr,
+                    "int64") == 0)
+        {
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+                imgvolt.im->array.SI64[ii] =
+                    (int64_t)(valarray[ii]);
         }
-        else {
-            for(uint64_t ii = 0; ii < xysize; ii++) imgvolt.im->array.F[ii] = valarray[ii];
+        else
+        {
+            for(uint64_t ii = 0;
+                ii < xysize; ii++)
+                imgvolt.im->array.F[ii] =
+                    valarray[ii];
         }
     }
 
-    free(valarray);
     return RETURN_SUCCESS;
 }
 
@@ -343,6 +488,7 @@ static void dmcomb_cleanup(DMCOMB_STATE *state)
     if(!state) return;
     if(state->imgch) free(state->imgch);
     if(state->dmdisptmp) free(state->dmdisptmp);
+    if(state->valarray) free(state->valarray);
 
     free(state);
 }
@@ -402,7 +548,12 @@ static DMCOMB_STATE* dmcomb_init()
         fflush(stdout);
     }
 
-    state->dmdisptmp = malloc(sizeof(float) * (*DMxsize_ptr) * (*DMysize_ptr));
+    state->dmdisptmp = malloc(
+        sizeof(float)
+        * (*DMxsize_ptr) * (*DMysize_ptr));
+    state->valarray = malloc(
+        sizeof(double)
+        * (*DMxsize_ptr) * (*DMysize_ptr));
 
     if (UNLIKELY(data.core.Debug > 0)) {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
@@ -519,7 +670,7 @@ static void dmcomb_step(
 
         if((*voltmode_ptr) & FPFLAG_ONOFF) {
             state->imgdmvolt.md->write = 1;
-            DM_displ2V(state->imgdisp, state->imgdmvolt);
+            DM_displ2V(state->imgdisp, state->imgdmvolt, state);
             processinfo_update_output_stream(processinfo,
                 state->imgdmvolt.im,
                 NULL);
@@ -544,7 +695,7 @@ static void dmcomb_step(
 
             if((*voltmode_ptr) & FPFLAG_ONOFF) {
                 state->imgdmvolt.md->write = 1;
-                DM_displ2V(state->imgdisp, state->imgdmvolt);
+                DM_displ2V(state->imgdisp, state->imgdmvolt, state);
                 processinfo_update_output_stream(processinfo,
                     state->imgdmvolt.im,
                     NULL);
