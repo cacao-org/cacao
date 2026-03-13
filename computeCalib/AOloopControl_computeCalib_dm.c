@@ -184,7 +184,7 @@ long AOloopControl_computeCalib_DMextrapolateModes(
                         long djj  = jj1 - jj;
                         long dii2 = dii * dii;
                         long djj2 = djj * djj;
-                        float r = sqrt(dii2 + djj2);
+                        float r = sqrtf(dii2 + djj2);
                         if(r < dist)
                         {
                             dist = r;
@@ -214,7 +214,7 @@ long AOloopControl_computeCalib_DMextrapolateModes(
 
                 // Transform the coefficient using an exponential function.
                 // This creates a smooth fall-off effect for extrapolation.
-                coeff = (exp(-coeff * coeff) - exp(-1.0)) / (1.0 - exp(-1.0));
+                coeff = (expf(-coeff * coeff) - expf(-1.0f)) / (1.0f - expf(-1.0f));
                 if(coeff < 0.0)
                 {
                     coeff = 0.0;
@@ -311,13 +311,13 @@ long AOloopControl_computeCalib_DMslaveExt(
                         {
                             dx = 1.0 * (ii - ii1);
                             dy = 1.0 * (jj - jj1);
-                            r  = sqrt(dx * dx + dy * dy);
+                            r  = sqrtf(dx * dx + dy * dy);
                             if ((r < pixrad) &&
                                 (data.core.image[IDmask].array.F[jj1 * xsize + ii1] >
                                  0.5))
                             {
                                 r1    = r / pixrad;
-                                coeff = exp(-10.0 * r1 * r1);
+                                coeff = expf(-10.0f * r1 * r1);
                                 valr += r * coeff;
                                 val1 +=
                                     data.core.image[IDin]
@@ -332,7 +332,7 @@ long AOloopControl_computeCalib_DMslaveExt(
                     if (val1cnt > 0.0001)
                     {
                         data.core.image[IDout].array.F[kk * xysize + index] =
-                            (val1 / val1cnt) * exp(-(valr / r0) * (valr / r0));
+                            (val1 / val1cnt) * expf(-(valr / r0) * (valr / r0));
                     }
                 }
             }

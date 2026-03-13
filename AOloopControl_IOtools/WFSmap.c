@@ -85,7 +85,7 @@ errno_t image_pixremap(
         xysize *= mapimg.md->size[1];
         for(uint64_t ii = 0; ii < (uint64_t)mapimg.md->size[0]*mapimg.md->size[1]*mapimg.md->size[2]; ii++)
         {
-            if(fabs(mapimg.im->array.F[ii]) > eps)
+            if(fabsf(mapimg.im->array.F[ii]) > eps)
             {
                 mapNBpix++;
             }
@@ -106,7 +106,7 @@ errno_t image_pixremap(
             for(uint64_t ii = 0; ii < (uint64_t)mapimg.md->size[0]*mapimg.md->size[1]; ii++)
             {
                 uint64_t pixindex = (uint64_t)kk * mapimg.md->size[0] * mapimg.md->size[1] + ii;
-                if(fabs(mapimg.im->array.F[pixindex]) > eps)
+                if(fabsf(mapimg.im->array.F[pixindex]) > eps)
                 {
                     map_inpixindex[mappix] = ii;
                     map_outpixindex[mappix] = kk;

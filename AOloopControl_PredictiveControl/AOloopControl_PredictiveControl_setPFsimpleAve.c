@@ -50,7 +50,7 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
     total = 0.0;
     for(kk = 0; kk < FilterOrder; kk++)
     {
-        coeff[kk] = pow(DecayCoeff, kk);
+        coeff[kk] = powf(DecayCoeff, kk);
         total += coeff[kk];
     }
     // normalize such that sum of coeffs is 1
@@ -65,7 +65,7 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
         for(ii = 0; ii < ysize; ii++)
             for(jj = 0; jj < ysize; jj++)
             {
-                data.core.image[IDPF].array.F[jj * xsize + ii + kk * ysize] = 0.0;
+                data.core.image[IDPF].array.F[jj * xsize + ii + kk * ysize] = 0.0f;
             }
         for(ii = 0; ii < ysize; ii++)
         {

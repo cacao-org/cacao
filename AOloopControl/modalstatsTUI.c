@@ -104,12 +104,12 @@ static int modalstats_TUI_process_user_key(
 
     case '+':
         mstatstruct->pscaleindex++;
-        mstatstruct->pscale = pow(10.0, mstatstruct->pscaleindex);
+        mstatstruct->pscale = powf(10.0f, mstatstruct->pscaleindex);
         break;
 
     case '-':
         mstatstruct->pscaleindex--;
-        mstatstruct->pscale = pow(10.0, mstatstruct->pscaleindex);
+        mstatstruct->pscale = powf(10.0f, mstatstruct->pscaleindex);
         break;
 
     case 'P':

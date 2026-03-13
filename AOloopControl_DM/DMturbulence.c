@@ -271,13 +271,13 @@ static errno_t make_seed_turbulence_screen(
     for(uint32_t ii = 1; ii < Dlim; ii++)
         for(uint32_t jj = 1; jj < Dlim; jj++)
         {
-            value += log10(data.core.image[ID].array.F[jj * size + ii]) -
-                     5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
+            value += log10f(data.core.image[ID].array.F[jj * size + ii]) -
+                     5.0f / 3.0f * log10f(sqrtf(ii * ii + jj * jj));
             cnt++;
         }
     // save_fl_fits("strf","strf.fits");
     delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
-    C1 = pow(10.0, value / cnt);
+    C1 = powf(10.0f, value / cnt);
 
     fft_structure_function("tmpo2", "strf");
     ID    = image_ID("strf", data.core.image, data.core.NB_MAX_IMAGE);
@@ -286,17 +286,19 @@ static errno_t make_seed_turbulence_screen(
     for(uint32_t ii = 1; ii < Dlim; ii++)
         for(uint32_t jj = 1; jj < Dlim; jj++)
         {
-            value += log10(data.core.image[ID].array.F[jj * size + ii]) -
-                     5.0 / 3.0 * log10(sqrt(ii * ii + jj * jj));
+            value += log10f(data.core.image[ID].array.F[jj * size + ii]) -
+                     5.0f / 3.0f * log10f(sqrtf(ii * ii + jj * jj));
             cnt++;
         }
     delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
-    C2 = pow(10.0, value / cnt);
+    C2 = powf(10.0f, value / cnt);
 
-    printf("%f %f\n", C1, C2);
+    if(UNLIKELY(data.core.Debug > 0)) {
+        printf("%f %f\n", C1, C2);
+    }
 
-    arith_image_cstmult("tmpo1", 1.0 / sqrt(C1), ID_name1);
-    arith_image_cstmult("tmpo2", 1.0 / sqrt(C2), ID_name2);
+    arith_image_cstmult("tmpo1", 1.0 / sqrtf(C1), ID_name1);
+    arith_image_cstmult("tmpo2", 1.0 / sqrtf(C2), ID_name2);
     delete_image_ID("tmpo1", DELETE_IMAGE_ERRMODE_WARNING);
     delete_image_ID("tmpo2", DELETE_IMAGE_ERRMODE_WARNING);
 
@@ -407,8 +409,8 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
         state->phystime = tdiff;
         double dt = state->phystime - state->phystimeprev;
         
-        state->x0m += dt * (*turbwspeed_ptr) * cos(*turbwangle_ptr);
-        state->y0m += dt * (*turbwspeed_ptr) * sin(*turbwangle_ptr);
+        state->x0m += dt * (*turbwspeed_ptr) * cosf(*turbwangle_ptr);
+        state->y0m += dt * (*turbwspeed_ptr) * sinf(*turbwangle_ptr);
         
         uint32_t Sxsize = data.core.image[state->IDts0].md->size[0];
         uint32_t Sysize = data.core.image[state->IDts0].md->size[1];
