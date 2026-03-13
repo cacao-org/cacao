@@ -728,14 +728,14 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
                     tval = 0.0;
                 }
                 sum += tval;
-                ssum += pow(tval, alpha);
+                ssum += powf(tval, alpha);
             }
 
         // best frame
         switch(EvalMode)
         {
         case 0:
-            evalarray[kk] = -(ssum / (pow(sum, alpha)));
+            evalarray[kk] = -(ssum / (powf(sum, alpha)));
             break;
 
         case 1:

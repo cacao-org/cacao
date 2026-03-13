@@ -164,7 +164,7 @@ static errno_t compute_function()
                     }
 
                     // Kernel radius
-                    int kradint = (int)(sqrt(nearest_dist2) + 3.0);
+                    int kradint = (int)(sqrtf(nearest_dist2) + 3.0f);
 
                     int iimin = ii - kradint;
                     if(iimin < 0)

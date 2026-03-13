@@ -400,7 +400,7 @@ static void modal_filter_step(
             static double modpha = 0.0;
             modpha += 1.0 / (*auxDMmvalmodperiod_ptr);
             if(modpha > 1.0) modpha -= 1.0;
-            auxDMfact *= sin(2.0 * M_PI * modpha);
+            auxDMfact *= sinf(2.0f * M_PI * modpha);
         }
 
         // External DM update

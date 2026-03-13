@@ -537,12 +537,12 @@ static errno_t compute_function()
                             "%7.3f   [nm]  --> %5.3f\n",
                             block,
                             block_cnt[block],
-                            1000.0 * sqrt(block_WFSrms2[block]),
-                            1000.0 * sqrt(block_WFSmrms2[block]),
-                            1000.0 * sqrt(block_WFSmqrms2[block]),
-                            1000.0 * sqrt(block_DMrms2[block]),
-                            1000.0 * sqrt(block_OLrms2[block]),
-                            sqrt(block_WFSrms2[block]) / sqrt(block_OLrms2[block]));
+                            1000.0 * sqrtf(block_WFSrms2[block]),
+                            1000.0 * sqrtf(block_WFSmrms2[block]),
+                            1000.0 * sqrtf(block_WFSmqrms2[block]),
+                            1000.0 * sqrtf(block_DMrms2[block]),
+                            1000.0 * sqrtf(block_OLrms2[block]),
+                            sqrtf(block_WFSrms2[block]) / sqrtf(block_OLrms2[block]));
 
                         char ffname[STRINGMAXLEN_FULLFILENAME];
                         WRITE_FULLFILENAME(ffname, "AOmodalstat.dat");
@@ -551,12 +551,12 @@ static errno_t compute_function()
                                 "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
                                 processinfo->loopcnt,
                                 block,
-                                1000.0 * sqrt(block_WFSrms2[block]),
-                                1000.0 * sqrt(block_WFSmqrms2[block]),
-                                1000.0 * sqrt(block_DMrms2[block]),
-                                1000.0 * sqrt(block_OLrms2[block]),
-                                sqrt(block_WFSrms2[block]) /
-                                sqrt(block_OLrms2[block]));
+                                1000.0 * sqrtf(block_WFSrms2[block]),
+                                1000.0 * sqrtf(block_WFSmqrms2[block]),
+                                1000.0 * sqrtf(block_DMrms2[block]),
+                                1000.0 * sqrtf(block_OLrms2[block]),
+                                sqrtf(block_WFSrms2[block]) /
+                                sqrtf(block_OLrms2[block]));
                         fclose(fp);
                     }
                 }

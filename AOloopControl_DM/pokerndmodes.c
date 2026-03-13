@@ -73,9 +73,9 @@ static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
 
         for(int m = 0; m < NBmode; m++)
         {
-            pokemval[m] = (pokeampl) * (1.0 - 2.0 * ran1());
-            pokemfreq[m] = (pokefreq) * (0.5 + 0.5 * ran1());
-            pokempha[m] = 2.0 * M_PI * ran1();
+            pokemval[m] = (pokeampl) * (1.0f - 2.0f * ran1());
+            pokemfreq[m] = (pokefreq) * (0.5f + 0.5f * ran1());
+            pokempha[m] = 2.0f * M_PI * ran1();
         }
     }
     /*    else
@@ -91,11 +91,11 @@ static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
     for(int m = 0; m < NBmode; m++)
     {
         pokempha[m] += pokemfreq[m] * ran1();
-        pokemfreq[m] += (pokefreq) * 0.01 * (1.0 - 2.0 * ran1());
+        pokemfreq[m] += (pokefreq) * 0.01f * (1.0f - 2.0f * ran1());
 
         if(pokemfreq[m] < 0.5 * (pokefreq))
         {
-            pokemfreq[m] = 0.5 * (pokefreq);
+            pokemfreq[m] = 0.5f * (pokefreq);
         }
 
         if(pokemfreq[m] > (pokefreq))
@@ -103,17 +103,17 @@ static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
             pokemfreq[m] = (pokefreq);
         }
 
-        while(pokempha[m] > 2.0 * M_PI)
+        while(pokempha[m] > 2.0f * M_PI)
         {
-            pokempha[m] -= 2.0 * M_PI;
+            pokempha[m] -= 2.0f * M_PI;
         }
 
-        pokemval[m] = (pokeampl) * sin(pokempha[m]);
+        pokemval[m] = (pokeampl) * sinf(pokempha[m]);
     }
 
     for(uint64_t ii = 0; ii < outimg.md->size[0]*outimg.md->size[1]; ii++)
     {
-        outimg.im->array.F[ii] = 0.0;
+        outimg.im->array.F[ii] = 0.0f;
     }
     for(int m = 0; m < NBmode; m++)
     {

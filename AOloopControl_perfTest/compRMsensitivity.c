@@ -226,7 +226,7 @@ AOloopControl_perfTest_computeRM_sensitivity(
                                  + ii];
                 if (data.core.image[IDwfsref]
                         .array.F[ii]
-                    > fabs(wv * amplimitum))
+                    > fabsf(wv * amplimitum))
                 {
                     SNR1 = wv
                         / sqrt(data.core.image[IDwfsref]

@@ -387,7 +387,7 @@ static errno_t Measure_Linear_Response_Modal(
     if(dtfr > 0.0)
     {
         // dtfr is then split into an integer offset [RMdelayfr] and the pokedelayns [delayMR1ns] :
-        RMdelayfr = ceil(dtfr);
+        RMdelayfr = ceilf(dtfr);
         delayMR1ns = (int)((1.0 * RMdelayfr - dtfr) * (1.0 / framerateHz) * 1.0e9 +
                            0.5);
     }

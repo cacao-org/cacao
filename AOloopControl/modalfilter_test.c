@@ -210,10 +210,10 @@ static errno_t compute_function()
         float phastep = (minPrate) + (1.0*mi / NBmode) * ((maxPrate) - (minPrate));
         mvalINpha[mi] += phastep;
 
-        mvalIN[mi] = cos(mvalINpha[mi]);
+        mvalIN[mi] = cosf(mvalINpha[mi]);
 
         // add noise
-        mvalIN[mi] += (noiseamp) * (1.0-2.0*ran1());
+        mvalIN[mi] += (noiseamp) * (1.0f - 2.0f * ran1());
         // mult
         mvalIN[mi] *= (multfact);
     }
@@ -227,7 +227,7 @@ static errno_t compute_function()
         ptr += SIZEOF_DATATYPE_FLOAT*NBmode*mvalDMbuff_tindex;
         memcpy( ptr, imgmvalDM.im->array.F, sizeof(float)*NBmode);
 
-        int latint = floor(DMlatency);  // integer part
+        int latint = floorf(DMlatency);  // integer part
         float latfrac = (DMlatency) - latint;  // fractional part
         int index0 = mvalDMbuff_tindex - latint;
         if(index0 < 0)
@@ -242,7 +242,7 @@ static errno_t compute_function()
 
         for(uint32_t mi=0; mi < NBmode; mi++)
         {
-            mvalDMd[mi] = (1.0-latfrac) * imgmvalDMbuff.im->array.F[index0*NBmode+mi];
+            mvalDMd[mi] = (1.0f - latfrac) * imgmvalDMbuff.im->array.F[index0*NBmode+mi];
             mvalDMd[mi] += latfrac * imgmvalDMbuff.im->array.F[index1*NBmode+mi];
         }
 
@@ -276,7 +276,7 @@ static errno_t compute_function()
         ptr += SIZEOF_DATATYPE_FLOAT*NBmode*mvalCbuff_tindex;
         memcpy( ptr, mvalC, sizeof(float)*NBmode);
 
-        int latint = floor(WFSlatency);  // integer part
+        int latint = floorf(WFSlatency);  // integer part
         float latfrac = (WFSlatency) - latint;  // fractional part
         int index0 = mvalCbuff_tindex - latint;
         if(index0 < 0)
@@ -291,7 +291,7 @@ static errno_t compute_function()
 
         for(uint32_t mi=0; mi < NBmode; mi++)
         {
-            mvalCd[mi] = (1.0-latfrac) * imgmvalCbuff.im->array.F[index0*NBmode+mi];
+            mvalCd[mi] = (1.0f - latfrac) * imgmvalCbuff.im->array.F[index0*NBmode+mi];
             mvalCd[mi] += latfrac * imgmvalCbuff.im->array.F[index1*NBmode+mi];
         }
     }

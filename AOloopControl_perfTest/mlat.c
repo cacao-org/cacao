@@ -248,11 +248,11 @@ static errno_t compute_function()
                 float y = (2.0 * jj - 1.0 * dmxsize) / dmysize;
                 data.core.image[IDdm0].array.F[jj * dmxsize + ii] = 0.0;
                 data.core.image[IDdm1].array.F[jj * dmxsize + ii] =
-                    (*OPDamp) * (sin(*CPA * x) * sin(*CPA * y));
+                    (*OPDamp) * (sinf(*CPA * x) * sinf(*CPA * y));
                 RMStot += data.core.image[IDdm1].array.F[jj * dmxsize + ii] *
                           data.core.image[IDdm1].array.F[jj * dmxsize + ii];
             }
-        RMStot = sqrt(RMStot / dmxsize / dmysize);
+        RMStot = sqrtf(RMStot / dmxsize / dmysize);
 
         printf("RMStot = %f", RMStot);
 

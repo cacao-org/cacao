@@ -115,8 +115,8 @@ static int compute_grid_spotpos(
                 }
 
                 // apply rotation
-                spotx += spotxoffset * cos(grid.pupsquare_angle) - spotyoffset * sin(grid.pupsquare_angle);
-                spoty += spotxoffset * sin(grid.pupsquare_angle) + spotyoffset * cos(grid.pupsquare_angle);
+                spotx += spotxoffset * cosf(grid.pupsquare_angle) - spotyoffset * sinf(grid.pupsquare_angle);
+                spoty += spotxoffset * sinf(grid.pupsquare_angle) + spotyoffset * cosf(grid.pupsquare_angle);
 
                 spotxpos[(dmjj * grid.dmxsize + dmii) * 4 + spotindex] = spotx;
                 spotypos[(dmjj * grid.dmxsize + dmii) * 4 + spotindex] = spoty;
