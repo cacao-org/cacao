@@ -43,7 +43,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
 // Optional custom configuration setup. comptbuff
 // Runs once at conf startup
 //
-static errno_t customCONFsetup()
+static __attribute__((unused)) errno_t customCONFsetup()
 {
     if(data.core.fpsptr != NULL)
     {
@@ -68,7 +68,7 @@ static errno_t customCONFcheck()
 
 
 // detailed help
-static errno_t help_function()
+static __attribute__((unused)) errno_t help_function()
 {
 
 
@@ -151,8 +151,8 @@ static errno_t compute_function()
                         {
                             if(imgmask.im->array.F[jj1 * xsize + ii1] > 0.5)
                             {
-                                float dx = (double) ii - ii1;
-                                float dy = (double) jj - jj1;
+                                float dx = (float) ii - ii1;
+                                float dy = (float) jj - jj1;
                                 float dr2 = dx * dx + dy * dy;
 
                                 if(dr2 < nearest_dist2)
@@ -191,21 +191,24 @@ static errno_t compute_function()
                     // find nearest pixels
                     //
                     long npixcnt = 0;
-                    double coefftotal = 0.0;
-                    double alpha1 = 1.0 / (edgeapo * nearest_dist2);
+                    float coefftotal = 0.0f;
+                    float alpha1 =
+                        1.0f
+                        / (edgeapo
+                           * nearest_dist2);
                     for(int ii1 = iimin; ii1 < iimax; ii1++)
                     {
                         for(int jj1 = jjmin; jj1 < jjmax; jj1++)
                         {
-                            float dx = (double) ii - ii1;
-                            float dy = (double) jj - jj1;
-                            double dr2 = dx * dx + dy * dy;
+                            float dx = (float) ii - ii1;
+                            float dy = (float) jj - jj1;
+                            float dr2 = dx * dx + dy * dy;
 
                             //if(dr2 < nearest_dist2 + 0.2) // only consider nearest pixels
                             //{
                             npix_dist2[npixcnt] = dr2;
                             npix_index[npixcnt] = jj1 * xsize + ii1;
-                            npix_coeff[npixcnt] = exp(-alpha1 * dr2);
+                            npix_coeff[npixcnt] = expf(-alpha1 * dr2);
                             coefftotal += npix_coeff[npixcnt];
                             npixcnt ++;
                             //}

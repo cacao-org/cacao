@@ -160,12 +160,12 @@ static errno_t make_seed_turbulence_screen(
     imageID IDv;
 
     // int OUTERSCALE_MODE = 1; // 1 if outer scale
-    double OUTERscale_f0;
-    double INNERscale_f0;
-    double dx, dy, r;
-    double rlim     = 0.0;
-    int    RLIMMODE = 0;
-    double iscoeff;
+    float OUTERscale_f0;
+    float INNERscale_f0;
+    float dx, dy, r;
+    float rlim     = 0.0f;
+    int   RLIMMODE = 0;
+    float iscoeff;
 
     /*  IDv = variable_ID("OUTERSCALE");
     if(IDv!=-1)
@@ -183,11 +183,15 @@ static errno_t make_seed_turbulence_screen(
         printf("R limit = %f pix\n", rlim);
     }
 
-    OUTERscale_f0 = 1.0 * size / outerscale; // [1/pix] in F plane
-    INNERscale_f0 = (5.92 / (2.0 * M_PI)) * size / innerscale;
+    OUTERscale_f0 = 1.0f * size / outerscale;
+    INNERscale_f0 =
+        (5.92f / (2.0f * (float) M_PI))
+        * size / innerscale;
 
     make_rnd("tmppha", size, size, "");
-    arith_image_cstmult("tmppha", 2.0 * M_PI, "tmppha1");
+    arith_image_cstmult(
+        "tmppha", 2.0f * (float) M_PI,
+        "tmppha1");
     delete_image_ID("tmppha", DELETE_IMAGE_ERRMODE_WARNING);
     //  make_dist("tmpd",size,size,size/2,size/2);
     create_2Dimage_ID("tmpd", size, size, &ID);
@@ -196,26 +200,37 @@ static errno_t make_seed_turbulence_screen(
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
         {
-            dx = (double) ii - size / 2;
-            dy = (double) jj - size / 2;
+            dx = (float) ii - size / 2;
+            dy = (float) jj - size / 2;
 
             if(RLIMMODE == 1)
             {
-                r = sqrt(dx * dx + dy * dy);
+                r = sqrtf(dx * dx + dy * dy);
                 if(r < rlim)
                 {
-                    data.core.image[ID].array.F[jj * size + ii] = 0.0;
+                    data.core.image[ID]
+                        .array.F[jj * size + ii]
+                        = 0.0f;
                 }
                 else
                 {
-                    data.core.image[ID].array.F[jj * size + ii] =
-                        sqrt(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
+                    data.core.image[ID]
+                        .array.F[jj * size + ii]
+                        = sqrtf(
+                            dx * dx
+                            + dy * dy
+                            + OUTERscale_f0
+                              * OUTERscale_f0);
                 }
             }
             else
             {
-                data.core.image[ID].array.F[jj * size + ii] =
-                    sqrt(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
+                data.core.image[ID]
+                    .array.F[jj * size + ii]
+                    = sqrtf(
+                        dx * dx + dy * dy
+                        + OUTERscale_f0
+                          * OUTERscale_f0);
             }
         }
     //  data.core.image[ID].array.F[size/2*size+size/2+10] = 1.0;
@@ -229,11 +244,15 @@ static errno_t make_seed_turbulence_screen(
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
         {
-            dx      = (double) ii - size / 2;
-            dy      = (double) jj - size / 2;
-            iscoeff = exp(-(dx * dx + dy * dy) / INNERscale_f0 / INNERscale_f0);
-            data.core.image[ID].array.F[jj * size + ii] *=
-                sqrt(iscoeff); // power -> amplitude : sqrt
+            dx      = (float) ii - size / 2;
+            dy      = (float) jj - size / 2;
+            iscoeff = expf(
+                -(dx * dx + dy * dy)
+                / INNERscale_f0
+                / INNERscale_f0);
+            data.core.image[ID]
+                .array.F[jj * size + ii]
+                *= sqrtf(iscoeff);
         }
 
     arith_image_cstpow("tmpd", 11.0 / 6.0, "tmpd1");
@@ -297,8 +316,10 @@ static errno_t make_seed_turbulence_screen(
         printf("%f %f\n", C1, C2);
     }
 
-    arith_image_cstmult("tmpo1", 1.0 / sqrtf(C1), ID_name1);
-    arith_image_cstmult("tmpo2", 1.0 / sqrtf(C2), ID_name2);
+    arith_image_cstmult(
+        "tmpo1", 1.0f / sqrtf(C1), ID_name1);
+    arith_image_cstmult(
+        "tmpo2", 1.0f / sqrtf(C2), ID_name2);
     delete_image_ID("tmpo1", DELETE_IMAGE_ERRMODE_WARNING);
     delete_image_ID("tmpo2", DELETE_IMAGE_ERRMODE_WARNING);
 
@@ -384,7 +405,7 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
     uint32_t ysize = state->imgDM.md->size[1];
     
     if(turbZERO_ptr && ((*turbZERO_ptr) & FPFLAG_ONOFF)) {
-        for(uint64_t ii=0; ii<xsize*ysize; ii++) state->turbimarray[ii] = 0.0;
+        for(uint64_t ii=0; ii<xsize*ysize; ii++) state->turbimarray[ii] = 0.0f;
         memcpy(state->imgDM.im->array.F,
             state->turbimarray,
             sizeof(float)*xsize*ysize);
@@ -421,48 +442,105 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
         while(state->y0m < 0) state->y0m += seedscreensizem;
         while(state->y0m > seedscreensizem) state->y0m -= seedscreensizem;
         
-        double total = 0.0;
-        for(uint32_t ii=0; ii<xsize; ii++) {
-            double xm = state->x0m + (*DMpixscale_ptr) * ii;
-            double xpix = xm / (*turbseedpixscale_ptr);
+        float total = 0.0f;
+        for(uint32_t ii = 0; ii < xsize; ii++)
+        {
+            double xm =
+                state->x0m
+                + (*DMpixscale_ptr) * ii;
+            double xpix =
+                xm / (*turbseedpixscale_ptr);
             uint32_t xpix0 = (uint32_t) xpix;
-            double xfrac = xpix - xpix0;
-            xpix0 = xpix0 % (*turbseedsize_ptr);
-            uint32_t xpix1 = (xpix0 + 1) % Sxsize;
-            
-            for(uint32_t jj=0; jj<ysize; jj++) {
-                double ym = state->y0m + (*DMpixscale_ptr) * jj;
-                double ypix = ym / (*turbseedpixscale_ptr);
-                uint32_t ypix0 = (uint32_t) ypix;
-                double yfrac = ypix - ypix0;
-                ypix0 = ypix0 % (*turbseedsize_ptr);
-                uint32_t ypix1 = (ypix0 + 1) % Sysize;
-                
-                double v00 = data.core.image[state->IDts0].array.F[ypix0 * Sxsize + xpix0];
-                double v10 = data.core.image[state->IDts0].array.F[ypix0 * Sxsize + xpix1];
-                double v01 = data.core.image[state->IDts0].array.F[ypix1 * Sxsize + xpix0];
-                double v11 = data.core.image[state->IDts0].array.F[ypix1 * Sxsize + xpix1];
-                
-                float val = v00 * (1.0-xfrac)*(1.0-yfrac) + v10*xfrac*(1.0-yfrac) + v01*(1.0-xfrac)*yfrac + v11*xfrac*yfrac;
-                val *= state->amplcoeff;
-                state->turbimarray[jj*xsize + ii] = val;
+            float xfrac =
+                (float)(xpix - xpix0);
+            xpix0 =
+                xpix0 % (*turbseedsize_ptr);
+            uint32_t xpix1 =
+                (xpix0 + 1) % Sxsize;
+
+            for(uint32_t jj = 0;
+                jj < ysize; jj++)
+            {
+                double ym =
+                    state->y0m
+                    + (*DMpixscale_ptr) * jj;
+                double ypix =
+                    ym
+                    / (*turbseedpixscale_ptr);
+                uint32_t ypix0 =
+                    (uint32_t) ypix;
+                float yfrac =
+                    (float)(ypix - ypix0);
+                ypix0 =
+                    ypix0
+                    % (*turbseedsize_ptr);
+                uint32_t ypix1 =
+                    (ypix0 + 1) % Sysize;
+
+                const float *F =
+                    data.core.image[
+                        state->IDts0]
+                        .array.F;
+                float v00 =
+                    F[ypix0 * Sxsize + xpix0];
+                float v10 =
+                    F[ypix0 * Sxsize + xpix1];
+                float v01 =
+                    F[ypix1 * Sxsize + xpix0];
+                float v11 =
+                    F[ypix1 * Sxsize + xpix1];
+
+                float val =
+                    v00 * (1.0f - xfrac)
+                        * (1.0f - yfrac)
+                    + v10 * xfrac
+                        * (1.0f - yfrac)
+                    + v01 * (1.0f - xfrac)
+                        * yfrac
+                    + v11 * xfrac * yfrac;
+                val *= (float)
+                    state->amplcoeff;
+                state->turbimarray[
+                    jj * xsize + ii] = val;
                 total += val;
             }
         }
         
-        double total2 = 0.0;
-        for(uint64_t ii=0; ii<xsize*ysize; ii++) {
-            state->turbimarray[ii] -= total / (xsize * ysize);
-            total2 += state->turbimarray[ii] * state->turbimarray[ii];
+        float total2 = 0.0f;
+        {
+            float mean =
+                total
+                / (float)(xsize * ysize);
+            for(uint64_t ii = 0;
+                ii < xsize * ysize; ii++)
+            {
+                state->turbimarray[ii] -=
+                    mean;
+                total2 +=
+                    state->turbimarray[ii]
+                    * state->turbimarray[ii];
+            }
         }
-        double RMSval = sqrt(total2 / (xsize * ysize));
-        
-        if (RMSval > 0) {
-            double coeffstep = (*turbampl_ptr) / RMSval;
-            double logdiff = log10(coeffstep);
-            double logdiff3abs = pow(fabs(logdiff), 3.0);
-            double amplloopgain = 1.0e-4 + logdiff3abs / (logdiff3abs + 1.0);
-            state->amplcoeff *= pow(10.0, amplloopgain * logdiff);
+        float RMSval = sqrtf(
+            total2
+            / (float)(xsize * ysize));
+
+        if(RMSval > 0.0f)
+        {
+            float coeffstep =
+                (*turbampl_ptr) / RMSval;
+            float logdiff =
+                log10f(coeffstep);
+            float logdiff3abs =
+                powf(fabsf(logdiff), 3.0f);
+            float amplloopgain =
+                1.0e-4f
+                + logdiff3abs
+                  / (logdiff3abs + 1.0f);
+            state->amplcoeff *=
+                powf(10.0f,
+                     amplloopgain
+                     * logdiff);
         }
         
         memcpy(state->imgDM.im->array.F,
@@ -472,6 +550,7 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
     }
 }
 
+static void dmturb_validate() __attribute__((unused));
 static void dmturb_validate() {
     if (turbseedsize_ptr && *turbseedsize_ptr == 0) *turbseedsize_ptr = 1024;
 }
