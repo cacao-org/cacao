@@ -132,10 +132,10 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
         char pinfoname[200]; // short name for the processinfo instance
         // avoid spaces, name should be human-readable
 
-        snprintf(pinfoname, 200, "PFwatchInput-loop%ld-block%ld", loop, PFblock);
+        snprintf(pinfoname, sizeof(pinfoname), "PFwatchInput-loop%ld-block%ld", loop, PFblock);
 
         char msgstring[200];
-        snprintf(msgstring, 200,
+        snprintf(msgstring, sizeof(msgstring),
                 "%ld->%ld %ld buffers",
                 PFblockStart,
                 PFblockEnd,
