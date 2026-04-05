@@ -12,8 +12,9 @@
 
 #define _GNU_SOURCE
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 #include "fps.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 #include "actmap_sample2D.h"
 #include "compute_control_modes.h"
@@ -87,22 +88,7 @@ static CLICMDARGDEF farg[] = {
 static CLICMDDATA CLIcmddata = {
     "", "", CLICMD_FIELDS_DEFAULTS
 };
-static CMDSETTINGS cms = {0};
-
-static __attribute__((constructor))
-void init_cms(void)
-{
-    strncpy(CLIcmddata.key,
-            FPS_app_info.cmdkey,
-            sizeof(CLIcmddata.key) - 1);
-    strncpy(CLIcmddata.description,
-            FPS_app_info.description,
-            sizeof(CLIcmddata.description)
-            - 1);
-    if (CLIcmddata.cmdsettings == NULL) {
-        CLIcmddata.cmdsettings = &cms;
-    }
-}
+FPS_CMDSETTINGS_INIT(main, CLIcmddata, FPS_app_info)
 
 static errno_t compute_function()
 {

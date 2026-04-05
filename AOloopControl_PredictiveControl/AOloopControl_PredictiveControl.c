@@ -12,8 +12,9 @@
 
 #define _GNU_SOURCE
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 #include "fps.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
@@ -92,22 +93,7 @@ static CLICMDARGDEF farg[] = {
 static CLICMDDATA CLIcmddata = {
     "", "", CLICMD_FIELDS_DEFAULTS
 };
-static CMDSETTINGS cms = {0};
-
-static __attribute__((constructor))
-void init_cms(void)
-{
-    strncpy(CLIcmddata.key,
-            FPS_app_info.cmdkey,
-            sizeof(CLIcmddata.key) - 1);
-    strncpy(CLIcmddata.description,
-            FPS_app_info.description,
-            sizeof(CLIcmddata.description)
-            - 1);
-    if (CLIcmddata.cmdsettings == NULL) {
-        CLIcmddata.cmdsettings = &cms;
-    }
-}
+FPS_CMDSETTINGS_INIT(main, CLIcmddata, FPS_app_info)
 
 static errno_t compute_function()
 {
@@ -147,26 +133,8 @@ static FPS_APP_INFO FPS_app_info_map = {
 static CLICMDDATA CLIcmddata_map = {
     "", "", CLICMD_FIELDS_NOPARAM
 };
-static CMDSETTINGS cms_map = {0};
+FPS_CMDSETTINGS_INIT(map, CLIcmddata_map, FPS_app_info_map)
 
-static __attribute__((constructor))
-void init_cms_map(void)
-{
-    strncpy(CLIcmddata_map.key,
-            FPS_app_info_map.cmdkey,
-            sizeof(CLIcmddata_map.key)
-            - 1);
-    strncpy(CLIcmddata_map.description,
-            FPS_app_info_map.description,
-            sizeof(
-                CLIcmddata_map
-                .description) - 1);
-    if (CLIcmddata_map.cmdsettings
-        == NULL) {
-        CLIcmddata_map.cmdsettings =
-            &cms_map;
-    }
-}
 
 static errno_t compute_map()
 {
@@ -213,26 +181,8 @@ static FPS_APP_INFO FPS_app_info_mk = {
 static CLICMDDATA CLIcmddata_mk = {
     "", "", CLICMD_FIELDS_NOPARAM
 };
-static CMDSETTINGS cms_mk = {0};
+FPS_CMDSETTINGS_INIT(mk, CLIcmddata_mk, FPS_app_info_mk)
 
-static __attribute__((constructor))
-void init_cms_mk(void)
-{
-    strncpy(CLIcmddata_mk.key,
-            FPS_app_info_mk.cmdkey,
-            sizeof(CLIcmddata_mk.key)
-            - 1);
-    strncpy(CLIcmddata_mk.description,
-            FPS_app_info_mk.description,
-            sizeof(
-                CLIcmddata_mk
-                .description) - 1);
-    if (CLIcmddata_mk.cmdsettings
-        == NULL) {
-        CLIcmddata_mk.cmdsettings =
-            &cms_mk;
-    }
-}
 
 static errno_t compute_mk()
 {
@@ -268,26 +218,8 @@ static FPS_APP_INFO FPS_app_info_ave = {
 static CLICMDDATA CLIcmddata_ave = {
     "", "", CLICMD_FIELDS_NOPARAM
 };
-static CMDSETTINGS cms_ave = {0};
+FPS_CMDSETTINGS_INIT(ave, CLIcmddata_ave, FPS_app_info_ave)
 
-static __attribute__((constructor))
-void init_cms_ave(void)
-{
-    strncpy(CLIcmddata_ave.key,
-            FPS_app_info_ave.cmdkey,
-            sizeof(CLIcmddata_ave.key)
-            - 1);
-    strncpy(CLIcmddata_ave.description,
-            FPS_app_info_ave.description,
-            sizeof(
-                CLIcmddata_ave
-                .description) - 1);
-    if (CLIcmddata_ave.cmdsettings
-        == NULL) {
-        CLIcmddata_ave.cmdsettings =
-            &cms_ave;
-    }
-}
 
 static errno_t compute_ave()
 {
