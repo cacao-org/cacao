@@ -66,4 +66,4 @@ install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 
 install(PROGRAMS ${SCRIPTS} DESTINATION bin)
 add_cacao_standalone(dmcomb AOloopControl_DM_comb.c)
-add_cacao_standalone_plugins(dmturb DMturbulence.c)
+add_cacao_standalone_plugins(dmturb DMturbulence.c fft imagegen)

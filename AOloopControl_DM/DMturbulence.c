@@ -10,7 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_arith/COREMOD_arith.h"
@@ -22,8 +22,10 @@
 #include "image_basic/image_basic.h"
 
 #include "fps.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 #include "processinfo.h"
 #include "processtools.h"
+#include "statistic/statistic.h"
 
 /* ================================================================
  * 1.  FPS COMPONENT IDENTITY
@@ -188,7 +190,11 @@ static errno_t make_seed_turbulence_screen(
         (5.92f / (2.0f * (float) M_PI))
         * size / innerscale;
 
-    make_rnd("tmppha", size, size, "");
+    imageID ID_tmppha;
+    create_2Dimage_ID("tmppha", size, size, &ID_tmppha);
+    for(uint64_t ii = 0; ii < size * size; ii++) {
+        data.core.image[ID_tmppha].array.F[ii] = (float) ran1();
+    }
     arith_image_cstmult(
         "tmppha", 2.0f * (float) M_PI,
         "tmppha1");
@@ -239,8 +245,10 @@ static errno_t make_seed_turbulence_screen(
     // f [1/pix] = sqrt(dx*dx+dy*dy)/size
     // f [1/pix] * size = sqrt(dx*dx+dy*dy)
 
-    make_rnd("tmpg", size, size, "-gauss");
-    ID = image_ID("tmpg", data.core.image, data.core.NB_MAX_IMAGE);
+    create_2Dimage_ID("tmpg", size, size, &ID);
+    for(uint64_t ii = 0; ii < size * size; ii++) {
+        data.core.image[ID].array.F[ii] = (float) gauss();
+    }
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
         {
