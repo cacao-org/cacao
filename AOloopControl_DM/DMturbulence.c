@@ -42,19 +42,19 @@ static FPS_APP_INFO FPS_app_info = {
  * 2.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
-static uint64_t *turbON_ptr              = NULL;
-static uint64_t *turbZERO_ptr            = NULL;
-static uint64_t *seedZERO_ptr            = NULL;
-static char     *dmstream_ptr            = NULL;
-static float    *DMpixscale_ptr          = NULL;
-static float    *turbwspeed_ptr          = NULL;
-static float    *turbwangle_ptr          = NULL;
-static float    *turbampl_ptr            = NULL;
-static uint64_t *compTurbSeed_ptr        = NULL;
-static uint32_t *turbseedsize_ptr        = NULL;
-static float    *turbseedpixscale_ptr    = NULL;
-static float    *turbseedinnerscale_ptr  = NULL;
-static float    *turbseedouterscale_ptr  = NULL;
+static uint64_t turbON = 0;
+static uint64_t turbZERO = 0;
+static uint64_t seedZERO = 0;
+static char dmstream[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static float DMpixscale = 0;
+static float turbwspeed = 0;
+static float turbwangle = 0;
+static float turbampl = 0;
+static uint64_t compTurbSeed = 0;
+static uint32_t turbseedsize = 0;
+static float turbseedpixscale = 0;
+static float turbseedinnerscale = 0;
+static float turbseedouterscale = 0;
 
 static uint64_t processinfo_change_cnt_local = 0;
 
@@ -64,66 +64,66 @@ static uint64_t processinfo_change_cnt_local = 0;
  * ============================================================= */
 
 #define FPS_PARAMS(X) \
-    X(".turbON", &turbON_ptr, \
+    X(".turbON", &turbON, \
       FPTYPE_ONOFF, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, \
       "turbulence on/off (off=freeze)") \
-    X(".turbZERO", &turbZERO_ptr, \
+    X(".turbZERO", &turbZERO, \
       FPTYPE_ONOFF, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
           | FPFLAG_VISIBLE, \
       "turbulence zero") \
-    X(".seedZERO", &seedZERO_ptr, \
+    X(".seedZERO", &seedZERO, \
       FPTYPE_ONOFF, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
           | FPFLAG_VISIBLE, \
       "set seed pos to zero") \
-    X(".dmstream", &dmstream_ptr, \
+    X(".dmstream", dmstream, \
       FPTYPE_STREAMNAME, 1, \
       FPFLAG_DEFAULT_INPUT \
           | FPFLAG_STREAM_RUN_REQUIRED \
           | FPFLAG_CHECKSTREAM \
           | FPFLAG_PRIMARY_CLI_INPUT, \
       "output DM turbulence stream") \
-    X(".DMpixscale", &DMpixscale_ptr, \
+    X(".DMpixscale", &DMpixscale, \
       FPTYPE_FLOAT32, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
       "DM pixel scale [m/pix]") \
-    X(".wspeed", &turbwspeed_ptr, \
+    X(".wspeed", &turbwspeed, \
       FPTYPE_FLOAT32, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
           | FPFLAG_VISIBLE, \
       "wind speed [m/s]") \
-    X(".wangle", &turbwangle_ptr, \
+    X(".wangle", &turbwangle, \
       FPTYPE_FLOAT32, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
           | FPFLAG_VISIBLE, \
       "wind angle [rad]") \
-    X(".ampl", &turbampl_ptr, \
+    X(".ampl", &turbampl, \
       FPTYPE_FLOAT32, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
           | FPFLAG_VISIBLE, \
       "amplitude across aperture [um]") \
-    X(".turbseed.comp", &compTurbSeed_ptr, \
+    X(".turbseed.comp", &compTurbSeed, \
       FPTYPE_ONOFF, 0, \
       FPFLAG_DEFAULT_INPUT, \
       "(re)compute turbulence seed") \
-    X(".turbseed.size", &turbseedsize_ptr, \
+    X(".turbseed.size", &turbseedsize, \
       FPTYPE_UINT32, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
       "screen seed size") \
     X(".turbseed.pixscale", \
-      &turbseedpixscale_ptr, \
+      &turbseedpixscale, \
       FPTYPE_FLOAT32, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
       "screen pixel scale [m/pix]") \
     X(".turbseed.innerscale", \
-      &turbseedinnerscale_ptr, \
+      &turbseedinnerscale, \
       FPTYPE_FLOAT32, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
       "screen inner scale [m]") \
     X(".turbseed.outerscale", \
-      &turbseedouterscale_ptr, \
+      &turbseedouterscale, \
       FPTYPE_FLOAT32, 0, \
       FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
       "screen outer scale [m]")
@@ -335,18 +335,18 @@ static errno_t make_seed_turbulence_screen(
 }
 
 static errno_t check_recompute_seed() {
-    if(compTurbSeed_ptr && (*compTurbSeed_ptr) & FPFLAG_ONOFF) {
+    if(compTurbSeed && (compTurbSeed) & FPFLAG_ONOFF) {
         printf("RECOMPUTING DM TURB SEED\n");
         make_seed_turbulence_screen(
             "tseed0",
             "tseed1",
-            *turbseedsize_ptr,
-            (*turbseedouterscale_ptr) / (*turbseedpixscale_ptr),
-            (*turbseedinnerscale_ptr) / (*turbseedpixscale_ptr)
+            turbseedsize,
+            (turbseedouterscale) / (turbseedpixscale),
+            (turbseedinnerscale) / (turbseedpixscale)
         );
         save_fits("tseed0", "../conf/turbseed0.fits");
         save_fits("tseed1", "../conf/turbseed1.fits");
-        *compTurbSeed_ptr &= ~FPFLAG_ONOFF;
+        compTurbSeed &= ~FPFLAG_ONOFF;
     }
     return RETURN_SUCCESS;
 }
@@ -365,7 +365,7 @@ static DMTURB_STATE* dmturb_init() {
     DMTURB_STATE *state = (DMTURB_STATE*) calloc(1, sizeof(DMTURB_STATE));
     
     // Connect to DM stream
-    state->imgDM = imgid_make_from_name(dmstream_ptr);
+    state->imgDM = imgid_make_from_name(dmstream);
     resolveIMGID(&state->imgDM,
         ERRMODE_ABORT,
         data.core.image,
@@ -381,7 +381,7 @@ static DMTURB_STATE* dmturb_init() {
         // If fail, create it?
         // Original code seemed to expect it or create it in customCONFcheck
         // Let's force creation if not exists
-        if (compTurbSeed_ptr) *compTurbSeed_ptr |= FPFLAG_ONOFF;
+        if (compTurbSeed) compTurbSeed |= FPFLAG_ONOFF;
         check_recompute_seed();
         load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0);
     }
@@ -412,22 +412,22 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
     uint32_t xsize = state->imgDM.md->size[0];
     uint32_t ysize = state->imgDM.md->size[1];
     
-    if(turbZERO_ptr && ((*turbZERO_ptr) & FPFLAG_ONOFF)) {
+    if(turbZERO && ((turbZERO) & FPFLAG_ONOFF)) {
         for(uint64_t ii=0; ii<xsize*ysize; ii++) state->turbimarray[ii] = 0.0f;
         memcpy(state->imgDM.im->array.F,
             state->turbimarray,
             sizeof(float)*xsize*ysize);
         processinfo_update_output_stream(processinfo, state->imgDM.im, NULL);
-        *turbZERO_ptr &= ~FPFLAG_ONOFF;
+        turbZERO &= ~FPFLAG_ONOFF;
     }
     
-    if(seedZERO_ptr && ((*seedZERO_ptr) & FPFLAG_ONOFF)) {
+    if(seedZERO && ((seedZERO) & FPFLAG_ONOFF)) {
         state->x0m = 0.0;
         state->y0m = 0.0;
-        *seedZERO_ptr &= ~FPFLAG_ONOFF;
+        seedZERO &= ~FPFLAG_ONOFF;
     }
     
-    if((*turbON_ptr) & FPFLAG_ONOFF) {
+    if((turbON) & FPFLAG_ONOFF) {
         struct timespec tnow;
         clock_gettime(CLOCK_MILK, &tnow);
         long tdiffsec = tnow.tv_sec - state->tstart.tv_sec;
@@ -438,12 +438,12 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
         state->phystime = tdiff;
         double dt = state->phystime - state->phystimeprev;
         
-        state->x0m += dt * (*turbwspeed_ptr) * cosf(*turbwangle_ptr);
-        state->y0m += dt * (*turbwspeed_ptr) * sinf(*turbwangle_ptr);
+        state->x0m += dt * (turbwspeed) * cosf(turbwangle);
+        state->y0m += dt * (turbwspeed) * sinf(turbwangle);
         
         uint32_t Sxsize = data.core.image[state->IDts0].md->size[0];
         uint32_t Sysize = data.core.image[state->IDts0].md->size[1];
-        double seedscreensizem = (*turbseedpixscale_ptr) * Sxsize;
+        double seedscreensizem = (turbseedpixscale) * Sxsize;
         
         while(state->x0m < 0) state->x0m += seedscreensizem;
         while(state->x0m > seedscreensizem) state->x0m -= seedscreensizem;
@@ -455,14 +455,14 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
         {
             double xm =
                 state->x0m
-                + (*DMpixscale_ptr) * ii;
+                + (DMpixscale) * ii;
             double xpix =
-                xm / (*turbseedpixscale_ptr);
+                xm / (turbseedpixscale);
             uint32_t xpix0 = (uint32_t) xpix;
             float xfrac =
                 (float)(xpix - xpix0);
             xpix0 =
-                xpix0 % (*turbseedsize_ptr);
+                xpix0 % (turbseedsize);
             uint32_t xpix1 =
                 (xpix0 + 1) % Sxsize;
 
@@ -471,17 +471,17 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
             {
                 double ym =
                     state->y0m
-                    + (*DMpixscale_ptr) * jj;
+                    + (DMpixscale) * jj;
                 double ypix =
                     ym
-                    / (*turbseedpixscale_ptr);
+                    / (turbseedpixscale);
                 uint32_t ypix0 =
                     (uint32_t) ypix;
                 float yfrac =
                     (float)(ypix - ypix0);
                 ypix0 =
                     ypix0
-                    % (*turbseedsize_ptr);
+                    % (turbseedsize);
                 uint32_t ypix1 =
                     (ypix0 + 1) % Sysize;
 
@@ -536,7 +536,7 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
         if(RMSval > 0.0f)
         {
             float coeffstep =
-                (*turbampl_ptr) / RMSval;
+                (turbampl) / RMSval;
             float logdiff =
                 log10f(coeffstep);
             float logdiff3abs =
@@ -560,7 +560,7 @@ static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps
 
 static void dmturb_validate() __attribute__((unused));
 static void dmturb_validate() {
-    if (turbseedsize_ptr && *turbseedsize_ptr == 0) *turbseedsize_ptr = 1024;
+    if (turbseedsize == 0) turbseedsize = 1024;
 }
 
 
