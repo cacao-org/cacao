@@ -4,7 +4,7 @@
  */
 
 /**
- * @file compute_straight_CM.h
+ * @file RM2zonal.h
  *
  */
 
