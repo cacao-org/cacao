@@ -98,7 +98,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
 
 
 // detailed help
-static errno_t help_function() __attribute__((unused))
+static __attribute__((unused)) errno_t help_function()
 {
 
 

@@ -38,7 +38,7 @@ static char outHcube[FUNCTION_PARAMETER_STRMAXLEN];
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-static errno_t customCONFsetup() __attribute__((unused))
+static __attribute__((unused)) errno_t customCONFsetup()
 {
     if(data.core.fpsptr != NULL)
     {
@@ -63,7 +63,7 @@ static errno_t customCONFcheck()
 
 
 // detailed help
-static errno_t help_function() __attribute__((unused))
+static __attribute__((unused)) errno_t help_function()
 {
     return RETURN_SUCCESS;
 }

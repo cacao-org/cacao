@@ -339,7 +339,7 @@ static errno_t modes_mask_normalize(IMGID imgmodeC, IMGID imgmask)
 }
 
 
-static errno_t customCONFsetup() __attribute__((unused))
+static __attribute__((unused)) errno_t customCONFsetup()
 {
     if(data.core.fpsptr != NULL)
     {
@@ -531,7 +531,7 @@ static errno_t customCONFcheck()
 
 
 // detailed help
-static errno_t help_function() __attribute__((unused))
+static __attribute__((unused)) errno_t help_function()
 {
     printf(
         "Compute AO control modes\n"
