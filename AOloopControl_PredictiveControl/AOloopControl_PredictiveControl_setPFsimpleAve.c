@@ -12,7 +12,7 @@
 
 #include <math.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 
 #include "COREMOD_memory/COREMOD_memory.h"
 

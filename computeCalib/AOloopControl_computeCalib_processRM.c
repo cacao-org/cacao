@@ -43,7 +43,7 @@
 
 #include <fitsio.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 #include "fps.h"
 
 #include "COREMOD_arith/COREMOD_arith.h"

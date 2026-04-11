@@ -10,9 +10,10 @@
 
 #include <time.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "fps.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 #include "processinfo.h"
 
 

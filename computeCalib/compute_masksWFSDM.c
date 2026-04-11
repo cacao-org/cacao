@@ -9,7 +9,8 @@
  */
 
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 
 #include "COREMOD_arith/COREMOD_arith.h"
@@ -57,7 +58,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
 // Optional custom configuration setup. comptbuff
 // Runs once at conf startup
 //
-static errno_t customCONFsetup()
+static errno_t customCONFsetup() __attribute__((unused))
 {
     if(data.core.fpsptr != NULL)
     {
@@ -83,7 +84,7 @@ static errno_t customCONFcheck()
 
 
 // detailed help
-static errno_t help_function()
+static errno_t help_function() __attribute__((unused))
 {
 
 

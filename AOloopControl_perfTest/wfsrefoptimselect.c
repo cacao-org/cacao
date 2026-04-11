@@ -12,7 +12,8 @@
 #include <dirent.h>
 
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
@@ -314,7 +315,7 @@ static errno_t WFSref_optimizeWFS_PSFselect(
 static FPS_CLI_BINDING my_bindings[] = {
     FPS_PARAMS(FPS_X_BINDING)
 };
-static int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+static int __attribute__((unused)) nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
 static CLICMDARGDEF farg[] = {
     FPS_PARAMS(FPS_X_FARG)

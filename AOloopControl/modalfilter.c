@@ -10,12 +10,13 @@
 #include <unistd.h>
 #include <time.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "timeutils.h"
 
 #include "fps.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 #include "processinfo.h"
 #include "processtools.h"
 
@@ -502,7 +503,7 @@ static void modal_filter_step(
 /**
  * @brief Basic parameter validation.
  */
-static void modalfilter_validate() {
+static void __attribute__((unused)) modalfilter_validate() {
     if (loopgain_ptr && *loopgain_ptr < 0) *loopgain_ptr = 0;
     if (loopmult_ptr && *loopmult_ptr < 0) *loopmult_ptr = 0;
     if (loopmult_ptr && *loopmult_ptr > 1.0) *loopmult_ptr = 1.0;

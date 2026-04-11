@@ -12,7 +12,8 @@
 
 #include <math.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 #include "linalgebra/SingularValueDecomp.h"
 #include "linalgebra/SGEMM.h"
@@ -98,7 +99,7 @@ errno_t mlat_diffseq_decode(
     int NBloopiter = 1;
     double loopgain1 = 0.99; // enforce consistency with input
 
-    double loopgaintconv = 0.02;
+    double loopgaintconv __attribute__((unused)) = 0.02;
     double loopgainmult = 0.99;
 
 
@@ -441,10 +442,10 @@ errno_t mlat_diffseq_decode(
 }
 
 
-static FPS_CLI_BINDING my_bindings[] = {
+static FPS_CLI_BINDING my_bindings[] __attribute__((unused)) = {
     FPS_PARAMS(FPS_X_BINDING)
 };
-static int nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+static int nb_bindings __attribute__((unused)) = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
 static CLICMDARGDEF farg[] = {
     FPS_PARAMS(FPS_X_FARG)

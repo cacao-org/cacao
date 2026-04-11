@@ -4,7 +4,8 @@
  *
  */
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
@@ -492,7 +493,7 @@ static errno_t customCONFcheck()
 
 
 // detailed help
-static errno_t help_function()
+static errno_t __attribute__((unused)) help_function()
 {
     return RETURN_SUCCESS;
 }

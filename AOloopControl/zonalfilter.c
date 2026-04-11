@@ -9,11 +9,12 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "timeutils.h"
 #include "zonalfilter.h"
 #include "fps.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 #include "processinfo.h"
 #include "ImageStreamIO/ImageStreamIO.h"
 
@@ -109,7 +110,7 @@ static float *zvalDMc = NULL;
 
 static void zonal_filter_step(
     PROCESSINFO              *processinfo,
-    FUNCTION_PARAMETER_STRUCT *fps,
+    FUNCTION_PARAMETER_STRUCT *fps __attribute__((unused)),
     IMAGE *imginDM,
     IMAGE *imgout,
     IMAGE *imgzgain,

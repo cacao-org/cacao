@@ -7,7 +7,8 @@
 #include <math.h>
 #include <time.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 

@@ -7,7 +7,7 @@
 #define _GNU_SOURCE
 
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -38,7 +38,7 @@ static char outHcube[FUNCTION_PARAMETER_STRMAXLEN];
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-static errno_t customCONFsetup()
+static errno_t customCONFsetup() __attribute__((unused))
 {
     if(data.core.fpsptr != NULL)
     {
@@ -63,7 +63,7 @@ static errno_t customCONFcheck()
 
 
 // detailed help
-static errno_t help_function()
+static errno_t help_function() __attribute__((unused))
 {
     return RETURN_SUCCESS;
 }

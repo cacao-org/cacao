@@ -6,7 +6,8 @@
 #include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_tools/COREMOD_tools.h"
 
 static FPS_APP_INFO FPS_app_info = {
@@ -87,7 +88,7 @@ static errno_t customCONFcheck()
 }
 
 // detailed help
-static errno_t help_function()
+static errno_t __attribute__((unused)) help_function()
 {
     return RETURN_SUCCESS; // no help for you
 }
@@ -125,7 +126,7 @@ static errno_t extract_traces(
     uint8_t  WFSatype = wfsin.md->datatype;
 
     uint32_t numtraces = specmask.md->size[2];
-    uint64_t sizeWFSout  = sizeWFSoutx * numtraces;
+    uint64_t sizeWFSout __attribute__((unused)) = sizeWFSoutx * numtraces;
 
     for(uint32_t k = 0; k < numtraces; k++)
     {
@@ -271,8 +272,8 @@ static errno_t compute_function()
 
     uint32_t sizeWFSx = wfsin.md->size[0];
     uint32_t sizeWFSy = wfsin.md->size[1];
-    uint64_t sizeWFSraw  = sizeWFSx * sizeWFSy;
-    uint8_t  WFSatype = wfsin.md->datatype;
+    uint64_t sizeWFSraw __attribute__((unused)) = sizeWFSx * sizeWFSy;
+    uint8_t  WFSatype __attribute__((unused)) = wfsin.md->datatype;
 
     IMGID specmask = imgid_make_from_name(specmask_shm_name);
     resolveIMGID(
@@ -373,7 +374,7 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, imgimWFS0.im, NULL); // post
 
         // STEP 3: NORMALIZATION
-        int status_normalize = 0;
+        int status_normalize __attribute__((unused)) = 0;
         imgimWFS1.md->write = 1;
 
         long fpi_compWFSnormalize = 
@@ -394,7 +395,7 @@ static errno_t compute_function()
 
         // STEP 4: REFERENCE SUBTRACTION
 
-        int status_refsub = 0;
+        int status_refsub __attribute__((unused)) = 0;
         imgimWFS2.md->write = 1;
         long fpi_compWFSrefsub = 
             functionparameter_GetParamIndex(

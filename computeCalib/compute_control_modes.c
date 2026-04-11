@@ -7,7 +7,8 @@
 
 #include <math.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "linopt_imtools/linopt_imtools.h"
@@ -338,7 +339,7 @@ static errno_t modes_mask_normalize(IMGID imgmodeC, IMGID imgmask)
 }
 
 
-static errno_t customCONFsetup()
+static errno_t customCONFsetup() __attribute__((unused))
 {
     if(data.core.fpsptr != NULL)
     {
@@ -530,7 +531,7 @@ static errno_t customCONFcheck()
 
 
 // detailed help
-static errno_t help_function()
+static errno_t help_function() __attribute__((unused))
 {
     printf(
         "Compute AO control modes\n"

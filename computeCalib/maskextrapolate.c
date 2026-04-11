@@ -11,7 +11,8 @@
 #include <math.h>
 
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 
 static FPS_APP_INFO FPS_app_info = {
@@ -43,7 +44,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
 // Optional custom configuration setup. comptbuff
 // Runs once at conf startup
 //
-static __attribute__((unused)) errno_t customCONFsetup()
+static errno_t customCONFsetup() __attribute__((unused))
 {
     if(data.core.fpsptr != NULL)
     {
@@ -68,7 +69,7 @@ static errno_t customCONFcheck()
 
 
 // detailed help
-static __attribute__((unused)) errno_t help_function()
+static errno_t help_function() __attribute__((unused))
 {
 
 

@@ -7,7 +7,8 @@
 #include "ImageStreamIO/ImageStruct.h"
 #include <float.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 // quicksort
 #include "COREMOD_tools/COREMOD_tools.h"
@@ -154,7 +155,7 @@ static errno_t customCONFcheck()
 }
 
 // detailed help
-static errno_t help_function()
+static errno_t __attribute__((unused)) help_function()
 {
     return RETURN_SUCCESS;
 }
@@ -163,7 +164,7 @@ static errno_t help_function()
 static errno_t spot_position(
     IMGID *inimg,
     IMGID *indarkimg,
-    float spot_size,
+    float spot_size __attribute__((unused)),
     float spot_x0,
     float spot_y0,
     float spot_searchrad,

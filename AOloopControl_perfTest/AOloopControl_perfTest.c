@@ -39,7 +39,7 @@
 #include <sys/stat.h>
 #include <unistd.h> /* chdir */
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"

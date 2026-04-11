@@ -8,7 +8,8 @@
 
 #include <math.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 
 static FPS_APP_INFO FPS_app_info = {
@@ -48,7 +49,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
 
 
 // detailed help
-static errno_t help_function()
+static errno_t __attribute__((unused)) help_function()
 {
     return RETURN_SUCCESS;
 }

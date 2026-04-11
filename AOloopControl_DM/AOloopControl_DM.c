@@ -23,7 +23,8 @@
 
 #include <string.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 
 #include "AOloopControl_DM/AOloopControl_DM.h"
 

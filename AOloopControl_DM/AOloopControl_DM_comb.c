@@ -10,14 +10,21 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "CLIcore/CLIcore.h"
+#include "CLIcore.h"
+#include "COREMOD_memory/COREMOD_memory.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_tools/COREMOD_tools.h"
 #include "COREMOD_arith/COREMOD_arith.h"
-#include "libmilkdata/milk_compiler.h"
+#include "milk_compiler.h"
 #include "processinfo.h"
-#include "processtools.h"
+
+// Suppress -Wunknown-pragmas for _Pragma("omp ...") expansions
+// when OpenMP is globally disabled in the build.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#endif
 
 /* ================================================================
  * 1.  FPS COMPONENT IDENTITY
@@ -714,6 +721,7 @@ static void dmcomb_step(
     }
 }
 
+static void dmcomb_validate() __attribute__((unused));
 static void dmcomb_validate() {
     if (DMindex_ptr && *DMindex_ptr > 99) *DMindex_ptr = 99;
 }
@@ -1009,4 +1017,8 @@ FPS_MAIN_STANDALONE_V2(
     FPS_app_info,
     FPS_PARAMS,
     compute_function)
+#endif
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
 #endif
