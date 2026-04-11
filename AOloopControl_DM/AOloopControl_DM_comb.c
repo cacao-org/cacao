@@ -543,12 +543,17 @@ static DMCOMB_STATE* dmcomb_init()
         fflush(stdout);
     }
 
-    state->imgdisp = stream_connect_create_2Df32(DMcombout,
-        DMxsize,
-        DMysize);
-    state->imgdispzpo = stream_connect_create_2Df32(DMcomboutzpo,
-        DMxsize,
-        DMysize);
+    if (strlen(DMcombout) > 0) {
+        state->imgdisp = stream_connect_create_2Df32(DMcombout,
+            DMxsize,
+            DMysize);
+    }
+    
+    if (strlen(DMcomboutzpo) > 0) {
+        state->imgdispzpo = stream_connect_create_2Df32(DMcomboutzpo,
+            DMxsize,
+            DMysize);
+    }
 
     if (UNLIKELY(data.core.Debug > 0)) {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
@@ -567,7 +572,7 @@ static DMCOMB_STATE* dmcomb_init()
         fflush(stdout);
     }
 
-    if((voltmode) & FPFLAG_ONOFF) {
+    if(((voltmode) & FPFLAG_ONOFF) && strlen(voltname) > 0) {
         if(
             image_ID(voltname, data.core.image, data.core.NB_MAX_IMAGE) == -1) read_sharedmem_image(voltname,
             data.core.image,
@@ -672,15 +677,17 @@ static void dmcomb_step(
                 NULL);
         }
 
-        update_dmdisp(state->imgdisp, state->imgch, state->dmdisptmp);
-        processinfo_update_output_stream(processinfo, state->imgdisp.im, NULL);
+        if (state->imgdisp.im != NULL) {
+            update_dmdisp(state->imgdisp, state->imgch, state->dmdisptmp);
+            processinfo_update_output_stream(processinfo, state->imgdisp.im, NULL);
 
-        if((voltmode) & FPFLAG_ONOFF) {
-            state->imgdmvolt.md->write = 1;
-            DM_displ2V(state->imgdisp, state->imgdmvolt, state);
-            processinfo_update_output_stream(processinfo,
-                state->imgdmvolt.im,
-                NULL);
+            if(((voltmode) & FPFLAG_ONOFF) && state->imgdmvolt.im != NULL) {
+                state->imgdmvolt.md->write = 1;
+                DM_displ2V(state->imgdisp, state->imgdmvolt, state);
+                processinfo_update_output_stream(processinfo,
+                    state->imgdmvolt.im,
+                    NULL);
+            }
         }
 
         if(((astrogrid) & FPFLAG_ONOFF) && (astrogridtdelay != 0)) {
@@ -695,29 +702,33 @@ static void dmcomb_step(
                 state->imgch[astrogridchan].im,
                 NULL);
 
-            update_dmdisp(state->imgdisp, state->imgch, state->dmdisptmp);
-            processinfo_update_output_stream(processinfo,
-                state->imgdisp.im,
-                NULL);
-
-            if((voltmode) & FPFLAG_ONOFF) {
-                state->imgdmvolt.md->write = 1;
-                DM_displ2V(state->imgdisp, state->imgdmvolt, state);
+            if (state->imgdisp.im != NULL) {
+                update_dmdisp(state->imgdisp, state->imgch, state->dmdisptmp);
                 processinfo_update_output_stream(processinfo,
-                    state->imgdmvolt.im,
+                    state->imgdisp.im,
                     NULL);
+
+                if(((voltmode) & FPFLAG_ONOFF) && state->imgdmvolt.im != NULL) {
+                    state->imgdmvolt.md->write = 1;
+                    DM_displ2V(state->imgdisp, state->imgdmvolt, state);
+                    processinfo_update_output_stream(processinfo,
+                        state->imgdmvolt.im,
+                        NULL);
+                }
             }
         }
     }
 
     if(UNLIKELY(DMupdatezpo)) {
-        update_dmdispzpo(state->imgdispzpo,
-            state->imgch,
-            state->dmdisptmp,
-            state->zpoffset_channel);
-        processinfo_update_output_stream(processinfo,
-            state->imgdispzpo.im,
-            NULL);
+        if(state->imgdispzpo.im != NULL) {
+            update_dmdispzpo(state->imgdispzpo,
+                state->imgch,
+                state->dmdisptmp,
+                state->zpoffset_channel);
+            processinfo_update_output_stream(processinfo,
+                state->imgdispzpo.im,
+                NULL);
+        }
     }
 }
 
