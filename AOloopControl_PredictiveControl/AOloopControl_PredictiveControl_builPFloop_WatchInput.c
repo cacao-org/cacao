@@ -121,7 +121,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     char outmaskfname[200];
     long IDinmask;
 
-    PROCESSINFO *processinfo;
+    PROCESSINFO *processinfo = NULL;
 
     if(data.core.processinfo == 1)
     {
@@ -136,12 +136,23 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
         char msgstring[200];
         snprintf(msgstring, sizeof(msgstring),
-                "%ld->%ld %ld buffers",
-                PFblockStart,
-                PFblockEnd,
-                NBbuff);
-        
+                 "%ld->%ld %ld buffers",
+                 PFblockStart,
+                 PFblockEnd,
+                 NBbuff);
+
         PROCESSINFO_AUX_SETUP(processinfo, pinfoname, "", msgstring);
+
+        if(processinfo == NULL)
+        {
+            /*
+             * PROCESSINFO_AUX_SETUP() may be a no-op fallback when
+             * processinfo support is not available in this build.
+             * Disable the processinfo path so later dereferences of
+             * processinfo do not use an uninitialized/NULL pointer.
+             */
+            data.core.processinfo = 0;
+        }
     }
 
     // CATCH SIGNALS
