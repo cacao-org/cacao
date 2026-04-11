@@ -381,7 +381,7 @@ static DMTURB_STATE* dmturb_init() {
         // If fail, create it?
         // Original code seemed to expect it or create it in customCONFcheck
         // Let's force creation if not exists
-        if (compTurbSeed) compTurbSeed |= FPFLAG_ONOFF;
+        compTurbSeed |= FPFLAG_ONOFF;
         check_recompute_seed();
         load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0);
     }
