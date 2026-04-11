@@ -543,13 +543,13 @@ static DMCOMB_STATE* dmcomb_init()
         fflush(stdout);
     }
 
-    if (strlen(DMcombout) > 0) {
+    if (DMcombout[0] != '\0') {
         state->imgdisp = stream_connect_create_2Df32(DMcombout,
             DMxsize,
             DMysize);
     }
     
-    if (strlen(DMcomboutzpo) > 0) {
+    if (DMcomboutzpo[0] != '\0') {
         state->imgdispzpo = stream_connect_create_2Df32(DMcomboutzpo,
             DMxsize,
             DMysize);
