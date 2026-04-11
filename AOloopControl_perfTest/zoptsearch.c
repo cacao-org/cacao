@@ -297,7 +297,7 @@ static errno_t compute_function()
 
     // optional control amplitude map
     IMGID imgctrlamp;
-    if ( strcmp(sensref0, "null") )
+    if ((ctrlampmap != NULL) && (strcmp(ctrlampmap, "null") != 0))
     {
         imgctrlamp = imgid_make_from_name(ctrlampmap);
         resolveIMGID(
