@@ -572,7 +572,7 @@ static DMCOMB_STATE* dmcomb_init()
         fflush(stdout);
     }
 
-    if(((voltmode) & FPFLAG_ONOFF) && strlen(voltname) > 0) {
+    if(((voltmode) & FPFLAG_ONOFF) && voltname[0] != '\0') {
         if(
             image_ID(voltname, data.core.image, data.core.NB_MAX_IMAGE) == -1) read_sharedmem_image(voltname,
             data.core.image,
