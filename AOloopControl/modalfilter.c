@@ -16,6 +16,7 @@
 #include "timeutils.h"
 
 #include "fps.h"
+#include "fps_globals.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "processinfo.h"
 #include "processtools.h"
@@ -759,7 +760,8 @@ FPS_V2_SECTION5(FPS_PARAMS)
 static errno_t compute_function()
 {
     IMGID imginWFS =
-        imgid_make_from_name(inmval);
+        imgid_make_from_fpskey(
+            inmval, FPS_name, ".inmval");
     resolveIMGID(&imginWFS, ERRMODE_ABORT,
         data.core.image, data.core.NB_MAX_IMAGE);
 
