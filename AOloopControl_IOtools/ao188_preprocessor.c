@@ -335,7 +335,7 @@ static errno_t compute_function()
 
 
         // Begin with LOWFS computations
-        lowfs_info.im->md->write = 1;
+        SHMIM_WRITE_ACQUIRE(lowfs_info.im->md);
         compute_lowfs_info(lowfs_info_ptr, apd_lowfs_ptr);
         processinfo_update_output_stream(processinfo, lowfs_info.im, NULL);
 
@@ -346,7 +346,7 @@ static errno_t compute_function()
 
         // HOWFS curvature computations
         // TODO Pass keywords through. Or don't?
-        curv_2k_doublesided.im->md->write = 1;
+        SHMIM_WRITE_ACQUIRE(curv_2k_doublesided.im->md);
         two_sided_curvature_compute(curv_2k_doublesided.im->array.F,
             apd_mat_in.im->array.SI16,
             NUM_APD_TOTAL,
@@ -358,7 +358,7 @@ static errno_t compute_function()
         // Post outputs
         if(curv_sign == 1)
         {
-            curv_1k_doublesided.im->md->write = 1;
+            SHMIM_WRITE_ACQUIRE(curv_1k_doublesided.im->md);
             memcpy(curv_1k_doublesided.im->array.F, curv_2k_doublesided.im->array.F,
                    NUM_APD_HOWFS * sizeof(float));
             processinfo_update_output_stream(processinfo,
@@ -366,7 +366,7 @@ static errno_t compute_function()
                 NULL);
         }
 
-        curv_2k_singlesided.im->md->write = 1;
+        SHMIM_WRITE_ACQUIRE(curv_2k_singlesided.im->md);
         // Get the latest side of the APD 216x2 buffer. WARNING: Size may be 217 if the curvature tag is embedded!
         // apd_mat_in.size[0] = 216 or 217 =/= NUM_APD_HOWFS.
 

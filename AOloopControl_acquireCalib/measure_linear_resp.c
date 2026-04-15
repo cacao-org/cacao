@@ -620,7 +620,7 @@ static errno_t Measure_Linear_Response_Modal(
             //printf("%5lu Poking\n", pokeframe);
             // Poke
             //
-            imgin.md->write = 1;
+            SHMIM_WRITE_ACQUIRE(imgin.md);
             memcpy((void *)(imgin.im->array.F),
                    (void *)(ptr0 + pkinfarray[pokeframe].PokeIndexCTRL_Mapped * framesize),
                    sizeof(float) * sizexyin);
@@ -654,7 +654,7 @@ static errno_t Measure_Linear_Response_Modal(
             {
                 arrayf[ii] = 0.0;
             }
-            imgin.md->write = 1;
+            SHMIM_WRITE_ACQUIRE(imgin.md);
             memcpy((void *)(imgin.im->array.F),
                    (void *)(arrayf),
                    sizeof(float) * sizexyin);

@@ -354,7 +354,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
         if(Tupdate == 1)
         {
-            data.core.image[IDout].md[0].write = 1;
+            SHMIM_WRITE_ACQUIRE(&data.core.image[IDout].md[0]);
             long kkin;
             for(kkin = 0; kkin < zsizein; kkin++)
             {
@@ -364,7 +364,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
                         data.core.image[IDinb]
                         .array.F[kkin * xysize + (ii + PFblockStart)];
             }
-            data.core.image[IDout].md[0].write = 0;
+            SHMIM_WRITE_RELEASE(&data.core.image[IDout].md[0]);
 
             printf("[%3ld/%3ld  %d]\n", buffindex, NBbuff, cube);
             Tupdate = 0;
@@ -384,7 +384,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
                 timenow.tv_nsec,
                 outcnt);
 
-            data.core.image[IDout].md[0].write = 1;
+            SHMIM_WRITE_ACQUIRE(&data.core.image[IDout].md[0]);
             for(ii = 0; ii < PFblockSize; ii++)  // Remove time averaged value
             {
                 ave = 0.0;
@@ -401,8 +401,8 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
             }
 
             COREMOD_MEMORY_image_set_sempost_byID(IDout, -1);
-            data.core.image[IDout].md[0].cnt0++;
-            data.core.image[IDout].md[0].write = 0;
+            SHMIM_CNT0_INCREMENT(&data.core.image[IDout].md[0]);
+            SHMIM_WRITE_RELEASE(&data.core.image[IDout].md[0]);
 
             buffindex = 0;
             outcnt++;
