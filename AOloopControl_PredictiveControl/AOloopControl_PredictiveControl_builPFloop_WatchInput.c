@@ -194,14 +194,14 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     PFblockSize = PFblockEnd - PFblockStart;
 
-    if(sprintf(imnameb0, "aol%ld_modeval_ol_logbuff0", loop) < 1)
+    if(snprintf(imnameb0, sizeof(imnameb0), "aol%ld_modeval_ol_logbuff0", loop) < 1)
     {
-        PRINT_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
-    if(sprintf(imnameb1, "aol%ld_modeval_ol_logbuff1", loop) < 1)
+    if(snprintf(imnameb1, sizeof(imnameb1), "aol%ld_modeval_ol_logbuff1", loop) < 1)
     {
-        PRINT_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     IDinb0 = read_sharedmem_image(imnameb0,
@@ -225,9 +225,9 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     EXECUTE_SYSTEM_COMMAND("mkdir -p PredictiveControl");
 
-    if(sprintf(inmaskname, "inmaskPFb%ld", PFblock) < 1)
+    if(snprintf(inmaskname, sizeof(inmaskname), "inmaskPFb%ld", PFblock) < 1)
     {
-        PRINT_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     create_2Dimage_ID(inmaskname, xysize, 1, &IDinmask);
@@ -240,18 +240,18 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
         data.core.image[IDinmask].array.F[ii] = 1.0;
     }
 
-    if(sprintf(inmaskfname, "./PredictiveControl/inmaskPF%ld.fits", PFblock) <
+    if(snprintf(inmaskfname, sizeof(inmaskfname), "./PredictiveControl/inmaskPF%ld.fits", PFblock) <
             1)
     {
-        PRINT_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     save_fits(inmaskname, inmaskfname);
-    if(sprintf(outmaskfname,
+    if(snprintf(outmaskfname, sizeof(outmaskfname),
                "./PredictiveControl/outmaskPF%ld.fits",
                PFblock) < 1)
     {
-        PRINT_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     save_fits(inmaskname, outmaskfname);
@@ -272,9 +272,9 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     imsizearray[1] = 1;
     imsizearray[2] = zsize;
 
-    if(sprintf(imnameout, "aol%ld_modevalol_PFb%ld", loop, PFblock) < 1)
+    if(snprintf(imnameout, sizeof(imnameout), "aol%ld_modevalol_PFb%ld", loop, PFblock) < 1)
     {
-        PRINT_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     {

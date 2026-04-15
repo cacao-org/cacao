@@ -150,14 +150,15 @@ static char *remove_ext(
     {
         return NULL;
     }
-    if((retstr = malloc(strlen(mystr) + 1)) == NULL)
+    size_t len = strlen(mystr);
+    if((retstr = malloc(len + 1)) == NULL)
     {
         return NULL;
     }
 
     // Make a copy and find the relevant characters.
 
-    strcpy(retstr, mystr);
+    memcpy(retstr, mystr, len + 1);
     lastdot = strrchr(retstr, dot);
     lastsep = (sep == 0) ? NULL : strrchr(retstr, sep);
 
@@ -219,17 +220,17 @@ static void quicksort_StreamDataFile(
             y.tstart = datfile[i].tstart;
             y.tend   = datfile[i].tend;
             y.cnt    = datfile[i].cnt;
-            strcpy(y.name, datfile[i].name);
+            snprintf(y.name, sizeof(y.name), "%s", datfile[i].name);
 
             datfile[i].tstart = datfile[j].tstart;
             datfile[i].tend   = datfile[j].tend;
             datfile[i].cnt    = datfile[j].cnt;
-            strcpy(datfile[i].name, datfile[j].name);
+            snprintf(datfile[i].name, sizeof(datfile[i].name), "%s", datfile[j].name);
 
             datfile[j].tstart = y.tstart;
             datfile[j].tend   = y.tend;
             datfile[j].cnt    = y.cnt;
-            strcpy(datfile[j].name, y.name);
+            snprintf(datfile[j].name, sizeof(datfile[j].name), "%s", y.name);
 
             i++;
             j--;
@@ -459,7 +460,7 @@ static errno_t processTimingFile(
             datfile.tend = tlast;
             datfile.cnt0end = cnt0last;
             datfile.cnt  = cnt;
-            strcpy(datfile.name, fnamestring);
+            snprintf(datfile.name, sizeof(datfile.name), "%s", fnamestring);
 
             FILE *fpout;
             if((fpout = fopen(outTimingfname, "w")) == NULL)
@@ -669,8 +670,9 @@ static errno_t compute_function()
                                     if(ret == 7)
                                     {
                                         // mkTiming = 0;
-                                        strcpy(datfile[NBdatFiles].name,
-                                            tmpstring);
+                                        snprintf(datfile[NBdatFiles].name,
+                                            sizeof(datfile[NBdatFiles].name),
+                                            "%s", tmpstring);
                                         // printf("File %s : timing info found\n",
                                         // fname);
                                         scanOK = 0; // done reading

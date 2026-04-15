@@ -138,9 +138,9 @@ errno_t AOloopControl_computeCalib_Process_zrespM(
     uint32_t sizeyWFS = data.core.image[IDzrm].md[0].size[1];
     uint32_t NBpoke   = data.core.image[IDzrm].md[0].size[2];
 
-    if(sprintf(name, "aol%ld_dmC", loopnumber) < 1)
+    if(snprintf(name, sizeof(name), "aol%ld_dmC", loopnumber) < 1)
     {
-        PRINT_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     IDdm             = read_sharedmem_image(name,
@@ -277,9 +277,9 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     }
 
 
-    if(sprintf(fname, "./zresptmp/%s_nbiter.txt", zrespm_name) < 1)
+    if(snprintf(fname, sizeof(fname), "./zresptmp/%s_nbiter.txt", zrespm_name) < 1)
     {
-        PRINT_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     if((fp = fopen(fname, "r")) == NULL)
@@ -310,9 +310,9 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
         printf("Processing %ld matrices\n", NBmat);
     }
 
-    if(sprintf(name, "aol%ld_dmC", loopnumber) < 1)
+    if(snprintf(name, sizeof(name), "aol%ld_dmC", loopnumber) < 1)
     {
-        PRINT_ERROR("sprintf wrote <1 char");
+        PRINT_ERROR("snprintf wrote <1 char");
     }
 
     IDzresp_array = (imageID *) malloc(sizeof(imageID) * NBmat);
@@ -331,19 +331,19 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
     // STEP 1: build individually cleaned RM
     for(kmat = 0; kmat < NBmat; kmat++)
     {
-        if(sprintf(fname, "./zresptmp/%s_pos_%03ld.fits", zrespm_name, kmat) <
+        if(snprintf(fname, sizeof(fname), "./zresptmp/%s_pos_%03ld.fits", zrespm_name, kmat) <
                 1)
         {
-            PRINT_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
         }
 
         imageID IDzrespfp = -1;
         load_fits(fname, "zrespfp", 2, &IDzrespfp);
 
-        if(sprintf(fname, "./zresptmp/%s_neg_%03ld.fits", zrespm_name, kmat) <
+        if(snprintf(fname, sizeof(fname), "./zresptmp/%s_neg_%03ld.fits", zrespm_name, kmat) <
                 1)
         {
-            PRINT_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
         }
 
         imageID IDzrespfm = -1;
@@ -354,9 +354,9 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
         NBpoke   = data.core.image[IDzrespfp].md[0].size[2];
         sizeWFS  = sizexWFS * sizeyWFS;
 
-        if(sprintf(name, "wfsrefc%03ld", kmat) < 1)
+        if(snprintf(name, sizeof(name), "wfsrefc%03ld", kmat) < 1)
         {
-            PRINT_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
         }
 
         create_3Dimage_ID(name,
@@ -365,9 +365,9 @@ AOloopControl_computeCalib_ProcessZrespM_medianfilt(
                           NBpoke,
                           &(IDWFSrefc_array[kmat]));
 
-        if(sprintf(zrname, "zrespm%03ld", kmat) < 1)
+        if(snprintf(zrname, sizeof(zrname), "zrespm%03ld", kmat) < 1)
         {
-            PRINT_ERROR("sprintf wrote <1 char");
+            PRINT_ERROR("snprintf wrote <1 char");
         }
 
         create_3Dimage_ID(zrname,

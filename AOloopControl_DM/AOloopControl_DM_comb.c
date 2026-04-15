@@ -195,7 +195,7 @@ static errno_t DM_displ2V(
         float inrange =
             (maxvolt)
             * (stroke100) / 100.0f;
-        strcpy(outv_ftype, "float32");
+        snprintf(outv_ftype, sizeof(outv_ftype), "float32");
         outv_exp = 1.0f;
         outv_inrange_min = -inrange;
         outv_inrange_max = inrange;
@@ -209,7 +209,7 @@ static errno_t DM_displ2V(
         float inrange =
             (maxvolt)
             * (stroke100) / 100.0f;
-        strcpy(outv_ftype, "uint16");
+        snprintf(outv_ftype, sizeof(outv_ftype), "uint16");
         outv_exp = 0.5f;
         outv_inrange_min = -inrange;
         outv_inrange_max = inrange;
