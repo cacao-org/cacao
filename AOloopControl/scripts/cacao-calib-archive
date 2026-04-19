@@ -1,5 +1,36 @@
 #!/usr/bin/env bash
 
+#######################################################################################
+# Script to archive a CACAO loop calibration.
+#
+# Usage: cacao-calib-arhchive cal_name
+#
+# This script must be run in `loop-name-rootdir`. Here cal_name corresponds to a descriptive name
+# of the calibration.  A timestamp will be apended to it, and the result is used to create a directory
+# in ``../loop-name-calibs`.
+#
+# The time stamp appendage can be suppressed with -u for update.
+#
+# The following files are copied to the cal directory.
+#         conf/CMmodesDM/CMmodesDM.fits
+#         conf/CMmodesWFS/CMmodesWFS.fits
+#         conf/RMmodesDM/RMmodesDM.fits
+#         conf/RMmodesWFS/RMmodesWFS.fits
+#         conf/RMmodesWFS/zrespM-H.fits
+#         conf/wfsref.fits
+#         conf/wfsmap.fits
+#         conf/wfsmask.fits
+#         conf/dmmap.fits
+#         conf/dmmask.fits
+#         LOOPNAME
+#
+# Additionally a file named calib_dir.txt is created which holds the directory path (useful for
+# dereferencing symlinks).
+#
+# The file calib_archived.txt is updated with the current time, and a log entry is made.
+#
+##########################################################################################################
+
 MSdescr="Archive AO calibration"
 
 MSextdescr="Copy current filesystem calibration to ../CACAO_LOOPNAME-AOcalibs/<calibname>/ directory
@@ -15,8 +46,6 @@ RequiredFiles=()
 
 
 RequiredDirs=(conf)
-
-
 
 MSarg+=( "calibname:string:calibration name" )
 MSopt+=( "u:update:setupdate::update existing, do not append timestamp" )
@@ -62,6 +91,10 @@ ARCHDIR="${BASEARCHDIR}${calib}/"
 
 
 mkdir -p ${ARCHDIR}
+mkdir -p ${ARCHDIR}/RMmodesDM
+mkdir -p ${ARCHDIR}/RMmodesWFS
+mkdir -p ${ARCHDIR}/CMmodesDM
+mkdir -p ${ARCHDIR}/CMmodesWFS
 
 echo "Saving to DIRECTORY ${ARCHDIR}"
 
@@ -69,30 +102,23 @@ echo "Saving to DIRECTORY ${ARCHDIR}"
 
 CONFDIR="conf"
 
-for f in $CONFDIR
-do
-    if [ -d "$f" ]
-    then
-        for ff in $f/*
-        do
-            #if this is a broken symlink, ignore it
-            if [ -L $ff ] && [ ! -e $ff ]
-            then
-                continue
-            fi
+cp ${CONFDIR}/RMmodesWFS/zrespM-H.fits ${ARCHDIR}/RMmodesWFS/zrespM-H.fits
+cp ${CONFDIR}/CMmodesDM/CMmodesDM.fits ${ARCHDIR}/CMmodesDM/CMmodesDM.fits
+cp ${CONFDIR}/CMmodesWFS/CMmodesWFS.fits ${ARCHDIR}/CMmodesWFS/CMmodesWFS.fits
+cp ${CONFDIR}/RMmodesDM/RMmodesDM.fits ${ARCHDIR}/RMmodesDM/RMmodesDM.fits
+cp ${CONFDIR}/RMmodesWFS/RMmodesWFS.fits ${ARCHDIR}/RMmodesWFS/RMmodesWFS.fits
+cp ${CONFDIR}/wfsref.fits ${ARCHDIR}/wfsref.fits
+cp ${CONFDIR}/wfsmask.fits ${ARCHDIR}/wfsmask.fits
+cp ${CONFDIR}/wfsmap.fits ${ARCHDIR}/wfsmap.fits
+cp ${CONFDIR}/dmmask.fits ${ARCHDIR}/dmmask.fits
+cp ${CONFDIR}/dmmap.fits ${ARCHDIR}/dmmap.fits
 
-	        cp -L -r $ff ${ARCHDIR}"$(basename $ff)"
-        done
-    else
-        cp -L -r $ff ${ARCHDIR}
-    fi
-done
-
+cp LOOPNAME ${ARCHDIR}/LOOPNAME
 
 # write out complete path so someone following a symlink can easily track where we are
-echo $(pwd)/${ARCHDIR} > ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_calib_dir.txt
+echo $(pwd)/${ARCHDIR} > ${ARCHDIR}/calib_dir.txt
 
 # append timestamp
-echo ${DATESTRING} >> ${ARCHDIR}/aol${CACAO_LOOPNUMBER}_calib_archived.txt
+echo ${DATESTRING} >> ${ARCHDIR}/calib_archived.txt
 
 echo "${DATESTRING} ARCHIVED ${calib}" >> ${BASEARCHDIR}/aol${CACAO_LOOPNUMBER}_archive-log.txt
