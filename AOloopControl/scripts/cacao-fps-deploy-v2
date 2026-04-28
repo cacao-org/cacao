@@ -4,6 +4,12 @@
 # Prototype for simplified Cacao deployment using FPS primitives natively.
 # Bypasses cacao-task-manager and cacaotask-* scripts entirely.
 
+# Early-exit one-line help (for cacao-commands probing)
+case "${1-}" in
+    -h1|--help-oneline) echo "Deploy a cacao AO loop using FPS primitives"; exit 0 ;;
+esac
+
+
 if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
     echo "Usage: cacao-fps-deploy-v2 [LOOPNAME] [LOOPNUMBER]"
     echo ""

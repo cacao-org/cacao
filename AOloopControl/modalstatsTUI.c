@@ -32,13 +32,13 @@ int            ansi__raw_active = 0;
 /** ansi_newline - emit CR+LF (raw mode requires explicit CR). */
 static inline void ansi_newline(void)
 {
-    (void) write(STDOUT_FILENO, "\r\n", 2);
+    if(write(STDOUT_FILENO, "\r\n", 2) < 0) {}
 }
 
 /** ansi_clearscreen - erase display and home cursor. */
 static inline void ansi_clearscreen(void)
 {
-    (void) write(STDOUT_FILENO, "\033[2J\033[H", 7);
+    if(write(STDOUT_FILENO, "\033[2J\033[H", 7) < 0) {}
 }
 
 
