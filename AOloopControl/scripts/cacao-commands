@@ -1,63 +1,155 @@
 #!/usr/bin/env bash
 
-MSdescr="list cacao- scripts"
+# This script uses milk-argparse
+# See template milk-scriptexample in module milk_module_example for template and instructions
 
-MSextdescr="List cacao-cli scripts
 
-Scan system for cacao- commands
+MSdescr="list cacao- commands with one-line descriptions"
 
+MSextdescr="List all cacao-* commands installed on this system.
+
+Each command is queried via -h1 / --help-oneline for a one-line description.
+Queries are run in parallel (up to CACAO_COMMANDS_JOBS concurrent jobs,
+default: number of CPU cores) to keep total runtime under ~1 s.
 "
 
 source milk-script-std-config
 
 PRINTPATH="0"
-MSopt+=( "p:path:set_printpath::Print command path" )
+MSopt+=( "p:path:set_printpath::Print command path instead of description" )
 function set_printpath()
 {
 	PRINTPATH="1"
 }
 
 PRINTDATE="0"
-MSopt+=( "d:date:set_printdate::Print command date" )
+MSopt+=( "d:date:set_printdate::Print command install date" )
 function set_printdate()
 {
 	PRINTDATE="1"
 }
 
+PORCELAIN="0"
+MSopt+=( "P:porcelain:set_porcelain::Machine-readable TSV output (name<TAB>description)" )
+function set_porcelain()
+{
+	PORCELAIN="1"
+}
+
 source milk-argparse
 
 
-CMDLIST=$(compgen -c "cacao-" | sort -u )
+CMDLIST=$(compgen -c "cacao-" | sort -u)
 
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-echo "LIST OF CACAO COMMANDS :"
+if [ "${PORCELAIN}" = "0" ] && [ "${PRINTPATH}" = "0" ] && [ "${PRINTDATE}" = "0" ]; then
+	echo "LIST OF CACAO COMMANDS :"
+fi
 
-for cmd in $CMDLIST; do
-	if [ "${PRINTPATH}" = "1" ]; then
-		pathstring="$(which ${cmd})"
-		printf "	${GREEN}%-32s${NC}  %s\n" "$cmd" "${pathstring}"
-	elif [ "${PRINTDATE}" = "1" ]; then
-		filename="$(which ${cmd})"
-		datestring="$(date -r $filename '+%Y-%m-%dT%H:%M:%SZ')"
-		CMDLISTOUT+="$(printf "%s  %s;" "${datestring}" "$cmd")"
-	else
-		helpline=$( $cmd -hs | head -n 1 )
-		printf "	${GREEN}%-32s${NC}  %s\n" "$cmd" "$helpline"
-	fi
+# ---------------------------------------------------------------------------
+# Fast path: print path — just which(1), no subprocess per command cost
+# ---------------------------------------------------------------------------
 
-done
+if [ "${PRINTPATH}" = "1" ]; then
+	for cmd in $CMDLIST; do
+		pathstring="$(which "${cmd}" 2>/dev/null || true)"
+		if [ "${PORCELAIN}" = "1" ]; then
+			printf "%s\t%s\n" "${cmd}" "${pathstring}"
+		else
+			printf "\t${GREEN}%-40s${NC}  %s\n" "${cmd}" "${pathstring}"
+		fi
+	done
+	exit 0
+fi
 
+# ---------------------------------------------------------------------------
+# Date path: collect dates, sort, then query -h1 sequentially
+# ---------------------------------------------------------------------------
 
 if [ "${PRINTDATE}" = "1" ]; then
+	CMDLISTOUT=""
+	for cmd in $CMDLIST; do
+		filename="$(which "${cmd}" 2>/dev/null || true)"
+		if [ -n "${filename}" ]; then
+			datestring="$(date -r "${filename}" '+%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || true)"
+			CMDLISTOUT+="$(printf "%s  %s;" "${datestring}" "${cmd}")"
+		fi
+	done
 	IFS=';' read -r -a array <<< "${CMDLISTOUT//[$'\t\r\n']}"; unset IFS
-	IFS=$'\n' sortedarray=($(sort <<<"${array[*]}")); unset IFS
+	IFS=$'\n' sortedarray=($(sort <<< "${array[*]}")); unset IFS
 	for element in "${sortedarray[@]//[$'\t\r\n']}"
 	do
-		cmdstr=$(echo $element | awk '{ print $2}')
-		datestr=$(echo $element | awk '{ print $1}')
-		helpline=$( $cmdstr -hs | head -n 1 )
-		printf " %s ${GREEN}%-32s${NC}  %s\n" "$datestr" "$cmdstr" "$helpline"
+		cmdstr=$(echo "${element}" | awk '{ print $2}')
+		datestr=$(echo "${element}" | awk '{ print $1}')
+		helpline=$(timeout 0.5 "${cmdstr}" -h1 2>/dev/null | head -n 1 | sed 's/^\.//' || true)
+		# Strip any remaining leading dots (CLIcore module registration noise)
+		helpline="${helpline#"${helpline%%[!.]*}"}"
+		if [ "${PORCELAIN}" = "1" ]; then
+			printf "%s\t%s\t%s\n" "${datestr}" "${cmdstr}" "${helpline}"
+		else
+			printf " %s ${GREEN}%-40s${NC}  %s\n" "${datestr}" "${cmdstr}" "${helpline}"
+		fi
 	done
+	exit 0
 fi
+
+# ---------------------------------------------------------------------------
+# Default: query -h1 for all commands in parallel, print in original order
+#
+# Strategy: launch all background jobs at once, each writing to a temp file
+# named by zero-padded index so ls ordering == original sort order.
+# A semaphore (via a FIFO + file descriptors) bounds concurrency to JOBS
+# parallel processes at a time, preventing fork-bomb on large installs.
+# ---------------------------------------------------------------------------
+
+JOBS="${CACAO_COMMANDS_JOBS:-$(nproc 2>/dev/null || echo 8)}"
+
+WORKDIR=$(mktemp -d)
+trap 'rm -rf "${WORKDIR}"' EXIT
+
+# Create semaphore FIFO
+SEMFIFO="${WORKDIR}/.sem"
+mkfifo "${SEMFIFO}"
+# Open FIFO on fd 3 for reading and writing (keeps it open)
+exec 3<>"${SEMFIFO}"
+# Pre-fill JOBS tokens
+for ((i=0; i<JOBS; i++)); do printf '.' >&3; done
+
+idx=0
+for cmd in $CMDLIST; do
+	outfile="${WORKDIR}/$(printf '%06d' "${idx}")"
+
+	# Acquire token (blocks when all JOBS slots are taken)
+	read -r -n 1 -u 3
+
+	# Launch background worker
+	{
+		line=$(timeout 0.5 "${cmd}" -h1 2>/dev/null | head -n 1 || true)
+		# Strip leading dots (CLIcore module registration progress)
+		line="${line#"${line%%[!.]*}"}"
+		printf "%s\t%s\n" "${cmd}" "${line}" > "${outfile}"
+		# Release token
+		printf '.' >&3
+	} &
+
+	(( idx++ )) || true
+done
+
+# Wait for all background jobs to finish
+wait
+
+# Close semaphore fd
+exec 3>&-
+
+# Print results in original sorted order
+for outfile in "${WORKDIR}"/[0-9]*; do
+	[ -f "${outfile}" ] || continue
+	IFS=$'\t' read -r cmd helpline < "${outfile}"
+	if [ "${PORCELAIN}" = "1" ]; then
+		printf "%s\t%s\n" "${cmd}" "${helpline}"
+	else
+		printf "\t${GREEN}%-40s${NC}  %s\n" "${cmd}" "${helpline}"
+	fi
+done

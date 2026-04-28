@@ -3,6 +3,13 @@
 # List all installed cacao-fpsexec-* commands with
 # their one-line descriptions (via -h1 flag).
 
+_DESCR="List installed cacao-fpsexec-* standalone executables"
+
+# Early-exit one-line help (for cacao-commands probing)
+case "${1-}" in
+    -h1|--help-oneline) echo "${_DESCR}"; exit 0 ;;
+esac
+
 SKIP_LIST="cacao-fpsexec-list"
 
 FUZZY=0

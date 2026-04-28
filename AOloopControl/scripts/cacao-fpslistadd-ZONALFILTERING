@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-echo "ZONAL FILTERING"
-
 FPSKWname="CACAO_FPSPROC_ZONALFILTERING"
 
 FPSKWval="NULL"
