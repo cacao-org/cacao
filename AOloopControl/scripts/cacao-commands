@@ -129,6 +129,17 @@ for cmd in $CMDLIST; do
 		line=$(timeout 0.5 "${cmd}" -h1 2>/dev/null | head -n 1 || true)
 		# Strip leading dots (CLIcore module registration progress)
 		line="${line#"${line%%[!.]*}"}"
+		# Fallback for C binaries that crash during init (SIGSEGV in
+		# dynamic-linker constructors): extract description via strings.
+		if [ -z "${line}" ]; then
+			cmdpath=$(command -v "${cmd}" 2>/dev/null || true)
+			if [ -n "${cmdpath}" ] && file "${cmdpath}" 2>/dev/null | grep -q "ELF"; then
+				line=$(strings "${cmdpath}" 2>/dev/null \
+					| grep -E "^[a-z][a-z A-Z-]{8,60}[a-z]$" \
+					| grep -iv "MILK_BUILD\|GCC\|ARCH\|OPT=\|standalone\|\.shm\|\.c\b\|fpsname\|keyword\|default" \
+					| head -n 1 || true)
+			fi
+		fi
 		printf "%s\t%s\n" "${cmd}" "${line}" > "${outfile}"
 		# Release token
 		printf '.' >&3

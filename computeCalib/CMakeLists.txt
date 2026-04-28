@@ -138,25 +138,71 @@ target_link_libraries(${LIBNAME} PRIVATE ${LINKLIBS})
 
 install(TARGETS ${LIBNAME} DESTINATION lib)
 add_cacao_standalone(cacaocc-maskextrapolate maskextrapolate.c)
-target_link_libraries(cacao-fpsexec-cacaocc-maskextrapolate PUBLIC ${LIBNAME} ${LINKLIBS})
+target_link_libraries(cacao-fpsexec-cacaocc-maskextrapolate PUBLIC)
 
 add_cacao_standalone(cacaocc-actsamp2d actmap_sample2D.c)
-target_link_libraries(cacao-fpsexec-cacaocc-actsamp2d PUBLIC ${LIBNAME} ${LINKLIBS})
+target_link_libraries(cacao-fpsexec-cacaocc-actsamp2d PUBLIC)
 
 add_cacao_standalone(cacaocc-rm2zonal RM2zonal.c)
-target_link_libraries(cacao-fpsexec-cacaocc-rm2zonal PUBLIC ${LIBNAME} ${LINKLIBS})
+target_include_directories(cacao-fpsexec-cacaocc-rm2zonal
+    PRIVATE ${PROJECT_SOURCE_DIR}/plugins/milk-extra-src)
+target_link_libraries(cacao-fpsexec-cacaocc-rm2zonal PUBLIC milklinoptimtools_compute)
+if(OPENBLAS_FOUND)
+    target_include_directories(cacao-fpsexec-cacaocc-rm2zonal
+        PRIVATE ${OPENBLAS_INCLUDE_DIRS})
+    target_link_directories(cacao-fpsexec-cacaocc-rm2zonal
+        PUBLIC ${OPENBLAS_LIBRARY_DIRS})
+    target_link_libraries(cacao-fpsexec-cacaocc-rm2zonal
+        PUBLIC ${OPENBLAS_LIBRARIES})
+    target_compile_definitions(cacao-fpsexec-cacaocc-rm2zonal
+        PRIVATE HAVE_OPENBLAS ${OPENBLAS_CFLAGS_OTHER})
+endif()
+if(MKL_FOUND)
+    target_include_directories(cacao-fpsexec-cacaocc-rm2zonal
+        PRIVATE ${MKL_INCLUDE_DIRS})
+    target_link_directories(cacao-fpsexec-cacaocc-rm2zonal
+        PUBLIC ${MKL_LIBRARY_DIRS})
+    target_link_libraries(cacao-fpsexec-cacaocc-rm2zonal
+        PUBLIC ${MKL_LIBRARIES})
+endif()
+if(NOT MKL_FOUND AND NOT DONT_NEED_LAPACKE)
+    target_link_libraries(cacao-fpsexec-cacaocc-rm2zonal PUBLIC lapacke)
+endif()
 
 add_cacao_standalone(cacaocc-comphadamard computeHadamard.c)
-target_link_libraries(cacao-fpsexec-cacaocc-comphadamard PUBLIC ${LIBNAME} ${LINKLIBS})
+target_link_libraries(cacao-fpsexec-cacaocc-comphadamard PUBLIC)
 
 add_cacao_standalone_plugins(cacaocc-compstrcm compute_straight_CM.c)
-target_link_libraries(cacao-fpsexec-cacaocc-compstrcm PUBLIC ${LIBNAME} ${LINKLIBS})
+if(OPENBLAS_FOUND)
+    target_include_directories(cacao-fpsexec-cacaocc-compstrcm
+        PRIVATE ${OPENBLAS_INCLUDE_DIRS})
+    target_link_directories(cacao-fpsexec-cacaocc-compstrcm
+        PUBLIC ${OPENBLAS_LIBRARY_DIRS})
+    target_link_libraries(cacao-fpsexec-cacaocc-compstrcm
+        PUBLIC ${OPENBLAS_LIBRARIES})
+    target_compile_definitions(cacao-fpsexec-cacaocc-compstrcm
+        PRIVATE HAVE_OPENBLAS ${OPENBLAS_CFLAGS_OTHER})
+endif()
+if(MKL_FOUND)
+    target_include_directories(cacao-fpsexec-cacaocc-compstrcm
+        PRIVATE ${MKL_INCLUDE_DIRS})
+    target_link_directories(cacao-fpsexec-cacaocc-compstrcm
+        PUBLIC ${MKL_LIBRARY_DIRS})
+    target_link_libraries(cacao-fpsexec-cacaocc-compstrcm
+        PUBLIC ${MKL_LIBRARIES})
+endif()
+if(NOT MKL_FOUND AND NOT DONT_NEED_LAPACKE)
+    target_link_libraries(cacao-fpsexec-cacaocc-compstrcm PUBLIC lapacke)
+endif()
 
 add_cacao_standalone(cacaocc-genrmwfs generateRMWFS.c)
-target_link_libraries(cacao-fpsexec-cacaocc-genrmwfs PUBLIC ${LIBNAME} ${LINKLIBS})
+target_link_libraries(cacao-fpsexec-cacaocc-genrmwfs PUBLIC)
 
 add_cacao_standalone(cacaocc-compmaskwfsdm compute_masksWFSDM.c)
-target_link_libraries(cacao-fpsexec-cacaocc-compmaskwfsdm PUBLIC ${LIBNAME} ${LINKLIBS} milkstatistic_compute)
+target_link_libraries(cacao-fpsexec-cacaocc-compmaskwfsdm PUBLIC milkstatistic_compute milkinfo_compute)
 
 add_cacao_standalone_plugins(cacaocc-compctrlmodes compute_control_modes.c)
-target_link_libraries(cacao-fpsexec-cacaocc-compctrlmodes PUBLIC ${LIBNAME} ${LINKLIBS} milklinoptimtools milkZernikePolyn)
+target_sources(cacao-fpsexec-cacaocc-compctrlmodes PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/modes_spatial_extrapolate.c)
+target_link_libraries(cacao-fpsexec-cacaocc-compctrlmodes
+    PUBLIC milklinoptimtools_compute milkZernikePolyn_compute)

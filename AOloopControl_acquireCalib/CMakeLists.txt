@@ -62,4 +62,4 @@ install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 install(PROGRAMS ${SCRIPTS} DESTINATION bin)
 
 add_cacao_standalone_plugins(cacaoac-measlinresp measure_linear_resp.c)
-target_link_libraries(cacao-fpsexec-cacaoac-measlinresp PUBLIC milkCOREMODiofits)
+target_link_libraries(cacao-fpsexec-cacaoac-measlinresp PUBLIC milkCOREMODiofits_compute)
