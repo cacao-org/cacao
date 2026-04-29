@@ -81,8 +81,6 @@ static uint64_t processinfo_change_cnt_local = 0;
     X(".dmstream", dmstream, \
       FPTYPE_STREAMNAME, 1, \
       FPFLAG_DEFAULT_INPUT \
-          | FPFLAG_STREAM_RUN_REQUIRED \
-          | FPFLAG_CHECKSTREAM \
           | FPFLAG_PRIMARY_CLI_INPUT, \
       "output DM turbulence stream") \
     X(".DMpixscale", &DMpixscale, \
