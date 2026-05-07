@@ -249,9 +249,10 @@ static errno_t compute_function()
     // Since it's a fps PARAM_IMG, it's expected to be already loaded.
     IMGID apd_mat_in = imgid_make_from_name(apd_mat_name);
     resolveIMGID(
-        &apd_mat_in, ERRMODE_ABORT,
+        &apd_mat_in, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (apd_mat_in.ID == -1) return RETURN_FAILURE;
 
     float apd_integrator[NUM_APD_HOWFS];
     memset(apd_integrator, 0, NUM_APD_HOWFS * sizeof(float));

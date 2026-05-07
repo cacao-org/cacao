@@ -131,9 +131,10 @@ static errno_t DMdisp_add_disp_from_circular_buffer(DMCOMB_STATE *state)
             data.core.NB_MAX_IMAGE);
         state->ag_imgdispbuffer = imgid_make_from_name(astrogridsname);
         resolveIMGID(&state->ag_imgdispbuffer,
-            ERRMODE_ABORT,
+            ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (state->ag_imgdispbuffer.ID == -1) return RETURN_FAILURE;
         state->ag_xysize = (uint64_t)(DMxsize) * (DMysize);
         state->ag_sliceindex = 0;
         state->ag_framecnt = 0;
@@ -579,9 +580,10 @@ static DMCOMB_STATE* dmcomb_init()
             data.core.NB_MAX_IMAGE);
         state->imgdmvolt = imgid_make_from_name(voltname);
         resolveIMGID(&state->imgdmvolt,
-            ERRMODE_ABORT,
+            ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (state->imgdmvolt.ID == -1) return NULL;
     }
 
     if (UNLIKELY(data.core.Debug > 0)) {

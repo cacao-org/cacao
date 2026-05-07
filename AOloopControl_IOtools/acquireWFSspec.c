@@ -266,9 +266,10 @@ static errno_t compute_function()
 
     IMGID wfsin = imgid_make_from_name(input_shm_name); // input raw wfs image
     resolveIMGID(
-        &wfsin, ERRMODE_ABORT,
+        &wfsin, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (wfsin.ID == -1) return RETURN_FAILURE;
 
     uint32_t sizeWFSx = wfsin.md->size[0];
     uint32_t sizeWFSy = wfsin.md->size[1];
@@ -277,9 +278,10 @@ static errno_t compute_function()
 
     IMGID specmask = imgid_make_from_name(specmask_shm_name);
     resolveIMGID(
-        &specmask, ERRMODE_ABORT,
+        &specmask, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (specmask.ID == -1) return RETURN_FAILURE;
     uint32_t numtraces = specmask.md->size[2];
     uint64_t sizeWFS  = sizeWFSx * numtraces;
     uint32_t sizeWFSoutx = sizeWFSx / binning;

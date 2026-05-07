@@ -274,8 +274,9 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_modevalWFS", loopindex);
         imgmodevalWFS = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalWFS, ERRMODE_ABORT,
+        resolveIMGID(&imgmodevalWFS, ERRMODE_WARN,
                      data.core.image, data.core.NB_MAX_IMAGE);
+                     if (imgmodevalWFS.ID == -1) return RETURN_FAILURE;
         NBmode = imgmodevalWFS.md->size[0];
     }
     mstatstruct.NBmode = NBmode;
@@ -285,8 +286,9 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_modevalDM", loopindex);
         imgmodevalDM = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalDM, ERRMODE_ABORT,
+        resolveIMGID(&imgmodevalDM, ERRMODE_WARN,
                      data.core.image, data.core.NB_MAX_IMAGE);
+                     if (imgmodevalDM.ID == -1) return RETURN_FAILURE;
     }
 
     IMGID imgmodevalDMf;
@@ -294,8 +296,9 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_modevalDMf", loopindex);
         imgmodevalDMf = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalDMf, ERRMODE_ABORT,
+        resolveIMGID(&imgmodevalDMf, ERRMODE_WARN,
                      data.core.image, data.core.NB_MAX_IMAGE);
+                     if (imgmodevalDMf.ID == -1) return RETURN_FAILURE;
     }
 
     IMGID imgmodevalOL;
@@ -303,8 +306,9 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_modevalOL", loopindex);
         imgmodevalOL = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalOL, ERRMODE_ABORT,
+        resolveIMGID(&imgmodevalOL, ERRMODE_WARN,
                      data.core.image, data.core.NB_MAX_IMAGE);
+                     if (imgmodevalOL.ID == -1) return RETURN_FAILURE;
     }
 
     IMGID imgmgain;
@@ -312,8 +316,9 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_mgain", loopindex);
         imgmgain = imgid_make_from_name(name);
-        resolveIMGID(&imgmgain, ERRMODE_ABORT,
+        resolveIMGID(&imgmgain, ERRMODE_WARN,
                      data.core.image, data.core.NB_MAX_IMAGE);
+                     if (imgmgain.ID == -1) return RETURN_FAILURE;
     }
 
     IMGID imgmmult;
@@ -321,8 +326,9 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_mmult", loopindex);
         imgmmult = imgid_make_from_name(name);
-        resolveIMGID(&imgmmult, ERRMODE_ABORT,
+        resolveIMGID(&imgmmult, ERRMODE_WARN,
                      data.core.image, data.core.NB_MAX_IMAGE);
+                     if (imgmmult.ID == -1) return RETURN_FAILURE;
     }
 
     IMGID imgmlimit;
@@ -330,8 +336,9 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_mlimit", loopindex);
         imgmlimit = imgid_make_from_name(name);
-        resolveIMGID(&imgmlimit, ERRMODE_ABORT,
+        resolveIMGID(&imgmlimit, ERRMODE_WARN,
                      data.core.image, data.core.NB_MAX_IMAGE);
+                     if (imgmlimit.ID == -1) return RETURN_FAILURE;
     }
 
     IMGID imgmlimitcntfrac;
@@ -339,8 +346,9 @@ errno_t AOloopControl_modalstatsTUI(
         char name[STRINGMAXLEN_STREAMNAME];
         WRITE_IMAGENAME(name, "aol%d_mlimitcntfrac", loopindex);
         imgmlimitcntfrac = imgid_make_from_name(name);
-        resolveIMGID(&imgmlimitcntfrac, ERRMODE_ABORT,
+        resolveIMGID(&imgmlimitcntfrac, ERRMODE_WARN,
                      data.core.image, data.core.NB_MAX_IMAGE);
+                     if (imgmlimitcntfrac.ID == -1) return RETURN_FAILURE;
     }
 
     /* ---- stat accumulation streams ---- */

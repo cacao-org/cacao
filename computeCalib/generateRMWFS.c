@@ -81,9 +81,10 @@ static errno_t compute_function()
 
     IMGID imgzRM = imgid_make_from_name(zrespWFS);
     resolveIMGID(
-        &imgzRM, ERRMODE_ABORT,
+        &imgzRM, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgzRM.ID == -1) return RETURN_FAILURE;
     uint32_t wfsxsize = imgzRM.md->size[0];
     uint32_t wfsysize = imgzRM.md->size[1];
     uint64_t wfssize = wfsxsize;
@@ -93,9 +94,10 @@ static errno_t compute_function()
 
     IMGID imDMmodesC = imgid_make_from_name(DMmodesC);
     resolveIMGID(
-        &imDMmodesC, ERRMODE_ABORT,
+        &imDMmodesC, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imDMmodesC.ID == -1) return RETURN_FAILURE;
     uint32_t dmxsize = imDMmodesC.md->size[0];
     uint32_t dmysize = imDMmodesC.md->size[1];
     uint64_t dmsize = dmxsize;

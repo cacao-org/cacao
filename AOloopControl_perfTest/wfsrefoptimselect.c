@@ -329,18 +329,20 @@ static errno_t compute_function()
 {
     IMGID inpsfimg = imgid_make_from_name(selinput);
     resolveIMGID(
-        &inpsfimg, ERRMODE_ABORT,
+        &inpsfimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (inpsfimg.ID == -1) return RETURN_FAILURE;
 
     IMGID inwfsimg;
     if ( strcmp(wfsinput, "null") )
     {
         inwfsimg = imgid_make_from_name(wfsinput);
         resolveIMGID(
-            &inwfsimg, ERRMODE_ABORT,
+            &inwfsimg, ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (inwfsimg.ID == -1) return RETURN_FAILURE;
     }
     else
     {
@@ -353,9 +355,10 @@ static errno_t compute_function()
     {
         indmimg = imgid_make_from_name(dminput);
         resolveIMGID(
-            &indmimg, ERRMODE_ABORT,
+            &indmimg, ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (indmimg.ID == -1) return RETURN_FAILURE;
     }
     else
     {

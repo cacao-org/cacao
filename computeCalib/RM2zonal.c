@@ -135,15 +135,17 @@ static errno_t compute_function()
 
     IMGID imgRMDM = imgid_make_from_name(RMmodesDM);
     resolveIMGID(
-        &imgRMDM, ERRMODE_ABORT,
+        &imgRMDM, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgRMDM.ID == -1) return RETURN_FAILURE;
 
     IMGID imgRMWFS = imgid_make_from_name(RMmodesWFS);
     resolveIMGID(
-        &imgRMWFS, ERRMODE_ABORT,
+        &imgRMWFS, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgRMWFS.ID == -1) return RETURN_FAILURE;
 
     struct timespec t0, t1, t2, t3, t4, t5;
 

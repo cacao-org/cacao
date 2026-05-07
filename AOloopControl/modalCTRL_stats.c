@@ -140,25 +140,28 @@ static errno_t compute_function()
         read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         imgtbuff_mvalDM = imgid_make_from_name(name);
         resolveIMGID(
-            &imgtbuff_mvalDM, ERRMODE_ABORT,
+            &imgtbuff_mvalDM, ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (imgtbuff_mvalDM.ID == -1) return RETURN_FAILURE;
 
         WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
         read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         imgtbuff_mvalWFS = imgid_make_from_name(name);
         resolveIMGID(
-            &imgtbuff_mvalWFS, ERRMODE_ABORT,
+            &imgtbuff_mvalWFS, ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (imgtbuff_mvalWFS.ID == -1) return RETURN_FAILURE;
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
         read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
         imgtbuff_mvalOL = imgid_make_from_name(name);
         resolveIMGID(
-            &imgtbuff_mvalOL, ERRMODE_ABORT,
+            &imgtbuff_mvalOL, ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (imgtbuff_mvalOL.ID == -1) return RETURN_FAILURE;
 
         NBmode   = imgtbuff_mvalOL.md->size[0];
         NBsample = imgtbuff_mvalOL.md->size[1];

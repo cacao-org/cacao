@@ -21,17 +21,20 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
     printf("extrapolate ...\n");
 
     resolveIMGID(
-        &imgmodes, ERRMODE_ABORT,
+        &imgmodes, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgmodes.ID == -1) return RETURN_FAILURE;
     resolveIMGID(
-        &imgmask, ERRMODE_ABORT,
+        &imgmask, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgmask.ID == -1) return RETURN_FAILURE;
     resolveIMGID(
-        &imgcpa, ERRMODE_ABORT,
+        &imgcpa, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgcpa.ID == -1) return RETURN_FAILURE;
 
     imcreatelikewiseIMGID(imgoutmodes, &imgmodes);
 

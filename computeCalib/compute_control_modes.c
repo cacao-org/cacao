@@ -174,17 +174,23 @@ static errno_t mk_ZernikeFourier_modal_basis(
 
         linopt_imtools_makeCPAmodes(&imgoutm,
                                     msizex,
-                                    0,
-                                    CPAmax,
-                                    CPAmax,
-                                    deltaCPA,
-                                    0.5 * msizex,
-                                    1.2,
-                                    0,
-                                    NULL,
-                                    imgmask,
-                                    0.0,
-                                    0.0
+                                    msizex, // sizey (assuming square as before)
+                                    0.5 * msizex, // xcenter
+                                    0.5 * msizex, // ycenter
+                                    0, // rCPAmin
+                                    CPAmax, // rCPAmax
+                                    CPAmax, // CPAmax
+                                    deltaCPA, // deltaCPA
+                                    0.5 * msizex, // radius
+                                    1.2, // radfactlim
+                                    0.0, // fpowerlaw
+                                    0.0, // fpowerlaw_minf
+                                    0.0, // fpowerlaw_maxf
+                                    0, // writeMfile
+                                    NULL, // outNBmax
+                                    imgmask, // imgmask
+                                    0.0, // extrfactor
+                                    0.0 // extroffset
                                    );
     }
 
@@ -557,15 +563,17 @@ static errno_t compute_function()
 
     /*IMGID inimg = makeIMGID(inimname);
     resolveIMGID(
-        &inimg, ERRMODE_ABORT,
+        &inimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (inimg.ID == -1) return RETURN_FAILURE;
 
     IMGID outimg = makeIMGID(outimname);
     resolveIMGID(
-        &outimg, ERRMODE_ABORT,
+        &outimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (outimg.ID == -1) return RETURN_FAILURE;
     */
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 
@@ -592,9 +600,10 @@ static errno_t compute_function()
         load_fits(fname_DMmaskCTRL, "DMmaskCTRL", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgDMmaskCTRL = imgid_make_from_name("DMmaskCTRL");
         resolveIMGID(
-            &imgDMmaskCTRL, ERRMODE_ABORT,
+            &imgDMmaskCTRL, ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (imgDMmaskCTRL.ID == -1) return RETURN_FAILURE;
 
         // DM actuators to be extrapolated from neighbors
         // this is a subset of DMmaskCTRL
@@ -602,9 +611,10 @@ static errno_t compute_function()
         load_fits(fname_DMmaskEXTR, "DMmaskEXTR", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgDMmaskEXTR = imgid_make_from_name("DMmaskEXTR");
         resolveIMGID(
-            &imgDMmaskEXTR, ERRMODE_ABORT,
+            &imgDMmaskEXTR, ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (imgDMmaskEXTR.ID == -1) return RETURN_FAILURE;
 
 
         // CREATE ZERNIKE+FOURIER DM MODES BASIS
@@ -686,9 +696,10 @@ static errno_t compute_function()
         load_fits(fname_zrespM, "zrespM", LOADFITS_ERRMODE_ERROR, NULL);
         IMGID imgzrespM = imgid_make_from_name("zrespM");
         resolveIMGID(
-            &imgzrespM, ERRMODE_ABORT,
+            &imgzrespM, ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (imgzrespM.ID == -1) return RETURN_FAILURE;
 
 
         // COMPUTE WFS RESPONSE TO MODES
@@ -768,15 +779,17 @@ static errno_t compute_function()
 
             IMGID imgloRM = imgid_make_from_name("loRM");
             resolveIMGID(
-                &imgloRM, ERRMODE_ABORT,
+                &imgloRM, ERRMODE_WARN,
                 data.core.image,
                 data.core.NB_MAX_IMAGE);
+                if (imgloRM.ID == -1) return RETURN_FAILURE;
 
             IMGID imgloDMmodes = imgid_make_from_name("loDMmodes");
             resolveIMGID(
-                &imgloDMmodes, ERRMODE_ABORT,
+                &imgloDMmodes, ERRMODE_WARN,
                 data.core.image,
                 data.core.NB_MAX_IMAGE);
+                if (imgloDMmodes.ID == -1) return RETURN_FAILURE;
 
 
             printf("Using low-order modal response [%ld %ld]\n",

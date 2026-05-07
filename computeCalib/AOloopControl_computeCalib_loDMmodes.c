@@ -175,17 +175,23 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
 
         linopt_imtools_makeCPAmodes(&imgoutm,
                                     msizex,
-                                    0.0,
-                                    1.5 * CPAmax,
-                                    CPAmax,
-                                    deltaCPA,
-                                    0.5 * msizex,
-                                    1.2,
-                                    0,
-                                    NULL,
-                                    imgCPAmask,
-                                    0.0,
-                                    0.0
+                                    msizex, // sizey (assuming square as before)
+                                    0.5 * msizex, // xcenter
+                                    0.5 * msizex, // ycenter
+                                    0, // rCPAmin
+                                    CPAmax, // rCPAmax
+                                    CPAmax, // CPAmax
+                                    deltaCPA, // deltaCPA
+                                    0.5 * msizex, // radius
+                                    1.2, // radfactlim
+                                    0.0, // fpowerlaw
+                                    0.0, // fpowerlaw_minf
+                                    0.0, // fpowerlaw_maxf
+                                    0, // writeMfile
+                                    NULL, // outNBmax
+                                    imgCPAmask, // imgmask
+                                    0.0, // extrfactor
+                                    0.0 // extroffset
                                    );
     }
 

@@ -149,9 +149,10 @@ static errno_t compute_function()
     //
     IMGID imgmvalDM = imgid_make_from_name(mvalDM);
     resolveIMGID(
-        &imgmvalDM, ERRMODE_ABORT,
+        &imgmvalDM, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgmvalDM.ID == -1) return RETURN_FAILURE;
     printf("%u modes\n", imgmvalDM.md->size[0]);
     uint32_t NBmode = imgmvalDM.md->size[0];
 
@@ -159,9 +160,10 @@ static errno_t compute_function()
     //
     IMGID imgmvalWFS = imgid_make_from_name(mvalWFS);
     resolveIMGID(
-        &imgmvalWFS, ERRMODE_ABORT,
+        &imgmvalWFS, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgmvalWFS.ID == -1) return RETURN_FAILURE;
 
 
     // connect / create mvalC

@@ -240,15 +240,17 @@ static errno_t compute_function()
 
     IMGID wfsinimg = imgid_make_from_name(wfsinsname);
     resolveIMGID(
-        &wfsinimg, ERRMODE_ABORT,
+        &wfsinimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (wfsinimg.ID == -1) return RETURN_FAILURE;
 
     IMGID mapimg = imgid_make_from_name(mapsname);
     resolveIMGID(
-        &mapimg, ERRMODE_ABORT,
+        &mapimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (mapimg.ID == -1) return RETURN_FAILURE;
 
 
     uint32_t sizeout = mapimg.md->size[2];
