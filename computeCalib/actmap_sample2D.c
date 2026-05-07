@@ -135,9 +135,10 @@ static errno_t compute_function()
 
     IMGID imgWF2D = imgid_make_from_name(inWF2D);
     resolveIMGID(
-        &imgWF2D, ERRMODE_ABORT,
+        &imgWF2D, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgWF2D.ID == -1) return RETURN_FAILURE;
     uint32_t wfxsize = imgWF2D.md->size[0];
     uint32_t wfysize = imgWF2D.md->size[1];
     uint64_t wfsize = wfxsize;

@@ -331,9 +331,10 @@ static errno_t compute_function()
 
     IMGID inimg = imgid_make_from_name(inimname);
     resolveIMGID(
-        &inimg, ERRMODE_ABORT,
+        &inimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (inimg.ID == -1) return RETURN_FAILURE;
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
 

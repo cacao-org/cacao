@@ -762,8 +762,9 @@ static errno_t compute_function()
     IMGID imginWFS =
         imgid_make_from_fpskey(
             inmval, FPS_name, ".inmval");
-    resolveIMGID(&imginWFS, ERRMODE_ABORT,
+    resolveIMGID(&imginWFS, ERRMODE_WARN,
         data.core.image, data.core.NB_MAX_IMAGE);
+        if (imginWFS.ID == -1) return RETURN_FAILURE;
 
     uint32_t NBmode = imginWFS.md[0].size[0];
 

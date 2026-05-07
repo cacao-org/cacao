@@ -177,9 +177,10 @@ static errno_t compute_function()
     // resolve image and create IMGID
     IMGID zrmimg = imgid_make_from_name(inimname);
     resolveIMGID(
-        &zrmimg, ERRMODE_ABORT,
+        &zrmimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (zrmimg.ID == -1) return RETURN_FAILURE;
 
     //printf("naxes = %d\n", zrmimg.md->naxis);
 

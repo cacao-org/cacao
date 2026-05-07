@@ -55,9 +55,10 @@ errno_t mlat_diffseq_decode(
     DEBUG_TRACE_FSTART();
 
     resolveIMGID(
-        &inimg, ERRMODE_ABORT,
+        &inimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (inimg.ID == -1) return RETURN_FAILURE;
 
 
     // m: number of samples in diffseq
@@ -310,9 +311,10 @@ errno_t mlat_diffseq_decode(
 
         IMGID imgpsinv = imgid_make_from_name("psinv");
         resolveIMGID(
-            &imgpsinv, ERRMODE_ABORT,
+            &imgpsinv, ERRMODE_WARN,
             data.core.image,
             data.core.NB_MAX_IMAGE);
+            if (imgpsinv.ID == -1) return RETURN_FAILURE;
 
 
         double loopgain = 0.1;
@@ -461,9 +463,10 @@ static errno_t compute_function()
 
     IMGID inimg = imgid_make_from_name(diffseqname);
     resolveIMGID(
-        &inimg, ERRMODE_ABORT,
+        &inimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (inimg.ID == -1) return RETURN_FAILURE;
 
 
     IMGID outimg = imgid_make_from_name(outseqname);

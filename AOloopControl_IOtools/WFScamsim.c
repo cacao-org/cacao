@@ -105,9 +105,10 @@ static errno_t compute_function()
 
     IMGID wfssignalimg = imgid_make_from_name(wfssignal_in);
     resolveIMGID(
-        &wfssignalimg, ERRMODE_ABORT,
+        &wfssignalimg, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (wfssignalimg.ID == -1) return RETURN_FAILURE;
 
     uint32_t sizexWFS = wfssignalimg.md->size[0];
     uint32_t sizeyWFS = wfssignalimg.md->size[1];

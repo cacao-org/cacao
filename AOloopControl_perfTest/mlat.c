@@ -144,9 +144,10 @@ static errno_t compute_function()
     // connect to DM
     IMGID imgdm = imgid_make_from_name(dmstream);
     resolveIMGID(
-        &imgdm, ERRMODE_ABORT,
+        &imgdm, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgdm.ID == -1) return RETURN_FAILURE;
     printf("DM size : %u %u\n", imgdm.md->size[0], imgdm.md->size[1]);
     uint32_t dmxsize = imgdm.md->size[0];
     uint32_t dmysize = imgdm.md->size[1];
@@ -154,9 +155,10 @@ static errno_t compute_function()
     // connect to WFS
     IMGID imgwfs = imgid_make_from_name(wfsstream);
     resolveIMGID(
-        &imgwfs, ERRMODE_ABORT,
+        &imgwfs, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgwfs.ID == -1) return RETURN_FAILURE;
     printf("WFS size : %u %u\n", imgwfs.md->size[0], imgwfs.md->size[1]);
 
     // connect to optional pokemap

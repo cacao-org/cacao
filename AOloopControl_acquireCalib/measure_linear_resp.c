@@ -870,25 +870,28 @@ static errno_t compute_function()
     // connect to input space
     IMGID imgin = imgid_make_from_name(streamin);
     resolveIMGID(
-        &imgin, ERRMODE_ABORT,
+        &imgin, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgin.ID == -1) return RETURN_FAILURE;
     printf("input  space size : %u %u\n", imgin.md->size[0], imgin.md->size[1]);
 
     // connect to output space
     IMGID imgout = imgid_make_from_name(streamout);
     resolveIMGID(
-        &imgout, ERRMODE_ABORT,
+        &imgout, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imgout.ID == -1) return RETURN_FAILURE;
     printf("output space size : %u %u\n", imgout.md->size[0], imgout.md->size[1]);
 
     load_fits(inmodeC, "inmodeC", LOADFITS_ERRMODE_WARNING, NULL);
     IMGID imginmodeC = imgid_make_from_name("inmodeC");
     resolveIMGID(
-        &imginmodeC, ERRMODE_ABORT,
+        &imginmodeC, ERRMODE_WARN,
         data.core.image,
         data.core.NB_MAX_IMAGE);
+        if (imginmodeC.ID == -1) return RETURN_FAILURE;
     printf("input modes size : %u %u %u\n", imginmodeC.md->size[0],
            imginmodeC.md->size[1], imginmodeC.md->size[2]);
 
