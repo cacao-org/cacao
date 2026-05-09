@@ -110,7 +110,7 @@ static float *zvalDMc = NULL;
 
 static void zonal_filter_step(
     PROCESSINFO              *processinfo,
-    FUNCTION_PARAMETER_STRUCT *fps __attribute__((unused)),
+    FPS *fps __attribute__((unused)),
     IMAGE *imginDM,
     IMAGE *imgout,
     IMAGE *imgzgain,

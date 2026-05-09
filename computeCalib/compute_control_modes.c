@@ -41,9 +41,9 @@ static float alignOD; // Outer diameter
 static uint32_t DMxsize;
 static uint32_t DMysize;
 
-static FUNCTION_PARAMETER_STRUCT FPS_zRMacqu;
-static FUNCTION_PARAMETER_STRUCT FPS_loRMacqu;
-static FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
+static FPS FPS_zRMacqu;
+static FPS FPS_loRMacqu;
+static FPS FPS_DMcomb;
 
 static char fname_DMmaskCTRL[FUNCTION_PARAMETER_STRMAXLEN];
 static char fname_DMmaskEXTR[FUNCTION_PARAMETER_STRMAXLEN];

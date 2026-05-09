@@ -29,7 +29,7 @@ static float    *pokeampl;
 static char *dmstream;
 
 // timing params
-static FUNCTION_PARAMETER_STRUCT FPS_mlat;
+static FPS FPS_mlat;
 
 // Toggles
 static uint64_t *update_mlat;
@@ -50,7 +50,7 @@ static uint32_t *NBinnerCycle;
 
 static uint64_t *MaskMode;
 
-static FUNCTION_PARAMETER_STRUCT FPS_DMcomb;
+static FPS FPS_DMcomb;
 
 static uint32_t *DMMODE;
 
