@@ -597,7 +597,7 @@ static DMCOMB_STATE* dmcomb_init()
 
 static void dmcomb_step(
     PROCESSINFO *processinfo,
-    FUNCTION_PARAMETER_STRUCT *fps,
+    FPS *fps,
     DMCOMB_STATE *state
 )
 {

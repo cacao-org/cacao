@@ -357,7 +357,7 @@ static void modal_filter_cleanup(MFILT_STATE *state) {
  */
 static void modal_filter_step(
     PROCESSINFO *processinfo,
-    FUNCTION_PARAMETER_STRUCT *fps,
+    FPS *fps,
     IMAGE *imginWFS,
     IMAGE *imgout,
     MFILT_STATE *state)

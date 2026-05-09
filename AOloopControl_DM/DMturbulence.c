@@ -397,7 +397,7 @@ static DMTURB_STATE* dmturb_init() {
     return state;
 }
 
-static void dmturb_step(PROCESSINFO *processinfo, FUNCTION_PARAMETER_STRUCT *fps, DMTURB_STATE *state) {
+static void dmturb_step(PROCESSINFO *processinfo, FPS *fps, DMTURB_STATE *state) {
     // Sync parameters
     if (fps) {
         if(fps->md->processinfo_change_cnt != processinfo_change_cnt_local) {
