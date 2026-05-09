@@ -17,7 +17,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "acquireWFS",
     .cmdkey      = "acquireWFS",
-    .description = "acquire WFS image"
+    .description = "acquire WFS image",
+    .description_long =
+        "Acquire and preprocess wavefront sensor images from a camera stream. Applies background subtraction and normalization."
 };
 
 

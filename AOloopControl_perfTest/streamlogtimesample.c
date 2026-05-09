@@ -109,6 +109,8 @@ static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "slogtsample",
     .cmdkey      = "slogtsample",
     .description = "resample streams to common clock",
+    .description_long =
+        "Resample multiple logged streams to a common clock for synchronized temporal analysis."
 };
 
 #define FPS_PARAMS(X) \

@@ -34,7 +34,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "dmturb",
     .cmdkey      = "atmturbulence",
-    .description = "DM turbulence simulation"
+    .description = "DM turbulence simulation",
+    .description_long =
+        "Simulate atmospheric turbulence on a deformable mirror by applying time-evolving Kolmogorov phase screens. Used for closed-loop testing without a real atmosphere."
 };
 
 

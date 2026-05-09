@@ -88,7 +88,9 @@ typedef struct
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "modalstatsTUI",
     .cmdkey      = "modalstatsTUI",
-    .description = "modal stats TUI"
+    .description = "modal stats TUI",
+    .description_long =
+        "TUI (Text User Interface) for real-time display of modal AO control statistics. Shows per-mode gains, RMS, and temporal evolution."
 };
 
 static uint64_t *AOloopindex;

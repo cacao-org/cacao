@@ -18,7 +18,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "maskextrapolate",
     .cmdkey      = "maskextrapolate",
-    .description = "mask and extrapolate modes"
+    .description = "mask and extrapolate modes",
+    .description_long =
+        "Extrapolate mode shapes beyond the pupil boundary using smooth interpolation. Prevents edge discontinuities in DM commands."
 };
 
 static char inmodeC[

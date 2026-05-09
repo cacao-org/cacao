@@ -19,7 +19,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "acqWFSlincal",
     .cmdkey      = "acqWFSlincal",
-    .description = "acquire linear WFS calibration"
+    .description = "acquire linear WFS calibration",
+    .description_long =
+        "Acquire WFS linear calibration data by systematically applying DM pokes and recording WFS responses. Builds the response matrix."
 };
 
 // Local variables pointers

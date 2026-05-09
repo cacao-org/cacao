@@ -15,7 +15,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "findspots",
     .cmdkey      = "findspots",
-    .description = "find spots in inmage"
+    .description = "find spots in inmage",
+    .description_long =
+        "Detect and locate bright spots in a wavefront sensor image. Uses thresholding and centroiding to find subaperture positions."
 };
 
 static char inimname[

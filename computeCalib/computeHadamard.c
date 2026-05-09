@@ -25,7 +25,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mkHadamard",
     .cmdkey      = "mkHadamard",
-    .description = "make Hadamard modes"
+    .description = "make Hadamard modes",
+    .description_long =
+        "Generate Hadamard mode patterns for efficient response matrix acquisition. Uses balanced Hadamard matrices to minimize measurement noise."
 };
 
 static char inmask[FUNCTION_PARAMETER_STRMAXLEN];

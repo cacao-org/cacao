@@ -23,7 +23,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mlat",
     .cmdkey      = "mlat",
-    .description = "measure latency between DM and WFS"
+    .description = "measure latency between DM and WFS",
+    .description_long =
+        "Measure the end-to-end latency between DM commands and WFS responses. Applies a known DM pattern and cross-correlates with WFS to find the delay."
 };
 
 

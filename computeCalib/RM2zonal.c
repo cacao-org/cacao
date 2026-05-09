@@ -69,7 +69,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "RM2zonal",
     .cmdkey      = "RM2zonal",
-    .description = "convert arbitrary response matrix to zonal"
+    .description = "convert arbitrary response matrix to zonal",
+    .description_long =
+        "Convert an arbitrary (e.g., modal) response matrix to zonal (per-actuator) representation."
 };
 
 static char RMmodesDM[FUNCTION_PARAMETER_STRMAXLEN];

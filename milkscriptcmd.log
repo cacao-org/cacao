@@ -1,0 +1,8 @@
+2026-05-09T23:08:17.298876Z 1778368097.298876 CMD oguyon@/home/oguyon/src/cacao milk-commands 
+2026-05-09T23:32:31.084999Z 1778369551.084999 CMD oguyon@/home/oguyon/src/cacao milk-commands 
+2026-05-09T23:32:43.192757Z 1778369563.192757 CMD oguyon@/home/oguyon/src/cacao milk-commands -s gauss
+2026-05-09T23:33:06.182647Z 1778369586.182647 CMD oguyon@/home/oguyon/src/cacao milk-commands -s gauss
+2026-05-09T23:33:10.726528Z 1778369590.726528 CMD oguyon@/home/oguyon/src/cacao milk-commands -s Gauss
+2026-05-09T23:33:17.213669Z 1778369597.213669 CMD oguyon@/home/oguyon/src/cacao milk-commands -s latency
+2026-05-09T23:36:05.567228Z 1778369765.567228 CMD oguyon@/home/oguyon/src/cacao milk-commands -s latency
+2026-05-09T23:36:10.188046Z 1778369770.188046 CMD oguyon@/home/oguyon/src/cacao milk-commands -s ltency

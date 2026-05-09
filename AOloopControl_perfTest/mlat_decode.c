@@ -34,7 +34,9 @@ static uint32_t *nb0end;
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mlatdsdecode",
     .cmdkey      = "mlatdsdecode",
-    .description = "mlat diff sequence decode"
+    .description = "mlat diff sequence decode",
+    .description_long =
+        "Decode a latency measurement sequence to extract the frame-by-frame delay between DM and WFS streams."
 };
 
 #define FPS_PARAMS(X) \

@@ -39,7 +39,9 @@ typedef struct
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "pyWFSgridmatch",
     .cmdkey      = "pyWFSgridmatch",
-    .description = "Match pyramid WFS zrespM to grid"
+    .description = "Match pyramid WFS zrespM to grid",
+    .description_long =
+        "Match a pyramid WFS zonal response matrix to a grid model. Aligns measured spot patterns to expected subaperture positions."
 };
 
 static char inimname[

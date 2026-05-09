@@ -41,7 +41,9 @@ static float *selnormplaw;
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "wfsroptsel",
     .cmdkey      = "wfsroptsel",
-    .description = "WFS ref optimize by PSF selection"
+    .description = "WFS ref optimize by PSF selection",
+    .description_long =
+        "Optimize WFS reference selection based on PSF quality metrics. Selects the reference that maximizes Strehl ratio."
 };
 
 #define FPS_PARAMS(X) \

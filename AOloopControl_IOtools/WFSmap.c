@@ -13,7 +13,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mapWFS",
     .cmdkey      = "mapWFS",
-    .description = "remap WFS image"
+    .description = "remap WFS image",
+    .description_long =
+        "Remap wavefront sensor pixels using a geometric transformation map. Corrects optical distortion or aligns subapertures."
 };
 
 static char wfsinsname[FUNCTION_PARAMETER_STRMAXLEN];

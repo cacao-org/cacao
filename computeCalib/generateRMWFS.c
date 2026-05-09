@@ -16,7 +16,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "generateRMWFS",
     .cmdkey      = "generateRMWFS",
-    .description = "generate RM WFS modes"
+    .description = "generate RM WFS modes",
+    .description_long =
+        "Generate synthetic response matrix modes for WFS testing. Creates ideal poke responses for simulation and validation."
 };
 
 // zonal WFS response

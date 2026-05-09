@@ -649,7 +649,9 @@ static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mkCMsvd",
     .cmdkey      = "mkCMsvd",
     .description =
-        "compute SVD control matrix from RM"
+        "compute SVD control matrix from RM",
+    .description_long =
+        "Process a response matrix via SVD to compute the control matrix. Applies singular value filtering and modal truncation."
 };
 
 // Section 2: Local variables for FPS parameters

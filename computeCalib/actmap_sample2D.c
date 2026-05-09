@@ -16,7 +16,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "sample2DWF",
     .cmdkey      = "sample2DWF",
-    .description = "sample 2D WF to act pos"
+    .description = "sample 2D WF to act pos",
+    .description_long =
+        "Sample a 2D wavefront at actuator positions to generate a discrete actuator command vector."
 };
 
 static char inWF2D[FUNCTION_PARAMETER_STRMAXLEN];

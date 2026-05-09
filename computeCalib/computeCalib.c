@@ -53,7 +53,9 @@ static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "aolHaddec",
     .cmdkey      = "aolHaddec",
     .description =
-        "decode Hadamard matrix"
+        "decode Hadamard matrix",
+    .description_long =
+        "Decode Hadamard-encoded response matrix measurements. Applies the inverse Hadamard transform to recover per-actuator responses."
 };
 
 #define FPS_PARAMS(X) \

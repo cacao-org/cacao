@@ -14,7 +14,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "WFScamsim",
     .cmdkey      = "WFScamsim",
-    .description = "simulate WFS camera"
+    .description = "simulate WFS camera",
+    .description_long =
+        "Simulate a wavefront sensor camera by applying photon noise, readout noise, and detector response to an ideal WFS image."
 };
 
 // Local variables

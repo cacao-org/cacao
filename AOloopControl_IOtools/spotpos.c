@@ -16,7 +16,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "spotpos",
     .cmdkey      = "spotpos",
-    .description = "measure spot position, photocenter"
+    .description = "measure spot position, photocenter",
+    .description_long =
+        "Measure the precise centroid position of spots in a WFS image using photocenter calculation with configurable weighting."
 };
 
 static char inimname[FUNCTION_PARAMETER_STRMAXLEN];
