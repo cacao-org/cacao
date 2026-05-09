@@ -44,7 +44,9 @@ static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "measlinresp",
     .cmdkey      = "measlinresp",
     .description =
-        "measure linear response of one stream to another"
+        "measure linear response of one stream to another",
+    .description_long =
+        "Measure the linear response between two streams (input and output). Computes the transfer function by correlating perturbations with responses."
 };
 
 

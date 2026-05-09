@@ -22,7 +22,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "compmasksWFSDM",
     .cmdkey      = "compmasksWFSDM",
-    .description = "compute WFS and DM masks"
+    .description = "compute WFS and DM masks",
+    .description_long =
+        "Compute pupil masks for WFS and DM from response matrix data. Identifies active subapertures and actuators."
 };
 
 static char zrespWFS[FUNCTION_PARAMETER_STRMAXLEN];

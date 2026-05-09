@@ -37,7 +37,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mfilttest",
     .cmdkey      = "mfilttest",
-    .description = "test input for modal filter"
+    .description = "test input for modal filter",
+    .description_long =
+        "Generate synthetic test input for the modal filter module. Produces known modal coefficient sequences for validation and benchmarking."
 };
 
 #define SNAMEPREFIX "tseqPF"

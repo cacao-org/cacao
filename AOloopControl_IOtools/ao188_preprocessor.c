@@ -25,7 +25,9 @@ static float one_sided_curv_integrator_gain = 0.01; // TODO FPS
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "ao188preproc",
     .cmdkey      = "ao188preproc",
-    .description = "AO188 APD Preprocessor"
+    .description = "AO188 APD Preprocessor",
+    .description_long =
+        "Preprocess APD (Avalanche Photodiode) count data from the Subaru AO188 system. Converts photon counts to WFS slope signals."
 };
 
 static char apd_mat_name[FUNCTION_PARAMETER_STRMAXLEN];

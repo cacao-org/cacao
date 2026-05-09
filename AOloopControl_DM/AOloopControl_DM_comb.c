@@ -33,7 +33,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "dmcomb",
     .cmdkey      = "dmcomb",
-    .description = "Combine DM channels"
+    .description = "Combine DM channels",
+    .description_long =
+        "Combine multiple DM command channels (correction, offsets, perturbations) into a single output. Applies per-channel gain, clipping limits, and response matrix mapping."
 };
 
 

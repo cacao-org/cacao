@@ -28,7 +28,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "zonalfilter",
     .cmdkey      = "zonalfilter",
-    .description = "zonal filtering"
+    .description = "zonal filtering",
+    .description_long =
+        "Apply zonal (per-actuator) filtering in a real-time AO control loop. Processes WFS signals directly in actuator space without modal decomposition."
 };
 
 

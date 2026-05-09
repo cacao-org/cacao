@@ -82,7 +82,8 @@ static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "zoptsearch",
     .cmdkey      = "zoptsearch",
     .description = "stream zonal control optimize search",
-    
+    .description_long =
+        "Search for optimal zonal control parameters by systematically varying gains and analyzing closed-loop residuals."
 };
 
 #define FPS_PARAMS(X) \

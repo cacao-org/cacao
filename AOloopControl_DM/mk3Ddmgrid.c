@@ -15,7 +15,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mk3Ddmgrid",
     .cmdkey      = "mk3Ddmgrid",
-    .description = "create DM calibration pattern sequence"
+    .description = "create DM calibration pattern sequence",
+    .description_long =
+        "Create a 3D sequence of DM calibration patterns. Generates systematic poke patterns for response matrix acquisition."
 };
 
 // Local variables pointers

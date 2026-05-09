@@ -25,7 +25,9 @@ static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "compRMsensitivity",
     .cmdkey      = "compRMsensitivity",
     .description =
-        "Compute response matrix sensitivity"
+        "Compute response matrix sensitivity",
+    .description_long =
+        "Compute the sensitivity of a response matrix by analyzing singular value magnitudes and modal coupling coefficients."
 };
 
 

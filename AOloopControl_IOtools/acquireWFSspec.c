@@ -13,7 +13,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "acquire_spectra",
     .cmdkey      = "acquire_spectra",
-    .description = "acquire spectra"
+    .description = "acquire spectra",
+    .description_long =
+        "Acquire spectral data from a wavefront sensor for chromatic characterization and dispersed fringe tracking."
 };
 
 // Local variables

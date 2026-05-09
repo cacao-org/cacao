@@ -54,7 +54,9 @@ static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "aolPFwatchin",
     .cmdkey      = "aolPFwatchin",
     .description =
-        "watch telemetry for PF input"
+        "watch telemetry for PF input",
+    .description_long =
+        "Monitor AO telemetry and prepare input buffers for the predictive filter engine. Watches WFS and DM streams and triggers filter updates."
 };
 
 #define FPS_PARAMS(X) \
@@ -113,7 +115,9 @@ static FPS_APP_INFO FPS_app_info_map = {
     .fps_name    = "aolmappfilt",
     .cmdkey      = "aolmappfilt",
     .description =
-        "map/search predictive filter"
+        "map/search predictive filter",
+    .description_long =
+        "Monitor AO telemetry and prepare input buffers for the predictive filter engine. Watches WFS and DM streams and triggers filter updates."
 };
 
 #define FPS_PARAMS_MAP(X) \
@@ -153,7 +157,9 @@ static FPS_APP_INFO FPS_app_info_mk = {
     .fps_name    = "aolmkpfilt",
     .cmdkey      = "aolmkpfilt",
     .description =
-        "test predictive filter"
+        "test predictive filter",
+    .description_long =
+        "Monitor AO telemetry and prepare input buffers for the predictive filter engine. Watches WFS and DM streams and triggers filter updates."
 };
 
 #define FPS_PARAMS_MK(X) \
@@ -202,7 +208,9 @@ static FPS_APP_INFO FPS_app_info_ave = {
     .fps_name    = "aolpfsetave",
     .cmdkey      = "aolpfsetave",
     .description =
-        "set PF to integrator"
+        "set PF to integrator",
+    .description_long =
+        "Monitor AO telemetry and prepare input buffers for the predictive filter engine. Watches WFS and DM streams and triggers filter updates."
 };
 
 #define FPS_PARAMS_AVE(X) \

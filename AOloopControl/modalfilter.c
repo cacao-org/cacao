@@ -31,7 +31,9 @@ static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "mfilt",
     .cmdkey      = "modalfilter",
     .description =
-        "Modal Filtering AO processing"
+        "Modal Filtering AO processing",
+    .description_long =
+        "Apply modal filtering in a real-time AO control loop. Decomposes WFS signals into modes, applies per-mode gains and temporal filters, and reconstructs DM commands."
 };
 
 

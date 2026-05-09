@@ -22,7 +22,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "compctrlmodes",
     .cmdkey      = "compctrlmodes",
-    .description = "compute AO control modes in WFS and DM space"
+    .description = "compute AO control modes in WFS and DM space",
+    .description_long =
+        "Compute AO control modes in both WFS and DM coordinate spaces. Generates the modal basis for closed-loop control."
 };
 
 // Local variables

@@ -15,7 +15,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "modalCTRLstats",
     .cmdkey      = "modalCTRLstats",
-    .description = "compute modal control stats"
+    .description = "compute modal control stats",
+    .description_long =
+        "Compute real-time statistics of modal control loop performance. Tracks RMS residual, actuator stroke, and temporal power spectra per mode."
 };
 
 // Local variables pointers

@@ -71,7 +71,9 @@
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "compsCM",
     .cmdkey      = "compsCM",
-    .description = "compute straight control matrix"
+    .description = "compute straight control matrix",
+    .description_long =
+        "Compute a control matrix directly from a response matrix using straight pseudo-inversion without modal decomposition."
 };
 
 static char RMmodesDMfname[FUNCTION_PARAMETER_STRMAXLEN];

@@ -21,7 +21,9 @@ static float *pokempha = NULL;
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "pokerndmodes",
     .cmdkey      = "pokerndmodes",
-    .description = "poke modes with random amplitudes"
+    .description = "poke modes with random amplitudes",
+    .description_long =
+        "Poke deformable mirror modes with random amplitudes for system identification and response matrix calibration."
 };
 
 // Local variables pointers
