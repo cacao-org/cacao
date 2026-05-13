@@ -10,7 +10,13 @@
 
 #define _GNU_SOURCE
 
+#include <stdio.h>
+
+#ifdef MILK_NO_CLI
+#include "CLIcore_standalone.h"
+#else
 #include "CLIcore.h"
+#endif
 
 #include "COREMOD_memory/COREMOD_memory.h"
 
@@ -41,18 +47,17 @@ errno_t AOloopControl_PredictiveControl_mapPredictiveFilter(
     modeouto   = modeout - modeoffset;
 
     IDmodecoeff = image_ID(IDmodecoeff_name,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
-    NBmodes     = data.core.image[IDmodecoeff].md[0].size[0];
-    NBsamples   = data.core.image[IDmodecoeff].md[0].size[2];
+        dcimg, dcnimg);
+    NBmodes     = dcimg[IDmodecoeff].md[0].size[0];
+    NBsamples   = dcimg[IDmodecoeff].md[0].size[2];
 
     // reformat measurements
     create_2Dimage_ID("trace", NBsamples, modesize, &IDtrace);
 
     for(ii = 0; ii < NBsamples; ii++)
         for(m = 0; m < modesize; m++)
-            data.core.image[IDtrace].array.F[m * NBsamples + ii] =
-                data.core.image[IDmodecoeff].array.F[ii * NBmodes + m];
+            dcimg[IDtrace].array.F[m * NBsamples + ii] =
+                dcimg[IDmodecoeff].array.F[ii * NBmodes + m];
 
     AOloopControl_PredictiveControl_testPredictiveFilter("trace",
             modeouto,
