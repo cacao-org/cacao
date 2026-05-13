@@ -11,9 +11,14 @@
 #define _GNU_SOURCE
 
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+#ifdef MILK_NO_CLI
+#include "CLIcore_standalone.h"
+#else
 #include "CLIcore.h"
-
+#endif
 #include "COREMOD_memory/COREMOD_memory.h"
 
 /**
@@ -34,9 +39,9 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
     float  *coeff;
     float   total;
 
-    IDPF        = image_ID(IDPF_name, data.core.image, data.core.NB_MAX_IMAGE);
-    xsize       = data.core.image[IDPF].md[0].size[0];
-    ysize       = data.core.image[IDPF].md[0].size[1];
+    IDPF        = image_ID(IDPF_name, dcimg, dcnimg);
+    xsize       = dcimg[IDPF].md[0].size[0];
+    ysize       = dcimg[IDPF].md[0].size[1];
     FilterOrder = xsize / ysize;
 
     coeff = (float *) malloc(sizeof(float) * FilterOrder);
@@ -65,11 +70,11 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
         for(ii = 0; ii < ysize; ii++)
             for(jj = 0; jj < ysize; jj++)
             {
-                data.core.image[IDPF].array.F[jj * xsize + ii + kk * ysize] = 0.0f;
+                dcimg[IDPF].array.F[jj * xsize + ii + kk * ysize] = 0.0f;
             }
         for(ii = 0; ii < ysize; ii++)
         {
-            data.core.image[IDPF].array.F[ii * xsize + ii + kk * ysize] = coeff[kk];
+            dcimg[IDPF].array.F[ii * xsize + ii + kk * ysize] = coeff[kk];
         }
     }
 

@@ -4,11 +4,14 @@
  */
 
 #include <math.h>
+#include <stdio.h>
 
+#ifdef MILK_NO_CLI
+#include "CLIcore_standalone.h"
+#else
 #include "CLIcore.h"
+#endif
 #include "COREMOD_memory/COREMOD_memory.h"
-
-#include "COREMOD_iofits/COREMOD_iofits.h"
 
 
 errno_t modes_spatial_extrapolate(IMGID imgmodes,
@@ -22,19 +25,22 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
 
     resolveIMGID(
         &imgmodes, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
-        if (imgmodes.ID == -1) return RETURN_FAILURE;
+        dcimg, dcnimg);
+    if (imgmodes.ID == -1) {
+        return RETURN_FAILURE;
+    }
     resolveIMGID(
         &imgmask, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
-        if (imgmask.ID == -1) return RETURN_FAILURE;
+        dcimg, dcnimg);
+    if (imgmask.ID == -1) {
+        return RETURN_FAILURE;
+    }
     resolveIMGID(
         &imgcpa, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
-        if (imgcpa.ID == -1) return RETURN_FAILURE;
+        dcimg, dcnimg);
+    if (imgcpa.ID == -1) {
+        return RETURN_FAILURE;
+    }
 
     imcreatelikewiseIMGID(imgoutmodes, &imgmodes);
 
