@@ -19,9 +19,9 @@
 #include "linalgebra/SGEMM.h"
 
 // input image names
-static char *diffseqname;
+static char diffseqname[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
-static char *outseqname;
+static char outseqname[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
 
 static uint32_t *oversamp;
@@ -40,8 +40,8 @@ static FPS_APP_INFO FPS_app_info = {
 };
 
 #define FPS_PARAMS(X) \
-    X(".diffseqname", &diffseqname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "input difference sequence cube") \
-    X(".outseq",      &outseqname,  FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "output time seq cube") \
+    X(".diffseqname", diffseqname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "input difference sequence cube") \
+    X(".outseq",      outseqname,  FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "output time seq cube") \
     X(".oversamp",    &oversamp,    FPTYPE_UINT32,     1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "samples per frame exposure time") \
     X(".nb0start",    &nb0start,    FPTYPE_UINT32,     1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "samples set to zero at start") \
     X(".nb0end",      &nb0end,      FPTYPE_UINT32,     1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "samples set to zero at end")

@@ -27,11 +27,11 @@
 
 // Local variables pointers
 
-static char *selinput;
+static char selinput[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
-static char *wfsinput;
+static char wfsinput[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
-static char *dminput;
+static char dminput[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
 static uint32_t *optmode;
 
@@ -47,9 +47,9 @@ static FPS_APP_INFO FPS_app_info = {
 };
 
 #define FPS_PARAMS(X) \
-    X(".selinput",   &selinput,   FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "selection input (PSF)") \
-    X(".wfsinput",   &wfsinput,   FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "WFS input") \
-    X(".dminput",    &dminput,    FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "DM input") \
+    X(".selinput",   selinput,   FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "selection input (PSF)") \
+    X(".wfsinput",   wfsinput,   FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "WFS input") \
+    X(".dminput",    dminput,    FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "DM input") \
     X(".optmode",    &optmode,    FPTYPE_UINT32,     0, FPFLAG_DEFAULT_INPUT, "1 maxn, 2 maxf, 3 minf") \
     X(".selnormplaw",&selnormplaw,FPTYPE_FLOAT32,    0, FPFLAG_DEFAULT_INPUT, "selection norm power law")
 

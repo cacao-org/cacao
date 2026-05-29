@@ -78,19 +78,19 @@ static int32_t *timingmode;
 static float *timingdt;
 
 // logging directory
-static char *logdir;
+static char logdir[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
 
 // stream 0
 
 // name
 // NULL if inactive
-static char *(sname[4]);
+static char sname[4][FUNCTION_PARAMETER_STRMAXLEN];
 
 // name tag
 // allows for processed copy of cubes to be ingested
 // for example, tag could be ".crop.darksub" for cropped dark subtracted image
-static char *(stag[4]);
+static char stag[4][FUNCTION_PARAMETER_STRMAXLEN];
 
 // FUll name
 // FITS   : ./<LOGDIR>/UTDATE/<SNAME>/<SNAME>_HH:MM:SS.sssssssss<TAG>.fits
@@ -120,21 +120,21 @@ static FPS_APP_INFO FPS_app_info = {
     X(".tendnsec",  &tendnsec,  FPTYPE_UINT32,  0, FPFLAG_DEFAULT_INPUT, "tendnsec") \
     X(".timingmode",&timingmode,FPTYPE_INT32,   0, FPFLAG_DEFAULT_INPUT, "timing mode (0+: inherit from stream)") \
     X(".timingdt",  &timingdt,  FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "output frame interval (0.001)") \
-    X(".logdir",    &logdir,    FPTYPE_DIRNAME, 0, FPFLAG_DEFAULT_INPUT, "log directory") \
-    X(".s0name",    &sname[0],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 0 name") \
-    X(".s0tag",     &stag[0],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 0 tag") \
+    X(".logdir",    logdir,    FPTYPE_DIRNAME, 0, FPFLAG_DEFAULT_INPUT, "log directory") \
+    X(".s0name",    sname[0],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 0 name") \
+    X(".s0tag",     stag[0],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 0 tag") \
     X(".s0latency", &slatency[0],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 0 latency [float]") \
     X(".s0lint",    &lintiming[0],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 0 linearize timing") \
-    X(".s1name",    &sname[1],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 1 name") \
-    X(".s1tag",     &stag[1],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 1 tag") \
+    X(".s1name",    sname[1],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 1 name") \
+    X(".s1tag",     stag[1],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 1 tag") \
     X(".s1latency", &slatency[1],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 1 latency [float]") \
     X(".s1lint",    &lintiming[1],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 1 linearize timing") \
-    X(".s2name",    &sname[2],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 2 name") \
-    X(".s2tag",     &stag[2],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 2 tag") \
+    X(".s2name",    sname[2],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 2 name") \
+    X(".s2tag",     stag[2],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 2 tag") \
     X(".s2latency", &slatency[2],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 2 latency [float]") \
     X(".s2lint",    &lintiming[2],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 2 linearize timing") \
-    X(".s3name",    &sname[3],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 3 name") \
-    X(".s3tag",     &stag[3],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 3 tag") \
+    X(".s3name",    sname[3],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 3 name") \
+    X(".s3tag",     stag[3],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 3 tag") \
     X(".s3latency", &slatency[3],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 3 latency [float]") \
     X(".s3lint",    &lintiming[3],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 3 linearize timing")
 

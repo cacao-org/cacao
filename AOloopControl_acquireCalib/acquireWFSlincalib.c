@@ -28,7 +28,7 @@ static FPS_APP_INFO FPS_app_info = {
 static uint32_t *AOloopindex;
 static float    *pokeampl;
 
-static char *dmstream;
+static char dmstream[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
 // timing params
 static FPS FPS_mlat;
@@ -68,8 +68,8 @@ static float *maskWFSc0;
 static float *maskWFSp1;
 static float *maskWFSc1;
 
-static char *fn_pokeC;
-static char *fn_RMDMmask;
+static char fn_pokeC[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char fn_RMDMmask[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
 static float *RMDMmaskCx;
 static float *RMDMmaskCy;
@@ -84,14 +84,14 @@ static uint64_t *autotiming;
 static uint64_t *compPokeMat;
 
 // executable scripts
-static char *exec_post_RMdecode;
-static char *exec_post_mkDMWFSmasks;
-static char *exec_post_mkDMslaveact;
-static char *exec_post_mkLODMmodes;
+static char exec_post_RMdecode[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char exec_post_mkDMWFSmasks[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char exec_post_mkDMslaveact[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char exec_post_mkLODMmodes[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
 #define FPS_PARAMS(X) \
     X(".AOloopindex", &AOloopindex, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "loop index") \
-    X(".dmstream", &dmstream, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM stream") \
+    X(".dmstream", dmstream, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM stream") \
     X(".ampl", &pokeampl, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "RM poke amplitude") \
     X(".timing.FPS_mlat", &FPS_mlat, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT, "hardware latency") \
     X(".timing.upmlat", &update_mlat, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "update latency from FPS") \
@@ -120,15 +120,15 @@ static char *exec_post_mkLODMmodes;
     X(".WFSmask.RMc0", &maskWFSc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask, point0 coefficient") \
     X(".WFSmask.RMp1", &maskWFSp1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask, point1 percentile point") \
     X(".WFSmask.RMc1", &maskWFSc1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask, point1 coefficient") \
-    X(".fn_pokeC", &fn_pokeC, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "Poke sequence cube") \
-    X(".fn_RMDMmask", &fn_RMDMmask, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "RM active DM actuators mask") \
+    X(".fn_pokeC", fn_pokeC, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "Poke sequence cube") \
+    X(".fn_RMDMmask", fn_RMDMmask, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "RM active DM actuators mask") \
     X(".normalize", &normalize, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "Normalize WFS frames") \
     X(".Hpoke", &Hpokemode, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "Hadamard poke mode") \
     X(".compPokeMat", &compPokeMat, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "(re)compute poke matrix") \
-    X(".exec.RMdecode", &exec_post_RMdecode, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "RM decode script") \
-    X(".exec.mkDMWFSmasks", &exec_post_mkDMWFSmasks, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM and WFS masks") \
-    X(".exec.mkDMslaveact", &exec_post_mkDMslaveact, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM slaved actuators") \
-    X(".exec.mkLODMmodes", &exec_post_mkLODMmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM low order modes")
+    X(".exec.RMdecode", exec_post_RMdecode, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "RM decode script") \
+    X(".exec.mkDMWFSmasks", exec_post_mkDMWFSmasks, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM and WFS masks") \
+    X(".exec.mkDMslaveact", exec_post_mkDMslaveact, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM slaved actuators") \
+    X(".exec.mkLODMmodes", exec_post_mkLODMmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM low order modes")
 
 
 FPS_V2_SECTION5(FPS_PARAMS)
