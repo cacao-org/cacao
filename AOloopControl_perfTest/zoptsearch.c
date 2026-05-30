@@ -191,7 +191,7 @@ static double image_optvalue(
     // copy to output if applicable
     if ( imgout.ID != -1 )
     {
-        imgout.md->write = 1;
+        SHMIM_WRITE_ACQUIRE(imgout.md);
         memcpy(imgout.im->array.F, imbuff, sizeof(float)*xysize);
         ImageStreamIO_UpdateIm(imgout.im);
     }
@@ -434,7 +434,7 @@ static errno_t compute_function()
             // apply control
             //
             {
-                imgctrl.md->write = 1;
+                SHMIM_WRITE_ACQUIRE(imgctrl.md);
                 if (imgctrlamp.ID == -1)
                 {
                     // no amplitude map, assume range is from -1 to +1

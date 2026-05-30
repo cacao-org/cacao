@@ -359,7 +359,7 @@ static errno_t compute_function()
             }
         }
 
-        imgimWFS0.md->write = 1;
+        SHMIM_WRITE_ACQUIRE(imgimWFS0.md);
 
         if(status_darksub == 0)
         {
@@ -379,7 +379,7 @@ static errno_t compute_function()
 
         // STEP 3: NORMALIZATION
         int status_normalize __attribute__((unused)) = 0;
-        imgimWFS1.md->write = 1;
+        SHMIM_WRITE_ACQUIRE(imgimWFS1.md);
 
         long fpi_compWFSnormalize = 
             functionparameter_GetParamIndex(
@@ -400,7 +400,7 @@ static errno_t compute_function()
         // STEP 4: REFERENCE SUBTRACTION
 
         int status_refsub __attribute__((unused)) = 0;
-        imgimWFS2.md->write = 1;
+        SHMIM_WRITE_ACQUIRE(imgimWFS2.md);
         long fpi_compWFSrefsub = 
             functionparameter_GetParamIndex(
                 data.core.fpsptr, ".comp.WFSrefsub");

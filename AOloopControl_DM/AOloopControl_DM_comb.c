@@ -686,7 +686,7 @@ static void dmcomb_step(
             processinfo_update_output_stream(processinfo, state->imgdisp.im, NULL);
 
             if(((voltmode) & FPFLAG_ONOFF) && state->imgdmvolt.im != NULL) {
-                state->imgdmvolt.md->write = 1;
+                SHMIM_WRITE_ACQUIRE(state->imgdmvolt.md);
                 DM_displ2V(state->imgdisp, state->imgdmvolt, state);
                 processinfo_update_output_stream(processinfo,
                     state->imgdmvolt.im,
@@ -713,7 +713,7 @@ static void dmcomb_step(
                     NULL);
 
                 if(((voltmode) & FPFLAG_ONOFF) && state->imgdmvolt.im != NULL) {
-                    state->imgdmvolt.md->write = 1;
+                    SHMIM_WRITE_ACQUIRE(state->imgdmvolt.md);
                     DM_displ2V(state->imgdisp, state->imgdmvolt, state);
                     processinfo_update_output_stream(processinfo,
                         state->imgdmvolt.im,

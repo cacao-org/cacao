@@ -325,7 +325,7 @@ static errno_t compute_function()
             clock_gettime(CLOCK_MILK, &time1);
         }
 
-        imgimWFS0.md->write = 1;
+        SHMIM_WRITE_ACQUIRE(imgimWFS0.md);
 
         switch(WFSatype)
         {
@@ -430,7 +430,7 @@ static errno_t compute_function()
         {
             clock_gettime(CLOCK_MILK, &time1);
         }
-        imgimWFS1.md->write = 1;
+        SHMIM_WRITE_ACQUIRE(imgimWFS1.md);
 
         if(functionparameter_GetParamValue_ONOFF(
                 data.core.fpsptr, ".comp.WFSnormalize") == 1)
@@ -533,7 +533,7 @@ static errno_t compute_function()
         {
             // subtract reference
             status_refsub = 1;
-            imgimWFS2.md->write = 1;
+            SHMIM_WRITE_ACQUIRE(imgimWFS2.md);
 
             if(imgwfsrefc.ID != -1)
             {
@@ -550,7 +550,7 @@ static errno_t compute_function()
         }
         else
         {
-            imgimWFS2.md->write = 1;
+            SHMIM_WRITE_ACQUIRE(imgimWFS2.md);
             memcpy(imgimWFS2.im->array.F,
                    imgimWFS1.im->array.F,
                    sizeof(float) * sizeWFS);
@@ -577,7 +577,7 @@ static errno_t compute_function()
                 data.core.fpsptr, ".comp.WFSsigav") == 1)
         {
             status_ave = 1;
-            imgimWFS3.md->write = 1;
+            SHMIM_WRITE_ACQUIRE(imgimWFS3.md);
             float tave_gain = *WFStaveragegain;
             float tave_mult = *WFStaveragemult;
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
@@ -637,7 +637,7 @@ static errno_t compute_function()
                 data.core.fpsptr, ".comp.WFSrefc") == 1)
         {
             status_wfsrefc = 1;
-            imgwfsrefc.md->write = 1;
+            SHMIM_WRITE_ACQUIRE(imgwfsrefc.md);
             float refcgain = *WFSrefcgain;
             float refcmult = *WFSrefcmult;
             if(imgwfsref.ID != -1)
