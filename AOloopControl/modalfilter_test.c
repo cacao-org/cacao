@@ -90,38 +90,38 @@ FPS_V2_SECTION5(FPS_PARAMS)
 
 static errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
         long fpi;
-        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".mvalDM");
+        fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".mvalDM");
         if(fpi > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi]
                 .fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
-        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".mvalWFS");
+        fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".mvalWFS");
         if(fpi > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi]
                 .fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
-        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".minPrate");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".minPrate");
+        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
 
-        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".multfact");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".multfact");
+        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
 
-        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".maxPrate");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".maxPrate");
+        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
 
-        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".noiseamp");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".noiseamp");
+        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
 
-        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".DMlatency");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".DMlatency");
+        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
 
-        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".WFSlatency");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".WFSlatency");
+        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
     }
     return RETURN_SUCCESS;
 }
@@ -152,8 +152,8 @@ static errno_t compute_function()
     IMGID imgmvalDM = imgid_make_from_name(mvalDM);
     resolveIMGID(
         &imgmvalDM, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgmvalDM.ID == -1) return RETURN_FAILURE;
     printf("%u modes\n", imgmvalDM.md->size[0]);
     uint32_t NBmode = imgmvalDM.md->size[0];
@@ -163,8 +163,8 @@ static errno_t compute_function()
     IMGID imgmvalWFS = imgid_make_from_name(mvalWFS);
     resolveIMGID(
         &imgmvalWFS, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgmvalWFS.ID == -1) return RETURN_FAILURE;
 
 

@@ -266,7 +266,7 @@ errno_t AOloopControl_modalstatsTUI(
         WRITE_IMAGENAME(name, "aol%d_CMmodesDM", loopindex);
         imgDMmodes = imgid_make_from_name(name);
         resolveIMGID(&imgDMmodes, ERRMODE_WARN,
-                     data.core.image, data.core.NB_MAX_IMAGE);
+                     dcimg, dcnimg);
         NBmode = imgDMmodes.md->size[2];
     }
     mstatstruct.NBmode = NBmode;
@@ -277,7 +277,7 @@ errno_t AOloopControl_modalstatsTUI(
         WRITE_IMAGENAME(name, "aol%d_modevalWFS", loopindex);
         imgmodevalWFS = imgid_make_from_name(name);
         resolveIMGID(&imgmodevalWFS, ERRMODE_WARN,
-                     data.core.image, data.core.NB_MAX_IMAGE);
+                     dcimg, dcnimg);
                      if (imgmodevalWFS.ID == -1) return RETURN_FAILURE;
         NBmode = imgmodevalWFS.md->size[0];
     }
@@ -289,7 +289,7 @@ errno_t AOloopControl_modalstatsTUI(
         WRITE_IMAGENAME(name, "aol%d_modevalDM", loopindex);
         imgmodevalDM = imgid_make_from_name(name);
         resolveIMGID(&imgmodevalDM, ERRMODE_WARN,
-                     data.core.image, data.core.NB_MAX_IMAGE);
+                     dcimg, dcnimg);
                      if (imgmodevalDM.ID == -1) return RETURN_FAILURE;
     }
 
@@ -299,7 +299,7 @@ errno_t AOloopControl_modalstatsTUI(
         WRITE_IMAGENAME(name, "aol%d_modevalDMf", loopindex);
         imgmodevalDMf = imgid_make_from_name(name);
         resolveIMGID(&imgmodevalDMf, ERRMODE_WARN,
-                     data.core.image, data.core.NB_MAX_IMAGE);
+                     dcimg, dcnimg);
                      if (imgmodevalDMf.ID == -1) return RETURN_FAILURE;
     }
 
@@ -309,7 +309,7 @@ errno_t AOloopControl_modalstatsTUI(
         WRITE_IMAGENAME(name, "aol%d_modevalOL", loopindex);
         imgmodevalOL = imgid_make_from_name(name);
         resolveIMGID(&imgmodevalOL, ERRMODE_WARN,
-                     data.core.image, data.core.NB_MAX_IMAGE);
+                     dcimg, dcnimg);
                      if (imgmodevalOL.ID == -1) return RETURN_FAILURE;
     }
 
@@ -319,7 +319,7 @@ errno_t AOloopControl_modalstatsTUI(
         WRITE_IMAGENAME(name, "aol%d_mgain", loopindex);
         imgmgain = imgid_make_from_name(name);
         resolveIMGID(&imgmgain, ERRMODE_WARN,
-                     data.core.image, data.core.NB_MAX_IMAGE);
+                     dcimg, dcnimg);
                      if (imgmgain.ID == -1) return RETURN_FAILURE;
     }
 
@@ -329,7 +329,7 @@ errno_t AOloopControl_modalstatsTUI(
         WRITE_IMAGENAME(name, "aol%d_mmult", loopindex);
         imgmmult = imgid_make_from_name(name);
         resolveIMGID(&imgmmult, ERRMODE_WARN,
-                     data.core.image, data.core.NB_MAX_IMAGE);
+                     dcimg, dcnimg);
                      if (imgmmult.ID == -1) return RETURN_FAILURE;
     }
 
@@ -339,7 +339,7 @@ errno_t AOloopControl_modalstatsTUI(
         WRITE_IMAGENAME(name, "aol%d_mlimit", loopindex);
         imgmlimit = imgid_make_from_name(name);
         resolveIMGID(&imgmlimit, ERRMODE_WARN,
-                     data.core.image, data.core.NB_MAX_IMAGE);
+                     dcimg, dcnimg);
                      if (imgmlimit.ID == -1) return RETURN_FAILURE;
     }
 
@@ -349,7 +349,7 @@ errno_t AOloopControl_modalstatsTUI(
         WRITE_IMAGENAME(name, "aol%d_mlimitcntfrac", loopindex);
         imgmlimitcntfrac = imgid_make_from_name(name);
         resolveIMGID(&imgmlimitcntfrac, ERRMODE_WARN,
-                     data.core.image, data.core.NB_MAX_IMAGE);
+                     dcimg, dcnimg);
                      if (imgmlimitcntfrac.ID == -1) return RETURN_FAILURE;
     }
 

@@ -48,7 +48,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static __attribute__((unused)) errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
     }
 
@@ -62,7 +62,7 @@ static __attribute__((unused)) errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
     }
 
@@ -86,8 +86,8 @@ static errno_t compute_function()
     IMGID imginmodeC = imgid_make_from_name(inmodeC);
     resolveIMGID(
         &imginmodeC, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imginmodeC.ID == -1) return RETURN_FAILURE;
     uint32_t xsize = imginmodeC.md->size[0];
     uint32_t ysize = imginmodeC.md->size[1];
@@ -99,15 +99,15 @@ static errno_t compute_function()
     IMGID imgmask = imgid_make_from_name(maskim);
     resolveIMGID(
         &imgmask, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgmask.ID == -1) return RETURN_FAILURE;
 
     IMGID imgextmask = imgid_make_from_name(extmaskim);
     resolveIMGID(
         &imgextmask, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgextmask.ID == -1) return RETURN_FAILURE;
 
 

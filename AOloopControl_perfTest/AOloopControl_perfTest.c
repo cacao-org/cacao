@@ -161,15 +161,15 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
     double mediansim0, mediansim1;
 
     IDstream0 = image_ID(IDname_stream0,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
-    xsize0    = data.core.image[IDstream0].md[0].size[0];
-    ysize0    = data.core.image[IDstream0].md[0].size[1];
+        dcimg,
+        dcnimg);
+    xsize0    = dcimg[IDstream0].md[0].size[0];
+    ysize0    = dcimg[IDstream0].md[0].size[1];
     xysize0   = xsize0 * ysize0;
-    NBframe0  = data.core.image[IDstream0].md[0].size[2];
+    NBframe0  = dcimg[IDstream0].md[0].size[2];
 
     NBpairMax =
-        (unsigned long long) NBframe0; // data.core.image[IDsimM0].md[0].size[0];
+        (unsigned long long) NBframe0; // dcimg[IDsimM0].md[0].size[0];
     NBpairMax *= (unsigned long long)(NBframe0 - 1) / 2;
     printf("NBpairMax = %llu x %llu =  %llu\n",
            (unsigned long long) NBframe0,
@@ -177,15 +177,15 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
            NBpairMax);
 
     IDstream1 = image_ID(IDname_stream1,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
-    xsize1    = data.core.image[IDstream1].md[0].size[0];
-    ysize1    = data.core.image[IDstream1].md[0].size[1];
+        dcimg,
+        dcnimg);
+    xsize1    = dcimg[IDstream1].md[0].size[0];
+    ysize1    = dcimg[IDstream1].md[0].size[1];
     xysize1   = xsize1 * ysize1;
-    NBframe1  = data.core.image[IDstream1].md[0].size[2];
+    NBframe1  = dcimg[IDstream1].md[0].size[2];
 
-    IDsimM0 = image_ID(IDname_simM0, data.core.image, data.core.NB_MAX_IMAGE);
-    IDsimM1 = image_ID(IDname_simM1, data.core.image, data.core.NB_MAX_IMAGE);
+    IDsimM0 = image_ID(IDname_simM0, dcimg, dcnimg);
+    IDsimM1 = image_ID(IDname_simM1, dcimg, dcnimg);
 
     // a few checks before proceeding
     if(NBframe0 != NBframe1)
@@ -199,47 +199,47 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
         exit(0);
     }
 
-    if(NBframe0 != data.core.image[IDsimM0].md[0].size[0])
+    if(NBframe0 != dcimg[IDsimM0].md[0].size[0])
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 xsize (%ld)\n",
                __FILE__,
                __FUNCTION__,
                __LINE__,
                NBframe0,
-               (long) data.core.image[IDsimM0].md[0].size[0]);
+               (long) dcimg[IDsimM0].md[0].size[0]);
         exit(0);
     }
 
-    if(NBframe0 != data.core.image[IDsimM0].md[0].size[1])
+    if(NBframe0 != dcimg[IDsimM0].md[0].size[1])
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe0 (%ld) != simM0 ysize (%ld)\n",
                __FILE__,
                __FUNCTION__,
                __LINE__,
                NBframe0,
-               (long) data.core.image[IDsimM0].md[0].size[1]);
+               (long) dcimg[IDsimM0].md[0].size[1]);
         exit(0);
     }
 
-    if(NBframe1 != data.core.image[IDsimM1].md[0].size[0])
+    if(NBframe1 != dcimg[IDsimM1].md[0].size[0])
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe1 (%ld) != simM1 xsize (%ld)\n",
                __FILE__,
                __FUNCTION__,
                __LINE__,
                NBframe1,
-               (long) data.core.image[IDsimM1].md[0].size[0]);
+               (long) dcimg[IDsimM1].md[0].size[0]);
         exit(0);
     }
 
-    if(NBframe1 != data.core.image[IDsimM1].md[0].size[1])
+    if(NBframe1 != dcimg[IDsimM1].md[0].size[1])
     {
         printf("[%s] [%s] [%d]  ERROR: NBframe1 (%ld) != simM1 ysize (%ld)\n",
                __FILE__,
                __FUNCTION__,
                __LINE__,
                NBframe1,
-               (long) data.core.image[IDsimM1].md[0].size[1]);
+               (long) dcimg[IDsimM1].md[0].size[1]);
         exit(0);
     }
 
@@ -310,12 +310,12 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                 sim0pair_k1[paircnt] = k1;
                 sim0pair_k2[paircnt] = k2;
                 sim0pair_val[paircnt] =
-                    data.core.image[IDsimM0].array.F[k1 * NBframe0 + k2];
+                    dcimg[IDsimM0].array.F[k1 * NBframe0 + k2];
 
                 sim1pair_k1[paircnt] = k1;
                 sim1pair_k2[paircnt] = k2;
                 sim1pair_val[paircnt] =
-                    data.core.image[IDsimM1].array.F[k1 * NBframe1 + k2];
+                    dcimg[IDsimM1].array.F[k1 * NBframe1 + k2];
 
                 paircnt++;
             }
@@ -360,8 +360,8 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                 pair,
                 k1,
                 k2,
-                data.core.image[IDsimM0].array.F[k1 * NBframe0 + k2] / mediansim0,
-                data.core.image[IDsimM1].array.F[k1 * NBframe0 + k2] / mediansim1);
+                dcimg[IDsimM0].array.F[k1 * NBframe0 + k2] / mediansim0,
+                dcimg[IDsimM1].array.F[k1 * NBframe0 + k2] / mediansim1);
     }
     fclose(fpout0);
 
@@ -382,8 +382,8 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                 pair,
                 k1,
                 k2,
-                data.core.image[IDsimM0].array.F[k1 * NBframe0 + k2] / mediansim0,
-                data.core.image[IDsimM1].array.F[k1 * NBframe1 + k2] / mediansim1);
+                dcimg[IDsimM0].array.F[k1 * NBframe0 + k2] / mediansim0,
+                dcimg[IDsimM1].array.F[k1 * NBframe1 + k2] / mediansim1);
     }
     fclose(fpout1);
 
@@ -406,9 +406,9 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
                 float         x, y;
                 unsigned long ii, jj;
 
-                x = data.core.image[IDsimM0].array.F[k1 * NBframe0 + k2] /
+                x = dcimg[IDsimM0].array.F[k1 * NBframe0 + k2] /
                     mediansim0;
-                y = data.core.image[IDsimM1].array.F[k1 * NBframe1 + k2] /
+                y = dcimg[IDsimM1].array.F[k1 * NBframe1 + k2] /
                     mediansim1;
 
                 ii = (uint32_t)(0.5 * x * xsize2Ddistrib);
@@ -416,7 +416,7 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
 
                 if((ii < xsize2Ddistrib) && (jj < ysize2Ddistrib))
                 {
-                    data.core.image[IDsim2Ddistrib]
+                    dcimg[IDsim2Ddistrib]
                     .array.F[jj * xsize2Ddistrib + ii] += 1.0;
                 }
             }
@@ -450,54 +450,54 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
 
         for(ii = 0; ii < xysize0; ii++)
         {
-            data.core.image[IDsim0diff0].array.F[pair * xysize0 + ii] =
-                data.core.image[IDstream0].array.F[k1 * xysize0 + ii] -
-                data.core.image[IDstream0].array.F[k2 * xysize0 + ii];
+            dcimg[IDsim0diff0].array.F[pair * xysize0 + ii] =
+                dcimg[IDstream0].array.F[k1 * xysize0 + ii] -
+                dcimg[IDstream0].array.F[k2 * xysize0 + ii];
         }
         for(ii = 0; ii < xysize1; ii++)
         {
-            data.core.image[IDsim0diff1].array.F[pair * xysize1 + ii] =
-                data.core.image[IDstream1].array.F[k1 * xysize1 + ii] -
-                data.core.image[IDstream1].array.F[k2 * xysize1 + ii];
+            dcimg[IDsim0diff1].array.F[pair * xysize1 + ii] =
+                dcimg[IDstream1].array.F[k1 * xysize1 + ii] -
+                dcimg[IDstream1].array.F[k2 * xysize1 + ii];
         }
 
         for(ii = 0; ii < xsize0; ii++)
             for(jj = 0; jj < ysize0; jj++)
             {
-                data.core.image[IDsim0pair0].array.F[pair * ysize0 * xsize0 * 3 +
+                dcimg[IDsim0pair0].array.F[pair * ysize0 * xsize0 * 3 +
                                                 jj * xsize0 * 3 + ii] =
-                                                    data.core.image[IDstream0]
+                                                    dcimg[IDstream0]
                                                     .array.F[k1 * xysize0 + jj * xsize0 + ii];
-                data.core.image[IDsim0pair0].array.F[pair * ysize0 * xsize0 * 3 +
+                dcimg[IDsim0pair0].array.F[pair * ysize0 * xsize0 * 3 +
                                                 jj * xsize0 * 3 + ii + xsize0] =
-                                                    data.core.image[IDstream0]
+                                                    dcimg[IDstream0]
                                                     .array.F[k2 * xysize0 + jj * xsize0 + ii];
-                data.core.image[IDsim0pair0]
+                dcimg[IDsim0pair0]
                 .array.F[pair * ysize0 * xsize0 * 3 + jj * xsize0 * 3 + ii +
                               xsize0 * 2] =
-                             data.core.image[IDstream0]
+                             dcimg[IDstream0]
                              .array.F[k1 * xysize0 + jj * xsize0 + ii] -
-                             data.core.image[IDstream0]
+                             dcimg[IDstream0]
                              .array.F[k2 * xysize0 + jj * xsize0 + ii];
             }
 
         for(ii = 0; ii < xsize1; ii++)
             for(jj = 0; jj < ysize1; jj++)
             {
-                data.core.image[IDsim0pair1].array.F[pair * ysize1 * xsize1 * 3 +
+                dcimg[IDsim0pair1].array.F[pair * ysize1 * xsize1 * 3 +
                                                 jj * xsize1 * 3 + ii] =
-                                                    data.core.image[IDstream1]
+                                                    dcimg[IDstream1]
                                                     .array.F[k1 * xysize1 + jj * xsize1 + ii];
-                data.core.image[IDsim0pair1].array.F[pair * ysize1 * xsize1 * 3 +
+                dcimg[IDsim0pair1].array.F[pair * ysize1 * xsize1 * 3 +
                                                 jj * xsize1 * 3 + ii + xsize1] =
-                                                    data.core.image[IDstream1]
+                                                    dcimg[IDstream1]
                                                     .array.F[k2 * xysize1 + jj * xsize1 + ii];
-                data.core.image[IDsim0pair1]
+                dcimg[IDsim0pair1]
                 .array.F[pair * ysize1 * xsize1 * 3 + jj * xsize1 * 3 + ii +
                               xsize1 * 2] =
-                             data.core.image[IDstream1]
+                             dcimg[IDstream1]
                              .array.F[k1 * xysize1 + jj * xsize1 + ii] -
-                             data.core.image[IDstream1]
+                             dcimg[IDstream1]
                              .array.F[k2 * xysize1 + jj * xsize1 + ii];
             }
     }
@@ -530,54 +530,54 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
 
         for(ii = 0; ii < xysize0; ii++)
         {
-            data.core.image[IDsim1diff0].array.F[pair * xysize0 + ii] =
-                data.core.image[IDstream0].array.F[k1 * xysize0 + ii] -
-                data.core.image[IDstream0].array.F[k2 * xysize0 + ii];
+            dcimg[IDsim1diff0].array.F[pair * xysize0 + ii] =
+                dcimg[IDstream0].array.F[k1 * xysize0 + ii] -
+                dcimg[IDstream0].array.F[k2 * xysize0 + ii];
         }
         for(ii = 0; ii < xysize1; ii++)
         {
-            data.core.image[IDsim1diff1].array.F[pair * xysize1 + ii] =
-                data.core.image[IDstream1].array.F[k1 * xysize1 + ii] -
-                data.core.image[IDstream1].array.F[k2 * xysize1 + ii];
+            dcimg[IDsim1diff1].array.F[pair * xysize1 + ii] =
+                dcimg[IDstream1].array.F[k1 * xysize1 + ii] -
+                dcimg[IDstream1].array.F[k2 * xysize1 + ii];
         }
 
         for(ii = 0; ii < xsize0; ii++)
             for(jj = 0; jj < ysize0; jj++)
             {
-                data.core.image[IDsim1pair0].array.F[pair * ysize0 * xsize0 * 3 +
+                dcimg[IDsim1pair0].array.F[pair * ysize0 * xsize0 * 3 +
                                                 jj * xsize0 * 3 + ii] =
-                                                    data.core.image[IDstream0]
+                                                    dcimg[IDstream0]
                                                     .array.F[k1 * xysize0 + jj * xsize0 + ii];
-                data.core.image[IDsim1pair0].array.F[pair * ysize0 * xsize0 * 3 +
+                dcimg[IDsim1pair0].array.F[pair * ysize0 * xsize0 * 3 +
                                                 jj * xsize0 * 3 + ii + xsize0] =
-                                                    data.core.image[IDstream0]
+                                                    dcimg[IDstream0]
                                                     .array.F[k2 * xysize0 + jj * xsize0 + ii];
-                data.core.image[IDsim1pair0]
+                dcimg[IDsim1pair0]
                 .array.F[pair * ysize0 * xsize0 * 3 + jj * xsize0 * 3 + ii +
                               xsize0 * 2] =
-                             data.core.image[IDstream0]
+                             dcimg[IDstream0]
                              .array.F[k1 * xysize0 + jj * xsize0 + ii] -
-                             data.core.image[IDstream0]
+                             dcimg[IDstream0]
                              .array.F[k2 * xysize0 + jj * xsize0 + ii];
             }
 
         for(ii = 0; ii < xsize1; ii++)
             for(jj = 0; jj < ysize1; jj++)
             {
-                data.core.image[IDsim1pair1].array.F[pair * ysize1 * xsize1 * 3 +
+                dcimg[IDsim1pair1].array.F[pair * ysize1 * xsize1 * 3 +
                                                 jj * xsize1 * 3 + ii] =
-                                                    data.core.image[IDstream1]
+                                                    dcimg[IDstream1]
                                                     .array.F[k1 * xysize1 + jj * xsize1 + ii];
-                data.core.image[IDsim1pair1].array.F[pair * ysize1 * xsize1 * 3 +
+                dcimg[IDsim1pair1].array.F[pair * ysize1 * xsize1 * 3 +
                                                 jj * xsize1 * 3 + ii + xsize1] =
-                                                    data.core.image[IDstream1]
+                                                    dcimg[IDstream1]
                                                     .array.F[k2 * xysize1 + jj * xsize1 + ii];
-                data.core.image[IDsim1pair1]
+                dcimg[IDsim1pair1]
                 .array.F[pair * ysize1 * xsize1 * 3 + jj * xsize1 * 3 + ii +
                               xsize1 * 2] =
-                             data.core.image[IDstream1]
+                             dcimg[IDstream1]
                              .array.F[k1 * xysize1 + jj * xsize1 + ii] -
-                             data.core.image[IDstream1]
+                             dcimg[IDstream1]
                              .array.F[k2 * xysize1 + jj * xsize1 + ii];
             }
     }
@@ -639,18 +639,18 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     double *evalarray;
     long   *indexarray;
 
-    IDwfs = image_ID(IDnameWFS, data.core.image, data.core.NB_MAX_IMAGE);
-    IDpsf = image_ID(IDnamePSF, data.core.image, data.core.NB_MAX_IMAGE);
+    IDwfs = image_ID(IDnameWFS, dcimg, dcnimg);
+    IDpsf = image_ID(IDnamePSF, dcimg, dcnimg);
 
-    xsizewfs  = data.core.image[IDwfs].md[0].size[0];
-    ysizewfs  = data.core.image[IDwfs].md[0].size[1];
+    xsizewfs  = dcimg[IDwfs].md[0].size[0];
+    ysizewfs  = dcimg[IDwfs].md[0].size[1];
     xysizewfs = xsizewfs * ysizewfs;
 
-    xsizepsf  = data.core.image[IDpsf].md[0].size[0];
-    ysizepsf  = data.core.image[IDpsf].md[0].size[1];
+    xsizepsf  = dcimg[IDpsf].md[0].size[0];
+    ysizepsf  = dcimg[IDpsf].md[0].size[1];
     xysizepsf = xsizepsf * ysizepsf;
 
-    NBframe = data.core.image[IDwfs].md[0].size[2];
+    NBframe = dcimg[IDwfs].md[0].size[2];
 
     evalarray = (double *) malloc(sizeof(double) * NBframe);
     if(evalarray == NULL)
@@ -692,7 +692,7 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     printf("WINDOW: %ld - %ld     %ld -%ld\n", x0t, x1t, y0t, y1t);
 
     long kk;
-    IDpsfmask = image_ID("PSFmask", data.core.image, data.core.NB_MAX_IMAGE);
+    IDpsfmask = image_ID("PSFmask", dcimg, dcnimg);
     if(IDpsfmask != -1)
     {
         for(kk = 0; kk < NBframe; kk++)
@@ -702,9 +702,9 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
             for(ii = x0t; ii < x1t; ii++)
                 for(jj = y0t; jj < y1t; jj++)
                 {
-                    data.core.image[IDpsf]
+                    dcimg[IDpsf]
                     .array.F[kk * xysizepsf + jj * xsizepsf + ii] *=
-                        data.core.image[IDpsfmask].array.F[jj * xsizepsf + ii];
+                        dcimg[IDpsfmask].array.F[jj * xsizepsf + ii];
                 }
         }
     }
@@ -721,7 +721,7 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
             for(jj = y0t; jj < y1t; jj++)
             {
                 float tval;
-                tval = data.core.image[IDpsf]
+                tval = dcimg[IDpsf]
                        .array.F[kk * xysizepsf + jj * xsizepsf + ii];
                 if(tval < 0.0)
                 {
@@ -779,27 +779,27 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
         {
             for(ii = 0; ii < xysizewfs; ii++)
             {
-                data.core.image[IDwfsbest].array.F[ii] +=
-                    data.core.image[IDwfs].array.F[indexarray[kk] * xysizewfs + ii];
+                dcimg[IDwfsbest].array.F[ii] +=
+                    dcimg[IDwfs].array.F[indexarray[kk] * xysizewfs + ii];
             }
 
             for(ii = 0; ii < xysizepsf; ii++)
             {
-                data.core.image[IDpsfbest].array.F[ii] +=
-                    data.core.image[IDpsf].array.F[indexarray[kk] * xysizepsf + ii];
+                dcimg[IDpsfbest].array.F[ii] +=
+                    dcimg[IDpsf].array.F[indexarray[kk] * xysizepsf + ii];
             }
         }
 
         for(ii = 0; ii < xysizewfs; ii++)
         {
-            data.core.image[IDwfsall].array.F[ii] +=
-                data.core.image[IDwfs].array.F[kk * xysizewfs + ii];
+            dcimg[IDwfsall].array.F[ii] +=
+                dcimg[IDwfs].array.F[kk * xysizewfs + ii];
         }
 
         for(ii = 0; ii < xysizepsf; ii++)
         {
-            data.core.image[IDpsfall].array.F[ii] +=
-                data.core.image[IDpsf].array.F[kk * xysizepsf + ii];
+            dcimg[IDpsfall].array.F[ii] +=
+                dcimg[IDpsf].array.F[kk * xysizepsf + ii];
         }
     }
     fclose(fp);
@@ -808,22 +808,22 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
 
     for(ii = 0; ii < xysizewfs; ii++)
     {
-        data.core.image[IDwfsbest].array.F[ii] /= kklim;
+        dcimg[IDwfsbest].array.F[ii] /= kklim;
     }
 
     for(ii = 0; ii < xysizepsf; ii++)
     {
-        data.core.image[IDpsfbest].array.F[ii] /= kklim;
+        dcimg[IDpsfbest].array.F[ii] /= kklim;
     }
 
     for(ii = 0; ii < xysizewfs; ii++)
     {
-        data.core.image[IDwfsall].array.F[ii] /= NBframe;
+        dcimg[IDwfsall].array.F[ii] /= NBframe;
     }
 
     for(ii = 0; ii < xysizepsf; ii++)
     {
-        data.core.image[IDpsfall].array.F[ii] /= NBframe;
+        dcimg[IDpsfall].array.F[ii] /= NBframe;
     }
 
     free(evalarray);

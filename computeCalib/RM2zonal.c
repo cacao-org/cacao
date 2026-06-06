@@ -98,7 +98,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static __attribute__((unused)) errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
 
     }
@@ -113,7 +113,7 @@ static __attribute__((unused)) errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
     }
 
@@ -138,15 +138,15 @@ static errno_t compute_function()
     IMGID imgRMDM = imgid_make_from_name(RMmodesDM);
     resolveIMGID(
         &imgRMDM, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgRMDM.ID == -1) return RETURN_FAILURE;
 
     IMGID imgRMWFS = imgid_make_from_name(RMmodesWFS);
     resolveIMGID(
         &imgRMWFS, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgRMWFS.ID == -1) return RETURN_FAILURE;
 
     struct timespec t0, t1, t2, t3, t4, t5;
@@ -176,7 +176,7 @@ static errno_t compute_function()
 #endif
 
 
-        //ID = image_ID("VTmat", data.core.image, data.core.NB_MAX_IMAGE);
+        //ID = image_ID("VTmat", dcimg, dcnimg);
         //IMGID imgVT = makesetIMGID("VTmat", ID);
 
         int nbmode;

@@ -47,36 +47,36 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
         long fpi_compdarkadd = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".compdarkadd");
-        long fpi_fluxtotal   = functionparameter_GetParamIndex(data.core.fpsptr, ".fluxtotal");
-        long fpi_camgain     = functionparameter_GetParamIndex(data.core.fpsptr, ".camgain");
+                milk_data.fpsptr, ".compdarkadd");
+        long fpi_fluxtotal   = functionparameter_GetParamIndex(milk_data.fpsptr, ".fluxtotal");
+        long fpi_camgain     = functionparameter_GetParamIndex(milk_data.fpsptr, ".camgain");
         long fpi_compphnoise = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".compphnoise");
-        long fpi_camRON      = functionparameter_GetParamIndex(data.core.fpsptr, ".camRON");
+                milk_data.fpsptr, ".compphnoise");
+        long fpi_camRON      = functionparameter_GetParamIndex(milk_data.fpsptr, ".camRON");
 
         if(fpi_compdarkadd > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_compdarkadd]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_fluxtotal > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_fluxtotal]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_camgain > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_camgain]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_compphnoise > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_compphnoise]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_camRON > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_camRON]
                 .fpflag |= FPFLAG_WRITERUN;
     }
@@ -108,8 +108,8 @@ static errno_t compute_function()
     IMGID wfssignalimg = imgid_make_from_name(wfssignal_in);
     resolveIMGID(
         &wfssignalimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (wfssignalimg.ID == -1) return RETURN_FAILURE;
 
     uint32_t sizexWFS = wfssignalimg.md->size[0];
@@ -122,8 +122,8 @@ static errno_t compute_function()
 
     resolveIMGID(
         &wfsdarkimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
 
     IMGID imcamtmpimg = imgid_make_from_name_2D("imcamtmp", sizexWFS, sizeyWFS);
     createimagefromIMGID(&imcamtmpimg);
@@ -173,8 +173,8 @@ static errno_t compute_function()
         {
             long fpi_compphnoise = 
                 functionparameter_GetParamIndex(
-                    data.core.fpsptr, ".compphnoise");
-            if(fpi_compphnoise > -1 && (data.core.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF))
+                    milk_data.fpsptr, ".compphnoise");
+            if(fpi_compphnoise > -1 && (milk_data.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF))
             {
                 for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {

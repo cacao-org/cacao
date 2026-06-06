@@ -172,7 +172,7 @@ static errno_t make_seed_turbulence_screen(
     /*  IDv = variable_ID("OUTERSCALE");
     if(IDv!=-1)
       {
-        outerscale = data.core.variable[IDv].value.f;
+        outerscale = milk_data.variable[IDv].value.f;
         printf("Outer scale = %f pix\n", outerscale);
       }
     */
@@ -181,7 +181,7 @@ static errno_t make_seed_turbulence_screen(
     if(IDv != -1)
     {
         RLIMMODE = 1;
-        rlim     = data.core.variable[IDv].value.f;
+        rlim     = milk_data.variable[IDv].value.f;
         printf("R limit = %f pix\n", rlim);
     }
 
@@ -193,7 +193,7 @@ static errno_t make_seed_turbulence_screen(
     imageID ID_tmppha;
     create_2Dimage_ID("tmppha", size, size, &ID_tmppha);
     for(uint64_t ii = 0; ii < size * size; ii++) {
-        data.core.image[ID_tmppha].array.F[ii] = (float) ran1();
+        dcimg[ID_tmppha].array.F[ii] = (float) ran1();
     }
     arith_image_cstmult(
         "tmppha", 2.0f * (float) M_PI,
@@ -214,13 +214,13 @@ static errno_t make_seed_turbulence_screen(
                 r = sqrtf(dx * dx + dy * dy);
                 if(r < rlim)
                 {
-                    data.core.image[ID]
+                    dcimg[ID]
                         .array.F[jj * size + ii]
                         = 0.0f;
                 }
                 else
                 {
-                    data.core.image[ID]
+                    dcimg[ID]
                         .array.F[jj * size + ii]
                         = sqrtf(
                             dx * dx
@@ -231,7 +231,7 @@ static errno_t make_seed_turbulence_screen(
             }
             else
             {
-                data.core.image[ID]
+                dcimg[ID]
                     .array.F[jj * size + ii]
                     = sqrtf(
                         dx * dx + dy * dy
@@ -239,7 +239,7 @@ static errno_t make_seed_turbulence_screen(
                           * OUTERscale_f0);
             }
         }
-    //  data.core.image[ID].array.F[size/2*size+size/2+10] = 1.0;
+    //  dcimg[ID].array.F[size/2*size+size/2+10] = 1.0;
 
     // period [pix] = size/sqrt(dx*dx+dy*dy)
     // f [1/pix] = sqrt(dx*dx+dy*dy)/size
@@ -247,7 +247,7 @@ static errno_t make_seed_turbulence_screen(
 
     create_2Dimage_ID("tmpg", size, size, &ID);
     for(uint64_t ii = 0; ii < size * size; ii++) {
-        data.core.image[ID].array.F[ii] = (float) gauss();
+        dcimg[ID].array.F[ii] = (float) gauss();
     }
     for(uint32_t ii = 0; ii < size; ii++)
         for(uint32_t jj = 0; jj < size; jj++)
@@ -258,7 +258,7 @@ static errno_t make_seed_turbulence_screen(
                 -(dx * dx + dy * dy)
                 / INNERscale_f0
                 / INNERscale_f0);
-            data.core.image[ID]
+            dcimg[ID]
                 .array.F[jj * size + ii]
                 *= sqrtf(iscoeff);
         }
@@ -273,8 +273,8 @@ static errno_t make_seed_turbulence_screen(
         IMGID imgtmpamp = imgid_make_from_name("tmpamp");
         resolveIMGID(
             &imgtmpamp, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgtmpamp.ID == -1) return RETURN_FAILURE;
         uint32_t cx = (uint32_t)(size / 2);
         uint32_t cy = (uint32_t)(size / 2);
@@ -293,13 +293,13 @@ static errno_t make_seed_turbulence_screen(
 
     /* compute the scaling factor in the power law of the structure function */
     fft_structure_function("tmpo1", "strf");
-    ID    = image_ID("strf", data.core.image, data.core.NB_MAX_IMAGE);
+    ID    = image_ID("strf", dcimg, dcnimg);
     value = 0.0;
     cnt   = 0;
     for(uint32_t ii = 1; ii < Dlim; ii++)
         for(uint32_t jj = 1; jj < Dlim; jj++)
         {
-            value += log10f(data.core.image[ID].array.F[jj * size + ii]) -
+            value += log10f(dcimg[ID].array.F[jj * size + ii]) -
                      5.0f / 3.0f * log10f(sqrtf(ii * ii + jj * jj));
             cnt++;
         }
@@ -308,20 +308,20 @@ static errno_t make_seed_turbulence_screen(
     C1 = powf(10.0f, value / cnt);
 
     fft_structure_function("tmpo2", "strf");
-    ID    = image_ID("strf", data.core.image, data.core.NB_MAX_IMAGE);
+    ID    = image_ID("strf", dcimg, dcnimg);
     value = 0.0;
     cnt   = 0;
     for(uint32_t ii = 1; ii < Dlim; ii++)
         for(uint32_t jj = 1; jj < Dlim; jj++)
         {
-            value += log10f(data.core.image[ID].array.F[jj * size + ii]) -
+            value += log10f(dcimg[ID].array.F[jj * size + ii]) -
                      5.0f / 3.0f * log10f(sqrtf(ii * ii + jj * jj));
             cnt++;
         }
     delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
     C2 = powf(10.0f, value / cnt);
 
-    if(UNLIKELY(data.core.Debug > 0)) {
+    if(UNLIKELY(milk_data.Debug > 0)) {
         printf("%f %f\n", C1, C2);
     }
 
@@ -369,8 +369,8 @@ static DMTURB_STATE* dmturb_init() {
     state->imgDM = imgid_make_from_name(dmstream);
     resolveIMGID(&state->imgDM,
         ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (state->imgDM.ID == -1) return NULL;
     printf("%u x %u actuator\n", state->imgDM.md->size[0], state->imgDM.md->size[1]);
     
@@ -443,8 +443,8 @@ static void dmturb_step(PROCESSINFO *processinfo, FPS *fps, DMTURB_STATE *state)
         state->x0m += dt * (turbwspeed) * cosf(turbwangle);
         state->y0m += dt * (turbwspeed) * sinf(turbwangle);
         
-        uint32_t Sxsize = data.core.image[state->IDts0].md->size[0];
-        uint32_t Sysize = data.core.image[state->IDts0].md->size[1];
+        uint32_t Sxsize = dcimg[state->IDts0].md->size[0];
+        uint32_t Sysize = dcimg[state->IDts0].md->size[1];
         double seedscreensizem = (turbseedpixscale) * Sxsize;
         
         while(state->x0m < 0) state->x0m += seedscreensizem;
@@ -488,7 +488,7 @@ static void dmturb_step(PROCESSINFO *processinfo, FPS *fps, DMTURB_STATE *state)
                     (ypix0 + 1) % Sysize;
 
                 const float *F =
-                    data.core.image[
+                    dcimg[
                         state->IDts0]
                         .array.F;
                 float v00 =
@@ -581,7 +581,7 @@ static errno_t compute_function()
 {
     DMTURB_STATE *state = dmturb_init();
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
-    dmturb_step(processinfo, data.core.fpsptr,
+    dmturb_step(processinfo, milk_data.fpsptr,
                 state);
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
     dmturb_cleanup(state);

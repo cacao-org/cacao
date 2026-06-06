@@ -61,7 +61,7 @@ static errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
     }
 
@@ -334,8 +334,8 @@ static errno_t compute_function()
     IMGID inimg = imgid_make_from_name(inimname);
     resolveIMGID(
         &inimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (inimg.ID == -1) return RETURN_FAILURE;
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT

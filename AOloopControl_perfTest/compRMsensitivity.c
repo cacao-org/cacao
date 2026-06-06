@@ -120,37 +120,37 @@ AOloopControl_perfTest_computeRM_sensitivity(
     printf("amplimit = %f um\n", amplimitum);
 
     IDdmmodes = image_ID(IDdmmodes_name,
-        data.core.image, data.core.NB_MAX_IMAGE);
-    dmxsize   = data.core.image[IDdmmodes].md[0].size[0];
-    dmysize   = data.core.image[IDdmmodes].md[0].size[1];
-    NBmodes   = data.core.image[IDdmmodes].md[0].size[2];
+        dcimg, dcnimg);
+    dmxsize   = dcimg[IDdmmodes].md[0].size[0];
+    dmysize   = dcimg[IDdmmodes].md[0].size[1];
+    NBmodes   = dcimg[IDdmmodes].md[0].size[2];
     dmxysize  = dmxsize * dmysize;
 
     IDdmmask = image_ID(IDdmmask_name,
-        data.core.image, data.core.NB_MAX_IMAGE);
+        dcimg, dcnimg);
 
     IDwfsref  = image_ID(IDwfsref_name,
-        data.core.image, data.core.NB_MAX_IMAGE);
-    wfsxsize  = data.core.image[IDwfsref].md[0].size[0];
-    wfsysize  = data.core.image[IDwfsref].md[0].size[1];
+        dcimg, dcnimg);
+    wfsxsize  = dcimg[IDwfsref].md[0].size[0];
+    wfsysize  = dcimg[IDwfsref].md[0].size[1];
     wfsxysize = wfsxsize * wfsysize;
 
     IDwfsresp = image_ID(IDwfsresp_name,
-        data.core.image, data.core.NB_MAX_IMAGE);
+        dcimg, dcnimg);
     IDwfsmask = image_ID(IDwfsmask_name,
-        data.core.image, data.core.NB_MAX_IMAGE);
+        dcimg, dcnimg);
 
     wfsreftot = 0.0;
     for (ii = 0; ii < wfsxysize; ii++)
     {
-        wfsreftot += data.core.image[IDwfsref].array.F[ii];
+        wfsreftot += dcimg[IDwfsref].array.F[ii];
     }
 
     wfsmasktot = 0.0;
     for (ii = 0; ii < wfsxysize; ii++)
     {
         wfsmasktot +=
-            data.core.image[IDwfsmask].array.F[ii];
+            dcimg[IDwfsmask].array.F[ii];
     }
 
     list_image_ID();
@@ -193,13 +193,13 @@ AOloopControl_perfTest_computeRM_sensitivity(
         for (ii = 0; ii < dmxysize; ii++)
         {
             tmp1 =
-                data.core.image[IDdmmodes]
+                dcimg[IDdmmodes]
                     .array.F[mode * dmxysize + ii]
-                * data.core.image[IDdmmask].array.F[ii];
+                * dcimg[IDdmmask].array.F[ii];
             aveval += tmp1;
             dmmoderms += tmp1 * tmp1;
             dmmodermscnt +=
-                data.core.image[IDdmmask].array.F[ii];
+                dcimg[IDdmmask].array.F[ii];
         }
         dmmoderms =
             sqrt(dmmoderms / dmmodermscnt);
@@ -212,32 +212,32 @@ AOloopControl_perfTest_computeRM_sensitivity(
         for (ii = 0; ii < wfsxysize; ii++)
         {
             tmp1 =
-                data.core.image[IDwfsresp]
+                dcimg[IDwfsresp]
                     .array.F[mode * wfsxysize + ii]
-                * data.core.image[IDwfsmask].array.F[ii];
+                * dcimg[IDwfsmask].array.F[ii];
             wfsmoderms += tmp1 * tmp1;
             wfsmodermscnt = 1.0;
             wfsmodermscnt +=
-                data.core.image[IDwfsmask].array.F[ii];
+                dcimg[IDwfsmask].array.F[ii];
 
-            if (data.core.image[IDwfsmask]
+            if (dcimg[IDwfsmask]
                     .array.F[ii] > 0.1)
             {
                 float wv =
-                    data.core.image[IDwfsresp]
+                    dcimg[IDwfsresp]
                         .array.F[mode * wfsxysize
                                  + ii];
-                if (data.core.image[IDwfsref]
+                if (dcimg[IDwfsref]
                         .array.F[ii]
                     > fabsf(wv * amplimitum))
                 {
                     SNR1 = wv
-                        / sqrt(data.core.image[IDwfsref]
+                        / sqrt(dcimg[IDwfsref]
                                    .array.F[ii]);
                     SNR1 /= wfsreftot;
                     SNR += SNR1 * SNR1;
                     pcnt +=
-                        data.core.image[IDwfsref]
+                        dcimg[IDwfsref]
                             .array.F[ii];
                 }
             }
@@ -277,15 +277,15 @@ AOloopControl_perfTest_computeRM_sensitivity(
             for (ii = 0; ii < dmxysize; ii++)
             {
                 XPval +=
-                    data.core.image[IDdmmask].array.F[ii]
-                    * data.core.image[IDdmmodes]
+                    dcimg[IDdmmask].array.F[ii]
+                    * dcimg[IDdmmodes]
                           .array.F[mode * dmxysize
                                    + ii]
-                    * data.core.image[IDdmmodes]
+                    * dcimg[IDdmmodes]
                           .array.F[mode1 * dmxysize
                                    + ii];
             }
-            data.core.image[IDoutXP]
+            dcimg[IDoutXP]
                 .array.F[mode * NBmodes + mode1] =
                 XPval / dmmodermscnt;
         }
@@ -304,14 +304,14 @@ AOloopControl_perfTest_computeRM_sensitivity(
             for (ii = 0; ii < wfsxysize; ii++)
             {
                 XPval +=
-                    data.core.image[IDwfsresp]
+                    dcimg[IDwfsresp]
                         .array.F[mode * wfsxysize
                                  + ii]
-                    * data.core.image[IDwfsresp]
+                    * dcimg[IDwfsresp]
                           .array.F[mode1 * wfsxysize
                                    + ii];
             }
-            data.core.image[IDoutXP_WFS]
+            dcimg[IDoutXP_WFS]
                 .array.F[mode * NBmodes + mode1] =
                 XPval / wfsxysize;
         }

@@ -41,12 +41,12 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static __attribute__((unused)) errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
-        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".zrespWFS")].fpflag |=
+        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".zrespWFS")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
 
-        data.core.fpsptr->parray[functionparameter_GetParamIndex(data.core.fpsptr, ".DMmodesC")].fpflag |=
+        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMmodesC")].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED;
     }
 
@@ -60,7 +60,7 @@ static __attribute__((unused)) errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
     }
 
@@ -84,8 +84,8 @@ static errno_t compute_function()
     IMGID imgzRM = imgid_make_from_name(zrespWFS);
     resolveIMGID(
         &imgzRM, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgzRM.ID == -1) return RETURN_FAILURE;
     uint32_t wfsxsize = imgzRM.md->size[0];
     uint32_t wfsysize = imgzRM.md->size[1];
@@ -97,8 +97,8 @@ static errno_t compute_function()
     IMGID imDMmodesC = imgid_make_from_name(DMmodesC);
     resolveIMGID(
         &imDMmodesC, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imDMmodesC.ID == -1) return RETURN_FAILURE;
     uint32_t dmxsize = imDMmodesC.md->size[0];
     uint32_t dmysize = imDMmodesC.md->size[1];

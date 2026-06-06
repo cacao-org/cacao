@@ -90,65 +90,65 @@ static errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
         long fpi_mappingXX = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".mappingXX");
+                milk_data.fpsptr, ".mappingXX");
         long fpi_mappingYY = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".mappingYY");
+                milk_data.fpsptr, ".mappingYY");
         long fpi_mappingXY = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".mappingXY");
+                milk_data.fpsptr, ".mappingXY");
         long fpi_mappingYX = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".mappingYX");
+                milk_data.fpsptr, ".mappingYX");
         long fpi_spotx0 = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".spotx0");
+                milk_data.fpsptr, ".spotx0");
         long fpi_spoty0 = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".spoty0");
+                milk_data.fpsptr, ".spoty0");
         long fpi_searchrad = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".searchrad");
+                milk_data.fpsptr, ".searchrad");
         long fpi_spotsize = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".spotsize");
+                milk_data.fpsptr, ".spotsize");
 
         // allow for change of parameter during runtime
         if(fpi_mappingXX > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_mappingXX]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_mappingYY > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_mappingYY]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_mappingXY > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_mappingXY]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_mappingYX > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_mappingYX]
                 .fpflag |= FPFLAG_WRITERUN;
 
         if(fpi_spotx0 > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_spotx0]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_spoty0 > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_spoty0]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_searchrad > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_searchrad]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_spotsize > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_spotsize]
                 .fpflag |= FPFLAG_WRITERUN;
     }
@@ -182,7 +182,7 @@ static errno_t spot_position(
     // custom stream process function code
 
     // check input image exists
-    resolveIMGID(inimg, ERRMODE_WARN, data.core.image, data.core.NB_MAX_IMAGE);
+    resolveIMGID(inimg, ERRMODE_WARN, dcimg, dcnimg);
     if (inimg->ID == -1) return RETURN_FAILURE;
 
     // get image size
@@ -195,20 +195,20 @@ static errno_t spot_position(
     // check if dark image exists
     resolveIMGID(
         indarkimg, ERRMODE_NULL,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
 
     // Checko output
     //
     resolveIMGID(
         outdatimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (outdatimg->ID == -1) return RETURN_FAILURE;
     resolveIMGID(
         outvecimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (outvecimg->ID == -1) return RETURN_FAILURE;
 
 
@@ -305,16 +305,16 @@ static errno_t compute_function()
     IMGID inimg = imgid_make_from_name(inimname);
     resolveIMGID(
         &inimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (inimg.ID == -1) return RETURN_FAILURE;
 
     // resolve dark image and create IMGID (optional)
     IMGID indarkimg = imgid_make_from_name(indarkname);
     resolveIMGID(
         &indarkimg, ERRMODE_NULL,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
 
     // Create output
     //

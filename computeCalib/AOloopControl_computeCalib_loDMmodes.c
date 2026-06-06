@@ -95,7 +95,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
 
     printf("msizexy = %u %u\n", msizex, msizey);
     list_image_ID();
-    IDmask = image_ID("dmmask", data.core.image, data.core.NB_MAX_IMAGE);
+    IDmask = image_ID("dmmask", dcimg, dcnimg);
     if(IDmask == -1)
     {
         double val0, val1;
@@ -114,7 +114,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                 val1 = 1.0 - exp(-pow(a1 * r, b1));
                 r    = sqrt(x * x + y * y) / r0;
                 val0 = exp(-pow(a0 * r, b0));
-                data.core.image[IDmask].array.F[jj * msizex + ii] = val0 * val1;
+                dcimg[IDmask].array.F[jj * msizex + ii] = val0 * val1;
             }
         save_fits("dmmask", "dmmask.fits");
         xc1 = xc;
@@ -128,9 +128,9 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         for(uint32_t ii = 0; ii < msizex; ii++)
             for(uint32_t jj = 0; jj < msizey; jj++)
             {
-                xc1 += (double) ii * data.core.image[IDmask].array.F[jj * msizex + ii];
-                yc1 += (double) jj * data.core.image[IDmask].array.F[jj * msizex + ii];
-                totm += data.core.image[IDmask].array.F[jj * msizex + ii];
+                xc1 += (double) ii * dcimg[IDmask].array.F[jj * msizex + ii];
+                yc1 += (double) jj * dcimg[IDmask].array.F[jj * msizex + ii];
+                totm += dcimg[IDmask].array.F[jj * msizex + ii];
             }
         // printf("xc1 yc1    %f  %f     %f\n", xc1, yc1, totm);
         xc1 /= totm;
@@ -138,14 +138,14 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
     }
 
     totm = arith_image_total("dmmask");
-    if((msizex != data.core.image[IDmask].md[0].size[0]) ||
-            (msizey != data.core.image[IDmask].md[0].size[1]))
+    if((msizex != dcimg[IDmask].md[0].size[0]) ||
+            (msizey != dcimg[IDmask].md[0].size[1]))
     {
         printf(
             "ERROR: file dmmask size (%u %u) does not match expected size "
             "(%u %u)\n",
-            data.core.image[IDmask].md[0].size[0],
-            data.core.image[IDmask].md[0].size[1],
+            dcimg[IDmask].md[0].size[0],
+            dcimg[IDmask].md[0].size[1],
             msizex,
             msizey);
         exit(0);
@@ -170,8 +170,8 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         IMGID imgCPAmask = imgid_make_from_name("modesCPAmask");
         resolveIMGID(
             &imgCPAmask, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
 
         linopt_imtools_makeCPAmodes(&imgoutm,
                                     msizex,
@@ -195,21 +195,21 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                                    );
     }
 
-    ID0    = image_ID("CPAmodes", data.core.image, data.core.NB_MAX_IMAGE);
-    IDfreq = image_ID("cpamodesfreq", data.core.image, data.core.NB_MAX_IMAGE);
+    ID0    = image_ID("CPAmodes", dcimg, dcnimg);
+    IDfreq = image_ID("cpamodesfreq", dcimg, dcnimg);
 
     printf("  %u %u %ld\n",
            msizex,
            msizey,
-           (long) data.core.image[ID0].md[0].size[2] - 1);
+           (long) dcimg[ID0].md[0].size[2] - 1);
     create_3Dimage_ID(ID_name,
                       msizex,
                       msizey,
-                      data.core.image[ID0].md[0].size[2] - 1 + NBZ,
+                      dcimg[ID0].md[0].size[2] - 1 + NBZ,
                       &ID);
 
     create_2Dimage_ID("modesfreqcpa",
-                      data.core.image[ID0].md[0].size[2] - 1 + NBZ,
+                      dcimg[ID0].md[0].size[2] - 1 + NBZ,
                       1,
                       &IDmfcpa);
 
@@ -218,7 +218,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
     printf("r1 = %f    %f %f\n", r1, xc1, yc1);
     for(k = 0; k < NBZ; k++)
     {
-        data.core.image[IDmfcpa].array.F[k] = zcpa[k];
+        dcimg[IDmfcpa].array.F[k] = zcpa[k];
         for(uint32_t ii = 0; ii < msizex; ii++)
             for(uint32_t jj = 0; jj < msizey; jj++)
             {
@@ -226,33 +226,33 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                 y  = (double) jj - yc1;
                 r  = sqrt(x * x + y * y) / r1;
                 PA = atan2(y, x);
-                data.core.image[ID].array.F[k * msizex * msizey + jj * msizex + ii] =
+                dcimg[ID].array.F[k * msizex * msizey + jj * msizex + ii] =
                     Zernike_value(zindex[k], r, PA);
             }
     }
 
-    for(uint32_t k = 0; k < (uint32_t) data.core.image[ID0].md[0].size[2] - 1; k++)
+    for(uint32_t k = 0; k < (uint32_t) dcimg[ID0].md[0].size[2] - 1; k++)
     {
-        data.core.image[IDmfcpa].array.F[k + NBZ] =
-            data.core.image[IDfreq].array.F[k + 1];
+        dcimg[IDmfcpa].array.F[k + NBZ] =
+            dcimg[IDfreq].array.F[k + 1];
         for(uint64_t ii = 0; ii < msizex * msizey; ii++)
-            data.core.image[ID].array.F[(k + NBZ) * msizex * msizey + ii] =
-                data.core.image[ID0].array.F[(k + 1) * msizex * msizey + ii];
+            dcimg[ID].array.F[(k + NBZ) * msizex * msizey + ii] =
+                dcimg[ID0].array.F[(k + 1) * msizex * msizey + ii];
     }
 
     for(uint32_t k = 0;
-            k < (uint32_t)(data.core.image[ID0].md[0].size[2] - 1 + NBZ);
+            k < (uint32_t)(dcimg[ID0].md[0].size[2] - 1 + NBZ);
             k++)
     {
         /// Remove excluded modes
-        long IDeModes = image_ID("emodes", data.core.image, data.core.NB_MAX_IMAGE);
+        long IDeModes = image_ID("emodes", dcimg, dcnimg);
         if(IDeModes != -1)
         {
             create_2Dimage_ID("tmpmode", msizex, msizey, &IDtm);
 
             for(uint64_t ii = 0; ii < msizex * msizey; ii++)
-                data.core.image[IDtm].array.F[ii] =
-                    data.core.image[ID].array.F[k * msizex * msizey + ii];
+                dcimg[IDtm].array.F[ii] =
+                    dcimg[ID].array.F[k * msizex * msizey + ii];
             linopt_imtools_image_fitModes("tmpmode",
                                           "emodes",
                                           "dmmask",
@@ -262,7 +262,7 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                                           NULL);
             linopt_imtools_image_construct("emodes", "lcoeff", "em00", NULL);
             delete_image_ID("lcoeff", DELETE_IMAGE_ERRMODE_WARNING);
-            IDem = image_ID("em00", data.core.image, data.core.NB_MAX_IMAGE);
+            IDem = image_ID("em00", dcimg, dcnimg);
 
             coeff = 1.0 - exp(-pow((double) k / kelim, 6.0));
             if(k > 2.0 * kelim)
@@ -270,9 +270,9 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                 coeff = 1.0;
             }
             for(uint64_t ii = 0; ii < msizex * msizey; ii++)
-                data.core.image[ID].array.F[k * msizex * msizey + ii] =
-                    data.core.image[IDtm].array.F[ii] -
-                    coeff * data.core.image[IDem].array.F[ii];
+                dcimg[ID].array.F[k * msizex * msizey + ii] =
+                    dcimg[IDtm].array.F[ii] -
+                    coeff * dcimg[IDem].array.F[ii];
 
             delete_image_ID("em00", DELETE_IMAGE_ERRMODE_WARNING);
             delete_image_ID("tmpmode", DELETE_IMAGE_ERRMODE_WARNING);
@@ -281,51 +281,51 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         double totvm = 0.0;
         for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
-            //	  data.core.image[ID].array.F[k*msize*msize+ii] =
-            // data.core.image[ID0].array.F[(k+1)*msize*msize+ii];
-            totvm += data.core.image[ID].array.F[k * msizex * msizey + ii] *
-                     data.core.image[IDmask].array.F[ii];
+            //	  dcimg[ID].array.F[k*msize*msize+ii] =
+            // dcimg[ID0].array.F[(k+1)*msize*msize+ii];
+            totvm += dcimg[ID].array.F[k * msizex * msizey + ii] *
+                     dcimg[IDmask].array.F[ii];
         }
         offset = totvm / totm;
 
         for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
-            data.core.image[ID].array.F[k * msizex * msizey + ii] -= offset;
-            data.core.image[ID].array.F[k * msizex * msizey + ii] *=
-                data.core.image[IDmask].array.F[ii];
+            dcimg[ID].array.F[k * msizex * msizey + ii] -= offset;
+            dcimg[ID].array.F[k * msizex * msizey + ii] *=
+                dcimg[IDmask].array.F[ii];
         }
 
         offset = 0.0;
         for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
-            offset += data.core.image[ID].array.F[k * msizex * msizey + ii];
+            offset += dcimg[ID].array.F[k * msizex * msizey + ii];
         }
 
         rms = 0.0;
         for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
-            data.core.image[ID].array.F[k * msizex * msizey + ii] -=
+            dcimg[ID].array.F[k * msizex * msizey + ii] -=
                 offset / msizex / msizey;
-            rms += data.core.image[ID].array.F[k * msizex * msizey + ii] *
-                   data.core.image[ID].array.F[k * msizex * msizey + ii];
+            rms += dcimg[ID].array.F[k * msizex * msizey + ii] *
+                   dcimg[ID].array.F[k * msizex * msizey + ii];
         }
         rms = sqrt(rms / totm);
         printf("Mode %u   RMS = %lf  (%f)\n", k, rms, totm);
         for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
-            data.core.image[ID].array.F[k * msizex * msizey + ii] /= rms;
+            dcimg[ID].array.F[k * msizex * msizey + ii] /= rms;
         }
     }
 
-    for(k = 0; k < data.core.image[ID0].md[0].size[2] - 1 + NBZ; k++)
+    for(k = 0; k < dcimg[ID0].md[0].size[2] - 1 + NBZ; k++)
     {
         rms = 0.0;
         for(uint64_t ii = 0; ii < msizex * msizey; ii++)
         {
-            data.core.image[ID].array.F[k * msizex * msizey + ii] -=
+            dcimg[ID].array.F[k * msizex * msizey + ii] -=
                 offset / msizex / msizey;
-            rms += data.core.image[ID].array.F[k * msizex * msizey + ii] *
-                   data.core.image[ID].array.F[k * msizex * msizey + ii];
+            rms += dcimg[ID].array.F[k * msizex * msizey + ii] *
+                   dcimg[ID].array.F[k * msizex * msizey + ii];
         }
         rms = sqrt(rms / totm);
         printf("Mode %ld   RMS = %lf\n", k, rms);
@@ -350,21 +350,21 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                          "modeg",
                          4.0 * pow(1.0 * (NBciter - citer) / NBciter, 0.5),
                          kernsize);
-            IDg = image_ID("modeg", data.core.image, data.core.NB_MAX_IMAGE);
-            for(uint32_t k = 0; k < data.core.image[ID].md[0].size[2]; k++)
+            IDg = image_ID("modeg", dcimg, dcnimg);
+            for(uint32_t k = 0; k < dcimg[ID].md[0].size[2]; k++)
             {
                 for(uint64_t ii = 0; ii < msizex * msizey; ii++)
-                    if(data.core.image[IDmask].array.F[ii] < 0.98)
-                        data.core.image[ID].array.F[k * msizex * msizey + ii] =
-                            data.core.image[IDg].array.F[k * msizex * msizey + ii];
+                    if(dcimg[IDmask].array.F[ii] < 0.98)
+                        dcimg[ID].array.F[k * msizex * msizey + ii] =
+                            dcimg[IDg].array.F[k * msizex * msizey + ii];
             }
             delete_image_ID("modeg", DELETE_IMAGE_ERRMODE_WARNING);
         }
     }
 
     /// SLAVED ACTUATORS
-    IDslaved = image_ID("dmslaved", data.core.image, data.core.NB_MAX_IMAGE);
-    ID       = image_ID(ID_name, data.core.image, data.core.NB_MAX_IMAGE);
+    IDslaved = image_ID("dmslaved", dcimg, dcnimg);
+    ID       = image_ID(ID_name, dcimg, dcnimg);
     if((IDslaved != -1) && (IDmask != -1))
     {
         imageID IDtmp;
@@ -376,17 +376,17 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
         imageID IDtmp2;
         create_2Dimage_ID("_tmpcoeff2", msizex, msizey, &IDtmp2);
 
-        for(m = 0; m < data.core.image[ID].md[0].size[2]; m++)
+        for(m = 0; m < dcimg[ID].md[0].size[2]; m++)
         {
             // write input DM mode
             for(uint64_t ii = 0; ii < msizex * msizey; ii++)
             {
-                data.core.image[IDtmp].array.F[ii] =
-                    data.core.image[ID].array.F[m * msizex * msizey + ii];
-                data.core.image[IDtmp1].array.F[ii] =
-                    data.core.image[IDmask].array.F[ii] *
-                    (1.0 - data.core.image[IDslaved].array.F[ii]);
-                data.core.image[IDtmp2].array.F[ii] = data.core.image[IDtmp1].array.F[ii];
+                dcimg[IDtmp].array.F[ii] =
+                    dcimg[ID].array.F[m * msizex * msizey + ii];
+                dcimg[IDtmp1].array.F[ii] =
+                    dcimg[IDmask].array.F[ii] *
+                    (1.0 - dcimg[IDslaved].array.F[ii]);
+                dcimg[IDtmp2].array.F[ii] = dcimg[IDtmp1].array.F[ii];
             }
 
             long  pixcnt = 1;
@@ -399,82 +399,82 @@ imageID AOloopControl_computeCalib_mkloDMmodes(const char *ID_name,
                 for(uint32_t ii = 1; ii < (uint32_t)(msizex - 1); ii++)
                     for(uint32_t jj = 1; jj < (uint32_t)(msizey - 1); jj++)
                     {
-                        if((data.core.image[IDtmp1].array.F[jj * msizex + ii] <
+                        if((dcimg[IDtmp1].array.F[jj * msizex + ii] <
                                 0.5) &&
-                                (data.core.image[IDslaved].array.F[jj * msizex + ii] >
+                                (dcimg[IDslaved].array.F[jj * msizex + ii] >
                                  0.5))
                         {
                             pixcnt++;
-                            vxp = data.core.image[IDtmp]
+                            vxp = dcimg[IDtmp]
                                   .array.F[jj * msizex + (ii + 1)];
-                            cxp = data.core.image[IDtmp1]
+                            cxp = dcimg[IDtmp1]
                                   .array.F[jj * msizex + (ii + 1)];
 
-                            vxm = data.core.image[IDtmp]
+                            vxm = dcimg[IDtmp]
                                   .array.F[jj * msizex + (ii - 1)];
-                            cxm = data.core.image[IDtmp1]
+                            cxm = dcimg[IDtmp1]
                                   .array.F[jj * msizex + (ii - 1)];
 
-                            vyp = data.core.image[IDtmp]
+                            vyp = dcimg[IDtmp]
                                   .array.F[(jj + 1) * msizex + ii];
-                            cyp = data.core.image[IDtmp1]
+                            cyp = dcimg[IDtmp1]
                                   .array.F[(jj + 1) * msizex + ii];
 
-                            vym = data.core.image[IDtmp]
+                            vym = dcimg[IDtmp]
                                   .array.F[(jj - 1) * msizex + ii];
-                            cym = data.core.image[IDtmp1]
+                            cym = dcimg[IDtmp1]
                                   .array.F[(jj - 1) * msizex + ii];
 
                             ctot = (cxp + cxm + cyp + cym);
 
                             if(ctot > 0.5)
                             {
-                                data.core.image[IDtmp].array.F[jj * msizex + ii] =
+                                dcimg[IDtmp].array.F[jj * msizex + ii] =
                                     (vxp * cxp + vxm * cxm + vyp * cyp +
                                      vym * cym) /
                                     ctot;
-                                data.core.image[IDtmp2].array.F[jj * msizex + ii] =
+                                dcimg[IDtmp2].array.F[jj * msizex + ii] =
                                     1.0;
                             }
                         }
                     }
                 for(uint64_t ii = 0; ii < msizex * msizey; ii++)
-                    data.core.image[IDtmp1].array.F[ii] =
-                        data.core.image[IDtmp2].array.F[ii];
+                    dcimg[IDtmp1].array.F[ii] =
+                        dcimg[IDtmp2].array.F[ii];
             }
             for(uint64_t ii = 0; ii < msizex * msizey; ii++)
-                data.core.image[ID].array.F[m * msizex * msizey + ii] =
-                    data.core.image[IDtmp].array.F[ii];
+                dcimg[ID].array.F[m * msizex * msizey + ii] =
+                    dcimg[IDtmp].array.F[ii];
 
             /*
 
                   IDtmp = create_2Dimage_ID("_tmpinterpol", msizex, msizey);
-                  for(m=0; m<data.core.image[ID].md[0].size[2]; m++)
+                  for(m=0; m<dcimg[ID].md[0].size[2]; m++)
                   {
                       for(ii=0; ii<msizex*msizey; ii++)
-                          data.core.image[IDtmp].array.F[ii] =
-             data.core.image[ID].array.F[m*msizex*msizey+ii];
+                          dcimg[IDtmp].array.F[ii] =
+             dcimg[ID].array.F[m*msizex*msizey+ii];
 
                       for(conviter=0; conviter<NBconviter; conviter++)
                       {
                           sigma = 0.5*NBconviter/(1.0+conviter);
                           gauss_filter("_tmpinterpol", "_tmpinterpolg", 1.0, 2);
-                          IDtmpg = image_ID("_tmpinterpolg", data.core.image, data.core.NB_MAX_IMAGE);
+                          IDtmpg = image_ID("_tmpinterpolg", dcimg, dcnimg);
                           for(ii=0; ii<msizex*msizey; ii++)
                           {
-                              if((data.core.image[IDmask].array.F[ii]>0.5)&&(data.core.image[IDslaved].array.F[ii]<0.5))
-                                  data.core.image[IDtmp].array.F[ii] =
-             data.core.image[ID].array.F[m*msizex*msizey+ii]; else
-                                  data.core.image[IDtmp].array.F[ii] =
-             data.core.image[IDtmpg].array.F[ii];
+                              if((dcimg[IDmask].array.F[ii]>0.5)&&(dcimg[IDslaved].array.F[ii]<0.5))
+                                  dcimg[IDtmp].array.F[ii] =
+             dcimg[ID].array.F[m*msizex*msizey+ii]; else
+                                  dcimg[IDtmp].array.F[ii] =
+             dcimg[IDtmpg].array.F[ii];
                           }
                           delete_image_ID("_tmpinterpolg",
              DELETE_IMAGE_ERRMODE_WARNING);
                       }
                       for(ii=0; ii<msizex*msizey; ii++)
-                          if(data.core.image[IDmask].array.F[ii]>0.5)
-                              data.core.image[ID].array.F[m*msizex*msizey+ii] =
-             data.core.image[IDtmp].array.F[ii];
+                          if(dcimg[IDmask].array.F[ii]>0.5)
+                              dcimg[ID].array.F[m*msizex*msizey+ii] =
+             dcimg[IDtmp].array.F[ii];
                   */
         }
         delete_image_ID("_tmpinterpol", DELETE_IMAGE_ERRMODE_WARNING);

@@ -61,7 +61,7 @@ int is_ready(int fd)
 //
 static errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
 
     }
@@ -252,8 +252,8 @@ static errno_t compute_function()
     IMGID apd_mat_in = imgid_make_from_name(apd_mat_name);
     resolveIMGID(
         &apd_mat_in, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (apd_mat_in.ID == -1) return RETURN_FAILURE;
 
     float apd_integrator[NUM_APD_HOWFS];

@@ -141,15 +141,15 @@ static errno_t compute_function()
     IMGID outimg = imgid_make_from_name(outsname);
     resolveIMGID(
         &outimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (outimg.ID == -1) return RETURN_FAILURE;
 
     IMGID modecimg = imgid_make_from_name(modecsname);
     resolveIMGID(
         &modecimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (modecimg.ID == -1) return RETURN_FAILURE;
 
     printf(" COMPUTE Flags = %ld\n", CLIcmddata.cmdsettings->flags);

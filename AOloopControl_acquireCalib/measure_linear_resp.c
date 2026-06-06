@@ -479,7 +479,7 @@ static errno_t Measure_Linear_Response_Modal(
             imgoutC2.im->array.F[PokeIndex * sizexyout + ii] = 0.0;
             for(uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
             {
-                data.core.image[IDoutCstep[AveStep]].array.F[PokeIndex * sizexyout + ii] = 0.0;
+                dcimg[IDoutCstep[AveStep]].array.F[PokeIndex * sizexyout + ii] = 0.0;
             }
         }
     }
@@ -638,7 +638,7 @@ static errno_t Measure_Linear_Response_Modal(
             {
                 {
                     char *ptr = (char *)
-                                data.core.image[IDoutCstep[pkinfarray[pokeframe].aveindex]].array.F;
+                                dcimg[IDoutCstep[pkinfarray[pokeframe].aveindex]].array.F;
                     ptr += sizeof(float) * pkinfarray[pokeframe].PokeIndexMEAS_Mapped * sizexyout;
                     memcpy(ptr,
                            imgout.im->array.F,
@@ -678,7 +678,7 @@ static errno_t Measure_Linear_Response_Modal(
                 for(uint64_t ii = 0; ii < sizexyout; ii++)
                 {
                     imgoutC2.im->array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout + ii] +=
-                    data.core.image[IDoutCstep[AveStep]].array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout +
+                    dcimg[IDoutCstep[AveStep]].array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout +
                                                             ii];
                 }
             }
@@ -873,8 +873,8 @@ static errno_t compute_function()
     IMGID imgin = imgid_make_from_name(streamin);
     resolveIMGID(
         &imgin, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgin.ID == -1) return RETURN_FAILURE;
     printf("input  space size : %u %u\n", imgin.md->size[0], imgin.md->size[1]);
 
@@ -882,8 +882,8 @@ static errno_t compute_function()
     IMGID imgout = imgid_make_from_name(streamout);
     resolveIMGID(
         &imgout, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgout.ID == -1) return RETURN_FAILURE;
     printf("output space size : %u %u\n", imgout.md->size[0], imgout.md->size[1]);
 
@@ -891,8 +891,8 @@ static errno_t compute_function()
     IMGID imginmodeC = imgid_make_from_name("inmodeC");
     resolveIMGID(
         &imginmodeC, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imginmodeC.ID == -1) return RETURN_FAILURE;
     printf("input modes size : %u %u %u\n", imginmodeC.md->size[0],
            imginmodeC.md->size[1], imginmodeC.md->size[2]);

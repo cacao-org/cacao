@@ -765,7 +765,7 @@ static errno_t compute_function()
         imgid_make_from_fpskey(
             inmval, FPS_name, ".inmval");
     resolveIMGID(&imginWFS, ERRMODE_WARN,
-        data.core.image, data.core.NB_MAX_IMAGE);
+        dcimg, dcnimg);
         if (imginWFS.ID == -1) return RETURN_FAILURE;
 
     uint32_t NBmode = imginWFS.md[0].size[0];
@@ -779,7 +779,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     modal_filter_step(
-        processinfo, data.core.fpsptr,
+        processinfo, milk_data.fpsptr,
         imginWFS.im, imgout.im, state);
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

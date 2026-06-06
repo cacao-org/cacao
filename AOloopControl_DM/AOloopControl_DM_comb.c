@@ -129,13 +129,13 @@ static errno_t DMdisp_add_disp_from_circular_buffer(DMCOMB_STATE *state)
         printf("(re-)initializing DMdisp_add_disp_from_circular_buffer");
         delete_image_ID(astrogridsname, DELETE_IMAGE_ERRMODE_WARNING);
         read_sharedmem_image(astrogridsname,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
         state->ag_imgdispbuffer = imgid_make_from_name(astrogridsname);
         resolveIMGID(&state->ag_imgdispbuffer,
             ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (state->ag_imgdispbuffer.ID == -1) return RETURN_FAILURE;
         state->ag_xysize = (uint64_t)(DMxsize) * (DMysize);
         state->ag_sliceindex = 0;
@@ -506,14 +506,14 @@ static void dmcomb_cleanup(DMCOMB_STATE *state)
 
 static DMCOMB_STATE* dmcomb_init()
 {
-    if (UNLIKELY(data.core.Debug > 0)) {
+    if (UNLIKELY(milk_data.Debug > 0)) {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
         fflush(stdout);
     }
 
     DMCOMB_STATE *state = (DMCOMB_STATE*) calloc(1, sizeof(DMCOMB_STATE));
 
-    if (UNLIKELY(data.core.Debug > 0)) {
+    if (UNLIKELY(milk_data.Debug > 0)) {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
         fflush(stdout);
     }
@@ -523,15 +523,15 @@ static DMCOMB_STATE* dmcomb_init()
         char name[STRINGMAXLEN_STREAMNAME];
         snprintf(name, sizeof(name), "dm%02udisp%02u", DMindex, ch);
 
-        if (UNLIKELY(data.core.Debug > 0)) {
+        if (UNLIKELY(milk_data.Debug > 0)) {
             printf("DEBUG: channel %d : %s\n", ch, name);
             fflush(stdout);
         }
 
         imageID IDch = read_sharedmem_image(name,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
-        if (UNLIKELY(data.core.Debug > 0)) {
+            dcimg,
+            dcnimg);
+        if (UNLIKELY(milk_data.Debug > 0)) {
             printf("DEBUG: ID = %ld\n", IDch);
             fflush(stdout);
         }
@@ -541,7 +541,7 @@ static DMCOMB_STATE* dmcomb_init()
             DMysize);
     }
 
-    if (UNLIKELY(data.core.Debug > 0)) {
+    if (UNLIKELY(milk_data.Debug > 0)) {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
         fflush(stdout);
     }
@@ -558,7 +558,7 @@ static DMCOMB_STATE* dmcomb_init()
             DMysize);
     }
 
-    if (UNLIKELY(data.core.Debug > 0)) {
+    if (UNLIKELY(milk_data.Debug > 0)) {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
         fflush(stdout);
     }
@@ -570,25 +570,25 @@ static DMCOMB_STATE* dmcomb_init()
         sizeof(double)
         * (DMxsize) * (DMysize));
 
-    if (UNLIKELY(data.core.Debug > 0)) {
+    if (UNLIKELY(milk_data.Debug > 0)) {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
         fflush(stdout);
     }
 
     if(((voltmode) & FPFLAG_ONOFF) && voltname[0] != '\0') {
         if(
-            image_ID(voltname, data.core.image, data.core.NB_MAX_IMAGE) == -1) read_sharedmem_image(voltname,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            image_ID(voltname, dcimg, dcnimg) == -1) read_sharedmem_image(voltname,
+            dcimg,
+            dcnimg);
         state->imgdmvolt = imgid_make_from_name(voltname);
         resolveIMGID(&state->imgdmvolt,
             ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (state->imgdmvolt.ID == -1) return NULL;
     }
 
-    if (UNLIKELY(data.core.Debug > 0)) {
+    if (UNLIKELY(milk_data.Debug > 0)) {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
         fflush(stdout);
     }
@@ -603,7 +603,7 @@ static void dmcomb_step(
     DMCOMB_STATE *state
 )
 {
-    if (UNLIKELY(data.core.Debug > 0)) {
+    if (UNLIKELY(milk_data.Debug > 0)) {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
         fflush(stdout);
     }
@@ -990,7 +990,7 @@ static errno_t compute_function()
     DMCOMB_STATE *state = dmcomb_init();
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
-    dmcomb_step(processinfo, data.core.fpsptr,
+    dmcomb_step(processinfo, milk_data.fpsptr,
         state);
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 

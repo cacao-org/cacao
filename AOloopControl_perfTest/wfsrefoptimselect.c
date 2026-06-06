@@ -332,8 +332,8 @@ static errno_t compute_function()
     IMGID inpsfimg = imgid_make_from_name(selinput);
     resolveIMGID(
         &inpsfimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (inpsfimg.ID == -1) return RETURN_FAILURE;
 
     IMGID inwfsimg;
@@ -342,8 +342,8 @@ static errno_t compute_function()
         inwfsimg = imgid_make_from_name(wfsinput);
         resolveIMGID(
             &inwfsimg, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (inwfsimg.ID == -1) return RETURN_FAILURE;
     }
     else
@@ -358,8 +358,8 @@ static errno_t compute_function()
         indmimg = imgid_make_from_name(dminput);
         resolveIMGID(
             &indmimg, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (indmimg.ID == -1) return RETURN_FAILURE;
     }
     else

@@ -35,7 +35,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
 
     }
@@ -243,15 +243,15 @@ static errno_t compute_function()
     IMGID wfsinimg = imgid_make_from_name(wfsinsname);
     resolveIMGID(
         &wfsinimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (wfsinimg.ID == -1) return RETURN_FAILURE;
 
     IMGID mapimg = imgid_make_from_name(mapsname);
     resolveIMGID(
         &mapimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (mapimg.ID == -1) return RETURN_FAILURE;
 
 

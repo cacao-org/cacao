@@ -314,7 +314,7 @@ static errno_t compute_function()
         //int status_wfsmult = 0;
 
         if(functionparameter_GetParamValue_ONOFF(
-                data.core.fpsptr, ".comp.darksub") == 1 &&
+                milk_data.fpsptr, ".comp.darksub") == 1 &&
                 imgwfsdark.ID != -1)
         {
             status_darksub = 1;
@@ -433,7 +433,7 @@ static errno_t compute_function()
         imgimWFS1.md->write = 1;
 
         if(functionparameter_GetParamValue_ONOFF(
-                data.core.fpsptr, ".comp.WFSnormalize") == 1)
+                milk_data.fpsptr, ".comp.WFSnormalize") == 1)
         {
             status_normalize = 1;
 
@@ -473,7 +473,7 @@ static errno_t compute_function()
 
             if((imgwfsmask.ID != -1)
                     && (functionparameter_GetParamValue_ONOFF(
-                        data.core.fpsptr, ".comp.compWFSmask") == 1))
+                        milk_data.fpsptr, ".comp.compWFSmask") == 1))
             {
                 for(uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
@@ -529,7 +529,7 @@ static errno_t compute_function()
             clock_gettime(CLOCK_MILK, &time1);
         }
         if(functionparameter_GetParamValue_ONOFF(
-                data.core.fpsptr, ".comp.WFSrefsub") == 1)
+                milk_data.fpsptr, ".comp.WFSrefsub") == 1)
         {
             // subtract reference
             status_refsub = 1;
@@ -574,7 +574,7 @@ static errno_t compute_function()
             clock_gettime(CLOCK_MILK, &time1);
         }
         if(functionparameter_GetParamValue_ONOFF(
-                data.core.fpsptr, ".comp.WFSsigav") == 1)
+                milk_data.fpsptr, ".comp.WFSsigav") == 1)
         {
             status_ave = 1;
             imgimWFS3.md->write = 1;
@@ -619,7 +619,7 @@ static errno_t compute_function()
         // Reset imWFS3, wfsrefc and wfszpo to zero
         //
         if(functionparameter_GetParamValue_ONOFF(
-                data.core.fpsptr, ".comp.resetWFSrefc") == 1)
+                milk_data.fpsptr, ".comp.resetWFSrefc") == 1)
         {
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
@@ -630,11 +630,11 @@ static errno_t compute_function()
 
             // toggle back to OFF
             functionparameter_SetParamValue_ONOFF(
-                data.core.fpsptr, ".comp.resetWFSrefc", 0);
+                milk_data.fpsptr, ".comp.resetWFSrefc", 0);
         }
 
         if(functionparameter_GetParamValue_ONOFF(
-                data.core.fpsptr, ".comp.WFSrefc") == 1)
+                milk_data.fpsptr, ".comp.WFSrefc") == 1)
         {
             status_wfsrefc = 1;
             imgwfsrefc.md->write = 1;
@@ -665,7 +665,7 @@ static errno_t compute_function()
 
             // normalize
             if(functionparameter_GetParamValue_ONOFF(
-                    data.core.fpsptr, ".comp.WFSnormalize") == 1)
+                    milk_data.fpsptr, ".comp.WFSnormalize") == 1)
             {
                 // Compute image total
                 double imtotal = 0.0;

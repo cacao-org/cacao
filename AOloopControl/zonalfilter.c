@@ -233,7 +233,7 @@ static errno_t compute_function()
     IMGID imginDM =
         imgid_make_from_name(inzval);
     resolveIMGID(&imginDM, ERRMODE_WARN,
-        data.core.image, data.core.NB_MAX_IMAGE);
+        dcimg, dcnimg);
         if (imginDM.ID == -1) return RETURN_FAILURE;
 
     uint32_t dmxsize = imginDM.md->size[0];
@@ -293,7 +293,7 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     zonal_filter_step(
-        processinfo, data.core.fpsptr,
+        processinfo, milk_data.fpsptr,
         imginDM.im, imgout.im,
         imgzgain.im, imgzgainfact.im,
         imgzmult.im, imgzmultfact.im,

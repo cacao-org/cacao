@@ -89,11 +89,11 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
         long fpi;
-        fpi = functionparameter_GetParamIndex(data.core.fpsptr, ".comp.statswrite");
-        if(fpi > -1) data.core.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".comp.statswrite");
+        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
     }
 
     return RETURN_SUCCESS;
@@ -105,7 +105,7 @@ static errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
     }
 
@@ -139,30 +139,30 @@ static errno_t compute_function()
         char name[STRINGMAXLEN_STREAMNAME];
 
         WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
-        read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
+        read_sharedmem_image(name, dcimg, dcnimg);
         imgtbuff_mvalDM = imgid_make_from_name(name);
         resolveIMGID(
             &imgtbuff_mvalDM, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgtbuff_mvalDM.ID == -1) return RETURN_FAILURE;
 
         WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
-        read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
+        read_sharedmem_image(name, dcimg, dcnimg);
         imgtbuff_mvalWFS = imgid_make_from_name(name);
         resolveIMGID(
             &imgtbuff_mvalWFS, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgtbuff_mvalWFS.ID == -1) return RETURN_FAILURE;
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
-        read_sharedmem_image(name, data.core.image, data.core.NB_MAX_IMAGE);
+        read_sharedmem_image(name, dcimg, dcnimg);
         imgtbuff_mvalOL = imgid_make_from_name(name);
         resolveIMGID(
             &imgtbuff_mvalOL, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgtbuff_mvalOL.ID == -1) return RETURN_FAILURE;
 
         NBmode   = imgtbuff_mvalOL.md->size[0];

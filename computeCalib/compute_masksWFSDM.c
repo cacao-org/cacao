@@ -62,7 +62,7 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static __attribute__((unused)) errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
 
     }
@@ -77,7 +77,7 @@ static __attribute__((unused)) errno_t customCONFsetup()
 static errno_t customCONFcheck()
 {
 
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
     }
 
@@ -102,14 +102,14 @@ static errno_t compute_function()
     list_image_ID();
 
 
-    imageID IDzrm = image_ID(zrespWFS, data.core.image, data.core.NB_MAX_IMAGE);
+    imageID IDzrm = image_ID(zrespWFS, dcimg, dcnimg);
     printf("IDzrm = %ld\n", IDzrm);
-    uint32_t sizexWFS = data.core.image[IDzrm].md[0].size[0];
-    uint32_t sizeyWFS = data.core.image[IDzrm].md[0].size[1];
+    uint32_t sizexWFS = dcimg[IDzrm].md[0].size[0];
+    uint32_t sizeyWFS = dcimg[IDzrm].md[0].size[1];
     uint64_t sizeWFS = sizexWFS;
     sizeWFS *= sizeyWFS;
 
-    uint32_t NBpoke   = data.core.image[IDzrm].md[0].size[2];
+    uint32_t NBpoke   = dcimg[IDzrm].md[0].size[2];
 
 
     imageID IDWFSmap;
@@ -134,10 +134,10 @@ static errno_t compute_function()
             double rms = 0.0;
             for(uint64_t ii = 0; ii < sizeWFS; ii++)
             {
-                double tmpv = data.core.image[IDzrm].array.F[poke * sizeWFS + ii];
+                double tmpv = dcimg[IDzrm].array.F[poke * sizeWFS + ii];
                 rms += tmpv * tmpv;
             }
-            data.core.image[IDDMmap].array.F[poke] = rms;
+            dcimg[IDDMmap].array.F[poke] = rms;
         }
         printf("done\n");
         fflush(stdout);
@@ -149,10 +149,10 @@ static errno_t compute_function()
             double rms = 0.0;
             for(uint32_t poke = 0; poke < NBpoke; poke++)
             {
-                double tmpv = data.core.image[IDzrm].array.F[poke * sizeWFS + ii];
+                double tmpv = dcimg[IDzrm].array.F[poke * sizeWFS + ii];
                 rms += tmpv * tmpv;
             }
-            data.core.image[IDWFSmap].array.F[ii] = rms;
+            dcimg[IDWFSmap].array.F[ii] = rms;
         }
         printf("done\n");
         fflush(stdout);
@@ -162,7 +162,7 @@ static errno_t compute_function()
 
         // pre-filtering
         // gauss_filter(DMmap_name, "dmmapg", 5.0, 8);
-        // IDDMmap1 = image_ID("dmmapg", data.core.image, data.core.NB_MAX_IMAGE);
+        // IDDMmap1 = image_ID("dmmapg", dcimg, dcnimg);
 
         // (map/map1)*pow(map,0.25)
 
@@ -173,19 +173,19 @@ static errno_t compute_function()
         create_2Dimage_ID("_tmpdmmap", dmxsize, dmysize, &IDtmp);
         for(uint64_t ii = 0; ii < dmxsize * dmysize; ii++)
         {
-            data.core.image[IDtmp].array.F[ii] = data.core.image[IDDMmap].array.F[ii] - lim0;
+            dcimg[IDtmp].array.F[ii] = dcimg[IDDMmap].array.F[ii] - lim0;
         }
         double lim = dmmaskcoeff1 * img_percentile("_tmpdmmap", dmmaskperc1);
 
         for(uint32_t poke = 0; poke < NBpoke; poke++)
         {
-            if(data.core.image[IDtmp].array.F[poke] < lim)
+            if(dcimg[IDtmp].array.F[poke] < lim)
             {
-                data.core.image[IDDMmask].array.F[poke] = 0.0;
+                dcimg[IDDMmask].array.F[poke] = 0.0;
             }
             else
             {
-                data.core.image[IDDMmask].array.F[poke] = 1.0;
+                dcimg[IDDMmask].array.F[poke] = 1.0;
             }
         }
         delete_image_ID("_tmpdmmap", DELETE_IMAGE_ERRMODE_WARNING);
@@ -200,19 +200,19 @@ static errno_t compute_function()
         create_2Dimage_ID("_tmpwfsmap", sizexWFS, sizeyWFS, &IDtmp);
         for(uint64_t ii = 0; ii < sizexWFS *sizeyWFS; ii++)
         {
-            data.core.image[IDtmp].array.F[ii] = data.core.image[IDWFSmap].array.F[ii] - lim0;
+            dcimg[IDtmp].array.F[ii] = dcimg[IDWFSmap].array.F[ii] - lim0;
         }
         lim = wfsmaskcoeff1 * img_percentile("_tmpwfsmap", wfsmaskperc1);
 
         for(uint64_t ii = 0; ii < sizeWFS; ii++)
         {
-            if(data.core.image[IDWFSmap].array.F[ii] < lim)
+            if(dcimg[IDWFSmap].array.F[ii] < lim)
             {
-                data.core.image[IDWFSmask].array.F[ii] = 0.0;
+                dcimg[IDWFSmask].array.F[ii] = 0.0;
             }
             else
             {
-                data.core.image[IDWFSmask].array.F[ii] = 1.0;
+                dcimg[IDWFSmask].array.F[ii] = 1.0;
             }
         }
         delete_image_ID("_tmpwfsmap", DELETE_IMAGE_ERRMODE_WARNING);

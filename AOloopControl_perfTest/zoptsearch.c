@@ -288,8 +288,8 @@ static errno_t compute_function()
     IMGID imgctrl = imgid_make_from_name(ctrlsname);
     resolveIMGID(
         &imgctrl, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgctrl.ID == -1) return RETURN_FAILURE;
 
     uint32_t ctrlxsize = imgctrl.md->size[0];
@@ -304,8 +304,8 @@ static errno_t compute_function()
         imgctrlamp = imgid_make_from_name(ctrlampmap);
         resolveIMGID(
             &imgctrlamp, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgctrlamp.ID == -1) return RETURN_FAILURE;
     }
     else
@@ -319,8 +319,8 @@ static errno_t compute_function()
     IMGID imgsens = imgid_make_from_name(senssname);
     resolveIMGID(
         &imgsens, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (imgsens.ID == -1) return RETURN_FAILURE;
 
     uint32_t sensxsize = imgsens.md->size[0];
@@ -351,8 +351,8 @@ static errno_t compute_function()
         imgsensref0 = imgid_make_from_name(sensref0);
         resolveIMGID(
             &imgsensref0, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgsensref0.ID == -1) return RETURN_FAILURE;
     }
     else
@@ -366,8 +366,8 @@ static errno_t compute_function()
         imgsensmask0 = imgid_make_from_name(sensmask0);
         resolveIMGID(
             &imgsensmask0, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgsensmask0.ID == -1) return RETURN_FAILURE;
     }
     else
@@ -381,8 +381,8 @@ static errno_t compute_function()
         imgsensref1 = imgid_make_from_name(sensref1);
         resolveIMGID(
             &imgsensref1, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgsensref1.ID == -1) return RETURN_FAILURE;
     }
     else
@@ -396,8 +396,8 @@ static errno_t compute_function()
         imgsensmask1 = imgid_make_from_name(sensmask1);
         resolveIMGID(
             &imgsensmask1, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgsensmask1.ID == -1) return RETURN_FAILURE;
     }
     else
@@ -547,7 +547,7 @@ static errno_t compute_function()
         }
 
 
-//        if(data.core.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
+//        if(milk_data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
 
 
     }

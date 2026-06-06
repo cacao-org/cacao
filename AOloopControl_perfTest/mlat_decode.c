@@ -58,8 +58,8 @@ errno_t mlat_diffseq_decode(
 
     resolveIMGID(
         &inimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (inimg.ID == -1) return RETURN_FAILURE;
 
 
@@ -314,8 +314,8 @@ errno_t mlat_diffseq_decode(
         IMGID imgpsinv = imgid_make_from_name("psinv");
         resolveIMGID(
             &imgpsinv, ERRMODE_WARN,
-            data.core.image,
-            data.core.NB_MAX_IMAGE);
+            dcimg,
+            dcnimg);
             if (imgpsinv.ID == -1) return RETURN_FAILURE;
 
 
@@ -466,8 +466,8 @@ static errno_t compute_function()
     IMGID inimg = imgid_make_from_name(diffseqname);
     resolveIMGID(
         &inimg, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (inimg.ID == -1) return RETURN_FAILURE;
 
 

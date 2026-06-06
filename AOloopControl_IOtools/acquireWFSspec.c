@@ -46,34 +46,34 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static errno_t customCONFsetup()
 {
-    if(data.core.fpsptr != NULL)
+    if(milk_data.fpsptr != NULL)
     {
         long fpi_inputshmname = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".wfsin");
+                milk_data.fpsptr, ".wfsin");
         long fpi_compWFSsubdark = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".comp.darksub");
+                milk_data.fpsptr, ".comp.darksub");
         long fpi_compWFSnormalize = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".comp.WFSnormalize");
+                milk_data.fpsptr, ".comp.WFSnormalize");
         long fpi_compWFSrefsub = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".comp.WFSrefsub");
+                milk_data.fpsptr, ".comp.WFSrefsub");
 
-        if(fpi_inputshmname > -1) data.core.fpsptr->parray[fpi_inputshmname].fpflag |=
+        if(fpi_inputshmname > -1) milk_data.fpsptr->parray[fpi_inputshmname].fpflag |=
             FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
 
         if(fpi_compWFSsubdark > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_compWFSsubdark]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_compWFSnormalize > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_compWFSnormalize]
                 .fpflag |= FPFLAG_WRITERUN;
         if(fpi_compWFSrefsub > -1)
-            data.core.fpsptr
+            milk_data.fpsptr
                 ->parray[fpi_compWFSrefsub]
                 .fpflag |= FPFLAG_WRITERUN;
     }
@@ -269,8 +269,8 @@ static errno_t compute_function()
     IMGID wfsin = imgid_make_from_name(input_shm_name); // input raw wfs image
     resolveIMGID(
         &wfsin, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (wfsin.ID == -1) return RETURN_FAILURE;
 
     uint32_t sizeWFSx = wfsin.md->size[0];
@@ -281,8 +281,8 @@ static errno_t compute_function()
     IMGID specmask = imgid_make_from_name(specmask_shm_name);
     resolveIMGID(
         &specmask, ERRMODE_WARN,
-        data.core.image,
-        data.core.NB_MAX_IMAGE);
+        dcimg,
+        dcnimg);
         if (specmask.ID == -1) return RETURN_FAILURE;
     uint32_t numtraces = specmask.md->size[2];
     uint64_t sizeWFS  = sizeWFSx * numtraces;
@@ -350,8 +350,8 @@ static errno_t compute_function()
         int status_darksub = 0;
         long fpi_compWFSsubdark = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".comp.darksub");
-        if(fpi_compWFSsubdark > -1 && (data.core.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF))
+                milk_data.fpsptr, ".comp.darksub");
+        if(fpi_compWFSsubdark > -1 && (milk_data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF))
         {
             if(imgWFSdark.ID != -1)
             {
@@ -383,8 +383,8 @@ static errno_t compute_function()
 
         long fpi_compWFSnormalize = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".comp.WFSnormalize");
-        if(fpi_compWFSnormalize > -1 && (data.core.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF))
+                milk_data.fpsptr, ".comp.WFSnormalize");
+        if(fpi_compWFSnormalize > -1 && (milk_data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF))
         {
             status_normalize = 1;
             spec_norm(imgimWFS0, imgimWFS1);
@@ -403,8 +403,8 @@ static errno_t compute_function()
         imgimWFS2.md->write = 1;
         long fpi_compWFSrefsub = 
             functionparameter_GetParamIndex(
-                data.core.fpsptr, ".comp.WFSrefsub");
-        if(fpi_compWFSrefsub > -1 && (data.core.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF))
+                milk_data.fpsptr, ".comp.WFSrefsub");
+        if(fpi_compWFSrefsub > -1 && (milk_data.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF))
         {
             // subtract reference
             status_refsub = 1;
