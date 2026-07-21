@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Olivier Guyon et al
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file    AOloopControl_DM_TTcircle_astrogrid.c
  * @brief   Create DM grid patterns for calibrations

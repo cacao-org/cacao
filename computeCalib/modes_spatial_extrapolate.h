@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Olivier Guyon et al
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 #ifndef CACAO_COMPUTECALIB_MODES_SPATIAL_EXTRAPOLATE_H
 #define CACAO_COMPUTECALIB_MODES_SPATIAL_EXTRAPOLATE_H
 

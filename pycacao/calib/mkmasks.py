@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Vincent Deo
+#
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
 from astropy.io import fits
 
 import numpy as np

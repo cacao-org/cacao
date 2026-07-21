@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Vincent Deo
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file    ao188_preprocessor.c
  * @brief   Convert ao188 APD data into curvature + SH data

@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2026 Olivier Guyon et al
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+
 /**
  * @file    measure_linear_respm.c
  * @brief   Measure linear response to perturbation
