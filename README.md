@@ -1,6 +1,6 @@
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
-Latest Version (off main branch): [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/milk-org/cacao/tree/main)
+Latest Version (`main` branch): [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/milk-org/cacao/tree/main)
 
 | Branch    | Build   | Docker Deployment    | Activity   |
 |-------------|-------------|-------------|-------------|
