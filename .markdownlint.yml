@@ -1,0 +1,47 @@
+# markdownlint configuration for milk project
+# See https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+# Disable line-length — we wrap manually but tables and
+# long links can legitimately exceed 80 chars.
+MD013: false
+
+# Allow hard tabs — used in helpreadline.md key tables.
+MD010: false
+
+# Allow $ prompts without output — our convention is to
+# always prefix shell commands with $ for clarity.
+MD014: false
+
+# Allow inline HTML — we use <details>, <summary>, <br/>
+# tags legitimately in collapsible sections and diagrams.
+MD033: false
+
+# Allow first line to not be a heading — some files start
+# with badges, YAML frontmatter, or NOTE alerts.
+MD041: false
+
+# Allow duplicate headings in different sections
+# (e.g. "Dependencies" appears in multiple plugin READMEs)
+MD024:
+  siblings_only: true
+
+# Allow trailing punctuation in headings (e.g. "FAQ?")
+MD026: false
+
+# Allow multiple blank lines (used for visual separation)
+MD012: false
+
+# Disable table column style checking (produces ~470 false positives)
+MD060: false
+
+# Allow flexible list-marker spacing — Material card grids
+# use 3-space indent after "-   " which triggers this rule.
+MD030: false
+
+# Allow indented code blocks — Material content tabs
+# (=== "tab") require 4-space-indented code fences.
+MD046: false
+
+# Allow mixed horizontal rule styles — Material grid cards
+# use *** as card separators while the rest of docs uses ---.
+MD035: false
