@@ -5,33 +5,9 @@ message("")
 message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 
 
-set(SOURCEFILES
-	${SRCNAME}.c
-    ${SRCNAME}.h
-    acquireWFSim.c
-    ao188_preprocessor.c
-    findspots.c
-    spotpos.c
-    WFScamsim.c
-    WFSmap.c
-    acquireWFSspec.c
-)
-
-set(INCLUDEFILES
-	${SRCNAME}.h
-    AOloopControl_IOtools.h
-    acquireWFSim.h
-    ao188_preprocessor.h
-    findspots.h
-    spotpos.h
-    WFScamsim.h
-    WFSmap.h
-    acquireWFSspec.h
-)
-
-
-set(SCRIPTS
-)
+file(GLOB SOURCEFILES "*.c" "*.cpp")
+file(GLOB INCLUDEFILES "*.h" "*.hpp")
+file(GLOB SCRIPTS "scripts/*")
 
 set(LINKLIBS
 	CLIcore
@@ -59,18 +35,15 @@ target_include_directories(${LIBNAME} PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/..
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
+# sources #include cross-plugin headers (e.g. statistic/statistic.h) directly
+target_include_directories(${LIBNAME} PRIVATE ${CMAKE_SOURCE_DIR}/plugins/milk-extra-src)
 
 target_link_libraries(${LIBNAME} PRIVATE ${LINKLIBS})
 
+milk_apply_extensions(${LIBNAME})
+
 install(TARGETS ${LIBNAME} DESTINATION lib)
-
-install(PROGRAMS
-	scripts/cacao-fpslistadd-SPOTPOS
-	DESTINATION bin)
-
-
 install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
-
 install(PROGRAMS ${SCRIPTS} DESTINATION bin)
 
 add_cacao_standalone(cacaoiot-acquireWFS acquireWFSim.c)

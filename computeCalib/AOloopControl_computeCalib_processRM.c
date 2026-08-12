@@ -12,6 +12,9 @@
  *
  */
 
+// MILK_CMAKE_REQUEST_MAGMA
+// MILK_CMAKE_REQUEST_CUDA
+
 #define _GNU_SOURCE
 
 // uncomment for test print statements to stdout

@@ -1,73 +1,44 @@
-set(PROJECTNAME "cacao")
+set(LIBNAME "cacaoAOloopControlperfTest")
+set(SRCNAME "AOloopControl_perfTest")
 
-# list source files (.c) other than modulename.c
-set(SOURCEFILES
-	compRMsensitivity.c
-	mlat.c
-	mlat_decode.c
-	streamlogtimesample.c
-	wfsrefoptimselect.c
-	zoptsearch.c
-)
+message("")
+message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 
-# list include files (.h) that should be installed on system
-set(INCLUDEFILES
-	mlat.h
-	mlat_decode.h
-)
-
-# list scripts that should be installed on system
-set(SCRIPTFILES
-	scripts/cacao-compRMsens
-	scripts/cacao-selectWFSframes
-	scripts/cacao-syncStreams
-	scripts/cacao-WFSrefTunePSFloop
-	scripts/cacao-fpslistadd-MLAT
-)
-
+file(GLOB SOURCEFILES "*.c" "*.cpp")
+file(GLOB INCLUDEFILES "*.h" "*.hpp")
+file(GLOB SCRIPTS "scripts/*")
 
 # DEFAULT SETTINGS
 # Do not change unless needed
 # =====================================================================
 
-
-# SRCNAME is current directory (last subdir)
-set(NAME0 "${CMAKE_CURRENT_SOURCE_DIR}")
-string(REPLACE "/" " " NAME1 ${NAME0})
-string(REGEX MATCH "[a-zA-Z0-9_]+$" SRCNAME "${NAME0}")
-
-
-# LIBNAME constructed by removing spaces
-string(REPLACE "_" "" LIBNAME "${PROJECTNAME}${SRCNAME}")
-
-
-message("")
-message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
-
-
 project(lib_${LIBNAME}_project)
 
-# Library can be compiled from multiple source files
-# Convention: the main souce file is named <libname>.c
-#
-add_library(${LIBNAME} SHARED ${SRCNAME}.c ${SOURCEFILES})
+add_library(${LIBNAME} SHARED ${SOURCEFILES})
+target_include_directories(
+  ${LIBNAME} PRIVATE $<TARGET_PROPERTY:CLIcore,INTERFACE_INCLUDE_DIRECTORIES>)
+# sources #include cross-plugin headers (e.g. statistic/statistic.h) directly
+target_include_directories(${LIBNAME} PRIVATE ${CMAKE_SOURCE_DIR}/plugins/milk-extra-src)
+target_include_directories(${LIBNAME} PRIVATE ${CMAKE_SOURCE_DIR}/plugins/cacao-src)
 
 target_link_libraries(${LIBNAME} PUBLIC CLIcore milkstatistic cacaoAOloopControl)
 
-install(TARGETS ${LIBNAME} DESTINATION lib)
-install(FILES ${SRCNAME}.h ${INCLUDEFILES} DESTINATION include/${SRCNAME})
+milk_apply_extensions(${LIBNAME})
 
-install(PROGRAMS
-	${SCRIPTFILES}
-	DESTINATION bin)
+install(TARGETS ${LIBNAME} DESTINATION lib)
+install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
+install(PROGRAMS ${SCRIPTS} DESTINATION bin)
 
 add_cacao_standalone(cacaopt-compRMsens compRMsensitivity.c)
 add_cacao_standalone(cacaopt-mlat mlat.c)
-target_link_libraries(cacao-fpsexec-cacaopt-mlat PUBLIC milkstatistic_compute)
 add_cacao_standalone(cacaopt-zoptsearch zoptsearch.c)
-target_link_libraries(cacao-fpsexec-cacaopt-zoptsearch PUBLIC milkstatistic_compute)
 add_cacao_standalone(cacaopt-wfsroptsel wfsrefoptimselect.c)
 add_cacao_standalone_plugins(cacaopt-slogtsample streamlogtimesample.c)
-target_link_libraries(cacao-fpsexec-cacaopt-slogtsample PUBLIC milkstatistic_compute)
 add_cacao_standalone(cacaopt-mlatdecode mlat_decode.c)
-target_link_libraries(cacao-fpsexec-cacaopt-mlatdecode PUBLIC milkstatistic_compute)
+
+# ---- specialized standalone overrides (TODO: automate) ----
+# "_compute" library variants no longer exist; link the regular libs.
+target_link_libraries(cacao-fpsexec-cacaopt-mlat PUBLIC milkstatistic)
+target_link_libraries(cacao-fpsexec-cacaopt-zoptsearch PUBLIC milkstatistic)
+target_link_libraries(cacao-fpsexec-cacaopt-slogtsample PUBLIC milkstatistic)
+target_link_libraries(cacao-fpsexec-cacaopt-mlatdecode PUBLIC milkstatistic)

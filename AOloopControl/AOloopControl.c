@@ -22,18 +22,7 @@
  *
  */
 
-/* ================================================================== */
-/* ================================================================== */
-/*            MODULE INFO                                             */
-/* ================================================================== */
-/* ================================================================== */
-
-// module default short name
-// all CLI calls to this module functions will be <shortname>.<funcname>
-// if set to "", then calls use <funcname>
 #define MODULE_SHORTNAME_DEFAULT "cacao"
-
-// Module short description
 #define MODULE_DESCRIPTION "AO loop control"
 
 #define _GNU_SOURCE
@@ -52,9 +41,6 @@
 #include "zonalfilter.h"
 
 
-INIT_MODULE_LIB(AOloopControl)
-
-
 static errno_t init_module_CLI()
 {
     CLIADDCMD_AOloopControl__modalfilter();
@@ -66,3 +52,5 @@ static errno_t init_module_CLI()
 
     return RETURN_SUCCESS;
 }
+
+MILK_MODULE(AOloopControl, init_module_CLI, NULL);

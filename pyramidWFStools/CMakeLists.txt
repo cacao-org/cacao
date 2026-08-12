@@ -1,32 +1,10 @@
 set(LIBNAME "cacaopyramidWFStools")
-project(lib_${LIBNAME}_project)
+set(SRCNAME "pyramidWFStools")
 
-# list source files (.c) other than modulename.c
-set(SOURCEFILES
-  pyWFSgridmatch.c
-)
+message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 
-
-# SRCNAME is current directory (last subdir)
-set(NAME0 "${CMAKE_CURRENT_SOURCE_DIR}")
-string(REPLACE "/" " " NAME1 ${NAME0})
-string(REGEX MATCH "[a-zA-Z0-9_]+$" SRCNAME "${NAME0}")
-message(" SRCNAME = ${SRCNAME}")
-
-# Library can be compiled from multiple source files
-# Convention: the main souce file is named <libname>.c
-#
-add_library(${LIBNAME} SHARED ${SRCNAME}.c ${SOURCEFILES})
-
-
-
-# list include files (.h) that should be installed on system
-set(INCLUDEFILES
-)
-
-# list scripts that should be installed on system
-set(SCRIPTFILES
-)
+file(GLOB SOURCEFILES "*.c" "*.cpp")
+file(GLOB INCLUDEFILES "*.h" "*.hpp")
 
 set(LINKLIBS
 	CLIcore
@@ -34,40 +12,19 @@ set(LINKLIBS
 	cacaoAOloopControl
 )
 
-#If not using MKL, check if OpenBLAS has lapacke symbols.  Include lapacke if not.
-if(NOT MKL_FOUND)
-
-    check_library_exists(openblas LAPACKE_sgemlq "" DONT_NEED_LAPACKE)
-
-    if(DONT_NEED_LAPACKE)
-       message("-- MKL NOT FOUND")
-       message("   LINKING OpenBLAS")
-    else()
-       message("-- MKL NOT FOUND")
-       message("   LINKING LAPACKE")
-       list(APPEND LINKLIBS lapacke)
-    endif()
-
-endif()
-
-
-
-
 # DEFAULT SETTINGS
 # Do not change unless needed
 # =====================================================================
 
+project(lib_${LIBNAME}_project)
 
-
-# LIBNAME constructed by removing spaces
-#string(REPLACE "_" "" LIBNAME "${SRCNAME}")
-#message(" LIBNAME = ${LIBNAME}")
-
+add_library(${LIBNAME} SHARED ${SOURCEFILES})
 
 # note: set to PUBLIC if other modules link to this one
-target_include_directories(${LIBNAME} PRIVATE ${PROJECT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${LIBNAME} PRIVATE ${PROJECT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/plugins/milk-extra-src)
 target_link_libraries(${LIBNAME} PRIVATE ${LINKLIBS})
 
+milk_apply_extensions(${LIBNAME})
+
 install(TARGETS ${LIBNAME} DESTINATION lib)
-install(FILES ${SRCNAME}.h ${INCLUDEFILES} DESTINATION include/${SRCNAME})
-install(PROGRAMS ${SCRIPTFILES} DESTINATION bin)
+install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})

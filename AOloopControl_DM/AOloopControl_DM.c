@@ -40,12 +40,6 @@
 #include "pokerndmodes.h"
 
 
-// Module initialization macro in CLIcore.h
-// macro argument defines module name for bindings
-//
-INIT_MODULE_LIB(AOloopControl_DM)
-
-
 static errno_t init_module_CLI()
 {
 
@@ -59,3 +53,5 @@ static errno_t init_module_CLI()
 
     return RETURN_SUCCESS;
 }
+
+MILK_MODULE(AOloopControl_DM, init_module_CLI, NULL);

@@ -7,10 +7,9 @@
  * @brief Compute straight cm module
  */
 
-/**
- * @file compute_straight_CM.c
- *
- */
+// MILK_CMAKE_MANDATE_LAPACKE
+// MILK_CMAKE_REQUEST_BLAS
+// MILK_CMAKE_REQUEST_CUDA
 
 #include <math.h>
 
@@ -32,17 +31,7 @@
 // Use MKL if available
 // Otherwise use openBLAS
 //
-#ifdef HAVE_MKL
-#include "mkl.h"
-#define BLASLIB "IntelMKL"
-#else
-#ifdef HAVE_OPENBLAS
-#include <cblas.h>
-#include <lapacke.h>
-#define BLASLIB "OpenBLAS"
-#endif
-#endif
-
+#include "milk_blas_lapacke.h"
 
 #include "linopt_imtools/compute_SVDpseudoInverse.h"
 
@@ -53,22 +42,6 @@
 #include <cusolverDn.h>
 #include <device_types.h>
 #include <pthread.h>
-#endif
-
-
-// CPU mode: Use MKL if available
-// Otherwise use openBLAS
-//
-#ifdef HAVE_MKL
-#include "mkl.h"
-#include "mkl_lapacke.h"
-#define BLASLIB "IntelMKL"
-#else
-#ifdef HAVE_OPENBLAS
-#include <cblas.h>
-#include <lapacke.h>
-#define BLASLIB "OpenBLAS"
-#endif
 #endif
 
 
@@ -270,16 +243,23 @@ static errno_t compute_function()
                     cudaFree(d_ATA);
 
                     SGEMMcomputed = 1;
-#endif
+#endif // #ifdef HAVE_CUDA
                 }
                 if(SGEMMcomputed == 0)
                 {
+#ifdef HAVE_BLAS
                     printf("Running SGEMM 1 on CPU\n");
                     fflush(stdout);
 
                     cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans,
                                 nbmode, nbmode, nbwfspix, 1.0, imgRMWFS.im->array.F, nbwfspix,
                                 imgRMWFS.im->array.F, nbwfspix, 0.0, imgATA.im->array.F, nbmode);
+#endif // #ifdef HAVE_BLAS
+                }
+                if(SGEMMcomputed == 0)
+                {
+                    PRINT_ERROR("FATAL -- need either of CUDA or BLAS for this computation\n");
+                    exit(1);
                 }
             }
 
@@ -413,19 +393,24 @@ static errno_t compute_function()
                 cudaFree(d_CMWFSall);
 
                 SGEMMcomputed = 1;
-#endif
+#endif // #ifdef HAVE_CUDA
             }
 
             if(SGEMMcomputed == 0)
             {
-
+#ifdef HAVE_BLAS
                 printf("Running SGEMM 2 on CPU\n");
                 fflush(stdout);
 
                 cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
                             nbwfspix, nbmode, nbmode, 1.0, imgRMWFS.im->array.F, nbwfspix,
                             imgevec.im->array.F, nbmode, 0.0, imgCMWFSall.im->array.F, nbwfspix);
-
+#endif // #ifdef HAVE_BLAS
+            }
+            if(SGEMMcomputed == 0)
+            {
+                PRINT_ERROR("FATAL -- need either of CUDA or BLAS for this computation\n");
+                exit(1);
             }
         }
 
@@ -490,17 +475,19 @@ static errno_t compute_function()
                 cudaFree(d_CMDMall);
 
                 SGEMMcomputed = 1;
-#endif
+#endif // #ifdef HAVE_CUDA
             }
 
             if(SGEMMcomputed == 0)
             {
+#ifdef HAVE_BLAS
                 printf("Running SGEMM 3 on CPU\n");
                 fflush(stdout);
 
                 cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans,
                             nbact, nbmode, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgevec.im->array.F,
                             nbmode, 0.0, imgCMDMall.im->array.F, nbact);
+#endif // #ifdef HAVE_BLAS
             }
         }
 

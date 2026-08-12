@@ -19,8 +19,7 @@
 #include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
-#include "linalgebra/SingularValueDecomp.h"
-#include "linalgebra/SGEMM.h"
+#include "linalgebra/linalgebra.h"
 
 // input image names
 static char diffseqname[FUNCTION_PARAMETER_STRMAXLEN] = "";

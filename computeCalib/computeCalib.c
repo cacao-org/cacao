@@ -33,9 +33,6 @@
 #include "computeCalib.h"
 
 
-INIT_MODULE_LIB(AOloopControl_computeCalib)
-
-
 /* =============================================================
  *  CMD 1: aolHaddec (4 args)
  * ============================================================ */
@@ -148,3 +145,5 @@ static errno_t init_module_CLI()
 
     return RETURN_SUCCESS;
 }
+
+MILK_MODULE(AOloopControl_computeCalib, init_module_CLI, NULL);

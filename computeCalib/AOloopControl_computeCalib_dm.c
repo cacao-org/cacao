@@ -7,25 +7,9 @@
  * @brief   Adaptive Optics Control loop engine compute calibration
  *
  * AO engine uses stream data structure
- *
- *
- *
  */
 
 #define _GNU_SOURCE
-
-// uncomment for test print statements to stdout
-//#define _PRINT_TEST
-
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
-/*                                        HEADER FILES */
-/* ===============================================================================================
- */
-/* ===============================================================================================
- */
 
 #include <malloc.h>
 #include <math.h>
@@ -38,10 +22,10 @@
 
 #include <time.h>
 
-#include <gsl/gsl_blas.h>
-#include <gsl/gsl_eigen.h>
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_matrix.h>
+//#include <gsl/gsl_blas.h>
+//#include <gsl/gsl_eigen.h>
+//#include <gsl/gsl_math.h>
+//#include <gsl/gsl_matrix.h>
 
 #include <fitsio.h>
 
@@ -61,10 +45,10 @@
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 #include "AOloopControl_acquireCalib/AOloopControl_acquireCalib.h"
-#include "computeCalib/computeCalib.h"
 
 #include "linalgebra/linalgebra.h"
 
+#include "computeCalib.h"
 
 /**
  * @brief      Detects the edge of a deformable mirror (DM) mask.

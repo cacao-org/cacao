@@ -36,9 +36,6 @@
 #include "measure_linear_resp.h"
 
 
-INIT_MODULE_LIB(AOloopControl_acquireCalib)
-
-
 /** @name AOloopControl_IOtools functions */
 
 static errno_t init_module_CLI()
@@ -57,3 +54,5 @@ static errno_t init_module_CLI()
 
     return RETURN_SUCCESS;
 }
+
+MILK_MODULE(AOloopControl_acquireCalib, init_module_CLI, NULL);

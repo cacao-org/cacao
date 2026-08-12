@@ -80,9 +80,6 @@ typedef struct
 } StreamDataFile;
 
 
-INIT_MODULE_LIB(AOloopControl_perfTest)
-
-
 static errno_t init_module_CLI()
 {
 
@@ -99,6 +96,8 @@ static errno_t init_module_CLI()
 
     return RETURN_SUCCESS;
 }
+
+MILK_MODULE(AOloopControl_perfTest, init_module_CLI, NULL);
 
 
 /**
