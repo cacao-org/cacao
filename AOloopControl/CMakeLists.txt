@@ -7,7 +7,8 @@ message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 file(GLOB SOURCEFILES "*.c" "*.cpp")
 file(GLOB INCLUDEFILES "*.h" "*.hpp")
 
-file(GLOB_RECURSE SCRIPTS "scripts/*")
+file(GLOB_RECURSE SCRIPTS LIST_DIRECTORIES false "scripts/*")
+list(FILTER SCRIPTS EXCLUDE REGEX "/\\..+")
 
 set(LINKLIBS
 	CLIcore
