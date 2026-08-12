@@ -37,7 +37,6 @@ INIT_MODULE_LIB(pyramidWFStools)
 
 static errno_t init_module_CLI()
 {
-
     CLIADDCMD_cacao_pyramidWFStools__pyWFSgridmatch();
 
     // add atexit functions here

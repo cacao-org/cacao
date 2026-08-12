@@ -1,7 +1,7 @@
 # AOloopControl_perfTest {#page_module_AOloopControl_perfTest}
 
 - @subpage AOloopControl_perfTest \n
-Main .c file with the command line interface functions
+  Main .c file with the command line interface functions
 
 - @subpage AOloopControl_perfTest_DM \n
 

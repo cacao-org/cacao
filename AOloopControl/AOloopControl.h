@@ -13,14 +13,8 @@
  */
 
 
-
 #ifndef _AOLOOPCONTROL_H
 #define _AOLOOPCONTROL_H
-
-
-
-
-
 
 
 #endif

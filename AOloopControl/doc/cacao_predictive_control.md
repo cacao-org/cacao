@@ -10,19 +10,16 @@ Predictive control is implemented in two processes:
 
 The predictive filter is modal, and adopts the same modes as the main control loop.
 
-
 ## Scripts
 
-File                       | Description
----------------------------|-----------------------------------------------------------
-aolARPF                    | find auto-regressive predictive filter
-aolARPFblock               | AO find optimal AR linear predictive filter
-
+| File         | Description                                 |
+| ------------ | ------------------------------------------- |
+| aolARPF      | find auto-regressive predictive filter      |
+| aolARPFblock | AO find optimal AR linear predictive filter |
 
 ---
+
 ---
-
-
 
 ## Data flow
 
@@ -41,7 +38,6 @@ Runs in tmux sessions: aol0PFb0watchin, aol0PFb1watchin ...
 **Computing filter**. Runs CLI command `mkARpfilt`, which runs function LINARFILTERPRED_Build_LinPredictor() in linARfilterPred.c.
 
 Runs in tmux sessions: aol0PFb0comp, aol1PFb0comp ...
-
 
 ## Running real-time prediction
 

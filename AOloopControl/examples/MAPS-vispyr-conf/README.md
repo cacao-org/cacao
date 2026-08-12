@@ -3,17 +3,14 @@
 MMT MAPS project.
 Visible light Pyramid WFS. Slopes input.
 
-
-
 # Running the example
 
 Notes:
+
 - Use commands milk-streamCTRL, milk-fpsCTRL and milk-procCTRL to track status
 - Run each command with -h option to get help and more details
 
-
 ## Setting up processes
-
 
 ```bash
 # Deploy configuration :
@@ -64,13 +61,15 @@ cacao-aorun-002-simwfs start
 ```
 
 ## Start 2D DM mapping
-MAPS deformable mirror commands are mapped as a 1D 336 element vector.  To view the commands as 2D shapes, we need to start a remapping process.
+
+MAPS deformable mirror commands are mapped as a 1D 336 element vector. To view the commands as 2D shapes, we need to start a remapping process.
 So to view a DM channel as a 2D image, for example the total command to the dm on dm10disp:
 
 ```bash
 tmux new -s dm10disp2D
 ./scripts/maps-remapshmim  dm10disp dm10disp2D
 ```
+
 You can exit the tmux window with `ctrl-b d`
 
 Or for a specific channel like aol2_dmC:
@@ -79,6 +78,7 @@ Or for a specific channel like aol2_dmC:
 tmux new -s aol2_dmC2D
 ./scripts/maps-remapshmim  aol2_dmC aol2_dmC2D
 ```
+
 You can exit the tmux window with `ctrl-b d`
 
 You can now view the DM commands shapes by point a viewer, such as rtimv, at `dm10disp2D` or `aol2_dmC2D`.
@@ -89,8 +89,6 @@ You can now view the DM commands shapes by point a viewer, such as rtimv, at `dm
 # Acquire WFS frames
 cacao-aorun-025-acqWFS -w start
 ```
-
-
 
 ## Measure DM to WFS latency
 
@@ -108,15 +106,14 @@ cacao-aorun-020-mlat -w
 ```
 
 Check latency file. If using gnuplot with loop number 2 :
+
 ```bash
 plot "maps-rundir/fps.mlat-2.datadir/hardwlatency.dat" u 2:3
 ```
+
 Check that the latency curve is clean and the latency reported matches the curve peak.
 
-
-
 ## Acquire response matrix
-
 
 ### Prepare DM poke modes
 
@@ -124,7 +121,9 @@ Check that the latency curve is clean and the latency reported matches the curve
 # Create DM poke mode cubes
 cacao-mkDMpokemodes
 ```
+
 The following files are written to ./conf/RMmodesDM/
+
 | File                 | Contents                                            |
 | -------------------- | --------------------------------------------------- |
 | `DMmask.fits     `   | DM mask                                             |
@@ -133,12 +132,11 @@ The following files are written to ./conf/RMmodesDM/
 | `HpokeC.fits     `   | Hadamard modes                                      |
 | `Hmat.fits       `   | Hadamard matrix (to convert Hadamard-zonal)         |
 | `Hpixindex.fits  `   | Hadamard pixel index                                |
-| `SmodesC.fits    `   | *Simple* (single actuator) pokes                    |
+| `SmodesC.fits    `   | _Simple_ (single actuator) pokes                    |
 
 Note: With a 1D DM representation, FpokesC and ZpokesC are meaningless.
 
 ### Run acquisition
-
 
 ```bash
 # Acquire response matrix - Hadamard modes
@@ -154,10 +152,9 @@ To inspect results, display file conf/RMmodesWFS/HpokeC.WFSresp.fits.
 ```bash
 cacao-aorun-031-RMHdecode
 ```
+
 To inspect results, display file conf/RMmodesWFS/zrespM-H.fits.
 This should visually look like a zonal response matrix.
-
-
 
 ### Alternative: Import arbitrary RM
 
@@ -178,28 +175,25 @@ exitCLI
 ```
 
 To adopt this matrix :
+
 ```bash
 ln -sf ${PWD}/conf/RMmodesDM/RMmodesDMz.fits ./conf/RMmodesDM/RMmodesDM.fits
 ln -sf ${PWD}/conf/RMmodesWFS/RMmodesWFSz.fits ./conf/RMmodesWFS/RMmodesWFS.fits
 ```
-
-
-
 
 ### Make DM and WFS masks
 
 ```bash
 cacao-aorun-032-RMmkmask -dmc0 0.0 -dmc1 0.0
 ```
+
 Check results:
+
 - conf/dmmask.fits
 - conf/wfsmask.fits
 
 If needed, rerun command with non-default parameters (see -h for options).
 Note: we are not going to apply the masks in this example, so OK if not net properly. The masks are informative here, allowing us to view which DM actuators and WFS pixels have the best response.
-
-
-
 
 ### Create synthetic (Fourier) response matrix
 
@@ -208,7 +202,6 @@ A synthetic RM allows for modes to be weighted by spatial frequency prior to com
 ```bash
 cacao-aorun-033-RM-mksynthetic -c 7
 ```
-
 
 ## Compute control matrix (straight)
 
@@ -219,10 +212,13 @@ cacao-fpsctrl setval compstrCM svdlim 0.001
 ```
 
 Then run the compstrCM process to compute CM and load it to shared memory :
+
 ```bash
 cacao-aorun-039-compstrCM
 ```
+
 Inspect result:
+
 - conf/CMmodesDM/CMmodesDM.fits
 - conf/CMmodesWFS/CMmodesWFS.fits
 
@@ -231,14 +227,12 @@ With svdlim=0.001, there should be 189 control modes.
 
 ## Running the loop
 
-
 Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
+
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 99
 cacao-fpsctrl setval mvalC2dm GPUindex 99
 ```
-
-
 
 Start the 3 control loop processes :
 
@@ -268,10 +262,7 @@ cacao-fpsctrl setval mfilt loopON ON
 
 ```
 
-
-
 ## Testing the loop (selfRM)
-
 
 ```bash
 # Set max number of modes above nbmodes
@@ -286,15 +277,17 @@ cacao-fpsctrl setval mfilt selfRM.enable ON
 Check result: maps-rundir/selfRM.fits
 
 ## Starting Turbulence simulation
-To set up the turbulence simulator for MAPS we need to map from a 2D phase screen to a 1D DM command vector.  The following steps will set this up:
+
+To set up the turbulence simulator for MAPS we need to map from a 2D phase screen to a 1D DM command vector. The following steps will set this up:
 
 ```bash
 mux new -s maps-turb
 ./scripts/maps-startturb
 ```
+
 You can exit the tumx session with `ctrl-b d`
 
-Now in the fpsCtrl TUI, you can toggle turbulence on and off under DMatmturb-2.  You can view the phase screen by pointing an viewere, such as rtimv, at `mapsturb2D`.
+Now in the fpsCtrl TUI, you can toggle turbulence on and off under DMatmturb-2. You can view the phase screen by pointing an viewere, such as rtimv, at `mapsturb2D`.
 
 # Cleanup
 
@@ -304,6 +297,5 @@ From main directory (upstream of rootdir) :
 cacao-task-manager -C 0 MAPS-vispyr
 rm -rf .maps.cacaotaskmanager-log
 ```
-
 
 THE END

@@ -39,93 +39,96 @@
 
 
 static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "mfilttest",
-    .cmdkey      = "mfilttest",
-    .description = "test input for modal filter",
-    .description_long =
-        "Generate synthetic test input for the modal filter module. Produces known modal coefficient sequences for validation and benchmarking."
+    .fps_name         = "mfilttest",
+    .cmdkey           = "mfilttest",
+    .description      = "test input for modal filter",
+    .description_long = "Generate synthetic test input for the modal filter module. Produces known "
+                        "modal coefficient sequences for validation and benchmarking."
 };
 
 #define SNAMEPREFIX "tseqPF"
 
 static uint64_t AOloopindex = 0;
-static char mvalDM[
-    FUNCTION_PARAMETER_STRMAXLEN];
-static char mvalWFS[
-    FUNCTION_PARAMETER_STRMAXLEN];
-static float minPrate = 0;
-static float maxPrate = 0;
-static float noiseamp = 0;
-static float multfact = 0;
-static float WFSlatency = 0;
-static float DMlatency = 0;
+static char     mvalDM[FUNCTION_PARAMETER_STRMAXLEN];
+static char     mvalWFS[FUNCTION_PARAMETER_STRMAXLEN];
+static float    minPrate   = 0;
+static float    maxPrate   = 0;
+static float    noiseamp   = 0;
+static float    multfact   = 0;
+static float    WFSlatency = 0;
+static float    DMlatency  = 0;
 
-#define FPS_PARAMS(X) \
-    X(".AOloopindex", &AOloopindex, \
-      FPTYPE_UINT64, 1, \
-      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "AO loop index") \
-    X(".mvalDM", mvalDM, \
-      FPTYPE_STREAMNAME, 1, \
-      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input mode values - DM control") \
-    X(".mvalWFS", mvalWFS, \
-      FPTYPE_STREAMNAME, 1, \
-      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output mode values to WFS") \
-    X(".minPrate", &minPrate, \
-      FPTYPE_FLOAT32, 1, \
-      FPFLAG_DEFAULT_INPUT, "min phase rate [rad/tstep]") \
-    X(".maxPrate", &maxPrate, \
-      FPTYPE_FLOAT32, 1, \
-      FPFLAG_DEFAULT_INPUT, "max phase rate [rad/tstep]") \
-    X(".noiseamp", &noiseamp, \
-      FPTYPE_FLOAT32, 1, \
-      FPFLAG_DEFAULT_INPUT, "noise amplitude") \
-    X(".multfact", &multfact, \
-      FPTYPE_FLOAT32, 1, \
-      FPFLAG_DEFAULT_INPUT, "multiplicative factor") \
-    X(".WFSlatency", &WFSlatency, \
-      FPTYPE_FLOAT32, 1, \
-      FPFLAG_DEFAULT_INPUT, "WFS latency [frame]") \
-    X(".DMlatency", &DMlatency, \
-      FPTYPE_FLOAT32, 1, \
-      FPFLAG_DEFAULT_INPUT, "DM latency [frame]")
+#define FPS_PARAMS(X)                                                                             \
+    X(".AOloopindex", &AOloopindex, FPTYPE_UINT64, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),  \
+      "AO loop index")                                                                            \
+    X(".mvalDM", mvalDM, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),         \
+      "input mode values - DM control")                                                           \
+    X(".mvalWFS", mvalWFS, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),       \
+      "output mode values to WFS")                                                                \
+    X(".minPrate", &minPrate, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,                            \
+      "min phase rate [rad/tstep]")                                                               \
+    X(".maxPrate", &maxPrate, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,                            \
+      "max phase rate [rad/tstep]")                                                               \
+    X(".noiseamp", &noiseamp, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "noise amplitude")         \
+    X(".multfact", &multfact, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "multiplicative factor")   \
+    X(".WFSlatency", &WFSlatency, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS latency [frame]") \
+    X(".DMlatency", &DMlatency, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM latency [frame]")
 
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
 static errno_t customCONFsetup()
 {
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
         long fpi;
         fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".mvalDM");
-        if(fpi > -1)
-            milk_data.fpsptr
-                ->parray[fpi]
-                .fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+        if (fpi > -1)
+        {
+            milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+        }
 
         fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".mvalWFS");
-        if(fpi > -1)
-            milk_data.fpsptr
-                ->parray[fpi]
-                .fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+        if (fpi > -1)
+        {
+            milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM;
+        }
 
         fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".minPrate");
-        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        if (fpi > -1)
+        {
+            milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        }
 
         fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".multfact");
-        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        if (fpi > -1)
+        {
+            milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        }
 
         fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".maxPrate");
-        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        if (fpi > -1)
+        {
+            milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        }
 
         fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".noiseamp");
-        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        if (fpi > -1)
+        {
+            milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        }
 
         fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".DMlatency");
-        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        if (fpi > -1)
+        {
+            milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        }
 
         fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".WFSlatency");
-        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        if (fpi > -1)
+        {
+            milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        }
     }
     return RETURN_SUCCESS;
 }
@@ -139,8 +142,6 @@ static errno_t customCONFcheck()
 // detailed help
 static errno_t __attribute__((unused)) help_function()
 {
-
-
     return RETURN_SUCCESS;
 }
 
@@ -154,22 +155,22 @@ static errno_t compute_function()
     // connect to input mode values array and get number of modes
     //
     IMGID imgmvalDM = imgid_make_from_name(mvalDM);
-    resolveIMGID(
-        &imgmvalDM, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (imgmvalDM.ID == -1) return RETURN_FAILURE;
+    resolveIMGID(&imgmvalDM, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgmvalDM.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
     printf("%u modes\n", imgmvalDM.md->size[0]);
     uint32_t NBmode = imgmvalDM.md->size[0];
 
     // Connect to mvalWFS
     //
     IMGID imgmvalWFS = imgid_make_from_name(mvalWFS);
-    resolveIMGID(
-        &imgmvalWFS, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (imgmvalWFS.ID == -1) return RETURN_FAILURE;
+    resolveIMGID(&imgmvalWFS, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgmvalWFS.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
 
 
     // connect / create mvalC
@@ -185,38 +186,38 @@ static errno_t compute_function()
 
     // mvalDM buffer
     uint32_t mvalDMbuff_tindex = 0;
-    IMGID imgmvalDMbuff = imgid_make_from_name_2D("mvalDMbuff", NBmode, NBdelaystep);
+    IMGID    imgmvalDMbuff     = imgid_make_from_name_2D("mvalDMbuff", NBmode, NBdelaystep);
     createimagefromIMGID(&imgmvalDMbuff);
 
     // mvalOUT buffer
     uint32_t mvalCbuff_tindex = 0;
-    IMGID imgmvalCbuff = imgid_make_from_name_2D("mvalCbuff", NBmode, NBdelaystep);
+    IMGID    imgmvalCbuff     = imgid_make_from_name_2D("mvalCbuff", NBmode, NBdelaystep);
     createimagefromIMGID(&imgmvalCbuff);
 
 
     list_image_ID();
 
 
-    float *mvalIN = (float*) malloc(sizeof(float)*NBmode);
-    float *mvalINpha = (float*) malloc(sizeof(float)*NBmode);
+    float *mvalIN    = (float *) malloc(sizeof(float) * NBmode);
+    float *mvalINpha = (float *) malloc(sizeof(float) * NBmode);
 
     // time-delayed DM correction
-    float *mvalDMd = (float*) malloc(sizeof(float)*NBmode);
+    float *mvalDMd = (float *) malloc(sizeof(float) * NBmode);
 
     // Corrected input
-    float *mvalC = (float*) malloc(sizeof(float)*NBmode);
+    float *mvalC = (float *) malloc(sizeof(float) * NBmode);
 
     // Time-delayed corrected input
-    float *mvalCd = (float*) malloc(sizeof(float)*NBmode);
+    float *mvalCd = (float *) malloc(sizeof(float) * NBmode);
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
 
 
     // Write input disturbance
     //
-    for(uint32_t mi=0; mi < NBmode; mi++)
+    for (uint32_t mi = 0; mi < NBmode; mi++)
     {
-        float phastep = (minPrate) + (1.0*mi / NBmode) * ((maxPrate) - (minPrate));
+        float phastep = (minPrate) + (1.0 * mi / NBmode) * ((maxPrate) - (minPrate));
         mvalINpha[mi] += phastep;
 
         mvalIN[mi] = cosf(mvalINpha[mi]);
@@ -233,47 +234,44 @@ static errno_t compute_function()
     {
         // Grab new input mvalDM
         char *ptr = (char *) imgmvalDMbuff.im->array.F;
-        ptr += SIZEOF_DATATYPE_FLOAT*NBmode*mvalDMbuff_tindex;
-        memcpy( ptr, imgmvalDM.im->array.F, sizeof(float)*NBmode);
+        ptr += SIZEOF_DATATYPE_FLOAT * NBmode * mvalDMbuff_tindex;
+        memcpy(ptr, imgmvalDM.im->array.F, sizeof(float) * NBmode);
 
-        int latint = floorf(DMlatency);  // integer part
-        float latfrac = (DMlatency) - latint;  // fractional part
-        int index0 = mvalDMbuff_tindex - latint;
-        if(index0 < 0)
+        int   latint  = floorf(DMlatency);   // integer part
+        float latfrac = (DMlatency) -latint; // fractional part
+        int   index0  = mvalDMbuff_tindex - latint;
+        if (index0 < 0)
         {
             index0 += NBdelaystep;
         }
         int index1 = index0 - 1;
-        if(index1 < 0)
+        if (index1 < 0)
         {
             index1 += NBdelaystep;
         }
 
-        for(uint32_t mi=0; mi < NBmode; mi++)
+        for (uint32_t mi = 0; mi < NBmode; mi++)
         {
-            mvalDMd[mi] = (1.0f - latfrac) * imgmvalDMbuff.im->array.F[index0*NBmode+mi];
-            mvalDMd[mi] += latfrac * imgmvalDMbuff.im->array.F[index1*NBmode+mi];
+            mvalDMd[mi] = (1.0f - latfrac) * imgmvalDMbuff.im->array.F[index0 * NBmode + mi];
+            mvalDMd[mi] += latfrac * imgmvalDMbuff.im->array.F[index1 * NBmode + mi];
         }
 
         {
             uint32_t mi = 5;
-            printf("latency DM index  [%3d %3d  %+9.6f  %+9.6f -> %+9.6f   %+9.6f\n",
-                   index0, index1,
-                   imgmvalDMbuff.im->array.F[index0*NBmode+mi],
-                   imgmvalDMbuff.im->array.F[index1*NBmode+mi],
-                   mvalDMd[mi],
+            printf("latency DM index  [%3d %3d  %+9.6f  %+9.6f -> %+9.6f   %+9.6f\n", index0,
+                   index1, imgmvalDMbuff.im->array.F[index0 * NBmode + mi],
+                   imgmvalDMbuff.im->array.F[index1 * NBmode + mi], mvalDMd[mi],
                    imgmvalDM.im->array.F[mi]);
         }
-
     }
     // apply time-delayed DM correction
-    for(uint32_t mi=0; mi < NBmode; mi++)
+    for (uint32_t mi = 0; mi < NBmode; mi++)
     {
         mvalC[mi] = mvalIN[mi] + mvalDMd[mi];
     }
     // update DM buffer index
-    mvalDMbuff_tindex ++;
-    if(mvalDMbuff_tindex == NBdelaystep)
+    mvalDMbuff_tindex++;
+    if (mvalDMbuff_tindex == NBdelaystep)
     {
         mvalDMbuff_tindex = 0;
     }
@@ -282,37 +280,37 @@ static errno_t compute_function()
     {
         // Grab new input mvalC
         char *ptr = (char *) imgmvalCbuff.im->array.F;
-        ptr += SIZEOF_DATATYPE_FLOAT*NBmode*mvalCbuff_tindex;
-        memcpy( ptr, mvalC, sizeof(float)*NBmode);
+        ptr += SIZEOF_DATATYPE_FLOAT * NBmode * mvalCbuff_tindex;
+        memcpy(ptr, mvalC, sizeof(float) * NBmode);
 
-        int latint = floorf(WFSlatency);  // integer part
-        float latfrac = (WFSlatency) - latint;  // fractional part
-        int index0 = mvalCbuff_tindex - latint;
-        if(index0 < 0)
+        int   latint  = floorf(WFSlatency);   // integer part
+        float latfrac = (WFSlatency) -latint; // fractional part
+        int   index0  = mvalCbuff_tindex - latint;
+        if (index0 < 0)
         {
             index0 += NBdelaystep;
         }
         int index1 = mvalCbuff_tindex - latint;
-        if(index1 < 0)
+        if (index1 < 0)
         {
             index1 += NBdelaystep;
         }
 
-        for(uint32_t mi=0; mi < NBmode; mi++)
+        for (uint32_t mi = 0; mi < NBmode; mi++)
         {
-            mvalCd[mi] = (1.0f - latfrac) * imgmvalCbuff.im->array.F[index0*NBmode+mi];
-            mvalCd[mi] += latfrac * imgmvalCbuff.im->array.F[index1*NBmode+mi];
+            mvalCd[mi] = (1.0f - latfrac) * imgmvalCbuff.im->array.F[index0 * NBmode + mi];
+            mvalCd[mi] += latfrac * imgmvalCbuff.im->array.F[index1 * NBmode + mi];
         }
     }
     // update C buffer index
-    mvalCbuff_tindex ++;
-    if(mvalCbuff_tindex == NBdelaystep)
+    mvalCbuff_tindex++;
+    if (mvalCbuff_tindex == NBdelaystep)
     {
         mvalCbuff_tindex = 0;
     }
 
 
-    memcpy(imgmvalWFS.im->array.F, mvalCd, sizeof(float)*NBmode);
+    memcpy(imgmvalWFS.im->array.F, mvalCd, sizeof(float) * NBmode);
     processinfo_update_output_stream(processinfo, imgmvalWFS.im, NULL);
 
     /*
@@ -347,15 +345,12 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 // Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl__modalfilter_test()
+errno_t CLIADDCMD_AOloopControl__modalfilter_test()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
@@ -368,10 +363,9 @@ CLIADDCMD_AOloopControl__modalfilter_test()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function,
-    customCONFsetup,
-    customCONFcheck)
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
+                                 FPS_PARAMS,
+                                 compute_function,
+                                 customCONFsetup,
+                                 customCONFcheck)
 #endif

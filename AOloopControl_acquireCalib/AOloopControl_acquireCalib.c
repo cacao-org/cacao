@@ -43,7 +43,6 @@ INIT_MODULE_LIB(AOloopControl_acquireCalib)
 
 static errno_t init_module_CLI()
 {
-
     DEBUG_TRACE_FSTART();
 
 

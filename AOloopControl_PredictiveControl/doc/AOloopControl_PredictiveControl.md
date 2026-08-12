@@ -11,20 +11,16 @@ Predictive control is implemented in two processes:
 
 The predictive filter is modal, and adopts the same modes as the main control loop.
 
-
-
 ## Scripts
 
-
-File          | Description
---------------|------------------------------------------------------
-aolARPF 	  | Find auto-regressive predictive filter
-aolARPFblock  | AO find optimal AR linear predictive filter
-
+| File         | Description                                 |
+| ------------ | ------------------------------------------- |
+| aolARPF      | Find auto-regressive predictive filter      |
+| aolARPFblock | AO find optimal AR linear predictive filter |
 
 ---
----
 
+---
 
 # Data flow for real-time operation
 
@@ -36,12 +32,9 @@ For each block, there are 3 main processes involved in running the predictive co
 - Compute prediction filter
 - Apply prediction
 
-
 All 3 processes work in a chain, and can be turned on/off from the GUI.
 
-
 ---
-
 
 ## Collect data from input telemetry
 
@@ -51,11 +44,9 @@ Output is a 3D image, of size: NBmodes x 1 x NBsteps.
 
 Output is shared memory image stream, named:
 
-	aol<loop>_modevalol_PFb<blocknumber>
-
+    aol<loop>_modevalol_PFb<blocknumber>
 
 ---
-
 
 ## Compute filter
 
@@ -64,7 +55,6 @@ Computing filter. Runs CLI command mkARpfilt, which runs function LINARFILTERPRE
 Input to function: aol<loop>_modevalol_PFb<blocknumber>
 
 Output to function: aol<loop>_modevalol_outPFb<blocknumber>
-
 
 ### Packaging input data matrix
 
@@ -76,11 +66,7 @@ In the column-major matrix representation, PFmatD data array is the transpose of
 
 Performed by calling function CUDACOMP_magma_compute_SVDpseudoInverse().
 
-
 ### Assembling Predictive Filter
-
-
-
 
 ---
 

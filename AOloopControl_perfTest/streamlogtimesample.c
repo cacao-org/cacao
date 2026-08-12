@@ -28,12 +28,12 @@
 
 typedef struct
 {
-    char   name[500];
-    double tstart;
-    double tend;
+    char     name[500];
+    double   tstart;
+    double   tend;
     uint64_t cnt0start;
     uint64_t cnt0end;
-    long   cnt;
+    long     cnt;
 } StreamDataFile;
 
 #define MaxNBdatFiles 100000
@@ -44,19 +44,19 @@ typedef struct
 //
 typedef struct
 {
-    double tstart;       // start time
-    double tend;         // end time
-    double avTime;       // average time stamp
-    double etimesec;     // exposure time accumulated [sec]
-    double etimeframe;   // exposure time accumulated [frame]
+    double tstart;     // start time
+    double tend;       // end time
+    double avTime;     // average time stamp
+    double etimesec;   // exposure time accumulated [sec]
+    double etimeframe; // exposure time accumulated [frame]
 } ResampledFrame;
 
 
 // PROCESSTIMINGFLAG
 
-#define PROCESSTIMINGFLAG_LOAD         0x00000001
-#define PROCESSTIMINGFLAG_WRITE        0x00000002
-#define PROCESSTIMINGFLAG_LINTIMING    0x00000004  // overwrite timings to force linear timing
+#define PROCESSTIMINGFLAG_LOAD 0x00000001
+#define PROCESSTIMINGFLAG_WRITE 0x00000002
+#define PROCESSTIMINGFLAG_LINTIMING 0x00000004 // overwrite timings to force linear timing
 
 
 // Local variables pointers
@@ -117,47 +117,54 @@ static FPS_APP_INFO FPS_app_info = {
         "Resample multiple logged streams to a common clock for synchronized temporal analysis."
 };
 
-#define FPS_PARAMS(X) \
-    X(".tstartsec", &tstartsec, FPTYPE_UINT32,  1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "tstartsec (1728797840)") \
-    X(".tstartnsec",&tstartnsec,FPTYPE_UINT32,  0, FPFLAG_DEFAULT_INPUT, "tstartnsec") \
-    X(".tendsec",   &tendsec,   FPTYPE_UINT32,  1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "tendsec (1728797850)") \
-    X(".tendnsec",  &tendnsec,  FPTYPE_UINT32,  0, FPFLAG_DEFAULT_INPUT, "tendnsec") \
-    X(".timingmode",&timingmode,FPTYPE_INT32,   0, FPFLAG_DEFAULT_INPUT, "timing mode (0+: inherit from stream)") \
-    X(".timingdt",  &timingdt,  FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "output frame interval (0.001)") \
-    X(".logdir",    logdir,    FPTYPE_DIRNAME, 0, FPFLAG_DEFAULT_INPUT, "log directory") \
-    X(".s0name",    sname[0],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 0 name") \
-    X(".s0tag",     stag[0],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 0 tag") \
-    X(".s0latency", &slatency[0],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 0 latency [float]") \
-    X(".s0lint",    &lintiming[0],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 0 linearize timing") \
-    X(".s1name",    sname[1],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 1 name") \
-    X(".s1tag",     stag[1],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 1 tag") \
-    X(".s1latency", &slatency[1],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 1 latency [float]") \
-    X(".s1lint",    &lintiming[1],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 1 linearize timing") \
-    X(".s2name",    sname[2],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 2 name") \
-    X(".s2tag",     stag[2],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 2 tag") \
-    X(".s2latency", &slatency[2],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 2 latency [float]") \
-    X(".s2lint",    &lintiming[2],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 2 linearize timing") \
-    X(".s3name",    sname[3],  FPTYPE_STREAMNAME,0,FPFLAG_DEFAULT_INPUT, "stream 3 name") \
-    X(".s3tag",     stag[3],   FPTYPE_STRING,    0,FPFLAG_DEFAULT_INPUT, "stream 3 tag") \
-    X(".s3latency", &slatency[3],FPTYPE_FLOAT32,  0,FPFLAG_DEFAULT_INPUT, "stream 3 latency [float]") \
-    X(".s3lint",    &lintiming[3],FPTYPE_ONOFF,   1,FPFLAG_DEFAULT_INPUT, "stream 3 linearize timing")
+#define FPS_PARAMS(X)                                                                      \
+    X(".tstartsec", &tstartsec, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
+      "tstartsec (1728797840)")                                                            \
+    X(".tstartnsec", &tstartnsec, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT, "tstartnsec")    \
+    X(".tendsec", &tendsec, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,     \
+      "tendsec (1728797850)")                                                              \
+    X(".tendnsec", &tendnsec, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT, "tendnsec")          \
+    X(".timingmode", &timingmode, FPTYPE_INT32, 0, FPFLAG_DEFAULT_INPUT,                   \
+      "timing mode (0+: inherit from stream)")                                             \
+    X(".timingdt", &timingdt, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,  \
+      "output frame interval (0.001)")                                                     \
+    X(".logdir", logdir, FPTYPE_DIRNAME, 0, FPFLAG_DEFAULT_INPUT, "log directory")         \
+    X(".s0name", sname[0], FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "stream 0 name")    \
+    X(".s0tag", stag[0], FPTYPE_STRING, 0, FPFLAG_DEFAULT_INPUT, "stream 0 tag")           \
+    X(".s0latency", &slatency[0], FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                 \
+      "stream 0 latency [float]")                                                          \
+    X(".s0lint", &lintiming[0], FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                     \
+      "stream 0 linearize timing")                                                         \
+    X(".s1name", sname[1], FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "stream 1 name")    \
+    X(".s1tag", stag[1], FPTYPE_STRING, 0, FPFLAG_DEFAULT_INPUT, "stream 1 tag")           \
+    X(".s1latency", &slatency[1], FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                 \
+      "stream 1 latency [float]")                                                          \
+    X(".s1lint", &lintiming[1], FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                     \
+      "stream 1 linearize timing")                                                         \
+    X(".s2name", sname[2], FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "stream 2 name")    \
+    X(".s2tag", stag[2], FPTYPE_STRING, 0, FPFLAG_DEFAULT_INPUT, "stream 2 tag")           \
+    X(".s2latency", &slatency[2], FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                 \
+      "stream 2 latency [float]")                                                          \
+    X(".s2lint", &lintiming[2], FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                     \
+      "stream 2 linearize timing")                                                         \
+    X(".s3name", sname[3], FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT, "stream 3 name")    \
+    X(".s3tag", stag[3], FPTYPE_STRING, 0, FPFLAG_DEFAULT_INPUT, "stream 3 tag")           \
+    X(".s3latency", &slatency[3], FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                 \
+      "stream 3 latency [float]")                                                          \
+    X(".s3lint", &lintiming[3], FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "stream 3 linearize timing")
 
-static char *remove_ext(
-    char *mystr,
-    char dot,
-    char sep
-)
+static char *remove_ext(char *mystr, char dot, char sep)
 {
     char *retstr, *lastdot, *lastsep;
 
     // Error checks and allocate string.
 
-    if(mystr == NULL)
+    if (mystr == NULL)
     {
         return NULL;
     }
     size_t len = strlen(mystr);
-    if((retstr = malloc(len + 1)) == NULL)
+    if ((retstr = malloc(len + 1)) == NULL)
     {
         return NULL;
     }
@@ -170,13 +177,13 @@ static char *remove_ext(
 
     // If it has an extension separator.
 
-    if(lastdot != NULL)
+    if (lastdot != NULL)
     {
         // and it's before the extenstion separator.
 
-        if(lastsep != NULL)
+        if (lastsep != NULL)
         {
-            if(lastsep < lastdot)
+            if (lastsep < lastdot)
             {
                 // then remove it.
 
@@ -197,11 +204,7 @@ static char *remove_ext(
 }
 
 
-static void quicksort_StreamDataFile(
-    StreamDataFile *datfile,
-    long left,
-    long right
-)
+static void quicksort_StreamDataFile(StreamDataFile *datfile, long left, long right)
 {
     register long  i, j;
     StreamDataFile x, y;
@@ -212,16 +215,16 @@ static void quicksort_StreamDataFile(
 
     do
     {
-        while(datfile[i].tstart < x.tstart && i < right)
+        while (datfile[i].tstart < x.tstart && i < right)
         {
             i++;
         }
-        while(x.tstart < datfile[j].tstart && j > left)
+        while (x.tstart < datfile[j].tstart && j > left)
         {
             j--;
         }
 
-        if(i <= j)
+        if (i <= j)
         {
             y.tstart = datfile[i].tstart;
             y.tend   = datfile[i].tend;
@@ -241,55 +244,52 @@ static void quicksort_StreamDataFile(
             i++;
             j--;
         }
-    }
-    while(i <= j);
+    } while (i <= j);
 
-    if(left < j)
+    if (left < j)
     {
         quicksort_StreamDataFile(datfile, left, j);
     }
-    if(i < right)
+    if (i < right)
     {
         quicksort_StreamDataFile(datfile, i, right);
     }
 }
 
 
-static errno_t processTimingFile(
-    char *inTimingfname,
-    char *outTimingfname,
-    char *fnamestring,
-    uint64_t PROCESSTIMINGFLAG,
-    double* timingarray
-)
+static errno_t processTimingFile(char    *inTimingfname,
+                                 char    *outTimingfname,
+                                 char    *fnamestring,
+                                 uint64_t PROCESSTIMINGFLAG,
+                                 double  *timingarray)
 {
     FILE *fp;
-    if((fp = fopen(inTimingfname, "r")) == NULL)
+    if ((fp = fopen(inTimingfname, "r")) == NULL)
     {
         printf("Cannot open file \"%s\"\n", inTimingfname);
         exit(0);
     }
     else
     {
-        double tfirst  = 0.0;
-        double tlast  = 0.0;
+        double   tfirst    = 0.0;
+        double   tlast     = 0.0;
         uint64_t cnt0first = 0;
-        uint64_t cnt0last = 0;
+        uint64_t cnt0last  = 0;
 
-        int    tOK    = 1;
-        int    scanOK = 1;
+        int tOK    = 1;
+        int scanOK = 1;
 
         double  MaxNBsample = 1000000;
-        double *tarray = (double *) malloc(sizeof(double) * MaxNBsample);
-        if(tarray == NULL)
+        double *tarray      = (double *) malloc(sizeof(double) * MaxNBsample);
+        if (tarray == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort(); // or handle error in other ways
         }
 
 
-        long *cnt0array = (long*) malloc(sizeof(long) * MaxNBsample);
-        if(cnt0array == NULL)
+        long *cnt0array = (long *) malloc(sizeof(long) * MaxNBsample);
+        if (cnt0array == NULL)
         {
             PRINT_ERROR("malloc returns NULL pointer");
             abort(); // or handle error in other ways
@@ -298,57 +298,51 @@ static errno_t processTimingFile(
         long cnt = 0;
 
 
-        double  cubetimesec, abslogtimesec, absacqtimesec;
-        long    cubeframenumber, framenumber, framecnt0, framecnt1;
-        while(scanOK == 1)
+        double cubetimesec, abslogtimesec, absacqtimesec;
+        long   cubeframenumber, framenumber, framecnt0, framecnt1;
+        while (scanOK == 1)
         {
             char line[512];
-            if(fgets(line, sizeof(line), fp) == NULL)
+            if (fgets(line, sizeof(line), fp) == NULL)
             {
                 scanOK = 0;
             }
             else
             {
-                if(line[0] != '#')
+                if (line[0] != '#')
                 {
                     scanOK = 1;
                 }
 
-                if(scanOK == 1)
+                if (scanOK == 1)
                 {
-                    if((sscanf(line,
-                               "%ld %ld %lf %lf %lf %ld %ld\n",
-                               &cubeframenumber,
-                               &framenumber,
-                               &cubetimesec,
-                               &abslogtimesec,
-                               &absacqtimesec,
-                               &framecnt0,
-                               &framecnt1) == 7) &&
-                            (tOK == 1))
+                    if ((sscanf(line, "%ld %ld %lf %lf %lf %ld %ld\n", &cubeframenumber,
+                                &framenumber, &cubetimesec, &abslogtimesec, &absacqtimesec,
+                                &framecnt0, &framecnt1) == 7) &&
+                        (tOK == 1))
                     {
                         // Use logtime instead of acqtime
                         double abstimesec = abslogtimesec;
 
-                        tarray[cnt] = abstimesec;
+                        tarray[cnt]    = abstimesec;
                         cnt0array[cnt] = framecnt0;
 
-                        if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LOAD)
+                        if (PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LOAD)
                         {
                             timingarray[cnt] = abstimesec;
                         }
 
-                        if(cnt == 0)
+                        if (cnt == 0)
                         {
-                            tfirst         = abstimesec;
-                            tlast          = abstimesec;
-                            cnt0first      = framecnt0;
-                            cnt0last       = framecnt0;
+                            tfirst    = abstimesec;
+                            tlast     = abstimesec;
+                            cnt0first = framecnt0;
+                            cnt0last  = framecnt0;
                         }
                         else
                         {
                             // if enforcing monotonic time
-                            if(abstimesec > tlast)
+                            if (abstimesec > tlast)
                             {
                                 tOK = 1;
                             }
@@ -356,7 +350,7 @@ static errno_t processTimingFile(
                             {
                                 tOK = 0;
                             }
-                            tlast = abstimesec;
+                            tlast    = abstimesec;
                             cnt0last = framecnt0;
                         }
                         cnt++;
@@ -364,7 +358,7 @@ static errno_t processTimingFile(
                 }
             }
 
-            if(tOK == 0)
+            if (tOK == 0)
             {
                 scanOK = 0;
             }
@@ -372,9 +366,9 @@ static errno_t processTimingFile(
         fclose(fp);
 
 
-        if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LOAD)
+        if (PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LOAD)
         {
-            if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LINTIMING)
+            if (PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_LINTIMING)
             {
                 // linear extrapolation
                 printf("Apply linear extrapolation\n");
@@ -383,21 +377,21 @@ static errno_t processTimingFile(
                 // average first and last 1/4 point
                 double ave0_cnt0 = 0.0;
                 double ave1_cnt0 = 0.0;
-                long ave0cnt = 0;
+                long   ave0cnt   = 0;
 
                 double ave0_time = 0.0;
                 double ave1_time = 0.0;
-                long ave1cnt = 0;
+                long   ave1cnt   = 0;
 
-                for(long pti=0; pti<cnt; pti++)
+                for (long pti = 0; pti < cnt; pti++)
                 {
-                    if(pti < 0.25*cnt)
+                    if (pti < 0.25 * cnt)
                     {
                         ave0_cnt0 += cnt0array[pti];
                         ave0_time += tarray[pti];
                         ave0cnt++;
                     }
-                    if(pti > 0.75*cnt)
+                    if (pti > 0.75 * cnt)
                     {
                         ave1_cnt0 += cnt0array[pti];
                         ave1_time += tarray[pti];
@@ -415,16 +409,16 @@ static errno_t processTimingFile(
 
                 // keep track of delta relative to lin extrapolation
 
-                double * timingdelta = (double*) malloc(sizeof(double) * cnt);
+                double *timingdelta = (double *) malloc(sizeof(double) * cnt);
 
                 {
                     //FILE *fptest = fopen("timingtext.txt", "w");
 
-                    double slope = (ave1_time-ave0_time) / (ave1_cnt0-ave0_cnt0);
-                    for(long pti=0; pti<cnt; pti++)
+                    double slope = (ave1_time - ave0_time) / (ave1_cnt0 - ave0_cnt0);
+                    for (long pti = 0; pti < cnt; pti++)
                     {
                         double x = cnt0array[pti];
-                        double y = ave0_time + (x-ave0_cnt0) * slope;
+                        double y = ave0_time + (x - ave0_cnt0) * slope;
                         //fprintf(fptest, "%5ld %5ld %f %f\n", pti, cnt0array[pti], timingarray[pti], y);
                         timingdelta[pti] = timingarray[pti] - y;
                         timingarray[pti] = y;
@@ -433,12 +427,12 @@ static errno_t processTimingFile(
                 }
 
                 quick_sort_double(timingdelta, cnt);
-                double mediandelta = timingdelta[cnt/2];
+                double mediandelta = timingdelta[cnt / 2];
                 free(timingdelta);
 
                 {
                     //FILE *fptest = fopen("timingtext1.txt", "w");
-                    for(long pti=0; pti<cnt; pti++)
+                    for (long pti = 0; pti < cnt; pti++)
                     {
                         timingarray[pti] += mediandelta;
                         //fprintf(fptest, "%5ld %f  %f\n", pti, timingarray[pti], mediandelta);
@@ -446,8 +440,6 @@ static errno_t processTimingFile(
 
                     //fclose(fp);
                 }
-
-
             }
         }
 
@@ -457,34 +449,28 @@ static errno_t processTimingFile(
 
 
         // write timing summary file
-        if(PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_WRITE)
+        if (PROCESSTIMINGFLAG & PROCESSTIMINGFLAG_WRITE)
         {
             StreamDataFile datfile;
 
-            datfile.tstart = tfirst;
+            datfile.tstart    = tfirst;
             datfile.cnt0start = cnt0first;
-            datfile.tend = tlast;
-            datfile.cnt0end = cnt0last;
-            datfile.cnt  = cnt;
+            datfile.tend      = tlast;
+            datfile.cnt0end   = cnt0last;
+            datfile.cnt       = cnt;
             snprintf(datfile.name, sizeof(datfile.name), "%s", fnamestring);
 
             FILE *fpout;
-            if((fpout = fopen(outTimingfname, "w")) == NULL)
+            if ((fpout = fopen(outTimingfname, "w")) == NULL)
             {
                 printf("Cannot write file \"%s\"\n", outTimingfname);
                 exit(0);
             }
             else
             {
-                fprintf(fpout,
-                        "%s   %lu %20.9f   %lu %20.9f   %10ld  %10.3f\n",
-                        fnamestring,
-                        datfile.cnt0start,
-                        datfile.tstart,
-                        datfile.cnt0end,
-                        datfile.tend,
-                        datfile.cnt,
-                        datfile.cnt / (datfile.tend - datfile.tstart));
+                fprintf(fpout, "%s   %lu %20.9f   %lu %20.9f   %10ld  %10.3f\n", fnamestring,
+                        datfile.cnt0start, datfile.tstart, datfile.cnt0end, datfile.tend,
+                        datfile.cnt, datfile.cnt / (datfile.tend - datfile.tstart));
                 fclose(fpout);
             }
         }
@@ -495,18 +481,13 @@ static errno_t processTimingFile(
 }
 
 
-static FPS_CLI_BINDING my_bindings[] = {
-    FPS_PARAMS(FPS_X_BINDING)
-};
-static int __attribute__((unused)) nb_bindings = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+static FPS_CLI_BINDING             my_bindings[] = { FPS_PARAMS(FPS_X_BINDING) };
+static int __attribute__((unused)) nb_bindings   = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
-static CLICMDARGDEF farg[] = {
-    FPS_PARAMS(FPS_X_FARG)
-};
+static CLICMDARGDEF farg[] = { FPS_PARAMS(FPS_X_FARG) };
 
-static CLICMDDATA CLIcmddata = {
-    "slogtsample", "resample streams to common clock", CLICMD_FIELDS_DEFAULTS
-};
+static CLICMDDATA CLIcmddata = { "slogtsample", "resample streams to common clock",
+                                 CLICMD_FIELDS_DEFAULTS };
 
 static errno_t compute_function()
 {
@@ -519,20 +500,20 @@ static errno_t compute_function()
 
 
     // loop over streams
-    for(int sindex=0; sindex < 4; sindex++)
+    for (int sindex = 0; sindex < 4; sindex++)
     {
         int ouputimginit = 0;
 
         // skip steams is name = null
-        if ( strcmp(sname[sindex], "null") )
+        if (strcmp(sname[sindex], "null"))
         {
             printf("STREAM %d : %s\n", sindex, sname[sindex]);
 
 
             char datadirstream[STRINGMAXLEN_DIRNAME];
             {
-                time_t timetstart = *tstartsec;
-                struct tm* tminfo;
+                time_t     timetstart = *tstartsec;
+                struct tm *tminfo;
 
                 tminfo = gmtime(&timetstart);
 
@@ -547,7 +528,7 @@ static errno_t compute_function()
 
             StreamDataFile *datfile;
             datfile = (StreamDataFile *) malloc(sizeof(StreamDataFile) * MaxNBdatFiles);
-            if(datfile == NULL)
+            if (datfile == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
                 abort(); // or handle error in other ways
@@ -559,83 +540,71 @@ static errno_t compute_function()
             int NBdatFiles = 0;
 
             DIR *d0;
-            d0  = opendir(datadirstream);
-            if(d0)
+            d0 = opendir(datadirstream);
+            if (d0)
             {
                 struct dirent *dir;
-                while((dir = readdir(d0)) != NULL)
+                while ((dir = readdir(d0)) != NULL)
                 {
-                    char          *ext;
+                    char *ext;
                     ext = strrchr(dir->d_name, '.');
-                    if(!ext)
+                    if (!ext)
                     {
                         // printf("no extension\n");
                     }
                     else
                     {
                         int datfileOK = 0;
-                        if(strcmp(ext + 1, "dat") == 0)
+                        if (strcmp(ext + 1, "dat") == 0)
                         {
                             datfileOK = 1;
                         }
-                        if(strcmp(ext + 1, "txt") == 0)
+                        if (strcmp(ext + 1, "txt") == 0)
                         {
                             datfileOK = 2;
                         }
 
-                        if(datfileOK != 0)
+                        if (datfileOK != 0)
                         {
                             printf("\n    processing file %s\n", dir->d_name);
                             // int mkTiming;
                             float tmpv;
                             int   ret;
 
-                            char          *tmpstring;
+                            char *tmpstring;
                             tmpstring = remove_ext(dir->d_name, '.', '/');
 
                             // Does timing file exist ?
-                            char  timingfname[STRINGMAXLEN_FULLFILENAME];
-                            WRITE_FULLFILENAME(timingfname,
-                                               "%s/%s.timing",
-                                               datadirstream,
+                            char timingfname[STRINGMAXLEN_FULLFILENAME];
+                            WRITE_FULLFILENAME(timingfname, "%s/%s.timing", datadirstream,
                                                tmpstring);
 
 
                             FILE *fp;
-                            if((fp = fopen(timingfname, "r")) == NULL)
+                            if ((fp = fopen(timingfname, "r")) == NULL)
                             {
                                 char fnamein[STRINGMAXLEN_FULLFILENAME];
 
-                                printf(
-                                    "    timing file %s missing -> creating\n",
-                                    timingfname);
+                                printf("    timing file %s missing -> creating\n", timingfname);
 
-                                if(datfileOK == 1)
+                                if (datfileOK == 1)
                                 {
-                                    snprintf(fnamein,
-                                             STRINGMAXLEN_FULLFILENAME,
-                                             "%s/%s.dat",
-                                             datadirstream,
-                                             tmpstring);
+                                    snprintf(fnamein, STRINGMAXLEN_FULLFILENAME, "%s/%s.dat",
+                                             datadirstream, tmpstring);
                                 }
                                 else
                                 {
-                                    snprintf(fnamein,
-                                             STRINGMAXLEN_FULLFILENAME,
-                                             "%s/%s.txt",
-                                             datadirstream,
-                                             tmpstring);
+                                    snprintf(fnamein, STRINGMAXLEN_FULLFILENAME, "%s/%s.txt",
+                                             datadirstream, tmpstring);
                                 }
 
                                 printf("input  : %s\n", fnamein);
                                 printf("output : %s\n", timingfname);
 
-                                processTimingFile(fnamein,
-                                                  timingfname,
-                                                  tmpstring,
+                                processTimingFile(fnamein, timingfname, tmpstring,
                                                   PROCESSTIMINGFLAG_WRITE, NULL);
 
-                                if((fp = fopen(timingfname, "r")) == NULL)
+                                if ((fp = fopen(timingfname, "r")) == NULL)
                                 {
                                     printf("ERROR: can't open file %s\n", timingfname);
                                     exit(0);
@@ -643,9 +612,7 @@ static errno_t compute_function()
                             }
                             else
                             {
-                                printf(
-                                    "    timing file %s found\n",
-                                    timingfname);
+                                printf("    timing file %s found\n", timingfname);
                             }
 
 
@@ -653,32 +620,27 @@ static errno_t compute_function()
                             int scanOK = 1; // keep scanning file
                             int readOK = 0; // read successful
 
-                            while(scanOK == 1)
+                            while (scanOK == 1)
                             {
                                 char line[512];
-                                if(fgets(line, sizeof(line), fp) == NULL)
+                                if (fgets(line, sizeof(line), fp) == NULL)
                                 {
                                     scanOK = 0;
                                 }
 
-                                if(line[0] != '#')
+                                if (line[0] != '#')
                                 {
-                                    ret = sscanf(line,
-                                                 "%s   %lu %lf   %lu %lf   %ld  %f\n",
-                                                 tmpstring,
-                                                 &datfile[NBdatFiles].cnt0start,
-                                                 &datfile[NBdatFiles].tstart,
-                                                 &datfile[NBdatFiles].cnt0end,
-                                                 &datfile[NBdatFiles].tend,
-                                                 &datfile[NBdatFiles].cnt,
-                                                 &tmpv);
+                                    ret = sscanf(
+                                        line, "%s   %lu %lf   %lu %lf   %ld  %f\n", tmpstring,
+                                        &datfile[NBdatFiles].cnt0start, &datfile[NBdatFiles].tstart,
+                                        &datfile[NBdatFiles].cnt0end, &datfile[NBdatFiles].tend,
+                                        &datfile[NBdatFiles].cnt, &tmpv);
 
-                                    if(ret == 7)
+                                    if (ret == 7)
                                     {
                                         // mkTiming = 0;
                                         snprintf(datfile[NBdatFiles].name,
-                                            sizeof(datfile[NBdatFiles].name),
-                                            "%s", tmpstring);
+                                                 sizeof(datfile[NBdatFiles].name), "%s", tmpstring);
                                         // printf("File %s : timing info found\n",
                                         // fname);
                                         scanOK = 0; // done reading
@@ -688,15 +650,17 @@ static errno_t compute_function()
                             }
                             fclose(fp);
 
-                            if(readOK == 0)
+                            if (readOK == 0)
                             {
                                 printf("File %s corrupted \n", timingfname);
                                 exit(0);
                             }
 
-                            if((datfile[NBdatFiles].tstart < 1.0*(*tendsec) + 1e-9*(*tendnsec)) &&
-                                    (datfile[NBdatFiles].tend > 1.0*(*tstartsec) + 1.0e-9*(*tstartnsec)) &&
-                                    (datfile[NBdatFiles].cnt > 0))
+                            if ((datfile[NBdatFiles].tstart <
+                                 1.0 * (*tendsec) + 1e-9 * (*tendnsec)) &&
+                                (datfile[NBdatFiles].tend >
+                                 1.0 * (*tstartsec) + 1.0e-9 * (*tstartnsec)) &&
+                                (datfile[NBdatFiles].cnt > 0))
                             {
                                 NBdatFiles++;
                             }
@@ -709,7 +673,7 @@ static errno_t compute_function()
 
             printf("NBdatFiles = %d\n", NBdatFiles);
 
-            if(NBdatFiles > 1)
+            if (NBdatFiles > 1)
             {
                 quicksort_StreamDataFile(datfile, 0, NBdatFiles - 1);
             }
@@ -717,52 +681,51 @@ static errno_t compute_function()
 
             // prepare output frame array
             double outtimestart = *tstartsec + 1e-9 * (*tstartnsec);
-            double outtimeend = *tendsec + 1e-9 * (*tendnsec);
+            double outtimeend   = *tendsec + 1e-9 * (*tendnsec);
             printf("    outtimestart = %.9lf sec\n", outtimestart);
             printf("    outtimeend   = %.9lf sec\n", outtimeend);
             long zsizeout = (outtimeend - outtimestart) / *timingdt;
             printf("zsizeout = %ld\n", zsizeout);
-            ResampledFrame *outframearray = (ResampledFrame*) malloc(sizeof(ResampledFrame)*zsizeout);
+            ResampledFrame *outframearray =
+                (ResampledFrame *) malloc(sizeof(ResampledFrame) * zsizeout);
 
 
-            for(long tstep = 0; tstep < zsizeout; tstep++)
+            for (long tstep = 0; tstep < zsizeout; tstep++)
             {
-                outframearray[tstep].tstart = outtimestart + 1.0 * tstep * (outtimeend - outtimestart) / zsizeout;
-                outframearray[tstep].tend = outtimestart + 1.0 * (tstep + 1) * (outtimeend - outtimestart) / zsizeout;
-                outframearray[tstep].etimesec  = 0.0;
+                outframearray[tstep].tstart =
+                    outtimestart + 1.0 * tstep * (outtimeend - outtimestart) / zsizeout;
+                outframearray[tstep].tend =
+                    outtimestart + 1.0 * (tstep + 1) * (outtimeend - outtimestart) / zsizeout;
+                outframearray[tstep].etimesec   = 0.0;
                 outframearray[tstep].etimeframe = 0.0;
             }
 
 
             IMGID imgout = imgid_make();
 
-            for(int idatfile = 0; idatfile < NBdatFiles; idatfile++)
+            for (int idatfile = 0; idatfile < NBdatFiles; idatfile++)
             {
                 printf("FILE %d / %d\n", idatfile, NBdatFiles);
                 fflush(stdout);
 
-                printf(
-                    "FILE [%d]: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f "
-                    "Hz\n",
-                    idatfile,
-                    datfile[idatfile].name,
-                    datfile[idatfile].tstart,
-                    datfile[idatfile].tend,
-                    datfile[idatfile].cnt,
-                    datfile[idatfile].cnt / (datfile[idatfile].tend - datfile[idatfile].tstart));
+                printf("FILE [%d]: %20s       %20.9f -> %20.9f   [%10ld]  %10.3f "
+                       "Hz\n",
+                       idatfile, datfile[idatfile].name, datfile[idatfile].tstart,
+                       datfile[idatfile].tend, datfile[idatfile].cnt,
+                       datfile[idatfile].cnt / (datfile[idatfile].tend - datfile[idatfile].tstart));
 
                 printf("LOADING TXT FILE\n");
                 fflush(stdout);
 
                 char fnameTXT[STRINGMAXLEN_FULLFILENAME + STRINGMAXLEN_DIRNAME];
-                snprintf(fnameTXT, sizeof(fnameTXT),
-                               "%s/%s.txt",
-                               datadirstream,
-                               datfile[idatfile].name);
+                snprintf(fnameTXT, sizeof(fnameTXT), "%s/%s.txt", datadirstream,
+                         datfile[idatfile].name);
                 printf("----------------------[%d] LOADING FILE %s\n", idatfile, fnameTXT);
-                double dtin = (datfile[idatfile].tend - datfile[idatfile].tstart)/(datfile[idatfile].cnt-1);
-                printf("    dtin    = %.9lf sec  (%f Hz)\n", dtin, 1.0/dtin);
-                printf("    latency = %.9f sec  (%f frame)\n", *slatency[sindex], *slatency[sindex]/dtin);
+                double dtin = (datfile[idatfile].tend - datfile[idatfile].tstart) /
+                              (datfile[idatfile].cnt - 1);
+                printf("    dtin    = %.9lf sec  (%f Hz)\n", dtin, 1.0 / dtin);
+                printf("    latency = %.9f sec  (%f frame)\n", *slatency[sindex],
+                       *slatency[sindex] / dtin);
 
 
                 // PREPARE MAPPING COMMANDS
@@ -771,67 +734,63 @@ static errno_t compute_function()
                 long frameinmin = datfile[idatfile].cnt;
                 long frameinmax = 0;
 
-                long maxNBcmd = 100000;
-                long cmdindex = 0;
-                long *mapping_orig = (long*) malloc(sizeof(long)*maxNBcmd); // input
-                long *mapping_dest = (long*) malloc(sizeof(long)*maxNBcmd); // output
-                double *mapping_coeff = (double*) malloc(sizeof(double)*maxNBcmd);
+                long    maxNBcmd      = 100000;
+                long    cmdindex      = 0;
+                long   *mapping_orig  = (long *) malloc(sizeof(long) * maxNBcmd); // input
+                long   *mapping_dest  = (long *) malloc(sizeof(long) * maxNBcmd); // output
+                double *mapping_coeff = (double *) malloc(sizeof(double) * maxNBcmd);
 
 
-                double *tarrayin = (double*) malloc(sizeof(double)*datfile[idatfile].cnt);
+                double *tarrayin = (double *) malloc(sizeof(double) * datfile[idatfile].cnt);
 
 
                 {
                     char fnameTXTout[STRINGMAXLEN_FULLFILENAME];
-                    WRITE_FULLFILENAME(fnameTXTout,
-                                   "%s.out.txt",
-                                   datfile[idatfile].name);
-                    if(*lintiming[sindex] == 1)
+                    WRITE_FULLFILENAME(fnameTXTout, "%s.out.txt", datfile[idatfile].name);
+                    if (*lintiming[sindex] == 1)
                     {
-                        processTimingFile(fnameTXT,
-                            fnameTXTout,
-                            sname[sindex],
-                            PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_LINTIMING|PROCESSTIMINGFLAG_WRITE,
-                            tarrayin);
+                        processTimingFile(fnameTXT, fnameTXTout, sname[sindex],
+                                          PROCESSTIMINGFLAG_LOAD | PROCESSTIMINGFLAG_LINTIMING |
+                                              PROCESSTIMINGFLAG_WRITE,
+                                          tarrayin);
                     }
                     else
                     {
-                        processTimingFile(fnameTXT,
-                            fnameTXTout,
-                            sname[sindex],
-                            PROCESSTIMINGFLAG_LOAD|PROCESSTIMINGFLAG_WRITE,
-                            tarrayin);
+                        processTimingFile(fnameTXT, fnameTXTout, sname[sindex],
+                                          PROCESSTIMINGFLAG_LOAD | PROCESSTIMINGFLAG_WRITE,
+                                          tarrayin);
                     }
                 }
 
 
                 // increments if input frame falls withing output cube
                 long NBinframeOK = 0;
-                for ( long framein=0; framein < datfile[idatfile].cnt; framein++)
+                for (long framein = 0; framein < datfile[idatfile].cnt; framein++)
                 {
                     // Unix times
                     double inframetimestart = (tarrayin[framein] - dtin) - *slatency[sindex];
                     double inframetimeend   = (tarrayin[framein]) - *slatency[sindex];
 
                     printf("%4ld   %.3f\n", framein, tarrayin[framein]);
-                    printf("  inframetimestart/end:  %.3f %.3f\n", inframetimestart, inframetimeend);
+                    printf("  inframetimestart/end:  %.3f %.3f\n", inframetimestart,
+                           inframetimeend);
 
                     // remap timing to frame index
-                    double findexframestart = (inframetimestart - outtimestart)/(*timingdt);
-                    double findexframeend   = (inframetimeend   - outtimestart)/(*timingdt);
+                    double findexframestart = (inframetimestart - outtimestart) / (*timingdt);
+                    double findexframeend   = (inframetimeend - outtimestart) / (*timingdt);
 
                     // if frame falls within output cube
-                    if((findexframeend > 0) && (findexframestart < zsizeout))
+                    if ((findexframeend > 0) && (findexframestart < zsizeout))
                     {
                         NBinframeOK++;
                         //printf("input file %3d frame %4ld maps to output frame range [%f - %f]\n",
                         //       idatfile, framein, findexframestart, findexframeend);
                         long frameout0 = (long) (findexframestart);
-                        long frameout1 = (long) (findexframeend+1.0);
-                        for(long frameout=frameout0; frameout < frameout1; frameout++)
+                        long frameout1 = (long) (findexframeend + 1.0);
+                        for (long frameout = frameout0; frameout < frameout1; frameout++)
                         {
-                            double istart = 1.0*frameout;
-                            double iend = 1.0*(frameout+1);
+                            double istart = 1.0 * frameout;
+                            double iend   = 1.0 * (frameout + 1);
                             if (findexframestart > istart)
                             {
                                 istart = findexframestart;
@@ -842,31 +801,28 @@ static errno_t compute_function()
                             }
                             double expfrac = iend - istart;
 
-                            if((frameout>-1)&&(frameout < zsizeout))
+                            if ((frameout > -1) && (frameout < zsizeout))
                             {
-                                printf("  [%3d / %3d]  %4ld/%4ld  -> %4ld/%4ld    %4ld:%4ld    %8.6f  \n",
-                                       idatfile,
-                                       NBdatFiles,
-                                       framein, datfile[idatfile].cnt,
-                                       frameout, zsizeout,
-                                       frameout0, frameout1,
-                                       expfrac);
-                                mapping_orig[cmdindex] = framein;
-                                mapping_dest[cmdindex] = frameout;
+                                printf("  [%3d / %3d]  %4ld/%4ld  -> %4ld/%4ld    %4ld:%4ld    "
+                                       "%8.6f  \n",
+                                       idatfile, NBdatFiles, framein, datfile[idatfile].cnt,
+                                       frameout, zsizeout, frameout0, frameout1, expfrac);
+                                mapping_orig[cmdindex]  = framein;
+                                mapping_dest[cmdindex]  = frameout;
                                 mapping_coeff[cmdindex] = expfrac;
 
                                 outframearray[frameout].etimeframe += expfrac;
-                                outframearray[frameout].etimesec += expfrac*dtin;
+                                outframearray[frameout].etimesec += expfrac * dtin;
 
-                                cmdindex ++;
+                                cmdindex++;
                             }
 
-                            if( framein < frameinmin)
+                            if (framein < frameinmin)
                             {
                                 frameinmin = framein;
                             }
 
-                            if( framein > frameinmax)
+                            if (framein > frameinmax)
                             {
                                 frameinmax = framein;
                             }
@@ -884,37 +840,29 @@ static errno_t compute_function()
 
                 // RUN MAPPING COMMANDS
                 //
-                if(NBinframeOK>0)
+                if (NBinframeOK > 0)
                 {
-
                     // load relevant section of input data cube
                     //
                     imageID IDc;
-                    char fnameFITS[STRINGMAXLEN_FULLFILENAME + STRINGMAXLEN_DIRNAME + 128];
-                    snprintf(fnameFITS, sizeof(fnameFITS),
-                                   "%s/%s%s.fits[*,*,%ld:%ld]",
-                                   datadirstream,
-                                   datfile[idatfile].name,
-                                   stag[sindex],
-                                   frameinmin+1,
-                                   frameinmax+1);
+                    char    fnameFITS[STRINGMAXLEN_FULLFILENAME + STRINGMAXLEN_DIRNAME + 128];
+                    snprintf(fnameFITS, sizeof(fnameFITS), "%s/%s%s.fits[*,*,%ld:%ld]",
+                             datadirstream, datfile[idatfile].name, stag[sindex], frameinmin + 1,
+                             frameinmax + 1);
 
                     printf("----------------------[%d] LOADING FILE %s\n", idatfile, fnameFITS);
                     load_fits(fnameFITS, "im0C", 1, &IDc);
 
 
-                    uint32_t xsize = dcimg[IDc].md->size[0];
-                    uint32_t ysize = dcimg[IDc].md->size[1];
+                    uint32_t xsize   = dcimg[IDc].md->size[0];
+                    uint32_t ysize   = dcimg[IDc].md->size[1];
                     uint32_t zsizein = dcimg[IDc].md->size[2];
-                    uint64_t xysize = xsize;
+                    uint64_t xysize  = xsize;
                     xysize *= ysize;
 
-                    if(ouputimginit == 0)
+                    if (ouputimginit == 0)
                     {
-                        imgout = imgid_make_from_name_3D(sname[sindex],
-                            xsize,
-                            ysize,
-                            zsizeout);
+                        imgout = imgid_make_from_name_3D(sname[sindex], xsize, ysize, zsizeout);
                         createimagefromIMGID(&imgout);
                         ouputimginit = 1;
                     }
@@ -923,21 +871,23 @@ static errno_t compute_function()
 
                     list_image_ID();
 
-                    for ( long cmdindex=0; cmdindex < maxNBcmd; cmdindex++)
+                    for (long cmdindex = 0; cmdindex < maxNBcmd; cmdindex++)
                     {
                         mapping_orig[cmdindex] -= frameinmin;
-                        if((mapping_dest[cmdindex]>-1)&&(mapping_dest[cmdindex]<zsizeout))
-
+                        if ((mapping_dest[cmdindex] > -1) && (mapping_dest[cmdindex] < zsizeout))
+                        {
                             printf("mapping slice %5ld/%5d (%d x %d) to %5ld/%5ld (%d x %d)\n",
-                                   mapping_orig[cmdindex], zsizein, dcimg[IDc].md->size[0], dcimg[IDc].md->size[1],
-                                   mapping_dest[cmdindex], zsizeout, imgout.im->md->size[0], imgout.im->md->size[1] );
+                                   mapping_orig[cmdindex], zsizein, dcimg[IDc].md->size[0],
+                                   dcimg[IDc].md->size[1], mapping_dest[cmdindex], zsizeout,
+                                   imgout.im->md->size[0], imgout.im->md->size[1]);
+                        }
 
                         //printf("CMD %4ld / %4ld : %3ld -> %3ld\n", cmdindex, maxNBcmd, mapping_orig[cmdindex], mapping_dest[cmdindex]);
 
-                        switch(dcimg[IDc].md->datatype)
+                        switch (dcimg[IDc].md->datatype)
                         {
                         case _DATATYPE_UINT8:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -946,7 +896,7 @@ static errno_t compute_function()
                             break;
 
                         case _DATATYPE_INT8:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -955,7 +905,7 @@ static errno_t compute_function()
                             break;
 
                         case _DATATYPE_UINT16:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -964,7 +914,7 @@ static errno_t compute_function()
                             break;
 
                         case _DATATYPE_INT16:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -973,7 +923,7 @@ static errno_t compute_function()
                             break;
 
                         case _DATATYPE_UINT32:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -982,7 +932,7 @@ static errno_t compute_function()
                             break;
 
                         case _DATATYPE_INT32:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -991,7 +941,7 @@ static errno_t compute_function()
                             break;
 
                         case _DATATYPE_UINT64:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -1000,7 +950,7 @@ static errno_t compute_function()
                             break;
 
                         case _DATATYPE_INT64:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -1009,7 +959,7 @@ static errno_t compute_function()
                             break;
 
                         case _DATATYPE_FLOAT:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -1018,7 +968,7 @@ static errno_t compute_function()
                             break;
 
                         case _DATATYPE_DOUBLE:
-                            for(uint64_t ii = 0; ii < xysize; ii++)
+                            for (uint64_t ii = 0; ii < xysize; ii++)
                             {
                                 imgout.im->array.F[xysize * mapping_dest[cmdindex] + ii] +=
                                     mapping_coeff[cmdindex] *
@@ -1029,14 +979,10 @@ static errno_t compute_function()
                         default:
                             list_image_ID();
                             PRINT_ERROR("datatype value not recognised");
-                            printf("ID %ld  datatype = %d\n",
-                                   IDc,
-                                   dcimg[IDc].md[0].datatype);
+                            printf("ID %ld  datatype = %d\n", IDc, dcimg[IDc].md[0].datatype);
                             exit(0);
                             break;
                         }
-
-
                     }
 
                     list_image_ID();
@@ -1068,12 +1014,10 @@ static errno_t compute_function()
                 FILE *fptimingout = fopen("timing.sync.txt", "w");
                 fprintf(fptimingout, "# outframe   etimeframe   etimesec\n");
 
-                for(long tstep = 0; tstep < zsizeout; tstep++)
+                for (long tstep = 0; tstep < zsizeout; tstep++)
                 {
-                    fprintf(fptimingout, "%4ld   %6.3f  %9.6f\n",
-                           tstep,
-                           outframearray[tstep].etimeframe,
-                           outframearray[tstep].etimesec);
+                    fprintf(fptimingout, "%4ld   %6.3f  %9.6f\n", tstep,
+                            outframearray[tstep].etimeframe, outframearray[tstep].etimesec);
                 }
                 fclose(fptimingout);
             }
@@ -1085,15 +1029,12 @@ static errno_t compute_function()
             printf("Free datfile\n");
             fflush(stdout);
             free(datfile);
-
         }
     }
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-
-
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
@@ -1104,8 +1045,10 @@ static errno_t compute_function()
 
 
 #ifndef FPS_STANDALONE
-static errno_t CLIfunction() {
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings, compute_function);
+static errno_t CLIfunction()
+{
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 // Register function in CLI

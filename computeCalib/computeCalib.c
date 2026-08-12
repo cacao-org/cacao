@@ -10,8 +10,7 @@
  */
 
 #define MODULE_SHORTNAME_DEFAULT "cacaocc"
-#define MODULE_DESCRIPTION \
-    "AO loop control compute calibration"
+#define MODULE_DESCRIPTION "AO loop control compute calibration"
 #define MODULE_APPLICATION "cacao-cli"
 
 #define _GNU_SOURCE
@@ -40,76 +39,43 @@ INIT_MODULE_LIB(AOloopControl_computeCalib)
  *  CMD 1: aolHaddec (4 args)
  * ============================================================ */
 
-static char p_inrm[
-    FUNCTION_PARAMETER_STRMAXLEN]
-    = "imRMh";
-static char p_hmat[
-    FUNCTION_PARAMETER_STRMAXLEN]
-    = "Hmat";
-static char p_pixidx[
-    FUNCTION_PARAMETER_STRMAXLEN]
-    = "pixiind";
-static char p_outrm[
-    FUNCTION_PARAMETER_STRMAXLEN]
-    = "imRM";
+static char p_inrm[FUNCTION_PARAMETER_STRMAXLEN]   = "imRMh";
+static char p_hmat[FUNCTION_PARAMETER_STRMAXLEN]   = "Hmat";
+static char p_pixidx[FUNCTION_PARAMETER_STRMAXLEN] = "pixiind";
+static char p_outrm[FUNCTION_PARAMETER_STRMAXLEN]  = "imRM";
 
 static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "aolHaddec",
-    .cmdkey      = "aolHaddec",
-    .description =
-        "decode Hadamard matrix",
-    .description_long =
-        "Decode Hadamard-encoded response matrix measurements. Applies the inverse Hadamard transform to recover per-actuator responses."
+    .fps_name         = "aolHaddec",
+    .cmdkey           = "aolHaddec",
+    .description      = "decode Hadamard matrix",
+    .description_long = "Decode Hadamard-encoded response matrix measurements. Applies the inverse "
+                        "Hadamard transform to recover per-actuator responses."
 };
 
-#define FPS_PARAMS(X) \
-    X(".inrm", p_inrm, \
-      FPTYPE_STREAMNAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "input RM") \
-    X(".hmat", p_hmat, \
-      FPTYPE_STREAMNAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "Hadamard matrix") \
-    X(".pixidx", p_pixidx, \
-      FPTYPE_STREAMNAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "DM pixel index frame") \
-    X(".outrm", p_outrm, \
-      FPTYPE_STRING, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "output RM")
+#define FPS_PARAMS(X)                                                                          \
+    X(".inrm", p_inrm, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "input RM")                 \
+    X(".hmat", p_hmat, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "Hadamard matrix")          \
+    X(".pixidx", p_pixidx, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "DM pixel index frame") \
+    X(".outrm", p_outrm, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "output RM")
 
-static FPS_CLI_BINDING my_bindings[] = {
-    FPS_PARAMS(FPS_X_BINDING)
-};
-static const int nb_bindings =
-    sizeof(my_bindings) /
-    sizeof(FPS_CLI_BINDING);
+static FPS_CLI_BINDING my_bindings[] = { FPS_PARAMS(FPS_X_BINDING) };
+static const int       nb_bindings   = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
 
-static CLICMDARGDEF farg[] = {
-    FPS_PARAMS(FPS_X_FARG)
-};
+static CLICMDARGDEF farg[] = { FPS_PARAMS(FPS_X_FARG) };
 
-static CLICMDDATA CLIcmddata = {
-    "", "", CLICMD_FIELDS_DEFAULTS
-};
+static CLICMDDATA CLIcmddata = { "", "", CLICMD_FIELDS_DEFAULTS };
 FPS_CMDSETTINGS_INIT(main, CLIcmddata, FPS_app_info)
 
 static errno_t compute_function()
 {
-    AOloopControl_computeCalib_Hadamard_decodeRM(
-        p_inrm, p_hmat,
-        p_pixidx, p_outrm);
+    AOloopControl_computeCalib_Hadamard_decodeRM(p_inrm, p_hmat, p_pixidx, p_outrm);
     return RETURN_SUCCESS;
 }
 
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 
@@ -119,13 +85,10 @@ static errno_t CLIfunction(void)
 
 static errno_t init_module_CLI()
 {
-    safe_fps_fill_farg_examples(
-        farg, my_bindings, nb_bindings);
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
     {
-        int cmdi = RegisterCLIcmd(
-            CLIcmddata, CLIfunction);
-        CLIcmddata.cmdsettings =
-            &data.cmd[cmdi].cmdsettings;
+        int cmdi               = RegisterCLIcmd(CLIcmddata, CLIfunction);
+        CLIcmddata.cmdsettings = &data.cmd[cmdi].cmdsettings;
     }
 
     CLIADDCMD_cacao_computeCalib__compute_control_modes();

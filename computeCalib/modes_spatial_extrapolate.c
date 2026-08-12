@@ -11,38 +11,32 @@
 #include <stdio.h>
 
 #ifdef MILK_NO_CLI
-#include "CLIcore_standalone.h"
+#    include "CLIcore_standalone.h"
 #else
-#include "CLIcore.h"
+#    include "CLIcore.h"
 #endif
 #include "COREMOD_memory/COREMOD_memory.h"
 
 
-errno_t modes_spatial_extrapolate(IMGID imgmodes,
-                                  IMGID imgmask,
-                                  IMGID imgcpa,
-                                  IMGID *imgoutmodes)
+errno_t modes_spatial_extrapolate(IMGID imgmodes, IMGID imgmask, IMGID imgcpa, IMGID *imgoutmodes)
 {
     DEBUG_TRACE_FSTART();
 
     printf("extrapolate ...\n");
 
-    resolveIMGID(
-        &imgmodes, ERRMODE_WARN,
-        dcimg, dcnimg);
-    if (imgmodes.ID == -1) {
+    resolveIMGID(&imgmodes, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgmodes.ID == -1)
+    {
         return RETURN_FAILURE;
     }
-    resolveIMGID(
-        &imgmask, ERRMODE_WARN,
-        dcimg, dcnimg);
-    if (imgmask.ID == -1) {
+    resolveIMGID(&imgmask, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgmask.ID == -1)
+    {
         return RETURN_FAILURE;
     }
-    resolveIMGID(
-        &imgcpa, ERRMODE_WARN,
-        dcimg, dcnimg);
-    if (imgcpa.ID == -1) {
+    resolveIMGID(&imgcpa, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgcpa.ID == -1)
+    {
         return RETURN_FAILURE;
     }
 
@@ -55,18 +49,18 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
     uint32_t ysize  = imgmodes.md->size[1];
     uint64_t xysize = ((uint64_t) xsize) * ysize;
 
-    for(uint32_t ii = 0; ii < xsize; ii++)
+    for (uint32_t ii = 0; ii < xsize; ii++)
     {
-        for(uint32_t jj = 0; jj < ysize; jj++)
+        for (uint32_t jj = 0; jj < ysize; jj++)
         {
             // initialize mindist to maximum possible distance
             double mindist = 1.0 * xsize + 1.0 * ysize;
 
-            for(uint32_t ii1 = 0; ii1 < xsize; ii1++)
+            for (uint32_t ii1 = 0; ii1 < xsize; ii1++)
             {
-                for(uint32_t jj1 = 0; jj1 < ysize; jj1++)
+                for (uint32_t jj1 = 0; jj1 < ysize; jj1++)
                 {
-                    if(imgmask.im->array.F[jj1 * xsize + ii1] > 0.5)
+                    if (imgmask.im->array.F[jj1 * xsize + ii1] > 0.5)
                     {
                         double dii = (double) ii1 - (double) ii;
                         double djj = (double) jj1 - (double) jj;
@@ -78,7 +72,7 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
 
                         double r = sqrt(r2);
 
-                        if(r < mindist)
+                        if (r < mindist)
                         {
                             mindist = r;
                         }
@@ -92,18 +86,18 @@ errno_t modes_spatial_extrapolate(IMGID imgmodes,
     // save_fits("pmindist", "pmindist.fits");
 
 
-    for(uint32_t kk = 0; kk < imgmodes.md->size[2]; kk++)
+    for (uint32_t kk = 0; kk < imgmodes.md->size[2]; kk++)
     {
-        for(uint32_t ii = 0; ii < xsize; ii++)
+        for (uint32_t ii = 0; ii < xsize; ii++)
         {
-            for(uint32_t jj = 0; jj < ysize; jj++)
+            for (uint32_t jj = 0; jj < ysize; jj++)
             {
                 uint64_t pindex = ((uint64_t) jj) * xsize + ii;
 
                 double coeff = imgpixmdist.im->array.F[pindex];
                 coeff /= (1.0 * xsize / (imgcpa.im->array.F[kk] + 0.1) * 0.8);
                 coeff = (exp(-coeff * coeff) - exp(-1.0)) / (1.0 - exp(-1.0));
-                if(coeff < 0.0)
+                if (coeff < 0.0)
                 {
                     coeff = 0.0;
                 }

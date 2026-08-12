@@ -5,13 +5,14 @@ These are notes for running MAPs as of the 2023 May/June run. References to simu
 ## Streams
 
 Milk commands for keeping tabs on streams:
+
 - `milk-streamCTRL`
-    - x => exit the viewer
+  - x => exit the viewer
 - `milk-fpsCTRL` => "Function Parameter monitor" can set params and run proc from here
-    - shift + R => starts a process
-    - ctrl + R => ends a process
-    - enter => changes a value
-    - space => to run thing within menues
+  - shift + R => starts a process
+  - ctrl + R => ends a process
+  - enter => changes a value
+  - space => to run thing within menues
 - `milk-procCTRL` => what processes are actively running
 
 How to check a specific stream?
@@ -35,9 +36,9 @@ go to the root directory
 connect to hardware
 <br> `./scripts/aorun-setmode-hardw`
 
-
 ## CHAI: Setting up
-(not a part  of this package, MAPs specific)
+
+(not a part of this package, MAPs specific)
 
 ```bash
 chai
@@ -47,8 +48,10 @@ chai
 > viswfs.enable # starting the wfs streams
 > cacao.enable
 ```
+
 Once chai has been started, we can look at wfs streams
-``` bash
+
+```bash
 rtimview viswfs_slopes &
 rtimview viswfs_pupils &
 ```
@@ -66,20 +69,24 @@ Start WFS fram aquisition
 ### DM to WFS latency
 
 Running from command line:
+
 ```bash
 # option -w is to wait for completion
 cacao-aorun-020-mlat -w
 ```
 
 Running from fpsCTRL:
-<br>    shift + R `mlat`
+<br> shift + R `mlat`
 
 Viewing latency:
-``` bash
+
+```bash
 gnuplot
 plot "maps-rundir/fps.mlat-2.datadir/hardwlatency.dat" u 2:3
 ```
+
 can check `mlat-> out -> latencyfr`
+
 - we expect this to be about 2 frames, around 5 frames we know would be noise
 
 ### Response Matrix Aquisition
@@ -98,21 +105,26 @@ Can add our own poke modes in this folder
 ```bash
 cacao-aorun-030-acqlinResp -n 6 -w HpokeC
 ```
+
 - Acquires response matrix - Hadamard modes
 - -n 6 cycles - default is 10.
 
 If this is a hadamar mode, you'll need to decode:
+
 ```bash
 cacao-aorun-032-RMmkmask -dmc0 0.0 -dmc1 0.0
 ```
+
 Check results:
+
 - conf/dmmask.fits
 - conf/wfsmask.fits
 
 How to do this in fpsCTRL:
- - shift + R `measlinreps-2`
- - edit `measlinreps -> inmodes` to change poke matrix
- - `measlinresp ->ampl -> 200` for most recent MAPs params
+
+- shift + R `measlinreps-2`
+- edit `measlinreps -> inmodes` to change poke matrix
+- `measlinresp ->ampl -> 200` for most recent MAPs params
 
 #### Compute control matrix
 
@@ -123,24 +135,27 @@ cacao-fpsctrl setval compstrCM svdlim 0.01
 ```
 
 Then run the compstrCM process to compute CM and load it to shared memory :
+
 ```bash
 cacao-aorun-039-compstrCM
 ```
 
 Inspect result:
+
 - ds9 conf/CMmodesDM/CMmodesDM.fits # these are still in a 1D image
 - ds9 conf/CMmodesWFS/CMmodesWFS.fits
 
 ## Running the loop
 
-
 Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
+
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 99
 cacao-fpsctrl setval mvalC2dm GPUindex 99
 ```
 
 Start the 3 loop processes
+
 ```bash
 # start WFS -> mode coefficient values
 cacao-aorun-050-wfs2cmval start
@@ -151,6 +166,7 @@ cacao-aorun-060-mfilt start
 # start mode coeff values -> DM
 cacao-aorun-070-cmval2dm start
 ```
+
 Closing the loop and setting loop parameters with mfilt:
 
 ```bash
@@ -166,16 +182,16 @@ cacao-fpsctrl setval mfilt loopON ON
 ```
 
 Alternatively, on the fpsCTRL
+
 - shift + R `wfs2cmodeval`
 - shift + R `mfilt`
 - shift + R `mvalC2dm`
 - edit values in `mfilt`
-   - `mfilt -> loopgain -> 0.1`
-   - `mfilt -> loopmult -> 0.98`
+  - `mfilt -> loopgain -> 0.1`
+  - `mfilt -> loopmult -> 0.98`
 - spacebar `mfilt -> loopON -> ON`
 
 ## Testing the loop (selfRM)
-
 
 ```bash
 # Set max number of modes above nbmodes
@@ -189,7 +205,6 @@ cacao-fpsctrl setval mfilt selfRM.enable ON
 
 Check result: maps-rundir/selfRM.fits
 
-
 # Cleanup
 
 From main directory (upstream of rootdir) :
@@ -198,8 +213,5 @@ From main directory (upstream of rootdir) :
 cacao-task-manager -C 0 MAPS-vispyr
 rm -rf .maps.cacaotaskmanager-log
 ```
-
-
-
 
 THE END

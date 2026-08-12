@@ -1,6 +1,4 @@
-# List of shared memory streams and semaphores     {#streams_semaphores}
-
-
+# List of shared memory streams and semaphores {#streams_semaphores}
 
 ## aolx_imWFS0
 
@@ -9,7 +7,6 @@
 Posted by process aolrun, after dark subtracted from aolx_wfsim
 
 Wait:
-
 
 - sem0: -
 - sem1: -
@@ -21,6 +18,5 @@ Wait:
 - sem7: -
 - sem8: -
 - sem9: -
-
 
 ## aolx_

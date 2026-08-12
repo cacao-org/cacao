@@ -1,7 +1,5 @@
 # Configuring and Running cacao {#page_cacao_top_guide}
 
-
-
 - @subpage page_cacao_stepbystep_example
 
 - @subpage page_cacao_Initial_Setup

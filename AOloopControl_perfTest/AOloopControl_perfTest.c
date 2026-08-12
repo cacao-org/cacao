@@ -64,8 +64,8 @@
 
 
 #ifdef _OPENMP
-#include <omp.h>
-#define OMP_NELEMENT_LIMIT 1000000
+#    include <omp.h>
+#    define OMP_NELEMENT_LIMIT 1000000
 #endif
 
 #define MaxNBdatFiles 100000
@@ -85,8 +85,6 @@ INIT_MODULE_LIB(AOloopControl_perfTest)
 
 static errno_t init_module_CLI()
 {
-
-
     CLIADDCMD_AOloopControl_perfTest__compRMsensitivity();
     CLIADDCMD_AOloopControl_perfTest__mlat();
     CLIADDCMD_AOloopControl_perfTest__mlat_decode();
@@ -623,14 +621,14 @@ errno_t AOloopControl_perfTest_StatAnalysis_2streams(char *IDname_stream0,
  */
 
 errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
-        char *IDnamePSF,
-        float frac,
-        long  x0,
-        long  x1,
-        long  y0,
-        long  y1,
-        int   EvalMode,
-        float alpha)
+                                                              char *IDnamePSF,
+                                                              float frac,
+                                                              long  x0,
+                                                              long  x1,
+                                                              long  y0,
+                                                              long  y1,
+                                                              int   EvalMode,
+                                                              float alpha)
 {
     imageID IDwfs;
     imageID IDpsf;
@@ -657,14 +655,14 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     NBframe = dcimg[IDwfs].md[0].size[2];
 
     evalarray = (double *) malloc(sizeof(double) * NBframe);
-    if(evalarray == NULL)
+    if (evalarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
     indexarray = (long *) malloc(sizeof(long) * NBframe);
-    if(indexarray == NULL)
+    if (indexarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
@@ -676,19 +674,19 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     y0t = y0;
     y1t = y1;
 
-    if(x0 < 0)
+    if (x0 < 0)
     {
         x0t = x0;
     }
-    if(x1 > xsizepsf - 1)
+    if (x1 > xsizepsf - 1)
     {
         x1t = xsizepsf - 1;
     }
-    if(y0 < 0)
+    if (y0 < 0)
     {
         y0t = y0;
     }
-    if(y1 > ysizepsf - 1)
+    if (y1 > ysizepsf - 1)
     {
         y1t = ysizepsf - 1;
     }
@@ -697,23 +695,24 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
 
     long kk;
     IDpsfmask = image_ID("PSFmask", dcimg, dcnimg);
-    if(IDpsfmask != -1)
+    if (IDpsfmask != -1)
     {
-        for(kk = 0; kk < NBframe; kk++)
+        for (kk = 0; kk < NBframe; kk++)
         {
             long ii, jj;
 
-            for(ii = x0t; ii < x1t; ii++)
-                for(jj = y0t; jj < y1t; jj++)
+            for (ii = x0t; ii < x1t; ii++)
+            {
+                for (jj = y0t; jj < y1t; jj++)
                 {
-                    dcimg[IDpsf]
-                    .array.F[kk * xysizepsf + jj * xsizepsf + ii] *=
+                    dcimg[IDpsf].array.F[kk * xysizepsf + jj * xsizepsf + ii] *=
                         dcimg[IDpsfmask].array.F[jj * xsizepsf + ii];
                 }
+            }
         }
     }
 
-    for(kk = 0; kk < NBframe; kk++)
+    for (kk = 0; kk < NBframe; kk++)
     {
         long   ii, jj;
         double sum  = 0.0;
@@ -721,22 +720,23 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
 
         indexarray[kk] = kk;
 
-        for(ii = x0t; ii < x1t; ii++)
-            for(jj = y0t; jj < y1t; jj++)
+        for (ii = x0t; ii < x1t; ii++)
+        {
+            for (jj = y0t; jj < y1t; jj++)
             {
                 float tval;
-                tval = dcimg[IDpsf]
-                       .array.F[kk * xysizepsf + jj * xsizepsf + ii];
-                if(tval < 0.0)
+                tval = dcimg[IDpsf].array.F[kk * xysizepsf + jj * xsizepsf + ii];
+                if (tval < 0.0)
                 {
                     tval = 0.0;
                 }
                 sum += tval;
                 ssum += powf(tval, alpha);
             }
+        }
 
         // best frame
-        switch(EvalMode)
+        switch (EvalMode)
         {
         case 0:
             evalarray[kk] = -(ssum / (powf(sum, alpha)));
@@ -768,64 +768,62 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
     create_2Dimage_ID("impsfall", xsizepsf, ysizepsf, &IDpsfall);
 
     long kklim;
-    kklim = (long)(frac * NBframe);
+    kklim = (long) (frac * NBframe);
 
     printf("kklim = %ld     %ld %ld\n", kklim, xysizewfs, xysizepsf);
 
     FILE *fp = fopen("fptest.txt", "w");
-    for(kk = 0; kk < NBframe; kk++)
+    for (kk = 0; kk < NBframe; kk++)
     {
         long ii;
 
         fprintf(fp, "%6ld  %6ld  %g\n", kk, indexarray[kk], evalarray[kk]);
 
-        if(kk < kklim)
+        if (kk < kklim)
         {
-            for(ii = 0; ii < xysizewfs; ii++)
+            for (ii = 0; ii < xysizewfs; ii++)
             {
                 dcimg[IDwfsbest].array.F[ii] +=
                     dcimg[IDwfs].array.F[indexarray[kk] * xysizewfs + ii];
             }
 
-            for(ii = 0; ii < xysizepsf; ii++)
+            for (ii = 0; ii < xysizepsf; ii++)
             {
                 dcimg[IDpsfbest].array.F[ii] +=
                     dcimg[IDpsf].array.F[indexarray[kk] * xysizepsf + ii];
             }
         }
 
-        for(ii = 0; ii < xysizewfs; ii++)
+        for (ii = 0; ii < xysizewfs; ii++)
         {
-            dcimg[IDwfsall].array.F[ii] +=
-                dcimg[IDwfs].array.F[kk * xysizewfs + ii];
+            dcimg[IDwfsall].array.F[ii] += dcimg[IDwfs].array.F[kk * xysizewfs + ii];
         }
 
-        for(ii = 0; ii < xysizepsf; ii++)
+        for (ii = 0; ii < xysizepsf; ii++)
         {
-            dcimg[IDpsfall].array.F[ii] +=
-                dcimg[IDpsf].array.F[kk * xysizepsf + ii];
+            dcimg[IDpsfall].array.F[ii] += dcimg[IDpsf].array.F[kk * xysizepsf + ii];
         }
     }
     fclose(fp);
 
     long ii;
 
-    for(ii = 0; ii < xysizewfs; ii++)
+    for (ii = 0; ii < xysizewfs; ii++)
     {
         dcimg[IDwfsbest].array.F[ii] /= kklim;
     }
 
-    for(ii = 0; ii < xysizepsf; ii++)
+    for (ii = 0; ii < xysizepsf; ii++)
     {
         dcimg[IDpsfbest].array.F[ii] /= kklim;
     }
 
-    for(ii = 0; ii < xysizewfs; ii++)
+    for (ii = 0; ii < xysizewfs; ii++)
     {
         dcimg[IDwfsall].array.F[ii] /= NBframe;
     }
 
-    for(ii = 0; ii < xysizepsf; ii++)
+    for (ii = 0; ii < xysizepsf; ii++)
     {
         dcimg[IDpsfall].array.F[ii] /= NBframe;
     }

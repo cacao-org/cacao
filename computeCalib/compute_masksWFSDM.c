@@ -23,15 +23,14 @@
 
 #include "info/info.h"
 
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "compmasksWFSDM",
-    .cmdkey      = "compmasksWFSDM",
-    .description = "compute WFS and DM masks",
-    .description_long =
-        "Compute pupil masks for WFS and DM from response matrix data. Identifies active subapertures and actuators."
-};
+static FPS_APP_INFO FPS_app_info = { .fps_name    = "compmasksWFSDM",
+                                     .cmdkey      = "compmasksWFSDM",
+                                     .description = "compute WFS and DM masks",
+                                     .description_long =
+                                         "Compute pupil masks for WFS and DM from response matrix "
+                                         "data. Identifies active subapertures and actuators." };
 
-static char zrespWFS[FUNCTION_PARAMETER_STRMAXLEN];
+static char     zrespWFS[FUNCTION_PARAMETER_STRMAXLEN];
 static uint32_t dmxsize;
 static uint32_t dmysize;
 
@@ -45,18 +44,29 @@ static float wfsmaskcoeff0;
 static float wfsmaskperc1;
 static float wfsmaskcoeff1;
 
-#define FPS_PARAMS(X) \
-    X(".zrespM", zrespWFS, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input zonal WFS RM") \
-    X(".dmxsize", &dmxsize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM x size") \
-    X(".dmysize", &dmysize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "DM y size") \
-    X(".dmmask.perc0", &dmmaskperc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask percentile 0") \
-    X(".dmmask.coeff0", &dmmaskcoeff0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask coefficient 0") \
-    X(".dmmask.perc1", &dmmaskperc1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask percentile 1") \
-    X(".dmmask.coeff1", &dmmaskcoeff1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM mask coefficient 1") \
-    X(".wfsmask.perc0", &wfsmaskperc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask percentile 0") \
-    X(".wfsmask.coeff0", &wfsmaskcoeff0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask coefficient 0") \
-    X(".wfsmask.perc1", &wfsmaskperc1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask percentile 1") \
-    X(".wfsmask.coeff1", &wfsmaskcoeff1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS mask coefficient 1")
+#define FPS_PARAMS(X)                                                                    \
+    X(".zrespM", zrespWFS, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),  \
+      "input zonal WFS RM")                                                              \
+    X(".dmxsize", &dmxsize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
+      "DM x size")                                                                       \
+    X(".dmysize", &dmysize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
+      "DM y size")                                                                       \
+    X(".dmmask.perc0", &dmmaskperc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "DM mask percentile 0")                                                            \
+    X(".dmmask.coeff0", &dmmaskcoeff0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,          \
+      "DM mask coefficient 0")                                                           \
+    X(".dmmask.perc1", &dmmaskperc1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "DM mask percentile 1")                                                            \
+    X(".dmmask.coeff1", &dmmaskcoeff1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,          \
+      "DM mask coefficient 1")                                                           \
+    X(".wfsmask.perc0", &wfsmaskperc0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,          \
+      "WFS mask percentile 0")                                                           \
+    X(".wfsmask.coeff0", &wfsmaskcoeff0, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,        \
+      "WFS mask coefficient 0")                                                          \
+    X(".wfsmask.perc1", &wfsmaskperc1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,          \
+      "WFS mask percentile 1")                                                           \
+    X(".wfsmask.coeff1", &wfsmaskcoeff1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,        \
+      "WFS mask coefficient 1")
 
 FPS_V2_SECTION5(FPS_PARAMS)
 
@@ -66,9 +76,8 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static __attribute__((unused)) errno_t customCONFsetup()
 {
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
-
     }
 
     return RETURN_SUCCESS;
@@ -80,8 +89,7 @@ static __attribute__((unused)) errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
     }
 
@@ -92,8 +100,6 @@ static errno_t customCONFcheck()
 // detailed help
 static __attribute__((unused)) errno_t help_function()
 {
-
-
     return RETURN_SUCCESS;
 }
 
@@ -110,10 +116,10 @@ static errno_t compute_function()
     printf("IDzrm = %ld\n", IDzrm);
     uint32_t sizexWFS = dcimg[IDzrm].md[0].size[0];
     uint32_t sizeyWFS = dcimg[IDzrm].md[0].size[1];
-    uint64_t sizeWFS = sizexWFS;
+    uint64_t sizeWFS  = sizexWFS;
     sizeWFS *= sizeyWFS;
 
-    uint32_t NBpoke   = dcimg[IDzrm].md[0].size[2];
+    uint32_t NBpoke = dcimg[IDzrm].md[0].size[2];
 
 
     imageID IDWFSmap;
@@ -130,13 +136,12 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-
         printf("Preparing DM map ... ");
         fflush(stdout);
-        for(uint32_t poke = 0; poke < NBpoke; poke++)
+        for (uint32_t poke = 0; poke < NBpoke; poke++)
         {
             double rms = 0.0;
-            for(uint64_t ii = 0; ii < sizeWFS; ii++)
+            for (uint64_t ii = 0; ii < sizeWFS; ii++)
             {
                 double tmpv = dcimg[IDzrm].array.F[poke * sizeWFS + ii];
                 rms += tmpv * tmpv;
@@ -148,10 +153,10 @@ static errno_t compute_function()
 
         printf("Preparing WFS map ... ");
         fflush(stdout);
-        for(uint64_t ii = 0; ii < sizeWFS; ii++)
+        for (uint64_t ii = 0; ii < sizeWFS; ii++)
         {
             double rms = 0.0;
-            for(uint32_t poke = 0; poke < NBpoke; poke++)
+            for (uint32_t poke = 0; poke < NBpoke; poke++)
             {
                 double tmpv = dcimg[IDzrm].array.F[poke * sizeWFS + ii];
                 rms += tmpv * tmpv;
@@ -175,15 +180,15 @@ static errno_t compute_function()
 
         imageID IDtmp;
         create_2Dimage_ID("_tmpdmmap", dmxsize, dmysize, &IDtmp);
-        for(uint64_t ii = 0; ii < dmxsize * dmysize; ii++)
+        for (uint64_t ii = 0; ii < dmxsize * dmysize; ii++)
         {
             dcimg[IDtmp].array.F[ii] = dcimg[IDDMmap].array.F[ii] - lim0;
         }
         double lim = dmmaskcoeff1 * img_percentile("_tmpdmmap", dmmaskperc1);
 
-        for(uint32_t poke = 0; poke < NBpoke; poke++)
+        for (uint32_t poke = 0; poke < NBpoke; poke++)
         {
-            if(dcimg[IDtmp].array.F[poke] < lim)
+            if (dcimg[IDtmp].array.F[poke] < lim)
             {
                 dcimg[IDDMmask].array.F[poke] = 0.0;
             }
@@ -202,15 +207,15 @@ static errno_t compute_function()
 
         lim0 = wfsmaskcoeff0 * img_percentile("wfsmap", wfsmaskperc0);
         create_2Dimage_ID("_tmpwfsmap", sizexWFS, sizeyWFS, &IDtmp);
-        for(uint64_t ii = 0; ii < sizexWFS *sizeyWFS; ii++)
+        for (uint64_t ii = 0; ii < sizexWFS * sizeyWFS; ii++)
         {
             dcimg[IDtmp].array.F[ii] = dcimg[IDWFSmap].array.F[ii] - lim0;
         }
         lim = wfsmaskcoeff1 * img_percentile("_tmpwfsmap", wfsmaskperc1);
 
-        for(uint64_t ii = 0; ii < sizeWFS; ii++)
+        for (uint64_t ii = 0; ii < sizeWFS; ii++)
         {
-            if(dcimg[IDWFSmap].array.F[ii] < lim)
+            if (dcimg[IDWFSmap].array.F[ii] < lim)
             {
                 dcimg[IDWFSmask].array.F[ii] = 0.0;
             }
@@ -222,8 +227,6 @@ static errno_t compute_function()
         delete_image_ID("_tmpwfsmap", DELETE_IMAGE_ERRMODE_WARNING);
         printf("done\n");
         fflush(stdout);
-
-
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
@@ -236,15 +239,12 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 // Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl_computeCalib__compmasksWFSDM()
+errno_t CLIADDCMD_AOloopControl_computeCalib__compmasksWFSDM()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
@@ -257,10 +257,9 @@ CLIADDCMD_AOloopControl_computeCalib__compmasksWFSDM()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function,
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
+                                 FPS_PARAMS,
+                                 compute_function,
 
-    customCONFcheck)
+                                 customCONFcheck)
 #endif

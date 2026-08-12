@@ -20,5 +20,4 @@
 void __attribute__((constructor)) libinit_pyramidWFStools();
 
 
-
 #endif

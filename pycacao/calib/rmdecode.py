@@ -10,39 +10,40 @@ import logging
 
 
 def decode_pokes_to_zonal_fitsio(
-        file_in_poke_modes: str,  # conf/RMmodesDM/HpokeC.fits
-        file_in_resp: str,  # conf/RMmodesWFS/HpokeC.WFSresp.fits
-        file_out_zpokes: str,  # conf/RMmodesDM/zpokeC-H.fits
-        file_out_zresp: str,  # conf/RMmodesWFS/zrespM-H.fits
-        *,
-        trim_to_mask: bool = True,
+    file_in_poke_modes: str,  # conf/RMmodesDM/HpokeC.fits
+    file_in_resp: str,  # conf/RMmodesWFS/HpokeC.WFSresp.fits
+    file_out_zpokes: str,  # conf/RMmodesDM/zpokeC-H.fits
+    file_out_zresp: str,  # conf/RMmodesWFS/zrespM-H.fits
+    *,
+    trim_to_mask: bool = True,
 ) -> None:
-    '''
-        Extension of cacaocc.aolHaddec
-        Reconstructs zonal RM from arbitrary set of modes
+    """
+    Extension of cacaocc.aolHaddec
+    Reconstructs zonal RM from arbitrary set of modes
 
-        This file-ified version resembles (and englobes)
-        cacao-aorun-031-RMHdecode
+    This file-ified version resembles (and englobes)
+    cacao-aorun-031-RMHdecode
 
-        file_in_poke_modes:
-            Modes (not pokes) - corresponds to HpokeC.fits
-        file_in_resp:
-            Response obtained through measlinresp - corresponds to HpokeC.WFSresp.fits
+    file_in_poke_modes:
+        Modes (not pokes) - corresponds to HpokeC.fits
+    file_in_resp:
+        Response obtained through measlinresp - corresponds to HpokeC.WFSresp.fits
 
 
-        file_out_zpokes:
-            Zonal poked actuators (<shape>) - corresponds to zpokeC.fits
-        file_out_zreps:
-            Zonal poke response - corresponds to zrespM.fits
+    file_out_zpokes:
+        Zonal poked actuators (<shape>) - corresponds to zpokeC.fits
+    file_out_zreps:
+        Zonal poke response - corresponds to zrespM.fits
 
-    '''
+    """
     poke_modes = fits.getdata(file_in_poke_modes)
     resp_matrix = fits.getdata(file_in_resp)
 
     dm_i, dm_j = poke_modes.shape[1], poke_modes.shape[2]
 
     mask_can_be_controlled, zonal_resp_matrix = decode_pokes_to_zonal(
-            poke_modes, resp_matrix)
+        poke_modes, resp_matrix
+    )
 
     # For compat reasons... we'll see where that gets us.
     if trim_to_mask:
@@ -64,8 +65,8 @@ def decode_pokes_to_zonal_fitsio(
 
 
 def project_zonal_on_modal(
-        modes: np.ndarray,
-        resp_matrix: np.ndarray,
+    modes: np.ndarray,
+    resp_matrix: np.ndarray,
 ):
     # Either ndim == 2 and it's actuator maps
     # Or ndim = 2 and it's modal coefficients
@@ -75,8 +76,7 @@ def project_zonal_on_modal(
     assert resp_matrix.ndim == 3
 
     if modes.ndim == 3:
-        modes_flat = modes.reshape(modes.shape[0],
-                                   modes.shape[1] * modes.shape[2])
+        modes_flat = modes.reshape(modes.shape[0], modes.shape[1] * modes.shape[2])
     else:
         modes_flat = modes
 
@@ -96,18 +96,17 @@ def project_zonal_on_modal(
 
 
 def decode_pokes_to_zonal(
-        poke_modes: np.ndarray,
-        resp_matrix: np.ndarray,
+    poke_modes: np.ndarray,
+    resp_matrix: np.ndarray,
 ) -> np.ndarray:
-    '''
-
-    '''
+    """ """
 
     # Dimension checks
     assert poke_modes.ndim == 3, "poke_modes not 3D"
     assert resp_matrix.ndim == 3, "resp_matrix not 3D"
-    assert poke_modes.shape[0] == resp_matrix.shape[
-            0], "poke_modes / resp_matrix: incompatible shapes."
+    assert (
+        poke_modes.shape[0] == resp_matrix.shape[0]
+    ), "poke_modes / resp_matrix: incompatible shapes."
 
     n_modes = poke_modes.shape[0]
     dm_i, dm_j = poke_modes.shape[1:]
@@ -118,7 +117,7 @@ def decode_pokes_to_zonal(
     resp_matrix_2D = resp_matrix.reshape(n_modes, wfs_i * wfs_j)
 
     # How many independent actuators can we control?
-    _q, _r = np.linalg.qr(poke_modes_2D, 'raw')
+    _q, _r = np.linalg.qr(poke_modes_2D, "raw")
     actu_q = np.sum(_q**2, axis=1)
     QR_TOLERANCING = 1e-6
     mask_actu_ctrl = actu_q > (actu_q.max() * QR_TOLERANCING)
@@ -127,13 +126,14 @@ def decode_pokes_to_zonal(
     assert n_actu_ctrl <= n_modes, "More actuators in span than modes to control them."
 
     logging.info(
-            f"n_actu_ctrl: {n_actu_ctrl} actuators can be controlled [From basis QR dec.]"
+        f"n_actu_ctrl: {n_actu_ctrl} actuators can be controlled [From basis QR dec.]"
     )
 
     # Perform poke inversions to controllable actuators
     inverse_of_pokes = np.zeros_like(poke_modes_2D.T)
     inverse_of_pokes[mask_actu_ctrl, :] = np.linalg.pinv(
-            poke_modes_2D[:, mask_actu_ctrl])
+        poke_modes_2D[:, mask_actu_ctrl]
+    )
 
     # Decode the matrix
     zonal_resp_matrix_2D = inverse_of_pokes @ resp_matrix_2D
@@ -150,5 +150,6 @@ if __name__ == "__main__":  # quick devdebug test
     FILEOUT_zpokeC = "conf/RMmodesDM/zpokeC-H.fits"
     FILEOUT_zrespC = "conf/RMmodesWFS/zrespM-H.fits"
 
-    decode_pokes_to_zonal_fitsio(FILE_HpokeC, FILE_HrespC, FILEOUT_zpokeC,
-                                 FILEOUT_zrespC)
+    decode_pokes_to_zonal_fitsio(
+        FILE_HpokeC, FILE_HrespC, FILEOUT_zpokeC, FILEOUT_zrespC
+    )

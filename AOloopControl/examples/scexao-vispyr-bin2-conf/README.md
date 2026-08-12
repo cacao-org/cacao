@@ -5,15 +5,11 @@ Low-resolution WFS mode (120x120)
 
 This is a (nearly) full-featured example for a single input / single output control loop.
 
-
-
-
 # Running the example
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
 ## 1. Setting up processes
-
 
 ```bash
 # Deploy configuration :
@@ -56,12 +52,14 @@ cd vispyr2-rootdir
 ### Logging and fpsCTRL start
 
 Deploy logging processes and terminals :
+
 ```bash
 cacao-msglogCTRL start
 cacao-msglogCTRL terms
 ```
 
 The command is equivalent to running in seprate windows :
+
 ```bash
 # Start automatic fpsCTRL logging
 cacao-fpsctrl-log -r &
@@ -74,10 +72,10 @@ cacao-log -k "OPNOTES" -i
 ```
 
 Start fpsCTRL terminal
+
 ```bash
 cacao-fpsctrl-TUI
 ```
-
 
 ## 2. Run DM and WFS simulators
 
@@ -93,16 +91,13 @@ cacao-aorun-001-dmsim start
 cacao-aorun-002-simwfs -w start
 ```
 
-
-
 ## 3. Measure WFS dark
 
-
 Takes dark, stores it into aolX_wfsdarkraw, with aolX_wfsdark pointing to it.
+
 ```bash
 cacao-aorun-005-takedark -n 2000
 ```
-
 
 ## 4. Start WFS acquisition
 
@@ -127,10 +122,7 @@ The reference is acquired here and immediately applied through the acquWFS proce
 cacao-aorun-020-mlat -w
 ```
 
-
-
 ## 6. Acquire Calibration
-
 
 ### 6.1. Prepare DM poke modes
 
@@ -138,7 +130,9 @@ cacao-aorun-020-mlat -w
 # Create DM poke mode cubes
 cacao-mkDMpokemodes -z 5 -c 25
 ```
+
 The following files are written to ./conf/RMmodesDM/
+
 | File                 | Contents                                            |
 | -------------------- | --------------------------------------------------- |
 | `DMmask.fits     `   | DM mask                                             |
@@ -147,18 +141,16 @@ The following files are written to ./conf/RMmodesDM/
 | `HpokeC.fits     `   | Hadamard modes                                      |
 | `Hmat.fits       `   | Hadamard matrix (to convert Hadamard-zonal)         |
 | `Hpixindex.fits  `   | Hadamard pixel index                                |
-| `SmodesC.fits    `   | *Simple* (single actuator) pokes                    |
-
-
+| `SmodesC.fits    `   | _Simple_ (single actuator) pokes                    |
 
 ### 6.2. Run acquisition
-
 
 ```bash
 # Acquire response matrix - Hadamard modes
 # 4 cycles - default is 10.
 cacao-aorun-030-acqlinResp -n 4 HpokeC
 ```
+
 This could take a while. Check status on milk-procCTRL.
 To inspect results, display file conf/RMmodesWFS/HpokeC.WFSresp.fits.
 
@@ -167,29 +159,29 @@ To inspect results, display file conf/RMmodesWFS/HpokeC.WFSresp.fits.
 ```bash
 cacao-aorun-031-RMHdecode
 ```
+
 To inspect results, display file conf/RMmodesWFS/zrespM-H.fits.
 This should visually look like a zonal response matrix.
-
 
 ### 6.3. Make DM and WFS masks
 
 ```bash
 cacao-aorun-032-RMmkmask
 ```
+
 Check results:
+
 - conf/dmmask.fits
 - conf/wfsmask.fits
 
 If needed, rerun command with non-default parameters (see -h for options).
 Note: we are not going to apply the masks in this example, so OK if not net properly. The masks are informative here, allowing us to view which DM actuators and WFS pixels have the best response.
 
-
 ### 6.4. Create synthetic (Fourier) response matrix
 
 ```bash
 cacao-aorun-033-RM-mksynthetic -c 25 -a 1.0
 ```
-
 
 ## 7. Compute control matrix (straight)
 
@@ -200,26 +192,28 @@ Set GPU device (if GPU available).
 cacao-fpsctrl setval compstrCM svdlim 0.002
 cacao-fpsctrl setval compstrCM GPUdevice 0
 ```
+
 Then run the compstrCM process to compute CM and load it to shared memory :
+
 ```bash
 cacao-aorun-039-compstrCM
 ```
 
 Check results:
+
 - conf/CMmodesDM/CMmodesDM.fits
 - conf/CMmodesWFS/CMmodesWFS.fits
-
 
 ## 8. Running the loop
 
 ### 8.1. Core processes
 
 Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
+
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 1
 cacao-fpsctrl setval mvalC2dm GPUindex 2
 ```
-
 
 Start the 3 control loop processes :
 
@@ -254,7 +248,6 @@ cacao-fpsctrl setval mfilt loopON ON
 
 ```
 
-
 ### 8.2. Forcing zero average correction
 
 Focring the average correction to be zero is useful to remove artefacts such as
@@ -263,6 +256,7 @@ calibration and operation, or to adapt to straylight (for example moonlight) whe
 observing a faint target.
 
 This is done from the acquWFS process, as follows:
+
 ```bash
 cacao-fpsctrl setval acquWFS WFStaveragegain 0.01
 cacao-fpsctrl setval acquWFS WFStaveragemult 0.999
@@ -270,26 +264,26 @@ cacao-fpsctrl setval acquWFS WFSrefcmult 0.0
 cacao-fpsctrl setval acquWFS WFSrefcgain 0.01
 cacao-fpsctrl setval acquWFS comp.WFSrefc ON
 ```
+
 These settings will time-average imWFS2 to imWFS3, and drive wfsrefc to imWFS3.
 
 Note that this mode and the zero-point offsetting described in the following section
 are mutually exclusive.
 
-
 To sart/stop this reference update, run :
+
 ```bash
 cacao-fpsctrl setval acquWFS comp.WFSrefc ON
 cacao-fpsctrl setval acquWFS comp.WFSrefc OFF
 ```
 
 To revert to the wfsref reference:
+
 ```bash
 cacao-fpsctrl setval acquWFS WFSrefcmult 1.0
 cacao-fpsctrl setval acquWFS WFSrefcgain 0.0
 cacao-fpsctrl setval acquWFS comp.WFSrefc ON
 ```
-
-
 
 ### 8.3. Zero Point Offsetting
 
@@ -299,12 +293,10 @@ cacao-aorun-071-zpo start
 
 Select DM channels to be included in zpo.
 
-
-
-
 ### 8.4. Astrogrid
 
 Example commands:
+
 ```bash
 
 # astrogrid with default parameters (50nm ampl, nbframe 2, bin 2, pattern XYgrid)
@@ -330,14 +322,6 @@ cacao-DMastrogrid stop
 # Set WFS reference to flat illumination over wfsmask
 cacao-wfsref-setflat
 ```
-
-
-
-
-
-
-
-
 
 ## 9. Testing the loop
 
@@ -370,7 +354,6 @@ cacao-aorun-100-DMturb stop
 cacao-modalstatsTUI
 ```
 
-
 ## 10. Predictive Control
 
 ### 10.1. Pseudo-OL reconstruction
@@ -392,14 +375,14 @@ cacao-aorun-080-testOL -w 0.1
 ```
 
 Check that probe and psOL reconstruction overlap and have same amplitude:
+
 ```bash
 gnuplot
 plot [0:] "vispyr2-rundir/testOL.log" u 1:2 w l title "probe", "vispyr2-rundir/testOL.log" u ($1):5 title "psOL", "vispyr2-rundir/testOL.log" u ($1):3 title "DM"
 quit
 ```
+
 The x-offset is the total latency (hardw+softw).
-
-
 
 ### 10.2. Modal control blocks
 
@@ -410,28 +393,29 @@ cacao-aorun-120-mstat start
 ```
 
 Start mkPFXX-Y processes.
+
 ```bash
 cacao-aorun-130-mkPF 0 start
 cacao-aorun-130-mkPF 1 start
 ```
 
 Start applyPFXX-Y processes.
+
 ```bash
 cacao-aorun-140-applyPF 0 start
 cacao-aorun-140-applyPF 1 start
 ```
 
-
-
-
 # 11. Logging streams to disk
 
 To setup processes for logging AO telemetry streams:
+
 ```bash
 milk-streamFITSlog sname pstart
 ```
 
 To start/stop logging:
+
 ```bash
 milk-streamFITSlog sname on
 milk-streamFITSlog sname off
@@ -446,9 +430,5 @@ cacao-msglogCTRL stop
 cacao-task-manager -C 0 scexao-vispyr-bin2
 rm -rf .vispyr2.cacaotaskmanager-log
 ```
-
-
-
-
 
 THE END

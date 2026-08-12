@@ -18,11 +18,11 @@
 
 
 static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "generateRMWFS",
-    .cmdkey      = "generateRMWFS",
-    .description = "generate RM WFS modes",
-    .description_long =
-        "Generate synthetic response matrix modes for WFS testing. Creates ideal poke responses for simulation and validation."
+    .fps_name         = "generateRMWFS",
+    .cmdkey           = "generateRMWFS",
+    .description      = "generate RM WFS modes",
+    .description_long = "Generate synthetic response matrix modes for WFS testing. Creates ideal "
+                        "poke responses for simulation and validation."
 };
 
 // zonal WFS response
@@ -32,10 +32,13 @@ static char DMmodesC[FUNCTION_PARAMETER_STRMAXLEN];
 static char outWFSmodesC[FUNCTION_PARAMETER_STRMAXLEN];
 
 
-#define FPS_PARAMS(X) \
-    X(".zrespWFS", zrespWFS, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input zonal response matrix") \
-    X(".DMmodesC", DMmodesC, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input DM modes") \
-    X(".outWFSmodesC", outWFSmodesC, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output WFS modes")
+#define FPS_PARAMS(X)                                                                             \
+    X(".zrespWFS", zrespWFS, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),     \
+      "input zonal response matrix")                                                              \
+    X(".DMmodesC", DMmodesC, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),     \
+      "input DM modes")                                                                           \
+    X(".outWFSmodesC", outWFSmodesC, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
+      "output WFS modes")
 
 FPS_V2_SECTION5(FPS_PARAMS)
 
@@ -45,13 +48,13 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static __attribute__((unused)) errno_t customCONFsetup()
 {
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
-        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".zrespWFS")].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED;
+        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".zrespWFS")]
+            .fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
 
-        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMmodesC")].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED;
+        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMmodesC")]
+            .fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
     }
 
     return RETURN_SUCCESS;
@@ -63,8 +66,7 @@ static __attribute__((unused)) errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
     }
 
@@ -75,8 +77,6 @@ static errno_t customCONFcheck()
 // detailed help
 static __attribute__((unused)) errno_t help_function()
 {
-
-
     return RETURN_SUCCESS;
 }
 
@@ -86,27 +86,27 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID imgzRM = imgid_make_from_name(zrespWFS);
-    resolveIMGID(
-        &imgzRM, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (imgzRM.ID == -1) return RETURN_FAILURE;
+    resolveIMGID(&imgzRM, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgzRM.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
     uint32_t wfsxsize = imgzRM.md->size[0];
     uint32_t wfsysize = imgzRM.md->size[1];
-    uint64_t wfssize = wfsxsize;
+    uint64_t wfssize  = wfsxsize;
     wfssize *= wfsysize;
     printf("wfssize = %lu\n", wfssize);
 
 
     IMGID imDMmodesC = imgid_make_from_name(DMmodesC);
-    resolveIMGID(
-        &imDMmodesC, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (imDMmodesC.ID == -1) return RETURN_FAILURE;
+    resolveIMGID(&imDMmodesC, ERRMODE_WARN, dcimg, dcnimg);
+    if (imDMmodesC.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
     uint32_t dmxsize = imDMmodesC.md->size[0];
     uint32_t dmysize = imDMmodesC.md->size[1];
-    uint64_t dmsize = dmxsize;
+    uint64_t dmsize  = dmxsize;
     dmsize *= dmysize;
     printf("dmsize = %lu\n", dmsize);
 
@@ -114,10 +114,7 @@ static errno_t compute_function()
     printf("%u modes\n", NBmodes);
 
 
-    IMGID imgoutWFSc = imgid_make_from_name_3D(outWFSmodesC,
-        wfsxsize,
-        wfsysize,
-        NBmodes);
+    IMGID imgoutWFSc = imgid_make_from_name_3D(outWFSmodesC, wfsxsize, wfsysize, NBmodes);
     createimagefromIMGID(&imgoutWFSc);
 
 
@@ -127,18 +124,18 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-        for(uint32_t mode = 0; mode < NBmodes; mode++)
+        for (uint32_t mode = 0; mode < NBmodes; mode++)
         {
             printf(".");
             fflush(stdout);
 
-            for(uint64_t iidm = 0; iidm < dmsize; iidm++)
+            for (uint64_t iidm = 0; iidm < dmsize; iidm++)
             {
-                for(uint64_t iiwfs = 0; iiwfs < wfssize; iiwfs++)
+                for (uint64_t iiwfs = 0; iiwfs < wfssize; iiwfs++)
                 {
                     imgoutWFSc.im->array.F[wfssize * mode + iiwfs] +=
-                    imDMmodesC.im->array.F[dmsize * mode + iidm] * imgzRM.im->array.F[wfssize * iidm
-                            + iiwfs];
+                        imDMmodesC.im->array.F[dmsize * mode + iidm] *
+                        imgzRM.im->array.F[wfssize * iidm + iiwfs];
                 }
             }
         }
@@ -155,15 +152,12 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 // Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl_computeCalib__generateRMWFS()
+errno_t CLIADDCMD_AOloopControl_computeCalib__generateRMWFS()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
@@ -176,10 +170,9 @@ CLIADDCMD_AOloopControl_computeCalib__generateRMWFS()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function,
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
+                                 FPS_PARAMS,
+                                 compute_function,
 
-    customCONFcheck)
+                                 customCONFcheck)
 #endif

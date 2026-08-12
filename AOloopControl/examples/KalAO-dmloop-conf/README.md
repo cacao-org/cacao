@@ -4,23 +4,20 @@ KalAO system
 
 cacao-task-manager tasks for this example :
 
-~~~
+```
  0           INITSETUP             DONE        READY   Initial setup:
  1     GETSIMCONFFILES             DONE        READY   Get simulation files:
  2          TESTCONFIG             DONE        READY   Test configuration:
  3          CACAOSETUP             DONE        READY   Run cacao-setup:
-~~~
-Subsequent tasks can perform specific parts of the AO loop.
+```
 
+Subsequent tasks can perform specific parts of the AO loop.
 
 # Running the example
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
-
-
 ## Setting up processes
-
 
 ```bash
 # Deploy configuration :
@@ -63,10 +60,6 @@ cacao-aorun-001-dmsim start
 cacao-aorun-002-simwfs start
 ```
 
-
-
-
-
 ## Start WFS acquisition
 
 ```bash
@@ -81,10 +74,7 @@ cacao-aorun-025-acqWFS start
 cacao-aorun-020-mlat
 ```
 
-
-
 ## Acquire response matrix
-
 
 ### Prepare DM poke modes
 
@@ -92,18 +82,17 @@ cacao-aorun-020-mlat
 # Create DM poke mode cubes
 cacao-mkDMpokemodes
 ```
+
 The following files are written to ./conf/RMmodes/ :
-- DMmask.fits    : DM mask
+
+- DMmask.fits : DM mask
 - FpokesC.8.fits : Fourier modes
-- Zmodes.fits    : Zernike modes
-- HpokeC.fits    : Hadamard modes
-- Hmat.fits      : Hadamard matrix (to convert Hadamard-zonal)
+- Zmodes.fits : Zernike modes
+- HpokeC.fits : Hadamard modes
+- Hmat.fits : Hadamard matrix (to convert Hadamard-zonal)
 - Hpixindex.fits : Hadamard pixel index
 
-
-
 ### Run acquisition
-
 
 ```bash
 # Acquire response matrix - Fourier modes
@@ -118,9 +107,8 @@ cacao-aorun-031-RMHdecode
 # The masks were manually generated for KalAO
 #cacao-aorun-032-RMmkmask
 ```
+
 :warning: DM and WFS masks will be required to compute control modes. They can be computed from a zonal RM (as shown above), or written by hand (single precision floats, 0.0 and 1.0 values).
-
-
 
 ### Take reference
 
@@ -131,7 +119,6 @@ This should not be used when actually using KalAO as it would overwrite the NCPA
 # cacao-aorun-026-takeref
 ```
 
-
 ## Compute control matrix (straight)
 
 Compute control modes, in both WFS and DM spaces.
@@ -141,22 +128,22 @@ cacao-fpsctrl setval compstrCM RMmodesDM "../conf/RMmodesDM/FpokesC.8.fits"
 cacao-fpsctrl setval compstrCM RMmodesWFS "../conf/RMmodesWFS/FpokesC.8.WFSresp.fits"
 cacao-fpsctrl setval compstrCM svdlim 0.2
 ```
+
 Then run the compstrCM process to compute CM and load it to shared memory :
+
 ```bash
 cacao-aorun-039-compstrCM
 cacao-aorun-040-compfCM -g 0 -c 6
 ```
 
-
-
 ## Running the loop
 
 Select GPUs
+
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 0
 cacao-fpsctrl setval mvalC2dm GPUindex 0
 ```
-
 
 From directory kalaodmloop-rootdir, start 3 processes :
 
@@ -185,6 +172,5 @@ cacao-fpsctrl setval mfilt loopmult 0.98
 cacao-fpsctrl setval mfilt loopON ON
 
 ```
-
 
 THE END

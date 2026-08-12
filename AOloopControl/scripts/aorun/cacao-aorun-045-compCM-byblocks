@@ -114,7 +114,7 @@ for (( i=0; i<$maxi; i++)); do
       let mb1=NBRMmodes
     fi
    printf "MODE BLOCK %02d  : %4d : %4d\n" $i $mb0 $mb1
-  
+
 
     if [[ $i -lt 2 ]]; then
       cacao-aorun-039-compstrCM -mb $i -mr $mb0:$mb1
@@ -130,13 +130,13 @@ for (( i=0; i<$maxi; i++)); do
       else
         cacao-aorun-039-compstrCM -mb $i -mr $mb0:$mb1 ${WHICH_MARG} 0:1:${margstring}
       fi
-      
+
       if [[ $i -eq 2 ]]; then
         margstring="2"
       else
         margstring="${margstring}:$i"
       fi
-      
+
     fi
   fi
 
@@ -226,12 +226,3 @@ cacaomsglog "END"
 
 # merge CMs
 #cacao-aorun-039-compstrCM -mbm 0:1:2:3:4:5:6
-
-
-
-
-
-
-
-
-
