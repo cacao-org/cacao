@@ -258,6 +258,7 @@ static errno_t compute_function()
                     cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans, nbmode, nbmode, nbwfspix,
                                 1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix,
                                 0.0, imgATA.im->array.F, nbmode);
+                    SGEMMcomputed = 1;
 #endif // #ifdef HAVE_BLAS
                 }
                 if (SGEMMcomputed == 0)
