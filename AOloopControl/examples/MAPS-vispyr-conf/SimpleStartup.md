@@ -1,7 +1,9 @@
 # Startup Simple
+
 This document assumes you already have the loaded directories etc. Your system is already calibrated. You should already have an interaction matrix.
 
 Starting from nothing, in maps-rootdir
+
 ```
 cacao-setup maps
 ```
@@ -15,14 +17,17 @@ cacao-aorun-025-acqWFS -w start
 ```
 
 Now we are picking a calibration
+
 ```
 ls ../maps-calibs
- ```
+```
+
 find the <calib-dir> from that list that you want to use tonight.
 
 ```
 cacao-calib-apply <calib-dir>
 ```
+
 ^ long term, this needs to shut down all confs and restart them again, this ensures the proper resp mat sizes.
 
 ```
@@ -32,6 +37,7 @@ cacao-aorun-070-cmval2dm start
 ```
 
 To start the 2D DM viewing stream:
+
 ```
 tmux new -s remap
 ./scripts/maps-remapdm10disp

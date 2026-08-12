@@ -2,21 +2,18 @@
 
 Each directory is named **CONFNAME**-conf.
 
-Name                       |  Description
----------------------------|------------------------------------------------------------
-scexao-vispyr-bin2-conf    | SCExAO visible pyramid WFS loop, 2x2 binned WFS (this is the recommended example)
-scexao-vispyr-bin1-conf    | SCExAO visible pyramid WFS loop, unbinned WFS
-KalAO-dmloop-conf          | KalAO system, SHWFS and main DM loop
-KalAO-ttmloop-conf         | KalAO system, Tip-Tilt offload loop
-
+| Name                    | Description                                                                       |
+| ----------------------- | --------------------------------------------------------------------------------- |
+| scexao-vispyr-bin2-conf | SCExAO visible pyramid WFS loop, 2x2 binned WFS (this is the recommended example) |
+| scexao-vispyr-bin1-conf | SCExAO visible pyramid WFS loop, unbinned WFS                                     |
+| KalAO-dmloop-conf       | KalAO system, SHWFS and main DM loop                                              |
+| KalAO-ttmloop-conf      | KalAO system, Tip-Tilt offload loop                                               |
 
 ---
 
 # Deploying and running cacao examples - Quickstart
 
-
 To deploy a cacao loop from the example configuration :
-
 
 ```bash
 # from work directory (workdir)
@@ -55,12 +52,11 @@ Use the -h option to get more details.
 
 # Running cacao examples - Details
 
-
 ## 0. Conventions and naming
 
 Each example directory contains the cacao configuration files required to setup and run an example. Directories are named :
 
-	CONFNAME-conf
+    CONFNAME-conf
 
 Where CONFNAME is, unsurprisingly, the example name.
 
@@ -73,13 +69,12 @@ Directory and file names for each example are constructed from the following thr
 
 :warning: Make sure you understand the role of these four variables before proceeding. Confusingly, **CONFNAME**, **LOOPNAME**, **LOOPROOTDIR** and **LOOPRUNDIR** could be the same string. You can set them to be identical if a single configuration will run a single loop in a single directory. For testing purposes, it may be useful to deploy multiple versions of the same loop in different directories, and/or to maintain multiple configurations for the same loop: to manage these cases, the four names can be different.
 
-Name                  |  Where is it set ?
-----------------------|------------------------------------------------------------
-**CONFNAME**          | This is a directory name: **CONFNAME**-conf contains configuration files
-**LOOPNAME**          | Variable CACAO_LOOPNAME defined in file cacaovars.bash
-**LOOPROOTDIR**       | Variable CACAO_LOOPROOTDIR defined in file cacaovars.bash
-**LOOPRUNDIR**        | Variable CACAO_LOOPRUNDIR defined in file cacaovars.bash
-
+| Name            | Where is it set ?                                                        |
+| --------------- | ------------------------------------------------------------------------ |
+| **CONFNAME**    | This is a directory name: **CONFNAME**-conf contains configuration files |
+| **LOOPNAME**    | Variable CACAO_LOOPNAME defined in file cacaovars.bash                   |
+| **LOOPROOTDIR** | Variable CACAO_LOOPROOTDIR defined in file cacaovars.bash                |
+| **LOOPRUNDIR**  | Variable CACAO_LOOPRUNDIR defined in file cacaovars.bash                 |
 
 ---
 
@@ -87,15 +82,14 @@ Name                  |  Where is it set ?
 
 Content of directory CONFNAME-conf
 
-~~~
+```
 ├── <CONFNAME>-conf                     -> configuration directory (where configuration files are stored)
 │   ├── tasklist.txt                    -> List of tasks that will be managed by cacao-task-manager
 │   ├── cacaovars.bash                  -> Variables defining the configuration: lists processes to be setup by cacao-setup
 │   ├── fpssetup.setval.conf            -> (optional) Initialization read by milk-fpsCTRL after launch
 │   ├── aorun-XXX-yyyyyy                -> (optional) custom user script. XXX=index, yyyyy=description
 │   └── simLHS                          -> (optional) Linear Hardware Simulation files
-~~~
-
+```
 
 ---
 
@@ -132,13 +126,12 @@ cacao-task-manager <CONFNAME>
 
 For example, the following tasks could be listed :
 
-~~~
+```
  0           INITSETUP             DONE        READY   Initial setup:
  1     GETSIMCONFFILES             DONE        READY   Get simulation files:
  2          TESTCONFIG             DONE        READY   Test configuration:
  3          CACAOSETUP             DONE        READY   Run cacao-setup:
-~~~
-
+```
 
 :warning: Instruction steps below depend on the tasks. For example, tasks GETSIMCONFFILES and TESTCONFIG may not exit... in which case you can skip the reading the corresponding sections. Note also that the task numbering may change: if GETSIMCONFFILES and TESTCONFIG don't exist, then CACAOSETUP will be task #1. The example may also include additional setup tasks.
 
@@ -153,17 +146,15 @@ cacao-task-manager -X 0 <CONFNAME>
 
 The LOOPROOTDIR content is as follows :
 
-~~~
+```
 ├── <LOOPROOTDIR>
 │   ├── aorun-XXX-yyyyyy files
 │   ├── cacaovars.LOOPNAME.bash
 │   └── fpssetup.setval.LOOPNAME.conf
 ├── .cacaotaskmanager-log
-~~~
+```
 
 The number of aorun scripts depends on the configuration.
-
-
 
 ## 3.2. Uploading external file(s)
 
@@ -177,7 +168,6 @@ To run this step:
 cacao-task-manager -X 1 <CONFNAME>
 ```
 
-
 ## 3.3. Testing the configuration
 
 The TESTCONFIG task performs tests.
@@ -189,7 +179,6 @@ To run this step:
 cacao-task-manager -X 2 <CONFNAME>
 ```
 
-
 ## 3.4. Running cacao-setup
 
 The CACAOSETUP task runs cacao-setup within **LOOPROOTDIR**, which :
@@ -199,14 +188,12 @@ The CACAOSETUP task runs cacao-setup within **LOOPROOTDIR**, which :
 - Launches all conf processes
 - Launches milk-fpsCTRL instance in tmux session. This will be used to manage and communicate with processes.
 
-
 cacao-setup is the main setup script, which calls other scripts and sets parameters for processes. The help option lists the main operations performed by cacao-setup :
 
 ```bash
 # from anywhere
 cacao-setup -h
 ```
-
 
 To run this step using cacao-task-manager:
 
@@ -218,7 +205,6 @@ cacao-task-manager -X 3 <CONFNAME>
 :bulb: To run tasks 0, 1, 2 and 3 (inclusive), you can skip the X=0,1,2 commands, and simply run the X=3 command.
 
 ---
-
 
 # 4. Configuring and controlling processes through milk-fpsCTRL fifo: aorunscript
 
@@ -235,12 +221,9 @@ Scripts **aorun-XXX-yyyyy** included in some of the examples perform these steps
 
 Users are encouraged to read the script content as a template for writing custom scripts.
 
-
-
 ---
 
 # 5. Managing data products and configurations
-
 
 ## 5.1.Directory, files, scripts and conventions
 
@@ -250,8 +233,6 @@ Each process managed by the function parameter structure (FPS) framework uses th
 - **LOOPROOTDIR/LOOPRUNDIR/fps._fpsname_.conf** : Configuration directory for the FPS processes. This is mostly an input for the FPS.
 - **LOOPROOTDIR/LOOPRUNDIR/fps._fpsname_.archive**: Archive directory. Note this is usually a sym link to another directory.
 
-
-
 <!--
 The directories are managed by the following scripts:
 
@@ -260,8 +241,6 @@ The directories are managed by the following scripts:
 - **fpsconf-archive**: Copy configuration to an archive directory, attaching timestamp and label.
 - **fpsconf-load**: Load from fps._fpsname_.archive into fps._fpsname_.conf
 -->
-
-
 
 <!--
 # Notes - to be done

@@ -11,29 +11,28 @@ import logging
 from typing import Tuple
 from collections import namedtuple
 
-PercentileParam = namedtuple('PercentileParam', ['p0', 'c0', 'p1', 'c1'])
+PercentileParam = namedtuple("PercentileParam", ["p0", "c0", "p1", "c1"])
 
 
 def make_masks_fitsio(
-        file_in_resp: str,  # conf/RMmodesWFS/zrespM-H.fits
-        dm_perc: PercentileParam = PercentileParam(p0=0.2, c0=0.5, p1=0.5,
-                                                   c1=0.5),
-        wfs_perc: PercentileParam = PercentileParam(p0=0.2, c0=0.5, p1=0.5,
-                                                    c1=0.5),
-        *,
-        dm_size: Tuple[int, int] = (50, 50)) -> None:
-    '''
-        Replacement of RMmkmask cacao bash script
+    file_in_resp: str,  # conf/RMmodesWFS/zrespM-H.fits
+    dm_perc: PercentileParam = PercentileParam(p0=0.2, c0=0.5, p1=0.5, c1=0.5),
+    wfs_perc: PercentileParam = PercentileParam(p0=0.2, c0=0.5, p1=0.5, c1=0.5),
+    *,
+    dm_size: Tuple[int, int] = (50, 50)
+) -> None:
+    """
+    Replacement of RMmkmask cacao bash script
 
-        file_in_resp:
-            Response obtained through measlinresp - decoded - corresponds to zrespM-H.fits
+    file_in_resp:
+        Response obtained through measlinresp - decoded - corresponds to zrespM-H.fits
 
-        dm_perc:
-            PercentileParam - percentiles for DMmask truncation
-        wfs_perc:
-            PercentileParam - percentiles for WFSmask truncation
+    dm_perc:
+        PercentileParam - percentiles for DMmask truncation
+    wfs_perc:
+        PercentileParam - percentiles for WFSmask truncation
 
-    '''
+    """
 
     resp_matrix = fits.getdata(file_in_resp)
 
@@ -46,22 +45,18 @@ def make_masks_fitsio(
 
     dm_map, dm_mask, wfs_map, wfs_mask = make_masks(resp_4D, dm_perc, wfs_perc)
 
-    fits.writeto('./conf/dmmap.fits', dm_map, overwrite=True)
-    fits.writeto('./conf/dmmask.fits', dm_mask.astype(np.float32),
-                 overwrite=True)
-    fits.writeto('./conf/wfsmap.fits', wfs_map, overwrite=True)
-    fits.writeto('./conf/wfsmask.fits', wfs_mask.astype(np.float32),
-                 overwrite=True)
+    fits.writeto("./conf/dmmap.fits", dm_map, overwrite=True)
+    fits.writeto("./conf/dmmask.fits", dm_mask.astype(np.float32), overwrite=True)
+    fits.writeto("./conf/wfsmap.fits", wfs_map, overwrite=True)
+    fits.writeto("./conf/wfsmask.fits", wfs_mask.astype(np.float32), overwrite=True)
 
 
 def make_masks(
-        resp_4D: np.ndarray,
-        dm_perc: PercentileParam,
-        wfs_perc: PercentileParam,
+    resp_4D: np.ndarray,
+    dm_perc: PercentileParam,
+    wfs_perc: PercentileParam,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    '''
-
-    '''
+    """ """
 
     # Dimension checks
     assert resp_4D.ndim == 4, "resp_matrix not 4D"

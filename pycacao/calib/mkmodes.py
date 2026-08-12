@@ -2,14 +2,14 @@
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-'''
-    mkmodes.py
+"""
+mkmodes.py
 
-    TODO: Move the main exec from the function lib...
+TODO: Move the main exec from the function lib...
 
-    Usage:
-        mkmodes.py (had|randhad) <outfile.fits> [--mask=<maskfile.fits>]
-'''
+Usage:
+    mkmodes.py (had|randhad) <outfile.fits> [--mask=<maskfile.fits>]
+"""
 
 # Random-permuted hadamard
 # Zernikes
@@ -40,18 +40,19 @@ def make_disk_from_conf(conf: CacaoConf, save_out: bool = True) -> np.ndarray:
     return disk_mask
 
 
-def make_disk(disk_parameters: Tuple[float, float, float],
-              dm_size: Tuple[int, int]) -> np.ndarray:
-    '''
-        Make boolean ndarray disk
-    '''
+def make_disk(
+    disk_parameters: Tuple[float, float, float], dm_size: Tuple[int, int]
+) -> np.ndarray:
+    """
+    Make boolean ndarray disk
+    """
     cx, cy, r = disk_parameters
     dm_x, dm_y = dm_size
 
     x = np.arange(dm_x)
     y = np.arange(dm_y)
 
-    mask = ((x[:, None] - cx)**2 + (y[None, :] - cy)**2)**.5 < r
+    mask = ((x[:, None] - cx) ** 2 + (y[None, :] - cy) ** 2) ** 0.5 < r
 
     # FIXME
     # OK so the problem is that to match the CACAO convention
@@ -61,9 +62,9 @@ def make_disk(disk_parameters: Tuple[float, float, float],
 
 
 def make_zonal(mask: np.ndarray) -> np.ndarray:
-    '''
-        Doesn't do much... cube with single poke slices from a mask.
-    '''
+    """
+    Doesn't do much... cube with single poke slices from a mask.
+    """
 
     n_actu = np.sum(mask)
     dm_x, dm_y = mask.shape
@@ -78,14 +79,14 @@ def make_zonal(mask: np.ndarray) -> np.ndarray:
     return modal_cube
 
 
-def make_hadamard(mask: np.ndarray, permuter: np.ndarray = None,
-                  permute_random: bool = False
-                  ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    '''
-        Make permuted Hadamard basis.
+def make_hadamard(
+    mask: np.ndarray, permuter: np.ndarray = None, permute_random: bool = False
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Make permuted Hadamard basis.
 
-        If permute_random, generate a random permutation of Hadamard modes.
-    '''
+    If permute_random, generate a random permutation of Hadamard modes.
+    """
 
     n_actu = np.sum(mask)
 
@@ -117,9 +118,13 @@ def make_hadamard(mask: np.ndarray, permuter: np.ndarray = None,
     return modal_cube, hadamard_matrix, permuter
 
 
-def make_fourier(dm_size: Tuple[int, int], dm_radius: float, cpa_max: int = 8,
-                 delta_cpa: float = 0.8,
-                 radius_factor_limit: float = 1.5) -> np.ndarray:
+def make_fourier(
+    dm_size: Tuple[int, int],
+    dm_radius: float,
+    cpa_max: int = 8,
+    delta_cpa: float = 0.8,
+    radius_factor_limit: float = 1.5,
+) -> np.ndarray:
     pass
 
 
@@ -128,33 +133,33 @@ def make_zernike(n: int):
 
 
 def make_dmkl(mask: np.ndarray, remove_piston: bool = True) -> np.ndarray:
-    '''
+    """
     DM KL, or proximity-based MMSE basis, or radial-Fourier basis.
     No real official name. But essentially KLs.
 
     Extension to positional, non-matrix DMs will be easy.
-    '''
+    """
 
     n_actu = np.sum(mask)
     dm_x, dm_y = mask.shape
 
     xd, yd = np.where(mask)
 
-    geom_covariance = ((xd[None, :] - xd[:, None])**2 +
-                       (yd[None, :] - yd[:, None])**2)**(5 / 6.0)
+    geom_covariance = (
+        (xd[None, :] - xd[:, None]) ** 2 + (yd[None, :] - yd[:, None]) ** 2
+    ) ** (5 / 6.0)
     # Diagonalize - Columns of sv_modes are our basis
     sv_modes, _sv_values, _ = np.linalg.svd(geom_covariance)
 
     # Note the 1 smaller and offset-by-one if removing piston.
-    modal_cube = np.zeros((n_actu - remove_piston, dm_x, dm_y),
-                          dtype=np.float32)
+    modal_cube = np.zeros((n_actu - remove_piston, dm_x, dm_y), dtype=np.float32)
     for ii in range(n_actu - remove_piston):
         modal_cube[ii, mask] = sv_modes[:, ii + remove_piston]
 
     return modal_cube
 
 
-'''
+"""
     Proposed DMKL pipeline:
 
     - Make randomized Hadamards
@@ -171,35 +176,37 @@ def make_dmkl(mask: np.ndarray, remove_piston: bool = True) -> np.ndarray:
         - Extension of DMmodes from [dmdrive] onto [dmslaved]
         - Synth RM onto this basis
         - Rank-trunc-TSVD on this basis. Inversion from masked WFS.
-'''
+"""
 
 if __name__ == "__main__":
 
     import os
 
     from docopt import docopt
+
     args = docopt(__doc__)
 
-    cacao_conf = CacaoConf.from_pwd_tree('.')
+    cacao_conf = CacaoConf.from_pwd_tree(".")
     cacao_conf.ensure_cwd()  # Redundant...
 
-    outfile = args['<outfile.fits>']
-    randomize_had = args['randhad']
-    maskfile = args['--mask']
+    outfile = args["<outfile.fits>"]
+    randomize_had = args["randhad"]
+    maskfile = args["--mask"]
 
-    assert not '/' in outfile
-    assert outfile.endswith('.fits')
+    assert not "/" in outfile
+    assert outfile.endswith(".fits")
 
     if maskfile is not None:
-        assert not '/' in maskfile
-        assert maskfile.endswith('.fits')
+        assert not "/" in maskfile
+        assert maskfile.endswith(".fits")
 
-        mask = fits.getdata(cacao_conf.PWD + '/conf/RMmodesDM/' + maskfile)
+        mask = fits.getdata(cacao_conf.PWD + "/conf/RMmodesDM/" + maskfile)
 
     else:
         mask = make_disk_from_conf(cacao_conf)
 
     modal_cube, _, _ = make_hadamard(mask, permute_random=randomize_had)
 
-    fits.writeto(cacao_conf.PWD + '/conf/RMmodesDM/' + outfile, modal_cube,
-                 overwrite=True)
+    fits.writeto(
+        cacao_conf.PWD + "/conf/RMmodesDM/" + outfile, modal_cube, overwrite=True
+    )

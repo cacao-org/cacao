@@ -2,25 +2,13 @@
 % Olivier Guyon
 % May 26, 2017
 
-
-
-
-
-
-
-
-
-
-
 # Processes
 
 Processes are logged in directory
 
-	./runproc/
+    ./runproc/
 
 A running processes creates a `xxxx.runproc` file in the directory.
-
-
 
 Key functions (located in `aolconfscripts/aolconf_funcs`):
 

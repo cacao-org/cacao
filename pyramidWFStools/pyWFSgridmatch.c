@@ -41,52 +41,37 @@ typedef struct
 
 
 static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "pyWFSgridmatch",
-    .cmdkey      = "pyWFSgridmatch",
-    .description = "Match pyramid WFS zrespM to grid",
-    .description_long =
-        "Match a pyramid WFS zonal response matrix to a grid model. Aligns measured spot patterns to expected subaperture positions."
+    .fps_name         = "pyWFSgridmatch",
+    .cmdkey           = "pyWFSgridmatch",
+    .description      = "Match pyramid WFS zrespM to grid",
+    .description_long = "Match a pyramid WFS zonal response matrix to a grid model. Aligns "
+                        "measured spot patterns to expected subaperture positions."
 };
 
-static char inimname[
-    FUNCTION_PARAMETER_STRMAXLEN];
-static double spotsize = 0;
-static uint32_t dmxsize = 0;
-static uint32_t dmysize = 0;
+static char     inimname[FUNCTION_PARAMETER_STRMAXLEN];
+static double   spotsize = 0;
+static uint32_t dmxsize  = 0;
+static uint32_t dmysize  = 0;
 
-#define FPS_PARAMS(X) \
-    X(".in_name", inimname, \
-      FPTYPE_STREAMNAME, 1, \
-      FPFLAG_DEFAULT_INPUT, "input image") \
-    X(".spotsize", &spotsize, \
-      FPTYPE_FLOAT64, 1, \
-      FPFLAG_DEFAULT_INPUT, "spot size") \
-    X(".dmxsize", &dmxsize, \
-      FPTYPE_UINT32, 1, \
-      FPFLAG_DEFAULT_INPUT, "DM x size") \
-    X(".dmysize", &dmysize, \
-      FPTYPE_UINT32, 1, \
-      FPFLAG_DEFAULT_INPUT, "DM y size")
+#define FPS_PARAMS(X)                                                                  \
+    X(".in_name", inimname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "input image") \
+    X(".spotsize", &spotsize, FPTYPE_FLOAT64, 1, FPFLAG_DEFAULT_INPUT, "spot size")    \
+    X(".dmxsize", &dmxsize, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "DM x size")       \
+    X(".dmysize", &dmysize, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "DM y size")
 
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
 // compute spot positions from grid params
-static int compute_grid_spotpos(
-    pyrWFSgrid grid,
-    float* spotxpos,
-    float* spotypos
-)
+static int compute_grid_spotpos(pyrWFSgrid grid, float *spotxpos, float *spotypos)
 {
     int nbspot = 0;
 
-    for(uint32_t dmii=0; dmii<grid.dmysize; dmii++)
+    for (uint32_t dmii = 0; dmii < grid.dmysize; dmii++)
     {
-        for(uint32_t dmjj=0; dmjj<grid.dmysize; dmjj++)
+        for (uint32_t dmjj = 0; dmjj < grid.dmysize; dmjj++)
         {
-
-
-            for(int spotindex = 0; spotindex<4; spotindex++)
+            for (int spotindex = 0; spotindex < 4; spotindex++)
             {
                 float spotx = grid.pupsquare_center_x;
                 float spoty = grid.pupsquare_center_y;
@@ -122,8 +107,10 @@ static int compute_grid_spotpos(
                 }
 
                 // apply rotation
-                spotx += spotxoffset * cosf(grid.pupsquare_angle) - spotyoffset * sinf(grid.pupsquare_angle);
-                spoty += spotxoffset * sinf(grid.pupsquare_angle) + spotyoffset * cosf(grid.pupsquare_angle);
+                spotx += spotxoffset * cosf(grid.pupsquare_angle) -
+                         spotyoffset * sinf(grid.pupsquare_angle);
+                spoty += spotxoffset * sinf(grid.pupsquare_angle) +
+                         spotyoffset * cosf(grid.pupsquare_angle);
 
                 spotxpos[(dmjj * grid.dmxsize + dmii) * 4 + spotindex] = spotx;
                 spotypos[(dmjj * grid.dmxsize + dmii) * 4 + spotindex] = spoty;
@@ -138,33 +125,27 @@ static int compute_grid_spotpos(
 }
 
 
-static double eval_gridmatch(
-    pyrWFSgrid grid,
-    float* spotxpos,
-    float* spotypos,
-    float* spotw
-)
+static double eval_gridmatch(pyrWFSgrid grid, float *spotxpos, float *spotypos, float *spotw)
 {
     double val = 0.0;
 
-    float* gridspotxpos = (float*) malloc(sizeof(float) * grid.dmxsize * grid.dmysize * 4);
-    float* gridspotypos = (float*) malloc(sizeof(float) * grid.dmxsize * grid.dmysize * 4);
+    float *gridspotxpos = (float *) malloc(sizeof(float) * grid.dmxsize * grid.dmysize * 4);
+    float *gridspotypos = (float *) malloc(sizeof(float) * grid.dmxsize * grid.dmysize * 4);
 
     // Compute spots pos for grid
     compute_grid_spotpos(grid, gridspotxpos, gridspotypos);
 
-    for(uint32_t dmii=0; dmii<grid.dmysize; dmii++)
+    for (uint32_t dmii = 0; dmii < grid.dmysize; dmii++)
     {
-        for(uint32_t dmjj=0; dmjj<grid.dmysize; dmjj++)
+        for (uint32_t dmjj = 0; dmjj < grid.dmysize; dmjj++)
         {
-
-            for(int spotindex = 0; spotindex<4; spotindex++)
+            for (int spotindex = 0; spotindex < 4; spotindex++)
             {
                 int index = (dmjj * grid.dmxsize + dmii) * 4 + spotindex;
 
                 float dx = spotxpos[index] - gridspotxpos[index];
                 float dy = spotypos[index] - gridspotypos[index];
-                val += (dx*dx + dy*dy)*spotw[index];
+                val += (dx * dx + dy * dy) * spotw[index];
             }
         }
     }
@@ -182,11 +163,11 @@ static errno_t compute_function()
 
     // resolve image and create IMGID
     IMGID zrmimg = imgid_make_from_name(inimname);
-    resolveIMGID(
-        &zrmimg, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (zrmimg.ID == -1) return RETURN_FAILURE;
+    resolveIMGID(&zrmimg, ERRMODE_WARN, dcimg, dcnimg);
+    if (zrmimg.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
 
     //printf("naxes = %d\n", zrmimg.md->naxis);
 
@@ -199,30 +180,30 @@ static errno_t compute_function()
         uint32_t xysize = xsize * ysize;
 
         // allocate mem for working array to detect peaks
-        float *imarray = (float *) malloc(sizeof(float) * xysize);
+        float *imarray  = (float *) malloc(sizeof(float) * xysize);
         float *imcarray = (float *) malloc(sizeof(float) * xysize);
 
         int ksizeint = (int) spotsize;
 
-        double pixval2sum_max = 0.0;
-        double *pixval2sum = (double *) malloc(sizeof(double) * zrmimg.md->size[2]);
+        double  pixval2sum_max = 0.0;
+        double *pixval2sum     = (double *) malloc(sizeof(double) * zrmimg.md->size[2]);
 
         // for each slice of zrm
-        for(uint32_t slice = 0; slice < zrmimg.md->size[2]; slice++)
+        for (uint32_t slice = 0; slice < zrmimg.md->size[2]; slice++)
         {
             pixval2sum[slice] = 0.0;
 
             // scan 2D pixels oc imarray for current slize
-            for(uint32_t ii = 0; ii < xsize; ii++)
+            for (uint32_t ii = 0; ii < xsize; ii++)
             {
-                for(uint32_t jj = 0; jj < ysize; jj++)
+                for (uint32_t jj = 0; jj < ysize; jj++)
                 {
-                    float pixval = zrmimg.im->array.F[slice * xysize + jj * xsize + ii];
-                    float pixval2 = pixval*pixval;
+                    float pixval  = zrmimg.im->array.F[slice * xysize + jj * xsize + ii];
+                    float pixval2 = pixval * pixval;
                     pixval2sum[slice] += pixval2;
                 }
             }
-            if(pixval2sum[slice] > pixval2sum_max)
+            if (pixval2sum[slice] > pixval2sum_max)
             {
                 pixval2sum_max = pixval2sum[slice];
             }
@@ -232,31 +213,31 @@ static errno_t compute_function()
         // spot positions and values
         float *spotpos_x = (float *) malloc(sizeof(float) * dmxsize * dmysize * 4);
         float *spotpos_y = (float *) malloc(sizeof(float) * dmxsize * dmysize * 4);
-        float *spotval = (float*) malloc(sizeof(float) * dmxsize * dmysize * 4);
+        float *spotval   = (float *) malloc(sizeof(float) * dmxsize * dmysize * 4);
 
 
         int sliceproc_cnt = 0;
         int sliceskip_cnt = 0;
 
-        for(uint32_t dmii=0; dmii<dmysize; dmii++)
+        for (uint32_t dmii = 0; dmii < dmysize; dmii++)
         {
-            for(uint32_t dmjj=0; dmjj<dmysize; dmjj++)
+            for (uint32_t dmjj = 0; dmjj < dmysize; dmjj++)
             {
                 uint32_t slice = dmjj * dmxsize + dmii;
 
-                if(pixval2sum[slice] > 0.1*pixval2sum_max)
+                if (pixval2sum[slice] > 0.1 * pixval2sum_max)
                 {
                     //printf("Processing DM actuator %3u x %3u (slice %5u)\n", dmii, dmjj, slice);
                     //fflush(stdout);
 
                     // scan 2D pixels of imarray for current slize
-                    for(uint32_t ii = 0; ii < xsize; ii++)
+                    for (uint32_t ii = 0; ii < xsize; ii++)
                     {
-                        for(uint32_t jj = 0; jj < ysize; jj++)
+                        for (uint32_t jj = 0; jj < ysize; jj++)
                         {
-                            float pixval = zrmimg.im->array.F[slice * xysize + jj * xsize + ii];
-                            float pixval2 = pixval*pixval;
-                            imarray[jj * xsize + ii] = pixval2;
+                            float pixval  = zrmimg.im->array.F[slice * xysize + jj * xsize + ii];
+                            float pixval2 = pixval * pixval;
+                            imarray[jj * xsize + ii]  = pixval2;
                             imcarray[jj * xsize + ii] = 0.0;
                         }
                     }
@@ -265,34 +246,34 @@ static errno_t compute_function()
                     //printf("    Convolve\n");
                     //fflush(stdout);
 
-                    for(uint32_t ii = 0; ii < xsize; ii++)
+                    for (uint32_t ii = 0; ii < xsize; ii++)
                     {
                         int ii1min = ii - ksizeint;
-                        if(ii1min < 0)
+                        if (ii1min < 0)
                         {
                             ii1min = 0;
                         }
                         int ii1max = ii + ksizeint;
-                        if(ii1max > (int) xsize)
+                        if (ii1max > (int) xsize)
                         {
                             ii1max = xsize;
                         }
-                        for(uint32_t jj = 0; jj < ysize; jj++)
+                        for (uint32_t jj = 0; jj < ysize; jj++)
                         {
                             int jj1min = jj - ksizeint;
-                            if(jj1min < 0)
+                            if (jj1min < 0)
                             {
                                 jj1min = 0;
                             }
                             int jj1max = jj + ksizeint;
-                            if(jj1max > (int) ysize)
+                            if (jj1max > (int) ysize)
                             {
                                 jj1max = ysize;
                             }
 
-                            for(int ii1 = ii1min; ii1 < ii1max; ii1++)
+                            for (int ii1 = ii1min; ii1 < ii1max; ii1++)
                             {
-                                for(int jj1 = jj1min; jj1 < jj1max; jj1++)
+                                for (int jj1 = jj1min; jj1 < jj1max; jj1++)
                                 {
                                     imcarray[jj * xsize + ii] += imarray[jj1 * xsize + ii1];
                                 }
@@ -304,44 +285,44 @@ static errno_t compute_function()
                     //printf("    Find spots\n");
                     //fflush(stdout);
 
-                    for(int spotindex = 0; spotindex<4; spotindex++)
+                    for (int spotindex = 0; spotindex < 4; spotindex++)
                     {
                         //printf("        processing quadrant %d\n", spotindex);
                         //fflush(stdout);
 
                         uint32_t iistart = 0;
                         uint32_t jjstart = 0;
-                        uint32_t iistop = xsize;
-                        uint32_t jjstop = ysize;
+                        uint32_t iistop  = xsize;
+                        uint32_t jjstop  = ysize;
 
                         switch (spotindex)
                         {
                         case 0: // bottom left
                             iistart = 0;
-                            iistop = xsize/2;
+                            iistop  = xsize / 2;
                             jjstart = 0;
-                            jjstop = ysize/2;
+                            jjstop  = ysize / 2;
                             break;
 
                         case 1: // top left
                             iistart = 0;
-                            iistop = xsize/2;
-                            jjstart = ysize/2;
-                            jjstop = ysize;
+                            iistop  = xsize / 2;
+                            jjstart = ysize / 2;
+                            jjstop  = ysize;
                             break;
 
                         case 2: // bottom right
-                            iistart = xsize/2;
-                            iistop = xsize;
+                            iistart = xsize / 2;
+                            iistop  = xsize;
                             jjstart = 0;
-                            jjstop = ysize/2;
+                            jjstop  = ysize / 2;
                             break;
 
                         case 3: // top right
-                            iistart = xsize/2;
-                            iistop = xsize;
-                            jjstart = ysize/2;
-                            jjstop = ysize;
+                            iistart = xsize / 2;
+                            iistop  = xsize;
+                            jjstart = ysize / 2;
+                            jjstop  = ysize;
                             break;
 
                         default:
@@ -350,18 +331,18 @@ static errno_t compute_function()
 
                         // Find strongest peak
                         //
-                        float vpeak = 0.0;
+                        float    vpeak  = 0.0;
                         uint32_t iipeak = 0;
                         uint32_t jjpeak = 0;
-                        for(uint32_t ii = iistart; ii < iistop; ii++)
+                        for (uint32_t ii = iistart; ii < iistop; ii++)
                         {
-                            for(uint32_t jj = jjstart; jj < jjstop; jj++)
+                            for (uint32_t jj = jjstart; jj < jjstop; jj++)
                             {
-                                if(imcarray[jj * xsize + ii] > vpeak)
+                                if (imcarray[jj * xsize + ii] > vpeak)
                                 {
                                     iipeak = ii;
                                     jjpeak = jj;
-                                    vpeak = imcarray[jj * xsize + ii];
+                                    vpeak  = imcarray[jj * xsize + ii];
                                 }
                             }
                         }
@@ -375,33 +356,33 @@ static errno_t compute_function()
                             double ysum = 0.0;
                             double wsum = 0.0;
 
-                            int ii1min = iipeak - (int)(spotsize + 1);
-                            if(ii1min < 0)
+                            int ii1min = iipeak - (int) (spotsize + 1);
+                            if (ii1min < 0)
                             {
                                 ii1min = 0;
                             }
-                            int ii1max = iipeak + (int)(spotsize + 1);
-                            if(ii1max > (int) xsize)
+                            int ii1max = iipeak + (int) (spotsize + 1);
+                            if (ii1max > (int) xsize)
                             {
                                 ii1max = xsize;
                             }
 
-                            int jj1min = jjpeak - (int)(spotsize + 1);
-                            if(jj1min < 0)
+                            int jj1min = jjpeak - (int) (spotsize + 1);
+                            if (jj1min < 0)
                             {
                                 jj1min = 0;
                             }
-                            int jj1max = jjpeak + (int)(spotsize + 1);
-                            if(jj1max > (int) ysize)
+                            int jj1max = jjpeak + (int) (spotsize + 1);
+                            if (jj1max > (int) ysize)
                             {
                                 jj1max = ysize;
                             }
                             //printf("        range = [%d, %d] x [%d, %d]\n", ii1min, ii1max, jj1min, jj1max);
                             //fflush(stdout);
 
-                            for(int ii1 = ii1min; ii1 < ii1max; ii1++)
+                            for (int ii1 = ii1min; ii1 < ii1max; ii1++)
                             {
-                                for(int jj1 = jj1min; jj1 < jj1max; jj1++)
+                                for (int jj1 = jj1min; jj1 < jj1max; jj1++)
                                 {
                                     float dx = (double) iipeak - ii1;
                                     float dy = (double) jjpeak - jj1;
@@ -417,15 +398,14 @@ static errno_t compute_function()
                             }
 
                             printf("[%5u %5u] SPOT %2d", dmii, dmjj, spotindex);
-                            printf("      %8.3f  %8.3f    %g\n", xsum/wsum, ysum/wsum, wsum);
+                            printf("      %8.3f  %8.3f    %g\n", xsum / wsum, ysum / wsum, wsum);
                             fflush(stdout);
 
 
-                            spotpos_x[slice * 4 + spotindex] = xsum/wsum;
-                            spotpos_y[slice * 4 + spotindex] = ysum/wsum;
-                            spotval[slice * 4 + spotindex] = wsum;
+                            spotpos_x[slice * 4 + spotindex] = xsum / wsum;
+                            spotpos_y[slice * 4 + spotindex] = ysum / wsum;
+                            spotval[slice * 4 + spotindex]   = wsum;
                         }
-
                     }
 
 
@@ -436,11 +416,11 @@ static errno_t compute_function()
                 {
                     //printf("Skipping   DM actuator %3u x %3u (slice %5u)\n", dmii, dmjj, slice);
                     //fflush(stdout);
-                    for(int spoti=0; spoti<4; spoti++)
+                    for (int spoti = 0; spoti < 4; spoti++)
                     {
                         spotpos_x[slice * 4 + spoti] = 0.0;
                         spotpos_y[slice * 4 + spoti] = 0.0;
-                        spotval[slice * 4 + spoti] = 0.0;
+                        spotval[slice * 4 + spoti]   = 0.0;
                     }
                     sliceskip_cnt++;
                 }
@@ -463,14 +443,14 @@ static errno_t compute_function()
         grid.dmysize = dmysize;
 
 
-        grid.pupsquare_xoffset = 0.4 * xsize;
-        grid.pupsquare_yoffset = 0.4 * ysize;
-        grid.pupsquare_angle = 0.0;
-        grid.pupsquare_center_x = 0.5*xsize;
-        grid.pupsquare_center_y = 0.5*ysize;
+        grid.pupsquare_xoffset  = 0.4 * xsize;
+        grid.pupsquare_yoffset  = 0.4 * ysize;
+        grid.pupsquare_angle    = 0.0;
+        grid.pupsquare_center_x = 0.5 * xsize;
+        grid.pupsquare_center_y = 0.5 * ysize;
 
-        grid.actpitch_x = (0.4*xsize)/(dmxsize);
-        grid.actpitch_y = (0.4*xsize)/(dmxsize);
+        grid.actpitch_x     = (0.4 * xsize) / (dmxsize);
+        grid.actpitch_y     = (0.4 * xsize) / (dmxsize);
         grid.actpitch_angle = 0.0;
 
         // copy grid to gridbest
@@ -482,55 +462,48 @@ static errno_t compute_function()
         // Compute spots pos for grid
         //compute_grid_spotpos(grid, gridspotpos_x, gridspotpos_y);
 
-        double gridvalbest = eval_gridmatch(grid,
-            spotpos_x,
-            spotpos_y,
-            spotval);
+        double gridvalbest = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
         printf("grid value = %g\n", gridvalbest);
         fflush(stdout);
 
-        gridstep.pupsquare_xoffset = 0.2;
-        gridstep.pupsquare_yoffset = 0.2;
-        gridstep.pupsquare_angle = 0.1;
-        gridstep.pupsquare_center_x = 0.01*xsize;
-        gridstep.pupsquare_center_y = 0.01*ysize;
+        gridstep.pupsquare_xoffset  = 0.2;
+        gridstep.pupsquare_yoffset  = 0.2;
+        gridstep.pupsquare_angle    = 0.1;
+        gridstep.pupsquare_center_x = 0.01 * xsize;
+        gridstep.pupsquare_center_y = 0.01 * ysize;
 
-        gridstep.actpitch_x = 0.5;
-        gridstep.actpitch_y = 0.5;
+        gridstep.actpitch_x     = 0.5;
+        gridstep.actpitch_y     = 0.5;
         gridstep.actpitch_angle = 0.1;
 
         double gridvaleps = 1.0e-6;
 
         {
             // optimize pupsquare_xoffset
-            int direction = 1;
-            int dirflipcnt = 0;
-            long loopcnt = 0;
+            int  direction  = 1;
+            int  dirflipcnt = 0;
+            long loopcnt    = 0;
 
-            double gridval_old = eval_gridmatch(grid,
-                spotpos_x,
-                spotpos_y,
-                spotval);
-            while((dirflipcnt < 2)&&(loopcnt < 1000))
+            double gridval_old = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+            while ((dirflipcnt < 2) && (loopcnt < 1000))
             {
                 grid.pupsquare_xoffset += direction * gridstep.pupsquare_xoffset;
-                double gridval_new = eval_gridmatch(grid,
-                    spotpos_x,
-                    spotpos_y,
-                    spotval);
-                if(gridval_new > gridval_old - gridvaleps)
+                double gridval_new = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+                if (gridval_new > gridval_old - gridvaleps)
                 {
                     // flip direction
                     direction *= -1;
                     dirflipcnt++;
                 }
-                printf("pupsquare_xoffset dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction, grid.pupsquare_xoffset, gridbest.pupsquare_xoffset, gridval_new, gridvalbest);
+                printf("pupsquare_xoffset dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction,
+                       grid.pupsquare_xoffset, gridbest.pupsquare_xoffset, gridval_new,
+                       gridvalbest);
                 gridval_old = gridval_new;
 
-                if(gridval_new < gridvalbest)
+                if (gridval_new < gridvalbest)
                 {
                     printf(" -> UPDATE");
-                    gridvalbest = gridval_new;
+                    gridvalbest                = gridval_new;
                     gridbest.pupsquare_xoffset = grid.pupsquare_xoffset;
                 }
                 printf("\n");
@@ -542,34 +515,30 @@ static errno_t compute_function()
 
         {
             // optimize pupsquare_yoffset
-            int direction = 1;
-            int dirflipcnt = 0;
-            long loopcnt = 0;
+            int  direction  = 1;
+            int  dirflipcnt = 0;
+            long loopcnt    = 0;
 
-            double gridval_old = eval_gridmatch(grid,
-                spotpos_x,
-                spotpos_y,
-                spotval);
-            while((dirflipcnt < 2)&&(loopcnt < 1000))
+            double gridval_old = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+            while ((dirflipcnt < 2) && (loopcnt < 1000))
             {
                 grid.pupsquare_yoffset += direction * gridstep.pupsquare_yoffset;
-                double gridval_new = eval_gridmatch(grid,
-                    spotpos_x,
-                    spotpos_y,
-                    spotval);
-                if(gridval_new > gridval_old - gridvaleps)
+                double gridval_new = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+                if (gridval_new > gridval_old - gridvaleps)
                 {
                     // flip direction
                     direction *= -1;
                     dirflipcnt++;
                 }
-                printf("pupsquare_yoffset dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction, grid.pupsquare_yoffset, gridbest.pupsquare_yoffset, gridval_new, gridvalbest);
+                printf("pupsquare_yoffset dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction,
+                       grid.pupsquare_yoffset, gridbest.pupsquare_yoffset, gridval_new,
+                       gridvalbest);
                 gridval_old = gridval_new;
 
-                if(gridval_new < gridvalbest)
+                if (gridval_new < gridvalbest)
                 {
                     printf(" -> UPDATE");
-                    gridvalbest = gridval_new;
+                    gridvalbest                = gridval_new;
                     gridbest.pupsquare_yoffset = grid.pupsquare_yoffset;
                 }
                 printf("\n");
@@ -580,34 +549,29 @@ static errno_t compute_function()
 
         {
             // optimize pupsquare_angle
-            int direction = 1;
-            int dirflipcnt = 0;
-            long loopcnt = 0;
+            int  direction  = 1;
+            int  dirflipcnt = 0;
+            long loopcnt    = 0;
 
-            double gridval_old = eval_gridmatch(grid,
-                spotpos_x,
-                spotpos_y,
-                spotval);
-            while((dirflipcnt < 2)&&(loopcnt < 1000))
+            double gridval_old = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+            while ((dirflipcnt < 2) && (loopcnt < 1000))
             {
                 grid.pupsquare_angle += direction * gridstep.pupsquare_angle;
-                double gridval_new = eval_gridmatch(grid,
-                    spotpos_x,
-                    spotpos_y,
-                    spotval);
-                if(gridval_new > gridval_old - gridvaleps)
+                double gridval_new = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+                if (gridval_new > gridval_old - gridvaleps)
                 {
                     // flip direction
                     direction *= -1;
                     dirflipcnt++;
                 }
-                printf("pupsquare_angle dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction, grid.pupsquare_angle, gridbest.pupsquare_angle, gridval_new, gridvalbest);
+                printf("pupsquare_angle dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction,
+                       grid.pupsquare_angle, gridbest.pupsquare_angle, gridval_new, gridvalbest);
                 gridval_old = gridval_new;
 
-                if(gridval_new < gridvalbest)
+                if (gridval_new < gridvalbest)
                 {
                     printf(" -> UPDATE");
-                    gridvalbest = gridval_new;
+                    gridvalbest              = gridval_new;
                     gridbest.pupsquare_angle = grid.pupsquare_angle;
                 }
                 printf("\n");
@@ -618,34 +582,30 @@ static errno_t compute_function()
 
         {
             // optimize pupsquare_center_x
-            int direction = 1;
-            int dirflipcnt = 0;
-            long loopcnt = 0;
+            int  direction  = 1;
+            int  dirflipcnt = 0;
+            long loopcnt    = 0;
 
-            double gridval_old = eval_gridmatch(grid,
-                spotpos_x,
-                spotpos_y,
-                spotval);
-            while((dirflipcnt < 2)&&(loopcnt < 1000))
+            double gridval_old = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+            while ((dirflipcnt < 2) && (loopcnt < 1000))
             {
                 grid.pupsquare_center_x += direction * gridstep.pupsquare_center_x;
-                double gridval_new = eval_gridmatch(grid,
-                    spotpos_x,
-                    spotpos_y,
-                    spotval);
-                if(gridval_new > gridval_old - gridvaleps)
+                double gridval_new = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+                if (gridval_new > gridval_old - gridvaleps)
                 {
                     // flip direction
                     direction *= -1;
                     dirflipcnt++;
                 }
-                printf("pupsquare_center_x dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction, grid.pupsquare_center_x, gridbest.pupsquare_center_x, gridval_new, gridvalbest);
+                printf("pupsquare_center_x dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction,
+                       grid.pupsquare_center_x, gridbest.pupsquare_center_x, gridval_new,
+                       gridvalbest);
                 gridval_old = gridval_new;
 
-                if(gridval_new < gridvalbest)
+                if (gridval_new < gridvalbest)
                 {
                     printf(" -> UPDATE");
-                    gridvalbest = gridval_new;
+                    gridvalbest                 = gridval_new;
                     gridbest.pupsquare_center_x = grid.pupsquare_center_x;
                 }
                 printf("\n");
@@ -657,34 +617,30 @@ static errno_t compute_function()
 
         {
             // optimize pupsquare_center_y
-            int direction = 1;
-            int dirflipcnt = 0;
-            long loopcnt = 0;
+            int  direction  = 1;
+            int  dirflipcnt = 0;
+            long loopcnt    = 0;
 
-            double gridval_old = eval_gridmatch(grid,
-                spotpos_x,
-                spotpos_y,
-                spotval);
-            while((dirflipcnt < 2)&&(loopcnt < 1000))
+            double gridval_old = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+            while ((dirflipcnt < 2) && (loopcnt < 1000))
             {
                 grid.pupsquare_center_y += direction * gridstep.pupsquare_center_y;
-                double gridval_new = eval_gridmatch(grid,
-                    spotpos_x,
-                    spotpos_y,
-                    spotval);
-                if(gridval_new > gridval_old - gridvaleps)
+                double gridval_new = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+                if (gridval_new > gridval_old - gridvaleps)
                 {
                     // flip direction
                     direction *= -1;
                     dirflipcnt++;
                 }
-                printf("pupsquare_center_y dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction, grid.pupsquare_center_y, gridbest.pupsquare_center_y, gridval_new, gridvalbest);
+                printf("pupsquare_center_y dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction,
+                       grid.pupsquare_center_y, gridbest.pupsquare_center_y, gridval_new,
+                       gridvalbest);
                 gridval_old = gridval_new;
 
-                if(gridval_new < gridvalbest)
+                if (gridval_new < gridvalbest)
                 {
                     printf(" -> UPDATE");
-                    gridvalbest = gridval_new;
+                    gridvalbest                 = gridval_new;
                     gridbest.pupsquare_center_y = grid.pupsquare_center_y;
                 }
                 printf("\n");
@@ -696,37 +652,32 @@ static errno_t compute_function()
 
         {
             // optimize actpitch_x
-            int direction = 1;
-            int dirflipcnt = 0;
-            long loopcnt = 0;
+            int  direction  = 1;
+            int  dirflipcnt = 0;
+            long loopcnt    = 0;
 
-            double gridval_old = eval_gridmatch(grid,
-                spotpos_x,
-                spotpos_y,
-                spotval);
-            while((dirflipcnt < 2)&&(loopcnt < 1000))
+            double gridval_old = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+            while ((dirflipcnt < 2) && (loopcnt < 1000))
             {
                 grid.actpitch_x += direction * gridstep.actpitch_x;
-                double gridval_new = eval_gridmatch(grid,
-                    spotpos_x,
-                    spotpos_y,
-                    spotval);
+                double gridval_new = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
                 printf(" (( %g %g  %g )) ", gridval_old, gridval_new, gridval_new - gridval_new);
 
-                if(gridval_new > gridval_old - gridvaleps)
+                if (gridval_new > gridval_old - gridvaleps)
                 {
                     // flip direction
                     printf("[FLIP %d]  ", dirflipcnt);
                     direction *= -1;
                     dirflipcnt++;
                 }
-                printf("actpitch_x dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction, grid.actpitch_x, gridbest.actpitch_x, gridval_new, gridvalbest);
+                printf("actpitch_x dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction,
+                       grid.actpitch_x, gridbest.actpitch_x, gridval_new, gridvalbest);
                 gridval_old = gridval_new;
 
-                if(gridval_new < gridvalbest)
+                if (gridval_new < gridvalbest)
                 {
                     printf(" -> UPDATE");
-                    gridvalbest = gridval_new;
+                    gridvalbest         = gridval_new;
                     gridbest.actpitch_x = grid.actpitch_x;
                 }
                 printf("\n");
@@ -734,39 +685,33 @@ static errno_t compute_function()
             }
             gridstep.actpitch_x *= 0.3;
         }
- 
 
 
         {
             // optimize actpitch_y
-            int direction = 1;
-            int dirflipcnt = 0;
-            long loopcnt = 0;
+            int  direction  = 1;
+            int  dirflipcnt = 0;
+            long loopcnt    = 0;
 
-            double gridval_old = eval_gridmatch(grid,
-                spotpos_x,
-                spotpos_y,
-                spotval);
-            while((dirflipcnt < 2)&&(loopcnt < 1000))
+            double gridval_old = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+            while ((dirflipcnt < 2) && (loopcnt < 1000))
             {
                 grid.actpitch_y += direction * gridstep.actpitch_y;
-                double gridval_new = eval_gridmatch(grid,
-                    spotpos_x,
-                    spotpos_y,
-                    spotval);
-                if(gridval_new > gridval_old - gridvaleps)
+                double gridval_new = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+                if (gridval_new > gridval_old - gridvaleps)
                 {
                     // flip direction
                     direction *= -1;
                     dirflipcnt++;
                 }
-                printf("actpitch_y dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction, grid.actpitch_y, gridbest.actpitch_y, gridval_new, gridvalbest);
+                printf("actpitch_y dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction,
+                       grid.actpitch_y, gridbest.actpitch_y, gridval_new, gridvalbest);
                 gridval_old = gridval_new;
 
-                if(gridval_new < gridvalbest)
+                if (gridval_new < gridvalbest)
                 {
                     printf(" -> UPDATE");
-                    gridvalbest = gridval_new;
+                    gridvalbest         = gridval_new;
                     gridbest.actpitch_y = grid.actpitch_y;
                 }
                 printf("\n");
@@ -777,34 +722,29 @@ static errno_t compute_function()
 
         {
             // optimize actpitch_angle
-            int direction = 1;
+            int direction  = 1;
             int dirflipcnt = 0;
-            int loopcnt = 0;
+            int loopcnt    = 0;
 
 
-            double gridval_old = eval_gridmatch(grid,
-                spotpos_x,
-                spotpos_y,
-                spotval);
-            while((dirflipcnt < 2)&&(loopcnt < 1000))
+            double gridval_old = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+            while ((dirflipcnt < 2) && (loopcnt < 1000))
             {
                 grid.actpitch_angle += direction * gridstep.actpitch_angle;
-                double gridval_new = eval_gridmatch(grid,
-                    spotpos_x,
-                    spotpos_y,
-                    spotval);
-                if(gridval_new > gridval_old - gridvaleps)
+                double gridval_new = eval_gridmatch(grid, spotpos_x, spotpos_y, spotval);
+                if (gridval_new > gridval_old - gridvaleps)
                 {
                     // flip direction
                     direction *= -1;
                     dirflipcnt++;
                 }
-                printf("actpitch_angle dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction, grid.actpitch_angle, gridbest.actpitch_angle, gridval_new, gridvalbest);
+                printf("actpitch_angle dir%+2d %6.3f [%6.3f]   %8.3f [%8.3f]  ", direction,
+                       grid.actpitch_angle, gridbest.actpitch_angle, gridval_new, gridvalbest);
                 gridval_old = gridval_new;
-                if(gridval_new < gridvalbest)
+                if (gridval_new < gridvalbest)
                 {
                     printf(" -> UPDATE");
-                    gridvalbest = gridval_new;
+                    gridvalbest             = gridval_new;
                     gridbest.actpitch_angle = grid.actpitch_angle;
                 }
                 printf("\n");
@@ -818,8 +758,6 @@ static errno_t compute_function()
         free(spotpos_y);
         free(imarray);
         free(spotval);
-
-
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
@@ -832,18 +770,14 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 // Register function in CLI
-errno_t
-CLIADDCMD_cacao_pyramidWFStools__pyWFSgridmatch()
+errno_t CLIADDCMD_cacao_pyramidWFStools__pyWFSgridmatch()
 {
-    safe_fps_fill_farg_examples(
-        farg, my_bindings, nb_bindings);
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     INSERT_STD_CLIREGISTERFUNC
 
@@ -852,8 +786,5 @@ CLIADDCMD_cacao_pyramidWFStools__pyWFSgridmatch()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function)
+FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
 #endif

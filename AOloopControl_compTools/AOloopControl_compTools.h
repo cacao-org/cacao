@@ -16,5 +16,4 @@
 #define _AOLOOPCONTROL_COMPTOOLS_H
 
 
-
 #endif

@@ -17,39 +17,31 @@
 
 
 static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "mk3Ddmgrid",
-    .cmdkey      = "mk3Ddmgrid",
-    .description = "create DM calibration pattern sequence",
-    .description_long =
-        "Create a 3D sequence of DM calibration patterns. Generates systematic poke patterns for response matrix acquisition."
+    .fps_name         = "mk3Ddmgrid",
+    .cmdkey           = "mk3Ddmgrid",
+    .description      = "create DM calibration pattern sequence",
+    .description_long = "Create a 3D sequence of DM calibration patterns. Generates systematic "
+                        "poke patterns for response matrix acquisition."
 };
 
 // Local variables pointers
 
 // output img name
-static char outname[
-    FUNCTION_PARAMETER_STRMAXLEN];
-static uint32_t xsize = 0;
-static uint32_t ysize = 0;
+static char     outname[FUNCTION_PARAMETER_STRMAXLEN];
+static uint32_t xsize     = 0;
+static uint32_t ysize     = 0;
 static uint32_t XYpattern = 0;
 static uint32_t binfactor = 1;
 
-#define FPS_PARAMS(X) \
-    X(".outname", outname, \
-      FPTYPE_STRING, 1, \
-      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output image name") \
-    X(".xsize", &xsize, \
-      FPTYPE_UINT32, 1, \
-      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "x size") \
-    X(".ysize", &ysize, \
-      FPTYPE_UINT32, 1, \
-      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "y size") \
-    X(".XYpattern", &XYpattern, \
-      FPTYPE_UINT32, 1, \
-      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "grid pattern") \
-    X(".binfact", &binfactor, \
-      FPTYPE_UINT32, 1, \
-      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "binning factor")
+#define FPS_PARAMS(X)                                                                          \
+    X(".outname", outname, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),        \
+      "output image name")                                                                     \
+    X(".xsize", &xsize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "x size") \
+    X(".ysize", &ysize, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "y size") \
+    X(".XYpattern", &XYpattern, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),   \
+      "grid pattern")                                                                          \
+    X(".binfact", &binfactor, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),     \
+      "binning factor")
 
 FPS_V2_SECTION5(FPS_PARAMS)
 
@@ -82,22 +74,21 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
 
 
     uint32_t zsize = 2;
-    if(XYmode == 5)
+    if (XYmode == 5)
     {
         zsize = 4;
     }
 
     IMGID imgout = stream_connect_create_3Df32(IDoutname, xsize, ysize, zsize);
 
-    float map4[4] = {0.0, 1.0, 0.0, -1.0};
+    float map4[4] = { 0.0, 1.0, 0.0, -1.0 };
 
-    switch(XYmode)
+    switch (XYmode)
     {
-
     case 0: // XYdiag
-        for(uint32_t ii = 0; ii < xsize; ii++)
+        for (uint32_t ii = 0; ii < xsize; ii++)
         {
-            for(uint32_t jj = 0; jj < ysize; jj++)
+            for (uint32_t jj = 0; jj < ysize; jj++)
             {
                 imgout.im->array.F[jj * xsize + ii] =
                     2.0 * ((((ii / bin) % 2 + (jj / bin) % 2)) % 2) - 1;
@@ -106,61 +97,55 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
         break;
 
     case 1: // X
-        for(uint32_t ii = 0; ii < xsize; ii++)
+        for (uint32_t ii = 0; ii < xsize; ii++)
         {
-            for(uint32_t jj = 0; jj < ysize; jj++)
+            for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                imgout.im->array.F[jj * xsize + ii] =
-                    2.0 * ((ii / bin) % 2) - 1;
+                imgout.im->array.F[jj * xsize + ii] = 2.0 * ((ii / bin) % 2) - 1;
             }
         }
         break;
 
     case 2: // Y
-        for(uint32_t ii = 0; ii < xsize; ii++)
+        for (uint32_t ii = 0; ii < xsize; ii++)
         {
-            for(uint32_t jj = 0; jj < ysize; jj++)
+            for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                imgout.im->array.F[jj * xsize + ii] =
-                    2.0 * ((jj / bin) % 2) - 1;
+                imgout.im->array.F[jj * xsize + ii] = 2.0 * ((jj / bin) % 2) - 1;
             }
         }
         break;
 
     case 3: // Xdiag
-        for(uint32_t ii = 0; ii < xsize; ii++)
+        for (uint32_t ii = 0; ii < xsize; ii++)
         {
-            for(uint32_t jj = 0; jj < ysize; jj++)
+            for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                imgout.im->array.F[jj * xsize + ii] =
-                    map4[(((ii + jj) / bin) % 4)];
+                imgout.im->array.F[jj * xsize + ii] = map4[(((ii + jj) / bin) % 4)];
             }
         }
         break;
 
     case 4: // Ydiag
-        for(uint32_t ii = 0; ii < xsize; ii++)
+        for (uint32_t ii = 0; ii < xsize; ii++)
         {
-            for(uint32_t jj = 0; jj < ysize; jj++)
+            for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                imgout.im->array.F[jj * xsize + ii] =
-                    map4[(((ysize + ii - jj) / bin) % 4)];
+                imgout.im->array.F[jj * xsize + ii] = map4[(((ysize + ii - jj) / bin) % 4)];
             }
         }
         break;
 
     case 5: // X then Y
-        for(uint32_t ii = 0; ii < xsize; ii++)
+        for (uint32_t ii = 0; ii < xsize; ii++)
         {
-            for(uint32_t jj = 0; jj < ysize; jj++)
+            for (uint32_t jj = 0; jj < ysize; jj++)
             {
                 // X
-                imgout.im->array.F[jj * xsize + ii] =
-                    2.0 * ((ii / bin) % 2) - 1;
+                imgout.im->array.F[jj * xsize + ii] = 2.0 * ((ii / bin) % 2) - 1;
 
                 // Y
-                imgout.im->array.F[2 * xysize + jj * xsize + ii] =
-                    2.0 * ((jj / bin) % 2) - 1;
+                imgout.im->array.F[2 * xysize + jj * xsize + ii] = 2.0 * ((jj / bin) % 2) - 1;
             }
         }
         break;
@@ -168,17 +153,16 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
 
 
     // repeat pattern to slices > 0
-    for(uint64_t ii = 0; ii < xysize; ii++)
+    for (uint64_t ii = 0; ii < xysize; ii++)
     {
         imgout.im->array.F[xysize + ii] = -imgout.im->array.F[ii];
     }
 
-    if(zsize == 4)
+    if (zsize == 4)
     {
-        for(uint64_t ii = 0; ii < xysize; ii++)
+        for (uint64_t ii = 0; ii < xysize; ii++)
         {
-            imgout.im->array.F[3 * xysize + ii] =
-                -imgout.im->array.F[2 * xysize + ii];
+            imgout.im->array.F[3 * xysize + ii] = -imgout.im->array.F[2 * xysize + ii];
         }
     }
 
@@ -213,17 +197,13 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
-errno_t
-CLIADDCMD_AOloopControl_DM__mk3Ddmgrid()
+errno_t CLIADDCMD_AOloopControl_DM__mk3Ddmgrid()
 {
-    safe_fps_fill_farg_examples(
-        farg, my_bindings, nb_bindings);
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
     INSERT_STD_CLIREGISTERFUNC
 
@@ -235,8 +215,5 @@ CLIADDCMD_AOloopControl_DM__mk3Ddmgrid()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function)
+FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
 #endif

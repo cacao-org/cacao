@@ -1,6 +1,4 @@
-
 # Calibration {#page_cacao_calibration}
-
 
 ## Acquiring a zonal response matrix
 
@@ -12,37 +10,37 @@
 
 - **stop zonal response matrix acquistion** (`zrespoff` in `Loop Configure` screen).
 
-
 The following files are then created:
 
------------------------------ ------------------------------------ -----------------------------------------------------------
-File                          Archived location                    Description
------------------------------ ------------------------------------ -----------------------------------------------------------
-**zrespmat.fits**             zrespM/zrespM_${datestr}.fits        zonal response matrix
+---
 
-**wfsref0.fits**              wfsref0/wfsref0_${datestr}.fits      WFS reference (time-averaged image)
+File Archived location Description
 
-**wfsmap.fits**               wfsmap/wfsmap_${datestr}.fits        Map of WFS elements sensitivity
+---
 
-**dmmap.fits**                dmmap/dmmap_${datestr}.fits          Map of DM elements sensitivity
+**zrespmat.fits** zrespM/zrespM_${datestr}.fits zonal response matrix
 
-**wfsmask.fits**              wfsmask/wfsmask_${datestr}.fits      WFS pixel mask, derived from wfsmap
+**wfsref0.fits** wfsref0/wfsref0_${datestr}.fits WFS reference (time-averaged image)
 
-**dmmaskRM.fits**             dmmaskRM/dmmaskRM_${datestr}.fits    DM actuator mask, derived from dmmap by selecting actuators with strong response
+**wfsmap.fits** wfsmap/wfsmap_${datestr}.fits Map of WFS elements sensitivity
 
-**dmslaved.fits**             dmslaved/dmslaved_${datestr}.fits    slaved DM actuators: actuators near active actuators in dmmaskRM
+**dmmap.fits** dmmap/dmmap_${datestr}.fits Map of DM elements sensitivity
 
-**dmmask.fits**               dmmask/dmmask_${datestr}.fits        DM mask: all actuators controlled (union of dmmaskRM and dmslaved)
------------------------------ ------------------------------------ -----------------------------------------------------------
+**wfsmask.fits** wfsmask/wfsmask_${datestr}.fits WFS pixel mask, derived from wfsmap
 
+**dmmaskRM.fits** dmmaskRM/dmmaskRM_${datestr}.fits DM actuator mask, derived from dmmap by selecting actuators with strong response
+
+**dmslaved.fits** dmslaved/dmslaved_${datestr}.fits slaved DM actuators: actuators near active actuators in dmmaskRM
+
+**dmmask.fits** dmmask/dmmask_${datestr}.fits DM mask: all actuators controlled (union of dmmaskRM and dmslaved)
+
+---
 
 Note that at this point, the files are NOT loaded in shared memory, but the archieved file names are stored in the staging area "conf_zrm_staged/conf_streamname.txt" for future loading.
 
 - **Adopt staged configuration** (`upzrm` in `Loop Configure` screen)
 
 - **Load zrespm files into shared memory** (`SMloadzrm` in `Loop Configure` screen)
-
-
 
 ## Acquiring a modal response matrix (optional, for ZONAL DM only)
 
@@ -60,31 +58,33 @@ To do so:
 
 The following files are then created:
 
------------------------------ ------------------------------------ -----------------------------------------------------------
-File                          Archived location                    Description
------------------------------ ------------------------------------ -----------------------------------------------------------
-**LOrespmat.fits**            LOrespM/LOrespM_${datestr}.fits      Modal response matrix
+---
 
-**respM_LOmodes.fits**        LODMmodes/LODMmodes_${datestr}.fits  Low-order modes
+File Archived location Description
 
-**LOwfsref0.fits**            LOwfsref0/LOwfsref0_${datestr}.fits  WFS reference measured during LO RM acquisition
+---
 
-**LOwfsmap.fits**             LOwfsmap/LOwfsmap_${datestr}.fits    Map of WFS elements sensitivity
+**LOrespmat.fits** LOrespM/LOrespM_${datestr}.fits Modal response matrix
 
-**LOdmmap.fits**              LOdmmap/LOdmmap_${datestr}.fits      Map of DM elements sensitivity
+**respM_LOmodes.fits** LODMmodes/LODMmodes_${datestr}.fits Low-order modes
 
-**LOwfsmask.fits**            LOwfsmask/LOwfsmask_${datestr}.fits  WFS pixel mask, derived from wfsmap
+**LOwfsref0.fits** LOwfsref0/LOwfsref0_${datestr}.fits WFS reference measured during LO RM acquisition
 
-**LOdmmask.fits**             LOdmmask/LOdmmask_${datestr}.fits    DM actuator mask, derived from dmmap by selecting actuators with strong response
------------------------------ ------------------------------------ -----------------------------------------------------------
+**LOwfsmap.fits** LOwfsmap/LOwfsmap_${datestr}.fits Map of WFS elements sensitivity
 
+**LOdmmap.fits** LOdmmap/LOdmmap_${datestr}.fits Map of DM elements sensitivity
+
+**LOwfsmask.fits** LOwfsmask/LOwfsmask_${datestr}.fits WFS pixel mask, derived from wfsmap
+
+**LOdmmask.fits** LOdmmask/LOdmmask_${datestr}.fits DM actuator mask, derived from dmmap by selecting actuators with strong response
+
+---
 
 Note that at this point, the files are NOT loaded in shared memory, but the archieved file names are stored in the staging area "conf_mrm_staged//conf_streamname.txt" for future loading.
 
 - **Adopt staged configuration** (`upmrm` in `Loop Configure` screen)
 
 - **Load LOrespm files into shared memory** (`SMloadmrm` in `Loop Configure` screen)
-
 
 ## Automatic system calibration (recommended)
 
@@ -99,10 +99,6 @@ The old calibrations are archived as follows:
 - "conf_zrm_staged.001" and "conf_mrm_staged.001" hold the configuration previously named "conf_zrm_staged.000" and "conf_mrm_staged.000"
 
 - etc for a total of 20 configuration
-
-
-
-
 
 ## Managing configurations
 

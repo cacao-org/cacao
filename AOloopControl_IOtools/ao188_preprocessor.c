@@ -13,7 +13,7 @@
 
 #include <math.h>
 #include <sys/socket.h> // For APD emergency shudown.
-#include <arpa/inet.h> // For APD emergency shudown.
+#include <arpa/inet.h>  // For APD emergency shudown.
 
 #include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -22,22 +22,23 @@ static long NUM_APD_TOTAL = 216;
 static long NUM_APD_HOWFS = 188;
 static long NUM_APD_LOWFS = 16;
 
-static float CURVATURE_REGZ = 1.0;
-static float SHACK_CENTROID_REGZ = 1.0;
+static float CURVATURE_REGZ                 = 1.0;
+static float SHACK_CENTROID_REGZ            = 1.0;
 static float one_sided_curv_integrator_gain = 0.01; // TODO FPS
 
 static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "ao188preproc",
-    .cmdkey      = "ao188preproc",
-    .description = "AO188 APD Preprocessor",
-    .description_long =
-        "Preprocess APD (Avalanche Photodiode) count data from the Subaru AO188 system. Converts photon counts to WFS slope signals."
+    .fps_name         = "ao188preproc",
+    .cmdkey           = "ao188preproc",
+    .description      = "AO188 APD Preprocessor",
+    .description_long = "Preprocess APD (Avalanche Photodiode) count data from the Subaru AO188 "
+                        "system. Converts photon counts to WFS slope signals."
 };
 
 static char apd_mat_name[FUNCTION_PARAMETER_STRMAXLEN];
 
-#define FPS_PARAMS(X) \
-    X(".wfsin", apd_mat_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "Wavefront sensor input")
+#define FPS_PARAMS(X)                                                                          \
+    X(".wfsin", apd_mat_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
+      "Wavefront sensor input")
 
 FPS_V2_SECTION5(FPS_PARAMS)
 
@@ -51,11 +52,11 @@ when exiting because of APD safety.
 #include <sys/select.h>
 int is_ready(int fd)
 {
-    fd_set fdset;
+    fd_set         fdset;
     struct timeval timeout;
     FD_ZERO(&fdset);
     FD_SET(fd, &fdset);
-    timeout.tv_sec = 0;
+    timeout.tv_sec  = 0;
     timeout.tv_usec = 1;
     return select(fd + 1, &fdset, NULL, NULL, &timeout) == 1 ? 1 : 0;
 }
@@ -65,9 +66,8 @@ int is_ready(int fd)
 //
 static errno_t customCONFsetup()
 {
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
-
     }
 
     return RETURN_SUCCESS;
@@ -99,7 +99,7 @@ static errno_t __attribute__((unused)) help_function()
 static errno_t apd_safety_execute(int lowfs_howfs)
 {
     int sockfd;
-    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         printf("Oh no APD emergency shutdown crapped!!!; can't create socket\n");
         return RETURN_FAILURE;
@@ -107,21 +107,20 @@ static errno_t apd_safety_execute(int lowfs_howfs)
 
     struct sockaddr_in server_addr;
     // Expecting elsewhere to manage SSH tunnels from localhost:18816/8 -> OBCP:10.0.0.6:18818
-    server_addr.sin_family = AF_INET;
+    server_addr.sin_family      = AF_INET;
     server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    server_addr.sin_port = lowfs_howfs ? htons(18816) : htons(18818);
+    server_addr.sin_port        = lowfs_howfs ? htons(18816) : htons(18818);
 
-    if(connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
+    if (connect(sockfd, (struct sockaddr *) &server_addr, sizeof(server_addr)) < 0)
     {
-        printf("Unable to connect on during APD emergency! err = %d %s\n", errno,
-               strerror(errno));
+        printf("Unable to connect on during APD emergency! err = %d %s\n", errno, strerror(errno));
         return RETURN_FAILURE;
     }
-    const char msg_howfs[] = "howfs lash close\r";
-    const char msg_lowfs[] = "lowfs lash close\r";
-    const char *msg = lowfs_howfs ? msg_howfs : msg_lowfs;
+    const char  msg_howfs[] = "howfs lash close\r";
+    const char  msg_lowfs[] = "lowfs lash close\r";
+    const char *msg         = lowfs_howfs ? msg_howfs : msg_lowfs;
 
-    if(send(sockfd, msg, strlen(msg), 0) < 0)
+    if (send(sockfd, msg, strlen(msg), 0) < 0)
     {
         printf("Unable to send message during APD emergency! err = %d %s\n", errno,
                strerror(errno));
@@ -136,17 +135,16 @@ static errno_t apd_safety_execute(int lowfs_howfs)
 Compute the curvature from the 188x2 APD curve-signed buffer.
 NGL, assuming size is gonna be 188...
 */
-static errno_t two_sided_curvature_compute(
-    float *curvature,
-    int16_t *apd_twosided,
-    long apd_slice_size,
-    long size)
+static errno_t two_sided_curvature_compute(float   *curvature,
+                                           int16_t *apd_twosided,
+                                           long     apd_slice_size,
+                                           long     size)
 {
     float fp, fm;
-    for(int k = 0; k < size; ++k)
+    for (int k = 0; k < size; ++k)
     {
-        fp = (float)apd_twosided[k];
-        fm = (float)apd_twosided[k + apd_slice_size];
+        fp           = (float) apd_twosided[k];
+        fm           = (float) apd_twosided[k + apd_slice_size];
         curvature[k] = (fp - fm) / (fp + fm + CURVATURE_REGZ);
     }
     return RETURN_SUCCESS;
@@ -156,43 +154,40 @@ static errno_t two_sided_curvature_compute(
 One sided curvature updated each and every time
 curv_sign = 0 or 1
 */
-static errno_t one_sided_curvature_compute(
-    float *curvature,
-    int16_t *apd_onesided,
-    float *apd_reference, // TODO must be updated.
-    long size,
-    int curv_sign)
+static errno_t one_sided_curvature_compute(float   *curvature,
+                                           int16_t *apd_onesided,
+                                           float   *apd_reference, // TODO must be updated.
+                                           long     size,
+                                           int      curv_sign)
 {
-    if(curv_sign == 0)
+    if (curv_sign == 0)
     {
-        for(int k = 0; k < size; ++k)
+        for (int k = 0; k < size; ++k)
         {
-            curvature[k] = (apd_onesided[k] - apd_reference[k]) / (apd_reference[k] +
-                           CURVATURE_REGZ);
+            curvature[k] =
+                (apd_onesided[k] - apd_reference[k]) / (apd_reference[k] + CURVATURE_REGZ);
         }
     }
     else
     {
-        for(int k = 0; k < size; ++k)
+        for (int k = 0; k < size; ++k)
         {
-            curvature[k] = (- apd_onesided[k] - apd_reference[k]) /
-                           (apd_reference[k] + CURVATURE_REGZ);
+            curvature[k] =
+                (-apd_onesided[k] - apd_reference[k]) / (apd_reference[k] + CURVATURE_REGZ);
         }
     }
     return RETURN_SUCCESS;
 }
 
-static errno_t apd_integrator_update(
-    float *apd_integrator,
-    int16_t *apd_onesided,
-    float integ_gain,
-    long size
-)
+static errno_t apd_integrator_update(float   *apd_integrator,
+                                     int16_t *apd_onesided,
+                                     float    integ_gain,
+                                     long     size)
 {
-    for(int k = 0; k < size; ++k)
+    for (int k = 0; k < size; ++k)
     {
-        apd_integrator[k] *= 1.0 -
-                             integ_gain; // TODO confcheck that gain < 1.0, maybe enfore much lower.
+        apd_integrator[k] *=
+            1.0 - integ_gain; // TODO confcheck that gain < 1.0, maybe enfore much lower.
         apd_integrator[k] += integ_gain * apd_onesided[k];
     }
     return RETURN_SUCCESS;
@@ -209,27 +204,23 @@ struct __attribute__((__packed__)) LOWFS_INFO_STRUCT
     float focus;
 };
 
-static errno_t compute_lowfs_info(struct LOWFS_INFO_STRUCT *lowfs_struct,
-                                  int16_t *lowfs_apd)
+static errno_t compute_lowfs_info(struct LOWFS_INFO_STRUCT *lowfs_struct, int16_t *lowfs_apd)
 {
-
     int subap_total = 0;
     int total_total = 0;
 
-    for(int s = 0; s < 4; ++s)
+    for (int s = 0; s < 4; ++s)
     {
         subap_total = lowfs_apd[4 * s] + lowfs_apd[4 * s + 1] + lowfs_apd[4 * s + 2] +
                       lowfs_apd[4 * s + 3] + SHACK_CENTROID_REGZ;
 
         total_total += subap_total;
 
-        lowfs_struct->local_tip[s] = (float)
-                                     (+ lowfs_apd[4 * s + 0] - lowfs_apd[4 * s + 1]
-                                      + lowfs_apd[4 * s + 2] - lowfs_apd[4 * s + 3]) /
-                                     subap_total;
-        lowfs_struct->local_tilt[s] = (float)
-                                      (+ lowfs_apd[4 * s + 0] + lowfs_apd[4 * s + 1]
-                                       - lowfs_apd[4 * s + 2] - lowfs_apd[4 * s + 3]) /
+        lowfs_struct->local_tip[s]  = (float) (+lowfs_apd[4 * s + 0] - lowfs_apd[4 * s + 1] +
+                                               lowfs_apd[4 * s + 2] - lowfs_apd[4 * s + 3]) /
+                                      subap_total;
+        lowfs_struct->local_tilt[s] = (float) (+lowfs_apd[4 * s + 0] + lowfs_apd[4 * s + 1] -
+                                               lowfs_apd[4 * s + 2] - lowfs_apd[4 * s + 3]) /
                                       subap_total;
 
         lowfs_struct->total_tip += lowfs_struct->local_tip[s];
@@ -240,10 +231,10 @@ static errno_t compute_lowfs_info(struct LOWFS_INFO_STRUCT *lowfs_struct,
     lowfs_struct->total_tilt /= 4.0;
 
     // Finally, the defocus - shouldn't there be a division by 4 here?
-    lowfs_struct->focus = + lowfs_struct->local_tip[0] + lowfs_struct->local_tilt[0]
-                          - lowfs_struct->local_tip[1] + lowfs_struct->local_tilt[1]
-                          + lowfs_struct->local_tip[2] - lowfs_struct->local_tilt[2]
-                          - lowfs_struct->local_tip[3] - lowfs_struct->local_tilt[3];
+    lowfs_struct->focus = +lowfs_struct->local_tip[0] + lowfs_struct->local_tilt[0] -
+                          lowfs_struct->local_tip[1] + lowfs_struct->local_tilt[1] +
+                          lowfs_struct->local_tip[2] - lowfs_struct->local_tilt[2] -
+                          lowfs_struct->local_tip[3] - lowfs_struct->local_tilt[3];
 
     return EXIT_SUCCESS;
 }
@@ -254,25 +245,25 @@ static errno_t compute_function()
 
     // Since it's a fps PARAM_IMG, it's expected to be already loaded.
     IMGID apd_mat_in = imgid_make_from_name(apd_mat_name);
-    resolveIMGID(
-        &apd_mat_in, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (apd_mat_in.ID == -1) return RETURN_FAILURE;
+    resolveIMGID(&apd_mat_in, ERRMODE_WARN, dcimg, dcnimg);
+    if (apd_mat_in.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
 
     float apd_integrator[NUM_APD_HOWFS];
     memset(apd_integrator, 0, NUM_APD_HOWFS * sizeof(float));
 
     int kw_idx_CURVSGN = -1; // TODO also make a friggin function.
-    for(int k = 0; k < apd_mat_in.md->NBkw; ++k)
+    for (int k = 0; k < apd_mat_in.md->NBkw; ++k)
     {
-        if(strcmp("_CURVSGN", apd_mat_in.im->kw[k].name) == 0)
+        if (strcmp("_CURVSGN", apd_mat_in.im->kw[k].name) == 0)
         {
             kw_idx_CURVSGN = k;
             break;
         }
     }
-    if(kw_idx_CURVSGN == -1)
+    if (kw_idx_CURVSGN == -1)
     {
         printf("Fatal: must have _CURVSGN keyword in apd SHM.\n");
         fflush(stdout);
@@ -283,27 +274,22 @@ static errno_t compute_function()
 
     // Create curvature outputs
     uint32_t size_curvature = NUM_APD_HOWFS;
-    IMGID curv_1k_doublesided = stream_connect_create_2D("curv_1kdouble",
-                                size_curvature, 1,
-                                _DATATYPE_FLOAT);
-    IMGID curv_2k_doublesided = stream_connect_create_2D("curv_2kdouble",
-                                size_curvature, 1,
-                                _DATATYPE_FLOAT);
-    IMGID curv_2k_singlesided = stream_connect_create_2D("curv_2ksingle",
-                                size_curvature, 1,
-                                _DATATYPE_FLOAT);
+    IMGID    curv_1k_doublesided =
+        stream_connect_create_2D("curv_1kdouble", size_curvature, 1, _DATATYPE_FLOAT);
+    IMGID curv_2k_doublesided =
+        stream_connect_create_2D("curv_2kdouble", size_curvature, 1, _DATATYPE_FLOAT);
+    IMGID curv_2k_singlesided =
+        stream_connect_create_2D("curv_2ksingle", size_curvature, 1, _DATATYPE_FLOAT);
 
 
-    IMGID lowfs_info = stream_connect_create_2D("lowfs_data", 11, 1,
-                       _DATATYPE_FLOAT);
-    struct LOWFS_INFO_STRUCT *lowfs_info_ptr = (struct LOWFS_INFO_STRUCT *)
-            lowfs_info.im->array.F;
+    IMGID lowfs_info = stream_connect_create_2D("lowfs_data", 11, 1, _DATATYPE_FLOAT);
+    struct LOWFS_INFO_STRUCT *lowfs_info_ptr = (struct LOWFS_INFO_STRUCT *) lowfs_info.im->array.F;
 
     // TODO Does procinfo need to be marked that apd_mat_in is the triggersname? YES!
 
-    float frame_max = 0;
-    float frame_mean = 0;
-    float long_term_mean = 0;
+    float frame_max           = 0;
+    float frame_mean          = 0;
+    float long_term_mean      = 0;
     float long_term_mean_gain = 0.002;
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
@@ -311,29 +297,30 @@ static errno_t compute_function()
     {
         int curv_sign = apd_mat_in.im->kw[kw_idx_CURVSGN].value.numl;
 
-        int16_t *apd_ptr = apd_mat_in.im->array.SI16 + curv_sign * apd_mat_in.md->size[0];
+        int16_t *apd_ptr       = apd_mat_in.im->array.SI16 + curv_sign * apd_mat_in.md->size[0];
         int16_t *apd_lowfs_ptr = apd_ptr + NUM_APD_HOWFS;
 
         // Computations for safety
-        frame_max = 0.0;
+        frame_max  = 0.0;
         frame_mean = 0.0;
-        for(int kk = 0; kk < NUM_APD_HOWFS + NUM_APD_LOWFS; ++kk)
+        for (int kk = 0; kk < NUM_APD_HOWFS + NUM_APD_LOWFS; ++kk)
         {
             float val = (float) apd_ptr[kk];
             frame_max = val > frame_max ? val : frame_max;
             frame_mean += val;
         }
         frame_mean /= (NUM_APD_HOWFS + NUM_APD_LOWFS);
-        long_term_mean = (1 - long_term_mean_gain) * long_term_mean + long_term_mean_gain * frame_mean;
-        if(frame_max > 8000 || frame_mean > 4000 || long_term_mean > 2000)
+        long_term_mean =
+            (1 - long_term_mean_gain) * long_term_mean + long_term_mean_gain * frame_mean;
+        if (frame_max > 8000 || frame_mean > 4000 || long_term_mean > 2000)
         {
             fflush(stdout);
             apd_safety_execute(0); // lowfs
             apd_safety_execute(1); // howfs
             processloopOK =
-            1; // This is gonna quit // IT SHOULDN'T QUIT - but it should open the loop?
+                1; // This is gonna quit // IT SHOULDN'T QUIT - but it should open the loop?
             // But the FPDP framegrabber is still running, so we can still get APD statistic to cntmon.
-            for(int i = 0; i < 50; ++i)
+            for (int i = 0; i < 50; ++i)
             {
                 printf("APD safety executing!!\n");
             }
@@ -354,43 +341,29 @@ static errno_t compute_function()
         // HOWFS curvature computations
         // TODO Pass keywords through. Or don't?
         curv_2k_doublesided.im->md->write = 1;
-        two_sided_curvature_compute(curv_2k_doublesided.im->array.F,
-            apd_mat_in.im->array.SI16,
-            NUM_APD_TOTAL,
-            NUM_APD_HOWFS);
-        processinfo_update_output_stream(processinfo,
-            curv_2k_doublesided.im,
-            NULL);
+        two_sided_curvature_compute(curv_2k_doublesided.im->array.F, apd_mat_in.im->array.SI16,
+                                    NUM_APD_TOTAL, NUM_APD_HOWFS);
+        processinfo_update_output_stream(processinfo, curv_2k_doublesided.im, NULL);
 
         // Post outputs
-        if(curv_sign == 1)
+        if (curv_sign == 1)
         {
             curv_1k_doublesided.im->md->write = 1;
             memcpy(curv_1k_doublesided.im->array.F, curv_2k_doublesided.im->array.F,
                    NUM_APD_HOWFS * sizeof(float));
-            processinfo_update_output_stream(processinfo,
-                curv_1k_doublesided.im,
-                NULL);
+            processinfo_update_output_stream(processinfo, curv_1k_doublesided.im, NULL);
         }
 
         curv_2k_singlesided.im->md->write = 1;
         // Get the latest side of the APD 216x2 buffer. WARNING: Size may be 217 if the curvature tag is embedded!
         // apd_mat_in.size[0] = 216 or 217 =/= NUM_APD_HOWFS.
 
-        apd_integrator_update(apd_integrator,
-            apd_ptr,
-            one_sided_curv_integrator_gain,
-            NUM_APD_HOWFS);
-        one_sided_curvature_compute(curv_2k_singlesided.im->array.F,
-            apd_ptr,
-            apd_integrator,
-            NUM_APD_HOWFS,
-            curv_sign);
+        apd_integrator_update(apd_integrator, apd_ptr, one_sided_curv_integrator_gain,
+                              NUM_APD_HOWFS);
+        one_sided_curvature_compute(curv_2k_singlesided.im->array.F, apd_ptr, apd_integrator,
+                                    NUM_APD_HOWFS, curv_sign);
 
-        processinfo_update_output_stream(processinfo,
-            curv_2k_singlesided.im,
-            NULL);
-
+        processinfo_update_output_stream(processinfo, curv_2k_singlesided.im, NULL);
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
@@ -410,15 +383,12 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 // Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl_IOtools__AO188Preproc()
+errno_t CLIADDCMD_AOloopControl_IOtools__AO188Preproc()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
@@ -432,12 +402,11 @@ CLIADDCMD_AOloopControl_IOtools__AO188Preproc()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function,
-    customCONFsetup,
-    customCONFcheck)
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
+                                 FPS_PARAMS,
+                                 compute_function,
+                                 customCONFsetup,
+                                 customCONFcheck)
 #endif
 
 /*

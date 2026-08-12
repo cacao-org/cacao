@@ -4,7 +4,7 @@
 # Calibration script
 
 # Configuration name
-# 
+#
 export CACAO_CONFWDIR="$1"
 cwd=$(pwd)
 
@@ -31,9 +31,9 @@ fi
 
 
 
-# Assemble zonal RM 
+# Assemble zonal RM
 # average 4x zonal RMs
-if ftest "zrespM"; then	
+if ftest "zrespM"; then
 cd ${CACAO_CONFWDIR}
 ./mkzRM
 cd $cwd

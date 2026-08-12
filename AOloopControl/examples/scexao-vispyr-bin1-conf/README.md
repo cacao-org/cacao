@@ -3,18 +3,16 @@
 SCExAO system pyramid WFS.
 Full-resolution WFS (240x240)
 
-
-
 cacao-task-manager tasks for this example :
 
-~~~
+```
  0           INITSETUP             DONE        READY   Initial setup:
  1     GETSIMCONFFILES             DONE        READY   Get simulation files:
  2          TESTCONFIG             DONE        READY   Test configuration:
  3          CACAOSETUP             DONE        READY   Run cacao-setup:
-~~~
-Subsequent tasks can perform specific parts of the AO loop.
+```
 
+Subsequent tasks can perform specific parts of the AO loop.
 
 # Running the example
 

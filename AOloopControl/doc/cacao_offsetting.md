@@ -1,13 +1,6 @@
-
-
 # Offsetting {#page_cacao_offsetting}
 
-
-
 Input channels are provided to offset the AO loop convergence point. By default, **DM channels 04-11 can be dedicated to zero-point offsetting**. The DM channels are sym-linked to `aolN_dmZP0` - `aolN_dmZP7`.
-
-
-
 
 Zero-point offsetting relies on two separate processes :
 
@@ -17,11 +10,9 @@ Zero-point offsetting relies on two separate processes :
 Zonal offsetting takes a DM map, multiplies it by the response matrix (in CPU or GPU).
 With Modal offsetting, this multiplication is pre-computed.
 
-
-
----
 ---
 
+---
 
 ## 1. Converting DM offsets to WFS offsets (zonal, CPU mode)
 
@@ -33,10 +24,9 @@ Every time one of the activated DM channel changes, the corresponding wfs `aolN_
 
 The process runs inside tmux session `aolNzploop#`
 
-
----
 ---
 
+---
 
 ## 2. Converting DM offsets to WFS offsets (zonal, GPU mode)
 
@@ -48,8 +38,8 @@ Every time one of the activated DM channel changes, the corresponding wfs `aolN_
 
 The process runs inside tmux session `aolNGPUzploop#`
 
-
 ---
+
 ---
 
 ## 3. Modal offsetting from another loop
@@ -66,12 +56,9 @@ To implement modal offsetting from a separate loop (refered to as the offsetting
 
 - Activate the WFS offsets process (see next subsection)
 
-
-
----
 ---
 
-
+---
 
 ## 4. Summing and applying WFS offsets to aolN_wfsref
 
@@ -83,38 +70,23 @@ Command `aolzpwfscloop` (function AOloopControl_WFSzeropoint_sum_update_loop() )
 
 The loop is running inside tmux session `aolNwfszpo`, and is launched when the loop is closed (`Floopon`) if the loop zero point offset flag is toggled on (`LPzpo`)
 
-
-
-
----
 ---
 
-
-
+---
 
 ## WFS average offset
 
 Measures average WFS residual with script :
 
-	./auxscripts/aolmkWFSres 0.0005
+    ./auxscripts/aolmkWFSres 0.0005
 
 Running average is in stresm aol_wfsres_ave
 
-
-
-
-
-
-
----
 ---
 
-
-
-
+---
 
 ## Controlling offsets from another loop
-
 
 ## Running the loop
 

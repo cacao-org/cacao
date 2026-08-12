@@ -19,9 +19,9 @@
 #include <stdlib.h>
 
 #ifdef MILK_NO_CLI
-#include "CLIcore_standalone.h"
+#    include "CLIcore_standalone.h"
 #else
-#include "CLIcore.h"
+#    include "CLIcore.h"
 #endif
 #include "COREMOD_memory/COREMOD_memory.h"
 
@@ -33,8 +33,7 @@
  * This is used to give more weigth to most recent measurements
  *
  */
-imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
-        float DecayCoeff)
+imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name, float DecayCoeff)
 {
     imageID IDPF;
     int     xsize, ysize;
@@ -49,7 +48,7 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
     FilterOrder = xsize / ysize;
 
     coeff = (float *) malloc(sizeof(float) * FilterOrder);
-    if(coeff == NULL)
+    if (coeff == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -57,26 +56,28 @@ imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name,
 
     // set up coeffs and compute their sum
     total = 0.0;
-    for(kk = 0; kk < FilterOrder; kk++)
+    for (kk = 0; kk < FilterOrder; kk++)
     {
         coeff[kk] = powf(DecayCoeff, kk);
         total += coeff[kk];
     }
     // normalize such that sum of coeffs is 1
-    for(kk = 0; kk < FilterOrder; kk++)
+    for (kk = 0; kk < FilterOrder; kk++)
     {
         coeff[kk] /= total;
     }
 
     printf("Filter order = %d\n", FilterOrder);
-    for(kk = 0; kk < FilterOrder; kk++)
+    for (kk = 0; kk < FilterOrder; kk++)
     {
-        for(ii = 0; ii < ysize; ii++)
-            for(jj = 0; jj < ysize; jj++)
+        for (ii = 0; ii < ysize; ii++)
+        {
+            for (jj = 0; jj < ysize; jj++)
             {
                 dcimg[IDPF].array.F[jj * xsize + ii + kk * ysize] = 0.0f;
             }
-        for(ii = 0; ii < ysize; ii++)
+        }
+        for (ii = 0; ii < ysize; ii++)
         {
             dcimg[IDPF].array.F[ii * xsize + ii + kk * ysize] = coeff[kk];
         }

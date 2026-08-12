@@ -4,13 +4,11 @@ NIR PyWFS 160x160 onto bimorph 188.
 
 TO BE AMENDED.
 
-
 # Running the example
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
 ## Setting up processes
-
 
 ```bash
 # Deploy configuration :
@@ -53,16 +51,11 @@ cacao-aorun-001-dmsim start
 cacao-aorun-002-simwfs -w start
 ```
 
-
-
 ## Measure WFS dark
-
 
 ```bash
 cacao-aorun-005-takedark -n 2000
 ```
-
-
 
 ## Start WFS acquisition
 
@@ -76,7 +69,6 @@ cacao-aorun-025-acqWFS -w start
 cacao-aorun-026-takeref -n 2000
 ```
 
-
 ## Measure DM to WFS latency
 
 ```bash
@@ -84,10 +76,7 @@ cacao-aorun-026-takeref -n 2000
 cacao-aorun-020-mlat -w
 ```
 
-
-
 ## Acquire response matrix
-
 
 ### Prepare DM poke modes
 
@@ -95,7 +84,9 @@ cacao-aorun-020-mlat -w
 # Create DM poke mode cubes
 cacao-mkDMpokemodes -z 5 -c 25
 ```
+
 The following files are written to ./conf/RMmodesDM/
+
 | File                 | Contents                                            |
 | -------------------- | --------------------------------------------------- |
 | `DMmask.fits     `   | DM mask                                             |
@@ -104,12 +95,9 @@ The following files are written to ./conf/RMmodesDM/
 | `HpokeC.fits     `   | Hadamard modes                                      |
 | `Hmat.fits       `   | Hadamard matrix (to convert Hadamard-zonal)         |
 | `Hpixindex.fits  `   | Hadamard pixel index                                |
-| `SmodesC.fits    `   | *Simple* (single actuator) pokes                    |
-
-
+| `SmodesC.fits    `   | _Simple_ (single actuator) pokes                    |
 
 ### Run acquisition
-
 
 ```bash
 # Acquire response matrix - Hadamard modes
@@ -123,7 +111,6 @@ cacao-aorun-030-acqlinResp -n 20 -w HpokeC
 cacao-aorun-031-RMHdecode
 ```
 
-
 ## Compute control matrix (straight)
 
 Compute control modes, in both WFS and DM spaces.
@@ -131,15 +118,14 @@ Compute control modes, in both WFS and DM spaces.
 ```bash
 cacao-fpsctrl setval compstrCM svdlim 0.001
 ```
+
 Then run the compstrCM process to compute CM and load it to shared memory :
+
 ```bash
 cacao-aorun-039-compstrCM
 ```
 
-
-
 ## Running the loop
-
 
 Start the 3 control loop processes :
 
@@ -168,6 +154,5 @@ cacao-fpsctrl setval mfilt loopmult 0.99
 cacao-fpsctrl setval mfilt loopON ON
 
 ```
-
 
 THE END

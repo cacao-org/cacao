@@ -27,12 +27,12 @@
 //
 typedef struct
 {
-    int PokeIndexMEAS;
-    int PokeIndexCTRL;
-    int PokeIndexMEAS_Mapped;
-    int PokeIndexCTRL_Mapped;
-    int aveindex;
-    int pokedelayns;
+    int             PokeIndexMEAS;
+    int             PokeIndexCTRL;
+    int             PokeIndexMEAS_Mapped;
+    int             PokeIndexCTRL_Mapped;
+    int             aveindex;
+    int             pokedelayns;
     struct timespec tstart;
     struct timespec tpoke;
 } PokeInfo;
@@ -47,10 +47,10 @@ static PokeInfo *pkinfarray;
 static FPS_APP_INFO FPS_app_info = {
     .fps_name    = "measlinresp",
     .cmdkey      = "measlinresp",
-    .description =
-        "measure linear response of one stream to another",
+    .description = "measure linear response of one stream to another",
     .description_long =
-        "Measure the linear response between two streams (input and output). Computes the transfer function by correlating perturbations with responses."
+        "Measure the linear response between two streams (input and output). Computes the transfer "
+        "function by correlating perturbations with responses."
 };
 
 
@@ -75,51 +75,24 @@ static int64_t  *saveALL            = NULL;
  * 3.  UNIFIED PARAMETER TABLE (X-Macro)
  * ============================================================= */
 
-#define FPS_PARAMS(X) \
-    X(".streamin", &streamin, \
-      FPTYPE_STREAMNAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "input (perturbation) stream") \
-    X(".streamout", &streamout, \
-      FPTYPE_STREAMNAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "output (signal) stream") \
-    X(".inmodes", &inmodeC, \
-      FPTYPE_FITSFILENAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "input modes") \
-    X(".outmodes", &outmodeC, \
-      FPTYPE_FITSFILENAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "output modes") \
-    X(".ampl", &pokeampl, \
-      FPTYPE_FLOAT32, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "RM poke amplitude") \
-    X(".timing.WFSfrequ", &timing_framerateHz, \
-      FPTYPE_FLOAT32, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "WFS frame rate [Hz]") \
-    X(".timing.hardwlatfr", &timing_latencyfr, \
-      FPTYPE_FLOAT32, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "hardware latency [fr]") \
-    X(".timing.NBave", &NBave, \
-      FPTYPE_UINT32, 0, \
-      FPFLAG_DEFAULT_INPUT, \
-      "Frames averaged per poke") \
-    X(".timing.NBexcl", &NBexcl, \
-      FPTYPE_UINT32, 0, \
-      FPFLAG_DEFAULT_INPUT, \
-      "Number of frames excluded") \
-    X(".timing.NBinnerCycle", &NBinnerCycle, \
-      FPTYPE_UINT32, 0, \
-      FPFLAG_DEFAULT_INPUT, \
-      "Number of inner cycles") \
-    X(".saveALL", &saveALL, \
-      FPTYPE_ONOFF, 0, \
-      FPFLAG_DEFAULT_INPUT, \
-      "save intermediate files")
+#define FPS_PARAMS(X)                                                                              \
+    X(".streamin", &streamin, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT,                          \
+      "input (perturbation) stream")                                                               \
+    X(".streamout", &streamout, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT,                        \
+      "output (signal) stream")                                                                    \
+    X(".inmodes", &inmodeC, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "input modes")           \
+    X(".outmodes", &outmodeC, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "output modes")        \
+    X(".ampl", &pokeampl, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "RM poke amplitude")            \
+    X(".timing.WFSfrequ", &timing_framerateHz, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "WFS frame rate [Hz]")                                                                       \
+    X(".timing.hardwlatfr", &timing_latencyfr, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "hardware latency [fr]")                                                                     \
+    X(".timing.NBave", &NBave, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT, "Frames averaged per poke") \
+    X(".timing.NBexcl", &NBexcl, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT,                           \
+      "Number of frames excluded")                                                                 \
+    X(".timing.NBinnerCycle", &NBinnerCycle, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT,               \
+      "Number of inner cycles")                                                                    \
+    X(".saveALL", &saveALL, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT, "save intermediate files")
 
 
 /* ================================================================
@@ -304,20 +277,18 @@ static errno_t __attribute__((unused)) help_function()
  */
 
 
-static errno_t Measure_Linear_Response_Modal(
-    IMGID       imgin,
-    IMGID       imgout,
-    IMGID       imginmodeC,
-    float       ampl,
-    float       framerateHz,
-    float       latencyfr,
-    uint32_t    timing_NBave,
-    uint32_t    timing_NBexcl,
-    uint32_t    SequInitMode,
-    char       *outCname,
-    char       *outdir,
-    int         saveALL
-)
+static errno_t Measure_Linear_Response_Modal(IMGID    imgin,
+                                             IMGID    imgout,
+                                             IMGID    imginmodeC,
+                                             float    ampl,
+                                             float    framerateHz,
+                                             float    latencyfr,
+                                             uint32_t timing_NBave,
+                                             uint32_t timing_NBexcl,
+                                             uint32_t SequInitMode,
+                                             char    *outCname,
+                                             char    *outdir,
+                                             int      saveALL)
 {
     DEBUG_TRACE_FSTART();
 
@@ -326,19 +297,19 @@ static errno_t Measure_Linear_Response_Modal(
 
     // Input space dimensions
     //
-    uint32_t sizexin = imgin.md->size[0];
-    uint32_t sizeyin = imgin.md->size[1];
+    uint32_t sizexin  = imgin.md->size[0];
+    uint32_t sizeyin  = imgin.md->size[1];
     uint64_t sizexyin = sizexin;
     sizexyin *= sizeyin;
 
     // Output space dimensions
     //
-    uint32_t sizexout = imgout.md->size[0];
-    uint32_t sizeyout = imgout.md->size[1];
+    uint32_t sizexout  = imgout.md->size[0];
+    uint32_t sizeyout  = imgout.md->size[1];
     uint64_t sizexyout = sizexout;
     sizexyout *= sizeyout;
 
-    long NBmode       = imginmodeC.md->size[2];
+    long NBmode = imginmodeC.md->size[2];
 
     DEBUG_TRACEPOINT("%ld modes", NBmode);
 
@@ -348,33 +319,33 @@ static errno_t Measure_Linear_Response_Modal(
 
     DEBUG_TRACEPOINT("duplicaate each mode to positive and negative amplitude");
     //
-    long NBmode2 = NBmode * 2;
+    long  NBmode2     = NBmode * 2;
     IMGID imginmodeC2 = imgid_make_from_name_3D("pokemodeC2", sizexin, sizeyin, NBmode2);
     createimagefromIMGID(&imginmodeC2);
 
     DEBUG_TRACEPOINT("sizexyin %lu", sizexyin);
 
-    for(int mode = 0; mode < NBmode; mode++)
+    for (int mode = 0; mode < NBmode; mode++)
     {
         int mode2 = 2 * mode;
-        for(uint64_t ii = 0; ii < sizexyin; ii++)
+        for (uint64_t ii = 0; ii < sizexyin; ii++)
         {
-            imginmodeC2.im->array.F[mode2 * sizexyin + ii] = ampl *
-                    imginmodeC.im->array.F[mode * sizexyin + ii];
+            imginmodeC2.im->array.F[mode2 * sizexyin + ii] =
+                ampl * imginmodeC.im->array.F[mode * sizexyin + ii];
         }
         mode2 = 2 * mode + 1;
-        for(uint64_t ii = 0; ii < sizexyin; ii++)
+        for (uint64_t ii = 0; ii < sizexyin; ii++)
         {
-            imginmodeC2.im->array.F[mode2 * sizexyin + ii] = -ampl *
-                    imginmodeC.im->array.F[mode * sizexyin + ii];
+            imginmodeC2.im->array.F[mode2 * sizexyin + ii] =
+                -ampl * imginmodeC.im->array.F[mode * sizexyin + ii];
         }
     }
 
 
     printf("    input  space size : %u %u\n", sizexin, sizeyin);
     printf("    output space size : %u %u\n", sizexout, sizeyout);
-    printf("    input modes size  : %u %u %u\n", imginmodeC.md->size[0],
-           imginmodeC.md->size[1], imginmodeC.md->size[2]);
+    printf("    input modes size  : %u %u %u\n", imginmodeC.md->size[0], imginmodeC.md->size[1],
+           imginmodeC.md->size[2]);
 
     printf("    framerateHz       : %f\n", framerateHz);
     printf("    latencyfr         : %f\n", latencyfr);
@@ -389,14 +360,13 @@ static errno_t Measure_Linear_Response_Modal(
     float dtfr = (latencyfr - 0.5) + 0.5 * timing_NBexcl;
     // positive value indicates the DM poke occurs before cycle start
 
-    int RMdelayfr = 0;
+    int RMdelayfr  = 0;
     int delayMR1ns = 0;
-    if(dtfr > 0.0)
+    if (dtfr > 0.0)
     {
         // dtfr is then split into an integer offset [RMdelayfr] and the pokedelayns [delayMR1ns] :
-        RMdelayfr = ceilf(dtfr);
-        delayMR1ns = (int)((1.0 * RMdelayfr - dtfr) * (1.0 / framerateHz) * 1.0e9 +
-                           0.5);
+        RMdelayfr  = ceilf(dtfr);
+        delayMR1ns = (int) ((1.0 * RMdelayfr - dtfr) * (1.0 / framerateHz) * 1.0e9 + 0.5);
     }
 
     printf("dtfr       = %f\n", dtfr);
@@ -406,15 +376,15 @@ static errno_t Measure_Linear_Response_Modal(
 
     // number of poke frames
     uint64_t NBpokeframe;
-    NBpokeframe  = timing_NBave + timing_NBexcl;  // for each mode
-    NBpokeframe *= NBmode2;                       // multiplied by number of modes
-    NBpokeframe += RMdelayfr;                     // to allow for latency at startup
+    NBpokeframe = timing_NBave + timing_NBexcl; // for each mode
+    NBpokeframe *= NBmode2;                     // multiplied by number of modes
+    NBpokeframe += RMdelayfr;                   // to allow for latency at startup
 
     pkinfarray = (PokeInfo *) malloc(sizeof(PokeInfo) * NBpokeframe);
 
 
     // initialization
-    for(uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe ++)
+    for (uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
     {
         // poke first mode
         pkinfarray[pokeframe].PokeIndexCTRL = 0;
@@ -424,16 +394,16 @@ static errno_t Measure_Linear_Response_Modal(
         pkinfarray[pokeframe].PokeIndexMEAS = -1;
     }
 
-    for(int pokemode = 0; pokemode < NBmode2; pokemode++)
+    for (int pokemode = 0; pokemode < NBmode2; pokemode++)
     {
-        for(uint32_t aveindex = 0; aveindex < timing_NBave + timing_NBexcl; aveindex++)
+        for (uint32_t aveindex = 0; aveindex < timing_NBave + timing_NBexcl; aveindex++)
         {
             int pokeCTRLindex = pokemode * (timing_NBave + timing_NBexcl) + aveindex;
             int pokeMEASindex = pokeCTRLindex + RMdelayfr;
 
             pkinfarray[pokeCTRLindex].PokeIndexCTRL = pokemode;
             pkinfarray[pokeMEASindex].PokeIndexMEAS = pokemode;
-            pkinfarray[pokeMEASindex].aveindex = aveindex;
+            pkinfarray[pokeMEASindex].aveindex      = aveindex;
         }
     }
 
@@ -455,14 +425,11 @@ static errno_t Measure_Linear_Response_Modal(
 
 
     // Cumulative
-    for(uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
+    for (uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
     {
         char imname[STRINGMAXLEN_IMGNAME];
         WRITE_IMAGENAME(imname, "imoutStep%03u", AveStep);
-        create_3Dimage_ID(imname,
-                          imgout.md->size[0],
-                          imgout.md->size[1],
-                          NBmode2,
+        create_3Dimage_ID(imname, imgout.md->size[0], imgout.md->size[1], NBmode2,
                           &(IDoutCstep[AveStep]));
     }
 
@@ -474,14 +441,14 @@ static errno_t Measure_Linear_Response_Modal(
     IMGID imgoutC2 = imgid_make_from_name_3D("tmpmoderespraw", sizexout, sizeyout, NBmode2);
     createimagefromIMGID(&imgoutC2);
 
-    for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
+    for (uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
     {
         // Mode to be poked
 
-        for(uint64_t ii = 0; ii < imgout.md->size[0]*imgout.md->size[1]; ii++)
+        for (uint64_t ii = 0; ii < imgout.md->size[0] * imgout.md->size[1]; ii++)
         {
             imgoutC2.im->array.F[PokeIndex * sizexyout + ii] = 0.0;
-            for(uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
+            for (uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
             {
                 dcimg[IDoutCstep[AveStep]].array.F[PokeIndex * sizexyout + ii] = 0.0;
             }
@@ -492,20 +459,20 @@ static errno_t Measure_Linear_Response_Modal(
     // Poke sequence defines the sequence of mode poked for each iteration
     uint32_t *array_PokeSequ = (uint32_t *) malloc(sizeof(uint32_t) * NBmode2);
     // It is first initiated to poke consecutive modes
-    for(uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
+    for (uint32_t PokeIndex = 0; PokeIndex < NBmode2; PokeIndex++)
     {
         array_PokeSequ[PokeIndex] = PokeIndex;
     }
 
-    if(SequInitMode & 0x01)
+    if (SequInitMode & 0x01)
     {
         // swap pairs every 4 indices
-        for(uint32_t PokeIndex = 0; PokeIndex < NBmode2 - 1; PokeIndex += 4)
+        for (uint32_t PokeIndex = 0; PokeIndex < NBmode2 - 1; PokeIndex += 4)
         {
             uint32_t index0 = PokeIndex;
             uint32_t index1 = PokeIndex + 1;
 
-            while(index1 > (uint32_t)(NBmode2 - 1))
+            while (index1 > (uint32_t) (NBmode2 - 1))
             {
                 index1 -= NBmode2;
             }
@@ -523,8 +490,8 @@ static errno_t Measure_Linear_Response_Modal(
     int permut_offset = 0;
 
 
-    char *ptr0      = (char *) imginmodeC2.im->array.F;
-    size_t framesize   = sizeof(float) * sizexin * sizeyin;
+    char  *ptr0      = (char *) imginmodeC2.im->array.F;
+    size_t framesize = sizeof(float) * sizexin * sizeyin;
 
     int semindexout = ImageStreamIO_getsemwaitindex(imgout.im, 0);
     printf("Using semaphore %d\n", semindexout);
@@ -538,30 +505,27 @@ static errno_t Measure_Linear_Response_Modal(
         printf("ITERATION %d\n", iter);
         fflush(stdout);
 
-        processinfo_WriteMessage_fmt(processinfo, "it %lu/%lu",
-                                     iter,
-                                     processinfo->loopcntMax
-                                    );
+        processinfo_WriteMessage_fmt(processinfo, "it %lu/%lu", iter, processinfo->loopcntMax);
 
 
         // swap pokes pairs
         //
-        if(SequInitMode & 0x02)
+        if (SequInitMode & 0x02)
         {
             printf("SWAPPING, MODE 2\n");
             fflush(stdout);
             permut_offset++;
-            if(permut_offset == 2)
+            if (permut_offset == 2)
             {
                 permut_offset = 0;
             }
 
-            for(uint32_t PokeIndex = permut_offset; PokeIndex < NBmode2; PokeIndex += 2)
+            for (uint32_t PokeIndex = permut_offset; PokeIndex < NBmode2; PokeIndex += 2)
             {
                 uint32_t index0 = PokeIndex;
                 uint32_t index1 = PokeIndex + 1;
 
-                if(index1 > (uint32_t)(NBmode2 - 1))
+                if (index1 > (uint32_t) (NBmode2 - 1))
                 {
                     index1 -= NBmode2;
                 }
@@ -575,20 +539,15 @@ static errno_t Measure_Linear_Response_Modal(
         }
 
 
-        for(uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe ++)
+        for (uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
         {
-
-            processinfo_WriteMessage_fmt(processinfo, "it %lu/%lu pokeframe %6lu / %6lu",
-                                         iter,
-                                         processinfo->loopcntMax,
-                                         pokeframe,
-                                         NBpokeframe
-                                        );
+            processinfo_WriteMessage_fmt(processinfo, "it %lu/%lu pokeframe %6lu / %6lu", iter,
+                                         processinfo->loopcntMax, pokeframe, NBpokeframe);
 
             pkinfarray[pokeframe].PokeIndexCTRL_Mapped =
                 array_PokeSequ[pkinfarray[pokeframe].PokeIndexCTRL];
 
-            if(pkinfarray[pokeframe].PokeIndexMEAS != -1)
+            if (pkinfarray[pokeframe].PokeIndexMEAS != -1)
             {
                 pkinfarray[pokeframe].PokeIndexMEAS_Mapped =
                     array_PokeSequ[pkinfarray[pokeframe].PokeIndexMEAS];
@@ -627,8 +586,8 @@ static errno_t Measure_Linear_Response_Modal(
             // Poke
             //
             imgin.md->write = 1;
-            memcpy((void *)(imgin.im->array.F),
-                   (void *)(ptr0 + pkinfarray[pokeframe].PokeIndexCTRL_Mapped * framesize),
+            memcpy((void *) (imgin.im->array.F),
+                   (void *) (ptr0 + pkinfarray[pokeframe].PokeIndexCTRL_Mapped * framesize),
                    sizeof(float) * sizexyin);
             imgin.md->cnt1 = pkinfarray[pokeframe].PokeIndexCTRL_Mapped;
             processinfo_update_output_stream(processinfo, imgin.im, NULL);
@@ -637,16 +596,13 @@ static errno_t Measure_Linear_Response_Modal(
 
             // Collect signal
             //
-            if((pkinfarray[pokeframe].aveindex < (int) timing_NBave)
-                    && (pkinfarray[pokeframe].PokeIndexMEAS_Mapped != -1))
+            if ((pkinfarray[pokeframe].aveindex < (int) timing_NBave) &&
+                (pkinfarray[pokeframe].PokeIndexMEAS_Mapped != -1))
             {
                 {
-                    char *ptr = (char *)
-                                dcimg[IDoutCstep[pkinfarray[pokeframe].aveindex]].array.F;
+                    char *ptr = (char *) dcimg[IDoutCstep[pkinfarray[pokeframe].aveindex]].array.F;
                     ptr += sizeof(float) * pkinfarray[pokeframe].PokeIndexMEAS_Mapped * sizexyout;
-                    memcpy(ptr,
-                           imgout.im->array.F,
-                           sizeof(float) * sizexyout);
+                    memcpy(ptr, imgout.im->array.F, sizeof(float) * sizexyout);
                 }
             }
         }
@@ -656,14 +612,12 @@ static errno_t Measure_Linear_Response_Modal(
         {
             /* A temporary array is created to hold the input commands */
             float *arrayf = (float *) calloc(sizexyin, sizeof(float));
-            for(uint64_t ii = 0; ii < sizexyin; ii++)
+            for (uint64_t ii = 0; ii < sizexyin; ii++)
             {
                 arrayf[ii] = 0.0;
             }
             imgin.md->write = 1;
-            memcpy((void *)(imgin.im->array.F),
-                   (void *)(arrayf),
-                   sizeof(float) * sizexyin);
+            memcpy((void *) (imgin.im->array.F), (void *) (arrayf), sizeof(float) * sizexyin);
             imgin.md->cnt1 = 0;
             processinfo_update_output_stream(processinfo, imgin.im, NULL);
             free(arrayf);
@@ -673,17 +627,17 @@ static errno_t Measure_Linear_Response_Modal(
         printf("Combining results ... ");
         fflush(stdout);
 
-        for(uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
+        for (uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
         {
             // sum over all values AveStep
-            for(pkinf.PokeIndexMEAS_Mapped = 0; pkinf.PokeIndexMEAS_Mapped < NBmode2;
-                    pkinf.PokeIndexMEAS_Mapped++)
+            for (pkinf.PokeIndexMEAS_Mapped = 0; pkinf.PokeIndexMEAS_Mapped < NBmode2;
+                 pkinf.PokeIndexMEAS_Mapped++)
             {
-                for(uint64_t ii = 0; ii < sizexyout; ii++)
+                for (uint64_t ii = 0; ii < sizexyout; ii++)
                 {
                     imgoutC2.im->array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout + ii] +=
-                    dcimg[IDoutCstep[AveStep]].array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout +
-                                                            ii];
+                        dcimg[IDoutCstep[AveStep]]
+                            .array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout + ii];
                 }
             }
         }
@@ -696,9 +650,8 @@ static errno_t Measure_Linear_Response_Modal(
 
         EXECUTE_SYSTEM_COMMAND("mkdir -m775 -p %s", outdir);
 
-        if(saveALL == 1)
+        if (saveALL == 1)
         {
-
             // Save all intermediate result
 
             FILE *fplog;
@@ -717,19 +670,15 @@ static errno_t Measure_Linear_Response_Modal(
 
             // Save individual time step within averaging for high temporal
             // resolution
-            for(uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
+            for (uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
             {
-
                 // save to disk IDoutCstep[AveStep]
 
                 char imname[STRINGMAXLEN_IMGNAME];
                 WRITE_IMAGENAME(imname, "imoutStep%03u", AveStep);
 
                 char tmpfname[STRINGMAXLEN_FULLFILENAME];
-                WRITE_FULLFILENAME(tmpfname,
-                                   "%s/wfsresp.tstep%03u.iter%04d.fits",
-                                   outdir,
-                                   AveStep,
+                WRITE_FULLFILENAME(tmpfname, "%s/wfsresp.tstep%03u.iter%04d.fits", outdir, AveStep,
                                    iter);
                 printf("SAVING %s -> %s ... ", imname, tmpfname);
                 fflush(stdout);
@@ -743,7 +692,7 @@ static errno_t Measure_Linear_Response_Modal(
         // print poke log
         {
             char tmpfname[STRINGMAXLEN_FULLFILENAME];
-            if(strlen(outdir) > 0)
+            if (strlen(outdir) > 0)
             {
                 WRITE_FULLFILENAME(tmpfname, "%s/RMpokelog.iter%04d.txt", outdir, iter);
             }
@@ -768,18 +717,13 @@ static errno_t Measure_Linear_Response_Modal(
             fprintf(fp, "# col 9   timing_NBave\n");
             fprintf(fp, "#\n");
 
-            for(uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
+            for (uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
             {
-                fprintf(fp,
-                        "%6lu %3d    %4d %4d   %4d %4d     %3ld %3u %3u\n",
-                        pokeframe,
-                        pkinfarray[pokeframe].aveindex,
-                        pkinfarray[pokeframe].PokeIndexMEAS,
+                fprintf(fp, "%6lu %3d    %4d %4d   %4d %4d     %3ld %3u %3u\n", pokeframe,
+                        pkinfarray[pokeframe].aveindex, pkinfarray[pokeframe].PokeIndexMEAS,
                         pkinfarray[pokeframe].PokeIndexCTRL,
                         pkinfarray[pokeframe].PokeIndexMEAS_Mapped,
-                        pkinfarray[pokeframe].PokeIndexCTRL_Mapped,
-                        NBmode2,
-                        timing_NBexcl,
+                        pkinfarray[pokeframe].PokeIndexCTRL_Mapped, NBmode2, timing_NBexcl,
                         timing_NBave);
             }
             fclose(fp);
@@ -793,7 +737,7 @@ static errno_t Measure_Linear_Response_Modal(
             fflush(stdout);
 
             WRITE_FULLFILENAME(tmpfname, "%s/RMpokeTiming.iter%04d.txt", outdir, iter);
-            FILE *fp            = fopen(tmpfname, "w");
+            FILE  *fp     = fopen(tmpfname, "w");
             double ftime0 = pkinfarray[0].tstart.tv_sec + 1.0e-9 * pkinfarray[0].tstart.tv_nsec;
             double ftime;
 
@@ -806,18 +750,13 @@ static errno_t Measure_Linear_Response_Modal(
             fprintf(fp, "# col 4   PokeIndexMEAS\n");
             fprintf(fp, "# col 5   time increment\n");
 
-            for(uint64_t ii = 0; ii < NBpokeframe; ii++)
+            for (uint64_t ii = 0; ii < NBpokeframe; ii++)
             {
                 ftime = pkinfarray[ii].tstart.tv_sec + 1.0e-9 * pkinfarray[ii].tstart.tv_nsec;
-                fprintf(fp,
-                        "%5lu  %16ld.%09ld  %16ld.%09ld  %5d  %12.9lf\n",
-                        ii,
-                        pkinfarray[ii].tstart.tv_sec,
-                        pkinfarray[ii].tstart.tv_nsec,
-                        pkinfarray[ii].tpoke.tv_sec,
-                        pkinfarray[ii].tpoke.tv_nsec,
-                        pkinfarray[ii].PokeIndexMEAS,
-                        ftime - ftime0);
+                fprintf(fp, "%5lu  %16ld.%09ld  %16ld.%09ld  %5d  %12.9lf\n", ii,
+                        pkinfarray[ii].tstart.tv_sec, pkinfarray[ii].tstart.tv_nsec,
+                        pkinfarray[ii].tpoke.tv_sec, pkinfarray[ii].tpoke.tv_nsec,
+                        pkinfarray[ii].PokeIndexMEAS, ftime - ftime0);
                 ftime0 = ftime;
             }
             fclose(fp);
@@ -835,24 +774,21 @@ static errno_t Measure_Linear_Response_Modal(
             IMGID imgmoderespC = imgid_make_from_name_3D("moderespC", sizexout, sizeyout, NBmode);
             createimagefromIMGID(&imgmoderespC);
 
-            for(int mode = 0; mode < NBmode; mode++)
+            for (int mode = 0; mode < NBmode; mode++)
             {
-                for(uint64_t ii = 0; ii < sizexyout; ii++)
+                for (uint64_t ii = 0; ii < sizexyout; ii++)
                 {
                     float posval = imgoutC2.im->array.F[(mode * 2) * sizexyout + ii];
                     float negval = imgoutC2.im->array.F[(mode * 2 + 1) * sizexyout + ii];
-                    imgmoderespC.im->array.F[ mode * sizexyout + ii ] = (posval - negval) / 2 /
-                    (timing_NBave * (iter + 1) * ampl);
-
+                    imgmoderespC.im->array.F[mode * sizexyout + ii] =
+                        (posval - negval) / 2 / (timing_NBave * (iter + 1) * ampl);
                 }
-
             }
             save_fits(imgmoderespC.name, tmpoutfname);
             save_fits(imgmoderespC.name, outCname);
         }
 
         iter++;
-
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
@@ -875,31 +811,31 @@ static errno_t compute_function()
 
     // connect to input space
     IMGID imgin = imgid_make_from_name(streamin);
-    resolveIMGID(
-        &imgin, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (imgin.ID == -1) return RETURN_FAILURE;
+    resolveIMGID(&imgin, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgin.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
     printf("input  space size : %u %u\n", imgin.md->size[0], imgin.md->size[1]);
 
     // connect to output space
     IMGID imgout = imgid_make_from_name(streamout);
-    resolveIMGID(
-        &imgout, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (imgout.ID == -1) return RETURN_FAILURE;
+    resolveIMGID(&imgout, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgout.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
     printf("output space size : %u %u\n", imgout.md->size[0], imgout.md->size[1]);
 
     load_fits(inmodeC, "inmodeC", LOADFITS_ERRMODE_WARNING, NULL);
     IMGID imginmodeC = imgid_make_from_name("inmodeC");
-    resolveIMGID(
-        &imginmodeC, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (imginmodeC.ID == -1) return RETURN_FAILURE;
-    printf("input modes size : %u %u %u\n", imginmodeC.md->size[0],
-           imginmodeC.md->size[1], imginmodeC.md->size[2]);
+    resolveIMGID(&imginmodeC, ERRMODE_WARN, dcimg, dcnimg);
+    if (imginmodeC.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
+    printf("input modes size : %u %u %u\n", imginmodeC.md->size[0], imginmodeC.md->size[1],
+           imginmodeC.md->size[2]);
 
 
     // TODO Check that DM size matches poke file
@@ -912,20 +848,9 @@ static errno_t compute_function()
     mkUTtimestring_nanosec_now(timestring);
     WRITE_DIRNAME(savedir, "measlinrespm/%s", timestring);
 
-    Measure_Linear_Response_Modal(
-        imgin,
-        imgout,
-        imginmodeC,
-        *pokeampl,
-        *timing_framerateHz,
-        *timing_latencyfr,
-        *NBave,
-        *NBexcl,
-        1,
-        outmodeC,
-        savedir,
-        *saveALL
-    );
+    Measure_Linear_Response_Modal(imgin, imgout, imginmodeC, *pokeampl, *timing_framerateHz,
+                                  *timing_latencyfr, *NBave, *NBexcl, 1, outmodeC, savedir,
+                                  *saveALL);
 
     list_image_ID();
 
@@ -940,16 +865,13 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 errno_t CLIADDCMD_AOloopControl__measure_linear_resp()
 {
-    safe_fps_fill_farg_examples(
-        farg, my_bindings, nb_bindings);
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
     return RETURN_SUCCESS;
 }
@@ -961,8 +883,5 @@ errno_t CLIADDCMD_AOloopControl__measure_linear_resp()
  * ============================================================= */
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function)
+FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
 #endif

@@ -64,9 +64,7 @@
  * with a value less than 0.5 (inactive). The resulting binary edge mask is
  * stored in a new image created with the name `IDout_name`.
  */
-imageID AOloopControl_computeCalib_DMedgeDetect(
-    const char *IDmaskRM_name,
-    const char *IDout_name)
+imageID AOloopControl_computeCalib_DMedgeDetect(const char *IDmaskRM_name, const char *IDout_name)
 {
     imageID IDout;
     imageID IDmaskRM;
@@ -75,12 +73,10 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
     long    xsize, ysize;
 
     // Offsets for 24-neighborhood (distance 1 and 2)
-    const int dx[24] = {  1, -1,  0,  0,  1,  1, -1, -1,
-              2, -2,  0,  0,  1,  1, -1, -1,
-             -1, -1,  1,  1,  2, -2,  2, -2 };
-    const int dy[24] = {  0,  0,  1, -1,  1, -1,  1, -1,
-              0,  0,  2, -2,  2, -2,  2, -2,
-              2, -2,  2, -2,  1,  1, -1, -1 };
+    const int dx[24] = { 1, -1, 0,  0,  1,  1,  -1, -1, 2, -2, 0, 0,
+                         1, 1,  -1, -1, -1, -1, 1,  1,  2, -2, 2, -2 };
+    const int dy[24] = { 0, 0,  1, -1, 1, -1, 1, -1, 0, 0, 2,  -2,
+                         2, -2, 2, -2, 2, -2, 2, -2, 1, 1, -1, -1 };
 
     IDmaskRM = image_ID(IDmaskRM_name, dcimg, dcnimg);
     xsize    = dcimg[IDmaskRM].md[0].size[0];
@@ -88,25 +84,30 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
 
     create_2Dimage_ID(IDout_name, xsize, ysize, &IDout);
 
-    for(ii = 2; ii < xsize - 2; ii++)
-        for(jj = 2; jj < ysize - 2; jj++)
+    for (ii = 2; ii < xsize - 2; ii++)
+    {
+        for (jj = 2; jj < ysize - 2; jj++)
         {
             val1 = 0.0;
             // Access the mask value once per pixel
             float mask_val = dcimg[IDmaskRM].array.F[jj * xsize + ii];
-            if(mask_val > 0.5)
+            if (mask_val > 0.5)
             {
-                for(int k = 0; k < 24; ++k)
+                for (int k = 0; k < 24; ++k)
                 {
                     int ni = ii + dx[k];
                     int nj = jj + dy[k];
                     // Access neighbor mask value once
-                    if(dcimg[IDmaskRM].array.F[nj * xsize + ni] < 0.5)
+                    if (dcimg[IDmaskRM].array.F[nj * xsize + ni] < 0.5)
+                    {
                         val1 += 1.0f; // Use float literal for consistency
+                    }
                 }
             }
-            dcimg[IDout].array.F[jj * xsize + ii] = (val1 > 4.9f) ? 1.0f : 0.0f; // Use float literals
+            dcimg[IDout].array.F[jj * xsize + ii] =
+                (val1 > 4.9f) ? 1.0f : 0.0f; // Use float literals
         }
+    }
 
     return IDout;
 }
@@ -127,19 +128,18 @@ imageID AOloopControl_computeCalib_DMedgeDetect(
  * @param IDout_name The name of the output image to store the extrapolated DM modes.
  * @return The imageID of the newly created output image.
  */
-long AOloopControl_computeCalib_DMextrapolateModes(
-    const char *IDin_name,
-    const char *IDmask_name,
-    const char *IDcpa_name,
-    const char *IDout_name)
+long AOloopControl_computeCalib_DMextrapolateModes(const char *IDin_name,
+                                                   const char *IDmask_name,
+                                                   const char *IDcpa_name,
+                                                   const char *IDout_name)
 {
-    imageID IDin = image_ID(IDin_name, dcimg, dcnimg);
-    long xsize = dcimg[IDin].md[0].size[0];
-    long ysize = dcimg[IDin].md[0].size[1];
-    long zsize;
+    imageID IDin  = image_ID(IDin_name, dcimg, dcnimg);
+    long    xsize = dcimg[IDin].md[0].size[0];
+    long    ysize = dcimg[IDin].md[0].size[1];
+    long    zsize;
     imageID IDout = -1; // Initialize to -1 to indicate no image created yet
 
-    if(dcimg[IDin].md[0].naxis == 3)
+    if (dcimg[IDin].md[0].naxis == 3)
     {
         zsize = dcimg[IDin].md[0].size[2];
         create_3Dimage_ID(IDout_name, xsize, ysize, zsize, &IDout);
@@ -157,23 +157,23 @@ long AOloopControl_computeCalib_DMextrapolateModes(
     // Measure pixel distance to the active region of the mask
     long IDpixdist = -1; // Scope: used only in this function
     create_2Dimage_ID("pixmaskdist", xsize, ysize, &IDpixdist);
-    for(long ii = 0; ii < xsize; ii++)
+    for (long ii = 0; ii < xsize; ii++)
     {
-        for(long jj = 0; jj < ysize; jj++)
+        for (long jj = 0; jj < ysize; jj++)
         {
             float dist = 1.0 * xsize + 1.0 * ysize;
-            for(long ii1 = 0; ii1 < xsize; ii1++)
+            for (long ii1 = 0; ii1 < xsize; ii1++)
             {
-                for(long jj1 = 0; jj1 < ysize; jj1++)
+                for (long jj1 = 0; jj1 < ysize; jj1++)
                 {
-                    if(dcimg[IDmask].array.F[jj1 * xsize + ii1] > 0.5)
+                    if (dcimg[IDmask].array.F[jj1 * xsize + ii1] > 0.5)
                     {
-                        long dii  = ii1 - ii;
-                        long djj  = jj1 - jj;
-                        long dii2 = dii * dii;
-                        long djj2 = djj * djj;
-                        float r = sqrtf(dii2 + djj2);
-                        if(r < dist)
+                        long  dii  = ii1 - ii;
+                        long  djj  = jj1 - jj;
+                        long  dii2 = dii * dii;
+                        long  djj2 = djj * djj;
+                        float r    = sqrtf(dii2 + djj2);
+                        if (r < dist)
                         {
                             dist = r;
                         }
@@ -185,11 +185,11 @@ long AOloopControl_computeCalib_DMextrapolateModes(
     }
 
     // Apply extrapolation for each mode
-    for(long kk = 0; kk < zsize; kk++)
+    for (long kk = 0; kk < zsize; kk++)
     {
-        for(long ii = 0; ii < xsize; ii++)
+        for (long ii = 0; ii < xsize; ii++)
         {
-            for(long jj = 0; jj < ysize; jj++)
+            for (long jj = 0; jj < ysize; jj++)
             {
                 long index = jj * xsize + ii;
                 // Calculate a coefficient based on pixel distance and CPA
@@ -197,19 +197,17 @@ long AOloopControl_computeCalib_DMextrapolateModes(
                 // for extrapolation. Smaller CPA means a larger effective radius, leading to
                 // more aggressive extrapolation.
                 float coeff = dcimg[IDpixdist].array.F[index] /
-                        ((1.0 * xsize / (dcimg[IDcpa].array.F[kk] + 0.1)) *
-                         0.8);
+                              ((1.0 * xsize / (dcimg[IDcpa].array.F[kk] + 0.1)) * 0.8);
 
                 // Transform the coefficient using an exponential function.
                 // This creates a smooth fall-off effect for extrapolation.
                 coeff = (expf(-coeff * coeff) - expf(-1.0f)) / (1.0f - expf(-1.0f));
-                if(coeff < 0.0)
+                if (coeff < 0.0)
                 {
                     coeff = 0.0;
                 }
                 dcimg[IDout].array.F[kk * xysize + index] =
-                    coeff * dcimg[IDin].array.F[kk * xysize + index] *
-                    coeff;
+                    coeff * dcimg[IDin].array.F[kk * xysize + index] * coeff;
             }
         }
     }
@@ -219,19 +217,18 @@ long AOloopControl_computeCalib_DMextrapolateModes(
 }
 
 
-long AOloopControl_computeCalib_DMslaveExt(
-    const char *IDin_name,
-    const char *IDmask_name,
-    const char *IDsl_name,
-    const char *IDout_name,
-    float       r0)
+long AOloopControl_computeCalib_DMslaveExt(const char *IDin_name,
+                                           const char *IDmask_name,
+                                           const char *IDsl_name,
+                                           const char *IDout_name,
+                                           float       r0)
 {
-    long IDin = image_ID(IDin_name, dcimg, dcnimg);
-    long xsize = dcimg[IDin].md[0].size[0];
-    long ysize = dcimg[IDin].md[0].size[1];
-    long zsize;
-    long index; // Declare index here
-    long kk;    // Declare kk here
+    long  IDin  = image_ID(IDin_name, dcimg, dcnimg);
+    long  xsize = dcimg[IDin].md[0].size[0];
+    long  ysize = dcimg[IDin].md[0].size[1];
+    long  zsize;
+    long  index; // Declare index here
+    long  kk;    // Declare kk here
     float rfactor = 2.0;
     float val1, val1cnt;
     float pixrad;
@@ -242,7 +239,7 @@ long AOloopControl_computeCalib_DMslaveExt(
     float valr;
 
     long IDout;
-    if(dcimg[IDin].md[0].naxis == 3)
+    if (dcimg[IDin].md[0].naxis == 3)
     {
         zsize = dcimg[IDin].md[0].size[2];
         create_3Dimage_ID(IDout_name, xsize, ysize, zsize, &IDout);
@@ -255,15 +252,16 @@ long AOloopControl_computeCalib_DMslaveExt(
     long xysize = xsize * ysize;
 
     long IDmask = image_ID(IDmask_name, dcimg, dcnimg); // IDmask is local to this function
-    long IDsl = image_ID(IDsl_name, dcimg, dcnimg);     // IDsl is local to this function
+    long IDsl   = image_ID(IDsl_name, dcimg, dcnimg);   // IDsl is local to this function
 
-    for(long ii = 0; ii < xsize; ii++)
-        for(long jj = 0; jj < ysize; jj++)
+    for (long ii = 0; ii < xsize; ii++)
+    {
+        for (long jj = 0; jj < ysize; jj++)
         {
             index = jj * xsize + ii;
             if (dcimg[IDmask].array.F[index] > 0.5)
             {
-                for(kk = 0; kk < zsize; kk++)
+                for (kk = 0; kk < zsize; kk++)
                 {
                     dcimg[IDout].array.F[kk * xysize + index] =
                         dcimg[IDin].array.F[kk * xysize + index];
@@ -279,43 +277,46 @@ long AOloopControl_computeCalib_DMslaveExt(
                     pixradl = (long) pixrad + 1;
 
                     ii1min = ii - pixradl;
-                    if(ii1min < 0)
+                    if (ii1min < 0)
+                    {
                         ii1min = 0;
+                    }
                     ii1max = ii + pixradl;
-                    if(ii1max > (xsize - 1))
+                    if (ii1max > (xsize - 1))
+                    {
                         ii1max = xsize - 1;
+                    }
 
                     jj1min = jj - pixradl;
-                    if(jj1min < 0)
+                    if (jj1min < 0)
+                    {
                         jj1min = 0;
+                    }
                     jj1max = jj + pixradl;
-                    if(jj1max > (ysize - 1))
+                    if (jj1max > (ysize - 1))
+                    {
                         jj1max = ysize - 1;
+                    }
 
                     valr = 0.0;
-                    for(long ii1 = ii1min; ii1 < ii1max + 1; ii1++)
+                    for (long ii1 = ii1min; ii1 < ii1max + 1; ii1++)
                     {
-                        for(long jj1 = jj1min; jj1 < jj1max + 1; jj1++)
+                        for (long jj1 = jj1min; jj1 < jj1max + 1; jj1++)
                         {
                             dx = 1.0 * (ii - ii1);
                             dy = 1.0 * (jj - jj1);
                             r  = sqrtf(dx * dx + dy * dy);
-                            if ((r < pixrad) &&
-                                (dcimg[IDmask].array.F[jj1 * xsize + ii1] >
-                                 0.5))
+                            if ((r < pixrad) && (dcimg[IDmask].array.F[jj1 * xsize + ii1] > 0.5))
                             {
                                 r1    = r / pixrad;
                                 coeff = expf(-10.0f * r1 * r1);
                                 valr += r * coeff;
                                 val1 +=
-                                    dcimg[IDin]
-                                    .array
-                                    .F[kk * xysize + jj1 * xsize + ii1] *
-                                    coeff;
+                                    dcimg[IDin].array.F[kk * xysize + jj1 * xsize + ii1] * coeff;
                                 val1cnt += coeff;
                             }
                         } // jj1
-                    }     // ii1
+                    } // ii1
                     valr /= val1cnt;
                     if (val1cnt > 0.0001)
                     {
@@ -332,6 +333,7 @@ long AOloopControl_computeCalib_DMslaveExt(
                 }
             }
         }
+    }
 
     return (IDout);
 }

@@ -42,7 +42,6 @@
 
 static errno_t init_module_CLI()
 {
-
     CLIADDCMD_AOloopControl_DM__comb();
 
     CLIADDCMD_AOloopControl_DM__mk3Ddmgrid();

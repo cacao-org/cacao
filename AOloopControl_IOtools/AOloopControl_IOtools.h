@@ -18,5 +18,4 @@
 #define _AOLOOPCONTROL_IOTOOLS_H
 
 
-
 #endif

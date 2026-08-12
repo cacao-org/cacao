@@ -17,22 +17,24 @@
 #include "COREMOD_memory/COREMOD_memory.h"
 
 
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "sample2DWF",
-    .cmdkey      = "sample2DWF",
-    .description = "sample 2D WF to act pos",
-    .description_long =
-        "Sample a 2D wavefront at actuator positions to generate a discrete actuator command vector."
-};
+static FPS_APP_INFO FPS_app_info = { .fps_name    = "sample2DWF",
+                                     .cmdkey      = "sample2DWF",
+                                     .description = "sample 2D WF to act pos",
+                                     .description_long =
+                                         "Sample a 2D wavefront at actuator positions to generate "
+                                         "a discrete actuator command vector." };
 
 static char inWF2D[FUNCTION_PARAMETER_STRMAXLEN];
 static char map2D[FUNCTION_PARAMETER_STRMAXLEN];
 static char outWF1D[FUNCTION_PARAMETER_STRMAXLEN];
 
-#define FPS_PARAMS(X) \
-    X(".inwf2D", inWF2D, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "input 2D wavefront") \
-    X(".mapfile", map2D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "mapping file, can be read from mapcoord2D.txt") \
-    X(".outWF1D", outWF1D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "output WF 1D")
+#define FPS_PARAMS(X)                                                                     \
+    X(".inwf2D", inWF2D, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
+      "input 2D wavefront")                                                               \
+    X(".mapfile", map2D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),     \
+      "mapping file, can be read from mapcoord2D.txt")                                    \
+    X(".outWF1D", outWF1D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),   \
+      "output WF 1D")
 
 FPS_V2_SECTION5(FPS_PARAMS)
 
@@ -42,10 +44,10 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static __attribute__((unused)) errno_t customCONFsetup()
 {
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
-        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".inwf2D")].fpflag |=
-            FPFLAG_STREAM_RUN_REQUIRED;
+        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".inwf2D")]
+            .fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
 
         //milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".mapfile")].fpflag |=
         //    FPFLAG_STREAM_RUN_REQUIRED;
@@ -60,8 +62,7 @@ static __attribute__((unused)) errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
     }
 
@@ -72,21 +73,16 @@ static errno_t customCONFcheck()
 // detailed help
 static __attribute__((unused)) errno_t help_function()
 {
-
-
     return RETURN_SUCCESS;
 }
 
 
-static IMGID load_actmapcoord2D(
-    char *fname,
-    char *outim
-)
+static IMGID load_actmapcoord2D(char *fname, char *outim)
 {
     FILE *fp = NULL;
 
     fp = fopen(fname, "r");
-    if(fp == NULL)
+    if (fp == NULL)
     {
         printf("ERROR: cannot load file %s\n", fname);
         exit(0);
@@ -94,11 +90,11 @@ static IMGID load_actmapcoord2D(
 
 
     // count number of lines
-    long actindex;
+    long  actindex;
     float xcoord;
     float ycoord;
-    long NBact = 0; // counter
-    while(fscanf(fp, "%ld %f %f\n", &actindex, &xcoord, &ycoord) == 3)
+    long  NBact = 0; // counter
+    while (fscanf(fp, "%ld %f %f\n", &actindex, &xcoord, &ycoord) == 3)
     {
         NBact++;
     }
@@ -110,22 +106,21 @@ static IMGID load_actmapcoord2D(
 
 
     fp = fopen(fname, "r");
-    if(fp == NULL)
+    if (fp == NULL)
     {
         printf("ERROR: cannot load file %s\n", fname);
         exit(0);
     }
-    for(uint32_t act = 0; act < NBact; act++)
+    for (uint32_t act = 0; act < NBact; act++)
     {
-
         int ret = fscanf(fp, "%ld %f %f\n", &actindex, &xcoord, &ycoord);
-        if(ret != 3)
+        if (ret != 3)
         {
             printf("ERROR reading file %s\n", fname);
             exit(0);
         }
 
-        imgout.im->array.F[act * 2] = xcoord;
+        imgout.im->array.F[act * 2]     = xcoord;
         imgout.im->array.F[act * 2 + 1] = ycoord;
     }
     fclose(fp);
@@ -140,24 +135,21 @@ static errno_t compute_function()
     DEBUG_TRACE_FSTART();
 
     IMGID imgWF2D = imgid_make_from_name(inWF2D);
-    resolveIMGID(
-        &imgWF2D, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (imgWF2D.ID == -1) return RETURN_FAILURE;
+    resolveIMGID(&imgWF2D, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgWF2D.ID == -1)
+    {
+        return RETURN_FAILURE;
+    }
     uint32_t wfxsize = imgWF2D.md->size[0];
     uint32_t wfysize = imgWF2D.md->size[1];
-    uint64_t wfsize = wfxsize;
+    uint64_t wfsize  = wfxsize;
     wfsize *= wfysize;
     printf("wfsize = %lu\n", wfsize);
 
 
     IMGID imgmap2D = imgid_make_from_name(map2D);
-    resolveIMGID(
-        &imgmap2D, ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-    if(imgmap2D.ID == -1)
+    resolveIMGID(&imgmap2D, ERRMODE_WARN, dcimg, dcnimg);
+    if (imgmap2D.ID == -1)
     {
         imgmap2D = load_actmapcoord2D("mapcoord2D.txt", map2D);
     }
@@ -189,7 +181,7 @@ static errno_t compute_function()
     long *iiact = (long *) malloc(sizeof(long) * mapsize);
     long *jjact = (long *) malloc(sizeof(long) * mapsize);
 
-    for(uint32_t act = 0; act < mapsize; act++)
+    for (uint32_t act = 0; act < mapsize; act++)
     {
         // actuator coordinates
         // relative to beam center, radius = 1
@@ -197,23 +189,23 @@ static errno_t compute_function()
         float xact = imgmap2D.im->array.F[act * 2];
         float yact = imgmap2D.im->array.F[act * 2 + 1];
 
-        iiact[act] = (long)(xcentf + radf * xact);
-        jjact[act] = (long)(ycentf + radf * yact);
+        iiact[act] = (long) (xcentf + radf * xact);
+        jjact[act] = (long) (ycentf + radf * yact);
 
-        if(iiact[act] < 0)
+        if (iiact[act] < 0)
         {
             iiact[act] = 0;
         }
-        if(iiact[act] > wfxsize - 1)
+        if (iiact[act] > wfxsize - 1)
         {
             iiact[act] = wfxsize - 1;
         }
 
-        if(jjact[act] < 0)
+        if (jjact[act] < 0)
         {
             jjact[act] = 0;
         }
-        if(jjact[act] > wfysize - 1)
+        if (jjact[act] > wfysize - 1)
         {
             jjact[act] = wfysize - 1;
         }
@@ -222,12 +214,12 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-        for(uint32_t slice = 0; slice < NBslice; slice++)
+        for (uint32_t slice = 0; slice < NBslice; slice++)
         {
-            for(uint32_t act = 0; act < mapsize; act++)
+            for (uint32_t act = 0; act < mapsize; act++)
             {
                 imgoutWF1D.im->array.F[slice * mapsize + act] =
-                imgWF2D.im->array.F[slice * wfsize + jjact[act] * wfxsize + iiact[act]];
+                    imgWF2D.im->array.F[slice * wfsize + jjact[act] * wfxsize + iiact[act]];
             }
         }
     }
@@ -245,15 +237,12 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 // Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl_computeCalib__sample2D()
+errno_t CLIADDCMD_AOloopControl_computeCalib__sample2D()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
@@ -266,10 +255,9 @@ CLIADDCMD_AOloopControl_computeCalib__sample2D()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function,
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
+                                 FPS_PARAMS,
+                                 compute_function,
 
-    customCONFcheck)
+                                 customCONFcheck)
 #endif

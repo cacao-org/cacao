@@ -17,11 +17,11 @@
 #include "COREMOD_memory/COREMOD_memory.h"
 
 static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "modalCTRLstats",
-    .cmdkey      = "modalCTRLstats",
-    .description = "compute modal control stats",
-    .description_long =
-        "Compute real-time statistics of modal control loop performance. Tracks RMS residual, actuator stroke, and temporal power spectra per mode."
+    .fps_name         = "modalCTRLstats",
+    .cmdkey           = "modalCTRLstats",
+    .description      = "compute modal control stats",
+    .description_long = "Compute real-time statistics of modal control loop performance. Tracks "
+                        "RMS residual, actuator stroke, and temporal power spectra per mode."
 };
 
 // Local variables pointers
@@ -60,30 +60,51 @@ static uint32_t *block9NBsample;
 
 static uint64_t *compstatswrite;
 
-#define FPS_PARAMS(X) \
-    X(".AOloopindex", &AOloopindex, FPTYPE_UINT64, 1, \
-      (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "AO loop index") \
-    X(".block.blk0NBmode", &block0NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 0 number of modes") \
-    X(".block.blk0NBsample", &block0NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 0 number of samples") \
-    X(".block.blk1NBmode", &block1NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 1 number of modes") \
-    X(".block.blk1NBsample", &block1NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 1 number of samples") \
-    X(".block.blk2NBmode", &block2NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 2 number of modes") \
-    X(".block.blk2NBsample", &block2NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 2 number of samples") \
-    X(".block.blk3NBmode", &block3NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 3 number of modes") \
-    X(".block.blk3NBsample", &block3NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 3 number of samples") \
-    X(".block.blk4NBmode", &block4NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 4 number of modes") \
-    X(".block.blk4NBsample", &block4NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 4 number of samples") \
-    X(".block.blk5NBmode", &block5NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 5 number of modes") \
-    X(".block.blk5NBsample", &block5NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 5 number of samples") \
-    X(".block.blk6NBmode", &block6NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 6 number of modes") \
-    X(".block.blk6NBsample", &block6NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 6 number of samples") \
-    X(".block.blk7NBmode", &block7NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 7 number of modes") \
-    X(".block.blk7NBsample", &block7NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 7 number of samples") \
-    X(".block.blk8NBmode", &block8NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 8 number of modes") \
-    X(".block.blk8NBsample", &block8NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 8 number of samples") \
-    X(".block.blk9NBmode", &block9NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 9 number of modes") \
-    X(".block.blk9NBsample", &block9NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "block 9 number of samples") \
-    X(".comp.statswrite", &compstatswrite, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "Write stats to file")
+#define FPS_PARAMS(X)                                                                            \
+    X(".AOloopindex", &AOloopindex, FPTYPE_UINT64, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
+      "AO loop index")                                                                           \
+    X(".block.blk0NBmode", &block0NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 0 number of modes")                                                                 \
+    X(".block.blk0NBsample", &block0NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 0 number of samples")                                                               \
+    X(".block.blk1NBmode", &block1NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 1 number of modes")                                                                 \
+    X(".block.blk1NBsample", &block1NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 1 number of samples")                                                               \
+    X(".block.blk2NBmode", &block2NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 2 number of modes")                                                                 \
+    X(".block.blk2NBsample", &block2NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 2 number of samples")                                                               \
+    X(".block.blk3NBmode", &block3NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 3 number of modes")                                                                 \
+    X(".block.blk3NBsample", &block3NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 3 number of samples")                                                               \
+    X(".block.blk4NBmode", &block4NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 4 number of modes")                                                                 \
+    X(".block.blk4NBsample", &block4NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 4 number of samples")                                                               \
+    X(".block.blk5NBmode", &block5NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 5 number of modes")                                                                 \
+    X(".block.blk5NBsample", &block5NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 5 number of samples")                                                               \
+    X(".block.blk6NBmode", &block6NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 6 number of modes")                                                                 \
+    X(".block.blk6NBsample", &block6NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 6 number of samples")                                                               \
+    X(".block.blk7NBmode", &block7NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 7 number of modes")                                                                 \
+    X(".block.blk7NBsample", &block7NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 7 number of samples")                                                               \
+    X(".block.blk8NBmode", &block8NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 8 number of modes")                                                                 \
+    X(".block.blk8NBsample", &block8NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 8 number of samples")                                                               \
+    X(".block.blk9NBmode", &block9NBmode, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,                \
+      "block 9 number of modes")                                                                 \
+    X(".block.blk9NBsample", &block9NBsample, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,            \
+      "block 9 number of samples")                                                               \
+    X(".comp.statswrite", &compstatswrite, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                \
+      "Write stats to file")
 
 FPS_V2_SECTION5(FPS_PARAMS)
 
@@ -93,11 +114,14 @@ FPS_V2_SECTION5(FPS_PARAMS)
 //
 static errno_t customCONFsetup()
 {
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
         long fpi;
         fpi = functionparameter_GetParamIndex(milk_data.fpsptr, ".comp.statswrite");
-        if(fpi > -1) milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        if (fpi > -1)
+        {
+            milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
+        }
     }
 
     return RETURN_SUCCESS;
@@ -108,8 +132,7 @@ static errno_t customCONFsetup()
 //
 static errno_t customCONFcheck()
 {
-
-    if(milk_data.fpsptr != NULL)
+    if (milk_data.fpsptr != NULL)
     {
     }
 
@@ -145,29 +168,29 @@ static errno_t compute_function()
         WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
         read_sharedmem_image(name, dcimg, dcnimg);
         imgtbuff_mvalDM = imgid_make_from_name(name);
-        resolveIMGID(
-            &imgtbuff_mvalDM, ERRMODE_WARN,
-            dcimg,
-            dcnimg);
-            if (imgtbuff_mvalDM.ID == -1) return RETURN_FAILURE;
+        resolveIMGID(&imgtbuff_mvalDM, ERRMODE_WARN, dcimg, dcnimg);
+        if (imgtbuff_mvalDM.ID == -1)
+        {
+            return RETURN_FAILURE;
+        }
 
         WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
         read_sharedmem_image(name, dcimg, dcnimg);
         imgtbuff_mvalWFS = imgid_make_from_name(name);
-        resolveIMGID(
-            &imgtbuff_mvalWFS, ERRMODE_WARN,
-            dcimg,
-            dcnimg);
-            if (imgtbuff_mvalWFS.ID == -1) return RETURN_FAILURE;
+        resolveIMGID(&imgtbuff_mvalWFS, ERRMODE_WARN, dcimg, dcnimg);
+        if (imgtbuff_mvalWFS.ID == -1)
+        {
+            return RETURN_FAILURE;
+        }
 
         WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
         read_sharedmem_image(name, dcimg, dcnimg);
         imgtbuff_mvalOL = imgid_make_from_name(name);
-        resolveIMGID(
-            &imgtbuff_mvalOL, ERRMODE_WARN,
-            dcimg,
-            dcnimg);
-            if (imgtbuff_mvalOL.ID == -1) return RETURN_FAILURE;
+        resolveIMGID(&imgtbuff_mvalOL, ERRMODE_WARN, dcimg, dcnimg);
+        if (imgtbuff_mvalOL.ID == -1)
+        {
+            return RETURN_FAILURE;
+        }
 
         NBmode   = imgtbuff_mvalOL.md->size[0];
         NBsample = imgtbuff_mvalOL.md->size[1];
@@ -211,12 +234,12 @@ static errno_t compute_function()
 
     uint32_t blki             = 0;
     int32_t  NBmode_available = NBmode;
-    while((NBmode_available > 0) && (NBblk < (uint32_t) MAXBLK))
+    while ((NBmode_available > 0) && (NBblk < (uint32_t) MAXBLK))
     {
         NBmode_available -= blksize[blki];
         printf("%u  available : %d\n", blki, NBmode_available);
         fflush(stdout);
-        if(NBmode_available < 0)
+        if (NBmode_available < 0)
         {
             blksize[blki] += NBmode_available;
         }
@@ -228,18 +251,15 @@ static errno_t compute_function()
         fflush(stdout);
         NBblk++;
     }
-    for(uint32_t blki1 = blki; blki1 < (uint32_t) MAXBLK; blki1++)
+    for (uint32_t blki1 = blki; blki1 < (uint32_t) MAXBLK; blki1++)
     {
         blksize[blki1]   = 0;
         blkoffset[blki1] = blkoffset[blki1 - 1];
     }
 
-    for(uint32_t blki = 0; blki < NBblk; blki++)
+    for (uint32_t blki = 0; blki < NBblk; blki++)
     {
-        printf("BLOCK %u  size %4u  range: %4u - %4u\n",
-               blki,
-               blksize[blki],
-               blkoffset[blki],
+        printf("BLOCK %u  size %4u  range: %4u - %4u\n", blki, blksize[blki], blkoffset[blki],
                blkoffset[blki] + blksize[blki] - 1);
     }
     *block0NBmode = blksize[0];
@@ -257,29 +277,23 @@ static errno_t compute_function()
     // block buffers
     //
     IMGID imgmvalOLbuffblk[NBblk];
-    for(uint32_t blki = 0; blki < NBblk; blki++)
+    for (uint32_t blki = 0; blki < NBblk; blki++)
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
-        WRITE_IMAGENAME(name,
-                        "aol%lu_modevalOLbuff_blk%02u",
-                        *AOloopindex,
-                        blki);
+        WRITE_IMAGENAME(name, "aol%lu_modevalOLbuff_blk%02u", *AOloopindex, blki);
         imgmvalOLbuffblk[blki] =
-            stream_connect_create_3Df32(name,
-                                        blksize[blki],
-                                        1,
-                                        blksamplesize[blki]);
+            stream_connect_create_3Df32(name, blksize[blki], 1, blksamplesize[blki]);
     }
     // local memory for block buffers
     //
     int32_t blksampleindex[NBblk];
     float  *mvalOLbuffarray[NBblk];
-    for(uint32_t blki = 0; blki < NBblk; blki++)
+    for (uint32_t blki = 0; blki < NBblk; blki++)
     {
-        blksampleindex[blki]  = 0;
-        mvalOLbuffarray[blki] = (float *) malloc(sizeof(float) * blksize[blki] *
-                                blksamplesize[blki]);
+        blksampleindex[blki] = 0;
+        mvalOLbuffarray[blki] =
+            (float *) malloc(sizeof(float) * blksize[blki] * blksamplesize[blki]);
     }
 
 
@@ -316,28 +330,22 @@ static errno_t compute_function()
     // block masks
     //
     IMGID imgblkmask[NBblk];
-    for(uint32_t blki = 0; blki < NBblk; blki++)
+    for (uint32_t blki = 0; blki < NBblk; blki++)
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
         WRITE_IMAGENAME(name, "aol%lu_blkmask%02u", *AOloopindex, blki);
-        imgblkmask[blki] =
-            stream_connect_create_2D(name, NBmode, 1, _DATATYPE_INT8);
-        for(uint32_t mi = blkoffset[blki];
-                mi < blkoffset[blki] + blksize[blki];
-                mi++)
+        imgblkmask[blki] = stream_connect_create_2D(name, NBmode, 1, _DATATYPE_INT8);
+        for (uint32_t mi = blkoffset[blki]; mi < blkoffset[blki] + blksize[blki]; mi++)
         {
             imgblkmask[blki].im->array.SI8[mi] = 1;
         }
-        processinfo_update_output_stream(processinfo,
-            imgblkmask[blki].im,
-            NULL);
+        processinfo_update_output_stream(processinfo, imgblkmask[blki].im, NULL);
     }
 
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
     {
-
         printf("Stepping ...\n");
 
 
@@ -345,27 +353,25 @@ static errno_t compute_function()
         //
         {
             int slice = imgtbuff_mvalOL.md->cnt1;
-            for(uint32_t sample = 0; sample < NBsample; sample++)
+            for (uint32_t sample = 0; sample < NBsample; sample++)
             {
-                for(uint32_t blki = 0; blki < NBblk; blki++)
+                for (uint32_t blki = 0; blki < NBblk; blki++)
                 {
-                    for(uint32_t mirel = 0; mirel < blksize[blki]; mirel++)
+                    for (uint32_t mirel = 0; mirel < blksize[blki]; mirel++)
                     {
                         uint32_t mi = mirel + blkoffset[blki];
 
-                        mvalOLbuffarray[blki][blksize[blki] * blksampleindex[blki] +
-                                              mirel] =
-                        imgtbuff_mvalOL.im->array.F[slice * NBsample * NBmode +
-                                                          sample * NBmode + mi];
+                        mvalOLbuffarray[blki][blksize[blki] * blksampleindex[blki] + mirel] =
+                            imgtbuff_mvalOL.im->array
+                                .F[slice * NBsample * NBmode + sample * NBmode + mi];
                     }
                     blksampleindex[blki]++;
-                    if(blksampleindex[blki] == blksamplesize[blki])
+                    if (blksampleindex[blki] == blksamplesize[blki])
                     {
-                        memcpy(imgmvalOLbuffblk[blki].im->array.F,
-                               mvalOLbuffarray[blki],
+                        memcpy(imgmvalOLbuffblk[blki].im->array.F, mvalOLbuffarray[blki],
                                sizeof(float) * blksize[blki] * blksamplesize[blki]);
-                        processinfo_update_output_stream(processinfo,
-                                                         imgmvalOLbuffblk[blki].im, NULL);
+                        processinfo_update_output_stream(processinfo, imgmvalOLbuffblk[blki].im,
+                                                         NULL);
                         blksampleindex[blki] = 0;
                     }
                 }
@@ -375,7 +381,7 @@ static errno_t compute_function()
         {
             int slice;
 
-            for(uint32_t mi = 0; mi < NBmode; mi++)
+            for (uint32_t mi = 0; mi < NBmode; mi++)
             {
                 mvalDM_ave[mi]  = 0.0;
                 mvalDM_rms2[mi] = 0.0;
@@ -391,26 +397,24 @@ static errno_t compute_function()
             }
 
             slice = imgtbuff_mvalDM.md->cnt1;
-            for(uint32_t sample = 0; sample < NBsample; sample++)
+            for (uint32_t sample = 0; sample < NBsample; sample++)
             {
-                for(uint32_t mi = 0; mi < NBmode; mi++)
+                for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    float tmpv =
-                    imgtbuff_mvalDM.im->array
-                    .F[slice * NBsample * NBmode + sample * NBmode + mi];
+                    float tmpv = imgtbuff_mvalDM.im->array
+                                     .F[slice * NBsample * NBmode + sample * NBmode + mi];
                     mvalDM_ave[mi] += tmpv;
                     mvalDM_rms2[mi] += tmpv * tmpv;
                 }
             }
 
             slice = imgtbuff_mvalWFS.md->cnt1;
-            for(uint32_t sample = 0; sample < NBsample; sample++)
+            for (uint32_t sample = 0; sample < NBsample; sample++)
             {
-                for(uint32_t mi = 0; mi < NBmode; mi++)
+                for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    float tmpv =
-                        imgtbuff_mvalWFS.im->array
-                        .F[slice * NBsample * NBmode + sample * NBmode + mi];
+                    float tmpv = imgtbuff_mvalWFS.im->array
+                                     .F[slice * NBsample * NBmode + sample * NBmode + mi];
                     mvalWFS_ave[mi] += tmpv;
                     mvalWFS_rms2[mi] += tmpv * tmpv;
                 }
@@ -418,19 +422,16 @@ static errno_t compute_function()
 
             // linear noise derivation
             //
-            for(uint32_t sample = 1; sample < NBsample - 1; sample++)
+            for (uint32_t sample = 1; sample < NBsample - 1; sample++)
             {
-                for(uint32_t mi = 0; mi < NBmode; mi++)
+                for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    float tmpv0 =
-                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                           (sample - 1) * NBmode + mi];
-                    float tmpv1 =
-                        imgtbuff_mvalWFS.im->array
-                        .F[slice * NBsample * NBmode + (sample) * NBmode + mi];
-                    float tmpv2 =
-                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                           (sample + 1) * NBmode + mi];
+                    float tmpv0 = imgtbuff_mvalWFS.im->array
+                                      .F[slice * NBsample * NBmode + (sample - 1) * NBmode + mi];
+                    float tmpv1 = imgtbuff_mvalWFS.im->array
+                                      .F[slice * NBsample * NBmode + (sample) *NBmode + mi];
+                    float tmpv2 = imgtbuff_mvalWFS.im->array
+                                      .F[slice * NBsample * NBmode + (sample + 1) * NBmode + mi];
 
                     float tmpv = 0.5 * (tmpv0 + tmpv2) - tmpv1;
                     mvalWFS_mrms2[mi] += tmpv * tmpv;
@@ -439,47 +440,40 @@ static errno_t compute_function()
 
             // linear noise derivation
             //
-            for(uint32_t sample = 1; sample < NBsample - 2; sample++)
+            for (uint32_t sample = 1; sample < NBsample - 2; sample++)
             {
-                for(uint32_t mi = 0; mi < NBmode; mi++)
+                for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    float tmpv0 =
-                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                           (sample - 1) * NBmode + mi];
-                    float tmpv1 =
-                        imgtbuff_mvalWFS.im->array
-                        .F[slice * NBsample * NBmode + (sample) * NBmode + mi];
-                    float tmpv2 =
-                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                           (sample + 1) * NBmode + mi];
-                    float tmpv3 =
-                        imgtbuff_mvalWFS.im->array.F[slice * NBsample * NBmode +
-                                                           (sample + 1) * NBmode + mi];
+                    float tmpv0 = imgtbuff_mvalWFS.im->array
+                                      .F[slice * NBsample * NBmode + (sample - 1) * NBmode + mi];
+                    float tmpv1 = imgtbuff_mvalWFS.im->array
+                                      .F[slice * NBsample * NBmode + (sample) *NBmode + mi];
+                    float tmpv2 = imgtbuff_mvalWFS.im->array
+                                      .F[slice * NBsample * NBmode + (sample + 1) * NBmode + mi];
+                    float tmpv3 = imgtbuff_mvalWFS.im->array
+                                      .F[slice * NBsample * NBmode + (sample + 1) * NBmode + mi];
 
-                    float tmpv =
-                        -0.5 * tmpv0 + 1.5 * tmpv1 - 1.5 * tmpv2 + 0.5 * tmpv3;
+                    float tmpv = -0.5 * tmpv0 + 1.5 * tmpv1 - 1.5 * tmpv2 + 0.5 * tmpv3;
                     mvalWFS_mqrms2[mi] += tmpv * tmpv;
                 }
             }
 
 
             slice = imgtbuff_mvalOL.md->cnt1;
-            for(uint32_t sample = 0; sample < NBsample; sample++)
+            for (uint32_t sample = 0; sample < NBsample; sample++)
             {
-                for(uint32_t mi = 0; mi < NBmode; mi++)
+                for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    float tmpv =
-                        imgtbuff_mvalOL.im->array
-                        .F[slice * NBsample * NBmode + sample * NBmode + mi];
+                    float tmpv = imgtbuff_mvalOL.im->array
+                                     .F[slice * NBsample * NBmode + sample * NBmode + mi];
                     mvalOL_ave[mi] += tmpv;
                     mvalOL_rms2[mi] += tmpv * tmpv;
                 }
             }
 
 
-            for(uint32_t mi = 0; mi < NBmode; mi++)
+            for (uint32_t mi = 0; mi < NBmode; mi++)
             {
-
                 mvalDM_ave[mi] /= NBsample;
                 mvalWFS_ave[mi] /= NBsample;
                 mvalOL_ave[mi] /= NBsample;
@@ -502,7 +496,7 @@ static errno_t compute_function()
             }
 
 
-            for(uint32_t block = 0; block < mblksizemax; block++)
+            for (uint32_t block = 0; block < mblksizemax; block++)
             {
                 block_cnt[block]       = 0;
                 block_DMrms2[block]    = 0.0;
@@ -512,7 +506,7 @@ static errno_t compute_function()
                 block_OLrms2[block]    = 0.0;
             }
 
-            for(uint32_t mi = 0; mi < NBmode; mi++)
+            for (uint32_t mi = 0; mi < NBmode; mi++)
             {
                 // remove noise
                 mvalWFS_rms2[mi] -= mvalWFS_mqrms2[mi];
@@ -529,54 +523,46 @@ static errno_t compute_function()
             }
 
 
-            if(*compstatswrite == 1)
+            if (*compstatswrite == 1)
             {
-                for(uint32_t block = 0; block < mblksizemax; block++)
+                for (uint32_t block = 0; block < mblksizemax; block++)
                 {
-                    if(block_cnt[block] > 0)
+                    if (block_cnt[block] > 0)
                     {
                         //block_DMrms2[block] /= block_cnt[block];
                         //block_WFSrms2[block] /= block_cnt[block];
                         //block_OLrms2[block] /= block_cnt[block];
-                        printf(
-                            "BLOCK %2d (%5ld modes) RMS  WFS = %7.3f (noise = "
-                            "%7.3f "
-                            "%7.3f)  DM = "
-                            "%7.3f   "
-                            "OL = "
-                            "%7.3f   [nm]  --> %5.3f\n",
-                            block,
-                            block_cnt[block],
-                            1000.0 * sqrtf(block_WFSrms2[block]),
-                            1000.0 * sqrtf(block_WFSmrms2[block]),
-                            1000.0 * sqrtf(block_WFSmqrms2[block]),
-                            1000.0 * sqrtf(block_DMrms2[block]),
-                            1000.0 * sqrtf(block_OLrms2[block]),
-                            sqrtf(block_WFSrms2[block]) / sqrtf(block_OLrms2[block]));
+                        printf("BLOCK %2d (%5ld modes) RMS  WFS = %7.3f (noise = "
+                               "%7.3f "
+                               "%7.3f)  DM = "
+                               "%7.3f   "
+                               "OL = "
+                               "%7.3f   [nm]  --> %5.3f\n",
+                               block, block_cnt[block], 1000.0 * sqrtf(block_WFSrms2[block]),
+                               1000.0 * sqrtf(block_WFSmrms2[block]),
+                               1000.0 * sqrtf(block_WFSmqrms2[block]),
+                               1000.0 * sqrtf(block_DMrms2[block]),
+                               1000.0 * sqrtf(block_OLrms2[block]),
+                               sqrtf(block_WFSrms2[block]) / sqrtf(block_OLrms2[block]));
 
                         char ffname[STRINGMAXLEN_FULLFILENAME];
                         WRITE_FULLFILENAME(ffname, "AOmodalstat.dat");
                         FILE *fp = fopen(ffname, "a");
-                        fprintf(fp,
-                                "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
-                                processinfo->loopcnt,
-                                block,
-                                1000.0 * sqrtf(block_WFSrms2[block]),
+                        fprintf(fp, "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
+                                processinfo->loopcnt, block, 1000.0 * sqrtf(block_WFSrms2[block]),
                                 1000.0 * sqrtf(block_WFSmqrms2[block]),
                                 1000.0 * sqrtf(block_DMrms2[block]),
                                 1000.0 * sqrtf(block_OLrms2[block]),
-                                sqrtf(block_WFSrms2[block]) /
-                                sqrtf(block_OLrms2[block]));
+                                sqrtf(block_WFSrms2[block]) / sqrtf(block_OLrms2[block]));
                         fclose(fp);
                     }
                 }
             }
         }
-
     }
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
-    for(uint32_t blki = 0; blki < NBblk; blki++)
+    for (uint32_t blki = 0; blki < NBblk; blki++)
     {
         free(mvalOLbuffarray[blki]);
     }
@@ -609,15 +595,12 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
 // Register function in CLI
-errno_t
-CLIADDCMD_AOloopControl__modalCTRL_stats()
+errno_t CLIADDCMD_AOloopControl__modalCTRL_stats()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
@@ -630,10 +613,9 @@ CLIADDCMD_AOloopControl__modalCTRL_stats()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function,
-    customCONFsetup,
-    customCONFcheck)
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
+                                 FPS_PARAMS,
+                                 compute_function,
+                                 customCONFsetup,
+                                 customCONFcheck)
 #endif

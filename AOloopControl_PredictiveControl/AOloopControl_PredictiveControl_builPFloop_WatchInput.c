@@ -47,13 +47,16 @@
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #if defined(__has_include)
-#if __has_include("processinfo_setup.h")
-#include "processinfo_setup.h"
-#endif
+#    if __has_include("processinfo_setup.h")
+#        include "processinfo_setup.h"
+#    endif
 #endif
 
 #ifndef PROCESSINFO_AUX_SETUP
-#define PROCESSINFO_AUX_SETUP(...) do { } while(0)
+#    define PROCESSINFO_AUX_SETUP(...) \
+        do                             \
+        {                              \
+        } while (0)
 #endif
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
@@ -90,8 +93,11 @@
  *          Number of input buffers to merge for each output
  *
  */
-imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
-    long loop, long PFblock, long PFblockStart, long PFblockEnd, long NBbuff)
+imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop,
+                                                              long PFblock,
+                                                              long PFblockStart,
+                                                              long PFblockEnd,
+                                                              long NBbuff)
 {
     imageID IDinb0;
     imageID IDinb1;
@@ -127,7 +133,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     PROCESSINFO *processinfo = NULL;
 
-    if(milk_data.processinfo == 1)
+    if (milk_data.processinfo == 1)
     {
         // CREATE PROCESSINFO ENTRY
         // see processtools.c in module CommandLineInterface for details
@@ -139,15 +145,12 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
         snprintf(pinfoname, sizeof(pinfoname), "PFwatchInput-loop%ld-block%ld", loop, PFblock);
 
         char msgstring[200];
-        snprintf(msgstring, sizeof(msgstring),
-                 "%ld->%ld %ld buffers",
-                 PFblockStart,
-                 PFblockEnd,
+        snprintf(msgstring, sizeof(msgstring), "%ld->%ld %ld buffers", PFblockStart, PFblockEnd,
                  NBbuff);
 
         PROCESSINFO_AUX_SETUP(processinfo, pinfoname, "", msgstring);
 
-        if(processinfo == NULL)
+        if (processinfo == NULL)
         {
             /*
              * PROCESSINFO_AUX_SETUP() may be a no-op fallback when
@@ -161,59 +164,55 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     // CATCH SIGNALS
 
-    if(sigaction(SIGTERM, &milk_data.sigact, NULL) == -1)
+    if (sigaction(SIGTERM, &milk_data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGTERM\n");
     }
 
-    if(sigaction(SIGINT, &milk_data.sigact, NULL) == -1)
+    if (sigaction(SIGINT, &milk_data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGINT\n");
     }
 
-    if(sigaction(SIGABRT, &milk_data.sigact, NULL) == -1)
+    if (sigaction(SIGABRT, &milk_data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGABRT\n");
     }
 
-    if(sigaction(SIGBUS, &milk_data.sigact, NULL) == -1)
+    if (sigaction(SIGBUS, &milk_data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGBUS\n");
     }
 
-    if(sigaction(SIGSEGV, &milk_data.sigact, NULL) == -1)
+    if (sigaction(SIGSEGV, &milk_data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGSEGV\n");
     }
 
-    if(sigaction(SIGHUP, &milk_data.sigact, NULL) == -1)
+    if (sigaction(SIGHUP, &milk_data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGHUP\n");
     }
 
-    if(sigaction(SIGPIPE, &milk_data.sigact, NULL) == -1)
+    if (sigaction(SIGPIPE, &milk_data.sigact, NULL) == -1)
     {
         printf("\ncan't catch SIGPIPE\n");
     }
 
     PFblockSize = PFblockEnd - PFblockStart;
 
-    if(snprintf(imnameb0, sizeof(imnameb0), "aol%ld_modeval_ol_logbuff0", loop) < 1)
+    if (snprintf(imnameb0, sizeof(imnameb0), "aol%ld_modeval_ol_logbuff0", loop) < 1)
     {
         PRINT_ERROR("snprintf wrote <1 char");
     }
 
-    if(snprintf(imnameb1, sizeof(imnameb1), "aol%ld_modeval_ol_logbuff1", loop) < 1)
+    if (snprintf(imnameb1, sizeof(imnameb1), "aol%ld_modeval_ol_logbuff1", loop) < 1)
     {
         PRINT_ERROR("snprintf wrote <1 char");
     }
 
-    IDinb0 = read_sharedmem_image(imnameb0,
-        dcimg,
-        dcnimg);
-    IDinb1 = read_sharedmem_image(imnameb1,
-        dcimg,
-        dcnimg);
+    IDinb0 = read_sharedmem_image(imnameb0, dcimg, dcnimg);
+    IDinb1 = read_sharedmem_image(imnameb1, dcimg, dcnimg);
 
     cnt0_old = dcimg[IDinb0].md[0].cnt0;
     cnt1_old = dcimg[IDinb1].md[0].cnt0;
@@ -229,45 +228,40 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     EXECUTE_SYSTEM_COMMAND("mkdir -p PredictiveControl");
 
-    if(snprintf(inmaskname, sizeof(inmaskname), "inmaskPFb%ld", PFblock) < 1)
+    if (snprintf(inmaskname, sizeof(inmaskname), "inmaskPFb%ld", PFblock) < 1)
     {
         PRINT_ERROR("snprintf wrote <1 char");
     }
 
     create_2Dimage_ID(inmaskname, xysize, 1, &IDinmask);
-    for(ii = 0; ii < xysize; ii++)
+    for (ii = 0; ii < xysize; ii++)
     {
         dcimg[IDinmask].array.F[ii] = 0.0;
     }
-    for(ii = PFblockStart; ii < PFblockEnd; ii++)
+    for (ii = PFblockStart; ii < PFblockEnd; ii++)
     {
         dcimg[IDinmask].array.F[ii] = 1.0;
     }
 
-    if(snprintf(inmaskfname, sizeof(inmaskfname), "./PredictiveControl/inmaskPF%ld.fits", PFblock) <
-            1)
+    if (snprintf(inmaskfname, sizeof(inmaskfname), "./PredictiveControl/inmaskPF%ld.fits",
+                 PFblock) < 1)
     {
         PRINT_ERROR("snprintf wrote <1 char");
     }
 
     save_fits(inmaskname, inmaskfname);
-    if(snprintf(outmaskfname, sizeof(outmaskfname),
-               "./PredictiveControl/outmaskPF%ld.fits",
-               PFblock) < 1)
+    if (snprintf(outmaskfname, sizeof(outmaskfname), "./PredictiveControl/outmaskPF%ld.fits",
+                 PFblock) < 1)
     {
         PRINT_ERROR("snprintf wrote <1 char");
     }
 
     save_fits(inmaskname, outmaskfname);
 
-    printf("Create aol%ld_modevalol_PFb%ld  : %ld x 1 x %ld\n",
-           loop,
-           PFblock,
-           PFblockSize,
-           zsize);
+    printf("Create aol%ld_modevalol_PFb%ld  : %ld x 1 x %ld\n", loop, PFblock, PFblockSize, zsize);
     fflush(stdout);
     imsizearray = (uint32_t *) malloc(sizeof(uint32_t) * 3);
-    if(imsizearray == NULL)
+    if (imsizearray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort();
@@ -276,28 +270,21 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     imsizearray[1] = 1;
     imsizearray[2] = zsize;
 
-    if(snprintf(imnameout, sizeof(imnameout), "aol%ld_modevalol_PFb%ld", loop, PFblock) < 1)
+    if (snprintf(imnameout, sizeof(imnameout), "aol%ld_modevalol_PFb%ld", loop, PFblock) < 1)
     {
         PRINT_ERROR("snprintf wrote <1 char");
     }
 
     {
-        IMGID imgout =
-            imgid_make_from_name(
-                imnameout);
-        imgout.mdt->naxis = 3;
-        imgout.mdt->size[0] =
-            imsizearray[0];
-        imgout.mdt->size[1] =
-            imsizearray[1];
-        imgout.mdt->size[2] =
-            imsizearray[2];
+        IMGID imgout         = imgid_make_from_name(imnameout);
+        imgout.mdt->naxis    = 3;
+        imgout.mdt->size[0]  = imsizearray[0];
+        imgout.mdt->size[1]  = imsizearray[1];
+        imgout.mdt->size[2]  = imsizearray[2];
         imgout.mdt->datatype = datatype;
-        imgout.mdt->shared = 1;
-        imgout.mdt->NBkw = 1;
-        imgout.im =
-            (IMAGE *) calloc(
-                1, sizeof(IMAGE));
+        imgout.mdt->shared   = 1;
+        imgout.mdt->NBkw     = 1;
+        imgout.im            = (IMAGE *) calloc(1, sizeof(IMAGE));
         imgid_mkimage(&imgout);
         IDout = imgout.ID;
     }
@@ -306,9 +293,10 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
     printf("Done\n");
     fflush(stdout);
 
-    if(milk_data.processinfo == 1)
-        processinfo->loopstat =
-            1; // Notify processinfo that we are entering loop
+    if (milk_data.processinfo == 1)
+    {
+        processinfo->loopstat = 1; // Notify processinfo that we are entering loop
+    }
 
     long buffindex = 0;
     long outcnt    = 0;
@@ -316,22 +304,21 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
     int loopOK = 1;
 
-    while(loopOK == 1)
+    while (loopOK == 1)
     {
-
-        if(milk_data.processinfo == 1)
+        if (milk_data.processinfo == 1)
         {
-            while(processinfo->CTRLval == 1)  // pause
+            while (processinfo->CTRLval == 1) // pause
             {
                 usleep(50);
             }
 
-            if(processinfo->CTRLval == 2)  // single iteration
+            if (processinfo->CTRLval == 2) // single iteration
             {
                 processinfo->CTRLval = 1;
             }
 
-            if(processinfo->CTRLval == 3)  // exit loop
+            if (processinfo->CTRLval == 3) // exit loop
             {
                 loopOK = 0;
             }
@@ -340,7 +327,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
         cnt0 = dcimg[IDinb0].md[0].cnt0;
         cnt1 = dcimg[IDinb1].md[0].cnt0;
 
-        if(cnt0 != cnt0_old)
+        if (cnt0 != cnt0_old)
         {
             cube     = 0;
             cnt0_old = cnt0;
@@ -348,7 +335,7 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
             Tupdate  = 1;
         }
 
-        if(cnt1 != cnt1_old)
+        if (cnt1 != cnt1_old)
         {
             cube     = 1;
             cnt1_old = cnt1;
@@ -356,17 +343,18 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
             Tupdate  = 1;
         }
 
-        if(Tupdate == 1)
+        if (Tupdate == 1)
         {
             dcimg[IDout].md[0].write = 1;
             long kkin;
-            for(kkin = 0; kkin < zsizein; kkin++)
+            for (kkin = 0; kkin < zsizein; kkin++)
             {
                 kk = buffindex * zsizein + kkin;
-                for(ii = 0; ii < PFblockSize; ii++)
+                for (ii = 0; ii < PFblockSize; ii++)
+                {
                     dcimg[IDout].array.F[kk * PFblockSize + ii] =
-                        dcimg[IDinb]
-                        .array.F[kkin * xysize + (ii + PFblockStart)];
+                        dcimg[IDinb].array.F[kkin * xysize + (ii + PFblockStart)];
+                }
             }
             dcimg[IDout].md[0].write = 0;
 
@@ -375,30 +363,25 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
             buffindex++;
         }
 
-        if(buffindex == NBbuff)  // write output
+        if (buffindex == NBbuff) // write output
         {
             t      = time(NULL);
             uttime = gmtime(&t);
             clock_gettime(CLOCK_MILK, &timenow);
-            printf(
-                "%02d:%02d:%02ld.%09ld  NEW TELEMETRY BUFFER AVAILABLE [%ld]\n",
-                uttime->tm_hour,
-                uttime->tm_min,
-                timenow.tv_sec % 60,
-                timenow.tv_nsec,
-                outcnt);
+            printf("%02d:%02d:%02ld.%09ld  NEW TELEMETRY BUFFER AVAILABLE [%ld]\n", uttime->tm_hour,
+                   uttime->tm_min, timenow.tv_sec % 60, timenow.tv_nsec, outcnt);
 
             dcimg[IDout].md[0].write = 1;
-            for(ii = 0; ii < PFblockSize; ii++)  // Remove time averaged value
+            for (ii = 0; ii < PFblockSize; ii++) // Remove time averaged value
             {
                 ave = 0.0;
-                for(kk = 0; kk < zsize; kk++)
+                for (kk = 0; kk < zsize; kk++)
                 {
                     ave += dcimg[IDout].array.F[kk * PFblockSize + ii];
                 }
 
                 ave /= zsize;
-                for(kk = 0; kk < zsize; kk++)
+                for (kk = 0; kk < zsize; kk++)
                 {
                     dcimg[IDout].array.F[kk * PFblockSize + ii] -= ave;
                 }
@@ -416,77 +399,77 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(
 
         // process signals
 
-        if(milk_data.signal_TERM == 1)
+        if (milk_data.signal_TERM == 1)
         {
             loopOK = 0;
-            if(milk_data.processinfo == 1)
+            if (milk_data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGTERM);
             }
         }
 
-        if(milk_data.signal_INT == 1)
+        if (milk_data.signal_INT == 1)
         {
             loopOK = 0;
-            if(milk_data.processinfo == 1)
+            if (milk_data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGINT);
             }
         }
 
-        if(milk_data.signal_ABRT == 1)
+        if (milk_data.signal_ABRT == 1)
         {
             loopOK = 0;
-            if(milk_data.processinfo == 1)
+            if (milk_data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGABRT);
             }
         }
 
-        if(milk_data.signal_BUS == 1)
+        if (milk_data.signal_BUS == 1)
         {
             loopOK = 0;
-            if(milk_data.processinfo == 1)
+            if (milk_data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGBUS);
             }
         }
 
-        if(milk_data.signal_SEGV == 1)
+        if (milk_data.signal_SEGV == 1)
         {
             loopOK = 0;
-            if(milk_data.processinfo == 1)
+            if (milk_data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGSEGV);
             }
         }
 
-        if(milk_data.signal_HUP == 1)
+        if (milk_data.signal_HUP == 1)
         {
             loopOK = 0;
-            if(milk_data.processinfo == 1)
+            if (milk_data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGHUP);
             }
         }
 
-        if(milk_data.signal_PIPE == 1)
+        if (milk_data.signal_PIPE == 1)
         {
             loopOK = 0;
-            if(milk_data.processinfo == 1)
+            if (milk_data.processinfo == 1)
             {
                 processinfo_SIGexit(processinfo, SIGPIPE);
             }
         }
 
         loopcnt++;
-        if(milk_data.processinfo == 1)
+        if (milk_data.processinfo == 1)
         {
             processinfo->loopcnt = loopcnt;
         }
     }
 
-    if(milk_data.processinfo == 1)
+    if (milk_data.processinfo == 1)
     {
         processinfo_cleanExit(processinfo);
     }

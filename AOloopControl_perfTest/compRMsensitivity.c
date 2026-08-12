@@ -26,12 +26,11 @@
  * ============================================================= */
 
 static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "compRMsensitivity",
-    .cmdkey      = "compRMsensitivity",
-    .description =
-        "Compute response matrix sensitivity",
-    .description_long =
-        "Compute the sensitivity of a response matrix by analyzing singular value magnitudes and modal coupling coefficients."
+    .fps_name         = "compRMsensitivity",
+    .cmdkey           = "compRMsensitivity",
+    .description      = "Compute response matrix sensitivity",
+    .description_long = "Compute the sensitivity of a response matrix by analyzing singular value "
+                        "magnitudes and modal coupling coefficients."
 };
 
 
@@ -39,48 +38,27 @@ static FPS_APP_INFO FPS_app_info = {
  * 2.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
-static char  *dmmodes   = NULL;
-static char  *dmmask    = NULL;
-static char  *wfsref    = NULL;
-static char  *wfsmodes  = NULL;
-static char  *wfsmask   = NULL;
-static float *amplum    = NULL;
-static float *lambdaum  = NULL;
+static char  *dmmodes  = NULL;
+static char  *dmmask   = NULL;
+static char  *wfsref   = NULL;
+static char  *wfsmodes = NULL;
+static char  *wfsmask  = NULL;
+static float *amplum   = NULL;
+static float *lambdaum = NULL;
 
 
 /* ================================================================
  * 3.  UNIFIED PARAMETER TABLE (X-Macro)
  * ============================================================= */
 
-#define FPS_PARAMS(X) \
-    X(".DMmodes", &dmmodes, \
-      FPTYPE_FILENAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "DM modes") \
-    X(".DMmask", &dmmask, \
-      FPTYPE_FILENAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "DM mask") \
-    X(".WFSref", &wfsref, \
-      FPTYPE_FILENAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "WFS reference") \
-    X(".WFSmodes", &wfsmodes, \
-      FPTYPE_FILENAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "WFS modes") \
-    X(".WFSmask", &wfsmask, \
-      FPTYPE_FILENAME, 1, \
-      FPFLAG_DEFAULT_INPUT, \
-      "WFS mask") \
-    X(".ampl", &amplum, \
-      FPTYPE_FLOAT32, 0, \
-      FPFLAG_DEFAULT_INPUT, \
-      "RM modes ampl limit [um]") \
-    X(".lambdaum", &lambdaum, \
-      FPTYPE_FLOAT32, 0, \
-      FPFLAG_DEFAULT_INPUT, \
-      "wavelength [um]")
+#define FPS_PARAMS(X)                                                                        \
+    X(".DMmodes", &dmmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM modes")            \
+    X(".DMmask", &dmmask, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM mask")               \
+    X(".WFSref", &wfsref, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS reference")         \
+    X(".WFSmodes", &wfsmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS modes")         \
+    X(".WFSmask", &wfsmask, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS mask")            \
+    X(".ampl", &amplum, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT, "RM modes ampl limit [um]") \
+    X(".lambdaum", &lambdaum, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT, "wavelength [um]")
 
 
 /* ================================================================
@@ -90,16 +68,14 @@ static float *lambdaum  = NULL;
 /**
  * measure response matrix sensitivity
  */
-static errno_t
-AOloopControl_perfTest_computeRM_sensitivity(
-    const char *IDdmmodes_name,
-    const char *IDdmmask_name,
-    const char *IDwfsref_name,
-    const char *IDwfsresp_name,
-    const char *IDwfsmask_name,
-    float       amplimitum,
-    float       lambdaum_val,
-    const char *foutname)
+static errno_t AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmodes_name,
+                                                            const char *IDdmmask_name,
+                                                            const char *IDwfsref_name,
+                                                            const char *IDwfsresp_name,
+                                                            const char *IDwfsmask_name,
+                                                            float       amplimitum,
+                                                            float       lambdaum_val,
+                                                            const char *foutname)
 {
     FILE   *fp;
     imageID IDdmmodes;
@@ -123,26 +99,21 @@ AOloopControl_perfTest_computeRM_sensitivity(
 
     printf("amplimit = %f um\n", amplimitum);
 
-    IDdmmodes = image_ID(IDdmmodes_name,
-        dcimg, dcnimg);
+    IDdmmodes = image_ID(IDdmmodes_name, dcimg, dcnimg);
     dmxsize   = dcimg[IDdmmodes].md[0].size[0];
     dmysize   = dcimg[IDdmmodes].md[0].size[1];
     NBmodes   = dcimg[IDdmmodes].md[0].size[2];
     dmxysize  = dmxsize * dmysize;
 
-    IDdmmask = image_ID(IDdmmask_name,
-        dcimg, dcnimg);
+    IDdmmask = image_ID(IDdmmask_name, dcimg, dcnimg);
 
-    IDwfsref  = image_ID(IDwfsref_name,
-        dcimg, dcnimg);
+    IDwfsref  = image_ID(IDwfsref_name, dcimg, dcnimg);
     wfsxsize  = dcimg[IDwfsref].md[0].size[0];
     wfsysize  = dcimg[IDwfsref].md[0].size[1];
     wfsxysize = wfsxsize * wfsysize;
 
-    IDwfsresp = image_ID(IDwfsresp_name,
-        dcimg, dcnimg);
-    IDwfsmask = image_ID(IDwfsmask_name,
-        dcimg, dcnimg);
+    IDwfsresp = image_ID(IDwfsresp_name, dcimg, dcnimg);
+    IDwfsmask = image_ID(IDwfsmask_name, dcimg, dcnimg);
 
     wfsreftot = 0.0;
     for (ii = 0; ii < wfsxysize; ii++)
@@ -153,14 +124,12 @@ AOloopControl_perfTest_computeRM_sensitivity(
     wfsmasktot = 0.0;
     for (ii = 0; ii < wfsxysize; ii++)
     {
-        wfsmasktot +=
-            dcimg[IDwfsmask].array.F[ii];
+        wfsmasktot += dcimg[IDwfsmask].array.F[ii];
     }
 
     list_image_ID();
     printf("NBmodes = %ld\n", NBmodes);
-    printf("wfs size = %ld %ld\n",
-           wfsxsize, wfsysize);
+    printf("wfs size = %ld %ld\n", wfsxsize, wfsysize);
     printf("wfs resp ID : %ld\n", IDwfsresp);
     printf("wfs mask ID : %ld\n", IDwfsmask);
     printf("wfsmasktot = %f\n", wfsmasktot);
@@ -168,16 +137,12 @@ AOloopControl_perfTest_computeRM_sensitivity(
     fp = fopen(foutname, "w");
 
     fprintf(fp, "# col 1 : mode index\n");
-    fprintf(fp,
-        "# col 2 : avg DM value (should be 0)\n");
+    fprintf(fp, "# col 2 : avg DM value (should be 0)\n");
     fprintf(fp, "# col 3 : DM mode RMS\n");
     fprintf(fp, "# col 4 : WFS mode RMS\n");
-    fprintf(fp,
-        "# col 5 : SNR for 1um DM / 1 ph\n");
-    fprintf(fp,
-        "# col 6 : fraction of flux used\n");
-    fprintf(fp,
-        "# col 7 : Photon Efficiency\n");
+    fprintf(fp, "# col 5 : SNR for 1um DM / 1 ph\n");
+    fprintf(fp, "# col 6 : fraction of flux used\n");
+    fprintf(fp, "# col 7 : Photon Efficiency\n");
     fprintf(fp, "\n");
 
     for (int mode = 0; mode < NBmodes; mode++)
@@ -196,17 +161,12 @@ AOloopControl_perfTest_computeRM_sensitivity(
         aveval       = 0.0;
         for (ii = 0; ii < dmxysize; ii++)
         {
-            tmp1 =
-                dcimg[IDdmmodes]
-                    .array.F[mode * dmxysize + ii]
-                * dcimg[IDdmmask].array.F[ii];
+            tmp1 = dcimg[IDdmmodes].array.F[mode * dmxysize + ii] * dcimg[IDdmmask].array.F[ii];
             aveval += tmp1;
             dmmoderms += tmp1 * tmp1;
-            dmmodermscnt +=
-                dcimg[IDdmmask].array.F[ii];
+            dmmodermscnt += dcimg[IDdmmask].array.F[ii];
         }
-        dmmoderms =
-            sqrt(dmmoderms / dmmodermscnt);
+        dmmoderms = sqrt(dmmoderms / dmmodermscnt);
         aveval /= dmmodermscnt;
 
         SNR           = 0.0;
@@ -215,109 +175,74 @@ AOloopControl_perfTest_computeRM_sensitivity(
         pcnt          = 0.0;
         for (ii = 0; ii < wfsxysize; ii++)
         {
-            tmp1 =
-                dcimg[IDwfsresp]
-                    .array.F[mode * wfsxysize + ii]
-                * dcimg[IDwfsmask].array.F[ii];
+            tmp1 = dcimg[IDwfsresp].array.F[mode * wfsxysize + ii] * dcimg[IDwfsmask].array.F[ii];
             wfsmoderms += tmp1 * tmp1;
             wfsmodermscnt = 1.0;
-            wfsmodermscnt +=
-                dcimg[IDwfsmask].array.F[ii];
+            wfsmodermscnt += dcimg[IDwfsmask].array.F[ii];
 
-            if (dcimg[IDwfsmask]
-                    .array.F[ii] > 0.1)
+            if (dcimg[IDwfsmask].array.F[ii] > 0.1)
             {
-                float wv =
-                    dcimg[IDwfsresp]
-                        .array.F[mode * wfsxysize
-                                 + ii];
-                if (dcimg[IDwfsref]
-                        .array.F[ii]
-                    > fabsf(wv * amplimitum))
+                float wv = dcimg[IDwfsresp].array.F[mode * wfsxysize + ii];
+                if (dcimg[IDwfsref].array.F[ii] > fabsf(wv * amplimitum))
                 {
-                    SNR1 = wv
-                        / sqrt(dcimg[IDwfsref]
-                                   .array.F[ii]);
+                    SNR1 = wv / sqrt(dcimg[IDwfsref].array.F[ii]);
                     SNR1 /= wfsreftot;
                     SNR += SNR1 * SNR1;
-                    pcnt +=
-                        dcimg[IDwfsref]
-                            .array.F[ii];
+                    pcnt += dcimg[IDwfsref].array.F[ii];
                 }
             }
         }
         frac = pcnt / wfsreftot;
 
-        wfsmoderms =
-            sqrt(wfsmoderms / wfsmodermscnt);
-        SNR = sqrt(SNR);
+        wfsmoderms = sqrt(wfsmoderms / wfsmodermscnt);
+        SNR        = sqrt(SNR);
 
-        sigmarad = (1.0 / SNR) * 2.0 * M_PI
-                   * (2.0 / (lambdaum_val));
+        sigmarad = (1.0 / SNR) * 2.0 * M_PI * (2.0 / (lambdaum_val));
 
         eff = 1.0 / (sigmarad * sigmarad);
 
         fprintf(fp,
-            "%5d   %16.06f   %16.06f"
-            "   %16.06f    %16.06g"
-            "      %12.06g"
-            "      %12.010f\n",
-            mode, aveval, dmmoderms,
-            wfsmoderms, SNR, frac, eff);
+                "%5d   %16.06f   %16.06f"
+                "   %16.06f    %16.06g"
+                "      %12.06g"
+                "      %12.010f\n",
+                mode, aveval, dmmoderms, wfsmoderms, SNR, frac, eff);
     }
 
     fclose(fp);
 
     /* computing DM space cross-product */
-    create_2Dimage_ID("DMmodesXP",
-        NBmodes, NBmodes, &IDoutXP);
+    create_2Dimage_ID("DMmodesXP", NBmodes, NBmodes, &IDoutXP);
 
     for (int mode = 0; mode < NBmodes; mode++)
     {
-        for (int mode1 = 0;
-             mode1 < mode + 1; mode1++)
+        for (int mode1 = 0; mode1 < mode + 1; mode1++)
         {
             XPval = 0.0;
             for (ii = 0; ii < dmxysize; ii++)
             {
-                XPval +=
-                    dcimg[IDdmmask].array.F[ii]
-                    * dcimg[IDdmmodes]
-                          .array.F[mode * dmxysize
-                                   + ii]
-                    * dcimg[IDdmmodes]
-                          .array.F[mode1 * dmxysize
-                                   + ii];
+                XPval += dcimg[IDdmmask].array.F[ii] *
+                         dcimg[IDdmmodes].array.F[mode * dmxysize + ii] *
+                         dcimg[IDdmmodes].array.F[mode1 * dmxysize + ii];
             }
-            dcimg[IDoutXP]
-                .array.F[mode * NBmodes + mode1] =
-                XPval / dmmodermscnt;
+            dcimg[IDoutXP].array.F[mode * NBmodes + mode1] = XPval / dmmodermscnt;
         }
     }
     save_fits("DMmodesXP", "DMmodesXP.fits");
 
     /* computing WFS space cross-product */
-    create_2Dimage_ID("WFSmodesXP",
-        NBmodes, NBmodes, &IDoutXP_WFS);
+    create_2Dimage_ID("WFSmodesXP", NBmodes, NBmodes, &IDoutXP_WFS);
     for (int mode = 0; mode < NBmodes; mode++)
     {
-        for (int mode1 = 0;
-             mode1 < mode + 1; mode1++)
+        for (int mode1 = 0; mode1 < mode + 1; mode1++)
         {
             XPval = 0.0;
             for (ii = 0; ii < wfsxysize; ii++)
             {
-                XPval +=
-                    dcimg[IDwfsresp]
-                        .array.F[mode * wfsxysize
-                                 + ii]
-                    * dcimg[IDwfsresp]
-                          .array.F[mode1 * wfsxysize
-                                   + ii];
+                XPval += dcimg[IDwfsresp].array.F[mode * wfsxysize + ii] *
+                         dcimg[IDwfsresp].array.F[mode1 * wfsxysize + ii];
             }
-            dcimg[IDoutXP_WFS]
-                .array.F[mode * NBmodes + mode1] =
-                XPval / wfsxysize;
+            dcimg[IDoutXP_WFS].array.F[mode * NBmodes + mode1] = XPval / wfsxysize;
         }
     }
     save_fits("WFSmodesXP", "WFSmodesXP.fits");
@@ -341,11 +266,8 @@ static errno_t compute_function()
 {
     DEBUG_TRACE_FSTART();
 
-    AOloopControl_perfTest_computeRM_sensitivity(
-        dmmodes, dmmask,
-        wfsref, wfsmodes, wfsmask,
-        *amplum, *lambdaum,
-        "RMsens.txt");
+    AOloopControl_perfTest_computeRM_sensitivity(dmmodes, dmmask, wfsref, wfsmodes, wfsmask,
+                                                 *amplum, *lambdaum, "RMsens.txt");
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
@@ -359,17 +281,13 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
-errno_t
-CLIADDCMD_AOloopControl_perfTest__compRMsensitivity()
+errno_t CLIADDCMD_AOloopControl_perfTest__compRMsensitivity()
 {
-    safe_fps_fill_farg_examples(
-        farg, my_bindings, nb_bindings);
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
     return RETURN_SUCCESS;
 }
@@ -381,8 +299,5 @@ CLIADDCMD_AOloopControl_perfTest__compRMsensitivity()
  * ============================================================= */
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function)
+FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
 #endif

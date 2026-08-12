@@ -17,7 +17,7 @@ ACTION = on
 - start zonal filtering process, input aolX_zvalDM output aolX_dmC
 
 ACTION = off
-- Change CU dm2mval output from aolX_zvalDM to aolX_dmC 
+- Change CU dm2mval output from aolX_zvalDM to aolX_dmC
 - stop zonal filtering process
 
 ACTION = cal
@@ -33,7 +33,7 @@ FILE   conf/matDM2mval_psinvcheck.fits
 FILE   conf/matDM2mval.fits
 STREAM aolX_matDM2mval
 	conversion matrix from DM to mode values
-"	
+"
 
 source milk-script-std-config
 source cacao-check-cacaovars

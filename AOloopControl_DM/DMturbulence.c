@@ -5,7 +5,7 @@
 /**
  * @file    DMturbulence.c
  * @brief   DM turbulence simulation
- * 
+ *
  * Refactored to FPS practices.
  */
 
@@ -40,7 +40,8 @@ static FPS_APP_INFO FPS_app_info = {
     .cmdkey      = "atmturbulence",
     .description = "DM turbulence simulation",
     .description_long =
-        "Simulate atmospheric turbulence on a deformable mirror by applying time-evolving Kolmogorov phase screens. Used for closed-loop testing without a real atmosphere."
+        "Simulate atmospheric turbulence on a deformable mirror by applying time-evolving "
+        "Kolmogorov phase screens. Used for closed-loop testing without a real atmosphere."
 };
 
 
@@ -48,19 +49,19 @@ static FPS_APP_INFO FPS_app_info = {
  * 2.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
-static uint64_t turbON = 0;
-static uint64_t turbZERO = 0;
-static uint64_t seedZERO = 0;
-static char dmstream[FUNCTION_PARAMETER_STRMAXLEN] = "";
-static float DMpixscale = 0;
-static float turbwspeed = 0;
-static float turbwangle = 0;
-static float turbampl = 0;
-static uint64_t compTurbSeed = 0;
-static uint32_t turbseedsize = 0;
-static float turbseedpixscale = 0;
-static float turbseedinnerscale = 0;
-static float turbseedouterscale = 0;
+static uint64_t turbON                                 = 0;
+static uint64_t turbZERO                               = 0;
+static uint64_t seedZERO                               = 0;
+static char     dmstream[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static float    DMpixscale                             = 0;
+static float    turbwspeed                             = 0;
+static float    turbwangle                             = 0;
+static float    turbampl                               = 0;
+static uint64_t compTurbSeed                           = 0;
+static uint32_t turbseedsize                           = 0;
+static float    turbseedpixscale                       = 0;
+static float    turbseedinnerscale                     = 0;
+static float    turbseedouterscale                     = 0;
 
 static uint64_t processinfo_change_cnt_local = 0;
 
@@ -69,80 +70,46 @@ static uint64_t processinfo_change_cnt_local = 0;
  * 3.  UNIFIED PARAMETER TABLE (X-Macro)
  * ============================================================= */
 
-#define FPS_PARAMS(X) \
-    X(".turbON", &turbON, \
-      FPTYPE_ONOFF, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, \
-      "turbulence on/off (off=freeze)") \
-    X(".turbZERO", &turbZERO, \
-      FPTYPE_ONOFF, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
-          | FPFLAG_VISIBLE, \
-      "turbulence zero") \
-    X(".seedZERO", &seedZERO, \
-      FPTYPE_ONOFF, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
-          | FPFLAG_VISIBLE, \
-      "set seed pos to zero") \
-    X(".dmstream", dmstream, \
-      FPTYPE_STREAMNAME, 1, \
-      FPFLAG_DEFAULT_INPUT \
-          | FPFLAG_PRIMARY_CLI_INPUT, \
-      "output DM turbulence stream") \
-    X(".DMpixscale", &DMpixscale, \
-      FPTYPE_FLOAT32, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
-      "DM pixel scale [m/pix]") \
-    X(".wspeed", &turbwspeed, \
-      FPTYPE_FLOAT32, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
-          | FPFLAG_VISIBLE, \
-      "wind speed [m/s]") \
-    X(".wangle", &turbwangle, \
-      FPTYPE_FLOAT32, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
-          | FPFLAG_VISIBLE, \
-      "wind angle [rad]") \
-    X(".ampl", &turbampl, \
-      FPTYPE_FLOAT32, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN \
-          | FPFLAG_VISIBLE, \
-      "amplitude across aperture [um]") \
-    X(".turbseed.comp", &compTurbSeed, \
-      FPTYPE_ONOFF, 0, \
-      FPFLAG_DEFAULT_INPUT, \
-      "(re)compute turbulence seed") \
-    X(".turbseed.size", &turbseedsize, \
-      FPTYPE_UINT32, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
-      "screen seed size") \
-    X(".turbseed.pixscale", \
-      &turbseedpixscale, \
-      FPTYPE_FLOAT32, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
-      "screen pixel scale [m/pix]") \
-    X(".turbseed.innerscale", \
-      &turbseedinnerscale, \
-      FPTYPE_FLOAT32, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
-      "screen inner scale [m]") \
-    X(".turbseed.outerscale", \
-      &turbseedouterscale, \
-      FPTYPE_FLOAT32, 0, \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, \
-      "screen outer scale [m]")
+#define FPS_PARAMS(X)                                                                            \
+    X(".turbON", &turbON, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,               \
+      "turbulence on/off (off=freeze)")                                                          \
+    X(".turbZERO", &turbZERO, FPTYPE_ONOFF, 0,                                                   \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN | FPFLAG_VISIBLE, "turbulence zero")                \
+    X(".seedZERO", &seedZERO, FPTYPE_ONOFF, 0,                                                   \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN | FPFLAG_VISIBLE, "set seed pos to zero")           \
+    X(".dmstream", dmstream, FPTYPE_STREAMNAME, 1,                                               \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT, "output DM turbulence stream")            \
+    X(".DMpixscale", &DMpixscale, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE,      \
+      "DM pixel scale [m/pix]")                                                                  \
+    X(".wspeed", &turbwspeed, FPTYPE_FLOAT32, 0,                                                 \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN | FPFLAG_VISIBLE, "wind speed [m/s]")               \
+    X(".wangle", &turbwangle, FPTYPE_FLOAT32, 0,                                                 \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN | FPFLAG_VISIBLE, "wind angle [rad]")               \
+    X(".ampl", &turbampl, FPTYPE_FLOAT32, 0,                                                     \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN | FPFLAG_VISIBLE, "amplitude across aperture [um]") \
+    X(".turbseed.comp", &compTurbSeed, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                    \
+      "(re)compute turbulence seed")                                                             \
+    X(".turbseed.size", &turbseedsize, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE,  \
+      "screen seed size")                                                                        \
+    X(".turbseed.pixscale", &turbseedpixscale, FPTYPE_FLOAT32, 0,                                \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, "screen pixel scale [m/pix]")                       \
+    X(".turbseed.innerscale", &turbseedinnerscale, FPTYPE_FLOAT32, 0,                            \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, "screen inner scale [m]")                           \
+    X(".turbseed.outerscale", &turbseedouterscale, FPTYPE_FLOAT32, 0,                            \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_VISIBLE, "screen outer scale [m]")
 
-typedef struct {
-    IMGID imgDM;
-    float *turbimarray;
+typedef struct
+{
+    IMGID   imgDM;
+    float  *turbimarray;
     imageID IDts0;
-    
+
     double phystime;
     double phystimeprev;
     double x0m;
     double y0m;
     double amplcoeff;
-    
+
     struct timespec tstart;
 
 } DMTURB_STATE;
@@ -151,13 +118,11 @@ typedef struct {
 /* HELPERS                                                                                         */
 /* =============================================================================================== */
 
-static errno_t make_seed_turbulence_screen(
-    const char *ID_name1,
-    const char *ID_name2,
-    long        size,
-    float       outerscale,
-    float       innerscale
-)
+static errno_t make_seed_turbulence_screen(const char *ID_name1,
+                                           const char *ID_name2,
+                                           long        size,
+                                           float       outerscale,
+                                           float       innerscale)
 {
     imageID ID;
     float   value, C1, C2;
@@ -182,7 +147,7 @@ static errno_t make_seed_turbulence_screen(
     */
 
     IDv = variable_ID("RLIM");
-    if(IDv != -1)
+    if (IDv != -1)
     {
         RLIMMODE = 1;
         rlim     = milk_data.variable[IDv].value.f;
@@ -190,59 +155,47 @@ static errno_t make_seed_turbulence_screen(
     }
 
     OUTERscale_f0 = 1.0f * size / outerscale;
-    INNERscale_f0 =
-        (5.92f / (2.0f * (float) M_PI))
-        * size / innerscale;
+    INNERscale_f0 = (5.92f / (2.0f * (float) M_PI)) * size / innerscale;
 
     imageID ID_tmppha;
     create_2Dimage_ID("tmppha", size, size, &ID_tmppha);
-    for(uint64_t ii = 0; ii < size * size; ii++) {
+    for (uint64_t ii = 0; ii < size * size; ii++)
+    {
         dcimg[ID_tmppha].array.F[ii] = (float) ran1();
     }
-    arith_image_cstmult(
-        "tmppha", 2.0f * (float) M_PI,
-        "tmppha1");
+    arith_image_cstmult("tmppha", 2.0f * (float) M_PI, "tmppha1");
     delete_image_ID("tmppha", DELETE_IMAGE_ERRMODE_WARNING);
     //  make_dist("tmpd",size,size,size/2,size/2);
     create_2Dimage_ID("tmpd", size, size, &ID);
 
 
-    for(uint32_t ii = 0; ii < size; ii++)
-        for(uint32_t jj = 0; jj < size; jj++)
+    for (uint32_t ii = 0; ii < size; ii++)
+    {
+        for (uint32_t jj = 0; jj < size; jj++)
         {
             dx = (float) ii - size / 2;
             dy = (float) jj - size / 2;
 
-            if(RLIMMODE == 1)
+            if (RLIMMODE == 1)
             {
                 r = sqrtf(dx * dx + dy * dy);
-                if(r < rlim)
+                if (r < rlim)
                 {
-                    dcimg[ID]
-                        .array.F[jj * size + ii]
-                        = 0.0f;
+                    dcimg[ID].array.F[jj * size + ii] = 0.0f;
                 }
                 else
                 {
-                    dcimg[ID]
-                        .array.F[jj * size + ii]
-                        = sqrtf(
-                            dx * dx
-                            + dy * dy
-                            + OUTERscale_f0
-                              * OUTERscale_f0);
+                    dcimg[ID].array.F[jj * size + ii] =
+                        sqrtf(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
                 }
             }
             else
             {
-                dcimg[ID]
-                    .array.F[jj * size + ii]
-                    = sqrtf(
-                        dx * dx + dy * dy
-                        + OUTERscale_f0
-                          * OUTERscale_f0);
+                dcimg[ID].array.F[jj * size + ii] =
+                    sqrtf(dx * dx + dy * dy + OUTERscale_f0 * OUTERscale_f0);
             }
         }
+    }
     //  dcimg[ID].array.F[size/2*size+size/2+10] = 1.0;
 
     // period [pix] = size/sqrt(dx*dx+dy*dy)
@@ -250,22 +203,20 @@ static errno_t make_seed_turbulence_screen(
     // f [1/pix] * size = sqrt(dx*dx+dy*dy)
 
     create_2Dimage_ID("tmpg", size, size, &ID);
-    for(uint64_t ii = 0; ii < size * size; ii++) {
+    for (uint64_t ii = 0; ii < size * size; ii++)
+    {
         dcimg[ID].array.F[ii] = (float) gauss();
     }
-    for(uint32_t ii = 0; ii < size; ii++)
-        for(uint32_t jj = 0; jj < size; jj++)
+    for (uint32_t ii = 0; ii < size; ii++)
+    {
+        for (uint32_t jj = 0; jj < size; jj++)
         {
             dx      = (float) ii - size / 2;
             dy      = (float) jj - size / 2;
-            iscoeff = expf(
-                -(dx * dx + dy * dy)
-                / INNERscale_f0
-                / INNERscale_f0);
-            dcimg[ID]
-                .array.F[jj * size + ii]
-                *= sqrtf(iscoeff);
+            iscoeff = expf(-(dx * dx + dy * dy) / INNERscale_f0 / INNERscale_f0);
+            dcimg[ID].array.F[jj * size + ii] *= sqrtf(iscoeff);
         }
+    }
 
     arith_image_cstpow("tmpd", 11.0 / 6.0, "tmpd1");
     delete_image_ID("tmpd", DELETE_IMAGE_ERRMODE_WARNING);
@@ -275,14 +226,14 @@ static errno_t make_seed_turbulence_screen(
 
     {
         IMGID imgtmpamp = imgid_make_from_name("tmpamp");
-        resolveIMGID(
-            &imgtmpamp, ERRMODE_WARN,
-            dcimg,
-            dcnimg);
-            if (imgtmpamp.ID == -1) return RETURN_FAILURE;
-        uint32_t cx = (uint32_t)(size / 2);
-        uint32_t cy = (uint32_t)(size / 2);
-        uint32_t w = imgtmpamp.md->size[0];
+        resolveIMGID(&imgtmpamp, ERRMODE_WARN, dcimg, dcnimg);
+        if (imgtmpamp.ID == -1)
+        {
+            return RETURN_FAILURE;
+        }
+        uint32_t cx                        = (uint32_t) (size / 2);
+        uint32_t cy                        = (uint32_t) (size / 2);
+        uint32_t w                         = imgtmpamp.md->size[0];
         imgtmpamp.im->array.F[cy * w + cx] = 0.0f;
     }
 
@@ -300,13 +251,15 @@ static errno_t make_seed_turbulence_screen(
     ID    = image_ID("strf", dcimg, dcnimg);
     value = 0.0;
     cnt   = 0;
-    for(uint32_t ii = 1; ii < Dlim; ii++)
-        for(uint32_t jj = 1; jj < Dlim; jj++)
+    for (uint32_t ii = 1; ii < Dlim; ii++)
+    {
+        for (uint32_t jj = 1; jj < Dlim; jj++)
         {
             value += log10f(dcimg[ID].array.F[jj * size + ii]) -
                      5.0f / 3.0f * log10f(sqrtf(ii * ii + jj * jj));
             cnt++;
         }
+    }
     // save_fl_fits("strf","strf.fits");
     delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
     C1 = powf(10.0f, value / cnt);
@@ -315,40 +268,39 @@ static errno_t make_seed_turbulence_screen(
     ID    = image_ID("strf", dcimg, dcnimg);
     value = 0.0;
     cnt   = 0;
-    for(uint32_t ii = 1; ii < Dlim; ii++)
-        for(uint32_t jj = 1; jj < Dlim; jj++)
+    for (uint32_t ii = 1; ii < Dlim; ii++)
+    {
+        for (uint32_t jj = 1; jj < Dlim; jj++)
         {
             value += log10f(dcimg[ID].array.F[jj * size + ii]) -
                      5.0f / 3.0f * log10f(sqrtf(ii * ii + jj * jj));
             cnt++;
         }
+    }
     delete_image_ID("strf", DELETE_IMAGE_ERRMODE_WARNING);
     C2 = powf(10.0f, value / cnt);
 
-    if(UNLIKELY(milk_data.Debug > 0)) {
+    if (UNLIKELY(milk_data.Debug > 0))
+    {
         printf("%f %f\n", C1, C2);
     }
 
-    arith_image_cstmult(
-        "tmpo1", 1.0f / sqrtf(C1), ID_name1);
-    arith_image_cstmult(
-        "tmpo2", 1.0f / sqrtf(C2), ID_name2);
+    arith_image_cstmult("tmpo1", 1.0f / sqrtf(C1), ID_name1);
+    arith_image_cstmult("tmpo2", 1.0f / sqrtf(C2), ID_name2);
     delete_image_ID("tmpo1", DELETE_IMAGE_ERRMODE_WARNING);
     delete_image_ID("tmpo2", DELETE_IMAGE_ERRMODE_WARNING);
 
     return RETURN_SUCCESS;
 }
 
-static errno_t check_recompute_seed() {
-    if(compTurbSeed && (compTurbSeed) & FPFLAG_ONOFF) {
+static errno_t check_recompute_seed()
+{
+    if (compTurbSeed && (compTurbSeed) &FPFLAG_ONOFF)
+    {
         printf("RECOMPUTING DM TURB SEED\n");
-        make_seed_turbulence_screen(
-            "tseed0",
-            "tseed1",
-            turbseedsize,
-            (turbseedouterscale) / (turbseedpixscale),
-            (turbseedinnerscale) / (turbseedpixscale)
-        );
+        make_seed_turbulence_screen("tseed0", "tseed1", turbseedsize,
+                                    (turbseedouterscale) / (turbseedpixscale),
+                                    (turbseedinnerscale) / (turbseedpixscale));
         save_fits("tseed0", "../conf/turbseed0.fits");
         save_fits("tseed1", "../conf/turbseed1.fits");
         compTurbSeed &= ~FPFLAG_ONOFF;
@@ -360,30 +312,39 @@ static errno_t check_recompute_seed() {
 /* RUN LOGIC                                                                                       */
 /* =============================================================================================== */
 
-static void dmturb_cleanup(DMTURB_STATE *state) {
-    if(!state) return;
-    if(state->turbimarray) free(state->turbimarray);
+static void dmturb_cleanup(DMTURB_STATE *state)
+{
+    if (!state)
+    {
+        return;
+    }
+    if (state->turbimarray)
+    {
+        free(state->turbimarray);
+    }
     free(state);
 }
 
-static DMTURB_STATE* dmturb_init() {
-    DMTURB_STATE *state = (DMTURB_STATE*) calloc(1, sizeof(DMTURB_STATE));
-    
+static DMTURB_STATE *dmturb_init()
+{
+    DMTURB_STATE *state = (DMTURB_STATE *) calloc(1, sizeof(DMTURB_STATE));
+
     // Connect to DM stream
     state->imgDM = imgid_make_from_name(dmstream);
-    resolveIMGID(&state->imgDM,
-        ERRMODE_WARN,
-        dcimg,
-        dcnimg);
-        if (state->imgDM.ID == -1) return NULL;
+    resolveIMGID(&state->imgDM, ERRMODE_WARN, dcimg, dcnimg);
+    if (state->imgDM.ID == -1)
+    {
+        return NULL;
+    }
     printf("%u x %u actuator\n", state->imgDM.md->size[0], state->imgDM.md->size[1]);
-    
-    uint32_t xsize = state->imgDM.md->size[0];
-    uint32_t ysize = state->imgDM.md->size[1];
-    state->turbimarray = (float*) malloc(sizeof(float) * xsize * ysize);
-    
+
+    uint32_t xsize     = state->imgDM.md->size[0];
+    uint32_t ysize     = state->imgDM.md->size[1];
+    state->turbimarray = (float *) malloc(sizeof(float) * xsize * ysize);
+
     // Load seed 0
-    if (load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0) != 0) {
+    if (load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0) != 0)
+    {
         // If fail, create it?
         // Original code seemed to expect it or create it in customCONFcheck
         // Let's force creation if not exists
@@ -391,182 +352,155 @@ static DMTURB_STATE* dmturb_init() {
         check_recompute_seed();
         load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0);
     }
-    
-    state->amplcoeff = 1.0;
-    state->phystime = 0.0;
+
+    state->amplcoeff    = 1.0;
+    state->phystime     = 0.0;
     state->phystimeprev = 0.0;
-    state->x0m = 0.0;
-    state->y0m = 0.0;
-    
+    state->x0m          = 0.0;
+    state->y0m          = 0.0;
+
     clock_gettime(CLOCK_MILK, &state->tstart);
-    
+
     return state;
 }
 
-static void dmturb_step(PROCESSINFO *processinfo, FPS *fps, DMTURB_STATE *state) {
+static void dmturb_step(PROCESSINFO *processinfo, FPS *fps, DMTURB_STATE *state)
+{
     // Sync parameters
-    if (fps) {
-        if(fps->md->processinfo_change_cnt != processinfo_change_cnt_local) {
+    if (fps)
+    {
+        if (fps->md->processinfo_change_cnt != processinfo_change_cnt_local)
+        {
             fps_to_processinfo(fps, processinfo);
             processinfo_change_cnt_local = fps->md->processinfo_change_cnt;
         }
     }
-    
+
     // Check seed recompute
     check_recompute_seed();
-    
+
     uint32_t xsize = state->imgDM.md->size[0];
     uint32_t ysize = state->imgDM.md->size[1];
-    
-    if(turbZERO && ((turbZERO) & FPFLAG_ONOFF)) {
-        for(uint64_t ii=0; ii<xsize*ysize; ii++) state->turbimarray[ii] = 0.0f;
-        memcpy(state->imgDM.im->array.F,
-            state->turbimarray,
-            sizeof(float)*xsize*ysize);
+
+    if (turbZERO && ((turbZERO) &FPFLAG_ONOFF))
+    {
+        for (uint64_t ii = 0; ii < xsize * ysize; ii++)
+        {
+            state->turbimarray[ii] = 0.0f;
+        }
+        memcpy(state->imgDM.im->array.F, state->turbimarray, sizeof(float) * xsize * ysize);
         processinfo_update_output_stream(processinfo, state->imgDM.im, NULL);
         turbZERO &= ~FPFLAG_ONOFF;
     }
-    
-    if(seedZERO && ((seedZERO) & FPFLAG_ONOFF)) {
+
+    if (seedZERO && ((seedZERO) &FPFLAG_ONOFF))
+    {
         state->x0m = 0.0;
         state->y0m = 0.0;
         seedZERO &= ~FPFLAG_ONOFF;
     }
-    
-    if((turbON) & FPFLAG_ONOFF) {
+
+    if ((turbON) &FPFLAG_ONOFF)
+    {
         struct timespec tnow;
         clock_gettime(CLOCK_MILK, &tnow);
-        long tdiffsec = tnow.tv_sec - state->tstart.tv_sec;
-        long tdiffnsec = tnow.tv_nsec - state->tstart.tv_nsec;
-        double tdiff = 1.0 * tdiffsec + 1.0e-9 * tdiffnsec;
-        
+        long   tdiffsec  = tnow.tv_sec - state->tstart.tv_sec;
+        long   tdiffnsec = tnow.tv_nsec - state->tstart.tv_nsec;
+        double tdiff     = 1.0 * tdiffsec + 1.0e-9 * tdiffnsec;
+
         state->phystimeprev = state->phystime;
-        state->phystime = tdiff;
-        double dt = state->phystime - state->phystimeprev;
-        
-        state->x0m += dt * (turbwspeed) * cosf(turbwangle);
-        state->y0m += dt * (turbwspeed) * sinf(turbwangle);
-        
-        uint32_t Sxsize = dcimg[state->IDts0].md->size[0];
-        uint32_t Sysize = dcimg[state->IDts0].md->size[1];
-        double seedscreensizem = (turbseedpixscale) * Sxsize;
-        
-        while(state->x0m < 0) state->x0m += seedscreensizem;
-        while(state->x0m > seedscreensizem) state->x0m -= seedscreensizem;
-        while(state->y0m < 0) state->y0m += seedscreensizem;
-        while(state->y0m > seedscreensizem) state->y0m -= seedscreensizem;
-        
-        float total = 0.0f;
-        for(uint32_t ii = 0; ii < xsize; ii++)
+        state->phystime     = tdiff;
+        double dt           = state->phystime - state->phystimeprev;
+
+        state->x0m += dt * (turbwspeed) *cosf(turbwangle);
+        state->y0m += dt * (turbwspeed) *sinf(turbwangle);
+
+        uint32_t Sxsize          = dcimg[state->IDts0].md->size[0];
+        uint32_t Sysize          = dcimg[state->IDts0].md->size[1];
+        double   seedscreensizem = (turbseedpixscale) *Sxsize;
+
+        while (state->x0m < 0)
         {
-            double xm =
-                state->x0m
-                + (DMpixscale) * ii;
-            double xpix =
-                xm / (turbseedpixscale);
+            state->x0m += seedscreensizem;
+        }
+        while (state->x0m > seedscreensizem)
+        {
+            state->x0m -= seedscreensizem;
+        }
+        while (state->y0m < 0)
+        {
+            state->y0m += seedscreensizem;
+        }
+        while (state->y0m > seedscreensizem)
+        {
+            state->y0m -= seedscreensizem;
+        }
+
+        float total = 0.0f;
+        for (uint32_t ii = 0; ii < xsize; ii++)
+        {
+            double   xm    = state->x0m + (DMpixscale) *ii;
+            double   xpix  = xm / (turbseedpixscale);
             uint32_t xpix0 = (uint32_t) xpix;
-            float xfrac =
-                (float)(xpix - xpix0);
-            xpix0 =
-                xpix0 % (turbseedsize);
-            uint32_t xpix1 =
-                (xpix0 + 1) % Sxsize;
+            float    xfrac = (float) (xpix - xpix0);
+            xpix0          = xpix0 % (turbseedsize);
+            uint32_t xpix1 = (xpix0 + 1) % Sxsize;
 
-            for(uint32_t jj = 0;
-                jj < ysize; jj++)
+            for (uint32_t jj = 0; jj < ysize; jj++)
             {
-                double ym =
-                    state->y0m
-                    + (DMpixscale) * jj;
-                double ypix =
-                    ym
-                    / (turbseedpixscale);
-                uint32_t ypix0 =
-                    (uint32_t) ypix;
-                float yfrac =
-                    (float)(ypix - ypix0);
-                ypix0 =
-                    ypix0
-                    % (turbseedsize);
-                uint32_t ypix1 =
-                    (ypix0 + 1) % Sysize;
+                double   ym    = state->y0m + (DMpixscale) *jj;
+                double   ypix  = ym / (turbseedpixscale);
+                uint32_t ypix0 = (uint32_t) ypix;
+                float    yfrac = (float) (ypix - ypix0);
+                ypix0          = ypix0 % (turbseedsize);
+                uint32_t ypix1 = (ypix0 + 1) % Sysize;
 
-                const float *F =
-                    dcimg[
-                        state->IDts0]
-                        .array.F;
-                float v00 =
-                    F[ypix0 * Sxsize + xpix0];
-                float v10 =
-                    F[ypix0 * Sxsize + xpix1];
-                float v01 =
-                    F[ypix1 * Sxsize + xpix0];
-                float v11 =
-                    F[ypix1 * Sxsize + xpix1];
+                const float *F   = dcimg[state->IDts0].array.F;
+                float        v00 = F[ypix0 * Sxsize + xpix0];
+                float        v10 = F[ypix0 * Sxsize + xpix1];
+                float        v01 = F[ypix1 * Sxsize + xpix0];
+                float        v11 = F[ypix1 * Sxsize + xpix1];
 
-                float val =
-                    v00 * (1.0f - xfrac)
-                        * (1.0f - yfrac)
-                    + v10 * xfrac
-                        * (1.0f - yfrac)
-                    + v01 * (1.0f - xfrac)
-                        * yfrac
-                    + v11 * xfrac * yfrac;
-                val *= (float)
-                    state->amplcoeff;
-                state->turbimarray[
-                    jj * xsize + ii] = val;
+                float val = v00 * (1.0f - xfrac) * (1.0f - yfrac) + v10 * xfrac * (1.0f - yfrac) +
+                            v01 * (1.0f - xfrac) * yfrac + v11 * xfrac * yfrac;
+                val *= (float) state->amplcoeff;
+                state->turbimarray[jj * xsize + ii] = val;
                 total += val;
             }
         }
-        
+
         float total2 = 0.0f;
         {
-            float mean =
-                total
-                / (float)(xsize * ysize);
-            for(uint64_t ii = 0;
-                ii < xsize * ysize; ii++)
+            float mean = total / (float) (xsize * ysize);
+            for (uint64_t ii = 0; ii < xsize * ysize; ii++)
             {
-                state->turbimarray[ii] -=
-                    mean;
-                total2 +=
-                    state->turbimarray[ii]
-                    * state->turbimarray[ii];
+                state->turbimarray[ii] -= mean;
+                total2 += state->turbimarray[ii] * state->turbimarray[ii];
             }
         }
-        float RMSval = sqrtf(
-            total2
-            / (float)(xsize * ysize));
+        float RMSval = sqrtf(total2 / (float) (xsize * ysize));
 
-        if(RMSval > 0.0f)
+        if (RMSval > 0.0f)
         {
-            float coeffstep =
-                (turbampl) / RMSval;
-            float logdiff =
-                log10f(coeffstep);
-            float logdiff3abs =
-                powf(fabsf(logdiff), 3.0f);
-            float amplloopgain =
-                1.0e-4f
-                + logdiff3abs
-                  / (logdiff3abs + 1.0f);
-            state->amplcoeff *=
-                powf(10.0f,
-                     amplloopgain
-                     * logdiff);
+            float coeffstep    = (turbampl) / RMSval;
+            float logdiff      = log10f(coeffstep);
+            float logdiff3abs  = powf(fabsf(logdiff), 3.0f);
+            float amplloopgain = 1.0e-4f + logdiff3abs / (logdiff3abs + 1.0f);
+            state->amplcoeff *= powf(10.0f, amplloopgain * logdiff);
         }
-        
-        memcpy(state->imgDM.im->array.F,
-            state->turbimarray,
-            sizeof(float)*xsize*ysize);
+
+        memcpy(state->imgDM.im->array.F, state->turbimarray, sizeof(float) * xsize * ysize);
         processinfo_update_output_stream(processinfo, state->imgDM.im, NULL);
     }
 }
 
 static void dmturb_validate() __attribute__((unused));
-static void dmturb_validate() {
-    if (turbseedsize == 0) turbseedsize = 1024;
+static void dmturb_validate()
+{
+    if (turbseedsize == 0)
+    {
+        turbseedsize = 1024;
+    }
 }
 
 
@@ -585,8 +519,7 @@ static errno_t compute_function()
 {
     DMTURB_STATE *state = dmturb_init();
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
-    dmturb_step(processinfo, milk_data.fpsptr,
-                state);
+    dmturb_step(processinfo, milk_data.fpsptr, state);
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
     dmturb_cleanup(state);
     return RETURN_SUCCESS;
@@ -600,17 +533,13 @@ static errno_t compute_function()
 #ifndef FPS_STANDALONE
 static errno_t CLIfunction(void)
 {
-    return safe_fps_generic_CLIfunction(
-        &FPS_app_info, farg, &CLIcmddata,
-        my_bindings, nb_bindings,
-        compute_function);
+    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
+                                        compute_function);
 }
 
-errno_t
-CLIADDCMD_AOloopControl_DM__atmturbulence()
+errno_t CLIADDCMD_AOloopControl_DM__atmturbulence()
 {
-    safe_fps_fill_farg_examples(
-        farg, my_bindings, nb_bindings);
+    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
     INSERT_STD_CLIREGISTERFUNC
     return RETURN_SUCCESS;
 }
@@ -622,8 +551,5 @@ CLIADDCMD_AOloopControl_DM__atmturbulence()
  * ============================================================= */
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(
-    FPS_app_info,
-    FPS_PARAMS,
-    compute_function)
+FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
 #endif

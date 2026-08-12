@@ -5,13 +5,11 @@ Low-resolution WFS mode (120x120)
 
 This is a (nearly) full-featured example for a single input / single output control loop.
 
-
 # Running the example
 
 :warning: Check the [instructions](https://github.com/cacao-org/cacao/tree/dev/AOloopControl/examples) before running these steps
 
 ## Setting up processes
-
 
 ```bash
 # Deploy configuration :
@@ -50,16 +48,11 @@ cd nirpyr188-rootdir
 cacao-aorun-001-dmsim start
 ```
 
-
-
 ## Measure WFS dark
-
 
 ```bash
 cacao-aorun-005-takedark -n 2000
 ```
-
-
 
 ## Start WFS acquisition
 
@@ -73,7 +66,6 @@ cacao-aorun-025-acqWFS -w start
 cacao-aorun-026-takeref -n 2000
 ```
 
-
 ## Measure DM to WFS latency
 
 ```bash
@@ -81,10 +73,7 @@ cacao-aorun-026-takeref -n 2000
 cacao-aorun-020-mlat -w
 ```
 
-
-
 ## Acquire response matrix
-
 
 ### Prepare DM poke modes
 
@@ -92,7 +81,9 @@ cacao-aorun-020-mlat -w
 # Create DM poke mode cubes
 cacao-mkDMpokemodes -z 5 -c 25
 ```
+
 The following files are written to ./conf/RMmodesDM/
+
 | File                 | Contents                                            |
 | -------------------- | --------------------------------------------------- |
 | `DMmask.fits     `   | DM mask                                             |
@@ -101,12 +92,9 @@ The following files are written to ./conf/RMmodesDM/
 | `HpokeC.fits     `   | Hadamard modes                                      |
 | `Hmat.fits       `   | Hadamard matrix (to convert Hadamard-zonal)         |
 | `Hpixindex.fits  `   | Hadamard pixel index                                |
-| `SmodesC.fits    `   | *Simple* (single actuator) pokes                    |
-
-
+| `SmodesC.fits    `   | _Simple_ (single actuator) pokes                    |
 
 ### Run acquisition
-
 
 ```bash
 # Acquire response matrix - Hadamard modes
@@ -127,21 +115,21 @@ Compute control modes, in both WFS and DM spaces.
 ```bash
 cacao-fpsctrl setval compstrCM svdlim 0.000001
 ```
+
 Then run the compstrCM process to compute CM and load it to shared memory :
+
 ```bash
 cacao-aorun-039-compstrCM
 ```
 
-
-
 ## Running the loop
 
 Select GPUs for the modal decomposition (WFS->modes) and expansion (modes->DM) MVMs
+
 ```bash
 cacao-fpsctrl setval wfs2cmodeval GPUindex 99
 cacao-fpsctrl setval mvalC2dm GPUindex 99
 ```
-
 
 Start the 3 control loop processes :
 
@@ -177,7 +165,5 @@ cacao-fpsctrl setval mfilt loopON ON
 cacao-task-manager -C 0 ao3k-ttoff188
 rm -rf .ttoff188.cacaotaskmanager-log
 ```
-
-
 
 THE END
