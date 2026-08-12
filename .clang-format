@@ -1,0 +1,86 @@
+# milk project clang-format configuration
+# Matches .agents/rules/code-style-guide.md and
+# .agents/rules/parameter-alignment.md
+#
+# Used by:
+#   - pre-commit hook (automated formatting on commit)
+#   - clangd (editor real-time formatting)
+#
+# Version: clang-format 21
+Language: Cpp
+BasedOnStyle: LLVM
+
+# === Brace Style: Allman ===
+BreakBeforeBraces: Allman
+# Preserve multi-line struct/array initializers with
+# closing brace on its own line
+Cpp11BracedListStyle: false
+
+# === Indentation ===
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+IndentCaseLabels: false
+IndentPPDirectives: AfterHash
+ContinuationIndentWidth: 4
+PPIndentWidth: 4
+IndentExternBlock: NoIndent
+
+# === Line Length ===
+ColumnLimit: 100
+
+# === Spacing ===
+SpaceBeforeParens: ControlStatements
+SpacesInParentheses: false
+SpaceAfterCStyleCast: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeSquareBrackets: false
+
+# === Pointer & Reference Alignment ===
+# char *ptr  (not char* ptr)
+PointerAlignment: Right
+ReferenceAlignment: Right
+
+# === Braces on Single-Line Bodies ===
+InsertBraces: true
+AllowShortBlocksOnASingleLine: Never
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+
+# === Parameters & Arguments ===
+# Function declarations: one param per line when they
+# don't all fit on one line
+BinPackParameters: false
+# Function calls: pack arguments on fewer lines
+BinPackArguments: true
+AllowAllParametersOfDeclarationOnNextLine: false
+AlignAfterOpenBracket: Align
+
+# === Alignment ===
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: true
+AlignEscapedNewlines: Left
+AlignOperands: Align
+AlignTrailingComments: true
+
+# === Line Breaking ===
+BreakBeforeBinaryOperators: None
+AllowAllArgumentsOnNextLine: true
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyReturnTypeOnItsOwnLine: 200
+
+# === Preprocessor ===
+# Do not reorder #include directives — order is
+# intentional in this project
+SortIncludes: Never
+
+# === Comments ===
+# Do not reflow comments — preserves Kernel-Doc
+# formatting and aligned tables in comments
+ReflowComments: false
+
+# === Blank Lines ===
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2
