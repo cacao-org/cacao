@@ -241,7 +241,6 @@ static errno_t compute_function()
                     SGEMMcomputed = 1;
 #endif // #ifdef HAVE_CUDA
                 }
-
                 if (SGEMMcomputed == 0)
                 {
                     printf("Running SGEMM 1 on CPU\n");

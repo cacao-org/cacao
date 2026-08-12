@@ -386,11 +386,6 @@ static errno_t compute_function()
                             imgCMWFSall.im->array.F, nbwfspix);
 #endif // #ifdef HAVE_BLAS
             }
-            if (SGEMMcomputed == 0)
-            {
-                PRINT_ERROR("FATAL -- need either of CUDA or BLAS for this computation\n");
-                exit(1);
-            }
         }
 
 
