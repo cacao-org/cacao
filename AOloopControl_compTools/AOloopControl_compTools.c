@@ -8,15 +8,9 @@
  *
  * AO engine uses stream data structure
  *
- *
  */
 
-// module default short name
-// all CLI calls to this module functions will be <shortname>.<funcname>
-// if set to "", then calls use <funcname>
 #define MODULE_SHORTNAME_DEFAULT "cacaoct"
-
-// Module short description
 #define MODULE_DESCRIPTION "AO loop control - computation tools"
 
 // Application to which module belongs
@@ -24,18 +18,15 @@
 
 #define _GNU_SOURCE
 
-
 #include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 
-#include "AOloopControl_compTools/AOloopControl_compTools.h"
-
-
-INIT_MODULE_LIB(AOloopControl_compTools)
-
+#include "AOloopControl_compTools.h"
 
 static errno_t init_module_CLI()
 {
     return RETURN_SUCCESS;
 }
+
+MILK_MODULE(AOloopControl_compTools, init_module_CLI, NULL);

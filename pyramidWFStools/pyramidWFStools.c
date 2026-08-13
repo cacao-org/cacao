@@ -32,9 +32,6 @@
 #include "pyWFSgridmatch.h"
 
 
-INIT_MODULE_LIB(pyramidWFStools)
-
-
 static errno_t init_module_CLI()
 {
     CLIADDCMD_cacao_pyramidWFStools__pyWFSgridmatch();
@@ -44,3 +41,5 @@ static errno_t init_module_CLI()
 
     return RETURN_SUCCESS;
 }
+
+MILK_MODULE(pyramidWFStools, init_module_CLI, NULL);

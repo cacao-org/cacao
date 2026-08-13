@@ -7,11 +7,10 @@
  * @brief Rm2zonal module
  */
 
-/**
- * @file compute_straight_CM.c
- *
- */
-
+// MILK_CMAKE_MANDATE_LAPACKE
+// MILK_CMAKE_MANDATE_BLAS
+// MILK_CMAKE_REQUEST_CUDA
+// --> Need BLAS or CUDA really
 
 #include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -19,54 +18,11 @@
 
 #include "timeutils.h"
 
-/*
-#include <gsl/gsl_blas.h>
-#include <gsl/gsl_eigen.h>
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_matrix.h>
-*/
-
-
-// Use MKL if available
-// Otherwise use openBLAS
-//
-#ifdef HAVE_MKL
-#    include "mkl.h"
-#    define BLASLIB "IntelMKL"
-#else
-#    ifdef HAVE_OPENBLAS
-#        include <cblas.h>
-#        include <lapacke.h>
-#        define BLASLIB "OpenBLAS"
-#    endif
-#endif
-
-
 #include "linopt_imtools/compute_SVDpseudoInverse.h"
 
+#include "milk_blas_lapacke.h"
 #ifdef HAVE_CUDA
-#    include <cublas_v2.h>
-#    include <cuda_runtime.h>
-#    include <cuda_runtime_api.h>
-#    include <cusolverDn.h>
-#    include <device_types.h>
-#    include <pthread.h>
-#endif
-
-
-// CPU mode: Use MKL if available
-// Otherwise use openBLAS
-//
-#ifdef HAVE_MKL
-#    include "mkl.h"
-#    include "mkl_lapacke.h"
-#    define BLASLIB "IntelMKL"
-#else
-#    ifdef HAVE_OPENBLAS
-#        include <cblas.h>
-#        include <lapacke.h>
-#        define BLASLIB "OpenBLAS"
-#    endif
+#    include "cublas_v2.h"
 #endif
 
 
@@ -111,7 +67,6 @@ static __attribute__((unused)) errno_t customCONFsetup()
     if (milk_data.fpsptr != NULL)
     {
     }
-
     return RETURN_SUCCESS;
 }
 
@@ -124,7 +79,6 @@ static errno_t customCONFcheck()
     if (milk_data.fpsptr != NULL)
     {
     }
-
     return RETURN_SUCCESS;
 }
 
@@ -160,29 +114,6 @@ static errno_t compute_function()
 
     INSERT_STD_PROCINFO_COMPUTEFUNC_START
     {
-#ifdef HAVE_OPENBLAS
-        printf("OpenBLASS  YES\n");
-#else
-        printf("OpenBLASS  NO\n");
-#endif
-
-#ifdef HAVE_MKL
-        printf("MKL        YES\n");
-#else
-        printf("MKL        NO\n");
-#endif
-
-
-#ifdef HAVE_CUDA
-        printf("CUDA       YES\n");
-#else
-        printf("CUDA       NO\n");
-#endif
-
-
-        //ID = image_ID("VTmat", dcimg, dcnimg);
-        //IMGID imgVT = makesetIMGID("VTmat", ID);
-
         int nbmode;
         int nbact;
 
@@ -308,7 +239,7 @@ static errno_t compute_function()
                     cudaFree(d_ATA);
 
                     SGEMMcomputed = 1;
-#endif
+#endif // #ifdef HAVE_CUDA
                 }
                 if (SGEMMcomputed == 0)
                 {
@@ -326,6 +257,7 @@ static errno_t compute_function()
 
                     cblas_sgemm(CblasColMajor, OP0, OP1, Ndim, Ndim, Mdim, 1.0, imgRMDM.im->array.F,
                                 nbact, imgRMDM.im->array.F, nbact, 0.0, imgATA.im->array.F, Ndim);
+                    SGEMMcomputed = 1;
                 }
             }
 
@@ -433,7 +365,7 @@ static errno_t compute_function()
                 cudaFree(d_mU);
 
                 SGEMMcomputed = 1;
-#endif
+#endif // #ifdef HAVE_CUDA
             }
 
             if (SGEMMcomputed == 0)
@@ -450,6 +382,7 @@ static errno_t compute_function()
                 cblas_sgemm(CblasColMajor, OP0, CblasNoTrans, Mdim, Ndim, Ndim, 1.0,
                             imgRMDM.im->array.F, nbact, imgmV.im->array.F, Ndim, 0.0,
                             imgmU.im->array.F, Mdim);
+                SGEMMcomputed = 1;
             }
         }
 
@@ -493,7 +426,6 @@ static errno_t compute_function()
                         mcolcoeff * imgmU.im->array.F[ii * Mdim + jj];
                 }
             }
-
 
             cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, Ndim, Mdim, Ndim, 1.0,
                         imgmV.im->array.F, Ndim, imgmUT.im->array.F, Ndim, 0.0,
@@ -543,30 +475,6 @@ static errno_t compute_function()
         delete_image(&imgmU, DELETE_IMAGE_ERRMODE_EXIT);
         delete_image(&imgeval, DELETE_IMAGE_ERRMODE_EXIT);
 
-
-        /*
-        fflush(stdout);
-
-        // Test Ainv x A
-
-        IMGID imgmAinvA = imgid_make_from_name_2D("mAinvA", nbmode, nbmode);
-        createimagefromIMGID(&imgmAinvA);
-
-
-        cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
-                     nbmode, nbmode, nbact, 1.0, imgmAinv.im->array.F, nbmode, imgRMDM.im->array.F, nbact, 0.0, imgmAinvA.im->array.F, nbmode);
-
-        // Test A x Ainv
-
-        IMGID imgmAAinv = imgid_make_from_name_2D("mAAinv", nbact, nbact);
-        createimagefromIMGID(&imgmAAinv);
-
-        cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
-                     nbact, nbact, nbmode, 1.0, imgRMDM.im->array.F, nbact, imgmAinv.im->array.F, nbmode, 0.0, imgmAAinv.im->array.F, nbact);
-
-        */
-
-
         // multiply RMwfs x Ainv -> RMzwfs
 
         IMGID imgRMWFSz =
@@ -587,20 +495,6 @@ static errno_t compute_function()
         cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, nbact, nbact, nbmode, 1.0,
                     imgRMDM.im->array.F, nbact, imgmAinv.im->array.F, nbmode, 0.0,
                     imgRMDMz.im->array.F, nbact);
-
-
-        /*
-        // TESTING RECOVERY OF ORIGINAL MODES
-
-        // RMzwfs x RMDM -> RMwfsm
-
-        IMGID imgRMWFSm = imgid_make_from_name_3D("RMwfsm",  imgRMWFS.md->size[0], imgRMWFS.md->size[1], nbmode);
-        createimagefromIMGID(&imgRMWFSm);
-
-        cblas_sgemm (CblasColMajor, CblasNoTrans, CblasNoTrans,
-                     nbwfspix, nbmode, nbact, 1.0, imgRMWFSz.im->array.F, nbwfspix, imgRMDM.im->array.F, nbact, 0.0, imgRMWFSm.im->array.F, nbwfspix);
-
-        */
 
         delete_image(&imgmAinv, DELETE_IMAGE_ERRMODE_EXIT);
     }

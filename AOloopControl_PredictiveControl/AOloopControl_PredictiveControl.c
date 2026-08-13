@@ -22,8 +22,6 @@
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
 
-INIT_MODULE_LIB(AOloopControl_PredictiveControl)
-
 
 /* =============================================================
  *  Parameters
@@ -232,3 +230,5 @@ static errno_t init_module_CLI()
 
     return RETURN_SUCCESS;
 }
+
+MILK_MODULE(AOloopControl_PredictiveControl, init_module_CLI, NULL);
