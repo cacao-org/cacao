@@ -166,7 +166,25 @@ static char exec_post_mkLODMmodes[FUNCTION_PARAMETER_STRMAXLEN]  = "";
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-static errno_t customCONFsetup()
+static imageID mkSimpleZpokeM(uint32_t dmxsize, uint32_t dmysize, char *IDout_name)
+{
+    imageID  IDout;
+    uint64_t dmxysize;
+
+    dmxysize = dmxsize * dmysize;
+
+    create_3Dimage_ID(IDout_name, dmxsize, dmysize, dmxysize, &IDout);
+
+    for (uint64_t kk = 0; kk < dmxysize; kk++)
+    {
+        dcimg[IDout].array.F[kk * dmxysize + kk] = 1.0;
+    }
+
+    return IDout;
+}
+
+
+static errno_t customCONFcheck()
 {
     if (milk_data.fpsptr != NULL)
     {
@@ -190,35 +208,7 @@ static errno_t customCONFsetup()
         {
             milk_data.fpsptr->parray[fpi].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
         }
-    }
 
-    return RETURN_SUCCESS;
-}
-
-
-// create simple poke matrix
-static imageID mkSimpleZpokeM(uint32_t dmxsize, uint32_t dmysize, char *IDout_name)
-{
-    imageID  IDout;
-    uint64_t dmxysize;
-
-    dmxysize = dmxsize * dmysize;
-
-    create_3Dimage_ID(IDout_name, dmxsize, dmysize, dmxysize, &IDout);
-
-    for (uint64_t kk = 0; kk < dmxysize; kk++)
-    {
-        dcimg[IDout].array.F[kk * dmxysize + kk] = 1.0;
-    }
-
-    return IDout;
-}
-
-
-static errno_t customCONFcheck()
-{
-    if (milk_data.fpsptr != NULL)
-    {
         long fpi_FPS_mlat = functionparameter_GetParamIndex(milk_data.fpsptr, ".timing.FPS_mlat");
         long fpi_FPS_DMcomb =
             functionparameter_GetParamIndex(milk_data.fpsptr, ".RMDMmask.FPS_DMcomb");
@@ -528,7 +518,6 @@ errno_t CLIADDCMD_milk_AOloopControl_acquireCalib__acquireWFSlincalib()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
 
     INSERT_STD_CLIREGISTERFUNC
@@ -538,9 +527,5 @@ errno_t CLIADDCMD_milk_AOloopControl_acquireCalib__acquireWFSlincalib()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-                                 customCONFsetup,
-                                 customCONFcheck)
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
 #endif

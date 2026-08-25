@@ -61,18 +61,6 @@ int is_ready(int fd)
     return select(fd + 1, &fdset, NULL, NULL, &timeout) == 1 ? 1 : 0;
 }
 
-// Optional custom configuration setup.
-// Runs once at conf startup
-//
-static errno_t customCONFsetup()
-{
-    if (milk_data.fpsptr != NULL)
-    {
-    }
-
-    return RETURN_SUCCESS;
-}
-
 // Optional custom configuration checks.
 // Runs at every configuration check loop iteration
 //
@@ -392,7 +380,6 @@ errno_t CLIADDCMD_AOloopControl_IOtools__AO188Preproc()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
 
     INSERT_STD_CLIREGISTERFUNC
@@ -402,11 +389,7 @@ errno_t CLIADDCMD_AOloopControl_IOtools__AO188Preproc()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-                                 customCONFsetup,
-                                 customCONFcheck)
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
 #endif
 
 /*

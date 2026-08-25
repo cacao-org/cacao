@@ -52,10 +52,10 @@ static uint64_t compWFSrefsub;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-// Optional custom configuration setup.
-// Runs once at conf startup
+// Optional custom configuration checks.
+// Runs at every configuration check loop iteration
 //
-static errno_t customCONFsetup()
+static errno_t customCONFcheck()
 {
     if (milk_data.fpsptr != NULL)
     {
@@ -87,14 +87,6 @@ static errno_t customCONFsetup()
         }
     }
 
-    return RETURN_SUCCESS;
-}
-
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
     return RETURN_SUCCESS;
 }
 
@@ -442,7 +434,6 @@ errno_t CLIADDCMD_AOloopControl_IOtools__acquirespectra()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
 
     INSERT_STD_CLIREGISTERFUNC
@@ -452,9 +443,5 @@ errno_t CLIADDCMD_AOloopControl_IOtools__acquirespectra()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-                                 customCONFsetup,
-                                 customCONFcheck)
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
 #endif

@@ -39,10 +39,10 @@ static char outWF1D[FUNCTION_PARAMETER_STRMAXLEN];
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-// Optional custom configuration setup. comptbuff
-// Runs once at conf startup
+// Optional custom configuration checks.
+// Runs at every configuration check loop iteration
 //
-static __attribute__((unused)) errno_t customCONFsetup()
+static errno_t customCONFcheck()
 {
     if (milk_data.fpsptr != NULL)
     {
@@ -51,19 +51,6 @@ static __attribute__((unused)) errno_t customCONFsetup()
 
         //milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".mapfile")].fpflag |=
         //    FPFLAG_STREAM_RUN_REQUIRED;
-    }
-
-    return RETURN_SUCCESS;
-}
-
-
-// Optional custom configuration checks.
-// Runs at every configuration check loop iteration
-//
-static errno_t customCONFcheck()
-{
-    if (milk_data.fpsptr != NULL)
-    {
     }
 
     return RETURN_SUCCESS;
@@ -246,7 +233,6 @@ errno_t CLIADDCMD_AOloopControl_computeCalib__sample2D()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC
 

@@ -352,7 +352,7 @@ static errno_t modes_mask_normalize(IMGID imgmodeC, IMGID imgmask)
 }
 
 
-static __attribute__((unused)) errno_t customCONFsetup()
+static errno_t customCONFcheck()
 {
     if (milk_data.fpsptr != NULL)
     {
@@ -374,16 +374,8 @@ static __attribute__((unused)) errno_t customCONFsetup()
         milk_data.fpsptr
             ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.FPS_DMcomb")]
             .fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
-    }
-
-    return RETURN_SUCCESS;
-}
 
 
-static errno_t customCONFcheck()
-{
-    if (milk_data.fpsptr != NULL)
-    {
         milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".zrespM")]
             .fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
 
@@ -970,7 +962,6 @@ errno_t CLIADDCMD_cacao_computeCalib__compute_control_modes()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC
 

@@ -12,6 +12,7 @@ file(GLOB SCRIPTS "scripts/*")
 set(LINKLIBS
 	CLIcore
     milkinfo
+	milkstatistic
     cacaoAOloopControl
 )
 
@@ -47,3 +48,12 @@ install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 install(PROGRAMS ${SCRIPTS} DESTINATION bin)
 
 add_cacao_standalone(cacaoiot-acquireWFS acquireWFSim.c)
+add_cacao_standalone(cacaoiot-ao188 ao188_preprocessor.c)
+
+add_cacao_standalone(cacaoiot-acquirespectra acquireWFSspec.c)
+add_cacao_standalone(cacaoiot-spotpos spotpos.c)
+add_cacao_standalone(cacaoiot-findspots findspots.c)
+add_cacao_standalone(cacaoiot-wfscamsim WFScamsim.c)
+target_link_libraries(cacao-fpsexec-cacaoiot-wfscamsim PRIVATE milkstatistic)
+add_cacao_standalone(cacaoiot-acqWFS acquireWFSim.c)
+add_cacao_standalone(cacaoiot-mapWFS WFSmap.c)

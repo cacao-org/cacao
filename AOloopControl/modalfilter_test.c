@@ -77,7 +77,7 @@ static float    DMlatency  = 0;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-static errno_t customCONFsetup()
+static errno_t customCONFcheck()
 {
     if (milk_data.fpsptr != NULL)
     {
@@ -130,11 +130,7 @@ static errno_t customCONFsetup()
             milk_data.fpsptr->parray[fpi].fpflag |= FPFLAG_WRITERUN;
         }
     }
-    return RETURN_SUCCESS;
-}
 
-static errno_t customCONFcheck()
-{
     return RETURN_SUCCESS;
 }
 
@@ -354,7 +350,6 @@ errno_t CLIADDCMD_AOloopControl__modalfilter_test()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC
 
@@ -363,9 +358,5 @@ errno_t CLIADDCMD_AOloopControl__modalfilter_test()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-                                 customCONFsetup,
-                                 customCONFcheck)
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
 #endif

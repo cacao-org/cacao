@@ -59,18 +59,6 @@ static int32_t GPUdevice;
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-// Optional custom configuration setup. comptbuff
-// Runs once at conf startup
-//
-static __attribute__((unused)) errno_t customCONFsetup()
-{
-    if (milk_data.fpsptr != NULL)
-    {
-    }
-    return RETURN_SUCCESS;
-}
-
-
 // Optional custom configuration checks.
 // Runs at every configuration check loop iteration
 //
@@ -518,7 +506,6 @@ errno_t CLIADDCMD_AOloopControl_computeCalib__RM2zonal()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
     INSERT_STD_CLIREGISTERFUNC
 

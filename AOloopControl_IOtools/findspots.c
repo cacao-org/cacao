@@ -45,19 +45,6 @@ static char     outmapcname[FUNCTION_PARAMETER_STRMAXLEN];
 FPS_V2_SECTION5(FPS_PARAMS)
 
 
-// Optional custom configuration setup
-// Runs once at conf startup
-//
-// To use this function, set :
-// CLIcmddata.FPS_customCONFsetup = customCONFsetup
-// when registering function
-// (see end of this file)
-//
-static errno_t customCONFsetup()
-{
-    return RETURN_SUCCESS;
-}
-
 // Optional custom configuration checks
 // Runs at every configuration check loop iteration
 //
@@ -365,7 +352,6 @@ errno_t CLIADDCMD_AOloopControl_IOtools__findspots()
 {
     safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
 
-    CLIcmddata.FPS_customCONFsetup = customCONFsetup;
     CLIcmddata.FPS_customCONFcheck = customCONFcheck;
 
     INSERT_STD_CLIREGISTERFUNC
@@ -375,9 +361,5 @@ errno_t CLIADDCMD_AOloopControl_IOtools__findspots()
 #endif
 
 #ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-                                 customCONFsetup,
-                                 customCONFcheck)
+FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
 #endif
