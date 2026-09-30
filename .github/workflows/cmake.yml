@@ -2,41 +2,44 @@ name: CMake
 
 on:
   push:
+  pull_request:
   schedule:
   - cron: '0 13 * * 1'
 
 env:
   BUILD_TYPE: Release
+  # milk branch that cacao is built against
+  MILK_REF: dev
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v2
-      
     - name: Install Dependencies
-      run: sudo apt-get install -qq libcfitsio-dev libreadline6-dev libncurses5-dev libfftw3-dev libgsl0-dev flex bison
-      
-    - name: Install openblas with lapack
       run: |
-        sudo apt-get install gfortran libopenblas-dev liblapacke-dev
+        sudo apt-get update -qq
+        sudo apt-get install -qq libcfitsio-dev libreadline-dev libncurses-dev libfftw3-dev libgsl-dev flex bison \
+          gfortran libopenblas-dev liblapacke-dev
 
-    - name: get milk and cacao
-      run: |
-        git clone https://github.com/milk-org/milk.git
-        cd milk
-        ./fetch_cacao_dev.sh
-        mkdir _build
+    - name: Checkout milk
+      uses: actions/checkout@v4
+      with:
+        repository: milk-org/milk
+        ref: ${{ env.MILK_REF }}
+        path: milk
+
+    # Build this commit of cacao, not upstream cacao (milk's fetch_cacao_dev.sh
+    # would clone cacao-org/cacao dev instead).
+    - name: Checkout cacao
+      uses: actions/checkout@v4
+      with:
+        path: milk/plugins/cacao-src
 
     - name: Configure CMake
-      shell: bash
-      working-directory: ${{github.workspace}}/milk/_build
-      run: cmake .. -DINSTALLMAKEDEFAULT=ON -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      working-directory: ${{ github.workspace }}/milk
+      run: cmake -S . -B _build -DINSTALLMAKEDEFAULT=ON -DCMAKE_BUILD_TYPE="$BUILD_TYPE"
 
     - name: Build
-      working-directory: ${{github.workspace}}/milk/_build
-      shell: bash
-      run: cmake --build . --config $BUILD_TYPE
-
-
+      working-directory: ${{ github.workspace }}/milk
+      run: cmake --build _build --config "$BUILD_TYPE" -j "$(nproc)"

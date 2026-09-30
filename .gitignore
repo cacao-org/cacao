@@ -6,4 +6,10 @@ __pycache__
 # respM*.fits
 AOloopControl/examples/ao3k-nirpyr188-conf/simLHS/respM*.fits
 
-.gitignore
+
+# editor swap files
+*.swp
+
+# build / docs output
+_build/
+.tox/

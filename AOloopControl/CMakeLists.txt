@@ -88,7 +88,6 @@ install(PROGRAMS scripts/cacao-setup
 	scripts/cacao-fpslistadd-MVMGPU_ZPO
 	scripts/cacao-fpslistadd-MODALCTRL_STATS
 	scripts/cacao-fpslistadd-MODALFILTERING
-	scripts/cacao-fpslistadd-MVMGPU_ZPO
 	scripts/cacao-fpslistadd-OLMODEVAL2DM
 	scripts/cacao-fpslistadd-SIMMVMGPU
 	scripts/cacao-fpslistadd-WFSMODEVAL2DM

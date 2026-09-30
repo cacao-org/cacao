@@ -1,126 +1,73 @@
+# cacao: Compute And Control for Adaptive Optics
+
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![CMake](https://github.com/CaltechOpticalObservatories/cacao/actions/workflows/cmake.yml/badge.svg?branch=dev)](https://github.com/CaltechOpticalObservatories/cacao/actions/workflows/cmake.yml)
+[![Docker](https://github.com/CaltechOpticalObservatories/cacao/actions/workflows/docker-image.yml/badge.svg?branch=dev)](https://github.com/CaltechOpticalObservatories/cacao/actions/workflows/docker-image.yml)
+[![Docs](https://github.com/CaltechOpticalObservatories/cacao/actions/workflows/docs.yml/badge.svg?branch=dev)](https://github.com/CaltechOpticalObservatories/cacao/actions/workflows/docs.yml)
 
-Latest Version (`main` branch): [![latesttag](https://img.shields.io/github/tag/cacao-org/cacao.svg)](https://github.com/milk-org/cacao/tree/main)
+<img align="left" src="cacao-logo-250pix.png" alt="cacao logo">
 
-| Branch    | Build   | Docker Deployment    | Activity   |
-|-------------|-------------|-------------|-------------|
-**main**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/main.svg)|
-**dev**|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/cmake.yml)|[![CMake badge](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml/badge.svg?branch=dev)](https://github.com/cacao-org/cacao/actions/workflows/docker-image.yml)|![lastcommit](https://img.shields.io/github/last-commit/cacao-org/cacao/dev.svg)|
+cacao is a real-time computation engine for adaptive optics control. It is
+written in C for low latency, uses multi-core CPUs and GPUs, and keeps data in
+shared-memory image streams with low-latency inter-process signaling.
 
+cacao is a plugin of [milk](https://github.com/milk-org/milk). It is built
+inside milk's source tree and adds AO modules, CLI commands and loop setup
+scripts on top of milk.
 
-Code metrics (dev branch) :
-[![CodeScene Code Health](https://codescene.io/projects/14780/status-badges/code-health)](https://codescene.io/projects/14780)
-[![CodeScene System Mastery](https://codescene.io/projects/14780/status-badges/system-mastery)](https://codescene.io/projects/14780)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6eefa0e1c1254889b1e2f6fda55930ca)](https://www.codacy.com/gh/cacao-org/cacao/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cacao-org/cacao&amp;utm_campaign=Badge_Grade)
-[![CodeFactor](https://www.codefactor.io/repository/github/cacao-org/cacao/badge)](https://www.codefactor.io/repository/github/cacao-org/cacao)
+This repository is the Caltech Optical Observatories fork of
+[cacao-org/cacao](https://github.com/cacao-org/cacao).
 
+<br clear="left"/>
 
-# cacao : Compute And Control for Adaptive Optics
+## Documentation
 
+The documentation is published at
+<https://caltechopticalobservatories.github.io/cacao/>. Its sources are in
+[`docs/`](docs/index.md):
 
-<img align="left" src="cacao-logo-250pix.png">
+- [Installation](docs/install.md)
+- [Running a loop from an example](docs/examples.md)
+- [Modules](docs/modules.md)
+- [Development](docs/development.md)
 
-cacao is a computation engine for adaptive optics control.
+To build the HTML documentation, run `tox -e docs`.
 
-**Compute Performance**: Uses multi-core CPUs and GPGPUs for [high computing throughput](https://github.com/cacao-org/cacao/wiki/Compute-Performance-Benchmarks). Written in C, optimized for performance. Holds images in RAM, with image stream support (shared memory with low-latency IPC support). cacao uses [milk](https://github.com/milk-org/milk).
+## Installing
 
-
-**User input**: Executable launches a [command line interface (CLI)](https://cacao-org.github.io/cacao/page_userinput.html) from which functions are accessible. Type "help" in the CLI to get started.
-
-
-**Modular**, [easy to add functions](https://cacao-org.github.io/cacao/page_LoadingModules.html), loaded at runtime as shared objects.
-
-
-
----
-
-
-## Getting help, Documentation
-
-Topic                        |  Chat room                             |  Documentation             |
------------------------------|----------------------------------------|--------------------|
-How to use cacao ?           | [![Gitter](https://badges.gitter.im/cacao-org/community.svg)](https://gitter.im/cacao-org/community)  Community | [Online documentation]( http://cacao-org.github.io/docs )  |
-Configuring computer system  | [![Gitter](https://badges.gitter.im/cacao-org/RTCconfig.svg)](https://gitter.im/cacao-org/RTCconfig)  Hardware / OS setup | [RTC setup]( https://github.com/cacao-org/cacao/wiki/Seeting-up-a-RTC-system ) |
-Software development         | [![Gitter](https://badges.gitter.im/cacao-org/codedev.svg)](https://gitter.im/cacao-org/codedev)      Developers | [coding standards]( http://CACAO-org.github.io/cacao/page_coding_standards.html ) and  [Online documentation]( http://CACAO-org.github.io/cacao/index.html )|
-
-
-
-Report bugs and issues on [this page]( https://github.com/cacao-org/cacao/issues ) and discuss them on the [Developers chat](https://gitter.im/cacao-org/codedev).
-
-
----
-
-## Installing cacao
-
-Install pre-requisite packages as needed. Check the [Dockerfile](https://github.com/cacao-org/cacao/blob/dev/Dockerfile) for list.
-
-cacao is a plugin of [milk](https://github.com/milk-org/milk).
-
-
-To install :
-
+Install the prerequisites first ([list](docs/install.md#prerequisites)). Then:
 
 ```bash
 git clone https://github.com/milk-org/milk.git
 cd milk
-./fetch_cacao_dev.sh
-mkdir _build
-cd _build
-cmake ..
-make
-sudo make install
+git clone https://github.com/CaltechOpticalObservatories/cacao.git plugins/cacao-src
+
+cmake -S . -B _build -DCMAKE_BUILD_TYPE=Release -DINSTALLMAKEDEFAULT=ON
+cmake --build _build -j "$(nproc)"
+sudo cmake --install _build
 ```
 
-Alternatively, the ./compile.sh script for can be run to install. Check compilation options with compile.sh -h option.
+Run `cmake` from the milk source root as shown. Configuring from inside
+`_build/` (`cmake ..`, or milk's `compile.sh`) silently leaves cacao out of the
+build.
 
----
+Then set `MILK_ROOT`, `MILK_INSTALLDIR`, `PATH` and `PKG_CONFIG_PATH`, and set
+up the shared-memory directory, as described in the
+[installation guide](docs/install.md#environment).
 
-## Documentation
+To build in Docker instead: `docker build -t cacao .`
 
-See [cacao's wiki](https://github.com/cacao-org/cacao/wiki) for detailed instructions to install, configure and use cacao.
-
-
----
-
-## Getting Started
-
-All functions are accessible from the command line interface (CLI). Enter the CLI and type "help" for instructions.
-
+## Getting started
 
 ```bash
-cacao
+cacao-loop-deploy -h                      # list example configurations
+cacao-loop-deploy -c scexao-vispyr-bin2   # copy an example into the current directory
+cacao-loop-deploy -r scexao-vispyr-bin2   # run its setup
 ```
 
-To set up a cacao AO loop, use the cacao-loop-deploy script. Consult help with :
+See [Running a loop from an example](docs/examples.md).
 
-```bash
-cacao-loop-deploy -h
-```
+## Help and issues
 
----
-
-## Tools
-
-Both cacao and milk use a common shared memory data stream format. See [ImageStreamIO module](https://github.com/milk-org/ImageStreamIO) for details.
-
-### Viewing real-time data streams
-
-Additional software is required to view real-time data streams. Several options exist:
-
-  * [shmimviewGTK](https://github.com/milk-org/shmimviewGTK), a lightweight efficient GTK-based viewer.
-  * [milk2ds9](https://github.com/jaredmales/milk2ds9) uses ds9 to view data streams (convenient for ds9 users)
-  * [rtimv](https://github.com/jaredmales/rtimv), a qt-based image viewer, higher performance than ds9 option
-  * [shmimviewqt](https://github.com/milk-org/shmimviewqt), another qt-based option (less polished than rtimv)
-  * [xaosim](https://github.com/fmartinache/xaosim)'s shmview image viewer, using python qt interface
-
-### Python interface to data streams
-
-Python users can read/write milk/cacao's data streams using additional packages:
-
-  * [pyMilk](https://github.com/milk-org/pyMilk) provides an interface to data streams.
-  * [xaosim](https://github.com/fmartinache/xaosim) includes a python interface to data streams.. and much more
-Both stream interfaces above are cross-compatible.
-
-
-
----
+Report bugs on the
+[issue tracker](https://github.com/CaltechOpticalObservatories/cacao/issues).
