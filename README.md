@@ -15,6 +15,13 @@ Code metrics (dev branch) :
 [![CodeFactor](https://www.codefactor.io/repository/github/cacao-org/cacao/badge)](https://www.codefactor.io/repository/github/cacao-org/cacao)
 
 
+---
+
+The development of MILK and CACAO is supported by the National Science Foundation under award 2410616 (CSSI program)
+
+---
+
+
 # cacao : Compute And Control for Adaptive Optics
 
 
