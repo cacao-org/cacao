@@ -28,29 +28,15 @@
 #define _GNU_SOURCE
 
 
-#include "CLIcore.h"
-#include "COREMOD_memory/COREMOD_memory.h"
+#include "milk_runnable.h"
 
+#include "AOloopControl.h"
 
-#include "modalfilter.h"
-#include "modalfilter_test.h"
+static const MILK_RUNNABLE *const runnables[] = {
+    &runnable_AOloopControl_modalfilter,
+    &runnable_AOloopControl_modalfilter_test,
+    &runnable_AOloopControl_modalCTRL_stats,
+    &runnable_AOloopControl_zonalfilter,
+};
 
-#include "modalCTRL_stats.h"
-#include "modalstatsTUI.h"
-
-#include "zonalfilter.h"
-
-
-static errno_t init_module_CLI()
-{
-    CLIADDCMD_AOloopControl__modalfilter();
-    CLIADDCMD_AOloopControl__modalfilter_test();
-    CLIADDCMD_AOloopControl__modalCTRL_stats();
-    CLIADDCMD_AOloopControl__modalstatsTUI();
-
-    CLIADDCMD_AOloopControl__zonalfilter();
-
-    return RETURN_SUCCESS;
-}
-
-MILK_MODULE(AOloopControl, init_module_CLI, NULL);
+MILK_MODULE_RUNNABLES(AOloopControl, NULL, runnables);

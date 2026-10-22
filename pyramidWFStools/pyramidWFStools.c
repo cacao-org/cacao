@@ -20,26 +20,12 @@
 // Module short description
 #define MODULE_DESCRIPTION "pyramid WFS tools"
 
-// Application to which module belongs
-#define MODULE_APPLICATION "cacao-cli"
-
 #define _GNU_SOURCE
 
+#include "milk_runnable.h"
 
-#include "CLIcore.h"
-#include "COREMOD_memory/COREMOD_memory.h"
+#include "pyramidWFStools.h"
 
-#include "pyWFSgridmatch.h"
+static const MILK_RUNNABLE *const runnables[] = { &runnable_pyramidWFStools_pyWFSgridmatch };
 
-
-static errno_t init_module_CLI()
-{
-    CLIADDCMD_cacao_pyramidWFStools__pyWFSgridmatch();
-
-    // add atexit functions here
-    // atexit((void*) myfunc);
-
-    return RETURN_SUCCESS;
-}
-
-MILK_MODULE(pyramidWFStools, init_module_CLI, NULL);
+MILK_MODULE_RUNNABLES(pyramidWFStools, NULL, runnables);

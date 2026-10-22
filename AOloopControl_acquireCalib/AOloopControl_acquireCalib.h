@@ -14,5 +14,9 @@
 #ifndef _AOLOOPCONTROL_ACQUIRECALIB_H
 #define _AOLOOPCONTROL_ACQUIRECALIB_H
 
+#include "milk_runnable.h"
+
+extern const MILK_RUNNABLE runnable_AOloopControl_acquireCalib_acqWFSlincal;
+extern const MILK_RUNNABLE runnable_AOloopControl_acquireCalib_measlinresp;
 
 #endif

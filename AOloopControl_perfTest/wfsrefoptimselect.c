@@ -16,12 +16,14 @@
 #include <dirent.h>
 
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
 #include "COREMOD_tools/COREMOD_tools.h" // quicksort
+
+#include "AOloopControl_perfTest.h"
 
 
 #define OPTMODE_MAXN 1
@@ -37,18 +39,9 @@ static char wfsinput[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
 static char dminput[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
-static uint32_t *optmode;
+static uint32_t optmode = 0;
 
-static float *selnormplaw;
-
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "wfsroptsel",
-    .cmdkey           = "wfsroptsel",
-    .description      = "WFS ref optimize by PSF selection",
-    .description_long = "Optimize WFS reference selection based on PSF quality metrics. Selects "
-                        "the reference that maximizes Strehl ratio."
-};
+static float selnormplaw = 0.0f;
 
 #define FPS_PARAMS(X)                                                                         \
     X(".selinput", selinput, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,   \
@@ -314,16 +307,16 @@ static errno_t WFSref_optimizeWFS_PSFselect(IMGID psfimg,
 }
 
 
-static FPS_CLI_BINDING             my_bindings[] = { FPS_PARAMS(FPS_X_BINDING) };
-static int __attribute__((unused)) nb_bindings   = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+MILK_PARAMS_DEFINE(wfsrefoptimselect, FPS_PARAMS);
 
-static CLICMDARGDEF farg[] = { FPS_PARAMS(FPS_X_FARG) };
-
-static CLICMDDATA CLIcmddata = { "wfsroptsel", "WFS ref optimize by PSF selection",
-                                 CLICMD_FIELDS_DEFAULTS };
-
-static errno_t compute_function()
+static MILK_HOT errno_t wfsrefoptimselect_compute(const MILK_RUNNABLE *self)
 {
+    // Parameters are read before the processinfo macros resync them
+    if (dcfpsptr != NULL)
+    {
+        fpsresync_fps_to_modvar(dcfpsptr, dcfpsbindings, dcfpsnbindings, 1);
+    }
+
     IMGID inpsfimg = imgid_make_from_name(selinput);
     resolveIMGID(&inpsfimg, ERRMODE_WARN, dcimg, dcnimg);
     if (inpsfimg.ID == -1)
@@ -365,33 +358,28 @@ static errno_t compute_function()
 
     DEBUG_TRACE_FSTART();
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
-        WFSref_optimizeWFS_PSFselect(inpsfimg, inwfsimg, indmimg, *optmode, *selnormplaw);
+        WFSref_optimizeWFS_PSFselect(inpsfimg, inwfsimg, indmimg, optmode, selnormplaw);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction()
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_perfTest__WFSref_optimize_PSFselection()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_perfTest_wfsrefoptimselect = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "wfsroptsel",
+                 .cmdkey           = "wfsroptsel",
+                 .description      = "WFS ref optimize by PSF selection",
+                 .description_long = "Optimize WFS reference selection based on PSF quality "
+                                     "metrics. Selects the reference that maximizes Strehl "
+                                     "ratio." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(wfsrefoptimselect),
+    .compute = wfsrefoptimselect_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacaopt-wfsroptsel", runnable_AOloopControl_perfTest_wfsrefoptimselect);

@@ -8,11 +8,12 @@
  */
 
 
+#include "milk_runnable.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
-#include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
@@ -40,24 +41,6 @@ typedef struct
 static PokeInfo *pkinfarray;
 
 
-/* ================================================================
- * 1.  FPS COMPONENT IDENTITY
- * ============================================================= */
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "measlinresp",
-    .cmdkey      = "measlinresp",
-    .description = "measure linear response of one stream to another",
-    .description_long =
-        "Measure the linear response between two streams (input and output). Computes the transfer "
-        "function by correlating perturbations with responses."
-};
-
-
-/* ================================================================
- * 2.  LOCAL PARAMETER VARIABLES
- * ============================================================= */
-
 static char     *streamin           = NULL;
 static char     *streamout          = NULL;
 static char     *inmodeC            = NULL;
@@ -70,10 +53,6 @@ static uint32_t *NBexcl             = NULL;
 static uint32_t *NBinnerCycle       = NULL;
 static int64_t  *saveALL            = NULL;
 
-
-/* ================================================================
- * 3.  UNIFIED PARAMETER TABLE (X-Macro)
- * ============================================================= */
 
 #define FPS_PARAMS(X)                                                                              \
     X(".streamin", &streamin, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT,                          \
@@ -95,18 +74,7 @@ static int64_t  *saveALL            = NULL;
     X(".saveALL", &saveALL, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT, "save intermediate files")
 
 
-/* ================================================================
- * 5.  BINDINGS, FARG, AND CLI DATA
- * ============================================================= */
-
-FPS_V2_SECTION5(FPS_PARAMS)
-
-
-// detailed help
-static errno_t __attribute__((unused)) help_function()
-{
-    return RETURN_SUCCESS;
-}
+MILK_PARAMS_DEFINE(measlinresp, FPS_PARAMS);
 
 
 /**
@@ -277,18 +245,19 @@ static errno_t __attribute__((unused)) help_function()
  */
 
 
-static errno_t Measure_Linear_Response_Modal(IMGID    imgin,
-                                             IMGID    imgout,
-                                             IMGID    imginmodeC,
-                                             float    ampl,
-                                             float    framerateHz,
-                                             float    latencyfr,
-                                             uint32_t timing_NBave,
-                                             uint32_t timing_NBexcl,
-                                             uint32_t SequInitMode,
-                                             char    *outCname,
-                                             char    *outdir,
-                                             int      saveALL)
+static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
+                                             IMGID                imgin,
+                                             IMGID                imgout,
+                                             IMGID                imginmodeC,
+                                             float                ampl,
+                                             float                framerateHz,
+                                             float                latencyfr,
+                                             uint32_t             timing_NBave,
+                                             uint32_t             timing_NBexcl,
+                                             uint32_t             SequInitMode,
+                                             char                *outCname,
+                                             char                *outdir,
+                                             int                  saveALL)
 {
     DEBUG_TRACE_FSTART();
 
@@ -408,7 +377,7 @@ static errno_t Measure_Linear_Response_Modal(IMGID    imgin,
     }
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+    MILK_PROCINFO_INIT(self);
 
     long timing_NBcycle = processinfo->loopcntMax;
     printf("    timing_NBcycle    : %ld\n", timing_NBcycle);
@@ -500,7 +469,7 @@ static errno_t Measure_Linear_Response_Modal(IMGID    imgin,
     int iter = 0;
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_LOOPSTART(self);
     {
         printf("ITERATION %d\n", iter);
         fflush(stdout);
@@ -790,7 +759,7 @@ static errno_t Measure_Linear_Response_Modal(IMGID    imgin,
 
         iter++;
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self);
 
 
     free(IDoutCstep);
@@ -805,7 +774,7 @@ static errno_t Measure_Linear_Response_Modal(IMGID    imgin,
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t measlinresp_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -848,7 +817,7 @@ static errno_t compute_function()
     mkUTtimestring_nanosec_now(timestring);
     WRITE_DIRNAME(savedir, "measlinrespm/%s", timestring);
 
-    Measure_Linear_Response_Modal(imgin, imgout, imginmodeC, *pokeampl, *timing_framerateHz,
+    Measure_Linear_Response_Modal(self, imgin, imgout, imginmodeC, *pokeampl, *timing_framerateHz,
                                   *timing_latencyfr, *NBave, *NBexcl, 1, outmodeC, savedir,
                                   *saveALL);
 
@@ -858,30 +827,16 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
-/* ================================================================
- * 7.  MILK MODULE REGISTRATION
- * ============================================================= */
-
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-errno_t CLIADDCMD_AOloopControl__measure_linear_resp()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-
-/* ================================================================
- * 8.  STANDALONE ENTRY POINT
- * ============================================================= */
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_acquireCalib_measlinresp = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name    = "measlinresp",
+                 .cmdkey      = "measlinresp",
+                 .description = "measure linear response of one stream to another",
+                 .description_long =
+                     "Measure the linear response between two streams (input and output). Computes "
+                     "the transfer function by correlating perturbations with responses." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(measlinresp),
+    .compute = measlinresp_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacaoac-measlinresp", runnable_AOloopControl_acquireCalib_measlinresp);

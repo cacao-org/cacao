@@ -7,20 +7,13 @@
  * @brief   remap WFS image
  *
  */
+#include "milk_runnable.h"
+
 #include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
 
-#include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "mapWFS",
-    .cmdkey           = "mapWFS",
-    .description      = "remap WFS image",
-    .description_long = "Remap wavefront sensor pixels using a geometric transformation map. "
-                        "Corrects optical distortion or aligns subapertures."
-};
 
 static char wfsinsname[FUNCTION_PARAMETER_STRMAXLEN];
 static char mapsname[FUNCTION_PARAMETER_STRMAXLEN];
@@ -34,7 +27,7 @@ static char wfsoutsname[FUNCTION_PARAMETER_STRMAXLEN];
     X(".wfsout", wfsoutsname, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),   \
       "Wavefront sensor output")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(WFSmap, FPS_PARAMS);
 
 
 // Optional custom configuration checks.
@@ -223,7 +216,7 @@ errno_t image_pixremap(IMGID inimg, IMGID mapimg, IMGID outimg, int reuse)
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t WFSmap_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -250,12 +243,13 @@ static errno_t compute_function()
     wfsoutimg = stream_connect_create_2D(wfsoutsname, sizeout, 1, _DATATYPE_FLOAT);
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         image_pixremap(wfsinimg, mapimg, wfsoutimg, 1);
         processinfo_update_output_stream(processinfo, wfsoutimg.im, NULL);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     imgid_free(&wfsinimg);
     imgid_free(&mapimg);
@@ -265,26 +259,16 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_IOtools__WFSmap()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_IOtools_WFSmap = {
+    .kind = MILK_RUNNABLE_FPS,
+    .app  = { .fps_name         = "mapWFS",
+              .cmdkey           = "mapWFS",
+              .description      = "remap WFS image",
+              .description_long = "Remap wavefront sensor pixels using a geometric transformation "
+                                  "map. Corrects optical distortion or aligns subapertures." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(WFSmap),
+    .compute   = WFSmap_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaoiot-mapWFS", runnable_AOloopControl_IOtools_WFSmap);

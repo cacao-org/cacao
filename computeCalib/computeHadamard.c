@@ -11,10 +11,12 @@
 #define _GNU_SOURCE
 
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+
+#include "computeCalib.h"
 
 #define MAX_MBLOCK 20
 
@@ -23,17 +25,6 @@
 #    define OMP_NELEMENT_LIMIT 1000000
 #endif
 
-
-// Local variables pointers
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "mkHadamard",
-    .cmdkey      = "mkHadamard",
-    .description = "make Hadamard modes",
-    .description_long =
-        "Generate Hadamard mode patterns for efficient response matrix acquisition. Uses balanced "
-        "Hadamard matrices to minimize measurement noise."
-};
 
 static char inmask[FUNCTION_PARAMETER_STRMAXLEN];
 static char outHcube[FUNCTION_PARAMETER_STRMAXLEN];
@@ -44,7 +35,7 @@ static char outHcube[FUNCTION_PARAMETER_STRMAXLEN];
     X(".outHcube", outHcube, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
       "output Hadamard cube")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(computeHadamard, FPS_PARAMS);
 
 
 // Optional custom configuration checks.
@@ -299,7 +290,7 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t computeHadamard_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -307,40 +298,29 @@ static errno_t compute_function()
     printf("INPUT  : %s\n", inmask);
     printf("OUTPUT : %s\n", outHcube);
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         AOloopControl_computeCalib_mkHadamardModes(inmask, outHcube);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_computeCalib__mkHadamard()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-
-                                 customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_computeCalib_computeHadamard = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name    = "mkHadamard",
+                 .cmdkey      = "mkHadamard",
+                 .description = "make Hadamard modes",
+                 .description_long =
+                     "Generate Hadamard mode patterns for efficient response matrix acquisition. "
+                     "Uses balanced Hadamard matrices to minimize measurement noise." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(computeHadamard),
+    .compute   = computeHadamard_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaocc-comphadamard", runnable_computeCalib_computeHadamard);

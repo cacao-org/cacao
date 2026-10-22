@@ -17,13 +17,15 @@
 #include <dirent.h>
 
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
 #include "COREMOD_tools/COREMOD_tools.h" // quicksort
 #include "statistic/statistic.h"         // ran1()
+
+#include "AOloopControl_perfTest.h"
 
 
 typedef struct
@@ -62,24 +64,24 @@ typedef struct
 // Local variables pointers
 
 // Start time: sec, nanosec
-static uint32_t *tstartsec;
+static uint32_t tstartsec = 0;
 
-static uint32_t *tstartnsec;
+static uint32_t tstartnsec = 0;
 
 
 // End time: sec, nanosec
-static uint32_t *tendsec;
+static uint32_t tendsec = 0;
 
-static uint32_t *tendnsec;
+static uint32_t tendnsec = 0;
 
 
 // Synchro mode
 // -1: adopt custom timing
 // 0+ : inherit timing from stream
-static int32_t *timingmode;
+static int32_t timingmode = 0;
 
 // time interval
-static float *timingdt;
+static float timingdt = 0.0f;
 
 // logging directory
 static char logdir[FUNCTION_PARAMETER_STRMAXLEN] = "";
@@ -102,20 +104,11 @@ static char stag[4][FUNCTION_PARAMETER_STRMAXLEN];
 
 // convention: positive if frames arrive late
 // real time = reported time - latency
-static float *(slatency[4]);
+static float slatency[4];
 
 // Force linear timing
 // Assumes input stream is acquired with regular timing
-static int32_t *(lintiming[4]);
-
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "slogtsample",
-    .cmdkey      = "slogtsample",
-    .description = "resample streams to common clock",
-    .description_long =
-        "Resample multiple logged streams to a common clock for synchronized temporal analysis."
-};
+static int32_t lintiming[4];
 
 #define FPS_PARAMS(X)                                                                      \
     X(".tstartsec", &tstartsec, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
@@ -481,21 +474,20 @@ static errno_t processTimingFile(char    *inTimingfname,
 }
 
 
-static FPS_CLI_BINDING             my_bindings[] = { FPS_PARAMS(FPS_X_BINDING) };
-static int __attribute__((unused)) nb_bindings   = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+MILK_PARAMS_DEFINE(streamlogtimesample, FPS_PARAMS);
 
-static CLICMDARGDEF farg[] = { FPS_PARAMS(FPS_X_FARG) };
-
-static CLICMDDATA CLIcmddata = { "slogtsample", "resample streams to common clock",
-                                 CLICMD_FIELDS_DEFAULTS };
-
-static errno_t compute_function()
+static MILK_HOT errno_t streamlogtimesample_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
+    // Parameters are read before the processinfo macros resync them
+    if (dcfpsptr != NULL)
+    {
+        fpsresync_fps_to_modvar(dcfpsptr, dcfpsbindings, dcfpsnbindings, 1);
+    }
 
-    printf("START TIME = %u.%09u\n", *tstartsec, *tstartnsec);
-    printf(" END  TIME = %u.%09u\n", *tendsec, *tendnsec);
+    printf("START TIME = %u.%09u\n", tstartsec, tstartnsec);
+    printf(" END  TIME = %u.%09u\n", tendsec, tendnsec);
     printf("\n");
 
 
@@ -512,7 +504,7 @@ static errno_t compute_function()
 
             char datadirstream[STRINGMAXLEN_DIRNAME];
             {
-                time_t     timetstart = *tstartsec;
+                time_t     timetstart = tstartsec;
                 struct tm *tminfo;
 
                 tminfo = gmtime(&timetstart);
@@ -656,10 +648,9 @@ static errno_t compute_function()
                                 exit(0);
                             }
 
-                            if ((datfile[NBdatFiles].tstart <
-                                 1.0 * (*tendsec) + 1e-9 * (*tendnsec)) &&
+                            if ((datfile[NBdatFiles].tstart < 1.0 * tendsec + 1e-9 * tendnsec) &&
                                 (datfile[NBdatFiles].tend >
-                                 1.0 * (*tstartsec) + 1.0e-9 * (*tstartnsec)) &&
+                                 1.0 * tstartsec + 1.0e-9 * tstartnsec) &&
                                 (datfile[NBdatFiles].cnt > 0))
                             {
                                 NBdatFiles++;
@@ -680,11 +671,11 @@ static errno_t compute_function()
 
 
             // prepare output frame array
-            double outtimestart = *tstartsec + 1e-9 * (*tstartnsec);
-            double outtimeend   = *tendsec + 1e-9 * (*tendnsec);
+            double outtimestart = tstartsec + 1e-9 * tstartnsec;
+            double outtimeend   = tendsec + 1e-9 * tendnsec;
             printf("    outtimestart = %.9lf sec\n", outtimestart);
             printf("    outtimeend   = %.9lf sec\n", outtimeend);
-            long zsizeout = (outtimeend - outtimestart) / *timingdt;
+            long zsizeout = (outtimeend - outtimestart) / timingdt;
             printf("zsizeout = %ld\n", zsizeout);
             ResampledFrame *outframearray =
                 (ResampledFrame *) malloc(sizeof(ResampledFrame) * zsizeout);
@@ -724,8 +715,8 @@ static errno_t compute_function()
                 double dtin = (datfile[idatfile].tend - datfile[idatfile].tstart) /
                               (datfile[idatfile].cnt - 1);
                 printf("    dtin    = %.9lf sec  (%f Hz)\n", dtin, 1.0 / dtin);
-                printf("    latency = %.9f sec  (%f frame)\n", *slatency[sindex],
-                       *slatency[sindex] / dtin);
+                printf("    latency = %.9f sec  (%f frame)\n", slatency[sindex],
+                       slatency[sindex] / dtin);
 
 
                 // PREPARE MAPPING COMMANDS
@@ -747,7 +738,7 @@ static errno_t compute_function()
                 {
                     char fnameTXTout[STRINGMAXLEN_FULLFILENAME];
                     WRITE_FULLFILENAME(fnameTXTout, "%s.out.txt", datfile[idatfile].name);
-                    if (*lintiming[sindex] == 1)
+                    if (lintiming[sindex] == 1)
                     {
                         processTimingFile(fnameTXT, fnameTXTout, sname[sindex],
                                           PROCESSTIMINGFLAG_LOAD | PROCESSTIMINGFLAG_LINTIMING |
@@ -768,16 +759,16 @@ static errno_t compute_function()
                 for (long framein = 0; framein < datfile[idatfile].cnt; framein++)
                 {
                     // Unix times
-                    double inframetimestart = (tarrayin[framein] - dtin) - *slatency[sindex];
-                    double inframetimeend   = (tarrayin[framein]) - *slatency[sindex];
+                    double inframetimestart = (tarrayin[framein] - dtin) - slatency[sindex];
+                    double inframetimeend   = (tarrayin[framein]) - slatency[sindex];
 
                     printf("%4ld   %.3f\n", framein, tarrayin[framein]);
                     printf("  inframetimestart/end:  %.3f %.3f\n", inframetimestart,
                            inframetimeend);
 
                     // remap timing to frame index
-                    double findexframestart = (inframetimestart - outtimestart) / (*timingdt);
-                    double findexframeend   = (inframetimeend - outtimestart) / (*timingdt);
+                    double findexframestart = (inframetimestart - outtimestart) / timingdt;
+                    double findexframeend   = (inframetimeend - outtimestart) / timingdt;
 
                     // if frame falls within output cube
                     if ((findexframeend > 0) && (findexframestart < zsizeout))
@@ -1033,10 +1024,11 @@ static errno_t compute_function()
     }
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
 
     DEBUG_TRACE_FEXIT();
@@ -1044,22 +1036,15 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction()
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_perfTest__streamlogtimesample()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_perfTest_streamlogtimesample = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "slogtsample",
+                 .cmdkey           = "slogtsample",
+                 .description      = "resample streams to common clock",
+                 .description_long = "Resample multiple logged streams to a common clock for "
+                                     "synchronized temporal analysis." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(streamlogtimesample),
+    .compute = streamlogtimesample_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacaopt-slogtsample", runnable_AOloopControl_perfTest_streamlogtimesample);

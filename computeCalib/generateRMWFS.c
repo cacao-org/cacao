@@ -13,17 +13,11 @@
  */
 
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
+#include "computeCalib.h"
 
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "generateRMWFS",
-    .cmdkey           = "generateRMWFS",
-    .description      = "generate RM WFS modes",
-    .description_long = "Generate synthetic response matrix modes for WFS testing. Creates ideal "
-                        "poke responses for simulation and validation."
-};
 
 // zonal WFS response
 //
@@ -40,7 +34,7 @@ static char outWFSmodesC[FUNCTION_PARAMETER_STRMAXLEN];
     X(".outWFSmodesC", outWFSmodesC, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
       "output WFS modes")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(generateRMWFS, FPS_PARAMS);
 
 
 // Optional custom configuration checks.
@@ -68,7 +62,7 @@ static __attribute__((unused)) errno_t help_function()
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t generateRMWFS_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -109,7 +103,8 @@ static errno_t compute_function()
     fflush(stdout);
     list_image_ID();
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         for (uint32_t mode = 0; mode < NBmodes; mode++)
         {
@@ -128,7 +123,7 @@ static errno_t compute_function()
         }
         printf("\n");
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
 
     DEBUG_TRACE_FEXIT();
@@ -136,29 +131,17 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_computeCalib__generateRMWFS()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-
-                                 customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_computeCalib_generateRMWFS = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "generateRMWFS",
+                 .cmdkey           = "generateRMWFS",
+                 .description      = "generate RM WFS modes",
+                 .description_long = "Generate synthetic response matrix modes for WFS testing. "
+                                     "Creates ideal poke responses for simulation and "
+                                     "validation." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(generateRMWFS),
+    .compute   = generateRMWFS_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaocc-genrmwfs", runnable_computeCalib_generateRMWFS);

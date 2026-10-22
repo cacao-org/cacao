@@ -8,21 +8,14 @@
  *
  *
  */
+#include "milk_runnable.h"
+
 #include <float.h>
 
-#include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 // quicksort
 #include "COREMOD_tools/COREMOD_tools.h"
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "findspots",
-    .cmdkey           = "findspots",
-    .description      = "find spots in inmage",
-    .description_long = "Detect and locate bright spots in a wavefront sensor image. Uses "
-                        "thresholding and centroiding to find subaperture positions."
-};
 
 static char     inimname[FUNCTION_PARAMETER_STRMAXLEN];
 static float    spotsize     = 0;
@@ -42,16 +35,11 @@ static char     outmapcname[FUNCTION_PARAMETER_STRMAXLEN];
     X(".outmapc", outmapcname, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),  \
       "output mapping cube")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(findspots, FPS_PARAMS);
 
 
 // Optional custom configuration checks
 // Runs at every configuration check loop iteration
-//
-// To use this function, set :
-// CLIcmddata.FPS_customCONFcheck = customCONFcheck
-// when registering function
-// (see end of this file)
 //
 static errno_t customCONFcheck()
 {
@@ -314,7 +302,7 @@ static errno_t find_image_spots(IMGID    inimg,
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t findspots_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -325,13 +313,13 @@ static errno_t compute_function()
         return RETURN_FAILURE;
     }
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+    MILK_PROCINFO_INIT(self)
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_LOOPSTART(self)
     {
         find_image_spots(inimg, spotsize, spotexcldist, maxnbspot);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     imgid_free(&inimg);
 
@@ -340,26 +328,16 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_IOtools__findspots()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_IOtools_findspots = {
+    .kind = MILK_RUNNABLE_FPS,
+    .app = { .fps_name         = "findspots",
+             .cmdkey           = "findspots",
+             .description      = "find spots in inmage",
+             .description_long = "Detect and locate bright spots in a wavefront sensor image. Uses "
+                                 "thresholding and centroiding to find subaperture positions." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(findspots),
+    .compute   = findspots_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaoiot-findspots", runnable_AOloopControl_IOtools_findspots);

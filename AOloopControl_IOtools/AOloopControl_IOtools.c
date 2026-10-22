@@ -21,41 +21,18 @@
 // Module short description
 #define MODULE_DESCRIPTION "AO loop control IO tools"
 
-// Application to which module belongs
-#define MODULE_APPLICATION "cacao-cli"
+#include "milk_runnable.h"
 
-#define _GNU_SOURCE
-
-
-#include "CLIcore.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-
-#include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_IOtools/AOloopControl_IOtools.h"
 
-#include "acquireWFSim.h"
-#include "findspots.h"
-#include "spotpos.h"
-#include "WFScamsim.h"
-#include "WFSmap.h"
-#include "ao188_preprocessor.h"
-#include "acquireWFSspec.h"
+static const MILK_RUNNABLE *const runnables[] = {
+    &runnable_AOloopControl_IOtools_acquireWFSim,
+    &runnable_AOloopControl_IOtools_spotpos,
+    &runnable_AOloopControl_IOtools_WFScamsim,
+    &runnable_AOloopControl_IOtools_WFSmap,
+    &runnable_AOloopControl_IOtools_findspots,
+    &runnable_AOloopControl_IOtools_ao188_preprocessor,
+    &runnable_AOloopControl_IOtools_acquireWFSspec,
+};
 
-
-static errno_t init_module_CLI()
-{
-    CLIADDCMD_AOloopControl_IOtools__acquireWFSim();
-    CLIADDCMD_AOloopControl_IOtools__spotpos();
-    CLIADDCMD_AOloopControl_IOtools__WFScamsim();
-    CLIADDCMD_AOloopControl_IOtools__WFSmap();
-    CLIADDCMD_AOloopControl_IOtools__findspots();
-    CLIADDCMD_AOloopControl_IOtools__AO188Preproc();
-    CLIADDCMD_AOloopControl_IOtools__acquirespectra();
-
-    // add atexit functions here
-    // atexit((void*) myfunc);
-
-    return RETURN_SUCCESS;
-}
-
-MILK_MODULE(AOloopControl_IOtools, init_module_CLI, NULL);
+MILK_MODULE_RUNNABLES(AOloopControl_IOtools, NULL, runnables);

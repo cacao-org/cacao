@@ -7,22 +7,11 @@
  * @brief Actmap sample2d module
  */
 
-/**
- * @file CLIADDCMD_AOloopControl_computeCalib__sample2D
- *
- */
-
-
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
+#include "computeCalib.h"
 
-static FPS_APP_INFO FPS_app_info = { .fps_name    = "sample2DWF",
-                                     .cmdkey      = "sample2DWF",
-                                     .description = "sample 2D WF to act pos",
-                                     .description_long =
-                                         "Sample a 2D wavefront at actuator positions to generate "
-                                         "a discrete actuator command vector." };
 
 static char inWF2D[FUNCTION_PARAMETER_STRMAXLEN];
 static char map2D[FUNCTION_PARAMETER_STRMAXLEN];
@@ -36,7 +25,7 @@ static char outWF1D[FUNCTION_PARAMETER_STRMAXLEN];
     X(".outWF1D", outWF1D, FPTYPE_STRING, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),   \
       "output WF 1D")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(actmap_sample2D, FPS_PARAMS);
 
 
 // Optional custom configuration checks.
@@ -117,7 +106,7 @@ static IMGID load_actmapcoord2D(char *fname, char *outim)
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t actmap_sample2D_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -199,7 +188,8 @@ static errno_t compute_function()
     }
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         for (uint32_t slice = 0; slice < NBslice; slice++)
         {
@@ -210,7 +200,7 @@ static errno_t compute_function()
             }
         }
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
 
     free(iiact);
@@ -221,29 +211,16 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_computeCalib__sample2D()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-
-                                 customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_computeCalib_actmap_sample2D = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "sample2DWF",
+                 .cmdkey           = "sample2DWF",
+                 .description      = "sample 2D WF to act pos",
+                 .description_long = "Sample a 2D wavefront at actuator positions to generate "
+                                     "a discrete actuator command vector." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(actmap_sample2D),
+    .compute   = actmap_sample2D_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaocc-actsamp2d", runnable_computeCalib_actmap_sample2D);

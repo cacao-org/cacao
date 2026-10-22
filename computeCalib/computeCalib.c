@@ -6,30 +6,21 @@
  * @file    AOloopControl_computeCalib.c
  * @brief   AO loop compute calibration
  *
- * Uses FPS V2 framework.
+ * Module registry and the aolHaddec unit.
  */
 
 #define MODULE_SHORTNAME_DEFAULT "cacaocc"
 #define MODULE_DESCRIPTION "AO loop control compute calibration"
-#define MODULE_APPLICATION "cacao-cli"
 
 #define _GNU_SOURCE
 
-#include "CLIcore.h"
-#include "fps.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-
-#include "actmap_sample2D.h"
-#include "compute_control_modes.h"
-#include "compute_masksWFSDM.h"
-#include "compute_straight_CM.h"
-#include "generateRMWFS.h"
-#include "computeHadamard.h"
-#include "maskextrapolate.h"
-
-#include "RM2zonal.h"
+#include "milk_runnable.h"
 
 #include "computeCalib.h"
+
+// Mandated units (LAPACKE, BLAS): NULL when their file is dropped from the build
+MILK_RUNNABLE_WEAK_DECL(runnable_computeCalib_RM2zonal);
+MILK_RUNNABLE_WEAK_DECL(runnable_computeCalib_compute_straight_CM);
 
 
 /* =============================================================
@@ -41,72 +32,51 @@ static char p_hmat[FUNCTION_PARAMETER_STRMAXLEN]   = "Hmat";
 static char p_pixidx[FUNCTION_PARAMETER_STRMAXLEN] = "pixiind";
 static char p_outrm[FUNCTION_PARAMETER_STRMAXLEN]  = "imRM";
 
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "aolHaddec",
-    .cmdkey           = "aolHaddec",
-    .description      = "decode Hadamard matrix",
-    .description_long = "Decode Hadamard-encoded response matrix measurements. Applies the inverse "
-                        "Hadamard transform to recover per-actuator responses."
-};
-
 #define FPS_PARAMS(X)                                                                          \
     X(".inrm", p_inrm, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "input RM")                 \
     X(".hmat", p_hmat, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "Hadamard matrix")          \
     X(".pixidx", p_pixidx, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "DM pixel index frame") \
     X(".outrm", p_outrm, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "output RM")
 
-static FPS_CLI_BINDING my_bindings[] = { FPS_PARAMS(FPS_X_BINDING) };
-static const int       nb_bindings   = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+MILK_PARAMS_DEFINE(aolHaddec, FPS_PARAMS);
 
-static CLICMDARGDEF farg[] = { FPS_PARAMS(FPS_X_FARG) };
-
-static CLICMDDATA CLIcmddata = { "", "", CLICMD_FIELDS_DEFAULTS };
-FPS_CMDSETTINGS_INIT(main, CLIcmddata, FPS_app_info)
-
-static errno_t compute_function()
+static MILK_HOT errno_t aolHaddec_compute(const MILK_RUNNABLE *self)
 {
+    (void) self;
     AOloopControl_computeCalib_Hadamard_decodeRM(p_inrm, p_hmat, p_pixidx, p_outrm);
     return RETURN_SUCCESS;
 }
 
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
+const MILK_RUNNABLE runnable_computeCalib_aolHaddec = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "aolHaddec",
+                 .cmdkey           = "aolHaddec",
+                 .description      = "decode Hadamard matrix",
+                 .description_long = "Decode Hadamard-encoded response matrix measurements. "
+                                     "Applies the inverse Hadamard transform to recover "
+                                     "per-actuator responses." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(aolHaddec),
+    .compute = aolHaddec_compute,
+};
 
 
 /* =============================================================
  *  REGISTRATION
  * ============================================================ */
 
-static errno_t init_module_CLI()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    {
-        int cmdi               = RegisterCLIcmd(CLIcmddata, CLIfunction);
-        CLIcmddata.cmdsettings = &data.cmd[cmdi].cmdsettings;
-    }
+// Module registry: CLI exposure = membership here.
+static const MILK_RUNNABLE *const runnables[] = {
+    &runnable_computeCalib_aolHaddec,
+    &runnable_computeCalib_compute_control_modes,
+    &runnable_computeCalib_compute_straight_CM,
+    &runnable_computeCalib_compute_masksWFSDM,
+    &runnable_computeCalib_generateRMWFS,
+    &runnable_computeCalib_computeHadamard,
+    &runnable_computeCalib_maskextrapolate,
+    &runnable_computeCalib_RM2zonal,
+    &runnable_computeCalib_mkCMsvd,
+    &runnable_computeCalib_actmap_sample2D,
+};
 
-    CLIADDCMD_cacao_computeCalib__compute_control_modes();
-
-    CLIADDCMD_AOloopControl_computeCalib__compsCM();
-
-    CLIADDCMD_AOloopControl_computeCalib__compmasksWFSDM();
-
-    CLIADDCMD_AOloopControl_computeCalib__generateRMWFS();
-
-    CLIADDCMD_AOloopControl_computeCalib__mkHadamard();
-
-    CLIADDCMD_AOloopControl_computeCalib__maskextrapolate();
-
-    CLIADDCMD_AOloopControl_computeCalib__RM2zonal();
-
-    CLIADDCMD_AOloopControl_computeCalib__mkCMsvd();
-
-    CLIADDCMD_AOloopControl_computeCalib__sample2D();
-
-    return RETURN_SUCCESS;
-}
-
-MILK_MODULE(AOloopControl_computeCalib, init_module_CLI, NULL);
+MILK_MODULE_RUNNABLES(AOloopControl_computeCalib, NULL, runnables);

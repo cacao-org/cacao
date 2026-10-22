@@ -15,5 +15,6 @@
 #ifndef _AOLOOPCONTROL_COMPTOOLS_H
 #define _AOLOOPCONTROL_COMPTOOLS_H
 
+#include "milk_runnable.h"
 
 #endif

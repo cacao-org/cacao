@@ -12,17 +12,10 @@
 
 #include <math.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "mk3Ddmgrid",
-    .cmdkey           = "mk3Ddmgrid",
-    .description      = "create DM calibration pattern sequence",
-    .description_long = "Create a 3D sequence of DM calibration patterns. Generates systematic "
-                        "poke patterns for response matrix acquisition."
-};
+#include "AOloopControl_DM/AOloopControl_DM.h"
 
 // Local variables pointers
 
@@ -43,7 +36,7 @@ static uint32_t binfactor = 1;
     X(".binfact", &binfactor, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),     \
       "binning factor")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(mk3Ddmgrid, FPS_PARAMS);
 
 
 // detailed help
@@ -173,47 +166,33 @@ long make_3Dgrid_DMsequ(char    *IDoutname,
 
 /**
  * @brief Wrapper function, used by all CLI calls
- *
- * INSERT_STD_PROCINFO statements enable processinfo support
  */
-static errno_t compute_function()
+static MILK_HOT errno_t mk3Ddmgrid_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
-    //    IMGID img = makeIMGID(inimname);
-    //inim.name);
-
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         make_3Dgrid_DMsequ(outname, xsize, ysize, XYpattern, binfactor);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-errno_t CLIADDCMD_AOloopControl_DM__mk3Ddmgrid()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    // Optional custom settings for this function can be included
-    // CLIcmddata.cmdsettings->procinfo_loopcntMax = 9;
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_DM_mk3Ddmgrid = {
+    .kind = MILK_RUNNABLE_FPS,
+    .app = {
+        .fps_name         = "mk3Ddmgrid",
+        .cmdkey           = "mk3Ddmgrid",
+        .description      = "create DM calibration pattern sequence",
+        .description_long = "Create a 3D sequence of DM calibration patterns. Generates systematic "
+                            "poke patterns for response matrix acquisition.",
+    },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(mk3Ddmgrid),
+    .compute = mk3Ddmgrid_compute,
+};

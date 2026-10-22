@@ -10,12 +10,10 @@
 #include <math.h>
 #include <stdio.h>
 
-#ifdef MILK_NO_CLI
-#    include "CLIcore_standalone.h"
-#else
-#    include "CLIcore.h"
-#endif
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+
+#include "computeCalib.h"
 
 
 errno_t modes_spatial_extrapolate(IMGID imgmodes, IMGID imgmask, IMGID imgcpa, IMGID *imgoutmodes)

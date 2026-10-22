@@ -6,25 +6,22 @@ message(" SRCNAME = ${SRCNAME} -> LIBNAME = ${LIBNAME}")
 file(GLOB SOURCEFILES "*.c" "*.cpp")
 file(GLOB INCLUDEFILES "*.h" "*.hpp")
 
-set(LINKLIBS
-	CLIcore
-	milkinfo
-	cacaoAOloopControl
-)
-
 # DEFAULT SETTINGS
 # Do not change unless needed
 # =====================================================================
 
 project(lib_${LIBNAME}_project)
 
-add_library(${LIBNAME} SHARED ${SOURCEFILES})
+include_directories("${PROJECT_SOURCE_DIR}/src")
+include_directories("${PROJECT_SOURCE_DIR}/..")
 
-# note: set to PUBLIC if other modules link to this one
-target_include_directories(${LIBNAME} PRIVATE ${PROJECT_SOURCE_DIR}/.. ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/plugins/milk-extra-src)
-target_link_libraries(${LIBNAME} PRIVATE ${LINKLIBS})
+milk_add_runnable_module(${LIBNAME} SOURCES ${SOURCEFILES} LINK_LIBS milkinfo_static cacaoAOloopControl_static)
+target_include_directories(${LIBNAME}_objs PRIVATE ${CMAKE_SOURCE_DIR}/plugins/milk-extra-src)
+milk_add_fpsexec_stubs(${LIBNAME})
 
-milk_apply_extensions(${LIBNAME})
+# CUSTOM ===========
+target_link_libraries(${LIBNAME} PUBLIC milkinfo cacaoAOloopControl)
+# ==================
 
 install(TARGETS ${LIBNAME} DESTINATION lib)
 install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})

@@ -20,38 +20,16 @@
 
 // Module short description
 #define MODULE_DESCRIPTION "AO loop control acquire calibration"
-// Application to which module belongs
-#define MODULE_APPLICATION "cacao-cli"
-
 #define _GNU_SOURCE
 
 
-#include "CLIcore.h"
-#include "COREMOD_memory/COREMOD_memory.h"
+#include "milk_runnable.h"
 
+#include "AOloopControl_acquireCalib.h"
 
-#include "computeCalib/computeCalib.h"
+static const MILK_RUNNABLE *const runnables[] = {
+    &runnable_AOloopControl_acquireCalib_acqWFSlincal,
+    &runnable_AOloopControl_acquireCalib_measlinresp,
+};
 
-#include "acquireWFSlincalib.h"
-#include "measure_linear_resp.h"
-
-
-/** @name AOloopControl_IOtools functions */
-
-static errno_t init_module_CLI()
-{
-    DEBUG_TRACE_FSTART();
-
-
-    CLIADDCMD_milk_AOloopControl_acquireCalib__acquireWFSlincalib();
-    CLIADDCMD_AOloopControl__measure_linear_resp();
-
-    // add atexit functions here
-    // atexit((void*) myfunc);
-
-    DEBUG_TRACE_FEXIT();
-
-    return RETURN_SUCCESS;
-}
-
-MILK_MODULE(AOloopControl_acquireCalib, init_module_CLI, NULL);
+MILK_MODULE_RUNNABLES(AOloopControl_acquireCalib, NULL, runnables);

@@ -50,8 +50,7 @@
 
 #include <fitsio.h>
 
-#include "CLIcore.h"
-#include "fps.h"
+#include "milk_runnable.h"
 
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -590,17 +589,9 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(const char *zrespm_n
 
 /**
  * ====================================================
- * V2 FPS section: mkCM (make control matrix)
+ * FPS section: mkCMsvd (make control matrix)
  * ====================================================
  */
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "mkCMsvd",
-    .cmdkey           = "mkCMsvd",
-    .description      = "compute SVD control matrix from RM",
-    .description_long = "Process a response matrix via SVD to compute the control matrix. Applies "
-                        "singular value filtering and modal truncation."
-};
 
 // Section 2: Local variables for FPS parameters
 static int64_t mkCM_AOloopindex;
@@ -619,12 +610,13 @@ static char    mkCM_out_label[FUNCTION_PARAMETER_STRMAXLEN];
     X(".GPUmode", &mkCM_GPUmode, FPTYPE_INT64, 1, FPFLAG_DEFAULT_INPUT, "Using GPU ?")        \
     X(".out.label", mkCM_out_label, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "output label")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(mkCMsvd, FPS_PARAMS);
 
 
 // Section 4: compute function (merged CONF+RUN)
-static errno_t compute_function_mkCM()
+static MILK_HOT errno_t mkCMsvd_compute(const MILK_RUNNABLE *self)
 {
+    (void) self;
     DEBUG_TRACE_FSTART();
 
     // Get output directory from FPS
@@ -719,25 +711,18 @@ static errno_t compute_function_mkCM()
 }
 
 
-// Section 7: CLI registration
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function_mkCM);
-}
-
-errno_t CLIADDCMD_AOloopControl_computeCalib__mkCMsvd()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFsetup = NULL;
-    CLIcmddata.FPS_customCONFcheck = NULL;
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
+const MILK_RUNNABLE runnable_computeCalib_mkCMsvd = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "mkCMsvd",
+                 .cmdkey           = "mkCMsvd",
+                 .description      = "compute SVD control matrix from RM",
+                 .description_long = "Process a response matrix via SVD to compute the control "
+                                     "matrix. Applies singular value filtering and modal "
+                                     "truncation." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(mkCMsvd),
+    .compute = mkCMsvd_compute,
+};
 
 //
 // make slave actuators from maskRM

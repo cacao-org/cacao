@@ -7,20 +7,13 @@
  * @brief   acquire spectra - a stripped-down version of acquireWFSim for dispersed WFS
  *
  */
+#include "milk_runnable.h"
+
 #include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
-#include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_tools/COREMOD_tools.h"
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "acquire_spectra",
-    .cmdkey           = "acquire_spectra",
-    .description      = "acquire spectra",
-    .description_long = "Acquire spectral data from a wavefront sensor for chromatic "
-                        "characterization and dispersed fringe tracking."
-};
 
 // Local variables
 static char     input_shm_name[FUNCTION_PARAMETER_STRMAXLEN];
@@ -49,7 +42,7 @@ static uint64_t compWFSrefsub;
     X(".comp.WFSrefsub", &compWFSrefsub, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                  \
       "subtract WFS reference aolX_wfsref -> imWFS2")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(acquireWFSspec, FPS_PARAMS);
 
 
 // Optional custom configuration checks.
@@ -248,7 +241,7 @@ static errno_t spec_norm(IMGID wfsin, IMGID wfsout)
     return RETURN_SUCCESS;
 }
 
-static errno_t compute_function()
+static MILK_HOT errno_t acquireWFSspec_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -321,8 +314,8 @@ static errno_t compute_function()
     }
 
     // This is the while(True) {
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         // STEP 1: extract spectra -> aolx_imWFSm
         extract_traces(wfsin, specmask, imgimWFSm, binning);
@@ -405,7 +398,7 @@ static errno_t compute_function()
         }
         processinfo_update_output_stream(processinfo, imgimWFS2.im, NULL);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     imgid_free(&wfsin);
     imgid_free(&specmask);
@@ -422,26 +415,16 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_IOtools__acquirespectra()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_IOtools_acquireWFSspec = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "acquire_spectra",
+                 .cmdkey           = "acquire_spectra",
+                 .description      = "acquire spectra",
+                 .description_long = "Acquire spectral data from a wavefront sensor for chromatic "
+                                     "characterization and dispersed fringe tracking." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(acquireWFSspec),
+    .compute   = acquireWFSspec_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaoiot-acquirespectra", runnable_AOloopControl_IOtools_acquireWFSspec);

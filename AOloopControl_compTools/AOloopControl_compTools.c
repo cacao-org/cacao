@@ -13,20 +13,13 @@
 #define MODULE_SHORTNAME_DEFAULT "cacaoct"
 #define MODULE_DESCRIPTION "AO loop control - computation tools"
 
-// Application to which module belongs
-#define MODULE_APPLICATION "cacao-cli"
-
 #define _GNU_SOURCE
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-
 
 #include "AOloopControl_compTools.h"
 
-static errno_t init_module_CLI()
-{
-    return RETURN_SUCCESS;
-}
+static const MILK_RUNNABLE *const runnables[] = { NULL };
 
-MILK_MODULE(AOloopControl_compTools, init_module_CLI, NULL);
+MILK_MODULE_RUNNABLES(AOloopControl_compTools, NULL, runnables);

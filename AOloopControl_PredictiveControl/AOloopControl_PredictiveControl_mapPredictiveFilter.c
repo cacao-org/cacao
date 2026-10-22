@@ -16,11 +16,7 @@
 
 #include <stdio.h>
 
-#ifdef MILK_NO_CLI
-#    include "CLIcore_standalone.h"
-#else
-#    include "CLIcore.h"
-#endif
+#include "milk_runnable.h"
 
 #include "COREMOD_memory/COREMOD_memory.h"
 

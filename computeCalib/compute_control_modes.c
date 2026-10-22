@@ -11,7 +11,7 @@
 
 #include <math.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -20,16 +20,8 @@
 #include "ZernikePolyn/zernike_value.h"
 
 
-#include "modes_spatial_extrapolate.h"
+#include "computeCalib.h"
 
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "compctrlmodes",
-    .cmdkey           = "compctrlmodes",
-    .description      = "compute AO control modes in WFS and DM space",
-    .description_long = "Compute AO control modes in both WFS and DM coordinate spaces. Generates "
-                        "the modal basis for closed-loop control."
-};
 
 // Local variables
 
@@ -101,7 +93,7 @@ static int64_t update_align;
     X(".DMgeom.upAlign", &update_align, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                  \
       "update default align (if no DMmaskRM)")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(compute_control_modes, FPS_PARAMS);
 
 
 /**
@@ -522,7 +514,7 @@ static __attribute__((unused)) errno_t help_function()
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_control_modes_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -541,15 +533,15 @@ static errno_t compute_function()
         dcnimg);
         if (outimg.ID == -1) return RETURN_FAILURE;
     */
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+    MILK_PROCINFO_INIT(self)
 
     // custom initialization
-    if (CLIcmddata.cmdsettings->flags & CLICMDFLAG_PROCINFO)
+    if (self->rt->cmddata.cmdsettings->flags & CLICMDFLAG_PROCINFO)
     {
         // procinfo is accessible here
     }
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_LOOPSTART(self)
     {
         // MaskMode = 0  : tapered masking
         // MaskMode = 1  : STRICT masking
@@ -943,36 +935,24 @@ static errno_t compute_function()
         // streamprocess(inimg, outimg);
         // processinfo_update_output_stream(processinfo, outimg.im, NULL);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_cacao_computeCalib__compute_control_modes()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-
-                                 customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_computeCalib_compute_control_modes = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "compctrlmodes",
+                 .cmdkey           = "compctrlmodes",
+                 .description      = "compute AO control modes in WFS and DM space",
+                 .description_long = "Compute AO control modes in both WFS and DM coordinate "
+                                     "spaces. Generates the modal basis for closed-loop "
+                                     "control." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(compute_control_modes),
+    .compute   = compute_control_modes_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaocc-compctrlmodes", runnable_computeCalib_compute_control_modes);

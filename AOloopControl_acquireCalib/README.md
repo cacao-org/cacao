@@ -17,4 +17,4 @@ Module responsible for `AOloopControl_acquireCalib` functionality.
 
 ## Dependencies
 
-- Implicit standard: `milkdata`, `ImageStreamIO`, `CLIcore`
+- Implicit standard: `milkdata`, `ImageStreamIO`

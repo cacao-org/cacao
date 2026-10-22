@@ -9,10 +9,14 @@
  */
 
 
-#include <math.h>
+#include "milk_runnable.h"
 
-#include "CLIcore.h"
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "COREMOD_memory/COREMOD_memory.h"
+#include "pyramidWFStools.h"
 
 
 // define struct type for grid parameters
@@ -40,14 +44,6 @@ typedef struct
 } pyrWFSgrid;
 
 
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "pyWFSgridmatch",
-    .cmdkey           = "pyWFSgridmatch",
-    .description      = "Match pyramid WFS zrespM to grid",
-    .description_long = "Match a pyramid WFS zonal response matrix to a grid model. Aligns "
-                        "measured spot patterns to expected subaperture positions."
-};
-
 static char     inimname[FUNCTION_PARAMETER_STRMAXLEN];
 static double   spotsize = 0;
 static uint32_t dmxsize  = 0;
@@ -59,7 +55,7 @@ static uint32_t dmysize  = 0;
     X(".dmxsize", &dmxsize, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "DM x size")       \
     X(".dmysize", &dmysize, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "DM y size")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(pyWFSgridmatch, FPS_PARAMS);
 
 
 // compute spot positions from grid params
@@ -157,7 +153,7 @@ static double eval_gridmatch(pyrWFSgrid grid, float *spotxpos, float *spotypos, 
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t pyWFSgridmatch_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -172,7 +168,8 @@ static errno_t compute_function()
     //printf("naxes = %d\n", zrmimg.md->naxis);
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         uint32_t xsize = zrmimg.md->size[0];
         uint32_t ysize = zrmimg.md->size[1];
@@ -759,7 +756,7 @@ static errno_t compute_function()
         free(imarray);
         free(spotval);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
 
     DEBUG_TRACE_FEXIT();
@@ -767,24 +764,15 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_cacao_pyramidWFStools__pyWFSgridmatch()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_pyramidWFStools_pyWFSgridmatch = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "pyWFSgridmatch",
+                 .cmdkey           = "pyWFSgridmatch",
+                 .description      = "Match pyramid WFS zrespM to grid",
+                 .description_long = "Match a pyramid WFS zonal response matrix to a grid model. "
+                                     "Aligns measured spot patterns to expected subaperture "
+                                     "positions." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(pyWFSgridmatch),
+    .compute = pyWFSgridmatch_compute,
+};

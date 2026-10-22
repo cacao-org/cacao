@@ -26,4 +26,4 @@ Module responsible for `AOloopControl_perfTest` functionality.
 
 ## Dependencies
 
-- Implicit standard: `milkdata`, `ImageStreamIO`, `CLIcore`
+- Implicit standard: `milkdata`, `ImageStreamIO`, `milk_runnable.h`

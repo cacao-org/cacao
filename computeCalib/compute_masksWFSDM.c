@@ -13,7 +13,7 @@
  */
 
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 
@@ -23,12 +23,7 @@
 
 #include "info/info.h"
 
-static FPS_APP_INFO FPS_app_info = { .fps_name    = "compmasksWFSDM",
-                                     .cmdkey      = "compmasksWFSDM",
-                                     .description = "compute WFS and DM masks",
-                                     .description_long =
-                                         "Compute pupil masks for WFS and DM from response matrix "
-                                         "data. Identifies active subapertures and actuators." };
+#include "computeCalib.h"
 
 static char     zrespWFS[FUNCTION_PARAMETER_STRMAXLEN];
 static uint32_t dmxsize;
@@ -68,7 +63,7 @@ static float wfsmaskcoeff1;
     X(".wfsmask.coeff1", &wfsmaskcoeff1, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,        \
       "WFS mask coefficient 1")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(compute_masksWFSDM, FPS_PARAMS);
 
 
 // Optional custom configuration checks.
@@ -91,7 +86,7 @@ static __attribute__((unused)) errno_t help_function()
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_masksWFSDM_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -121,7 +116,8 @@ static errno_t compute_function()
     imageID IDDMmask;
     create_2Dimage_ID("dmmask", dmxsize, dmysize, &IDDMmask);
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         printf("Preparing DM map ... ");
         fflush(stdout);
@@ -215,7 +211,7 @@ static errno_t compute_function()
         printf("done\n");
         fflush(stdout);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
 
     DEBUG_TRACE_FEXIT();
@@ -223,29 +219,16 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_computeCalib__compmasksWFSDM()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info,
-                                 FPS_PARAMS,
-                                 compute_function,
-
-                                 customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_computeCalib_compute_masksWFSDM = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "compmasksWFSDM",
+                 .cmdkey           = "compmasksWFSDM",
+                 .description      = "compute WFS and DM masks",
+                 .description_long = "Compute pupil masks for WFS and DM from response matrix "
+                                     "data. Identifies active subapertures and actuators." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(compute_masksWFSDM),
+    .compute   = compute_masksWFSDM_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaocc-compmaskwfsdm", runnable_computeCalib_compute_masksWFSDM);
