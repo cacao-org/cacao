@@ -10,10 +10,12 @@
 #include "ImageStreamIO/ImageStruct.h"
 #include <math.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #include "statistic/statistic.h"
+
+#include "AOloopControl_DM/AOloopControl_DM.h"
 
 // poke mode values
 //
@@ -21,13 +23,6 @@ static float *pokemval  = NULL;
 static float *pokemfreq = NULL;
 static float *pokempha  = NULL;
 
-
-static FPS_APP_INFO FPS_app_info = { .fps_name    = "pokerndmodes",
-                                     .cmdkey      = "pokerndmodes",
-                                     .description = "poke modes with random amplitudes",
-                                     .description_long =
-                                         "Poke deformable mirror modes with random amplitudes for "
-                                         "system identification and response matrix calibration." };
 
 // Local variables pointers
 static char  outsname[FUNCTION_PARAMETER_STRMAXLEN];
@@ -45,7 +40,7 @@ static float pokefreq = 0;
     X(".pokefreq", &pokefreq, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),      \
       "poke frequency")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(pokerndmodes, FPS_PARAMS);
 
 
 // detailed help
@@ -130,7 +125,7 @@ static errno_t pokerndmodes(IMGID outimg, IMGID modecimg)
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t pokerndmodes_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -148,46 +143,31 @@ static errno_t compute_function()
         return RETURN_FAILURE;
     }
 
-    printf(" COMPUTE Flags = %ld\n", CLIcmddata.cmdsettings->flags);
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+    MILK_PROCINFO_INIT(self)
 
-    // custom initialization
-    printf(" COMPUTE Flags = %ld\n", CLIcmddata.cmdsettings->flags);
-    if (CLIcmddata.cmdsettings->flags & CLICMDFLAG_PROCINFO)
-    {
-        // procinfo is accessible here
-    }
-
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_LOOPSTART(self)
 
     pokerndmodes(outimg, modecimg);
     processinfo_update_output_stream(processinfo, outimg.im, NULL);
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_DM__pokerndmodes()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_DM_pokerndmodes = {
+    .kind = MILK_RUNNABLE_FPS,
+    .app = {
+        .fps_name    = "pokerndmodes",
+        .cmdkey      = "pokerndmodes",
+        .description = "poke modes with random amplitudes",
+        .description_long =
+            "Poke deformable mirror modes with random amplitudes for "
+            "system identification and response matrix calibration.",
+    },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(pokerndmodes),
+    .compute = pokerndmodes_compute,
+};

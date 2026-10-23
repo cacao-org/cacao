@@ -27,24 +27,19 @@
  * - Apply correction: mvalIN+mvalDMd -> mvalC
  * - Apply time delay, wite ouput: mvalC (WFSdelay)-> outmval
  */
-#include "ImageStreamIO/ImageStruct.h"
-
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
+#include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+
+#include "AOloopControl.h"
 
 // for random noise
 #include "statistic/statistic.h"
 
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "mfilttest",
-    .cmdkey           = "mfilttest",
-    .description      = "test input for modal filter",
-    .description_long = "Generate synthetic test input for the modal filter module. Produces known "
-                        "modal coefficient sequences for validation and benchmarking."
-};
 
 #define SNAMEPREFIX "tseqPF"
 
@@ -74,7 +69,7 @@ static float    DMlatency  = 0;
     X(".WFSlatency", &WFSlatency, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "WFS latency [frame]") \
     X(".DMlatency", &DMlatency, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "DM latency [frame]")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(modalfilter_test, FPS_PARAMS);
 
 
 static errno_t customCONFcheck()
@@ -142,7 +137,7 @@ static errno_t __attribute__((unused)) help_function()
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t modalfilter_test_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -206,7 +201,8 @@ static errno_t compute_function()
     // Time-delayed corrected input
     float *mvalCd = (float *) malloc(sizeof(float) * NBmode);
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
 
 
     // Write input disturbance
@@ -325,7 +321,7 @@ static errno_t compute_function()
     */
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     free(mvalC);
     free(mvalCd);
@@ -338,25 +334,16 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl__modalfilter_test()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_modalfilter_test = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "mfilttest",
+                 .cmdkey           = "mfilttest",
+                 .description      = "test input for modal filter",
+                 .description_long = "Generate synthetic test input for the modal filter module. "
+                                     "Produces known modal coefficient sequences for "
+                                     "validation and benchmarking." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(modalfilter_test),
+    .compute   = modalfilter_test_compute,
+    .confcheck = customCONFcheck,
+};

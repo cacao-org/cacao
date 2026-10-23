@@ -9,13 +9,14 @@
  * Templated upon the RTS19 code.
  *
  */
+#include "milk_runnable.h"
+
 #include "ImageStreamIO/ImageStruct.h"
 
 #include <math.h>
 #include <sys/socket.h> // For APD emergency shudown.
 #include <arpa/inet.h>  // For APD emergency shudown.
 
-#include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 static long NUM_APD_TOTAL = 216;
@@ -26,21 +27,13 @@ static float CURVATURE_REGZ                 = 1.0;
 static float SHACK_CENTROID_REGZ            = 1.0;
 static float one_sided_curv_integrator_gain = 0.01; // TODO FPS
 
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "ao188preproc",
-    .cmdkey           = "ao188preproc",
-    .description      = "AO188 APD Preprocessor",
-    .description_long = "Preprocess APD (Avalanche Photodiode) count data from the Subaru AO188 "
-                        "system. Converts photon counts to WFS slope signals."
-};
-
 static char apd_mat_name[FUNCTION_PARAMETER_STRMAXLEN];
 
 #define FPS_PARAMS(X)                                                                          \
     X(".wfsin", apd_mat_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
       "Wavefront sensor input")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(ao188_preprocessor, FPS_PARAMS);
 
 
 /*
@@ -227,7 +220,7 @@ static errno_t compute_lowfs_info(struct LOWFS_INFO_STRUCT *lowfs_struct, int16_
     return EXIT_SUCCESS;
 }
 
-static errno_t compute_function()
+static MILK_HOT errno_t ao188_preprocessor_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -280,8 +273,8 @@ static errno_t compute_function()
     float long_term_mean      = 0;
     float long_term_mean_gain = 0.002;
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         int curv_sign = apd_mat_in.im->kw[kw_idx_CURVSGN].value.numl;
 
@@ -353,7 +346,7 @@ static errno_t compute_function()
 
         processinfo_update_output_stream(processinfo, curv_2k_singlesided.im, NULL);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     // We should probably clean close the SHMs?
     // Why doesn't anything in milk ever call ImageStreamIO_closeIm?
@@ -368,29 +361,19 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_IOtools__AO188Preproc()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_IOtools_ao188_preprocessor = {
+    .kind = MILK_RUNNABLE_FPS,
+    .app = { .fps_name         = "ao188preproc",
+             .cmdkey           = "ao188preproc",
+             .description      = "AO188 APD Preprocessor",
+             .description_long = "Preprocess APD (Avalanche Photodiode) count data from the Subaru "
+                                 "AO188 system. Converts photon counts to WFS slope signals." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(ao188_preprocessor),
+    .compute   = ao188_preprocessor_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaoiot-ao188", runnable_AOloopControl_IOtools_ao188_preprocessor);
 
 /*
 cacao << EOF

@@ -7,6 +7,7 @@
  * @brief Mlat decode module
  */
 
+#include "milk_runnable.h"
 #include "ImageStreamIO/ImageStruct.h"
 /**
  * @file mlat_decode.c
@@ -16,10 +17,11 @@
 
 #include <math.h>
 
-#include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #include "linalgebra/linalgebra.h"
+
+#include "AOloopControl_perfTest.h"
 
 // input image names
 static char diffseqname[FUNCTION_PARAMETER_STRMAXLEN] = "";
@@ -27,19 +29,12 @@ static char diffseqname[FUNCTION_PARAMETER_STRMAXLEN] = "";
 static char outseqname[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
 
-static uint32_t *oversamp;
+static uint32_t oversamp = 0;
 
-static uint32_t *nb0start;
+static uint32_t nb0start = 0;
 
-static uint32_t *nb0end;
+static uint32_t nb0end = 0;
 
-
-static FPS_APP_INFO FPS_app_info = { .fps_name    = "mlatdsdecode",
-                                     .cmdkey      = "mlatdsdecode",
-                                     .description = "mlat diff sequence decode",
-                                     .description_long =
-                                         "Decode a latency measurement sequence to extract the "
-                                         "frame-by-frame delay between DM and WFS streams." };
 
 #define FPS_PARAMS(X)                                                                             \
     X(".diffseqname", diffseqname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
@@ -450,17 +445,17 @@ errno_t mlat_diffseq_decode(IMGID    inimg,
 }
 
 
-static FPS_CLI_BINDING my_bindings[] __attribute__((unused)) = { FPS_PARAMS(FPS_X_BINDING) };
-static int nb_bindings __attribute__((unused)) = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+MILK_PARAMS_DEFINE(mlat_decode, FPS_PARAMS);
 
-static CLICMDARGDEF farg[] = { FPS_PARAMS(FPS_X_FARG) };
-
-static CLICMDDATA CLIcmddata = { "mlatdsdecode", "mlat diff sequence decode",
-                                 CLICMD_FIELDS_DEFAULTS };
-
-static errno_t compute_function()
+static MILK_HOT errno_t mlat_decode_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
+
+    // Parameters are read before the processinfo macros resync them
+    if (dcfpsptr != NULL)
+    {
+        fpsresync_fps_to_modvar(dcfpsptr, dcfpsbindings, dcfpsnbindings, 1);
+    }
 
     IMGID inimg = imgid_make_from_name(diffseqname);
     resolveIMGID(&inimg, ERRMODE_WARN, dcimg, dcnimg);
@@ -472,16 +467,16 @@ static errno_t compute_function()
 
     IMGID outimg = imgid_make_from_name(outseqname);
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+    MILK_PROCINFO_INIT(self)
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_LOOPSTART(self)
     {
-        mlat_diffseq_decode(inimg, &outimg, *oversamp, *nb0start, *nb0end);
+        mlat_diffseq_decode(inimg, &outimg, oversamp, nb0start, nb0end);
 
         processinfo_update_output_stream(processinfo, outimg.im, NULL);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     imgid_free(&inimg);
     imgid_free(&outimg);
@@ -491,22 +486,15 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction()
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_perfTest__mlat_decode()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_perfTest_mlat_decode = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "mlatdsdecode",
+                 .cmdkey           = "mlatdsdecode",
+                 .description      = "mlat diff sequence decode",
+                 .description_long = "Decode a latency measurement sequence to extract the "
+                                     "frame-by-frame delay between DM and WFS streams." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(mlat_decode),
+    .compute = mlat_decode_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacaopt-mlatdecode", runnable_AOloopControl_perfTest_mlat_decode);

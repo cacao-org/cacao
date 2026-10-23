@@ -15,8 +15,7 @@
 #ifndef _AOLOOPCONTROL_PREDICTIVECONTROL_H
 #define _AOLOOPCONTROL_PREDICTIVECONTROL_H
 
-/** @brief Initialize module. */
-void __attribute__((constructor)) libinit_AOloopControl_PredictiveControl();
+#include "milk_runnable.h"
 
 /* ===============================================================================================
  */

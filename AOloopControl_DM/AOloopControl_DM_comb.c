@@ -14,14 +14,15 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_tools/COREMOD_tools.h"
 #include "COREMOD_arith/COREMOD_arith.h"
 #include "milk_compiler.h"
-#include "processinfo.h"
+
+#include "AOloopControl_DM/AOloopControl_DM.h"
 
 // Suppress -Wunknown-pragmas for _Pragma("omp ...") expansions
 // when OpenMP is globally disabled in the build.
@@ -29,20 +30,6 @@
 #    pragma GCC diagnostic push
 #    pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #endif
-
-/* ================================================================
- * 1.  FPS COMPONENT IDENTITY
- * ============================================================= */
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "dmcomb",
-    .cmdkey      = "dmcomb",
-    .description = "Combine DM channels",
-    .description_long =
-        "Combine multiple DM command channels (correction, offsets, perturbations) into a single "
-        "output. Applies per-channel gain, clipping limits, and response matrix mapping."
-};
-
 
 /* ================================================================
  * 2.  LOCAL PARAMETER VARIABLES
@@ -839,57 +826,39 @@ static void dmcomb_validate()
     X(".zpoffset.ch11", &zpoffsetch11, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT, "channel 11 zpoffset")
 
 
-/* ================================================================
- * 5.  BINDINGS, FARG, AND CLI DATA
- * ============================================================= */
-
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(dmcomb, FPS_PARAMS);
 
 
-/* ================================================================
- * 6.  COMPUTE WRAPPER
- * ============================================================= */
-
-static errno_t compute_function()
+static MILK_HOT errno_t dmcomb_compute(const MILK_RUNNABLE *self)
 {
     DMCOMB_STATE *state = dmcomb_init();
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     dmcomb_step(processinfo, milk_data.fpsptr, state);
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     dmcomb_cleanup(state);
     return RETURN_SUCCESS;
 }
 
 
-/* ================================================================
- * 7.  MILK MODULE REGISTRATION
- * ============================================================= */
-
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-errno_t CLIADDCMD_AOloopControl_DM__comb()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-
-/* ================================================================
- * 8.  STANDALONE ENTRY POINT
- * ============================================================= */
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_DM_comb = {
+    .kind = MILK_RUNNABLE_FPS,
+    .app = {
+        .fps_name    = "dmcomb",
+        .cmdkey      = "dmcomb",
+        .description = "Combine DM channels",
+        .description_long =
+            "Combine multiple DM command channels (correction, offsets, perturbations) into a "
+            "single output. Applies per-channel gain, clipping limits, and response matrix "
+            "mapping.",
+    },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(dmcomb),
+    .compute = dmcomb_compute,
+};
+EXPORT_FPSEXEC(cacao, "dmcomb", runnable_AOloopControl_DM_comb);
 
 #ifdef __GNUC__
 #    pragma GCC diagnostic pop

@@ -9,20 +9,15 @@
  *
  *
  */
-#include "ImageStreamIO/ImageStruct.h"
-
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
+#include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "modalCTRLstats",
-    .cmdkey           = "modalCTRLstats",
-    .description      = "compute modal control stats",
-    .description_long = "Compute real-time statistics of modal control loop performance. Tracks "
-                        "RMS residual, actuator stroke, and temporal power spectra per mode."
-};
+#include "AOloopControl.h"
 
 // Local variables pointers
 static uint64_t *AOloopindex;
@@ -106,7 +101,7 @@ static uint64_t *compstatswrite;
     X(".comp.statswrite", &compstatswrite, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                \
       "Write stats to file")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(modalCTRL_stats, FPS_PARAMS);
 
 
 // Optional custom configuration checks.
@@ -135,7 +130,7 @@ static errno_t __attribute__((unused)) help_function()
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -313,7 +308,7 @@ static errno_t compute_function()
     long   *block_cnt       = (long *) malloc(sizeof(long) * mblksizemax);
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+    MILK_PROCINFO_INIT(self)
 
     // block masks
     //
@@ -332,7 +327,7 @@ static errno_t compute_function()
     }
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_LOOPSTART(self)
     {
         printf("Stepping ...\n");
 
@@ -548,7 +543,7 @@ static errno_t compute_function()
             }
         }
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     for (uint32_t blki = 0; blki < NBblk; blki++)
     {
@@ -580,25 +575,16 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl__modalCTRL_stats()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_modalCTRL_stats = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "modalCTRLstats",
+                 .cmdkey           = "modalCTRLstats",
+                 .description      = "compute modal control stats",
+                 .description_long = "Compute real-time statistics of modal control loop "
+                                     "performance. Tracks RMS residual, actuator stroke, and "
+                                     "temporal power spectra per mode." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(modalCTRL_stats),
+    .compute   = modalCTRL_stats_compute,
+    .confcheck = customCONFcheck,
+};

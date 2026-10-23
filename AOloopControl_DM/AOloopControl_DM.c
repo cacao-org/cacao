@@ -21,36 +21,16 @@
 // Module short description
 #define MODULE_DESCRIPTION "AO loop Control DM operation"
 
-// Application to which module belongs
-#define MODULE_APPLICATION "cacao-cli"
-
-
-#include <string.h>
-
-#include "CLIcore.h"
-#include "COREMOD_memory/COREMOD_memory.h"
+#include "milk_runnable.h"
 
 #include "AOloopControl_DM/AOloopControl_DM.h"
 
+// Module registry: CLI exposure = membership here.
+static const MILK_RUNNABLE *const runnables[] = {
+    &runnable_AOloopControl_DM_comb,
+    &runnable_AOloopControl_DM_mk3Ddmgrid,
+    &runnable_AOloopControl_DM_DMturbulence,
+    &runnable_AOloopControl_DM_pokerndmodes,
+};
 
-#include "AOloopControl_DM_comb.h"
-
-#include "DMturbulence.h"
-#include "mk3Ddmgrid.h"
-#include "pokerndmodes.h"
-
-
-static errno_t init_module_CLI()
-{
-    CLIADDCMD_AOloopControl_DM__comb();
-
-    CLIADDCMD_AOloopControl_DM__mk3Ddmgrid();
-
-    CLIADDCMD_AOloopControl_DM__atmturbulence();
-
-    CLIADDCMD_AOloopControl_DM__pokerndmodes();
-
-    return RETURN_SUCCESS;
-}
-
-MILK_MODULE(AOloopControl_DM, init_module_CLI, NULL);
+MILK_MODULE_RUNNABLES(AOloopControl_DM, NULL, runnables);

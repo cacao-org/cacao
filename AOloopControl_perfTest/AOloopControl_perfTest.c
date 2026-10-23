@@ -28,9 +28,6 @@
 // Module short description
 #define MODULE_DESCRIPTION "AO loop control performance monitoring and testing"
 
-// Application to which module belongs
-#define MODULE_APPLICATION "cacao-cli"
-
 #define _GNU_SOURCE
 
 
@@ -43,7 +40,7 @@
 #include <sys/stat.h>
 #include <unistd.h> /* chdir */
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -53,14 +50,6 @@
 
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_perfTest/AOloopControl_perfTest.h"
-
-#include "compRMsensitivity.h"
-#include "mlat.h"
-#include "mlat_decode.h"
-
-#include "streamlogtimesample.h"
-#include "wfsrefoptimselect.h"
-#include "zoptsearch.h"
 
 
 #ifdef _OPENMP
@@ -80,22 +69,16 @@ typedef struct
 } StreamDataFile;
 
 
-static errno_t init_module_CLI()
-{
-    CLIADDCMD_AOloopControl_perfTest__compRMsensitivity();
-    CLIADDCMD_AOloopControl_perfTest__mlat();
-    CLIADDCMD_AOloopControl_perfTest__mlat_decode();
+static const MILK_RUNNABLE *const runnables[] = {
+    &runnable_AOloopControl_perfTest_compRMsensitivity,
+    &runnable_AOloopControl_perfTest_mlat,
+    &runnable_AOloopControl_perfTest_mlat_decode,
+    &runnable_AOloopControl_perfTest_streamlogtimesample,
+    &runnable_AOloopControl_perfTest_wfsrefoptimselect,
+    &runnable_AOloopControl_perfTest_zoptsearch,
+};
 
-    CLIADDCMD_AOloopControl_perfTest__streamlogtimesample();
-
-    CLIADDCMD_AOloopControl_perfTest__WFSref_optimize_PSFselection();
-
-    CLIADDCMD_AOloopControl_perfTest__zoptsearch();
-
-    return RETURN_SUCCESS;
-}
-
-MILK_MODULE(AOloopControl_perfTest, init_module_CLI, NULL);
+MILK_MODULE_RUNNABLES(AOloopControl_perfTest, NULL, runnables);
 
 
 /**

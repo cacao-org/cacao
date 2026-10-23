@@ -16,8 +16,9 @@
 #ifndef _PYRAMIDWFSTOOLS_H
 #define _PYRAMIDWFSTOOLS_H
 
-/** @brief Initialize module */
-void __attribute__((constructor)) libinit_pyramidWFStools();
+#include "milk_runnable.h"
+
+extern const MILK_RUNNABLE runnable_pyramidWFStools_pyWFSgridmatch;
 
 
 #endif

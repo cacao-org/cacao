@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <time.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "timeutils.h"
@@ -25,24 +25,10 @@
 #include "processinfo.h"
 #include "processtools.h"
 
-#include "modalfilter.h"
+#include "AOloopControl.h"
 
 /* ================================================================
- * 1.  FPS COMPONENT IDENTITY
- * ============================================================= */
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "mfilt",
-    .cmdkey      = "modalfilter",
-    .description = "Modal Filtering AO processing",
-    .description_long =
-        "Apply modal filtering in a real-time AO control loop. Decomposes WFS signals into modes, "
-        "applies per-mode gains and temporal filters, and reconstructs DM commands."
-};
-
-
-/* ================================================================
- * 2.  LOCAL PARAMETER VARIABLES
+ * 1.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
 static char     inmval[FUNCTION_PARAMETER_STRMAXLEN]  = "";
@@ -595,7 +581,7 @@ static void __attribute__((unused)) modalfilter_validate()
 
 
 /* ================================================================
- * 3.  UNIFIED PARAMETER TABLE (X-Macro)
+ * 2.  UNIFIED PARAMETER TABLE (X-Macro)
  * ============================================================= */
 
 #define FPS_PARAMS(X)                                                                             \
@@ -700,19 +686,14 @@ static void __attribute__((unused)) modalfilter_validate()
 
 
 /* ================================================================
- * 5.  BINDINGS, FARG, AND CLI DATA
+ * 4.  COMPUTE WRAPPER
  * ============================================================= */
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(modalfilter, FPS_PARAMS);
 
-
-/* ================================================================
- * 6.  COMPUTE WRAPPER
- * ============================================================= */
-
-static errno_t compute_function()
+static MILK_HOT errno_t modalfilter_compute(const MILK_RUNNABLE *self)
 {
-    IMGID imginWFS = imgid_make_from_fpskey(inmval, FPS_name, ".inmval");
+    IMGID imginWFS = imgid_make_from_fpskey(inmval, dcfpsname, ".inmval");
     resolveIMGID(&imginWFS, ERRMODE_WARN, dcimg, dcnimg);
     if (imginWFS.ID == -1)
     {
@@ -725,39 +706,27 @@ static errno_t compute_function()
 
     MFILT_STATE *state = modal_filter_init(NBmode);
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     modal_filter_step(processinfo, milk_data.fpsptr, imginWFS.im, imgout.im, state);
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     modal_filter_cleanup(state);
     return RETURN_SUCCESS;
 }
 
 
-/* ================================================================
- * 7.  MILK MODULE REGISTRATION
- * ============================================================= */
-
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-errno_t CLIADDCMD_AOloopControl__modalfilter()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-
-/* ================================================================
- * 8.  STANDALONE ENTRY POINT
- * ============================================================= */
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_modalfilter = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name    = "mfilt",
+                 .cmdkey      = "modalfilter",
+                 .description = "Modal Filtering AO processing",
+                 .description_long =
+                     "Apply modal filtering in a real-time AO control loop. Decomposes WFS "
+                     "signals into modes, applies per-mode gains and temporal filters, and "
+                     "reconstructs DM commands." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(modalfilter),
+    .compute = modalfilter_compute,
+};
+EXPORT_FPSEXEC(cacao, "mfilt", runnable_AOloopControl_modalfilter);

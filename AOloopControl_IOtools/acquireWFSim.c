@@ -8,23 +8,11 @@
  */
 
 
+#include "milk_runnable.h"
+
 #include <math.h>
 
-#include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-
-
-/* ================================================================
- * 1.  FPS COMPONENT IDENTITY
- * ============================================================= */
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "acquireWFS",
-    .cmdkey           = "acquireWFS",
-    .description      = "acquire WFS image",
-    .description_long = "Acquire and preprocess wavefront sensor images from a camera stream. "
-                        "Applies background subtraction and normalization."
-};
 
 
 /* ================================================================
@@ -90,21 +78,10 @@ static char     *wfszposname      = NULL;
     X(".wfszpo", &wfszposname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS zero point offset")
 
 
-/* ================================================================
- * 5.  BINDINGS, FARG, AND CLI DATA
- * ============================================================= */
-
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(acquireWFSim, FPS_PARAMS);
 
 
-// detailed help
-static errno_t __attribute__((unused)) help_function()
-{
-    return RETURN_SUCCESS;
-}
-
-
-static errno_t compute_function()
+static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -216,7 +193,8 @@ static errno_t compute_function()
     struct timespec time1, time2;
     long            n_print_timings = 5000;
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         // ===========================================
         // COPY FRAME TO LOCAL MEMORY BUFFER
@@ -643,37 +621,23 @@ static errno_t compute_function()
         processinfo_WriteMessage_fmt(processinfo, "d%d n%d s%d a%d c%d", status_darksub,
                                      status_normalize, status_refsub, status_ave, status_wfsrefc);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
-/* ================================================================
- * 7.  MILK MODULE REGISTRATION
- * ============================================================= */
-
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-errno_t CLIADDCMD_AOloopControl_IOtools__acquireWFSim()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-
-/* ================================================================
- * 8.  STANDALONE ENTRY POINT
- * ============================================================= */
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_IOtools_acquireWFSim = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "acquireWFS",
+                 .cmdkey           = "acquireWFS",
+                 .description      = "acquire WFS image",
+                 .description_long = "Acquire and preprocess wavefront sensor images from a camera "
+                                     "stream. Applies background subtraction and normalization." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(acquireWFSim),
+    .compute = acquireWFSim_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacaoiot-acquireWFS", runnable_AOloopControl_IOtools_acquireWFSim);
+EXPORT_FPSEXEC(cacao, "cacaoiot-acqWFS", runnable_AOloopControl_IOtools_acquireWFSim);

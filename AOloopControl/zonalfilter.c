@@ -13,10 +13,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "timeutils.h"
-#include "zonalfilter.h"
+#include "AOloopControl.h"
 #include "fps.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "processinfo.h"
@@ -26,21 +26,7 @@
 
 
 /* ================================================================
- * 1.  FPS COMPONENT IDENTITY
- * ============================================================= */
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "zonalfilter",
-    .cmdkey      = "zonalfilter",
-    .description = "zonal filtering",
-    .description_long =
-        "Apply zonal (per-actuator) filtering in a real-time AO control loop. Processes WFS "
-        "signals directly in actuator space without modal decomposition."
-};
-
-
-/* ================================================================
- * 2.  LOCAL PARAMETER VARIABLES
+ * 1.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
 static uint64_t *AOloopindex = NULL;
@@ -58,7 +44,7 @@ static float *zvalDMc = NULL;
 
 
 /* ================================================================
- * 3.  UNIFIED PARAMETER TABLE (X-Macro)
+ * 2.  UNIFIED PARAMETER TABLE (X-Macro)
  * ============================================================= */
 
 #define FPS_PARAMS(X)                                                                            \
@@ -84,7 +70,7 @@ static float *zvalDMc = NULL;
 
 
 /* ================================================================
- * 4.  COMPUTATION LOGIC
+ * 3.  COMPUTATION LOGIC
  * ============================================================= */
 
 static void zonal_filter_step(PROCESSINFO *processinfo,
@@ -170,17 +156,12 @@ static void zonal_filter_step(PROCESSINFO *processinfo,
 
 
 /* ================================================================
- * 5.  BINDINGS, FARG, AND CLI DATA
+ * 4.  COMPUTE WRAPPER
  * ============================================================= */
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(zonalfilter, FPS_PARAMS);
 
-
-/* ================================================================
- * 6.  COMPUTE WRAPPER
- * ============================================================= */
-
-static errno_t compute_function()
+static MILK_HOT errno_t zonalfilter_compute(const MILK_RUNNABLE *self)
 {
     IMGID imginDM = imgid_make_from_name(inzval);
     resolveIMGID(&imginDM, ERRMODE_WARN, dcimg, dcnimg);
@@ -220,41 +201,29 @@ static errno_t compute_function()
     WRITE_IMAGENAME(name, "aol%lu_zlimitfact", *AOloopindex);
     IMGID imgzlimitfact = stream_connect_create_2Df32(name, dmxsize, dmysize);
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     zonal_filter_step(processinfo, milk_data.fpsptr, imginDM.im, imgout.im, imgzgain.im,
                       imgzgainfact.im, imgzmult.im, imgzmultfact.im, imgzzeropoint.im, imgzlimit.im,
                       imgzlimitfact.im);
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     free(zvalDMc);
     return RETURN_SUCCESS;
 }
 
 
-/* ================================================================
- * 7.  MILK MODULE REGISTRATION
- * ============================================================= */
-
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-errno_t CLIADDCMD_AOloopControl__zonalfilter()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-
-/* ================================================================
- * 8.  STANDALONE ENTRY POINT
- * ============================================================= */
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_zonalfilter = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name    = "zonalfilter",
+                 .cmdkey      = "zonalfilter",
+                 .description = "zonal filtering",
+                 .description_long =
+                     "Apply zonal (per-actuator) filtering in a real-time AO control loop. "
+                     "Processes WFS signals directly in actuator space without modal "
+                     "decomposition." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(zonalfilter),
+    .compute = zonalfilter_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacao-zonalfilter", runnable_AOloopControl_zonalfilter);

@@ -8,25 +8,17 @@
  *
  */
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 
 
 #include "AOloopControl_compTools/AOloopControl_compTools.h"
-#include "computeCalib/computeHadamard.h"
+#include "computeCalib/computeCalib.h"
 
 #include "image_gen/image_gen.h"
 
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "acqWFSlincal",
-    .cmdkey           = "acqWFSlincal",
-    .description      = "acquire linear WFS calibration",
-    .description_long = "Acquire WFS linear calibration data by systematically applying DM pokes "
-                        "and recording WFS responses. Builds the response matrix."
-};
 
 // Local variables pointers
 static uint32_t *AOloopindex;
@@ -163,7 +155,7 @@ static char exec_post_mkLODMmodes[FUNCTION_PARAMETER_STRMAXLEN]  = "";
       FPFLAG_DEFAULT_INPUT | FPFLAG_FILE_RUN_REQUIRED, "Make DM low order modes")
 
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(acqWFSlincal, FPS_PARAMS);
 
 
 static imageID mkSimpleZpokeM(uint32_t dmxsize, uint32_t dmysize, char *IDout_name)
@@ -471,12 +463,12 @@ static errno_t __attribute__((unused)) help_function()
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t acqWFSlincal_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_INIT(self);
+    MILK_PROCINFO_LOOPSTART(self);
     {
         // Compute Poke Matrix if required
         //
@@ -499,33 +491,23 @@ static errno_t compute_function()
             }
         }
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self);
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_milk_AOloopControl_acquireCalib__acquireWFSlincalib()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_acquireCalib_acqWFSlincal = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name    = "acqWFSlincal",
+                 .cmdkey      = "acqWFSlincal",
+                 .description = "acquire linear WFS calibration",
+                 .description_long =
+                     "Acquire WFS linear calibration data by systematically applying DM pokes "
+                     "and recording WFS responses. Builds the response matrix." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(acqWFSlincal),
+    .compute   = acqWFSlincal_compute,
+    .confcheck = customCONFcheck,
+};

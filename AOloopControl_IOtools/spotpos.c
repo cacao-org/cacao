@@ -8,22 +8,15 @@
  *
  *
  */
+#include "milk_runnable.h"
+
 #include "ImageStreamIO/ImageStruct.h"
 #include <float.h>
 
-#include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 // quicksort
 #include "COREMOD_tools/COREMOD_tools.h"
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "spotpos",
-    .cmdkey           = "spotpos",
-    .description      = "measure spot position, photocenter",
-    .description_long = "Measure the precise centroid position of spots in a WFS image using "
-                        "photocenter calculation with configurable weighting."
-};
 
 static char inimname[FUNCTION_PARAMETER_STRMAXLEN];
 static char indarkname[FUNCTION_PARAMETER_STRMAXLEN];
@@ -80,16 +73,11 @@ static char outTTvec[FUNCTION_PARAMETER_STRMAXLEN];
     X(".outTTvec", outTTvec, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT,                      \
       "output 2D TT vector (control TT)")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(spotpos, FPS_PARAMS);
 
 
 // Optional custom configuration checks
 // Runs at every configuration check loop iteration
-//
-// To use this function, set :
-// CLIcmddata.FPS_customCONFcheck = customCONFcheck
-// when registering function
-// (see end of this file)
 //
 static errno_t customCONFcheck()
 {
@@ -287,7 +275,7 @@ static errno_t spot_position(IMGID *inimg,
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t spotpos_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -315,9 +303,9 @@ static errno_t compute_function()
         outTTvecimg = stream_connect_create_2D(outTTvec, 2, 1, _DATATYPE_FLOAT);
     }
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_INIT
+    MILK_PROCINFO_INIT(self)
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_LOOPSTART
+    MILK_PROCINFO_LOOPSTART(self)
     {
         spot_position(&inimg, &indarkimg, spotsize, spotx0, spoty0, searchrad, &outposimg,
                       mappingXX, mappingYY, mappingXY, mappingYX, &outTTvecimg);
@@ -327,7 +315,7 @@ static errno_t compute_function()
         processinfo_update_output_stream(processinfo, outposimg.im, NULL);   // outposimg
         processinfo_update_output_stream(processinfo, outTTvecimg.im, NULL); // outTTvecimg
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     imgid_free(&inimg);
     imgid_free(&indarkimg);
@@ -339,26 +327,16 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_IOtools__spotpos()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_IOtools_spotpos = {
+    .kind = MILK_RUNNABLE_FPS,
+    .app  = { .fps_name         = "spotpos",
+              .cmdkey           = "spotpos",
+              .description      = "measure spot position, photocenter",
+              .description_long = "Measure the precise centroid position of spots in a WFS image "
+                                  "using photocenter calculation with configurable weighting." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(spotpos),
+    .compute   = spotpos_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaoiot-spotpos", runnable_AOloopControl_IOtools_spotpos);

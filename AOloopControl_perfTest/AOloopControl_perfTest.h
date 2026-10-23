@@ -13,6 +13,14 @@
 #ifndef _AOLOOPCONTROL_PERFTEST_H
 #define _AOLOOPCONTROL_PERFTEST_H
 
+#include "milk_runnable.h"
+
+extern const MILK_RUNNABLE runnable_AOloopControl_perfTest_compRMsensitivity;
+extern const MILK_RUNNABLE runnable_AOloopControl_perfTest_mlat;
+extern const MILK_RUNNABLE runnable_AOloopControl_perfTest_mlat_decode;
+extern const MILK_RUNNABLE runnable_AOloopControl_perfTest_streamlogtimesample;
+extern const MILK_RUNNABLE runnable_AOloopControl_perfTest_wfsrefoptimselect;
+extern const MILK_RUNNABLE runnable_AOloopControl_perfTest_zoptsearch;
 
 errno_t AOloopControl_perfTest_mkSyncStreamFiles2(char  *datadir,
                                                   char  *stream0,

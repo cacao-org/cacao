@@ -7,21 +7,14 @@
  * @brief   camera simulation for WFS
  *
  */
+#include "milk_runnable.h"
+
 #include "ImageStreamIO/ImageStruct.h"
 
-#include "CLIcore.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 
 #include "statistic/statistic.h"
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "WFScamsim",
-    .cmdkey           = "WFScamsim",
-    .description      = "simulate WFS camera",
-    .description_long = "Simulate a wavefront sensor camera by applying photon noise, readout "
-                        "noise, and detector response to an ideal WFS image."
-};
 
 // Local variables
 static char     wfssignal_in[FUNCTION_PARAMETER_STRMAXLEN];
@@ -48,7 +41,7 @@ static float    camRON;
     X(".camRON", &camRON, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT,                                \
       "camera readout noise [e-] (neg = 0)")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(WFScamsim, FPS_PARAMS);
 
 
 // Optional custom configuration checks.
@@ -97,7 +90,7 @@ static errno_t __attribute__((unused)) help_function()
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t WFScamsim_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -130,7 +123,8 @@ static errno_t compute_function()
     }
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         // scale flux
         // ensure there is no negative value
@@ -239,7 +233,7 @@ static errno_t compute_function()
 
         processinfo_update_output_stream(processinfo, wfsoutimg.im, NULL);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     imgid_free(&wfssignalimg);
     imgid_free(&wfsdarkimg);
@@ -250,26 +244,16 @@ static errno_t compute_function()
     return RETURN_SUCCESS;
 }
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_IOtools__WFScamsim()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    CLIcmddata.FPS_customCONFcheck = customCONFcheck;
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2_CONFCHECK(FPS_app_info, FPS_PARAMS, compute_function, customCONFcheck)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_IOtools_WFScamsim = {
+    .kind = MILK_RUNNABLE_FPS,
+    .app  = { .fps_name         = "WFScamsim",
+              .cmdkey           = "WFScamsim",
+              .description      = "simulate WFS camera",
+              .description_long = "Simulate a wavefront sensor camera by applying photon noise, "
+                                  "readout noise, and detector response to an ideal WFS image." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(WFScamsim),
+    .compute   = WFScamsim_compute,
+    .confcheck = customCONFcheck,
+};
+EXPORT_FPSEXEC(cacao, "cacaoiot-wfscamsim", runnable_AOloopControl_IOtools_WFScamsim);

@@ -14,7 +14,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "ImageStreamIO/ImageStruct.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_arith/COREMOD_arith.h"
@@ -25,25 +25,10 @@
 #include "image_gen/image_gen.h"
 #include "image_basic/image_basic.h"
 
-#include "fps.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-#include "processinfo.h"
-#include "processtools.h"
 #include "statistic/statistic.h"
 
-/* ================================================================
- * 1.  FPS COMPONENT IDENTITY
- * ============================================================= */
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "dmturb",
-    .cmdkey      = "atmturbulence",
-    .description = "DM turbulence simulation",
-    .description_long =
-        "Simulate atmospheric turbulence on a deformable mirror by applying time-evolving "
-        "Kolmogorov phase screens. Used for closed-loop testing without a real atmosphere."
-};
-
+#include "AOloopControl_DM/AOloopControl_DM.h"
 
 /* ================================================================
  * 2.  LOCAL PARAMETER VARIABLES
@@ -504,52 +489,33 @@ static void dmturb_validate()
 }
 
 
-/* ================================================================
- * 5.  BINDINGS, FARG, AND CLI DATA
- * ============================================================= */
-
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(dmturb, FPS_PARAMS);
 
 
-/* ================================================================
- * 6.  COMPUTE WRAPPER
- * ============================================================= */
-
-static errno_t compute_function()
+static MILK_HOT errno_t dmturb_compute(const MILK_RUNNABLE *self)
 {
     DMTURB_STATE *state = dmturb_init();
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     dmturb_step(processinfo, milk_data.fpsptr, state);
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
     dmturb_cleanup(state);
     return RETURN_SUCCESS;
 }
 
 
-/* ================================================================
- * 7.  MILK MODULE REGISTRATION
- * ============================================================= */
-
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-errno_t CLIADDCMD_AOloopControl_DM__atmturbulence()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-
-/* ================================================================
- * 8.  STANDALONE ENTRY POINT
- * ============================================================= */
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_DM_DMturbulence = {
+    .kind = MILK_RUNNABLE_FPS,
+    .app = {
+        .fps_name    = "dmturb",
+        .cmdkey      = "atmturbulence",
+        .description = "DM turbulence simulation",
+        .description_long =
+            "Simulate atmospheric turbulence on a deformable mirror by applying time-evolving "
+            "Kolmogorov phase screens. Used for closed-loop testing without a real atmosphere.",
+    },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(dmturb),
+    .compute = dmturb_compute,
+};
+EXPORT_FPSEXEC(cacao, "dmturb", runnable_AOloopControl_DM_DMturbulence);

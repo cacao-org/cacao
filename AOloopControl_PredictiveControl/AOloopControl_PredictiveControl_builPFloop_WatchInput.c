@@ -41,23 +41,13 @@
 
 #include <fitsio.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
-#if defined(__has_include)
-#    if __has_include("processinfo_setup.h")
-#        include "processinfo_setup.h"
-#    endif
-#endif
+#include "processinfo_setup.h"
 
-#ifndef PROCESSINFO_AUX_SETUP
-#    define PROCESSINFO_AUX_SETUP(...) \
-        do                             \
-        {                              \
-        } while (0)
-#endif
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
 

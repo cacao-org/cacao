@@ -11,7 +11,7 @@
 #include <math.h>
 #include <time.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -19,43 +19,31 @@
 #include "COREMOD_tools/COREMOD_tools.h" // quicksort
 #include "statistic/statistic.h"         // ran1()
 
-
-/* ================================================================
- * 1.  FPS COMPONENT IDENTITY
- * ============================================================= */
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name    = "mlat",
-    .cmdkey      = "mlat",
-    .description = "measure latency between DM and WFS",
-    .description_long =
-        "Measure the end-to-end latency between DM commands and WFS responses. Applies a known DM "
-        "pattern and cross-correlates with WFS to find the delay."
-};
+#include "AOloopControl_perfTest.h"
 
 
 /* ================================================================
  * 2.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
-static char     *dmstream      = NULL;
-static char     *wfsstream     = NULL;
-static float    *frameratewait = NULL;
-static float    *OPDamp        = NULL;
-static char     *pokemap       = NULL;
-static float    *CPA           = NULL;
-static uint32_t *NBiter        = NULL;
-static uint32_t *wfsNBframemax = NULL;
-static float    *wfsdt         = NULL;
-static float    *twaitus       = NULL;
-static float    *refdtoffset   = NULL;
-static float    *dtoffset      = NULL;
-static float    *framerateHz   = NULL;
-static float    *latencyfr     = NULL;
-static int64_t  *saveraw       = NULL;
-static int64_t  *saveseq       = NULL;
-static uint32_t *seqNBframe    = NULL;
-static float    *seqdtframe    = NULL;
+static char     dmstream[FUNCTION_PARAMETER_STRMAXLEN]  = "";
+static char     wfsstream[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static float    frameratewait                           = 0.0f;
+static float    OPDamp                                  = 0.0f;
+static char     pokemap[FUNCTION_PARAMETER_STRMAXLEN]   = "";
+static float    CPA                                     = 0.0f;
+static uint32_t NBiter                                  = 0;
+static uint32_t wfsNBframemax                           = 0;
+static float    wfsdt                                   = 0.0f;
+static float    twaitus                                 = 0.0f;
+static float    refdtoffset                             = 0.0f;
+static float    dtoffset                                = 0.0f;
+static float    framerateHz                             = 0.0f;
+static float    latencyfr                               = 0.0f;
+static int32_t  saveraw                                 = 0;
+static int32_t  saveseq                                 = 0;
+static uint32_t seqNBframe                              = 0;
+static float    seqdtframe                              = 0.0f;
 
 
 /* ================================================================
@@ -63,10 +51,10 @@ static float    *seqdtframe    = NULL;
  * ============================================================= */
 
 #define FPS_PARAMS(X)                                                                             \
-    X(".dmstream", &dmstream, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "DM stream")            \
-    X(".wfsstream", &wfsstream, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS stream")         \
+    X(".dmstream", dmstream, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "DM stream")             \
+    X(".wfsstream", wfsstream, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS stream")          \
     X(".OPDamp", &OPDamp, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "poke amplitude [um]")         \
-    X(".pokemap", &pokemap, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "optional DM poke map")   \
+    X(".pokemap", pokemap, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "optional DM poke map")    \
     X(".CPA", &CPA, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "Cycles/aperture [float]")           \
     X(".frameratewait", &frameratewait, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                  \
       "time for frame rate measurement")                                                          \
@@ -92,16 +80,18 @@ static float    *seqdtframe    = NULL;
       "seq cube time resolution [fr]")
 
 
-/* ================================================================
- * 5.  BINDINGS, FARG, AND CLI DATA
- * ============================================================= */
-
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(mlat, FPS_PARAMS);
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
+
+    // Parameters are read before the processinfo macros resync them
+    if (dcfpsptr != NULL)
+    {
+        fpsresync_fps_to_modvar(dcfpsptr, dcfpsbindings, dcfpsnbindings, 1);
+    }
 
     // connect to DM
     IMGID imgdm = imgid_make_from_name(dmstream);
@@ -137,7 +127,7 @@ static errno_t compute_function()
         uint32_t naxes[3];
         naxes[0] = imgwfs.md->size[0];
         naxes[1] = imgwfs.md->size[1];
-        naxes[2] = *wfsNBframemax;
+        naxes[2] = wfsNBframemax;
 
         {
             IMGID imgwfsc         = imgid_make_from_name("_testwfsc");
@@ -152,14 +142,14 @@ static errno_t compute_function()
         }
     }
 
-    float *latencyarray = (float *) malloc(sizeof(float) * *NBiter);
+    float *latencyarray = (float *) malloc(sizeof(float) * NBiter);
     if (latencyarray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
         abort(); // or handle error in other ways
     }
 
-    float *latencysteparray = (float *) malloc(sizeof(float) * *NBiter);
+    float *latencysteparray = (float *) malloc(sizeof(float) * NBiter);
     if (latencysteparray == NULL)
     {
         PRINT_ERROR("malloc returns NULL pointer");
@@ -170,8 +160,8 @@ static errno_t compute_function()
     // Prepare output diff cube sequence
     // if saveraw = ON
     //
-    long   diffseqsize    = *seqNBframe; // number of slices
-    float  diffseqdtframe = *seqdtframe; // time increment per slice [frame]
+    long   diffseqsize    = seqNBframe; // number of slices
+    float  diffseqdtframe = seqdtframe; // time increment per slice [frame]
     float *diffseqkkcnt =
         (float *) malloc(sizeof(float) * diffseqsize); // count how many frames go in each slice
     for (int diffseqkk = 0; diffseqkk < diffseqsize; diffseqkk++)
@@ -199,8 +189,7 @@ static errno_t compute_function()
                 float x                                 = (2.0 * ii - 1.0 * dmxsize) / dmxsize;
                 float y                                 = (2.0 * jj - 1.0 * dmxsize) / dmysize;
                 dcimg[IDdm0].array.F[jj * dmxsize + ii] = 0.0;
-                dcimg[IDdm1].array.F[jj * dmxsize + ii] =
-                    (*OPDamp) * (sinf(*CPA * x) * sinf(*CPA * y));
+                dcimg[IDdm1].array.F[jj * dmxsize + ii] = OPDamp * (sinf(CPA * x) * sinf(CPA * y));
                 RMStot += dcimg[IDdm1].array.F[jj * dmxsize + ii] *
                           dcimg[IDdm1].array.F[jj * dmxsize + ii];
             }
@@ -213,7 +202,7 @@ static errno_t compute_function()
         {
             for (uint32_t jj = 0; jj < dmysize; jj++)
             {
-                dcimg[IDdm1].array.F[jj * dmxsize + ii] *= (*OPDamp) / RMStot;
+                dcimg[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
             }
         }
 
@@ -222,7 +211,8 @@ static errno_t compute_function()
     }
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         // Measure coarse estimate of frame rate
         //
@@ -237,7 +227,7 @@ static errno_t compute_function()
             long stringmaxlen = 200;
             char msgstring[stringmaxlen];
             snprintf(msgstring, stringmaxlen, "Measuring approx frame rate over %.1f sec",
-                     *frameratewait);
+                     frameratewait);
             processinfo_WriteMessage(processinfo, msgstring);
 
             clock_gettime(CLOCK_MILK, &tnow);
@@ -245,7 +235,7 @@ static errno_t compute_function()
             wfscntstart   = imgwfs.md->cnt0;
 
             {
-                long nsec           = (long) (1000000000 * (*frameratewait));
+                long nsec           = (long) (1000000000 * frameratewait);
                 long nsec_remaining = nsec % 1000000000;
                 long sec            = nsec / 1000000000;
 
@@ -256,14 +246,13 @@ static errno_t compute_function()
                 nanosleep(&timesleep, NULL);
             }
 
-            //        usleep( (long)  (1000000 * (*frameratewait)) );
 
             clock_gettime(CLOCK_MILK, &tnow);
             tdouble_end = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
             wfscntend   = imgwfs.md->cnt0;
-            *wfsdt      = (tdouble_end - tdouble_start) / (wfscntend - wfscntstart);
+            wfsdt       = (tdouble_end - tdouble_start) / (wfscntend - wfscntstart);
 
-            printf("wfs dt = %f sec\n", *wfsdt);
+            printf("wfs dt = %f sec\n", wfsdt);
 
             if (wfscntend - wfscntstart < 5)
             {
@@ -276,12 +265,12 @@ static errno_t compute_function()
             else
             {
                 framerateOK = 1;
-                snprintf(msgstring, stringmaxlen, "frame period wfsdt = %f sec  ( %f Hz )\n",
-                         *wfsdt, 1.0 / *wfsdt);
+                snprintf(msgstring, stringmaxlen, "frame period wfsdt = %f sec  ( %f Hz )\n", wfsdt,
+                         1.0 / wfsdt);
                 processinfo_WriteMessage(processinfo, msgstring);
 
                 // This is approximate, will be measured more precisely later on
-                *framerateHz = 1.0 / (*wfsdt);
+                framerateHz = 1.0 / wfsdt;
             }
         }
 
@@ -292,8 +281,8 @@ static errno_t compute_function()
         {
             // store all raw measurements in these arrays
             //
-            double *valarrayall = (double *) malloc(sizeof(double) * (*wfsNBframemax) * (*NBiter));
-            double *dtarrayall  = (double *) malloc(sizeof(double) * (*wfsNBframemax) * (*NBiter));
+            double *valarrayall = (double *) malloc(sizeof(double) * wfsNBframemax * NBiter);
+            double *dtarrayall  = (double *) malloc(sizeof(double) * wfsNBframemax * NBiter);
 
             // number of raw measurements
             int NBrawmeas = 0;
@@ -306,12 +295,12 @@ static errno_t compute_function()
             double dtmax; // Max running time per iteration
 
             // update timing parameters for poke test
-            dtmax        = *wfsdt * (*wfsNBframemax) * 1.2 + 0.5;
-            *twaitus     = 1000000.0 * *wfsdt * 3.0; // wait 3 frames
-            *refdtoffset = 0.5 * *wfsdt;
+            dtmax       = wfsdt * wfsNBframemax * 1.2 + 0.5;
+            twaitus     = 1000000.0 * wfsdt * 3.0; // wait 3 frames
+            refdtoffset = 0.5 * wfsdt;
 
             struct timespec *tarray;
-            tarray = (struct timespec *) malloc(sizeof(struct timespec) * (*wfsNBframemax));
+            tarray = (struct timespec *) malloc(sizeof(struct timespec) * wfsNBframemax);
             if (tarray == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
@@ -319,7 +308,7 @@ static errno_t compute_function()
             }
 
             double *dtarray;
-            dtarray = (double *) malloc(sizeof(double) * (*wfsNBframemax));
+            dtarray = (double *) malloc(sizeof(double) * wfsNBframemax);
             if (dtarray == NULL)
             {
                 PRINT_ERROR("malloc returns NULL pointer");
@@ -332,7 +321,7 @@ static errno_t compute_function()
             clock_gettime(CLOCK_MILK, &tnow);
             tdouble_start       = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
             long wfscntstart    = imgwfs.md->cnt0;
-            long wfsframeoffset = (long) (0.1 * (*wfsNBframemax));
+            long wfsframeoffset = (long) (0.1 * wfsNBframemax);
 
             // Measurement loop
 
@@ -354,7 +343,7 @@ static errno_t compute_function()
                 long            kkmax    = 0;
 
 
-                processinfo_WriteMessage_fmt(processinfo, "iteration %5u / %5u", iter, *NBiter);
+                processinfo_WriteMessage_fmt(processinfo, "iteration %5u / %5u", iter, NBiter);
 
 
                 for (uint32_t ii = 0; ii < dmxsize * dmysize; ii++)
@@ -370,7 +359,7 @@ static errno_t compute_function()
                 // Wait time is a few frames
                 //
                 {
-                    long nsec = (long) (1000 * (*twaitus));
+                    long nsec = (long) (1000 * twaitus);
 
                     long nsec_remaining = nsec % 1000000000;
                     long sec            = nsec / 1000000000;
@@ -385,7 +374,7 @@ static errno_t compute_function()
                 // Waiting for a number of frames for streams to settle
                 //
                 wfscnt0 = imgwfs.md->cnt0;
-                for (uint32_t wfsframe = 0; wfsframe < *wfsNBframemax; wfsframe++)
+                for (uint32_t wfsframe = 0; wfsframe < wfsNBframemax; wfsframe++)
                 {
                     while (wfscnt0 == imgwfs.md->cnt0)
                     {
@@ -415,7 +404,7 @@ static errno_t compute_function()
                 int  wfsslice = 0;
                 wfscnt0       = imgwfs.md->cnt0;
 
-                while ((dt < dtmax) && (wfsframe < *wfsNBframemax))
+                while ((dt < dtmax) && (wfsframe < wfsNBframemax))
                 {
                     // WAITING for new image
                     //
@@ -460,12 +449,12 @@ static errno_t compute_function()
                     // At roughly the half time, apply DM pattern #1
                     // This is only done once per sequence, using dmstate toggle from 0 to 1
                     //
-                    if ((dmstate == 0) && (dt > *refdtoffset) && (wfsframe > wfsframeoffset))
+                    if ((dmstate == 0) && (dt > refdtoffset) && (wfsframe > wfsframeoffset))
                     {
                         // Add a random wait to obtain continuous time offset sampling
                         //
                         {
-                            long nsec = (long) (1000000000.0 * ran1() * (*wfsdt));
+                            long nsec = (long) (1000000000.0 * ran1() * wfsdt);
 
                             long nsec_remaining = nsec % 1000000000;
                             long sec            = nsec / 1000000000;
@@ -488,7 +477,7 @@ static errno_t compute_function()
                         {
                             for (uint32_t ii = 0; ii < dmxsize * dmysize; ii++)
                             {
-                                imgdm.im->array.F[ii] = (*OPDamp) * imgpokemap.im->array.F[ii];
+                                imgdm.im->array.F[ii] = OPDamp * imgpokemap.im->array.F[ii];
                             }
                             processinfo_update_output_stream(processinfo, imgdm.im, NULL);
                         }
@@ -496,9 +485,9 @@ static errno_t compute_function()
                         // Record time at which DM command is sent
                         //
                         clock_gettime(CLOCK_MILK, &tnow);
-                        tdouble   = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
-                        dt        = tdouble - tstartdouble;
-                        *dtoffset = dt; // time at which DM command is sent
+                        tdouble  = 1.0 * tnow.tv_sec + 1.0e-9 * tnow.tv_nsec;
+                        dt       = tdouble - tstartdouble;
+                        dtoffset = dt; // time at which DM command is sent
                     }
                     wfsframe++;
                 }
@@ -512,7 +501,7 @@ static errno_t compute_function()
                 {
                     for (uint32_t ii = 0; ii < dmxsize * dmysize; ii++)
                     {
-                        imgdm.im->array.F[ii] = (*OPDamp) * imgpokemap.im->array.F[ii];
+                        imgdm.im->array.F[ii] = OPDamp * imgpokemap.im->array.F[ii];
                     }
                     processinfo_update_output_stream(processinfo, imgdm.im, NULL);
                 }
@@ -603,7 +592,7 @@ static errno_t compute_function()
 
                     {
                         float timeoffset =
-                            (0.5 * (dtarray[kk] + dtarray[kk - 1]) - *dtoffset) * (*framerateHz);
+                            (0.5 * (dtarray[kk] + dtarray[kk - 1]) - dtoffset) * framerateHz;
                         int diffseqkk = timeoffset / diffseqdtframe;
                         if ((diffseqkk >= 0) && (diffseqkk < diffseqsize))
                         {
@@ -637,7 +626,7 @@ static errno_t compute_function()
                 //
                 for (wfsframe = 1; wfsframe < NBwfsframe; wfsframe++)
                 {
-                    double ptdt  = (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - *dtoffset);
+                    double ptdt  = (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - dtoffset);
                     double ptval = valarray[wfsframe];
 
                     valarrayall[NBrawmeas] = ptval;
@@ -645,14 +634,14 @@ static errno_t compute_function()
                     NBrawmeas++;
 
                     fprintf(fphwlat, "%ld   %10.2f     %g\n", wfsframe - kkoffset,
-                            1.0e6 * (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - *dtoffset),
+                            1.0e6 * (0.5 * (dtarray[wfsframe] + dtarray[wfsframe - 1]) - dtoffset),
                             valarray[wfsframe]);
                 }
 
 
                 free(valarray);
 
-                latency = valmaxdt - *dtoffset;
+                latency = valmaxdt - dtoffset;
                 // latencystep = kkmax;
 
 
@@ -661,14 +650,14 @@ static errno_t compute_function()
                     latencymax = latency;
                 }
 
-                fprintf(fphwlat, "# %5u  %8.6f\n", iter, (valmaxdt - *dtoffset));
+                fprintf(fphwlat, "# %5u  %8.6f\n", iter, (valmaxdt - dtoffset));
 
                 latencysteparray[iter] = 1.0 * kkmax;
-                latencyarray[iter]     = (valmaxdt - *dtoffset);
+                latencyarray[iter]     = (valmaxdt - dtoffset);
 
                 // process signals, increment loop counter
                 iter++;
-                if (iter == (*NBiter))
+                if (iter == NBiter)
                 {
                     loopOK = 0;
                 }
@@ -685,7 +674,7 @@ static errno_t compute_function()
 
             // PROCESS RESULTS
             //
-            processinfo_WriteMessage_fmt(processinfo, "Processing Data (%u iterations)", (*NBiter));
+            processinfo_WriteMessage_fmt(processinfo, "Processing Data (%u iterations)", NBiter);
 
 
             // normalize imgdiffseq
@@ -719,7 +708,7 @@ static errno_t compute_function()
             float latencystepave = 0.0;
             float minlatency     = latencyarray[0];
             float maxlatency     = latencyarray[0];
-            for (uint32_t iter = 0; iter < (*NBiter); iter++)
+            for (uint32_t iter = 0; iter < NBiter; iter++)
             {
                 if (latencyarray[iter] > maxlatency)
                 {
@@ -734,14 +723,15 @@ static errno_t compute_function()
                 latencyave += latencyarray[iter];
                 latencystepave += latencysteparray[iter];
             }
-            latencyave /= (*NBiter);
-            latencystepave /= (*NBiter);
+            latencyave /= NBiter;
+            latencystepave /= NBiter;
 
             // measure precise frame rate
             //
             double dt = tdouble_end - tdouble_start;
             printf("FRAME RATE = %.3f Hz\n", 1.0 * (wfscntend - wfscntstart) / dt);
-            *framerateHz = 1.0 * (wfscntend - wfscntstart) / dt;
+            framerateHz = 1.0 * (wfscntend - wfscntstart) / dt;
+            fpsresync_modvar_to_fps(dcfpsptr, dcfpsbindings, dcfpsnbindings);
             functionparameter_SaveParam2disk(milk_data.fpsptr, ".out.framerateHz");
 
 
@@ -756,7 +746,7 @@ static errno_t compute_function()
                 fpout       = fps_write_RUNoutput_file(milk_data.fpsptr, "hardwlatencypts", "dat");
                 int   iimin = 0;
                 int   iimax = 0;
-                float dtrange = 0.5 / (*framerateHz); // in sec
+                float dtrange = 0.5 / framerateHz; // in sec
                 for (int ii = 0; ii < NBrawmeas; ii++)
                 {
                     while ((dtarrayall[iimax] < dtarrayall[ii] + dtrange) &&
@@ -829,8 +819,9 @@ static errno_t compute_function()
             // update latencystepave from framerate
 
 
-            *latencyfr = latencymeaspeakdt * (*framerateHz);
-            printf("latency = %f frame\n", *latencyfr);
+            latencyfr = latencymeaspeakdt * framerateHz;
+            printf("latency = %f frame\n", latencyfr);
+            fpsresync_modvar_to_fps(dcfpsptr, dcfpsbindings, dcfpsnbindings);
             functionparameter_SaveParam2disk(milk_data.fpsptr, ".out.latencyfr");
 
             {
@@ -852,13 +843,13 @@ static errno_t compute_function()
 
                 FILE *fpout;
                 fpout = fopen(ffname, "w");
-                fprintf(fpout, "export CACAO_WFSFRATE=%.3f\n", *framerateHz);
-                fprintf(fpout, "export CACAO_LATENCYHARDWFR=%.3f\n", *latencyfr);
+                fprintf(fpout, "export CACAO_WFSFRATE=%.3f\n", framerateHz);
+                fprintf(fpout, "export CACAO_LATENCYHARDWFR=%.3f\n", latencyfr);
                 fclose(fpout);
             }
         }
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
     free(latencyarray);
     free(latencysteparray);
@@ -875,29 +866,19 @@ static errno_t compute_function()
 }
 
 /* ================================================================
- * 7.  MILK MODULE REGISTRATION
+ * 7.  MILK_RUNNABLE
  * ============================================================= */
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-errno_t CLIADDCMD_AOloopControl_perfTest__mlat()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-
-/* ================================================================
- * 8.  STANDALONE ENTRY POINT
- * ============================================================= */
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_perfTest_mlat = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "mlat",
+                 .cmdkey           = "mlat",
+                 .description      = "measure latency between DM and WFS",
+                 .description_long = "Measure the end-to-end latency between DM commands and WFS "
+                                     "responses. Applies a known DM pattern and cross-correlates "
+                                     "with WFS to find the delay." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(mlat),
+    .compute = mlat_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacaopt-mlat", runnable_AOloopControl_perfTest_mlat);

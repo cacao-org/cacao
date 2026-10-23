@@ -14,37 +14,24 @@
 
 #include <time.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
-#include "fps.h"
 #include "COREMOD_memory/COREMOD_memory.h"
-#include "processinfo.h"
 
-
-/* ================================================================
- * 1.  FPS COMPONENT IDENTITY
- * ============================================================= */
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "compRMsensitivity",
-    .cmdkey           = "compRMsensitivity",
-    .description      = "Compute response matrix sensitivity",
-    .description_long = "Compute the sensitivity of a response matrix by analyzing singular value "
-                        "magnitudes and modal coupling coefficients."
-};
+#include "AOloopControl_perfTest.h"
 
 
 /* ================================================================
  * 2.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
-static char  *dmmodes  = NULL;
-static char  *dmmask   = NULL;
-static char  *wfsref   = NULL;
-static char  *wfsmodes = NULL;
-static char  *wfsmask  = NULL;
-static float *amplum   = NULL;
-static float *lambdaum = NULL;
+static char  dmmodes[FUNCTION_PARAMETER_STRMAXLEN]  = "";
+static char  dmmask[FUNCTION_PARAMETER_STRMAXLEN]   = "";
+static char  wfsref[FUNCTION_PARAMETER_STRMAXLEN]   = "";
+static char  wfsmodes[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char  wfsmask[FUNCTION_PARAMETER_STRMAXLEN]  = "";
+static float amplum                                 = 0.0f;
+static float lambdaum                               = 0.0f;
 
 
 /* ================================================================
@@ -52,11 +39,11 @@ static float *lambdaum = NULL;
  * ============================================================= */
 
 #define FPS_PARAMS(X)                                                                        \
-    X(".DMmodes", &dmmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM modes")            \
-    X(".DMmask", &dmmask, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM mask")               \
-    X(".WFSref", &wfsref, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS reference")         \
-    X(".WFSmodes", &wfsmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS modes")         \
-    X(".WFSmask", &wfsmask, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS mask")            \
+    X(".DMmodes", dmmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM modes")             \
+    X(".DMmask", dmmask, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM mask")                \
+    X(".WFSref", wfsref, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS reference")          \
+    X(".WFSmodes", wfsmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS modes")          \
+    X(".WFSmask", wfsmask, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS mask")             \
     X(".ampl", &amplum, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT, "RM modes ampl limit [um]") \
     X(".lambdaum", &lambdaum, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT, "wavelength [um]")
 
@@ -255,19 +242,19 @@ static errno_t AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmode
  * 5.  BINDINGS, FARG, AND CLI DATA
  * ============================================================= */
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(compRMsensitivity, FPS_PARAMS);
 
 
 /* ================================================================
  * 6.  COMPUTE WRAPPER
  * ============================================================= */
 
-static errno_t compute_function()
+static MILK_HOT errno_t compRMsensitivity_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
-    AOloopControl_perfTest_computeRM_sensitivity(dmmodes, dmmask, wfsref, wfsmodes, wfsmask,
-                                                 *amplum, *lambdaum, "RMsens.txt");
+    AOloopControl_perfTest_computeRM_sensitivity(dmmodes, dmmask, wfsref, wfsmodes, wfsmask, amplum,
+                                                 lambdaum, "RMsens.txt");
 
     DEBUG_TRACE_FEXIT();
     return RETURN_SUCCESS;
@@ -275,29 +262,19 @@ static errno_t compute_function()
 
 
 /* ================================================================
- * 7.  MILK MODULE REGISTRATION
+ * 7.  MILK_RUNNABLE
  * ============================================================= */
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-errno_t CLIADDCMD_AOloopControl_perfTest__compRMsensitivity()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-
-/* ================================================================
- * 8.  STANDALONE ENTRY POINT
- * ============================================================= */
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_perfTest_compRMsensitivity = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "compRMsensitivity",
+                 .cmdkey           = "compRMsensitivity",
+                 .description      = "Compute response matrix sensitivity",
+                 .description_long = "Compute the sensitivity of a response matrix by analyzing "
+                                     "singular value magnitudes and modal coupling "
+                                     "coefficients." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(compRMsensitivity),
+    .compute = compRMsensitivity_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacaopt-compRMsens", runnable_AOloopControl_perfTest_compRMsensitivity);

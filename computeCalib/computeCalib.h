@@ -16,8 +16,17 @@
 #ifndef _AOLOOPCONTROL_COMPUTECALIB_H
 #define _AOLOOPCONTROL_COMPUTECALIB_H
 
-/** @brief Initialize module */
-void __attribute__((constructor)) libinit_AOloopControl_computeCalib();
+#include "milk_runnable.h"
+
+// RM2zonal and compute_straight_CM are mandated units: declared weak in computeCalib.c
+extern const MILK_RUNNABLE runnable_computeCalib_maskextrapolate;
+extern const MILK_RUNNABLE runnable_computeCalib_actmap_sample2D;
+extern const MILK_RUNNABLE runnable_computeCalib_computeHadamard;
+extern const MILK_RUNNABLE runnable_computeCalib_generateRMWFS;
+extern const MILK_RUNNABLE runnable_computeCalib_compute_masksWFSDM;
+extern const MILK_RUNNABLE runnable_computeCalib_compute_control_modes;
+extern const MILK_RUNNABLE runnable_computeCalib_mkCMsvd;
+extern const MILK_RUNNABLE runnable_computeCalib_aolHaddec;
 
 
 imageID AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, const char *outname);
@@ -66,8 +75,7 @@ errno_t AOloopControl_computeCalib_ProcessZrespM_medianfilt(const char *zrespm_n
                                                             double      rmampl,
                                                             int         normalize);
 
-errno_t CLIADDCMD_AOloopControl_computeCalib__mkCMsvd();
-
+errno_t modes_spatial_extrapolate(IMGID imgmodes, IMGID imgmask, IMGID imgcpa, IMGID *imgoutmodes);
 
 long AOloopControl_computeCalib_mkSlavedAct(const char *IDmaskRM_name,
                                             float       pixrad,

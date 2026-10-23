@@ -34,4 +34,4 @@ Module responsible for `computeCalib` functionality.
 
 ## Dependencies
 
-- Implicit standard: `milkdata`, `ImageStreamIO`, `CLIcore`
+- Implicit standard: `milkdata`, `ImageStreamIO`

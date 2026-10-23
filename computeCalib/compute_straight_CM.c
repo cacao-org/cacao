@@ -13,9 +13,8 @@
 
 #include <math.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
-#include "fps.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #include "timeutils.h"
@@ -44,14 +43,8 @@
 #    include <pthread.h>
 #endif
 
+#include "computeCalib.h"
 
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "compsCM",
-    .cmdkey           = "compsCM",
-    .description      = "compute straight control matrix",
-    .description_long = "Compute a control matrix directly from a response matrix using straight "
-                        "pseudo-inversion without modal decomposition."
-};
 
 static char RMmodesDMfname[FUNCTION_PARAMETER_STRMAXLEN];
 static char RMmodesWFSfname[FUNCTION_PARAMETER_STRMAXLEN];
@@ -84,7 +77,7 @@ static int32_t GPUdevice;
     X(".GPUdevice", &GPUdevice, FPTYPE_INT32, 1, FPFLAG_DEFAULT_INPUT,                             \
       "using GPU (99 : no GPU, otherwise GPU device)")
 
-FPS_V2_SECTION5(FPS_PARAMS)
+MILK_PARAMS_DEFINE(compute_straight_CM, FPS_PARAMS);
 
 
 // detailed help
@@ -94,7 +87,7 @@ static __attribute__((unused)) errno_t help_function()
 }
 
 
-static errno_t compute_function()
+static MILK_HOT errno_t compute_straight_CM_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
@@ -143,7 +136,8 @@ static errno_t compute_function()
     struct timespec t0, t1, t2, t3, t4, t5, t6, t7, t8, t9;
 
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
 #ifdef HAVE_OPENBLAS
         printf("OpenBLASS  YES\n");
@@ -641,7 +635,7 @@ static errno_t compute_function()
         save_fits("CMmodesDM", CMmodesDMfname);
         save_fits("CMmodesWFS", CMmodesWFSfname);
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
 
     struct timespec tdiff;
@@ -693,24 +687,16 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_computeCalib__compsCM()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_computeCalib_compute_straight_CM = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "compsCM",
+                 .cmdkey           = "compsCM",
+                 .description      = "compute straight control matrix",
+                 .description_long = "Compute a control matrix directly from a response matrix "
+                                     "using straight pseudo-inversion without modal "
+                                     "decomposition." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(compute_straight_CM),
+    .compute = compute_straight_CM_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacaocc-compstrcm", runnable_computeCalib_compute_straight_CM);

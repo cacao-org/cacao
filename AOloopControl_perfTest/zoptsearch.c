@@ -13,11 +13,13 @@
 
 #include <math.h>
 
-#include "CLIcore.h"
+#include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
 
 #include "statistic/statistic.h" // ran1, gauss, gauss_trc
 #include "quicksort.h"
+
+#include "AOloopControl_perfTest.h"
 
 // optimization modes
 
@@ -64,53 +66,45 @@ struct optimizationmode
 
 // Local variables pointers
 
-static char     *ctrlsname;
-static uint32_t *nbpoke;
-static float    *ctrlamp;
-static char     *ctrlampmap;
-static char     *senssname;
-static char     *sensproc;
-static char     *sensref0;
-static char     *sensmask0;
-static int32_t  *sensnorm0;
-static char     *sensref1;
-static char     *sensmask1;
-static int32_t  *sensnorm1;
-static uint32_t *opttype;
-static uint32_t *optcomp;
-static float    *optparam0;
-static float    *optparam1;
-static float    *twaitframe;
-static uint32_t *tintframe;
-
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "zoptsearch",
-    .cmdkey           = "zoptsearch",
-    .description      = "stream zonal control optimize search",
-    .description_long = "Search for optimal zonal control parameters by systematically varying "
-                        "gains and analyzing closed-loop residuals."
-};
+static char     ctrlsname[FUNCTION_PARAMETER_STRMAXLEN]  = "";
+static uint32_t nbpoke                                   = 0;
+static float    ctrlamp                                  = 0.0f;
+static char     ctrlampmap[FUNCTION_PARAMETER_STRMAXLEN] = "null";
+static char     senssname[FUNCTION_PARAMETER_STRMAXLEN]  = "";
+static char     sensproc[FUNCTION_PARAMETER_STRMAXLEN]   = "null";
+static char     sensref0[FUNCTION_PARAMETER_STRMAXLEN]   = "null";
+static char     sensmask0[FUNCTION_PARAMETER_STRMAXLEN]  = "null";
+static int32_t  sensnorm0                                = 0;
+static char     sensref1[FUNCTION_PARAMETER_STRMAXLEN]   = "null";
+static char     sensmask1[FUNCTION_PARAMETER_STRMAXLEN]  = "null";
+static int32_t  sensnorm1                                = 0;
+static uint32_t opttype                                  = 0;
+static uint32_t optcomp                                  = 0;
+static float    optparam0                                = 0.0f;
+static float    optparam1                                = 0.0f;
+static float    twaitframe                               = 0.0f;
+static uint32_t tintframe                                = 0;
 
 #define FPS_PARAMS(X)                                                                           \
-    X(".ctrlsname", &ctrlsname, FPTYPE_STREAMNAME, 1,                                           \
+    X(".ctrlsname", ctrlsname, FPTYPE_STREAMNAME, 1,                                            \
       FPFLAG_DEFAULT_INPUT | FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM, "control stream") \
     X(".nbpoke", &nbpoke, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "number of pokes")            \
     X(".ctrlamp", &ctrlamp, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "control amplitude")       \
-    X(".ctrlampmap", &ctrlampmap, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                   \
+    X(".ctrlampmap", ctrlampmap, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                    \
       "control stream amplitude map")                                                           \
-    X(".senssname", &senssname, FPTYPE_STREAMNAME, 1,                                           \
+    X(".senssname", senssname, FPTYPE_STREAMNAME, 1,                                            \
       FPFLAG_DEFAULT_INPUT | FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM, "sensing stream") \
-    X(".sensprocout", &sensproc, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                    \
+    X(".sensprocout", sensproc, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                     \
       "processed image output")                                                                 \
-    X(".sproc.sensref0", &sensref0, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                 \
+    X(".sproc.sensref0", sensref0, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                  \
       "sensing reference 0")                                                                    \
-    X(".sproc.sensmask0", &sensmask0, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,               \
+    X(".sproc.sensmask0", sensmask0, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                \
       "sensing mask 0 (float)")                                                                 \
     X(".sproc.sensnorm0", &sensnorm0, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,  \
       "normalization 0 on/off")                                                                 \
-    X(".sproc.sensref1", &sensref1, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                 \
+    X(".sproc.sensref1", sensref1, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                  \
       "sensing reference 1")                                                                    \
-    X(".sproc.sensmask1", &sensmask1, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,               \
+    X(".sproc.sensmask1", sensmask1, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT,                \
       "sensing mask 1 (float)")                                                                 \
     X(".sproc.sensnorm1", &sensnorm1, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,  \
       "normalization 1 on/off")                                                                 \
@@ -292,17 +286,17 @@ static double image_optvalue(IMGID                   imgin,
 }
 
 
-static FPS_CLI_BINDING my_bindings[] __attribute__((unused)) = { FPS_PARAMS(FPS_X_BINDING) };
-static int nb_bindings __attribute__((unused)) = sizeof(my_bindings) / sizeof(FPS_CLI_BINDING);
+MILK_PARAMS_DEFINE(zoptsearch, FPS_PARAMS);
 
-static CLICMDARGDEF farg[] = { FPS_PARAMS(FPS_X_FARG) };
-
-static CLICMDDATA CLIcmddata = { "zoptsearch", "stream zonal control optimize search",
-                                 CLICMD_FIELDS_DEFAULTS };
-
-static errno_t compute_function()
+static MILK_HOT errno_t zoptsearch_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
+
+    // Parameters are read before the processinfo macros resync them
+    if (dcfpsptr != NULL)
+    {
+        fpsresync_fps_to_modvar(dcfpsptr, dcfpsbindings, dcfpsnbindings, 1);
+    }
 
     // connect to control stream
     //
@@ -320,7 +314,7 @@ static errno_t compute_function()
 
     // optional control amplitude map
     IMGID imgctrlamp;
-    if ((ctrlampmap != NULL) && (strcmp(ctrlampmap, "null") != 0))
+    if ((ctrlampmap[0] != '\0') && (strcmp(ctrlampmap, "null") != 0))
     {
         imgctrlamp = imgid_make_from_name(ctrlampmap);
         resolveIMGID(&imgctrlamp, ERRMODE_WARN, dcimg, dcnimg);
@@ -427,10 +421,10 @@ static errno_t compute_function()
 
     // prepare image cube buffers
 
-    IMGID imgsenscube = imgid_make_from_name_3D("imsenscube", sensxsize, sensysize, *nbpoke);
+    IMGID imgsenscube = imgid_make_from_name_3D("imsenscube", sensxsize, sensysize, nbpoke);
     createimagefromIMGID(&imgsenscube);
 
-    IMGID imgctrlcube = imgid_make_from_name_3D("imctrlcube", ctrlxsize, ctrlysize, *nbpoke);
+    IMGID imgctrlcube = imgid_make_from_name_3D("imctrlcube", ctrlxsize, ctrlysize, nbpoke);
     createimagefromIMGID(&imgctrlcube);
 
 
@@ -443,7 +437,8 @@ static errno_t compute_function()
     int      framecollected = 0;
     uint32_t pokeindex      = 0;
 
-    INSERT_STD_PROCINFO_COMPUTEFUNC_START
+    MILK_PROCINFO_INIT(self)
+    MILK_PROCINFO_LOOPSTART(self)
     {
         //printf("=== %3ld   framestep = %4d\n", processinfo->loopcnt, framestep);
 
@@ -459,7 +454,7 @@ static errno_t compute_function()
                     // no amplitude map, assume range is from -1 to +1
                     for (uint32_t ii = 0; ii < ctrlxysize; ii++)
                     {
-                        imgctrl.im->array.F[ii] = (1.0 - 2.0 * ran1()) * (*ctrlamp);
+                        imgctrl.im->array.F[ii] = (1.0 - 2.0 * ran1()) * ctrlamp;
                     }
                 }
                 else
@@ -467,7 +462,7 @@ static errno_t compute_function()
                     for (uint32_t ii = 0; ii < ctrlxysize; ii++)
                     {
                         imgctrl.im->array.F[ii] =
-                            (1.0 - 2.0 * ran1()) * imgctrlamp.im->array.F[ii] * (*ctrlamp);
+                            (1.0 - 2.0 * ran1()) * imgctrlamp.im->array.F[ii] * ctrlamp;
                     }
                 }
                 ImageStreamIO_UpdateIm(imgctrl.im);
@@ -475,7 +470,7 @@ static errno_t compute_function()
 
                 // copy to storage buffer
                 printf("copying ctrl to buffer slize %d\n", pokeindex);
-                if (pokeindex < *nbpoke)
+                if (pokeindex < nbpoke)
                 {
                     char *ptrdest;
                     ptrdest = (char *) imgctrlcube.im->array.F;
@@ -493,7 +488,7 @@ static errno_t compute_function()
             }
         }
 
-        if (framestep > *twaitframe)
+        if (framestep > twaitframe)
         {
             // accumulate
             //printf("    Accumulate\n");
@@ -507,7 +502,7 @@ static errno_t compute_function()
 
         framestep++;
 
-        if (framecollected == *tintframe)
+        if (framecollected == tintframe)
         {
             // Average
             //printf(" >>>> Average and process\n");
@@ -521,7 +516,7 @@ static errno_t compute_function()
 
             // copy to storage buffer
             printf("copying sens to buffer slize %d\n", pokeindex);
-            if (pokeindex < *nbpoke)
+            if (pokeindex < nbpoke)
             {
                 char *ptrdest;
                 ptrdest = (char *) imgsenscube.im->array.F;
@@ -531,12 +526,12 @@ static errno_t compute_function()
             }
 
             struct optimizationmode optm;
-            optm.type  = *opttype;
-            optm.comp  = *optcomp;
-            optm.v0    = *optparam0;
-            optm.v1    = *optparam1;
-            optm.norm0 = *sensnorm0;
-            optm.norm1 = *sensnorm1;
+            optm.type  = opttype;
+            optm.comp  = optcomp;
+            optm.v0    = optparam0;
+            optm.v1    = optparam1;
+            optm.norm0 = sensnorm0;
+            optm.norm1 = sensnorm1;
 
             double optval = image_optvalue(imgacc, optm, imgsensref0, imgsensmask0, imgsensref1,
                                            imgsensmask1, imgsensproc);
@@ -545,10 +540,10 @@ static errno_t compute_function()
 
 
             pokeindex++;
-            if (pokeindex == *nbpoke)
+            if (pokeindex == nbpoke)
             {
                 // exit loop
-                printf("Reached pokeindex = %d -> Exiting loop\n", *nbpoke);
+                printf("Reached pokeindex = %d -> Exiting loop\n", nbpoke);
                 processinfo->loopcntMax = 0;
             }
 
@@ -558,7 +553,7 @@ static errno_t compute_function()
 
         //        if(milk_data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
     }
-    INSERT_STD_PROCINFO_COMPUTEFUNC_END
+    MILK_PROCINFO_END(self)
 
 
     DEBUG_TRACE_FEXIT();
@@ -566,22 +561,16 @@ static errno_t compute_function()
 }
 
 
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
-{
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
-}
-
-// Register function in CLI
-errno_t CLIADDCMD_AOloopControl_perfTest__zoptsearch()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-    INSERT_STD_CLIREGISTERFUNC
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
+const MILK_RUNNABLE runnable_AOloopControl_perfTest_zoptsearch = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "zoptsearch",
+                 .cmdkey           = "zoptsearch",
+                 .description      = "stream zonal control optimize search",
+                 .description_long = "Search for optimal zonal control parameters by "
+                                     "systematically varying gains and analyzing closed-loop "
+                                     "residuals." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(zoptsearch),
+    .compute = zoptsearch_compute,
+};
+EXPORT_FPSEXEC(cacao, "cacaopt-zoptsearch", runnable_AOloopControl_perfTest_zoptsearch);
