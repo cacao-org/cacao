@@ -1059,8 +1059,9 @@ static errno_t DM_displ2V(
             x = x < 0.0 ? 0.0 : x;
             x = x > 1.0 ? 1.0 : x;
 
-            // apply mapping exponent
-            valarray[ii] = pow(x, *outv_exp);
+            x = *(outv_exp) == 1.0 ? x : pow(x, *outv_exp);
+            // TODO 100% expecting a segfault on null-ptr deref on valarray if this is used as a library function, not FPS environment.
+            // TODO which is fine for now, the function is static.
 
             // remap to output range
             valarray[ii] = (*outv_outrange_min) + valarray[ii] * (*outv_outrange_max -
