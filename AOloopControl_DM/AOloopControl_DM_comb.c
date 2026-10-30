@@ -190,6 +190,11 @@ static int64_t *zpoffsetch11 = NULL;
 long            fpi_zpoffsetch11;
 
 
+// work array for generic disp -> volt mapping
+// allocated / freed in compute_function
+static double *valarray = NULL;
+
+
 
 
 static CLICMDARGDEF farg[] =
@@ -962,41 +967,6 @@ static errno_t DM_displ2V(
 
 
 
-    // Generic mapping code
-    //
-    // First, we map input range to output range
-    // output is stored in valarray, in range [outv_outrange_min,outv_outrange_max]
-    //
-    double *valarray = (double *) malloc(sizeof(double) * (*DMxsize) * (*DMysize));
-    for(uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
-    {
-        // map input to [0.0 - 1.0]
-        float inval = imgdisp.im->array.F[ii];
-        double x = inval - (*outv_inrange_min);
-        x = x / (*outv_inrange_max - *outv_inrange_min);
-        if(x < 0.0)
-        {
-            x = 0.0;
-        }
-        if(x > 1.0)
-        {
-            x = 1.0;
-        }
-
-        // apply mapping exponent
-        valarray[ii] = pow(x, *outv_exp);
-
-        // remap to output range
-        valarray[ii] = (*outv_outrange_min) + valarray[ii] * (*outv_outrange_max -
-                       *outv_outrange_min);
-    }
-
-
-
-
-
-
-
     // SPECIAL CASES
     //
     if((*volttype) == 1)
@@ -1048,7 +1018,7 @@ static errno_t DM_displ2V(
     else if((*volttype) == 3)
         // Volt type == 3 -> SLM mode
     {
-        // linear unipolar, output is UT16
+        // linear unipolar, output is UI16
         for(uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
         {
             float volt = (imgdisp.im->array.F[ii] / (*stroke100)) + 0.5; // DC offest = 0.5
@@ -1073,6 +1043,30 @@ static errno_t DM_displ2V(
 
     if((*volttype) == 0)
     {
+        // Generic mapping code
+        //
+        // First, we map input range to output range
+        // output is stored in valarray, in range [outv_outrange_min,outv_outrange_max]
+        //
+        for(uint64_t ii = 0; ii < (*DMxsize) * (*DMysize); ii++)
+        {
+            // map input to [0.0 - 1.0]
+            float inval = imgdisp.im->array.F[ii];
+            double x = inval - (*outv_inrange_min);
+            x = x / (*outv_inrange_max - *outv_inrange_min);
+
+            x = isnan(x) ? 0.5 : x; // NaN check: map to mid-range
+            x = x < 0.0 ? 0.0 : x;
+            x = x > 1.0 ? 1.0 : x;
+
+            // apply mapping exponent
+            valarray[ii] = pow(x, *outv_exp);
+
+            // remap to output range
+            valarray[ii] = (*outv_outrange_min) + valarray[ii] * (*outv_outrange_max -
+                           *outv_outrange_min);
+        }
+
 
         // type conversion
         //
@@ -1152,10 +1146,7 @@ static errno_t DM_displ2V(
                 imgvolt.im->array.F[ii] = valarray[ii];
             }
         }
-
     }
-
-    free(valarray);
 
 
 
@@ -1284,6 +1275,10 @@ static errno_t compute_function()
     // Create temporaray storage to compute summed displacement
     //
     float *dmdisptmp = malloc(sizeof(*dmdisptmp) * (*DMxsize) * (*DMysize));
+
+    // Work array for generic disp -> volt mapping (used by DM_displ2V)
+    //
+    valarray = (double *) malloc(sizeof(double) * (*DMxsize) * (*DMysize));
 
     IMGID imgdmvolt;
     if(*voltmode == 1)
@@ -1501,6 +1496,8 @@ static errno_t compute_function()
     INSERT_STD_PROCINFO_COMPUTEFUNC_END
 
     free(dmdisptmp);
+    free(valarray);
+    valarray = NULL;
     free(imgch);
 
 
