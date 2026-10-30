@@ -715,6 +715,64 @@ static errno_t customCONFcheck()
         }
 
 
+        {
+            long fpi_outv_list[] = {fpi_outv_inrange_min,
+                                    fpi_outv_inrange_max,
+                                    fpi_outv_outrange_min,
+                                    fpi_outv_outrange_max,
+                                    fpi_outv_exp
+                                   };
+            int nb_outv = sizeof(fpi_outv_list) / sizeof(fpi_outv_list[0]);
+
+            if((*volttype == 1) || (*volttype == 2)) // non-writable
+            {
+                for(int i = 0; i < nb_outv; i++)
+                {
+                    data.fpsptr->parray[fpi_outv_list[i]].fpflag &= ~FPFLAG_WRITE;
+                    data.fpsptr->parray[fpi_outv_list[i]].fpflag &=
+                        ~FPFLAG_WRITECONF;
+                }
+            }
+            else // writable
+            {
+                for(int i = 0; i < nb_outv; i++)
+                {
+                    data.fpsptr->parray[fpi_outv_list[i]].fpflag |= FPFLAG_WRITE;
+                    data.fpsptr->parray[fpi_outv_list[i]].fpflag |=
+                        FPFLAG_WRITECONF;
+                }
+            }
+
+            long fpi_volt_list[] = {fpi_stroke100,
+                                    fpi_maxvolt
+                                   };
+            int nb_volt = sizeof(fpi_volt_list) / sizeof(fpi_volt_list[0]);
+
+            if((*volttype == 0) || (*volttype == 3)) // non-writable
+            {
+                for(int i = 0; i < nb_volt; i++)
+                {
+                    data.fpsptr->parray[fpi_volt_list[i]].fpflag &= ~FPFLAG_WRITE;
+                    data.fpsptr->parray[fpi_volt_list[i]].fpflag &=
+                        ~FPFLAG_WRITECONF;
+                    data.fpsptr->parray[fpi_volt_list[i]].fpflag &=
+                        ~FPFLAG_WRITERUN;
+                }
+            }
+            else // writable
+            {
+                for(int i = 0; i < nb_volt; i++)
+                {
+                    data.fpsptr->parray[fpi_volt_list[i]].fpflag |= FPFLAG_WRITE;
+                    data.fpsptr->parray[fpi_volt_list[i]].fpflag |=
+                        FPFLAG_WRITECONF;
+                    data.fpsptr->parray[fpi_volt_list[i]].fpflag |=
+                        FPFLAG_WRITERUN;
+                }
+            }
+        }
+
+
         if(data.fpsptr->parray[fpi_astrogrid].fpflag &
                 FPFLAG_ONOFF) // ON state
         {
@@ -887,13 +945,11 @@ static errno_t DM_displ2V(
         *outv_inrange_min = -inrange;
         *outv_inrange_max = inrange;
         *outv_outrange_min = -(*maxvolt);
-        *outv_outrange_max = -(*maxvolt);
+        *outv_outrange_max = (*maxvolt);
     }
     else if((*volttype) == 2)
     {
         // quadratic unipolar, output is UI16
-        //
-
         float inrange = (*maxvolt) * (*stroke100) / 100.0;
 
         strcpy(outv_ftype, "uint16");
