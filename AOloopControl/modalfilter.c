@@ -390,7 +390,7 @@ static void modal_filter_step(PROCESSINFO *processinfo,
     uint32_t NBmode = imginWFS->md[0].size[0];
 
     // Zero loop
-    if (loopZERO && ((loopZERO) &FPFLAG_ONOFF))
+    if (loopZERO)
     {
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
@@ -400,7 +400,7 @@ static void modal_filter_step(PROCESSINFO *processinfo,
         }
         memset(imgout->array.F, 0, sizeof(float) * NBmode);
         processinfo_update_output_stream(processinfo, imgout, NULL);
-        (loopZERO) &= ~FPFLAG_ONOFF;
+        loopZERO = 0;
     }
 
     if ((loopON) == 1)
@@ -411,8 +411,7 @@ static void modal_filter_step(PROCESSINFO *processinfo,
         }
         if (loopNBstep == 0)
         {
-            loopON = 0;
-            (loopON) &= ~FPFLAG_ONOFF;
+            loopON     = 0;
             loopNBstep = 1;
         }
 
@@ -502,15 +501,9 @@ static void modal_filter_step(PROCESSINFO *processinfo,
                 float val = state->imgmvaloffloadDM.im->array.F[mi];
                 val += state->imgoffloadmgain.im->array.F[mi] * imgout->array.F[mi];
                 val *= state->imgoffloadmmult.im->array.F[mi];
-                float limit = state->imgoffloadmlimit.im->array.F[mi];
-                if (val > limit)
-                {
-                    val = limit;
-                }
-                if (val < -limit)
-                {
-                    val = -limit;
-                }
+                float limit                             = state->imgoffloadmlimit.im->array.F[mi];
+                val                                     = val > limit ? limit : val;
+                val                                     = val < -limit ? -limit : val;
                 state->imgmvaloffloadDM.im->array.F[mi] = val;
             }
             processinfo_update_output_stream(processinfo, state->imgmvaloffloadDM.im, NULL);

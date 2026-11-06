@@ -16,11 +16,11 @@ repos:
     hooks:
     -   id: cmake-format
         args: ['--enable-markup=False']
--   repo: https://github.com/rbubley/mirrors-prettier
-    rev: v3.9.5
-    hooks:
-    -   id: prettier
-        types_or: [markdown]
+#-   repo: https://github.com/rbubley/mirrors-prettier
+#    rev: v3.9.5
+#    hooks:
+#    -   id: prettier
+#        types_or: [markdown]
 -   repo: https://github.com/pre-commit/pre-commit-hooks.git
     rev: v6.0.0
     hooks:

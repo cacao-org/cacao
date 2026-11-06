@@ -83,6 +83,14 @@ static float    seqdtframe                              = 0.0f;
 MILK_PARAMS_DEFINE(mlat, FPS_PARAMS);
 
 
+/** Write DM pattern IDsrc (local float image, DM-sized) to the DM stream and publish it. */
+static void mlat_setdm(PROCESSINFO *processinfo, IMGID *imgdm, imageID IDsrc)
+{
+    memcpy(imgdm->im->array.F, dcimg[IDsrc].array.F, sizeof(float) * imgdm->md->nelement);
+    processinfo_update_output_stream(processinfo, imgdm->im, NULL);
+}
+
+
 static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
@@ -122,25 +130,11 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
     }
 
     // create wfs image cube for storage
-    imageID IDwfsc;
-    {
-        uint32_t naxes[3];
-        naxes[0] = imgwfs.md->size[0];
-        naxes[1] = imgwfs.md->size[1];
-        naxes[2] = wfsNBframemax;
-
-        {
-            IMGID imgwfsc         = imgid_make_from_name("_testwfsc");
-            imgwfsc.mdt->naxis    = 3;
-            imgwfsc.mdt->size[0]  = naxes[0];
-            imgwfsc.mdt->size[1]  = naxes[1];
-            imgwfsc.mdt->size[2]  = naxes[2];
-            imgwfsc.mdt->datatype = imgwfs.md->datatype;
-            imgwfsc.im            = (IMAGE *) calloc(1, sizeof(IMAGE));
-            imgid_mkimage(&imgwfsc);
-            IDwfsc = imgwfsc.ID;
-        }
-    }
+    IMGID imgwfsc =
+        imgid_make_from_name_3D("_testwfsc", imgwfs.md->size[0], imgwfs.md->size[1], wfsNBframemax);
+    imgwfsc.mdt->datatype = imgwfs.md->datatype;
+    imgwfsc.im            = (IMAGE *) calloc(1, sizeof(IMAGE));
+    createimagefromIMGID(&imgwfsc);
 
     float *latencyarray = (float *) malloc(sizeof(float) * NBiter);
     if (latencyarray == NULL)
@@ -203,6 +197,15 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
             for (uint32_t jj = 0; jj < dmysize; jj++)
             {
                 dcimg[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
+            }
+        }
+
+        // An explicit pokemap replaces the sine pattern
+        if (imgpokemap.ID != -1)
+        {
+            for (uint32_t ii = 0; ii < dmxsize * dmysize; ii++)
+            {
+                dcimg[IDdm1].array.F[ii] = OPDamp * imgpokemap.im->array.F[ii];
             }
         }
 
@@ -346,11 +349,7 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
                 processinfo_WriteMessage_fmt(processinfo, "iteration %5u / %5u", iter, NBiter);
 
 
-                for (uint32_t ii = 0; ii < dmxsize * dmysize; ii++)
-                {
-                    imgdm.im->array.F[ii] = 0.0;
-                }
-                processinfo_update_output_stream(processinfo, imgdm.im, NULL);
+                mlat_setdm(processinfo, &imgdm, IDdm0);
 
 
                 unsigned int dmstate = 0;
@@ -431,7 +430,7 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
                     char *ptr0          = ImageStreamIO_get_image_d_ptr(imgwfs.im);
                     ptr0 += datatype_size * wfsslice * wfssize;
 
-                    char *ptr = ImageStreamIO_get_image_d_ptr(&dcimg[IDwfsc]);
+                    char *ptr = ImageStreamIO_get_image_d_ptr(imgwfsc.im);
                     ptr += datatype_size * wfsframe * wfssize;
 
                     memcpy(ptr, ptr0, datatype_size * wfssize);
@@ -469,18 +468,7 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
                         kkoffset = wfsframe;
 
                         dmstate = 1;
-                        if (imgpokemap.ID == -1)
-                        {
-                            copy_image_ID("_mlattestdm", dmstream, 1);
-                        }
-                        else
-                        {
-                            for (uint32_t ii = 0; ii < dmxsize * dmysize; ii++)
-                            {
-                                imgdm.im->array.F[ii] = OPDamp * imgpokemap.im->array.F[ii];
-                            }
-                            processinfo_update_output_stream(processinfo, imgdm.im, NULL);
-                        }
+                        mlat_setdm(processinfo, &imgdm, IDdm1);
 
                         // Record time at which DM command is sent
                         //
@@ -493,18 +481,7 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
                 }
 
 
-                if (imgpokemap.ID == -1)
-                {
-                    copy_image_ID("_mlattestdm", dmstream, 1);
-                }
-                else
-                {
-                    for (uint32_t ii = 0; ii < dmxsize * dmysize; ii++)
-                    {
-                        imgdm.im->array.F[ii] = OPDamp * imgpokemap.im->array.F[ii];
-                    }
-                    processinfo_update_output_stream(processinfo, imgdm.im, NULL);
-                }
+                mlat_setdm(processinfo, &imgdm, IDdm1);
                 dmstate = 0;
 
 
@@ -539,15 +516,15 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
                 // Scan valarry looking for maximum -> store in valmax
                 //
                 // Define a macro for the type switching that follows
-#define IMAGE_SUMMING_CASE(IMG_PTR_ID)                                                  \
-    {                                                                                   \
-        for (uint64_t ii = 0; ii < wfssize; ii++)                                       \
-        {                                                                               \
-            double tmp = 1.0 * dcimg[IDwfsc].array.IMG_PTR_ID[kk * wfssize + ii] -      \
-                         1.0 * dcimg[IDwfsc].array.IMG_PTR_ID[(kk - 1) * wfssize + ii]; \
-            valarray[kk] += 1.0 * tmp * tmp;                                            \
-            diffseqvalarray[ii] = tmp;                                                  \
-        }                                                                               \
+#define IMAGE_SUMMING_CASE(IMG_PTR_ID)                                                \
+    {                                                                                 \
+        for (uint64_t ii = 0; ii < wfssize; ii++)                                     \
+        {                                                                             \
+            double tmp = 1.0 * imgwfsc.im->array.IMG_PTR_ID[kk * wfssize + ii] -      \
+                         1.0 * imgwfsc.im->array.IMG_PTR_ID[(kk - 1) * wfssize + ii]; \
+            valarray[kk] += 1.0 * tmp * tmp;                                          \
+            diffseqvalarray[ii] = tmp;                                                \
+        }                                                                             \
     }
 
 
@@ -702,7 +679,7 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
             }
 
 
-            copy_image_ID("_mlattestdm0", dmstream, 1);
+            mlat_setdm(processinfo, &imgdm, IDdm0);
 
             float latencyave     = 0.0;
             float latencystepave = 0.0;

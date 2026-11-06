@@ -1,0 +1,33 @@
+# [config] # TODO nesting of top-level params.
+long_name = "dmcomb"
+name = "dmcomb"
+loop_number = 100
+tasks = [ "init_folders", "fetch_assets", "fps_init", "conf_start" ] # TODO auto-parse this and run it.
+
+# Aliases
+_ln = "{loop_number}"
+
+# This loop is a test loop for the typical AO linear simulator
+# DM stream => delay -> MVM -> camera simulator ==> WFS
+
+# Global # TODO this needs nesting rather than top level
+dataloads = [
+]
+
+# [preload-files]
+
+# [postload-files]
+
+[sessions]
+dmcomb = 'cacao-fpsexec-dmcomb'
+
+[dmcomb]
+procinfo.enabled = true
+procinfo.loopcntMax = -1
+procinfo.triggermode = 3 # TODO Probably the wrong default for DMcomb
+procinfo.triggersname = 'dm{_ln}disp03'
+
+DMindex = "{_ln}"
+DMcombout = "dm{_ln}disp"
+DMxsize = 10
+DMysize = 10
