@@ -19,41 +19,41 @@
 
 #include "AOloopControl.h"
 
-// Local variables pointers
-static uint64_t *AOloopindex;
+// Local variables
+static uint64_t AOloopindex = 0;
 
 // blocks sizes
-static uint32_t *block0NBmode;
-static uint32_t *block0NBsample;
+static uint32_t block0NBmode   = 2;
+static uint32_t block0NBsample = 30000;
 
-static uint32_t *block1NBmode;
-static uint32_t *block1NBsample;
+static uint32_t block1NBmode   = 256;
+static uint32_t block1NBsample = 30000;
 
-static uint32_t *block2NBmode;
-static uint32_t *block2NBsample;
+static uint32_t block2NBmode   = 256;
+static uint32_t block2NBsample = 30000;
 
-static uint32_t *block3NBmode;
-static uint32_t *block3NBsample;
+static uint32_t block3NBmode   = 256;
+static uint32_t block3NBsample = 30000;
 
-static uint32_t *block4NBmode;
-static uint32_t *block4NBsample;
+static uint32_t block4NBmode   = 256;
+static uint32_t block4NBsample = 30000;
 
-static uint32_t *block5NBmode;
-static uint32_t *block5NBsample;
+static uint32_t block5NBmode   = 256;
+static uint32_t block5NBsample = 30000;
 
-static uint32_t *block6NBmode;
-static uint32_t *block6NBsample;
+static uint32_t block6NBmode   = 256;
+static uint32_t block6NBsample = 30000;
 
-static uint32_t *block7NBmode;
-static uint32_t *block7NBsample;
+static uint32_t block7NBmode   = 256;
+static uint32_t block7NBsample = 30000;
 
-static uint32_t *block8NBmode;
-static uint32_t *block8NBsample;
+static uint32_t block8NBmode   = 256;
+static uint32_t block8NBsample = 30000;
 
-static uint32_t *block9NBmode;
-static uint32_t *block9NBsample;
+static uint32_t block9NBmode   = 256;
+static uint32_t block9NBsample = 30000;
 
-static uint64_t *compstatswrite;
+static int32_t compstatswrite = 0;
 
 #define FPS_PARAMS(X)                                                                            \
     X(".AOloopindex", &AOloopindex, FPTYPE_UINT64, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
@@ -148,7 +148,7 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
-        WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", AOloopindex);
         read_sharedmem_image(name, dcimg, dcnimg);
         imgtbuff_mvalDM = imgid_make_from_name(name);
         resolveIMGID(&imgtbuff_mvalDM, ERRMODE_WARN, dcimg, dcnimg);
@@ -157,7 +157,7 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
             return RETURN_FAILURE;
         }
 
-        WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", AOloopindex);
         read_sharedmem_image(name, dcimg, dcnimg);
         imgtbuff_mvalWFS = imgid_make_from_name(name);
         resolveIMGID(&imgtbuff_mvalWFS, ERRMODE_WARN, dcimg, dcnimg);
@@ -166,7 +166,7 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
             return RETURN_FAILURE;
         }
 
-        WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", AOloopindex);
         read_sharedmem_image(name, dcimg, dcnimg);
         imgtbuff_mvalOL = imgid_make_from_name(name);
         resolveIMGID(&imgtbuff_mvalOL, ERRMODE_WARN, dcimg, dcnimg);
@@ -177,7 +177,7 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
 
         NBmode   = imgtbuff_mvalOL.md->size[0];
         NBsample = imgtbuff_mvalOL.md->size[1];
-        WRITE_IMAGENAME(name, "aol%lu_mblk", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%lu_mblk", AOloopindex);
         imgblock = stream_connect_create_2D(name, NBmode, 1, _DATATYPE_INT32);
     }
 
@@ -191,28 +191,28 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
     uint32_t blksize[MAXBLK];
     uint32_t blkoffset[MAXBLK];
     blkoffset[0] = 0;
-    blksize[0]   = *block0NBmode;
-    blksize[1]   = *block1NBmode;
-    blksize[2]   = *block2NBmode;
-    blksize[3]   = *block3NBmode;
-    blksize[4]   = *block4NBmode;
-    blksize[5]   = *block5NBmode;
-    blksize[6]   = *block6NBmode;
-    blksize[7]   = *block7NBmode;
-    blksize[8]   = *block8NBmode;
-    blksize[9]   = *block9NBmode;
+    blksize[0]   = block0NBmode;
+    blksize[1]   = block1NBmode;
+    blksize[2]   = block2NBmode;
+    blksize[3]   = block3NBmode;
+    blksize[4]   = block4NBmode;
+    blksize[5]   = block5NBmode;
+    blksize[6]   = block6NBmode;
+    blksize[7]   = block7NBmode;
+    blksize[8]   = block8NBmode;
+    blksize[9]   = block9NBmode;
 
     int32_t blksamplesize[MAXBLK];
-    blksamplesize[0] = *block0NBsample;
-    blksamplesize[1] = *block1NBsample;
-    blksamplesize[2] = *block2NBsample;
-    blksamplesize[3] = *block3NBsample;
-    blksamplesize[4] = *block4NBsample;
-    blksamplesize[5] = *block5NBsample;
-    blksamplesize[6] = *block6NBsample;
-    blksamplesize[7] = *block7NBsample;
-    blksamplesize[8] = *block8NBsample;
-    blksamplesize[9] = *block9NBsample;
+    blksamplesize[0] = block0NBsample;
+    blksamplesize[1] = block1NBsample;
+    blksamplesize[2] = block2NBsample;
+    blksamplesize[3] = block3NBsample;
+    blksamplesize[4] = block4NBsample;
+    blksamplesize[5] = block5NBsample;
+    blksamplesize[6] = block6NBsample;
+    blksamplesize[7] = block7NBsample;
+    blksamplesize[8] = block8NBsample;
+    blksamplesize[9] = block9NBsample;
 
 
     uint32_t blki             = 0;
@@ -245,16 +245,16 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
         printf("BLOCK %u  size %4u  range: %4u - %4u\n", blki, blksize[blki], blkoffset[blki],
                blkoffset[blki] + blksize[blki] - 1);
     }
-    *block0NBmode = blksize[0];
-    *block1NBmode = blksize[1];
-    *block2NBmode = blksize[2];
-    *block3NBmode = blksize[3];
-    *block4NBmode = blksize[4];
-    *block5NBmode = blksize[5];
-    *block6NBmode = blksize[6];
-    *block7NBmode = blksize[7];
-    *block8NBmode = blksize[8];
-    *block9NBmode = blksize[9];
+    block0NBmode = blksize[0];
+    block1NBmode = blksize[1];
+    block2NBmode = blksize[2];
+    block3NBmode = blksize[3];
+    block4NBmode = blksize[4];
+    block5NBmode = blksize[5];
+    block6NBmode = blksize[6];
+    block7NBmode = blksize[7];
+    block8NBmode = blksize[8];
+    block9NBmode = blksize[9];
 
 
     // block buffers
@@ -264,7 +264,7 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
-        WRITE_IMAGENAME(name, "aol%lu_modevalOLbuff_blk%02u", *AOloopindex, blki);
+        WRITE_IMAGENAME(name, "aol%lu_modevalOLbuff_blk%02u", AOloopindex, blki);
         imgmvalOLbuffblk[blki] =
             stream_connect_create_3Df32(name, blksize[blki], 1, blksamplesize[blki]);
     }
@@ -317,7 +317,7 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
     {
         char name[STRINGMAXLEN_STREAMNAME];
 
-        WRITE_IMAGENAME(name, "aol%lu_blkmask%02u", *AOloopindex, blki);
+        WRITE_IMAGENAME(name, "aol%lu_blkmask%02u", AOloopindex, blki);
         imgblkmask[blki] = stream_connect_create_2D(name, NBmode, 1, _DATATYPE_INT8);
         for (uint32_t mi = blkoffset[blki]; mi < blkoffset[blki] + blksize[blki]; mi++)
         {
@@ -506,7 +506,7 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
             }
 
 
-            if (*compstatswrite == 1)
+            if (compstatswrite == 1)
             {
                 for (uint32_t block = 0; block < mblksizemax; block++)
                 {
@@ -588,3 +588,4 @@ const MILK_RUNNABLE runnable_AOloopControl_modalCTRL_stats = {
     .compute   = modalCTRL_stats_compute,
     .confcheck = customCONFcheck,
 };
+EXPORT_FPSEXEC(cacao, "modalCTRLstats", runnable_AOloopControl_modalCTRL_stats);

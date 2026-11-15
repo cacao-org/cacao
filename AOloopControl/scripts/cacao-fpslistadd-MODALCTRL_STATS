@@ -17,7 +17,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacao-cli.modalCTRLstats"
+fpsfcall="cacao-fpsexec-modalCTRLstats"
 
 # short description
 fpsdescr="Modal control stats"
@@ -38,4 +38,4 @@ function fpsentry_addcmds() {
 }
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

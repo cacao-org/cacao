@@ -1,21 +1,18 @@
 #!/usr/bin/env bash
 
-
 MSdescr="AO modal stats TUI"
 
-MSextdescr="Displays modal stats
+MSextdescr="Displays modal stats in an interactive ANSI terminal UI
 "
 
 source milk-script-std-config
 
 # check and load cacaovars
 source cacao-check-cacaovars
-RequiredCommands=( cacao-cli )
+RequiredCommands=( cacao-modalstatsTUI-bin )
 RequiredPipes=()
 RequiredFiles=()
 RequiredDirs=()
-
-
 
 source milk-argparse
 
@@ -25,33 +22,4 @@ if [ "${EXITSTATUS}" = "1" ]; then
 fi
 set -u
 
-
-
-ttystring=$( tty | tr -d \/ )
-pname="modalstatsTUI"
-fifoname="$MILK_SHM_DIR/milkCLIfifo.${pname}.${ttystring}"
-SF="$MILK_SHM_DIR/milkCLIstartup.${pname}.${ttystring}"
-echo "readshmim aol${CACAO_LOOPNUMBER}_CMmodesDM" > $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_modevalWFS" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_modevalDM" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_modevalDMf" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_modevalOL" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mgain" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mmult" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mlimit" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mlimitcntfrac" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mvalWFSave" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mvalWFSrms" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mvalDMave" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mvalDMrms" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mvalOLave" >> $SF
-echo "readshmim aol${CACAO_LOOPNUMBER}_mvalOLrms" >> $SF
-echo "listim" >> $SF
-echo "cacao-cli.modalstatsTUI ${CACAO_LOOPNUMBER}" >> $SF
-echo "exitCLI" >> $SF
-
-MILK_QUIET=1 cacao-cli -n ${pname} -f ${fifoname} -s $SF
-
-
-# cacao-cli.modalstatsTUI
-# cacao-cli.modalCTRLstats
+exec cacao-modalstatsTUI-bin "${CACAO_LOOPNUMBER}"

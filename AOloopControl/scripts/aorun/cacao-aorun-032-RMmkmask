@@ -150,28 +150,17 @@ cacaomsglog "START"
 #loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
 
 cacao-cli << EOF
-loadfits "${RMfname}" zrespM
+iofits.loadfits "${RMfname}" zrespM .
 
-cacaocc.compmasksWFSDM .dmmask.perc0 ${DMmaskRMp0}
-cacaocc.compmasksWFSDM .dmmask.coeff0 ${DMmaskRMc0}
-cacaocc.compmasksWFSDM .dmmask.perc1 ${DMmaskRMp1}
-cacaocc.compmasksWFSDM .dmmask.coeff1 ${DMmaskRMc1}
+cacaocc.compmasksWFSDM zrespM ${CACAO_DMxsize} ${CACAO_DMysize} ${DMmaskRMp0} ${DMmaskRMc0} ${DMmaskRMp1} ${DMmaskRMc1} ${WFSmaskRMp0} ${WFSmaskRMc0} ${WFSmaskRMp1} ${WFSmaskRMc1}
 
-cacaocc.compmasksWFSDM .wfsmask.perc0 ${WFSmaskRMp0}
-cacaocc.compmasksWFSDM .wfsmask.coeff0 ${WFSmaskRMc0}
-cacaocc.compmasksWFSDM .wfsmask.perc1 ${WFSmaskRMp1}
-cacaocc.compmasksWFSDM .wfsmask.coeff1 ${WFSmaskRMc1}
+iofits.saveFITS dmmap "!${CACAO_CONFWDIR}/dmmap.fits"
+iofits.saveFITS wfsmap "!${CACAO_CONFWDIR}/wfsmap.fits"
 
-cacaocc.compmasksWFSDM zrespM ${CACAO_DMxsize} ${CACAO_DMysize}
+iofits.saveFITS dmmask "!${CACAO_CONFWDIR}/dmmask.tmp.fits"
+iofits.saveFITS wfsmask "!${CACAO_CONFWDIR}/wfsmask.tmp.fits"
 
-saveFITS dmmap "${CACAO_CONFWDIR}/dmmap.fits"
-saveFITS wfsmap "${CACAO_CONFWDIR}/wfsmap.fits"
-
-saveFITS dmmask "${CACAO_CONFWDIR}/dmmask.tmp.fits"
-saveFITS wfsmask "${CACAO_CONFWDIR}/wfsmask.tmp.fits"
-
-listim
-exitCLI
+exit
 EOF
 
 

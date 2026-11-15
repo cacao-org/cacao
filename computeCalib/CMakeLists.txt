@@ -23,6 +23,7 @@ milk_add_runnable_module(${LIBNAME} SOURCES ${SOURCEFILES} LINK_LIBS
         milklinoptimtools_static
         milkstatistic_static
         milkZernikePolyn_static
+        milkimagefilter_static
         cacaoAOloopControl_static
 )
 target_include_directories(${LIBNAME}_objs PRIVATE ${CMAKE_SOURCE_DIR}/plugins/milk-extra-src)
@@ -34,6 +35,7 @@ target_link_libraries(${LIBNAME} PUBLIC
         milklinoptimtools
         milkstatistic
         milkZernikePolyn
+        milkimagefilter
         cacaoAOloopControl
 )
 # ==================

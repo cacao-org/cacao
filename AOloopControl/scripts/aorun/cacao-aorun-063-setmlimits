@@ -67,18 +67,10 @@ fi
 
 cacaomsglog "APPLYING MODAL LIMITS : galpha ${mlimitalpha}  floor ${mlimitfloor}  TT ${mlimitTT}"
 
-MILK_QUIET=1 milk << EOF
-mload milkinfo
-mload milkimagegen
-readshmim aol${CACAO_LOOPNUMBER}_mlimitfact
-info.imstats aol${CACAO_LOOPNUMBER}_mlimitfact
-imgen.mkdist imd imsize0 1 1 1
-imd1=imd/imsize0
-imd2=(1.0-imd1)^${mlimitalpha}
-imd3=(1-${mlimitfloor})*imd2+${mlimitfloor}
-cp imd3 aol${CACAO_LOOPNUMBER}_mlimitfact
-setpix aol${CACAO_LOOPNUMBER}_mlimitfact ${mlimitTT} 0 0
-setpix aol${CACAO_LOOPNUMBER}_mlimitfact ${mlimitTT} 1 0
-listim
-exitCLI
+imsize0=$(cacao-cli -q -c "@get s.aol${CACAO_LOOPNUMBER}_mlimitfact.xsize; exit" | awk 'NF{v=$1} END{print v}')
+
+MILK_QUIET=1 cacao-cli << EOF
+imgen.mkdist imd ${imsize0} 1 1 1
+@calc "s.aol${CACAO_LOOPNUMBER}_mlimitfact = (1.0 - ${mlimitfloor}) * pow(1.0 - imd / ${imsize0}, ${mlimitalpha}) + ${mlimitfloor}; s.aol${CACAO_LOOPNUMBER}_mlimitfact[0, 0] = ${mlimitTT}; s.aol${CACAO_LOOPNUMBER}_mlimitfact[1, 0] = ${mlimitTT}"
+exit
 EOF

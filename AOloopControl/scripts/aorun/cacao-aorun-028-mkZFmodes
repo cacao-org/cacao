@@ -181,37 +181,20 @@ deltaCPA="0.8"
 
 if [[ ${rCPAmin} -eq 0 ]]; then
 
-milk-all << EOF
-mload cacaocomputeCalib
-zern.mkzerc .TTfactor ${TTfactor}
-zern.mkzerc .radmaskfact ${radmaskfact}
-zern.mkzerc zerc ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
-zercm=zerc*3
-lintools.mkFouriermodes .fpowerlaw -${alpha}
-lintools.mkFouriermodes .fpowerlaw_minf 1.0
-lintools.mkFouriermodes .fpowerlaw_maxf 100.0
-lintools.mkFouriermodes ?
-lintools.mkFouriermodes .rCPAmin 0.0
-lintools.mkFouriermodes .rCPAmax ${rCPAmax}
-lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
-immerge zerc Fmodes RMsyn_modesDM 2
-listim
-saveFITS RMsyn_modesDM "${CACAO_CONFWDIR}/RMmodesDM/modesZF0.fits"
-exitCLI
+cacao-cli << EOF
+zern.mkzerc zerc ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0} ${NBzer} .TTfactor=${TTfactor} .radmaskfact=${radmaskfact}
+lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0 .fpowerlaw=-${alpha} .fpowerlaw_minf=1.0 .fpowerlaw_maxf=100.0 .rCPAmin=0.0 .rCPAmax=${rCPAmax}
+arith.immerge zerc Fmodes RMsyn_modesDM 2
+iofits.saveFITS RMsyn_modesDM "!${CACAO_CONFWDIR}/RMmodesDM/modesZF0.fits"
+exit
 EOF
 
 else
 
-milk-all << EOF
-mload cacaocomputeCalib
-lintools.mkFouriermodes .fpowerlaw -${alpha}
-lintools.mkFouriermodes .fpowerlaw_minf 1.0
-lintools.mkFouriermodes .fpowerlaw_maxf 100.0
-lintools.mkFouriermodes .rCPAmin ${rCPAmin}
-lintools.mkFouriermodes .rCPAmax ${rCPAmax}
-lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
-saveFITS Fmodes "${CACAO_CONFWDIR}/RMmodesDM/modesZF0.fits"
-exitCLI
+cacao-cli << EOF
+lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0 .fpowerlaw=-${alpha} .fpowerlaw_minf=1.0 .fpowerlaw_maxf=100.0 .rCPAmin=${rCPAmin} .rCPAmax=${rCPAmax}
+iofits.saveFITS Fmodes "!${CACAO_CONFWDIR}/RMmodesDM/modesZF0.fits"
+exit
 EOF
 
 fi
@@ -223,18 +206,14 @@ fi
 # Edge apodization
 # Uses dmmask.fits
 #
-milk-all << EOF
-mload cacaocomputeCalib
-radext=${DMr0}*${radmaskfact}
-imgen.mkdisk dmmaskext ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} radext
-loadfits "${CACAO_CONFWDIR}/RMmodesDM/modesZF0.fits" modesZF0
-loadfits "${CACAO_CONFWDIR}/dmmask.fits" dmmask
-cacaocc.maskextrapolate .edgeapo ${edgeapo}
-cacaocc.maskextrapolate modesZF0 dmmask dmmaskext modesZF
-
-saveFITS modesZF "${CACAO_CONFWDIR}/RMmodesDM/modesZF.fits"
-listim
-exitCLI
+radext=$(awk -v r="${DMr0}" -v f="${radmaskfact}" 'BEGIN{printf "%.6f", r*f}')
+cacao-cli << EOF
+imgen.mkdisk dmmaskext ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${radext}
+iofits.loadfits "${CACAO_CONFWDIR}/RMmodesDM/modesZF0.fits" modesZF0 .
+iofits.loadfits "${CACAO_CONFWDIR}/dmmask.fits" dmmask .
+cacaocc.maskextrapolate modesZF0 dmmask dmmaskext modesZF ${edgeapo}
+iofits.saveFITS modesZF "!${CACAO_CONFWDIR}/RMmodesDM/modesZF.fits"
+exit
 EOF
 
 

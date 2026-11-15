@@ -19,63 +19,65 @@
  * 2.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
-static char     *insname          = NULL;
-static uint32_t *AOloopindex      = NULL;
-static uint32_t *semindex         = NULL;
-static float    *fluxtotal        = NULL;
-static float    *GPUalpha         = NULL;
-static float    *GPUbeta          = NULL;
-static float    *WFSnormfloor     = NULL;
-static float    *WFStaveragegain  = NULL;
-static float    *WFStaveragemult  = NULL;
-static float    *WFSrefcgain      = NULL;
-static float    *WFSrefcmult      = NULL;
-static int64_t  *compWFSsubdark   = NULL;
-static int64_t  *compWFSnormalize = NULL;
-static int64_t  *compWFSmask      = NULL;
-static int64_t  *compWFSrefsub    = NULL;
-static int64_t  *compWFSsigav     = NULL;
-static int64_t  *compWFSrefc      = NULL;
-static int64_t  *resetWFSrefc     = NULL;
-static char     *wfszposname      = NULL;
+static char     insname[FUNCTION_PARAMETER_STRMAXLEN]     = "inV";
+static uint32_t AOloopindex                                 = 0;
+static uint32_t semindex                                    = 1;
+static float    fluxtotal                                   = 0.0f;
+static float    GPUalpha                                    = 0.0f;
+static float    GPUbeta                                     = 0.0f;
+static float    WFSnormfloor                                = 0.0f;
+static float    WFStaveragegain                             = 0.01f;
+static float    WFStaveragemult                             = 0.999f;
+static float    WFSrefcgain                                 = 0.0f;
+static float    WFSrefcmult                                 = 1.0f;
+static int32_t  compWFSsubdark                              = 1;
+static int32_t  compWFSnormalize                            = 1;
+static int32_t  compWFSmask                                 = 1;
+static int32_t  compWFSrefsub                               = 1;
+static int32_t  compWFSsigav                                = 1;
+static int32_t  compWFSrefc                                 = 1;
+static int32_t  resetWFSrefc                                = 0;
+static char     wfszposname[FUNCTION_PARAMETER_STRMAXLEN] = "aolX_wfszpo";
 
 
 /* ================================================================
  * 3.  UNIFIED PARAMETER TABLE (X-Macro)
  * ============================================================= */
 
-#define FPS_PARAMS(X)                                                                             \
-    X(".insname", &insname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "input stream name")      \
-    X(".AOloopindex", &AOloopindex, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "loop index")         \
-    X(".semindex", &semindex, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT, "input semaphore index")    \
-    X(".WFStaveragegain", &WFStaveragegain, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,              \
-      "tmlt*(1-tg)*imwfs3+tg*imwfs2")                                                             \
-    X(".WFStaveragemult", &WFStaveragemult, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,              \
-      "tmlt*(1-tg)*imwfs3+tg*imwfs2")                                                             \
-    X(".WFSrefcmult", &WFSrefcmult, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                      \
-      "mlt*(wfsref-zpo)+(1-m)*refc")                                                              \
-    X(".WFSrefcgain", &WFSrefcgain, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                      \
-      "wfsrefc+gain*imwfs3->wfsrefc")                                                             \
-    X(".out.fluxtotal", &fluxtotal, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT, "total flux")       \
-    X(".out.GPUalpha", &GPUalpha, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                       \
-      "GPU alpha coefficient")                                                                    \
-    X(".out.GPUbeta", &GPUbeta, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT, "GPU beta coefficient") \
-    X(".WFSnormfloor", &WFSnormfloor, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                    \
-      "WFS flux floor for normalize")                                                             \
-    X(".comp.darksub", &compWFSsubdark, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                    \
-      "-wfsdark, x wfsmult->imWFS0")                                                              \
-    X(".comp.WFSnormalize", &compWFSnormalize, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,             \
-      "normalize over wfsmask->imWFS1")                                                           \
-    X(".comp.compWFSmask", &compWFSmask, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT, "x wfsmask ?")    \
-    X(".comp.WFSrefsub", &compWFSrefsub, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                   \
-      "subtract WFS ref ->imWFS2")                                                                \
-    X(".comp.WFSsigav", &compWFSsigav, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                     \
-      "average WFS signal")                                                                       \
-    X(".comp.WFSrefc", &compWFSrefc, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                       \
-      "WFS reference correction")                                                                 \
-    X(".comp.resetWFSrefc", &resetWFSrefc, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                 \
-      "reset WFS reference correction")                                                           \
-    X(".wfszpo", &wfszposname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS zero point offset")
+#define FPS_PARAMS(X)                                                                               \
+    X(".insname", insname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "input stream name")         \
+    X(".AOloopindex", &AOloopindex, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "loop index")           \
+    X(".semindex", &semindex, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT, "input semaphore index")      \
+    X(".WFStaveragegain", &WFStaveragegain, FPTYPE_FLOAT32, 0,                                      \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), "tmlt*(1-tg)*imwfs3+tg*imwfs2")                     \
+    X(".WFStaveragemult", &WFStaveragemult, FPTYPE_FLOAT32, 0,                                      \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), "tmlt*(1-tg)*imwfs3+tg*imwfs2")                     \
+    X(".WFSrefcmult", &WFSrefcmult, FPTYPE_FLOAT32, 0, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),    \
+      "mlt*(wfsref-zpo)+(1-m)*refc")                                                                \
+    X(".WFSrefcgain", &WFSrefcgain, FPTYPE_FLOAT32, 0, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),    \
+      "wfsrefc+gain*imwfs3->wfsrefc")                                                               \
+    X(".out.fluxtotal", &fluxtotal, FPTYPE_FLOAT32, 0, (FPFLAG_DEFAULT_OUTPUT | FPFLAG_WRITERUN),   \
+      "total flux")                                                                                 \
+    X(".out.GPUalpha", &GPUalpha, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                         \
+      "GPU alpha coefficient")                                                                      \
+    X(".out.GPUbeta", &GPUbeta, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT, "GPU beta coefficient")   \
+    X(".WFSnormfloor", &WFSnormfloor, FPTYPE_FLOAT32, 0, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),  \
+      "WFS flux floor for normalize")                                                               \
+    X(".comp.darksub", &compWFSsubdark, FPTYPE_ONOFF, 0, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),  \
+      "-wfsdark, x wfsmult->imWFS0")                                                                \
+    X(".comp.WFSnormalize", &compWFSnormalize, FPTYPE_ONOFF, 0,                                     \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), "normalize over wfsmask->imWFS1")                   \
+    X(".comp.compWFSmask", &compWFSmask, FPTYPE_ONOFF, 0, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), \
+      "x wfsmask ?")                                                                                \
+    X(".comp.WFSrefsub", &compWFSrefsub, FPTYPE_ONOFF, 0, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), \
+      "subtract WFS ref ->imWFS2")                                                                  \
+    X(".comp.WFSsigav", &compWFSsigav, FPTYPE_ONOFF, 0, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),   \
+      "average WFS signal")                                                                         \
+    X(".comp.WFSrefc", &compWFSrefc, FPTYPE_ONOFF, 0, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),     \
+      "WFS reference correction")                                                                   \
+    X(".comp.resetWFSrefc", &resetWFSrefc, FPTYPE_ONOFF, 0,                                         \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), "reset WFS reference correction")                   \
+    X(".wfszpo", wfszposname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS zero point offset")
 
 
 MILK_PARAMS_DEFINE(acquireWFSim, FPS_PARAMS);
@@ -110,25 +112,25 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
     {
         char name[STRINGMAXLEN_IMGNAME];
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS0", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_imWFS0", AOloopindex);
         imgimWFS0 = stream_connect_create_2Df32(name, sizexWFS, sizeyWFS);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS1", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_imWFS1", AOloopindex);
         imgimWFS1 = stream_connect_create_2Df32(name, sizexWFS, sizeyWFS);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS2", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_imWFS2", AOloopindex);
         imgimWFS2 = stream_connect_create_2Df32(name, sizexWFS, sizeyWFS);
 
-        WRITE_IMAGENAME(name, "aol%u_imWFS3", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_imWFS3", AOloopindex);
         imgimWFS3 = stream_connect_create_2Df32(name, sizexWFS, sizeyWFS);
 
-        WRITE_IMAGENAME(name, "aol%u_wfsref", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_wfsref", AOloopindex);
         imgwfsref = stream_connect_create_2Df32(name, sizexWFS, sizeyWFS);
 
-        WRITE_IMAGENAME(name, "aol%u_wfsrefc", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_wfsrefc", AOloopindex);
         imgwfsrefc = stream_connect_create_2Df32(name, sizexWFS, sizeyWFS);
 
-        WRITE_IMAGENAME(name, "aol%u_wfsmask", *AOloopindex);
+        WRITE_IMAGENAME(name, "aol%u_wfsmask", AOloopindex);
         imgwfsmask = stream_connect_create_2Df32(name, sizexWFS, sizeyWFS);
     }
 
@@ -137,7 +139,7 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
     {
         // if wfsmask created here, initialize it to 1
         printf("INITIALIZING wfsmask to 1\n");
-        for (uint64_t ii; ii < imgwfsmask.md->nelement; ii++)
+        for (uint64_t ii = 0; ii < imgwfsmask.md->nelement; ii++)
         {
             imgwfsmask.im->array.F[ii] = 1.0;
         }
@@ -146,10 +148,10 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
 
     list_image_ID();
 
-    int wfsim_semwaitindex = ImageStreamIO_getsemwaitindex(imgwfsim.im, *semindex);
+    int wfsim_semwaitindex = ImageStreamIO_getsemwaitindex(imgwfsim.im, semindex);
     if (wfsim_semwaitindex > -1)
     {
-        *semindex = wfsim_semwaitindex;
+        semindex = wfsim_semwaitindex;
     }
 
     // initialize camera averaging arrays if not already done
@@ -168,7 +170,7 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
     IMGID imgwfsdark;
     {
         char wfsdarkname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", *AOloopindex);
+        WRITE_IMAGENAME(wfsdarkname, "aol%u_wfsdark", AOloopindex);
         imgwfsdark = stream_connect(wfsdarkname);
     }
 
@@ -177,7 +179,7 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
     IMGID imgwfsmult;
     {
         char wfsmultname[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(wfsmultname, "aol%u_wfsmult", *AOloopindex);
+        WRITE_IMAGENAME(wfsmultname, "aol%u_wfsmult", AOloopindex);
         imgwfsmult = stream_connect(wfsmultname);
     }
 
@@ -248,8 +250,7 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
         // check if wfsmult to be applied
         //int status_wfsmult = 0;
 
-        if (functionparameter_GetParamValue_ONOFF(milk_data.fpsptr, ".comp.darksub") == 1 &&
-            imgwfsdark.ID != -1)
+        if (compWFSsubdark && imgwfsdark.ID != -1)
         {
             status_darksub = 1;
         }
@@ -359,7 +360,7 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
         }
         imgimWFS1.md->write = 1;
 
-        if (functionparameter_GetParamValue_ONOFF(milk_data.fpsptr, ".comp.WFSnormalize") == 1)
+        if (compWFSnormalize)
         {
             status_normalize = 1;
 
@@ -382,21 +383,20 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
                     imtotal += imgimWFS0.im->array.F[ii];
                 }
             }
-            *fluxtotal = imtotal;
+            fluxtotal = imtotal;
 
 
             // avoiding division by zero
             //
-            double fluxtotpos = *fluxtotal;
+            double fluxtotpos = fluxtotal;
             if (fluxtotpos < 0.0)
             {
                 fluxtotpos = 0.0;
             }
-            double totalinv = 1.0 / (*fluxtotal + *WFSnormfloor * sizeWFS);
+            double totalinv = 1.0 / (fluxtotal + WFSnormfloor * sizeWFS);
 
 
-            if ((imgwfsmask.ID != -1) &&
-                (functionparameter_GetParamValue_ONOFF(milk_data.fpsptr, ".comp.compWFSmask") == 1))
+            if ((imgwfsmask.ID != -1) && compWFSmask)
             {
                 for (uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
@@ -445,7 +445,7 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
         {
             clock_gettime(CLOCK_MILK, &time1);
         }
-        if (functionparameter_GetParamValue_ONOFF(milk_data.fpsptr, ".comp.WFSrefsub") == 1)
+        if (compWFSrefsub)
         {
             // subtract reference
             status_refsub       = 1;
@@ -485,12 +485,12 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
         {
             clock_gettime(CLOCK_MILK, &time1);
         }
-        if (functionparameter_GetParamValue_ONOFF(milk_data.fpsptr, ".comp.WFSsigav") == 1)
+        if (compWFSsigav)
         {
             status_ave          = 1;
             imgimWFS3.md->write = 1;
-            float tave_gain     = *WFStaveragegain;
-            float tave_mult     = *WFStaveragemult;
+            float tave_gain     = WFStaveragegain;
+            float tave_mult     = WFStaveragemult;
             for (uint64_t ii = 0; ii < sizeWFS; ii++)
             {
                 float valf = tave_mult * ((1.0 - tave_gain) * imgimWFS3.im->array.F[ii] +
@@ -527,7 +527,7 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
 
         // Reset imWFS3, wfsrefc and wfszpo to zero
         //
-        if (functionparameter_GetParamValue_ONOFF(milk_data.fpsptr, ".comp.resetWFSrefc") == 1)
+        if (resetWFSrefc)
         {
             for (uint64_t ii = 0; ii < sizeWFS; ii++)
             {
@@ -537,15 +537,16 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
             }
 
             // toggle back to OFF
+            resetWFSrefc = 0;
             functionparameter_SetParamValue_ONOFF(milk_data.fpsptr, ".comp.resetWFSrefc", 0);
         }
 
-        if (functionparameter_GetParamValue_ONOFF(milk_data.fpsptr, ".comp.WFSrefc") == 1)
+        if (compWFSrefc)
         {
             status_wfsrefc       = 1;
             imgwfsrefc.md->write = 1;
-            float refcgain       = *WFSrefcgain;
-            float refcmult       = *WFSrefcmult;
+            float refcgain       = WFSrefcgain;
+            float refcmult       = WFSrefcmult;
             if (imgwfsref.ID != -1)
             {
                 // refcmult is pulling refc toward ref-wfszpo
@@ -568,7 +569,7 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
             }
 
             // normalize
-            if (functionparameter_GetParamValue_ONOFF(milk_data.fpsptr, ".comp.WFSnormalize") == 1)
+            if (compWFSnormalize)
             {
                 // Compute image total
                 double   imtotal = 0.0;

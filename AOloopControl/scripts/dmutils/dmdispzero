@@ -18,8 +18,4 @@ then
 fi
 
 
-cacao-cli << EOF
-readshmim dm$1disp$2
-imzero dm$1disp$2
-exit
-EOF
+cacao-cli -q -c "@calc \"s.dm${1}disp${2} = 0\""

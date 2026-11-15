@@ -65,7 +65,7 @@ milkbindir="${MILK_INSTALLDIR}/bin"
 shopt -s nullglob
 for fpslistaddexec in ${milkbindir}/cacao-fpslistadd-*; do
         #echo ">>>>>>>>>>>>>>>>>> Running ${fpslistaddexec}"
-        FPSLISTADD_MODE="info" ${fpslistaddexec} -h
+        FPSLISTADD_MODE="info" ${fpslistaddexec}
 done
 shopt -u nullglob
 
@@ -75,7 +75,7 @@ shopt -u nullglob
 shopt -s nullglob
 for fpslf in cacao-fpslistadd-*; do
 	#echo "Processing fpslistadd file ${fpslf}"
-	. ./${fpslf} -h
+	FPSLISTADD_MODE="info" . ./${fpslf}
 done
 shopt -u nullglob
 

@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# Early-exit for -h1 before sourcing
+case "${1-}" in
+    -h1|--help-oneline)
+        echo "List CACAO commands"
+        exit 0 ;;
+esac
+
 # This script uses milk-argparse
 # See template milk-scriptexample in module milk_module_example for template and instructions
 
@@ -14,6 +21,7 @@ default: number of CPU cores) to keep total runtime under ~1 s.
 "
 
 source milk-script-std-config
+RequiredCommands=( cacao-cli )
 
 PRINTPATH="0"
 MSopt+=( "p:path:set_printpath::Print command path instead of description" )

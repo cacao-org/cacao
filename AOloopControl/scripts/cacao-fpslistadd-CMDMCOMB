@@ -41,4 +41,4 @@ function fpsentry_addcmds() {
 
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

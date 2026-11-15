@@ -5,10 +5,7 @@ source cacao-check-cacaovars
 
 
 #Make image for the 2D turbulence map
-milk-all << EOF
-mk2Dim "s>tf32>mapsturb2D" 50 50
-exitCLI
-EOF
+cacao-cli -q -c '@calc "s.mapsturb2D = zeros(50, 50)"; exit'
 
 
 sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.dmstream mapsturb2D"

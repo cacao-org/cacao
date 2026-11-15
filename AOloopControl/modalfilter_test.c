@@ -347,3 +347,4 @@ const MILK_RUNNABLE runnable_AOloopControl_modalfilter_test = {
     .compute   = modalfilter_test_compute,
     .confcheck = customCONFcheck,
 };
+EXPORT_FPSEXEC(cacao, "mfilttest", runnable_AOloopControl_modalfilter_test);

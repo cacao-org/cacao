@@ -63,14 +63,11 @@ until [ -f "$filename" ]
 do
      sleep 0.1
 done
-milk-shmim-zero aol${CACAO_LOOPNUMBER}_dmC
-
-for (( ch=0; ch<NBchannel; ch++ ))
-do
-   echo "zeroing $ch"
-   dmchstring=$( printf "dm%02ddisp%02d" ${CACAO_DMSIMINDEX} $ch )
-   milk-shmim-zero ${dmchstring}
-done
+cacao-cli -q << EOF
+@calc "s.aol${CACAO_LOOPNUMBER}_dmC = 0"
+$(for (( ch=0; ch<NBchannel; ch++ )); do printf '@calc "s.dm%02ddisp%02d = 0"\n' "${CACAO_DMSIMINDEX}" "$ch"; done)
+exit
+EOF
 
 
 fi

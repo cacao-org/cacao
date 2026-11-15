@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
 
+# Early-exit for -h1 before sourcing
+case "${1-}" in
+    -h1|--help-oneline)
+        echo "Execute cacao-cli command string"
+        exit 0 ;;
+esac
 
-MSdescr="Execute cacao-cli command"
+MSdescr="Execute cacao-cli command string"
 
-MSextdescr="Execute command string within cacao-cli command line interface (CLI)
-
-Multiple commands separated by ;
-For example, \"listim;listim\" will run listim command twice
-"
-
-
+MSextdescr="Execute command string within cacao-cli command line interface (CLI).
+Multiple commands can be separated by ; or newlines, e.g. \"mem.listim; mem.listim\"."
 
 source milk-script-std-config
 
+RequiredCommands=(cacao-cli)
+RequiredFiles=()
+RequiredDirs=()
 
-MSarg+=( "cmd:string:command string, enter within \"\"" )
-
+MSarg+=( "cmd:string:command string" )
 
 pname="cacaoexec"
 MSopt+=( "n:pname:set_pname:pname[string]:set process name" )
@@ -23,32 +26,20 @@ function set_pname() {
 	pname="$1"
 }
 
-
 source milk-argparse
-
 
 cmdstring="${inputMSargARRAY[0]}"
 
+set +u
+if [ -n "${MILK_SHM_DIR:-}" ] && [ -w "${MILK_SHM_DIR}/" ]; then
+    SFDIR="${MILK_SHM_DIR}/"
+else
+    SFDIR="/tmp"
+fi
+set -u
 
+SF="${SFDIR}/cacaoCLIstartup.${pname}.$$"
+trap 'rm -f "${SF}"' EXIT
+printf '%s\nexit\n' "${cmdstring}" > "${SF}"
 
-
-
-
-
-IFS=';' read -r -a array <<< "$cmdstring"
-
-
-
-#fifoname="cacaoCLIfifo.${pname}"
-SF="${MILK_SHM_DIR}/.cacaoCLIstartup.${pname}.$$"
-echo "" > $SF
-for cmdline in "${array[@]}"
-do
-    echo "${cmdline}" >> ${SF}
-done
-echo "exitCLI" >> ${SF}
-
-echo "SF = ${SF}"
-cacao-cli -n ${pname} -f -s ${SF}
-
-rm ${SF}
+MILK_QUIET=1 cacao-cli -n "${pname}" -s "${SF}"

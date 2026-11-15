@@ -35,23 +35,17 @@ function fpsentry_addcmds() {
     addfpscmd "setval ${fpsfname}.insname aol${CACAO_LOOPNUMBER}_modevalOL"
     addfpscmd "setval ${fpsfname}.immodes aol${CACAO_LOOPNUMBER}_DMmodes"
     addfpscmd "setval ${fpsfname}.outcoeff aol${CACAO_LOOPNUMBER}_dmOL"
-    addfpscmd "setval ${fpsfname}.option.sname_intot NULL"
 
 
-    addfpscmd "setval ${fpsfname}.option.sname_refin NULL"
 
-    addfpscmd "setval ${fpsfname}.outinit OFF"
 
     addfpscmd "setval ${fpsfname}.GPUindex 0"
 
-    addfpscmd "setval ${fpsfname}.option.axmode 1"
-    addfpscmd "setval ${fpsfname}.option.PROCESS OFF"
-    addfpscmd "setval ${fpsfname}.option.TRACEMODE OFF"
+    addfpscmd "setval ${fpsfname}.axmode 1"
     addfpscmd "setval ${fpsfname}.option.MODENORM OFF"
 
-    addfpscmd "setval ${fpsfname}.option.twait 0"
 }
 
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

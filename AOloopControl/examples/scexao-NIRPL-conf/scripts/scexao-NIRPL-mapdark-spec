@@ -17,9 +17,6 @@ source ./scripts/fps-utility
 # delete previous dark
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm
 
-sendFPScmd "waitonrunON"
-sendFPScmd "waitonconfON"
-
 # configure acqu to run once on the raw dark
 sendFPScmd "setval acquire_spectra-${CACAO_LOOPNUMBER}.procinfo.loopcntMax 1"
 sendFPScmd "setval acquire_spectra-${CACAO_LOOPNUMBER}.wfsin aol${CACAO_LOOPNUMBER}_wfsdarkraw"
@@ -27,14 +24,14 @@ sendFPScmd "confwupdate acquire_spectra-${CACAO_LOOPNUMBER}"
 
 # "pulse" the process
 sendFPScmd "runstart acquire_spectra-${CACAO_LOOPNUMBER}"
-sendFPScmd "runstop acquire_spectra-${CACAO_LOOPNUMBER}"
+cacao_fps_wait_run_done "acquire_spectra-${CACAO_LOOPNUMBER}"
 
 # copy the output to wfsdark
-cacao << EOF
-readshmim aol${CACAO_LOOPNUMBER}_imWFS2
-readshmim aol${CACAO_LOOPNUMBER}_wfsdark
-imcpshm aol${CACAO_LOOPNUMBER}_imWFS2 aol${CACAO_LOOPNUMBER}_wfsdark
-exitCLI
+cacao-cli << EOF
+mem.readshmim aol${CACAO_LOOPNUMBER}_imWFS2
+mem.readshmim aol${CACAO_LOOPNUMBER}_wfsdark
+mem.imcpshm aol${CACAO_LOOPNUMBER}_imWFS2 aol${CACAO_LOOPNUMBER}_wfsdark
+exit
 EOF
 
 # reset acqu

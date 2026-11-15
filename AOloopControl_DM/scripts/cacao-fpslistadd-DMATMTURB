@@ -30,7 +30,6 @@ function fpsentry_addmodules() {
 function fpsentry_addcmds() {
 	DMTURBCHAN="10"
 	addfpscmd "setval ${fpsfname}.dmstream dm${CACAO_DMINDEX}disp${DMTURBCHAN}"
-	addfpscmd "setval ${fpsfname}.turbfname atmturbC.fits"
 	# infinite loop
 	addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1"
 	addfpscmd "setval ${fpsfname}.procinfo.triggermode 4" # delay
@@ -41,4 +40,4 @@ function fpsentry_addcmds() {
 
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

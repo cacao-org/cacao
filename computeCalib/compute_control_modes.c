@@ -25,34 +25,37 @@
 
 // Local variables
 
-static uint32_t AOloopindex;
+static int32_t AOloopindex = 0;
 
-static float svdlim;
-static float CPAmax;
-static float deltaCPA;
+static float svdlim   = 0.01f;
+static float CPAmax   = 20.0f;
+static float deltaCPA = 0.8f;
 
-static float alignCX; // X center
-static float alignCY; // Y center
-static float alignID; // Inner diameter
-static float alignOD; // Outer diameter
+static float alignCX = 10.0f; // X center
+static float alignCY = 10.0f; // Y center
+static float alignID = 5.0f;  // Inner diameter
+static float alignOD = 10.0f; // Outer diameter
 
-static uint32_t DMxsize;
-static uint32_t DMysize;
+static uint32_t DMxsize = 32;
+static uint32_t DMysize = 32;
 
-static FPS FPS_zRMacqu;
-static FPS FPS_loRMacqu;
-static FPS FPS_DMcomb;
+static char fpsname_zRMacqu[FUNCTION_PARAMETER_STRMAXLEN]  = "";
+static char fpsname_loRMacqu[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char fpsname_DMcomb[FUNCTION_PARAMETER_STRMAXLEN]   = "";
+static FPS  FPS_zRMacqu                                    = { 0 };
+static FPS  FPS_loRMacqu                                   = { 0 };
+static FPS  FPS_DMcomb                                     = { 0 };
 
-static char fname_DMmaskCTRL[FUNCTION_PARAMETER_STRMAXLEN];
-static char fname_DMmaskEXTR[FUNCTION_PARAMETER_STRMAXLEN];
-static char fname_zrespM[FUNCTION_PARAMETER_STRMAXLEN];
-static char fname_WFSmask[FUNCTION_PARAMETER_STRMAXLEN];
-static char fname_loRM[FUNCTION_PARAMETER_STRMAXLEN];
-static char fname_loRMmodes[FUNCTION_PARAMETER_STRMAXLEN];
+static char fname_DMmaskCTRL[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char fname_DMmaskEXTR[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char fname_zrespM[FUNCTION_PARAMETER_STRMAXLEN]     = "";
+static char fname_WFSmask[FUNCTION_PARAMETER_STRMAXLEN]    = "";
+static char fname_loRM[FUNCTION_PARAMETER_STRMAXLEN]       = "";
+static char fname_loRMmodes[FUNCTION_PARAMETER_STRMAXLEN]  = "";
 
 // Toggles
-static int64_t update_RMfiles;
-static int64_t update_align;
+static int32_t update_RMfiles = 0;
+static int32_t update_align   = 0;
 
 #define FPS_PARAMS(X)                                                                           \
     X(".AOloopindex", &AOloopindex, FPTYPE_INT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
@@ -72,9 +75,9 @@ static int64_t update_align;
       "beam outer diameter")                                                                    \
     X(".DMgeom.DMxsize", &DMxsize, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "DM x size")         \
     X(".DMgeom.DMysize", &DMysize, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "DM y size")         \
-    X(".FPS_zRMacqu", &FPS_zRMacqu, FPTYPE_FPSNAME, 1,                                          \
+    X(".FPS_zRMacqu", fpsname_zRMacqu, FPTYPE_FPSNAME, 1,                                       \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED), "FPS zonal RM acquisition")             \
-    X(".DMgeom.FPS_DMcomb", &FPS_DMcomb, FPTYPE_FPSNAME, 1,                                     \
+    X(".DMgeom.FPS_DMcomb", fpsname_DMcomb, FPTYPE_FPSNAME, 1,                                  \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_FPS_RUN_REQUIRED), "FPS DM comb")                          \
     X(".DMgeom.DMmaskCTRL", fname_DMmaskCTRL, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT,     \
       "DM actuators controlled")                                                                \
@@ -82,7 +85,7 @@ static int64_t update_align;
       "DM actuators extrapolated")                                                              \
     X(".zrespM", fname_zrespM, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "zonal response matrix") \
     X(".WFSmask", fname_WFSmask, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT, "WFS mask")            \
-    X(".auxRM.FPS_loRMacqu", &FPS_loRMacqu, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT,            \
+    X(".auxRM.FPS_loRMacqu", fpsname_loRMacqu, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT,         \
       "FPS low order modal RM acquisition")                                                     \
     X(".auxRM.loRM", fname_loRM, FPTYPE_STRING, 1, FPFLAG_DEFAULT_INPUT,                        \
       "low order modal response matrix")                                                        \
@@ -349,61 +352,64 @@ static errno_t customCONFcheck()
     if (milk_data.fpsptr != NULL)
     {
         // FPS are not required
+        long fpi_zrespM     = functionparameter_GetParamIndex(milk_data.fpsptr, ".zrespM");
+        long fpi_WFSmask    = functionparameter_GetParamIndex(milk_data.fpsptr, ".WFSmask");
+        long fpi_loRMacqu   = functionparameter_GetParamIndex(milk_data.fpsptr, ".auxRM.FPS_loRMacqu");
+        long fpi_zRMacqu    = functionparameter_GetParamIndex(milk_data.fpsptr, ".FPS_zRMacqu");
+        long fpi_DMcomb     = functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.FPS_DMcomb");
+        long fpi_upRMfiles  = functionparameter_GetParamIndex(milk_data.fpsptr, ".upRMfiles");
+        long fpi_upAlign    = functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.upAlign");
+        long fpi_DMmaskCTRL = functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.DMmaskCTRL");
+        long fpi_DMmaskEXTR = functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.DMmaskEXTR");
 
-        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".zrespM")]
-            .fpflag &= ~FPFLAG_STREAM_RUN_REQUIRED;
-
-        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".WFSmask")]
-            .fpflag &= ~FPFLAG_STREAM_RUN_REQUIRED;
-
-        milk_data.fpsptr
-            ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".auxRM.FPS_loRMacqu")]
-            .fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
-
-        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".FPS_zRMacqu")]
-            .fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
-
-        milk_data.fpsptr
-            ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.FPS_DMcomb")]
-            .fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
-
-
-        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".zrespM")]
-            .fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
-
-        milk_data.fpsptr->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".WFSmask")]
-            .fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
-
-
-        if (FPS_zRMacqu.SMfd < 1)
+        if (fpi_zrespM > -1)
         {
-            functionparameter_ConnectExternalFPS(
-                milk_data.fpsptr, functionparameter_GetParamIndex(milk_data.fpsptr, ".FPS_zRMacqu"),
-                &FPS_zRMacqu);
+            milk_data.fpsptr->parray[fpi_zrespM].fpflag &= ~FPFLAG_STREAM_RUN_REQUIRED;
+        }
+        if (fpi_WFSmask > -1)
+        {
+            milk_data.fpsptr->parray[fpi_WFSmask].fpflag &= ~FPFLAG_STREAM_RUN_REQUIRED;
+        }
+        if (fpi_loRMacqu > -1)
+        {
+            milk_data.fpsptr->parray[fpi_loRMacqu].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
+        }
+        if (fpi_zRMacqu > -1)
+        {
+            milk_data.fpsptr->parray[fpi_zRMacqu].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
+        }
+        if (fpi_DMcomb > -1)
+        {
+            milk_data.fpsptr->parray[fpi_DMcomb].fpflag &= ~FPFLAG_FPS_RUN_REQUIRED;
         }
 
-        if (FPS_loRMacqu.SMfd < 1)
+        if (fpi_zrespM > -1)
         {
-            functionparameter_ConnectExternalFPS(
-                milk_data.fpsptr,
-                functionparameter_GetParamIndex(milk_data.fpsptr, ".auxRM.FPS_loRMacqu"),
-                &FPS_loRMacqu);
+            milk_data.fpsptr->parray[fpi_zrespM].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
+        }
+        if (fpi_WFSmask > -1)
+        {
+            milk_data.fpsptr->parray[fpi_WFSmask].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
         }
 
-        if (FPS_DMcomb.SMfd < 1)
+        if (FPS_zRMacqu.SMfd < 1 && fpi_zRMacqu > -1)
         {
-            functionparameter_ConnectExternalFPS(
-                milk_data.fpsptr,
-                functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.FPS_DMcomb"),
-                &FPS_DMcomb);
+            functionparameter_ConnectExternalFPS(milk_data.fpsptr, fpi_zRMacqu, &FPS_zRMacqu);
         }
 
+        if (FPS_loRMacqu.SMfd < 1 && fpi_loRMacqu > -1)
+        {
+            functionparameter_ConnectExternalFPS(milk_data.fpsptr, fpi_loRMacqu, &FPS_loRMacqu);
+        }
+
+        if (FPS_DMcomb.SMfd < 1 && fpi_DMcomb > -1)
+        {
+            functionparameter_ConnectExternalFPS(milk_data.fpsptr, fpi_DMcomb, &FPS_DMcomb);
+        }
 
         // Update RM files
-        if (milk_data.fpsptr
-                ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".upRMfiles")]
-                .fpflag &
-            FPFLAG_ONOFF)
+        if (fpi_upRMfiles > -1 &&
+            (milk_data.fpsptr->parray[fpi_upRMfiles].fpflag & FPFLAG_ONOFF))
         {
             if (FPS_zRMacqu.SMfd > 0)
             {
@@ -439,31 +445,26 @@ static errno_t customCONFcheck()
                         FUNCTION_PARAMETER_STRMAXLEN);
 
                 SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/respM.fits", datadir);
-                functionparameter_SetParamValue_STRING(milk_data.fpsptr, ".loRM", fname);
+                functionparameter_SetParamValue_STRING(milk_data.fpsptr, ".auxRM.loRM", fname);
 
                 SNPRINTF_CHECK(fname, FUNCTION_PARAMETER_STRMAXLEN, "%s/RMpokeCube.fits", datadir);
-                functionparameter_SetParamValue_STRING(milk_data.fpsptr, ".loRMmodes", fname);
+                functionparameter_SetParamValue_STRING(milk_data.fpsptr, ".auxRM.loRMmodes", fname);
             }
 
             // set back to OFF
-            milk_data.fpsptr
-                ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".upRMfiles")]
-                .fpflag &= ~FPFLAG_ONOFF;
+            milk_data.fpsptr->parray[fpi_upRMfiles].fpflag &= ~FPFLAG_ONOFF;
         }
 
-
         // update align params for auto mask
-        if (milk_data.fpsptr
-                ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.upAlign")]
-                .fpflag &
-            FPFLAG_ONOFF)
+        if (fpi_upAlign > -1 &&
+            (milk_data.fpsptr->parray[fpi_upAlign].fpflag & FPFLAG_ONOFF))
         {
             if (FPS_DMcomb.SMfd > 0)
             {
                 int DMxsize = functionparameter_GetParamValue_INT64(&FPS_DMcomb, ".DMxsize");
                 int DMysize = functionparameter_GetParamValue_INT64(&FPS_DMcomb, ".DMysize");
                 __attribute__((unused)) int DMMODE =
-                    functionparameter_GetParamValue_INT64(&FPS_DMcomb, ".DMMODE");
+                    functionparameter_GetParamValue_INT64(&FPS_DMcomb, ".DMmode");
 
                 float cx = 0.5 * DMxsize - 0.5;
                 float cy = 0.5 * DMysize - 0.5;
@@ -477,18 +478,17 @@ static errno_t customCONFcheck()
                 functionparameter_SetParamValue_FLOAT32(milk_data.fpsptr, ".DMgeom.align.OD", od);
                 functionparameter_SetParamValue_FLOAT32(milk_data.fpsptr, ".DMgeom.align.ID", id);
             }
-            milk_data.fpsptr
-                ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.upAlign")]
-                .fpflag &= ~FPFLAG_ONOFF;
+            milk_data.fpsptr->parray[fpi_upAlign].fpflag &= ~FPFLAG_ONOFF;
         }
 
-
-        milk_data.fpsptr
-            ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.DMmaskCTRL")]
-            .fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
-        milk_data.fpsptr
-            ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.DMmaskEXTR")]
-            .fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
+        if (fpi_DMmaskCTRL > -1)
+        {
+            milk_data.fpsptr->parray[fpi_DMmaskCTRL].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
+        }
+        if (fpi_DMmaskEXTR > -1)
+        {
+            milk_data.fpsptr->parray[fpi_DMmaskEXTR].fpflag |= FPFLAG_STREAM_RUN_REQUIRED;
+        }
     }
 
     return RETURN_SUCCESS;

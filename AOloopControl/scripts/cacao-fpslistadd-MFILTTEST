@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacao-cli.mfilttest"
+fpsfcall="cacao-fpsexec-mfilttest"
 
 # short description
 fpsdescr="Modal filtering test input"
@@ -39,4 +39,4 @@ function fpsentry_addcmds() {
 
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

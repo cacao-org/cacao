@@ -53,7 +53,7 @@ function cacao-calib-loadFITSfile ()
 	echo "FITSFILE = ${FITSFILE}"
 	echo "${FITSFILE}" > conf/shmim.${SNAME}.name.txt
 	cp "${FITSFILE}" "conf/shmim.${SNAME}.fits"
-	milk-FITS2shm "conf/shmim.${SNAME}.fits" aol${CACAO_LOOPNUMBER}_${SNAME}
+	milk-FITS2shm _loadfits:exec "conf/shmim.${SNAME}.fits" "@S:aol${CACAO_LOOPNUMBER}_${SNAME}"
 
 	cacaomsglog "USING ${FITSFILE} as ${SNAME}"
 }

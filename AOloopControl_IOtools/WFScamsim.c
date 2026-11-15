@@ -17,28 +17,31 @@
 #include "statistic/statistic.h"
 
 // Local variables
-static char     wfssignal_in[FUNCTION_PARAMETER_STRMAXLEN];
-static char     wfsim_out[FUNCTION_PARAMETER_STRMAXLEN];
-static uint64_t compdarkadd;
-static char     wfsdark[FUNCTION_PARAMETER_STRMAXLEN];
-static float    fluxtotal;
-static float    camgain;
-static uint64_t compphnoise;
-static float    camRON;
+static char    wfssignal_in[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char    wfsim_out[FUNCTION_PARAMETER_STRMAXLEN]    = "";
+static int32_t compdarkadd                                = 0;
+static char    wfsdark[FUNCTION_PARAMETER_STRMAXLEN]      = "";
+static float   fluxtotal                                  = -1.0f;
+static float   camgain                                    = 1.0f;
+static int32_t compphnoise                                = 0;
+static float   camRON                                     = 0.0f;
 
 #define FPS_PARAMS(X)                                                                              \
     X(".wfssignal", wfssignal_in, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
       "Wavefront sensor input signal")                                                             \
     X(".wfscamim", wfsim_out, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),     \
       "Wavefront sensor ouput image")                                                              \
-    X(".compdarkadd", &compdarkadd, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "subtract dark")        \
+    X(".compdarkadd", &compdarkadd, FPTYPE_ONOFF, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),     \
+      "subtract dark")                                                                             \
     X(".camdark", wfsdark, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),        \
       "camera dark frame")                                                                         \
-    X(".fluxtotal", &fluxtotal, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT,                          \
+    X(".fluxtotal", &fluxtotal, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),       \
       "total output flux [phe-], <0 if no scaling")                                                \
-    X(".camgain", &camgain, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT, "camera gain [e- / ADU]")    \
-    X(".compphnoise", &compphnoise, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "compute photon noise") \
-    X(".camRON", &camRON, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT,                                \
+    X(".camgain", &camgain, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),           \
+      "camera gain [e- / ADU]")                                                                    \
+    X(".compphnoise", &compphnoise, FPTYPE_ONOFF, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),     \
+      "compute photon noise")                                                                      \
+    X(".camRON", &camRON, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),             \
       "camera readout noise [e-] (neg = 0)")
 
 MILK_PARAMS_DEFINE(WFScamsim, FPS_PARAMS);
@@ -153,10 +156,7 @@ static MILK_HOT errno_t WFScamsim_compute(const MILK_RUNNABLE *self)
         //
         if (fluxtotal >= 0.0)
         {
-            long fpi_compphnoise =
-                functionparameter_GetParamIndex(milk_data.fpsptr, ".compphnoise");
-            if (fpi_compphnoise > -1 &&
-                (milk_data.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF))
+            if (compphnoise)
             {
                 for (uint64_t ii = 0; ii < sizeWFS; ii++)
                 {

@@ -65,12 +65,11 @@ cacaomsglog "START"
 #
 mkdir -p ${CACAO_CONFWDIR}/RMmodesWFS
 cacao-cli << EOF
-loadfits "${CACAO_CONFWDIR}/zrespM.fits" zrespM
-loadfits "${CACAO_CONFWDIR}/RMmodesDM/${DMmodeCname}.fits" dmC
+iofits.loadfits "${CACAO_CONFWDIR}/zrespM.fits" zrespM .
+iofits.loadfits "${CACAO_CONFWDIR}/RMmodesDM/${DMmodeCname}.fits" dmC .
 cacaocc.generateRMWFS zrespM dmC wfsC
-saveFITS wfsC "${CACAO_CONFWDIR}/RMmodesWFS/${DMmodeCname}.fits"
-listim
-exitCLI
+iofits.saveFITS wfsC "!${CACAO_CONFWDIR}/RMmodesWFS/${DMmodeCname}.fits"
+exit
 EOF
 
 

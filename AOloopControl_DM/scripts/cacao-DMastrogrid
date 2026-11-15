@@ -13,7 +13,7 @@ source milk-script-std-config
 source cacao-check-cacaovars
 
 
-RequiredCommands+=( cacao-astrogrid-mkgrid milk-shmim-zero )
+RequiredCommands+=( cacao-astrogrid-mkgrid cacao-cli )
 RequiredFiles=(DMINDEX)
 
 MSarg+=( "action:string:action (start/stop/check)" )
@@ -65,7 +65,6 @@ fi
 
 echo "DMINDEX = ${DMINDEX}"
 echo "CACAO_LOOPNAME = ${CACAO_LOOPNAME}"
-echo "fpsCTRLfifo = ${fpsCTRLfifo}"
 
 
 cacaomsglog "amplitude ${amplitude}"
@@ -100,7 +99,7 @@ fi
 if [ ${ACTION} = "stop" ]; then
 	cacaomsglog "STOP"
 	sendFPScmd "setval DMch2disp-${DMINDEX}.astrogrid.mode OFF"
-	milk-shmim-zero dm${DMINDEX}disp${ASTROGRIDCHANNEL}
+	cacao-cli -q -c "@calc \"s.dm${DMINDEX}disp${ASTROGRIDCHANNEL} = 0\"; exit"
 	ACTIONOK=1
 fi
 

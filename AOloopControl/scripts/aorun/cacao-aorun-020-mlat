@@ -100,11 +100,7 @@ if [[ ${ACTUATORPOKE} -eq 0 ]]; then
 sendFPScmd "setval mlat-${CACAO_LOOPNUMBER}.pokemap null"
 else
 ## prepare pokemap
-milk-all << EOF
-mk2Dim "s>aol${CACAO_LOOPNUMBER}_pokemap" ${CACAO_DMxsize} ${CACAO_DMysize}
-setpix aol${CACAO_LOOPNUMBER}_pokemap 1.0 ${actX} ${actY}
-exitCLI
-EOF
+cacao-cli -q -c "@calc \"s.aol${CACAO_LOOPNUMBER}_pokemap = zeros(${CACAO_DMxsize}, ${CACAO_DMysize}); s.aol${CACAO_LOOPNUMBER}_pokemap[${actX}, ${actY}] = 1.0\"; exit"
 sendFPScmd "setval mlat-${CACAO_LOOPNUMBER}.pokemap aol${CACAO_LOOPNUMBER}_pokemap"
 fi
 
@@ -117,11 +113,7 @@ sendFPScmd "runstart mlat-${CACAO_LOOPNUMBER}"
 
 if [ $WaitForCompletion == "1" ]; then
 	echo "Waiting for completion ..."
-	pOK=1
-	while [ $pOK -gt 0 ]; do
-		sleep 0.2
-		pOK=$(ps -alx| grep mlat-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l) || :
-	done
+	cacao_fps_wait_run_done "mlat-${CACAO_LOOPNUMBER}"
 fi
 
 if [ $DisplayGraph == "1" ]; then

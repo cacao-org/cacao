@@ -21,12 +21,14 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 include_directories("${PROJECT_SOURCE_DIR}/..")
 
 milk_add_runnable_module(${LIBNAME} SOURCES ${SOURCEFILES}
-                         LINK_LIBS milkinfo_static cacaoAOloopControl_static milkCOREMODiofits_static)
+                         LINK_LIBS milkinfo_static milkimagegen_static cacaoAOloopControl_static
+                         cacaocomputeCalib_static milkCOREMODiofits_static)
 target_include_directories(${LIBNAME}_objs PRIVATE ${CMAKE_SOURCE_DIR}/plugins/milk-extra-src)
 milk_add_fpsexec_stubs(${LIBNAME})
 
 # CUSTOM ===========
-target_link_libraries(${LIBNAME} PUBLIC milkinfo cacaoAOloopControl milkCOREMODiofits)
+target_link_libraries(${LIBNAME} PUBLIC milkinfo milkimagegen cacaoAOloopControl
+                      cacaocomputeCalib milkCOREMODiofits)
 # ==================
 
 install(TARGETS ${LIBNAME} DESTINATION lib)

@@ -125,11 +125,7 @@ rm -f ./${CACAO_CONFWDIR}/RMmodesWFS/RMmodesWFS.fits
 
 
 echo "Waiting for completion ..."
-pOK=1
-while [ $pOK -gt 0 ]; do
-	sleep 0.2
-	pOK=$(ps -alx| grep measlinresp-${CACAO_LOOPNUMBER} | grep RUNSTART | wc -l) || :
-done
+cacao_fps_wait_run_done "measlinresp-${CACAO_LOOPNUMBER}"
 #fi
 
 ln -s $(pwd)/${CACAO_CONFWDIR}/RMmodesWFS/${DMmodeCname}.WFSresp.fits ./${CACAO_CONFWDIR}/RMmodesWFS/RMmodesWFS.fits

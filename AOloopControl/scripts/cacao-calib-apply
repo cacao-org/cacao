@@ -10,7 +10,7 @@ source milk-script-std-config
 
 # check and load cacaovars
 source cacao-check-cacaovars
-RequiredCommands=(milk)
+RequiredCommands=( milk-FITS2shm )
 RequiredPipes=()
 RequiredFiles=()
 
@@ -40,18 +40,18 @@ echo "Loop ${CACAO_LOOPNUMBER}: Loading calibration from ${ARCHDIR}"
 if [[ -d "${ARCHDIR}" ]]; then
 
 # Load CM to shared memory
-milk-FITS2shm "${ARCHDIR}/CMmodesWFS/CMmodesWFS.fits" aol${CACAO_LOOPNUMBER}_modesWFS
-milk-FITS2shm "${ARCHDIR}/CMmodesDM/CMmodesDM.fits" aol${CACAO_LOOPNUMBER}_DMmodes
+milk-FITS2shm _loadfits:exec "${ARCHDIR}/CMmodesWFS/CMmodesWFS.fits" "@S:aol${CACAO_LOOPNUMBER}_modesWFS"
+milk-FITS2shm _loadfits:exec "${ARCHDIR}/CMmodesDM/CMmodesDM.fits" "@S:aol${CACAO_LOOPNUMBER}_DMmodes"
 
 
-milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsref.fits" aol${CACAO_LOOPNUMBER}_wfsref
-milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsrefc.fits" aol${CACAO_LOOPNUMBER}_wfsrefc
+milk-FITS2shm _loadfits:exec "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsref.fits" "@S:aol${CACAO_LOOPNUMBER}_wfsref"
+milk-FITS2shm _loadfits:exec "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsrefc.fits" "@S:aol${CACAO_LOOPNUMBER}_wfsrefc"
 
-milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsmask.fits" aol${CACAO_LOOPNUMBER}_wfsmask
-milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsmap.fits" aol${CACAO_LOOPNUMBER}_wfsmap
+milk-FITS2shm _loadfits:exec "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsmask.fits" "@S:aol${CACAO_LOOPNUMBER}_wfsmask"
+milk-FITS2shm _loadfits:exec "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_wfsmap.fits" "@S:aol${CACAO_LOOPNUMBER}_wfsmap"
 
-milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_dmmask.fits" aol${CACAO_LOOPNUMBER}_dmmask
-milk-FITS2shm "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_dmmap.fits" aol${CACAO_LOOPNUMBER}_dmmap
+milk-FITS2shm _loadfits:exec "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_dmmask.fits" "@S:aol${CACAO_LOOPNUMBER}_dmmask"
+milk-FITS2shm _loadfits:exec "${ARCHDIR}/shmim.aol${CACAO_LOOPNUMBER}_dmmap.fits" "@S:aol${CACAO_LOOPNUMBER}_dmmap"
 
 
 # record this calib as applied

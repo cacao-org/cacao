@@ -1,3 +1,13 @@
 #!/usr/bin/env bash
 
-MILKCLI_APPNAME="cacao-cli" MILKCLI_ADD_LIBS="$MILKCLI_ADD_LIBS;cacaoAOloopControl,cacaoAOloopControlIOtools,cacaoAOloopControlcompTools,cacaoAOloopControlacquireCalib,cacaocomputeCalib,cacaoAOloopControlDM,cacaoAOloopControlperfTest,cacaoAOloopControlPredictiveControl" milk-cli "$@"
+case "${1-}" in
+    -h1|--help-oneline)
+        echo "Start CACAO interactive CLI"
+        exit 0 ;;
+esac
+
+CACAO_LIBS="cacaoAOloopControl;cacaoAOloopControlDM;cacaoAOloopControlIOtools;cacaoAOloopControlPredictiveControl;cacaoAOloopControlacquireCalib;cacaoAOloopControlperfTest;cacaocomputeCalib;cacaopyramidWFStools"
+
+export MILKCLI_APPNAME="cacao-cli"
+export MILKCLI_ADD_LIBS="${MILKCLI_ADD_LIBS:+${MILKCLI_ADD_LIBS};}${CACAO_LIBS}"
+exec milk-cli "$@"

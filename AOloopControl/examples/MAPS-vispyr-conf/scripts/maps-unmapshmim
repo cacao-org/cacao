@@ -5,20 +5,5 @@ act1Dval=$2
 
 # Remap to 1D, loop
 #
-milk << EOF
-readshmim ${act2Dim}
-loadfits "data/mapping.fits" mapping
-# make output shared memory stream
-pixunmap .outim.shared 1
-pixunmap ..procinfo 1
-
-# trigger on semaphore of stream act2Dim
-pixunmap ..triggermode 3
-pixunmap ..triggersname ${act2Dim}
-
-# run forever, until killed
-pixunmap ..loopcntMax -1
-
-pixunmap ${act2Dim} mapping ${act1Dval}
-exitCLI
-EOF
+milk-FITS2shm _loadfits:exec "data/mapping.fits" "@S:_map_${act1Dval}"
+exec milk-fpsexec-milk-calc -loops -t "${act2Dim}" -e "s.${act1Dval} = pixunmap(s.${act2Dim}, s._map_${act1Dval})" "unmap_${act1Dval}:run"

@@ -11,7 +11,7 @@ source milk-script-std-config
 source cacao-check-cacaovars
 
 
-RequiredCommands=(milk)
+RequiredCommands=( cacao-cli )
 RequiredPipes=()
 RequiredFiles=()
 RequiredDirs=(AOcalibs)
@@ -44,39 +44,39 @@ ARCHDIR="AOcalibs/${calib}"
 mkdir -p ${ARCHDIR}
 
 
-MILK_QUIET=1 milk << EOF
-readshmim aol${CACAO_LOOPNUMBER}_modesWFS
-saveFITS aol${CACAO_LOOPNUMBER}_modesWFS "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS.fits"
+MILK_QUIET=1 cacao-cli << EOF
+mem.readshmim aol${CACAO_LOOPNUMBER}_modesWFS
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_modesWFS "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_modesWFS.fits"
 
-readshmim aol${CACAO_LOOPNUMBER}_DMmodes
-saveFITS aol${CACAO_LOOPNUMBER}_DMmodes "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_DMmodes
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_DMmodes "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_DMmodes.fits"
 
-readshmim aol${CACAO_LOOPNUMBER}_wfsref
-saveFITS aol${CACAO_LOOPNUMBER}_wfsref "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsref.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_wfsref
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_wfsref "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsref.fits"
 
 
-readshmim aol${CACAO_LOOPNUMBER}_wfsmask
-saveFITS aol${CACAO_LOOPNUMBER}_wfsmask "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmask.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_wfsmask
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_wfsmask "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmask.fits"
 
-readshmim aol${CACAO_LOOPNUMBER}_wfsmap
-saveFITS aol${CACAO_LOOPNUMBER}_wfsmap "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmap.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_wfsmap
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_wfsmap "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_wfsmap.fits"
 
-readshmim aol${CACAO_LOOPNUMBER}_dmmask
-saveFITS aol${CACAO_LOOPNUMBER}_dmmask "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmmask.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_dmmask
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_dmmask "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmmask.fits"
 
-readshmim aol${CACAO_LOOPNUMBER}_dmslaved
-saveFITS aol${CACAO_LOOPNUMBER}_dmslaved "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmslaved.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_dmslaved
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_dmslaved "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_dmslaved.fits"
 
-readshmim aol${CACAO_LOOPNUMBER}_zrespM
-saveFITS aol${CACAO_LOOPNUMBER}_zrespM "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_zrespM.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_zrespM
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_zrespM "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_zrespM.fits"
 
-readshmim aol${CACAO_LOOPNUMBER}_LOrespM
-saveFITS aol${CACAO_LOOPNUMBER}_LOrespM "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LOrespM.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_LOrespM
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_LOrespM "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LOrespM.fits"
 
-readshmim aol${CACAO_LOOPNUMBER}_LODMmodes
-saveFITS aol${CACAO_LOOPNUMBER}_LODMmodes "${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LODMmodes.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_LODMmodes
+iofits.saveFITS aol${CACAO_LOOPNUMBER}_LODMmodes "!${ARCHDIR}/aol${CACAO_LOOPNUMBER}_LODMmodes.fits"
 
-exitCLI
+exit
 EOF
 
 

@@ -34,15 +34,15 @@
  * 2.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
-static uint64_t turbON                                 = 0;
-static uint64_t turbZERO                               = 0;
-static uint64_t seedZERO                               = 0;
+static int32_t  turbON                                 = 0;
+static int32_t  turbZERO                               = 0;
+static int32_t  seedZERO                               = 0;
 static char     dmstream[FUNCTION_PARAMETER_STRMAXLEN] = "";
 static float    DMpixscale                             = 0;
 static float    turbwspeed                             = 0;
 static float    turbwangle                             = 0;
 static float    turbampl                               = 0;
-static uint64_t compTurbSeed                           = 0;
+static int32_t  compTurbSeed                           = 0;
 static uint32_t turbseedsize                           = 0;
 static float    turbseedpixscale                       = 0;
 static float    turbseedinnerscale                     = 0;
@@ -280,7 +280,7 @@ static errno_t make_seed_turbulence_screen(const char *ID_name1,
 
 static errno_t check_recompute_seed()
 {
-    if (compTurbSeed && (compTurbSeed) &FPFLAG_ONOFF)
+    if (compTurbSeed)
     {
         printf("RECOMPUTING DM TURB SEED\n");
         make_seed_turbulence_screen("tseed0", "tseed1", turbseedsize,
@@ -288,7 +288,7 @@ static errno_t check_recompute_seed()
                                     (turbseedinnerscale) / (turbseedpixscale));
         save_fits("tseed0", "../conf/turbseed0.fits");
         save_fits("tseed1", "../conf/turbseed1.fits");
-        compTurbSeed &= ~FPFLAG_ONOFF;
+        compTurbSeed = 0;
     }
     return RETURN_SUCCESS;
 }
@@ -333,7 +333,7 @@ static DMTURB_STATE *dmturb_init()
         // If fail, create it?
         // Original code seemed to expect it or create it in customCONFcheck
         // Let's force creation if not exists
-        compTurbSeed |= FPFLAG_ONOFF;
+        compTurbSeed = 1;
         check_recompute_seed();
         load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0);
     }
@@ -367,7 +367,7 @@ static void dmturb_step(PROCESSINFO *processinfo, FPS *fps, DMTURB_STATE *state)
     uint32_t xsize = state->imgDM.md->size[0];
     uint32_t ysize = state->imgDM.md->size[1];
 
-    if (turbZERO && ((turbZERO) &FPFLAG_ONOFF))
+    if (turbZERO)
     {
         for (uint64_t ii = 0; ii < xsize * ysize; ii++)
         {
@@ -375,17 +375,17 @@ static void dmturb_step(PROCESSINFO *processinfo, FPS *fps, DMTURB_STATE *state)
         }
         memcpy(state->imgDM.im->array.F, state->turbimarray, sizeof(float) * xsize * ysize);
         processinfo_update_output_stream(processinfo, state->imgDM.im, NULL);
-        turbZERO &= ~FPFLAG_ONOFF;
+        turbZERO = 0;
     }
 
-    if (seedZERO && ((seedZERO) &FPFLAG_ONOFF))
+    if (seedZERO)
     {
         state->x0m = 0.0;
         state->y0m = 0.0;
-        seedZERO &= ~FPFLAG_ONOFF;
+        seedZERO   = 0;
     }
 
-    if ((turbON) &FPFLAG_ONOFF)
+    if (turbON)
     {
         struct timespec tnow;
         clock_gettime(CLOCK_MILK, &tnow);

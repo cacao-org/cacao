@@ -7,7 +7,7 @@ MSextdescr="Take dark, copy it to AOcalib/wfsdark dir"
 source milk-script-std-config
 
 
-RequiredCommands=(milk)
+RequiredCommands=( cacao-cli milk-shmimave milk-fps-set milk-fps-rm milk-fpsexec-iofits-saveFITS milk-FITS2shm )
 RequiredFiles=(LOOPNUMBER)
 RequiredDirs=(AOcalibs/wfsdark)
 
@@ -66,31 +66,20 @@ ARCHDIR="AOcalibs/dark"
 echo "Loop ${AOLOOPNUMBER}"
 
 
-milk-all << EOF
-readshmim aol${AOLOOPNUMBER}_wfsim
-streamave ..procinfo 1
-streamave ..triggermode 3
-streamave ..triggersname aol${AOLOOPNUMBER}_wfsim
-streamave ..loopcntMax ${nbframe}
-streamave aol${AOLOOPNUMBER}_wfsim imdark ${nbframe}
-saveFITS imdark "imdark.fits"
-exitCLI
-EOF
+_avefps="takedark_$$"
+_darkshm="imdark_$$"
+milk-shmimave "${_avefps}:fpsinit" "aol${AOLOOPNUMBER}_wfsim" "${_darkshm}" "${nbframe}"
+milk-fps-set "${_avefps}.procinfo.triggersname" "aol${AOLOOPNUMBER}_wfsim"
+milk-fps-set "${_avefps}.procinfo.triggermode" 3
+milk-fps-set "${_avefps}.procinfo.loopcntMax" "${nbframe}"
+milk-shmimave "${_avefps}:run"
+milk-fps-rm -f -x "${_avefps}"
+milk-fpsexec-iofits-saveFITS _savefits:exec "${_darkshm}" "!imdark.fits"
+rm -f "${MILK_SHM_DIR}/${_darkshm}.im.shm"
 
-
-
-mkdir -d ${ARCHDIR}
+mkdir -p ${ARCHDIR}
 cp imdark.fits ${ARCHDIR}/dark_$(date -u --iso-8601=seconds).fits
 
-
-
-
 if [ "${shmapply}" = "1" ]; then
-milk-all << EOF
-loadfits "imdark.fits" imdark
-imcpshm imdark aol${AOLOOPNUMBER}_wfsdark
-exitCLI
-EOF
-
-
+milk-FITS2shm _loadfits:exec "imdark.fits" "@S:aol${AOLOOPNUMBER}_wfsdark"
 fi

@@ -19,11 +19,12 @@ source milk-argparse
 # average #NBAVE frames, write result to conf/wfsimave.fits
 
 rm -f ${MILK_SHM_DIR}/aol${CACAO_LOOPNUMBER}_wfsdark.im.shm
-cacao << EOF
-loadfits "conf/wfsdarkraw.fits" darkraw
-loadfits "conf/spotmap.fits" spotmap
+cacao-cli << EOF
+iofits.loadfits "conf/wfsdarkraw.fits" darkraw .
+iofits.loadfits "conf/spotmap.fits" spotmap .
 cacaoio.mapWFS darkraw spotmap darkm
-saveFITS darkm "conf/wfsdark.fits"
-imcpshm darkm aol${CACAO_LOOPNUMBER}_wfsdark
-exitCLI
+iofits.saveFITS darkm "!conf/wfsdark.fits"
+mem.readshmim aol${CACAO_LOOPNUMBER}_wfsdark
+mem.imcpshm darkm aol${CACAO_LOOPNUMBER}_wfsdark
+exit
 EOF

@@ -20,11 +20,9 @@ source milk-script-std-config
 source cacao-check-cacaovars
 
 
-RequiredCommands=( tmux milk )
+RequiredCommands=( tmux cacao-cli milk-shmimave milk-fps-set milk-fps-rm milk-FITS2shm )
 
-fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
-fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
-RequiredPipes=( ${fpsCTRLfifo} )
+RequiredPipes=()
 
 RequiredDirs=()
 
@@ -39,33 +37,27 @@ source milk-argparse
 
 echo "input frame = ${CACAO_WFSSTREAM}"
 
-milk << EOF
-readshmim ${CACAO_WFSSTREAM}
-streamave ..procinfo 1
-streamave ..triggersname ${CACAO_WFSSTREAM}
-streamave ..triggermode 3
-streamave ..loopcntMax 1000
-streamave ${CACAO_WFSSTREAM} ${CACAO_WFSSTREAM}_ave 1000
-loadfits "${CACAO_WFSSTREAM}_dark.fits" imdark
-imflux=${CACAO_WFSSTREAM}_ave-imdark
-saveFITS imflux "${CACAO_WFSSTREAM}_wfsref.fits"
-listim
-exitCLI
-EOF
-
-
-
+_avefps="mkspotmap_$$"
+_avestream="${CACAO_WFSSTREAM}_ave"
+milk-shmimave "${_avefps}:fpsinit" "${CACAO_WFSSTREAM}" "${_avestream}" 1000
+milk-fps-set "${_avefps}.procinfo.triggersname" "${CACAO_WFSSTREAM}"
+milk-fps-set "${_avefps}.procinfo.triggermode" 3
+milk-fps-set "${_avefps}.procinfo.loopcntMax" 1000
+milk-shmimave "${_avefps}:run"
+milk-fps-rm -f -x "${_avefps}"
 
 cacao-cli << EOF
-loadfits "${CACAO_WFSSTREAM}_wfsref.fits" im
-cacaoio.findspots im 4 20 19 mapc
-saveFITS spotscan "spotscan.fits"
-saveFITS mapc "${CACAO_WFSSTREAM}_mapc.fits"
-listim
-exitCLI
+mem.readshmim ${_avestream}
+iofits.loadfits "${CACAO_WFSSTREAM}_dark.fits" imdark .
+@calc "imflux = s.${_avestream} - imdark"
+iofits.saveFITS imflux "!${CACAO_WFSSTREAM}_wfsref.fits"
+cacaoio.findspots imflux 4 20 19 mapc
+iofits.saveFITS spotscan "!spotscan.fits"
+iofits.saveFITS mapc "!${CACAO_WFSSTREAM}_mapc.fits"
+exit
 EOF
 
-milk-FITS2shm ${CACAO_WFSSTREAM}_mapc.fits ${CACAO_WFSSTREAM}_mapc
+milk-FITS2shm _loadfits:exec "${CACAO_WFSSTREAM}_mapc.fits" "@S:${CACAO_WFSSTREAM}_mapc"
 
 sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.wfsin ${CACAO_WFSSTREAM}"
 sendFPScmd "setval mapWFS-${CACAO_LOOPNUMBER}.map ${CACAO_WFSSTREAM}_mapc"

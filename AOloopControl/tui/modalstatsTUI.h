@@ -4,14 +4,13 @@
 
 /**
  * @file modalstatsTUI.h
- * @brief errno_t AOloopControl_modalstatsTUI(int loopindex);
+ * @brief Standalone ANSI terminal UI for modal AO control statistics
  */
 
 #ifndef AOLOOPCONTROL_MODALSTATSTUI_H
 #define AOLOOPCONTROL_MODALSTATSTUI_H
 
-//errno_t AOloopControl_modalstatsTUI(int loopindex);
-
-errno_t CLIADDCMD_AOloopControl__modalstatsTUI();
+/** @brief Run interactive modal stats TUI for loop @p loopindex. */
+int AOloopControl_modalstatsTUI(int loopindex);
 
 #endif

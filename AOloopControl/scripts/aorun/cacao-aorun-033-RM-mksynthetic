@@ -156,10 +156,10 @@ DMy0=$(( $DMsizey / 2 ))
 DMr0=$(( $DMsizex / 2 ))
 
 # create DM mask
-milk-all << EOF
+cacao-cli << EOF
 imgen.mkdisk dmmask2D ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0}
-saveFITS dmmask2D "conf/dmmask2D.fits"
-exitCLI
+iofits.saveFITS dmmask2D "!conf/dmmask2D.fits"
+exit
 EOF
 
 fi
@@ -193,37 +193,20 @@ deltaCPA="0.8"
 
 if [[ $rCPAmin -eq 0 ]]; then
 
-milk-all << EOF
-mload cacaocomputeCalib
-zern.mkzerc .TTfactor ${TTfactor}
-zern.mkzerc .radmaskfact ${radmaskfact}
-zern.mkzerc zerc ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
-zercm=zerc*3
-lintools.mkFouriermodes .fpowerlaw -${alpha}
-lintools.mkFouriermodes .fpowerlaw_minf 1.0
-lintools.mkFouriermodes .fpowerlaw_maxf 100.0
-lintools.mkFouriermodes ?
-lintools.mkFouriermodes .rCPAmin 0.0
-lintools.mkFouriermodes .rCPAmax ${rCPAmax}
-lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
-immerge zerc Fmodes RMsyn_modesDM 2
-listim
-saveFITS RMsyn_modesDM "conf/RMmodesDM/RMsyn_modesDM0.fits"
-exitCLI
+cacao-cli << EOF
+zern.mkzerc zerc ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${DMr0} ${NBzer} .TTfactor=${TTfactor} .radmaskfact=${radmaskfact}
+lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0 .fpowerlaw=-${alpha} .fpowerlaw_minf=1.0 .fpowerlaw_maxf=100.0 .rCPAmin=0.0 .rCPAmax=${rCPAmax}
+arith.immerge zerc Fmodes RMsyn_modesDM 2
+iofits.saveFITS RMsyn_modesDM "!conf/RMmodesDM/RMsyn_modesDM0.fits"
+exit
 EOF
 
 else
 
-milk-all << EOF
-mload cacaocomputeCalib
-lintools.mkFouriermodes .fpowerlaw -${alpha}
-lintools.mkFouriermodes .fpowerlaw_minf 1.0
-lintools.mkFouriermodes .fpowerlaw_maxf 100.0
-lintools.mkFouriermodes .rCPAmin ${rCPAmin}
-lintools.mkFouriermodes .rCPAmax ${rCPAmax}
-lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0
-saveFITS Fmodes "conf/RMmodesDM/RMsyn_modesDM0.fits"
-exitCLI
+cacao-cli << EOF
+lintools.mkFouriermodes Fmodes ${DMsizex} ${DMsizey} ${CPAmax} ${deltaCPA} ${DMr0} ${radmaskfact} 0 .fpowerlaw=-${alpha} .fpowerlaw_minf=1.0 .fpowerlaw_maxf=100.0 .rCPAmin=${rCPAmin} .rCPAmax=${rCPAmax}
+iofits.saveFITS Fmodes "!conf/RMmodesDM/RMsyn_modesDM0.fits"
+exit
 EOF
 
 fi
@@ -244,19 +227,15 @@ fi
 
 
 
-milk-all << EOF
-mload cacaocomputeCalib
-radext=${DMr0}*${radmaskfact}
-imgen.mkdisk dmmaskext ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} radext
-loadfits "conf/RMmodesDM/RMsyn_modesDM0.fits" RMsyn_modesDM
-loadfits "conf/dmmask-syn.fits" dmmask
-cacaocc.maskextrapolate .edgeapo ${edgeapo}
-cacaocc.maskextrapolate RMsyn_modesDM dmmask dmmaskext RMsyn_modesDMm
+radext=$(awk -v r="${DMr0}" -v f="${radmaskfact}" 'BEGIN{printf "%.6f", r*f}')
+cacao-cli << EOF
+imgen.mkdisk dmmaskext ${DMsizex} ${DMsizey} ${DMx0} ${DMy0} ${radext}
+iofits.loadfits "conf/RMmodesDM/RMsyn_modesDM0.fits" RMsyn_modesDM .
+iofits.loadfits "conf/dmmask-syn.fits" dmmask .
+cacaocc.maskextrapolate RMsyn_modesDM dmmask dmmaskext RMsyn_modesDMm ${edgeapo}
 
-#RMsyn_modesDMm=RMsyn_modesDM*dmmask
-saveFITS RMsyn_modesDMm "conf/RMmodesDM/RMsyn_modesDM2D.fits"
-listim
-exitCLI
+iofits.saveFITS RMsyn_modesDMm "!conf/RMmodesDM/RMsyn_modesDM2D.fits"
+exit
 EOF
 
 
@@ -291,12 +270,11 @@ cp $(pwd)/conf/RMmodesDM/RMsyn_modesDM.fits ./conf/RMsyn_modesDM.fits
 #
 
 cacao-cli << EOF
-loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM
-loadfits "conf/RMmodesDM/RMsyn_modesDM.fits" dmC
+iofits.loadfits "conf/RMmodesWFS/zrespM-H.fits" zrespM .
+iofits.loadfits "conf/RMmodesDM/RMsyn_modesDM.fits" dmC .
 cacaocc.generateRMWFS zrespM dmC wfsC
-saveFITS wfsC "conf/RMmodesWFS/RMsyn_modesWFS.fits"
-listim
-exitCLI
+iofits.saveFITS wfsC "!conf/RMmodesWFS/RMsyn_modesWFS.fits"
+exit
 EOF
 
 

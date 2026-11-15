@@ -75,32 +75,23 @@ imageID AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, cons
     imageID   IDmat;
     int      *Hmat;
     imageID   IDindex;
-    uint32_t *sizearray;
 
-    imageID  IDmask = image_ID(DMmask_name, dcimg, dcnimg);
+    imageID IDmask = image_ID(DMmask_name, dcimg, dcnimg);
+    if (IDmask == -1)
+    {
+        IDmask = read_sharedmem_image(DMmask_name, dcimg, dcnimg);
+    }
+    if (IDmask == -1)
+    {
+        PRINT_ERROR("Cannot resolve mask %s", DMmask_name);
+        return -1;
+    }
+
     uint32_t xsize  = dcimg[IDmask].md[0].size[0];
     uint32_t ysize  = dcimg[IDmask].md[0].size[1];
     uint64_t xysize = xsize * ysize;
 
-    sizearray = (uint32_t *) malloc(sizeof(uint32_t) * 2);
-    if (sizearray == NULL)
-    {
-        PRINT_ERROR("malloc returns NULL pointer");
-        abort(); // or handle error in other ways
-    }
-    sizearray[0] = xsize;
-    sizearray[1] = ysize;
-    {
-        IMGID imghidx         = imgid_make_from_name("Hpixindex");
-        imghidx.mdt->naxis    = 2;
-        imghidx.mdt->size[0]  = sizearray[0];
-        imghidx.mdt->size[1]  = sizearray[1];
-        imghidx.mdt->datatype = _DATATYPE_FLOAT;
-        imghidx.im            = (IMAGE *) calloc(1, sizeof(IMAGE));
-        imgid_mkimage(&imghidx);
-        IDindex = imghidx.ID;
-    }
-    free(sizearray);
+    create_2Dimage_ID("Hpixindex", xsize, ysize, &IDindex);
 
     cnt = 0;
     for (uint64_t ii = 0; ii < xysize; ii++)
@@ -233,15 +224,42 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
     long     kk, kk1, ii;
     uint32_t zsizeout;
 
-    IDin     = image_ID(inname, dcimg, dcnimg);
+    IDin = image_ID(inname, dcimg, dcnimg);
+    if (IDin == -1)
+    {
+        IDin = read_sharedmem_image(inname, dcimg, dcnimg);
+    }
+    if (IDin == -1)
+    {
+        PRINT_ERROR("Cannot resolve input RM %s", inname);
+        return -1;
+    }
     sizexwfs = dcimg[IDin].md[0].size[0];
     sizeywfs = dcimg[IDin].md[0].size[1];
     sizewfs  = sizexwfs * sizeywfs;
     NBframes = dcimg[IDin].md[0].size[2];
 
     IDindex = image_ID(indexname, dcimg, dcnimg);
+    if (IDindex == -1)
+    {
+        IDindex = read_sharedmem_image(indexname, dcimg, dcnimg);
+    }
+    if (IDindex == -1)
+    {
+        PRINT_ERROR("Cannot resolve index image %s", indexname);
+        return -1;
+    }
 
     IDhad = image_ID(Hmatname, dcimg, dcnimg);
+    if (IDhad == -1)
+    {
+        IDhad = read_sharedmem_image(Hmatname, dcimg, dcnimg);
+    }
+    if (IDhad == -1)
+    {
+        PRINT_ERROR("Cannot resolve Hadamard matrix %s", Hmatname);
+        return -1;
+    }
     if ((dcimg[IDhad].md[0].size[0] != NBframes) || (dcimg[IDhad].md[0].size[1] != NBframes))
     {
         printf("ERROR: size of Hadamard matrix [%ld x %ld] does not match "

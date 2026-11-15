@@ -36,10 +36,10 @@ function fpsentry_addcmds() {
 	addfpscmd "setval ${fpsfname}.DMxsize ${CACAO_DMxsize}"
 	addfpscmd "setval ${fpsfname}.DMysize ${CACAO_DMysize}"
 	addfpscmd "setval ${fpsfname}.DMcombout dm${CACAO_DMSIMINDEX}disp"
-	addfpscmd "setval ${fpsfname}.astrogrid aol${CACAO_LOOPNUMBER}_DMastrogrid"
+	addfpscmd "setval ${fpsfname}.astrogrid.sname aol${CACAO_LOOPNUMBER}_DMastrogrid"
 	addfpscmd "setval ${fpsfname}.zpoffset.DMcomboutzpo aol${CACAO_LOOPNUMBER}_dmzpo"
 }
 
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

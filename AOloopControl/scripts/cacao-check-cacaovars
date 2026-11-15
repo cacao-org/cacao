@@ -114,7 +114,6 @@ fi
 
 
 fpsCTRLtmuxname=""
-fpsCTRLfifo=""
 if [ $errstatus == "1" ]; then
 	echo "           Note: This script needs to run in a cacao-cli rootdir directory"
 	echo "           Check that cacaovar file includes variables definitions"
@@ -123,15 +122,77 @@ if [ $errstatus == "1" ]; then
 	EXITSTATUS=1
 else
 	fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
-	fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
 fi
 
 
+CACAO_FPS_WAITONRUN="${CACAO_FPS_WAITONRUN:-0}"
 
+function cacao_fps_is_running {
+	local fps="$1"
+	local st=""
+	st=$(milk-cli -q -c "@get f.${fps}.run; exit" 2>/dev/null | awk 'NF{v=$1} END{print v}' || true)
+	case "${st}" in
+		starting|running|stopping) return 0 ;;
+		*) return 1 ;;
+	esac
+}
+
+function cacao_fps_wait_run_done {
+	while cacao_fps_is_running "$1"; do
+		sleep 0.1
+	done
+}
 
 function sendFPScmd {
-    echo "SENDING: $1"
-    echo "$1" >> ${fpsCTRLfifo}
+	local line="$1"
+	line="${line#"${line%%[![:space:]]*}"}"
+	if [ -z "${line}" ] || [ "${line::1}" = "#" ]; then
+		return 0
+	fi
+	if [ -z "${CACAO_QUIET:-}" ]; then
+		echo "FPS CMD: ${line}"
+	fi
+	local IFS=$' \t\n'
+	local cmd="" arg1="" arg2=""
+	read -r cmd arg1 arg2 <<< "${line}"
+	case "${cmd}" in
+		setval)
+			milk-fps-set "${arg1}" "${arg2}"
+			;;
+		confstart)
+			milk-fps-confstart "${arg1}"
+			;;
+		confstop)
+			milk-fps-confstop "${arg1}"
+			;;
+		confupdate|confwupdate|confstep)
+			milk-fps-confstep "${arg1}"
+			;;
+		runstart)
+			milk-fps-runstart "${arg1}"
+			if [ "${CACAO_FPS_WAITONRUN:-0}" = "1" ]; then
+				cacao_fps_wait_run_done "${arg1}"
+			fi
+			;;
+		runstop)
+			milk-fps-runstop "${arg1}"
+			;;
+		fpsrm)
+			milk-fps-rm -f -x "${arg1}"
+			;;
+		waitonrunON)
+			CACAO_FPS_WAITONRUN=1
+			;;
+		waitonrunOFF)
+			CACAO_FPS_WAITONRUN=0
+			;;
+		waitonconfON|waitonconfOFF|setqindex|setqprio|queueprio|logsymlink|exit)
+			:
+			;;
+		*)
+			echo "WARNING: sendFPScmd unknown command '${cmd}' in: ${line}" >&2
+			;;
+	esac
 }
 
 
@@ -156,8 +217,8 @@ fi
 
 
 
-RequiredCommands=( tmux milk )
-RequiredPipes=( ${fpsCTRLfifo} )
+RequiredCommands=( tmux cacao-cli )
+RequiredPipes=()
 RequiredDirs=()
 
 # SET CONF WORKING DIRECTORY

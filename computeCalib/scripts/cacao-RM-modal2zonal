@@ -10,6 +10,8 @@ MSdescr="Project modal RM to zonal basis"
 MSextdescr="Project modal RM to zonal basis"
 source milk-script-std-config
 
+RequiredCommands=( cacao-cli )
+
 MSarg+=( "RMdm:FITSfile:input RM in DM space" )
 MSarg+=( "RMwfs:FITSfile:input RM in WFS space" )
 
@@ -20,17 +22,15 @@ source milk-argparse
 
 
 RMmDMifn="${inputMSargARRAY[0]}"
-RMmDMifn="${inputMSargARRAY[1]}"
+RMmWFSifn="${inputMSargARRAY[1]}"
 RMzDMofn="${inputMSargARRAY[2]}"
 RMzWFSofn="${inputMSargARRAY[3]}"
 
-cacao << EOF
-loadfits "${RMmDMifn}" RMdm
-loadfits "${RMmWFSifn}" RMwfs
-cacaocc.RM2zonal .GPUdevice -1
-cacaocc.RM2zonal RMdm RMwfs RMzdm RMzwfs 0.001
-listim
-saveFITS RMzwfs "${RMzWFSofn}"
-saveFITS RMzdm "${RMzWFSofn}"
-exitCLI
+cacao-cli << EOF
+iofits.loadfits "${RMmDMifn}" RMdm .
+iofits.loadfits "${RMmWFSifn}" RMwfs .
+cacaocc.RM2zonal RMdm RMwfs RMzdm RMzwfs 0.001 -1
+iofits.saveFITS RMzwfs "!${RMzWFSofn}"
+iofits.saveFITS RMzdm "!${RMzDMofn}"
+exit
 EOF

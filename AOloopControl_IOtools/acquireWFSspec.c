@@ -16,14 +16,14 @@
 #include "COREMOD_tools/COREMOD_tools.h"
 
 // Local variables
-static char     input_shm_name[FUNCTION_PARAMETER_STRMAXLEN];
-static char     specmask_shm_name[FUNCTION_PARAMETER_STRMAXLEN];
-static uint32_t binning;
-static uint32_t AOloopindex;
-static uint32_t semindex;
-static uint64_t compWFSsubdark;
-static uint64_t compWFSnormalize;
-static uint64_t compWFSrefsub;
+static char     input_shm_name[FUNCTION_PARAMETER_STRMAXLEN]    = "";
+static char     specmask_shm_name[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static uint32_t binning                                         = 1;
+static uint32_t AOloopindex                                     = 0;
+static uint32_t semindex                                        = 1;
+static int32_t  compWFSsubdark                                  = 0;
+static int32_t  compWFSnormalize                                = 0;
+static int32_t  compWFSrefsub                                   = 0;
 
 #define FPS_PARAMS(X)                                                                            \
     X(".wfsin", input_shm_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
@@ -35,12 +35,12 @@ static uint64_t compWFSrefsub;
     X(".AOloopindex", &AOloopindex, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
       "loop index")                                                                              \
     X(".semindex", &semindex, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "input semaphore index")   \
-    X(".comp.darksub", &compWFSsubdark, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                   \
+    X(".comp.darksub", &compWFSsubdark, FPTYPE_ONOFF, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), \
       "sub aolX_wfsdark -> imWFS0")                                                              \
-    X(".comp.WFSnormalize", &compWFSnormalize, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,            \
-      "normalize WFS frames -> imWFS1")                                                          \
-    X(".comp.WFSrefsub", &compWFSrefsub, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                  \
-      "subtract WFS reference aolX_wfsref -> imWFS2")
+    X(".comp.WFSnormalize", &compWFSnormalize, FPTYPE_ONOFF, 1,                                  \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), "normalize WFS frames -> imWFS1")                \
+    X(".comp.WFSrefsub", &compWFSrefsub, FPTYPE_ONOFF, 1,                                        \
+      (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), "subtract WFS reference aolX_wfsref -> imWFS2")
 
 MILK_PARAMS_DEFINE(acquireWFSspec, FPS_PARAMS);
 
@@ -325,27 +325,14 @@ static MILK_HOT errno_t acquireWFSspec_compute(const MILK_RUNNABLE *self)
 
         // STEP 2: DARK SUB -> aolx_imWFS0
         // check wfsdark is to be subtracted
-        int  status_darksub = 0;
-        long fpi_compWFSsubdark =
-            functionparameter_GetParamIndex(milk_data.fpsptr, ".comp.darksub");
-        if (fpi_compWFSsubdark > -1 &&
-            (milk_data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF))
-        {
-            if (imgWFSdark.ID != -1)
-            {
-                status_darksub = 1;
-            }
-        }
+        int status_darksub = (compWFSsubdark && imgWFSdark.ID != -1) ? 1 : 0;
 
         imgimWFS0.md->write = 1;
 
         if (status_darksub == 0)
         {
             // no dark subtraction, pass through
-            for (uint_fast64_t ii = 0; ii < sizeWFS; ii++)
-            {
-                memcpy(imgimWFS0.im->array.F, imgimWFSm.im->array.F, sizeof(float) * sizeWFS);
-            }
+            memcpy(imgimWFS0.im->array.F, imgimWFSm.im->array.F, sizeof(float) * sizeWFS);
         }
         else
         {
@@ -357,10 +344,7 @@ static MILK_HOT errno_t acquireWFSspec_compute(const MILK_RUNNABLE *self)
         int status_normalize __attribute__((unused)) = 0;
         imgimWFS1.md->write                          = 1;
 
-        long fpi_compWFSnormalize =
-            functionparameter_GetParamIndex(milk_data.fpsptr, ".comp.WFSnormalize");
-        if (fpi_compWFSnormalize > -1 &&
-            (milk_data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF))
+        if (compWFSnormalize)
         {
             status_normalize = 1;
             spec_norm(imgimWFS0, imgimWFS1);
@@ -375,10 +359,7 @@ static MILK_HOT errno_t acquireWFSspec_compute(const MILK_RUNNABLE *self)
 
         int status_refsub __attribute__((unused)) = 0;
         imgimWFS2.md->write                       = 1;
-        long fpi_compWFSrefsub =
-            functionparameter_GetParamIndex(milk_data.fpsptr, ".comp.WFSrefsub");
-        if (fpi_compWFSrefsub > -1 &&
-            (milk_data.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF))
+        if (compWFSrefsub)
         {
             // subtract reference
             status_refsub = 1;

@@ -84,25 +84,20 @@ if [ ${ACTION} == "cal" ]; then
 
 ACTIONOK=1
 
-NBmode=$(fitsheader conf/CMmodesDM.fits | grep NAXIS3 | awk '{print $3}' )
+NBmode=$(cacao-cli -q -c 'iofits.loadfits "conf/CMmodesDM.fits" im .; @get l.im.zsize; exit' | awk 'NF{v=$1} END{print v}')
 echo "NBmode = ${NBmode}"
 
 
-milk-all << EOF
-loadfits "conf/CMmodesDM.fits" CMmDM
-linalg.compSVD .GPUdevice 0
-linalg.compSVD .compmode 6
-linalg.compSVD CMmDM SVDU SVDS SVDV ${calsvdlim}
-#saveFITS SVDinrec "SVDinrec.fits"
-saveFITS psinvcheck "conf/matDM2mval_psinvcheck.fits"
-saveFITS psinv "conf/modesDMinv.fits"
+cacao-cli << EOF
+iofits.loadfits "conf/CMmodesDM.fits" CMmDM .
+linalg.compSVD CMmDM SVDU SVDS SVDV ${calsvdlim} .GPUdevice=0 .compmode=6
+iofits.saveFITS psinvcheck "!conf/matDM2mval_psinvcheck.fits"
+iofits.saveFITS psinv "!conf/modesDMinv.fits"
 imgbasic.imswapaxis2D psinv matDM2mval
-listim
-set3Daxes matDM2mval ${CACAO_DMxsize} ${CACAO_DMxsize} ${NBmode}
-saveFITS matDM2mval "conf/matDM2mval.fits"
-imcpshm matDM2mval aol${CACAO_LOOPNUMBER}_matDM2mval
-listim
-exitCLI
+@calc "matDM2mval = reshape(matDM2mval, ${CACAO_DMxsize}, ${CACAO_DMxsize}, ${NBmode})"
+iofits.saveFITS matDM2mval "!conf/matDM2mval.fits"
+mem.imcpshm matDM2mval aol${CACAO_LOOPNUMBER}_matDM2mval
+exit
 EOF
 
 fi
@@ -144,7 +139,7 @@ if [ ${ACTION} == "off" ]; then
 	sendFPScmd "runstart mvalC2dm-${CACAO_LOOPNUMBER}"
 
 	sleep 1
-	milk-shmim-zero aol${CACAO_LOOPNUMBER}_modevalDMf
+	cacao-cli -q -c "@calc \"s.aol${CACAO_LOOPNUMBER}_modevalDMf = 0\"; exit"
 fi
 fi
 

@@ -146,41 +146,27 @@ cp "${mADMfile}" _mADM.fits
 cp "${mBWFSfile}" _mBWFS.fits
 cp "${mBDMfile}" _mBDM.fits
 
-milk-all << EOF
-loadfits "./${CACAO_CONFWDIR}/wfsmask.fits" wfsmask
-loadfits "_mAWFS.fits" mAWFS
-loadfits "_mADM.fits" mADMn
-normalizeslice .auxin mADMn
-normalizeslice mAWFS wfsmask mAWFSn 2
-loadfits "_mBWFS.fits" mBWFS
-loadfits "_mBDM.fits" mBDM
+cacao-cli << EOF
+iofits.loadfits "./${CACAO_CONFWDIR}/wfsmask.fits" wfsmask .
+iofits.loadfits "_mAWFS.fits" mAWFS .
+iofits.loadfits "_mADM.fits" mADMn .
+@calc 'mm = mAWFS * wfsmask; n2 = einsum("ijk,ijk->k", mm, mm); invn = reshape(n2 > 0 ? 1.0 / sqrt(n2) : 0.0, 1, 1, l.mAWFS.zsize); mAWFSn = mAWFS * invn; mADMn = mADMn * invn'
+iofits.loadfits "_mBWFS.fits" mBWFS .
+iofits.loadfits "_mBDM.fits" mBDM .
 
 # measure mAWFS content in mBWFS -> xp
-linalg.sgemm .GPUdevice 0
-linalg.sgemm .transpA 1
-linalg.sgemm mAWFSn mBWFS xp
-#saveFITS xp "tmp_xp.fits"
-#listim
+linalg.sgemm mAWFSn mBWFS xp .GPUdevice=0 .transpA=1
 
 # expand
-linalg.sgemm .transpA 0
-linalg.sgemm mAWFSn xp imexpWFS
-linalg.sgemm mADMn xp imexpDM
-#saveFITS imexp "tmp_imexpWFS.fits"
-#listim
+linalg.sgemm mAWFSn xp imexpWFS .GPUdevice=0 .transpA=0
+linalg.sgemm mADMn xp imexpDM .GPUdevice=0 .transpA=0
 
-mCWFS=mBWFS-imexpWFS
-mCDM=mBDM-imexpDM
+@calc "mCWFS = mBWFS - imexpWFS; mCDM = mBDM - imexpDM"
 
-#linalg.sgemm .transpA 1
-#linalg.sgemm mAWFSn mC xp2
-#saveFITS xp2 "tmp_xp2.fits"
-#listim
+iofits.saveFITS mCWFS "!_tmpoutCWFS.fits"
+iofits.saveFITS mCDM "!_tmpoutCM.fits"
 
-saveFITS mCWFS "_tmpoutCWFS.fits"
-saveFITS mCDM "_tmpoutCM.fits"
-
-exitCLI
+exit
 EOF
 
 # cleamup
@@ -217,44 +203,30 @@ cp "${mAWFSfile}" _mAWFS.fits
 cp "${mBDMfile}" _mBDM.fits
 cp "${mBWFSfile}" _mBWFS.fits
 
-milk-all << EOF
-loadfits "${CACAO_CONFWDIR}/dmmask.fits" dmmask
-loadfits "${mADMfile}" mADM
-loadfits "${mAWFSfile}" mAWFSn
-normalizeslice .auxin mAWFSn
-normalizeslice mADM dmmask mADMn 2
-loadfits "${mBDMfile}" mBDM
-loadfits "${mBWFSfile}" mBWFS
+cacao-cli << EOF
+iofits.loadfits "${CACAO_CONFWDIR}/dmmask.fits" dmmask .
+iofits.loadfits "${mADMfile}" mADM .
+iofits.loadfits "${mAWFSfile}" mAWFSn .
+@calc 'mm = mADM * dmmask; n2 = einsum("ijk,ijk->k", mm, mm); invn = reshape(n2 > 0 ? 1.0 / sqrt(n2) : 0.0, 1, 1, l.mADM.zsize); mADMn = mADM * invn; mAWFSn = mAWFSn * invn'
+iofits.loadfits "${mBDMfile}" mBDM .
+iofits.loadfits "${mBWFSfile}" mBWFS .
 
 # measure mADM content in mBDM -> xp
-linalg.sgemm .GPUdevice 0
-linalg.sgemm .transpA 1
-mADMnm=mADMn*dmmask
-mBDMm=mBDM*dmmask
-linalg.sgemm mADMnm mBDMm xp
-#saveFITS xp "tmp_xp.fits"
-#listim
+@calc "mADMnm = mADMn * dmmask; mBDMm = mBDM * dmmask"
+linalg.sgemm mADMnm mBDMm xp .GPUdevice=0 .transpA=1
 
 # expand
-linalg.sgemm .transpA 0
-linalg.sgemm mADMn xp imexpDM
-linalg.sgemm mAWFSn xp imexpWFS
-#saveFITS imexpDM "tmp_imexpDM.fits"
-#saveFITS imexpWFS "tmp_imexpWFS.fits"
-#listim
+linalg.sgemm mADMn xp imexpDM .GPUdevice=0 .transpA=0
+linalg.sgemm mAWFSn xp imexpWFS .GPUdevice=0 .transpA=0
 
-mCDM=mBDM-imexpDM
-mCWFS=mBWFS-imexpWFS
+@calc "mCDM = mBDM - imexpDM; mCWFS = mBWFS - imexpWFS"
 
-linalg.sgemm .transpA 1
-linalg.sgemm mADMn mCDM xp2
-#saveFITS xp2 "tmp_xp2.fits"
-listim
+linalg.sgemm mADMn mCDM xp2 .GPUdevice=0 .transpA=1
 
-saveFITS mCDM "_tmpoutCM.fits"
-saveFITS mCWFS "_tmpoutCWFS.fits"
+iofits.saveFITS mCDM "!_tmpoutCM.fits"
+iofits.saveFITS mCWFS "!_tmpoutCWFS.fits"
 
-exitCLI
+exit
 EOF
 
 # cleamup
@@ -329,7 +301,7 @@ blockcnt=0
 
 CMmDMname="NULL"
 CMmWFSname="NULL"
-export IFS=":"
+IFS=":"
 blockloopinit=0
 blocksrc="NULL"
 for block in ${modeblockmerge}; do
@@ -345,21 +317,21 @@ for block in ${modeblockmerge}; do
   mbB="${block}"
   mbC="m${blockcnt}"
 
-milk << EOF
-loadfits "./${CACAO_CONFWDIR}/CMmodesDM/CMmodesDM.${mbA}.fits" mA
-loadfits "./${CACAO_CONFWDIR}/CMmodesDM/CMmodesDM.${mbB}.fits" mB
-immerge mA mB mC 2
-saveFITS mC "./${CACAO_CONFWDIR}/CMmodesDM/CMmodesDM.${mbC}.fits"
-exitCLI
+cacao-cli << EOF
+iofits.loadfits "./${CACAO_CONFWDIR}/CMmodesDM/CMmodesDM.${mbA}.fits" mA .
+iofits.loadfits "./${CACAO_CONFWDIR}/CMmodesDM/CMmodesDM.${mbB}.fits" mB .
+arith.immerge mA mB mC 2
+iofits.saveFITS mC "!./${CACAO_CONFWDIR}/CMmodesDM/CMmodesDM.${mbC}.fits"
+exit
 EOF
   CMmDMname="./${CACAO_CONFWDIR}/CMmodesDM/CMmodesDM.${mbC}.fits"
 
-milk << EOF
-loadfits "./${CACAO_CONFWDIR}/CMmodesWFS/CMmodesWFS.${mbA}.fits" mA
-loadfits "./${CACAO_CONFWDIR}/CMmodesWFS/CMmodesWFS.${mbB}.fits" mB
-immerge mA mB mC 2
-saveFITS mC "./${CACAO_CONFWDIR}/CMmodesWFS/CMmodesWFS.${mbC}.fits"
-exitCLI
+cacao-cli << EOF
+iofits.loadfits "./${CACAO_CONFWDIR}/CMmodesWFS/CMmodesWFS.${mbA}.fits" mA .
+iofits.loadfits "./${CACAO_CONFWDIR}/CMmodesWFS/CMmodesWFS.${mbB}.fits" mB .
+arith.immerge mA mB mC 2
+iofits.saveFITS mC "!./${CACAO_CONFWDIR}/CMmodesWFS/CMmodesWFS.${mbC}.fits"
+exit
 EOF
   CMmWFSname="./${CACAO_CONFWDIR}/CMmodesWFS/CMmodesWFS.${mbC}.fits"
 
@@ -368,6 +340,7 @@ EOF
   blockloopinit=1
   blockcnt=$((blockcnt+1))
 done
+unset IFS
 
 
 echo "============================================"
@@ -421,16 +394,16 @@ else
     echo "no mode selection - keeping ALL"
   else
     # select modes for block
-milk << EOF
-loadfits "./${CACAO_CONFWDIR}/RMmodesDM/RMmodesDM.fits[*,*,${moderange}]" im
-saveFITS im "./${CACAO_CONFWDIR}/RMmodesDM/RMmodesDM.${modeblock}.fits"
-exitCLI
+cacao-cli << EOF
+iofits.loadfits "./${CACAO_CONFWDIR}/RMmodesDM/RMmodesDM.fits[*,*,${moderange}]" im .
+iofits.saveFITS im "!./${CACAO_CONFWDIR}/RMmodesDM/RMmodesDM.${modeblock}.fits"
+exit
 EOF
 
-milk << EOF
-loadfits "./${CACAO_CONFWDIR}/RMmodesWFS/RMmodesWFS.fits[*,*,${moderange}]" im
-saveFITS im "./${CACAO_CONFWDIR}/RMmodesWFS/RMmodesWFS.${modeblock}.fits"
-exitCLI
+cacao-cli << EOF
+iofits.loadfits "./${CACAO_CONFWDIR}/RMmodesWFS/RMmodesWFS.fits[*,*,${moderange}]" im .
+iofits.saveFITS im "!./${CACAO_CONFWDIR}/RMmodesWFS/RMmodesWFS.${modeblock}.fits"
+exit
 EOF
   fi
 
@@ -451,7 +424,7 @@ EOF
 
   # marginalize input DM modes against previous mode blocks CM(s) DM
   #
-  export IFS=":"
+  IFS=":"
   for block in $modeblockmarginalizeDM; do
     marginalizeDM=1
     mA="${block}"
@@ -466,11 +439,12 @@ EOF
     mBDMfile="${inputRMDMfname}"
     mBWFSfile="${inputRMWFSfname}"
   done
+  unset IFS
 
 
   # marginalize input WFS modes against previous mode blocks CM(s) WFS
   #
-  export IFS=":"
+  IFS=":"
   for block in $modeblockmarginalizeWFS; do
     marginalizeWFS=1
     mA="${block}"
@@ -488,6 +462,7 @@ EOF
     mBWFSfile="${inputRMWFSfname}"
     mBDMfile="${inputRMDMfname}"
   done
+  unset IFS
 
   echo "post-marg RMDM  : ${inputRMDMfname}"
   echo "post-marg RMWFS : ${inputRMWFSfname}"
@@ -536,6 +511,7 @@ EOF
 
   sendFPScmd "confwupdate compstrCM-${CACAO_LOOPNUMBER}"
   sendFPScmd "runstart compstrCM-${CACAO_LOOPNUMBER}"
+  cacao_fps_wait_run_done "compstrCM-${CACAO_LOOPNUMBER}"
 
 
 
@@ -546,9 +522,14 @@ EOF
     FileOut="${CACAO_CONFWDIR}/CMmodesWFS/CMmodesWFS.${modeblock}.fits"
   fi
   echo "Waiting for file ${FileOut}"
-  until [ -f ${FileOut} ]
-  do
+  _wait_cnt=0
+  until [ -f "${FileOut}" ]; do
+    if [ "${_wait_cnt}" -ge 50 ]; then
+      echo "ERROR: missing expected output ${FileOut}" >&2
+      exit 1
+    fi
     sleep 0.1
+    _wait_cnt=$((_wait_cnt + 1))
   done
 
   # Load CM DM to shared memory
@@ -569,9 +550,14 @@ EOF
     FileOut="${CACAO_CONFWDIR}/CMmodesDM/CMmodesDM.${modeblock}.fits"
   fi
   echo "Waiting for file ${FileOut}"
-  until [ -f ${FileOut} ]
-  do
+  _wait_cnt=0
+  until [ -f "${FileOut}" ]; do
+    if [ "${_wait_cnt}" -ge 50 ]; then
+      echo "ERROR: missing expected output ${FileOut}" >&2
+      exit 1
+    fi
     sleep 0.1
+    _wait_cnt=$((_wait_cnt + 1))
   done
 
 
@@ -611,31 +597,27 @@ xpWFSoutput="${CACAO_CONFWDIR}/CMmodesWFS.${modeblock}.xp.fits"
 fi
 
 
-milk-all << EOF
-loadfits "./${CACAO_CONFWDIR}/dmmask.fits" dmmask
-loadfits "${xpCMDMinput}" mDM
-mDMm=mDM*dmmask
+cacao-cli << EOF
+iofits.loadfits "./${CACAO_CONFWDIR}/dmmask.fits" dmmask .
+iofits.loadfits "${xpCMDMinput}" mDM .
+@calc "mDMm = mDM * dmmask"
 
-linalg.sgemm .GPUdevice 0
-linalg.sgemm .transpA 1
-linalg.sgemm mDMm mDMm xp
-saveFITS xp "${xpDMoutput}"
+linalg.sgemm mDMm mDMm xp .GPUdevice=0 .transpA=1
+iofits.saveFITS xp "!${xpDMoutput}"
 
-exitCLI
+exit
 EOF
 
 
-milk-all << EOF
-loadfits "./${CACAO_CONFWDIR}/wfsmask.fits" wfsmask
-loadfits "${xpCMWFSinput}" mWFS
-mWFSm=mWFS*wfsmask
+cacao-cli << EOF
+iofits.loadfits "./${CACAO_CONFWDIR}/wfsmask.fits" wfsmask .
+iofits.loadfits "${xpCMWFSinput}" mWFS .
+@calc "mWFSm = mWFS * wfsmask"
 
-linalg.sgemm .GPUdevice 0
-linalg.sgemm .transpA 1
-linalg.sgemm mWFSm mWFSm xp
-saveFITS xp "${xpWFSoutput}"
+linalg.sgemm mWFSm mWFSm xp .GPUdevice=0 .transpA=1
+iofits.saveFITS xp "!${xpWFSoutput}"
 
-exitCLI
+exit
 EOF
 
 

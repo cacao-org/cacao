@@ -38,14 +38,14 @@ static float lambdaum                               = 0.0f;
  * 3.  UNIFIED PARAMETER TABLE (X-Macro)
  * ============================================================= */
 
-#define FPS_PARAMS(X)                                                                        \
-    X(".DMmodes", dmmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM modes")             \
-    X(".DMmask", dmmask, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "DM mask")                \
-    X(".WFSref", wfsref, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS reference")          \
-    X(".WFSmodes", wfsmodes, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS modes")          \
-    X(".WFSmask", wfsmask, FPTYPE_FILENAME, 1, FPFLAG_DEFAULT_INPUT, "WFS mask")             \
-    X(".ampl", &amplum, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT, "RM modes ampl limit [um]") \
-    X(".lambdaum", &lambdaum, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT, "wavelength [um]")
+#define FPS_PARAMS(X)                                                                           \
+    X(".DMmodes", dmmodes, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "DM modes")              \
+    X(".DMmask", dmmask, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "DM mask")                 \
+    X(".WFSref", wfsref, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS reference")           \
+    X(".WFSmodes", wfsmodes, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS modes")           \
+    X(".WFSmask", wfsmask, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS mask")              \
+    X(".ampl", &amplum, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "RM modes ampl limit [um]")    \
+    X(".lambdaum", &lambdaum, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "wavelength [um]")
 
 
 /* ================================================================
@@ -87,20 +87,27 @@ static errno_t AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmode
     printf("amplimit = %f um\n", amplimitum);
 
     IDdmmodes = image_ID(IDdmmodes_name, dcimg, dcnimg);
+    IDdmmask  = image_ID(IDdmmask_name, dcimg, dcnimg);
+    IDwfsref  = image_ID(IDwfsref_name, dcimg, dcnimg);
+    IDwfsresp = image_ID(IDwfsresp_name, dcimg, dcnimg);
+    IDwfsmask = image_ID(IDwfsmask_name, dcimg, dcnimg);
+
+    if ((IDdmmodes == -1) || (IDdmmask == -1) || (IDwfsref == -1) || (IDwfsresp == -1) ||
+        (IDwfsmask == -1))
+    {
+        PRINT_ERROR("Missing input image (dmmodes=%ld dmmask=%ld wfsref=%ld wfsmodes=%ld wfsmask=%ld)",
+                    IDdmmodes, IDdmmask, IDwfsref, IDwfsresp, IDwfsmask);
+        return RETURN_FAILURE;
+    }
+
     dmxsize   = dcimg[IDdmmodes].md[0].size[0];
     dmysize   = dcimg[IDdmmodes].md[0].size[1];
     NBmodes   = dcimg[IDdmmodes].md[0].size[2];
     dmxysize  = dmxsize * dmysize;
 
-    IDdmmask = image_ID(IDdmmask_name, dcimg, dcnimg);
-
-    IDwfsref  = image_ID(IDwfsref_name, dcimg, dcnimg);
     wfsxsize  = dcimg[IDwfsref].md[0].size[0];
     wfsysize  = dcimg[IDwfsref].md[0].size[1];
     wfsxysize = wfsxsize * wfsysize;
-
-    IDwfsresp = image_ID(IDwfsresp_name, dcimg, dcnimg);
-    IDwfsmask = image_ID(IDwfsmask_name, dcimg, dcnimg);
 
     wfsreftot = 0.0;
     for (ii = 0; ii < wfsxysize; ii++)
@@ -215,7 +222,7 @@ static errno_t AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmode
             dcimg[IDoutXP].array.F[mode * NBmodes + mode1] = XPval / dmmodermscnt;
         }
     }
-    save_fits("DMmodesXP", "DMmodesXP.fits");
+    save_fits("DMmodesXP", "!DMmodesXP.fits");
 
     /* computing WFS space cross-product */
     create_2Dimage_ID("WFSmodesXP", NBmodes, NBmodes, &IDoutXP_WFS);
@@ -232,7 +239,7 @@ static errno_t AOloopControl_perfTest_computeRM_sensitivity(const char *IDdmmode
             dcimg[IDoutXP_WFS].array.F[mode * NBmodes + mode1] = XPval / wfsxysize;
         }
     }
-    save_fits("WFSmodesXP", "WFSmodesXP.fits");
+    save_fits("WFSmodesXP", "!WFSmodesXP.fits");
 
     return RETURN_SUCCESS;
 }
@@ -253,11 +260,12 @@ static MILK_HOT errno_t compRMsensitivity_compute(const MILK_RUNNABLE *self)
 {
     DEBUG_TRACE_FSTART();
 
-    AOloopControl_perfTest_computeRM_sensitivity(dmmodes, dmmask, wfsref, wfsmodes, wfsmask, amplum,
-                                                 lambdaum, "RMsens.txt");
+    errno_t ret = AOloopControl_perfTest_computeRM_sensitivity(dmmodes, dmmask, wfsref, wfsmodes,
+                                                               wfsmask, amplum, lambdaum,
+                                                               "RMsens.txt");
 
     DEBUG_TRACE_FEXIT();
-    return RETURN_SUCCESS;
+    return ret;
 }
 
 

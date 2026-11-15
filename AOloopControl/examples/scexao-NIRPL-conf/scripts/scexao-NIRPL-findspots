@@ -21,30 +21,34 @@ NBAVE="${inputMSargARRAY[0]}"
 
 # average #NBAVE frames, write result to conf/wfsimave.fits
 
-cacao << EOF
-readshmim aol${CACAO_LOOPNUMBER}_wfsim
-streamave ..procinfo 1
-streamave ..triggermode 3
-streamave ..triggersname aol${CACAO_LOOPNUMBER}_wfsim
-streamave ..loopcntMax ${NBAVE}
-streamave aol${CACAO_LOOPNUMBER}_wfsim imave ${NBAVE}
-readshmim aol${CACAO_LOOPNUMBER}_wfsdark
-imaved=imave-aol${CACAO_LOOPNUMBER}_wfsdark
-saveFITS imaved "conf/wfsimave.fits"
-exitCLI
+_avefps="findspots_$$"
+_avestream="_imave_$$"
+milk-shmimave "${_avefps}:fpsinit" "aol${CACAO_LOOPNUMBER}_wfsim" "${_avestream}" "${NBAVE}"
+milk-fps-set "${_avefps}.procinfo.triggersname" "aol${CACAO_LOOPNUMBER}_wfsim"
+milk-fps-set "${_avefps}.procinfo.triggermode" 3
+milk-fps-set "${_avefps}.procinfo.loopcntMax" "${NBAVE}"
+milk-shmimave "${_avefps}:run"
+milk-fps-rm -f -x "${_avefps}"
+
+cacao-cli << EOF
+mem.readshmim ${_avestream}
+mem.readshmim aol${CACAO_LOOPNUMBER}_wfsdark
+@calc "imaved = s.${_avestream} - s.aol${CACAO_LOOPNUMBER}_wfsdark"
+iofits.saveFITS imaved "!conf/wfsimave.fits"
+exit
 EOF
+rm -f "${MILK_SHM_DIR}/${_avestream}.im.shm"
 
 spotsize="10"
 spotexcldist="30"
 nbspots="19"
 
-cacao << EOF
-loadfits "conf/wfsimave.fits" imave
+cacao-cli << EOF
+iofits.loadfits "conf/wfsimave.fits" imave .
 cacaoio.findspots imave ${spotsize} ${spotexcldist} ${nbspots} spotmap
-saveFITS spotmap "conf/spotmap.fits"
-listim
-exitCLI
+iofits.saveFITS spotmap "!conf/spotmap.fits"
+exit
 EOF
 
 
-milk-FITS2shm "conf/spotmap.fits" aol${CACAO_LOOPNUMBER}_wfsmapping
+milk-FITS2shm _loadfits:exec "conf/spotmap.fits" "@S:aol${CACAO_LOOPNUMBER}_wfsmapping"

@@ -20,64 +20,66 @@
 #include "image_gen/image_gen.h"
 
 
-// Local variables pointers
-static uint32_t *AOloopindex;
-static float    *pokeampl;
+// Local variables
+static uint32_t AOloopindex = 0;
+static float    pokeampl    = 0.01f;
 
 static char dmstream[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
 // timing params
-static FPS FPS_mlat;
+static char fpsname_mlat[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static FPS  FPS_mlat                                   = { 0 };
 
 // Toggles
-static uint64_t *update_mlat;
-static uint64_t *update_RMDMmask;
+static int32_t update_mlat     = 0;
+static int32_t update_RMDMmask = 0;
 
 // WFS frame rate [Hz]
-static float *WFSfrequ;
+static float WFSfrequ = 1000.0f;
 
 // Hardware latency in unit of WFS frame
-static float *hardwlatfr;
+static float hardwlatfr = 1.0f;
 
-static uint32_t *delayfr;
-static uint32_t *delayRM1us;
-static uint32_t *NBave;
-static uint32_t *NBexcl;
-static uint32_t *NBcycle;
-static uint32_t *NBinnerCycle;
+static uint32_t delayfr      = 2;
+static uint32_t delayRM1us   = 100;
+static uint32_t NBave        = 5;
+static uint32_t NBexcl       = 1;
+static uint32_t NBcycle      = 10;
+static uint32_t NBinnerCycle = 10;
 
-static uint64_t *MaskMode;
+static int32_t MaskMode = 0;
 
-static FPS FPS_DMcomb;
+static char fpsname_DMcomb[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static FPS  FPS_DMcomb                                   = { 0 };
 
-static uint32_t *DMMODE;
+static uint32_t DMMODE = 1;
 
-static float *maskDMp0;
-static float *maskDMc0;
-static float *maskDMp1;
-static float *maskDMc1;
+static float maskDMp0 = 0.2f;
+static float maskDMc0 = 1.0f;
+static float maskDMp1 = 0.2f;
+static float maskDMc1 = 1.0f;
 
-static float *DMproxrad;
+static float DMproxrad = 2.5f;
 
-static float *maskWFSp0;
-static float *maskWFSc0;
-static float *maskWFSp1;
-static float *maskWFSc1;
+static float maskWFSp0 = 0.2f;
+static float maskWFSc0 = 1.0f;
+static float maskWFSp1 = 0.2f;
+static float maskWFSc1 = 1.0f;
 
 static char fn_pokeC[FUNCTION_PARAMETER_STRMAXLEN]    = "";
 static char fn_RMDMmask[FUNCTION_PARAMETER_STRMAXLEN] = "";
 
-static float *RMDMmaskCx;
-static float *RMDMmaskCy;
-static float *RMDMmaskR;
+static float RMDMmaskCx = 10.0f;
+static float RMDMmaskCy = 10.0f;
+static float RMDMmaskR  = 10.0f;
 
-static uint64_t *normalize;
+static int32_t normalize = 1;
 
-static uint64_t *Hpokemode;
+static int32_t Hpokemode = 0;
 
-static uint64_t *autotiming;
+static int32_t autotiming = 1;
 
-static uint64_t *compPokeMat;
+static int32_t compPokeMat = 0;
 
 // executable scripts
 static char exec_post_RMdecode[FUNCTION_PARAMETER_STRMAXLEN]     = "";
@@ -91,7 +93,8 @@ static char exec_post_mkLODMmodes[FUNCTION_PARAMETER_STRMAXLEN]  = "";
       "DM stream")                                                                                 \
     X(".ampl", &pokeampl, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),            \
       "RM poke amplitude")                                                                         \
-    X(".timing.FPS_mlat", &FPS_mlat, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT, "hardware latency")  \
+    X(".timing.FPS_mlat", fpsname_mlat, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT,                   \
+      "hardware latency")                                                                          \
     X(".timing.upmlat", &update_mlat, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT,                       \
       "update latency from FPS")                                                                   \
     X(".timing.WFSfrequ", &WFSfrequ, FPTYPE_FLOAT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
@@ -111,7 +114,7 @@ static char exec_post_mkLODMmodes[FUNCTION_PARAMETER_STRMAXLEN]  = "";
       "Number of measurement cycles to be repeated")                                               \
     X(".timing.NBinnerCycle", &NBinnerCycle, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT,               \
       "Number of inner cycles")                                                                    \
-    X(".RMDMmask.FPS_DMcomb", &FPS_DMcomb, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT,                \
+    X(".RMDMmask.FPS_DMcomb", fpsname_DMcomb, FPTYPE_FPSNAME, 1, FPFLAG_DEFAULT_INPUT,             \
       "DM control process")                                                                        \
     X(".RMDMmask.DMMODE", &DMMODE, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "0:spatial, 1:modal")   \
     X(".RMDMmask.Cx", &RMDMmaskCx, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "X center")            \
@@ -259,26 +262,33 @@ static errno_t customCONFcheck()
         {
             printf("UPDATE TIMING >>>>>>>>>\n");
 
-
-            // long delayfr = (long) (1000000.0*latfr);
+            float cur_hardwlatfr =
+                functionparameter_GetParamValue_FLOAT32(milk_data.fpsptr, ".timing.hardwlatfr");
+            uint32_t cur_NBexcl =
+                functionparameter_GetParamValue_UINT32(milk_data.fpsptr, ".timing.NBexcl");
+            float cur_WFSfrequ =
+                functionparameter_GetParamValue_FLOAT32(milk_data.fpsptr, ".timing.WFSfrequ");
 
             // RMdelay = hardwlaten - 0.5 - excl/2
-            double RMdelay = *hardwlatfr - 0.5 - 0.5 * (*NBexcl);
+            double RMdelay = cur_hardwlatfr - 0.5 - 0.5 * cur_NBexcl;
 
-            int val_RMdelayfr = ((int) ((*hardwlatfr) - 0.5 - 0.5 * (*NBexcl) + 10.0)) + 1 - 10;
+            int val_RMdelayfr = ((int) (cur_hardwlatfr - 0.5 - 0.5 * cur_NBexcl + 10.0)) + 1 - 10;
 
-            int val_delayRM1us = (int) ((1.0 * val_RMdelayfr - RMdelay) / (*WFSfrequ) * 1000000.0);
+            int val_delayRM1us = (int) ((1.0 * val_RMdelayfr - RMdelay) / cur_WFSfrequ * 1000000.0);
 
             if (RMdelay > 0)
             {
-                *delayfr    = val_RMdelayfr;
-                *delayRM1us = val_delayRM1us;
+                delayfr    = (uint32_t) val_RMdelayfr;
+                delayRM1us = (uint32_t) val_delayRM1us;
             }
             else
             {
-                *delayfr    = 0;
-                *delayRM1us = 0;
+                delayfr    = 0;
+                delayRM1us = 0;
             }
+            functionparameter_SetParamValue_UINT32(milk_data.fpsptr, ".timing.delayfr", delayfr);
+            functionparameter_SetParamValue_UINT32(milk_data.fpsptr, ".timing.delayRM1us",
+                                                   delayRM1us);
         }
 
 
@@ -325,7 +335,7 @@ static errno_t customCONFcheck()
                     char fnameRMDMmask[FUNCTION_PARAMETER_STRMAXLEN];
 
                     strncpy(fnameRMDMmask,
-                            functionparameter_GetParamPtr_STRING(milk_data.fpsptr, ".sn_RMDMmask"),
+                            functionparameter_GetParamPtr_STRING(milk_data.fpsptr, ".fn_RMDMmask"),
                             FUNCTION_PARAMETER_STRMAXLEN);
 
                     imageID ID_RMDMmask;
@@ -334,13 +344,18 @@ static errno_t customCONFcheck()
                     {
                         // create it
                         //
-                        if (*DMMODE == 0)
+                        if (DMMODEin == 0)
                         {
                             // spatial DM
                             // make centered disk
                             //
-                            make_disk("RMDMmask", DMxsize, DMysize, *RMDMmaskCx, *RMDMmaskCy,
-                                      *RMDMmaskR);
+                            float cx = functionparameter_GetParamValue_FLOAT32(milk_data.fpsptr,
+                                                                               ".RMDMmask.Cx");
+                            float cy = functionparameter_GetParamValue_FLOAT32(milk_data.fpsptr,
+                                                                               ".RMDMmask.Cy");
+                            float rad = functionparameter_GetParamValue_FLOAT32(milk_data.fpsptr,
+                                                                                ".RMDMmask.R");
+                            make_disk("RMDMmask", DMxsize, DMysize, cx, cy, rad);
                             //0.5 * (DMxsize) + 0.6);
                         }
                         else
@@ -472,7 +487,7 @@ static MILK_HOT errno_t acqWFSlincal_compute(const MILK_RUNNABLE *self)
     {
         // Compute Poke Matrix if required
         //
-        if (*compPokeMat)
+        if (compPokeMat)
         {
             printf("Computing Poke Matrix\n");
 
@@ -511,3 +526,4 @@ const MILK_RUNNABLE runnable_AOloopControl_acquireCalib_acqWFSlincal = {
     .compute   = acqWFSlincal_compute,
     .confcheck = customCONFcheck,
 };
+EXPORT_FPSEXEC(cacao, "cacaoac-acqWFSlincal", runnable_AOloopControl_acquireCalib_acqWFSlincal);

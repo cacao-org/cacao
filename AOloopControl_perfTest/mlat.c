@@ -26,14 +26,14 @@
  * 2.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
-static char     dmstream[FUNCTION_PARAMETER_STRMAXLEN]  = "";
-static char     wfsstream[FUNCTION_PARAMETER_STRMAXLEN] = "";
-static float    frameratewait                           = 0.0f;
-static float    OPDamp                                  = 0.0f;
-static char     pokemap[FUNCTION_PARAMETER_STRMAXLEN]   = "";
-static float    CPA                                     = 0.0f;
-static uint32_t NBiter                                  = 0;
-static uint32_t wfsNBframemax                           = 0;
+static char     dmstream[FUNCTION_PARAMETER_STRMAXLEN]  = "null";
+static char     wfsstream[FUNCTION_PARAMETER_STRMAXLEN] = "null";
+static float    frameratewait                           = 5.0f;
+static float    OPDamp                                  = 0.1f;
+static char     pokemap[FUNCTION_PARAMETER_STRMAXLEN]   = "null";
+static float    CPA                                     = 20.0f;
+static uint32_t NBiter                                  = 100;
+static uint32_t wfsNBframemax                           = 50;
 static float    wfsdt                                   = 0.0f;
 static float    twaitus                                 = 0.0f;
 static float    refdtoffset                             = 0.0f;
@@ -42,8 +42,8 @@ static float    framerateHz                             = 0.0f;
 static float    latencyfr                               = 0.0f;
 static int32_t  saveraw                                 = 0;
 static int32_t  saveseq                                 = 0;
-static uint32_t seqNBframe                              = 0;
-static float    seqdtframe                              = 0.0f;
+static uint32_t seqNBframe                              = 100;
+static float    seqdtframe                              = 0.1f;
 
 
 /* ================================================================
@@ -154,7 +154,7 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
     // Prepare output diff cube sequence
     // if saveraw = ON
     //
-    long   diffseqsize    = seqNBframe; // number of slices
+    long   diffseqsize    = (seqNBframe > 0) ? seqNBframe : 1; // number of slices
     float  diffseqdtframe = seqdtframe; // time increment per slice [frame]
     float *diffseqkkcnt =
         (float *) malloc(sizeof(float) * diffseqsize); // count how many frames go in each slice
@@ -192,11 +192,14 @@ static MILK_HOT errno_t mlat_compute(const MILK_RUNNABLE *self)
 
         printf("RMStot = %f", RMStot);
 
-        for (uint32_t ii = 0; ii < dmxsize; ii++)
+        if (RMStot > 0.0f)
         {
-            for (uint32_t jj = 0; jj < dmysize; jj++)
+            for (uint32_t ii = 0; ii < dmxsize; ii++)
             {
-                dcimg[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
+                for (uint32_t jj = 0; jj < dmysize; jj++)
+                {
+                    dcimg[IDdm1].array.F[jj * dmxsize + ii] *= OPDamp / RMStot;
+                }
             }
         }
 

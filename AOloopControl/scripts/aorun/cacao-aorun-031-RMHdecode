@@ -56,15 +56,15 @@ source milk-argparse
 cacaomsglog "START"
 
 cacao-cli << EOF
-loadfits "${FILE_Hipixindex}" pixiind
-loadfits "${FILE_Hmat}" Hmat
-loadfits "${FILE_HpokeC}" HpokeC
-loadfits "${FILE_HrespC}" HrespC
+iofits.loadfits "${FILE_Hipixindex}" pixiind .
+iofits.loadfits "${FILE_Hmat}" Hmat .
+iofits.loadfits "${FILE_HpokeC}" HpokeC .
+iofits.loadfits "${FILE_HrespC}" HrespC .
 cacaocc.aolHaddec HpokeC Hmat pixiind zpokeC
 cacaocc.aolHaddec HrespC Hmat pixiind zrespC
-saveFITS zpokeC "${CACAO_CONFWDIR}/RMmodesDM/zpokeC-H.fits"
-saveFITS zrespC "${CACAO_CONFWDIR}/RMmodesWFS/zrespM-H.fits"
-exitCLI
+iofits.saveFITS zpokeC "!${CACAO_CONFWDIR}/RMmodesDM/zpokeC-H.fits"
+iofits.saveFITS zrespC "!${CACAO_CONFWDIR}/RMmodesWFS/zrespM-H.fits"
+exit
 EOF
 cp ${CACAO_CONFWDIR}/RMmodesWFS/zrespM-H.fits ${CACAO_CONFWDIR}/zrespM.fits
 

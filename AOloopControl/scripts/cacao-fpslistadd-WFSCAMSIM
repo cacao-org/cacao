@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacaoio.WFScamsim"
+fpsfcall="cacao-fpsexec-cacaoiot-wfscamsim"
 
 # short description
 fpsdescr="WFS camera simulation"
@@ -43,4 +43,4 @@ function fpsentry_addcmds() {
 
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

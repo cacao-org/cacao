@@ -40,19 +40,18 @@ fi
 
 cacaomsglog "NBframe ${NBframe}"
 
-#MILK_QUIET=1
-milk << EOF
-readshmim aol${CACAO_LOOPNUMBER}_imWFS1
-streamave ..procinfo 1
-streamave ..triggersname aol${CACAO_LOOPNUMBER}_imWFS1
-streamave ..triggermode 3
-streamave ..loopcntMax ${NBframe}
-streamave .out_shared 0
-streamave aol${CACAO_LOOPNUMBER}_imWFS1 wfsref ${NBframe}
-saveFITS wfsref "${CACAO_CONFWDIR}/wfsref.fits"
-listim
-exitCLI
-EOF
+_avefps="takeref_${CACAO_LOOPNUMBER}_$$"
+_refshm="wfsref_${CACAO_LOOPNUMBER}_$$"
+milk-shmimave "${_avefps}:fpsinit" "aol${CACAO_LOOPNUMBER}_imWFS1" "${_refshm}" "${NBframe}"
+milk-fps-set "${_avefps}.out_shared" 1
+milk-fps-set "${_avefps}.procinfo.triggersname" "aol${CACAO_LOOPNUMBER}_imWFS1"
+milk-fps-set "${_avefps}.procinfo.triggermode" 3
+milk-fps-set "${_avefps}.procinfo.loopcntMax" "${NBframe}"
+milk-fps-set "${_avefps}.procinfo.enabled" ON
+milk-shmimave "${_avefps}:run"
+milk-fps-rm -f -x "${_avefps}"
+milk-fpsexec-iofits-saveFITS _savefits:exec "${_refshm}" "!${CACAO_CONFWDIR}/wfsref.fits"
+rm -f "${MILK_SHM_DIR}/${_refshm}.im.shm"
 
 
 # LOGGING

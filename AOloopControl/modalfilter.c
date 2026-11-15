@@ -31,54 +31,54 @@
  * 1.  LOCAL PARAMETER VARIABLES
  * ============================================================= */
 
-static char     inmval[FUNCTION_PARAMETER_STRMAXLEN]  = "";
-static char     outmval[FUNCTION_PARAMETER_STRMAXLEN] = "";
-static float    loopgain                              = 0;
-static float    loopmult                              = 0;
-static float    looplimit                             = 0;
-static uint64_t loopZERO                              = 0;
+static char     inmval[FUNCTION_PARAMETER_STRMAXLEN]  = "aol0_modevalWFS";
+static char     outmval[FUNCTION_PARAMETER_STRMAXLEN] = "aol0_modevalDM";
+static float    loopgain                              = 0.01f;
+static float    loopmult                              = 0.95f;
+static float    looplimit                             = 1.0f;
+static int32_t  loopZERO                              = 0;
 static uint64_t AOloopindex                           = 0;
-static uint64_t loopON                                = 0;
-static int64_t  loopNBstep                            = 0;
-static uint64_t compOL                                = 0;
-static float    psol_WFSfact                          = 0;
-static float    latencyhardwfr                        = 0;
-static float    latencysoftwfr                        = 0;
-static uint64_t comptbuff                             = 0;
-static uint64_t autolim                               = 0;
-static float    autolimprobegain                      = 0;
-static float    autolimsigmafact                      = 0;
-static uint32_t tbuffsize                             = 0;
-static uint64_t auxDMmvalenable                       = 0;
-static float    auxDMmvalmixfact                      = 0;
-static uint64_t auxDMmvalmodulate                     = 0;
-static float    auxDMmvalmodperiod                    = 0;
-static uint64_t enablePF                              = 0;
+static int32_t  loopON                                = 0;
+static int64_t  loopNBstep                            = -1;
+static int32_t  compOL                                = 0;
+static float    psol_WFSfact                          = 0.893f;
+static float    latencyhardwfr                        = 1.7f;
+static float    latencysoftwfr                        = 1.5f;
+static int32_t  comptbuff                             = 0;
+static int32_t  autolim                               = 0;
+static float    autolimprobegain                      = 0.1f;
+static float    autolimsigmafact                      = 2.0f;
+static uint32_t tbuffsize                             = 512;
+static int32_t  auxDMmvalenable                       = 0;
+static float    auxDMmvalmixfact                      = 1.0f;
+static int32_t  auxDMmvalmodulate                     = 0;
+static float    auxDMmvalmodperiod                    = 20.0f;
+static int32_t  enablePF                              = 0;
 static uint32_t PF_NBblock                            = 0;
-static uint32_t PF_maxwaitus                          = 0;
-static float    PFmixcoeff                            = 0;
-static uint64_t autoloopenable                        = 0;
-static float    autoloopsleep                         = 0;
-static uint64_t selfRMenable                          = 0;
-static uint32_t selfRMnbmode                          = 0;
-static float    selfRMpokeampl                        = 0;
-static uint32_t selfRMzsize                           = 0;
-static uint32_t selfRMnbiter                          = 0;
-static uint32_t selfRMnbsettlestep                    = 0;
-static uint64_t testOL                                = 0;
-static uint64_t testOLloop                            = 0;
-static float    testOLupdategain                      = 0;
+static uint32_t PF_maxwaitus                          = 500;
+static float    PFmixcoeff                            = 0.3f;
+static int32_t  autoloopenable                        = 0;
+static float    autoloopsleep                         = 0.001f;
+static int32_t  selfRMenable                          = 0;
+static uint32_t selfRMnbmode                          = 32;
+static float    selfRMpokeampl                        = 0.01f;
+static uint32_t selfRMzsize                           = 20;
+static uint32_t selfRMnbiter                          = 8;
+static uint32_t selfRMnbsettlestep                    = 1;
+static int32_t  testOL                                = 0;
+static int32_t  testOLloop                            = 0;
+static float    testOLupdategain                      = 0.1f;
 static uint32_t testOLmode                            = 0;
-static float    testOLampl                            = 0;
-static uint32_t testOLnbsample                        = 0;
+static float    testOLampl                            = 0.01f;
+static uint32_t testOLnbsample                        = 1000;
 static uint32_t testOLcnt                             = 0;
-static uint64_t offload                               = 0;
-static float    offloadloopgain                       = 0;
-static float    offloadloopmult                       = 0;
-static float    offloadlooplimit                      = 0;
-static uint64_t recburst                              = 0;
-static uint32_t recburst_mode                         = 0;
-static uint32_t recburst_nbsample                     = 0;
+static int32_t  offload                               = 0;
+static float    offloadloopgain                       = 0.01f;
+static float    offloadloopmult                       = 0.95f;
+static float    offloadlooplimit                      = 1.0f;
+static int32_t  recburst                              = 0;
+static uint32_t recburst_mode                         = 5;
+static uint32_t recburst_nbsample                     = 1000;
 
 static uint64_t processinfo_change_cnt_local = 0;
 
@@ -308,16 +308,18 @@ static MFILT_STATE *modal_filter_init(uint32_t NBmode)
     state->autolimDMsigma = (double *) calloc(NBmode, sizeof(double));
 
     // Telemetry Buffers
+    uint32_t tbsize = (tbuffsize > 0) ? tbuffsize : 512;
     WRITE_IMAGENAME(name, "aol%lu_modevalDM_buff", AOloopindex);
-    state->imgtbuff_mvalDM = stream_connect_create_3Df32(name, NBmode, tbuffsize, 2);
+    state->imgtbuff_mvalDM = stream_connect_create_3Df32(name, NBmode, tbsize, 2);
     WRITE_IMAGENAME(name, "aol%lu_modevalWFS_buff", AOloopindex);
-    state->imgtbuff_mvalWFS = stream_connect_create_3Df32(name, NBmode, tbuffsize, 2);
+    state->imgtbuff_mvalWFS = stream_connect_create_3Df32(name, NBmode, tbsize, 2);
     WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", AOloopindex);
-    state->imgtbuff_mvalOL = stream_connect_create_3Df32(name, NBmode, tbuffsize, 2);
+    state->imgtbuff_mvalOL = stream_connect_create_3Df32(name, NBmode, tbsize, 2);
 
     // SelfRM
+    uint32_t srmzsize = (selfRMzsize > 0) ? selfRMzsize : 20;
     WRITE_IMAGENAME(name, "aol%lu_mfiltselfRM", AOloopindex);
-    state->imgselfRM      = stream_connect_create_3Df32(name, NBmode, NBmode, selfRMzsize);
+    state->imgselfRM      = stream_connect_create_3Df32(name, NBmode, NBmode, srmzsize);
     state->selfRMpokecmd  = (float *) calloc(NBmode, sizeof(float));
     state->selfRMpokesign = 1.0;
 
@@ -484,6 +486,7 @@ static void modal_filter_step(PROCESSINFO *processinfo,
         if (enablePF == 0)
         {
             memcpy(imgout->array.F, state->mvaloutapply, sizeof(float) * NBmode);
+            processinfo_update_output_stream(processinfo, imgout, NULL);
         }
 
         // Offload Loop
@@ -579,8 +582,7 @@ static void __attribute__((unused)) modalfilter_validate()
 
 #define FPS_PARAMS(X)                                                                             \
     X(".inmval", inmval, FPTYPE_STREAMNAME, 1,                                                    \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT | FPFLAG_STREAM_RUN_REQUIRED |              \
-          FPFLAG_CHECKSTREAM,                                                                     \
+      FPFLAG_DEFAULT_TRIGGER_STREAM | FPFLAG_PRIMARY_CLI_INPUT,                                   \
       "input mode values from WFS")                                                               \
     X(".outmval", outmval, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT, \
       "output mode values to DM")                                                                 \

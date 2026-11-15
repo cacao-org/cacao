@@ -16,7 +16,7 @@ fpsarg0="${CACAO_DMSIMINDEX}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="streamdelay"
+fpsfcall="milk-fpsexec-mem-streamdelay"
 
 # short description
 fpsdescr="streamdelay for simulation mode"
@@ -44,4 +44,4 @@ function fpsentry_addcmds() {
 
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

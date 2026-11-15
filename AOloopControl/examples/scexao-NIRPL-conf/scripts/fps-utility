@@ -5,30 +5,15 @@
 
 source cacao-check-cacaovars
 
-function sendFPScmd {
-  echo "SENDING: $1"
-  echo "$1" >> ${MILK_SHM_DIR}/${CACAO_LOOPNAME}_fpsCTRL.fifo
-}
-
 function setupfps {
 	(
-	cd ${CACAO_LOOPRUNDIR}
-	echo "CONFIGURING: $1"
-	echo "ADDING TO FPSCTRL AND STARTING TMUX"
-	# first, init fps and start tmux
-	cacao <<- EOF
-	cacaoio.$1 _FPSINIT_ "${CACAO_LOOPNUMBER}"
-	cacaoio.$1 _TMUXSTART_ "${CACAO_LOOPNUMBER}"
-	exitCLI
-	EOF
-	# rescan fps tree
-	sendFPScmd "rescan"
+	cd ${CACAO_LOOPRUNDIR} || return 1
+	local fn="$1"
+	local fpsname="${fn}-${CACAO_LOOPNUMBER}"
+	local execbin="cacao-fpsexec-cacaoiot-${fn//_/}"
+	echo "CONFIGURING: ${fn}"
+	"${execbin}" -n "${fpsname}" fpsinit
 	echo "STARTING CONF PROCESS"
-	sendFPScmd "confstart $1-${CACAO_LOOPNUMBER}"
-	echo "STARTING PROCINFO"
-	cacao <<- EOF
-	cacaoio.$1 ..procinfo 1
-	exitCLI
-	EOF
+	sendFPScmd "confstart ${fpsname}"
 	)
 }

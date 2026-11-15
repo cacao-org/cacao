@@ -47,7 +47,7 @@ tstart=$(date "+%s")
 
 source milk-script-std-config
 
-RequiredCommands=( cacao )
+RequiredCommands=( cacao-cli )
 RequiredFiles=()
 RequiredDirs=()
 
@@ -84,12 +84,14 @@ dtlag="${inputMSargARRAY[6]}"
 timespan="${inputMSargARRAY[7]}"
 
 
-cacao << EOF
-cacaopt.aolptmksyncs2 "$directory" ${streamWFS} ${streamPSF} ${tstart} ${tstop} ${dtsample} ${dtlag} ${timespan}
-saveFITS outC0 "${streamWFS}.sync.fits"
-saveFITS outC1 "${streamPSF}.sync.fits"
-listim
-exitCLI
+read -r t0s t0ns < <(awk -v t="${tstart}" 'BEGIN{s=int(t); printf "%d %d\n", s, int((t-s)*1e9+0.5)}')
+read -r t1s t1ns < <(awk -v t="${tstop}" 'BEGIN{s=int(t); printf "%d %d\n", s, int((t-s)*1e9+0.5)}')
+
+cacao-cli << EOF
+cacaopt.slogtsample ${t0s} ${t1s} ${dtsample} OFF OFF OFF OFF .tstartnsec=${t0ns} .tendnsec=${t1ns} .logdir="${directory}" .s0name=${streamWFS} .s1name=${streamPSF} .s1latency=${dtlag}
+iofits.saveFITS ${streamWFS} "!${streamWFS}.sync.fits"
+iofits.saveFITS ${streamPSF} "!${streamPSF}.sync.fits"
+exit
 EOF
 
 echo "dealing with sync files"
@@ -99,24 +101,24 @@ echo "dealing with sync files"
 # subtract dark if it exists
 
 if [ -f "${streamWFS}.dark.fits" ]; then
-cacao << EOF
-loadfits "${streamWFS}.dark.fits" streamWFSdark
-loadfits "${streamWFS}.sync.fits" outC0
-outC0c=outC0-streamWFSdark
-saveFITS outC0c "${streamWFS}.syncC.fits"
-exitCLI
+cacao-cli << EOF
+iofits.loadfits "${streamWFS}.dark.fits" streamWFSdark .
+iofits.loadfits "${streamWFS}.sync.fits" outC0 .
+@calc "outC0c = outC0 - streamWFSdark"
+iofits.saveFITS outC0c "!${streamWFS}.syncC.fits"
+exit
 EOF
 mv ${streamWFS}.syncC.fits ${streamWFS}.sync.fits
 fi
 
 
 if [ -f "${streamPSF}.dark.fits" ]; then
-cacao << EOF
-loadfits "${streamPSF}.dark.fits" streamPSFdark
-loadfits "${streamPSF}.sync.fits" outC1
-outC1c=outC1-streamPSFdark
-saveFITS outC1c "${streamPSF}.syncC.fits"
-exitCLI
+cacao-cli << EOF
+iofits.loadfits "${streamPSF}.dark.fits" streamPSFdark .
+iofits.loadfits "${streamPSF}.sync.fits" outC1 .
+@calc "outC1c = outC1 - streamPSFdark"
+iofits.saveFITS outC1c "!${streamPSF}.syncC.fits"
+exit
 EOF
 mv ${streamPSF}.syncC.fits ${streamPSF}.sync.fits
 fi

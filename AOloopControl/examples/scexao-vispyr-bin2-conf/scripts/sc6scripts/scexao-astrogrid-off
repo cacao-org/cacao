@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-fifoname="/milk/shm/vpyr_fpsCTRL.fifo"
-
-echo "setval DMch2disp-00.astrogrid.mode OFF" >> ${fifoname}
+milk-fps-set DMch2disp-00.astrogrid.mode OFF
 
 sleep 0.5
 
-milk-shmim-zero dm00disp09
+cacao-cli -q -c '@calc "s.dm00disp09 = 0"; exit'
 
 scxkw-setter set X_GRDST OFF 1

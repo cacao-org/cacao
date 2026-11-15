@@ -13,7 +13,7 @@ MSextdescr="
 
 source milk-script-std-config
 
-RequiredCommands=( cacao )
+RequiredCommands=( cacao-cli )
 RequiredFiles=()
 RequiredDirs=()
 
@@ -50,16 +50,14 @@ lambdaum="${inputMSargARRAY[6]}"
 
 
 
-cacao << EOF
-loadfits "$dmmodes" dmmodes
-loadfits "$dmmask" dmmask
-loadfits "$wfsref" wfsref
-loadfits "$wfsmodes" wfsmodes
-loadfits "$wfsmask" wfsmask
+cacao-cli << EOF
+iofits.loadfits "$dmmodes" dmmodes .
+iofits.loadfits "$dmmask" dmmask .
+iofits.loadfits "$wfsref" wfsref .
+iofits.loadfits "$wfsmodes" wfsmodes .
+iofits.loadfits "$wfsmask" wfsmask .
 
-cacaopt.compRMsens dmmodes dmmask wfsref wfsmodes wfsmask ${amplum} ${lambdaum}
-
-listim
+cacaopt.compRMsensitivity dmmodes dmmask wfsref wfsmodes wfsmask ${amplum} ${lambdaum}
 
 exit
 EOF

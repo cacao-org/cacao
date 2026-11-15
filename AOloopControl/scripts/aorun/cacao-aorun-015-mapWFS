@@ -20,15 +20,14 @@ CACAO_LOOPNAME = ${CACAO_LOOPNAME}
 # standard configuration
 # location ./scripts/
 source milk-script-std-config
+source cacao-check-cacaovars
 
 # prerequisites
 #
 
-RequiredCommands=( tmux milk )
+RequiredCommands=( tmux cacao-cli )
 
-fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
-fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
-RequiredPipes=( ${fpsCTRLfifo} )
+RequiredPipes=()
 
 RequiredDirs=()
 
@@ -48,14 +47,6 @@ RequiredDirs=()
 
 # parse arguments
 source milk-argparse
-
-
-
-
-function sendFPScmd {
-    echo "SENDING: $1"
-    echo "$1" >> ${fpsCTRLfifo}
-}
 
 
 echo "input frame = ${CACAO_WFSSTREAM}"

@@ -69,6 +69,8 @@ typedef struct
 } StreamDataFile;
 
 
+static const MILK_RUNNABLE runnable_AOloopControl_perfTest_SelectWFSframes_from_PSFframes;
+
 static const MILK_RUNNABLE *const runnables[] = {
     &runnable_AOloopControl_perfTest_compRMsensitivity,
     &runnable_AOloopControl_perfTest_mlat,
@@ -76,6 +78,7 @@ static const MILK_RUNNABLE *const runnables[] = {
     &runnable_AOloopControl_perfTest_streamlogtimesample,
     &runnable_AOloopControl_perfTest_wfsrefoptimselect,
     &runnable_AOloopControl_perfTest_zoptsearch,
+    &runnable_AOloopControl_perfTest_SelectWFSframes_from_PSFframes,
 };
 
 MILK_MODULE_RUNNABLES(AOloopControl_perfTest, NULL, runnables);
@@ -625,6 +628,11 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
 
     IDwfs = image_ID(IDnameWFS, dcimg, dcnimg);
     IDpsf = image_ID(IDnamePSF, dcimg, dcnimg);
+    if ((IDwfs == -1) || (IDpsf == -1))
+    {
+        PRINT_ERROR("Missing input stream (wfs=%ld psf=%ld)", IDwfs, IDpsf);
+        return RETURN_FAILURE;
+    }
 
     xsizewfs  = dcimg[IDwfs].md[0].size[0];
     ysizewfs  = dcimg[IDwfs].md[0].size[1];
@@ -815,3 +823,53 @@ errno_t AOloopControl_perfTest_SelectWFSframes_from_PSFframes(char *IDnameWFS,
 
     return RETURN_SUCCESS;
 }
+
+static char    selwfs_wfs[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char    selwfs_psf[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static float   selwfs_frac                            = 0.1f;
+static int64_t selwfs_x0                              = 0;
+static int64_t selwfs_x1                              = 0;
+static int64_t selwfs_y0                              = 0;
+static int64_t selwfs_y1                              = 0;
+static int32_t selwfs_emode                           = 0;
+static float   selwfs_alpha                           = 2.0f;
+
+#define SELWFS_PARAMS(X)                                                                           \
+    X(".wfsinput", selwfs_wfs, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS input cube")       \
+    X(".psfinput", selwfs_psf, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "PSF input cube")       \
+    X(".frac", &selwfs_frac, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "selection fraction")        \
+    X(".x0", &selwfs_x0, FPTYPE_INT64, 1, FPFLAG_DEFAULT_INPUT, "PSF window x0")                   \
+    X(".x1", &selwfs_x1, FPTYPE_INT64, 1, FPFLAG_DEFAULT_INPUT, "PSF window x1")                   \
+    X(".y0", &selwfs_y0, FPTYPE_INT64, 1, FPFLAG_DEFAULT_INPUT, "PSF window y0")                   \
+    X(".y1", &selwfs_y1, FPTYPE_INT64, 1, FPFLAG_DEFAULT_INPUT, "PSF window y1")                   \
+    X(".evalmode", &selwfs_emode, FPTYPE_INT32, 1, FPFLAG_DEFAULT_INPUT, "evaluation mode")        \
+    X(".alpha", &selwfs_alpha, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "alpha norm")
+
+MILK_PARAMS_DEFINE(selwfs, SELWFS_PARAMS);
+
+static MILK_HOT errno_t selwfs_compute(const MILK_RUNNABLE *self)
+{
+    DEBUG_TRACE_FSTART();
+    errno_t ret = AOloopControl_perfTest_SelectWFSframes_from_PSFframes(selwfs_wfs,
+                                                                        selwfs_psf,
+                                                                        selwfs_frac,
+                                                                        selwfs_x0,
+                                                                        selwfs_x1,
+                                                                        selwfs_y0,
+                                                                        selwfs_y1,
+                                                                        selwfs_emode,
+                                                                        selwfs_alpha);
+    DEBUG_TRACE_FEXIT();
+    return ret;
+}
+
+static const MILK_RUNNABLE runnable_AOloopControl_perfTest_SelectWFSframes_from_PSFframes = {
+    .kind    = MILK_RUNNABLE_FPS,
+    .app     = { .fps_name         = "aolperfselwfsfpsf",
+                 .cmdkey           = "aolperfselwfsfpsf",
+                 .description      = "Select WFS frames from best PSF frames",
+                 .description_long = "Select WFS frames corresponding to the best PSF frames." },
+    .srcfile = __FILE__,
+    MILK_PARAMS_REF(selwfs),
+    .compute = selwfs_compute,
+};

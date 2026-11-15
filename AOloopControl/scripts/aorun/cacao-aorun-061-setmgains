@@ -67,20 +67,12 @@ fi
 
 cacaomsglog "APPLYING MODAL GAINS : galpha ${mgainalpha}  floor ${mgainfloor}  TT ${mgainTT}"
 
-MILK_QUIET=1 milk << EOF
-mload milkinfo
-mload milkimagegen
-readshmim aol${CACAO_LOOPNUMBER}_mgainfact
-info.imstats aol${CACAO_LOOPNUMBER}_mgainfact
-imgen.mkdist imd imsize0 1 1 1
-imd1=imd/imsize0
-imd2=(1.0-imd1)^${mgainalpha}
-imd3=(1-${mgainfloor})*imd2+${mgainfloor}
-cp imd3 aol${CACAO_LOOPNUMBER}_mgainfact
-setpix aol${CACAO_LOOPNUMBER}_mgainfact ${mgainTT} 0 0
-setpix aol${CACAO_LOOPNUMBER}_mgainfact ${mgainTT} 1 0
-listim
-exitCLI
+imsize0=$(cacao-cli -q -c "@get s.aol${CACAO_LOOPNUMBER}_mgainfact.xsize; exit" | awk 'NF{v=$1} END{print v}')
+
+MILK_QUIET=1 cacao-cli << EOF
+imgen.mkdist imd ${imsize0} 1 1 1
+@calc "s.aol${CACAO_LOOPNUMBER}_mgainfact = (1.0 - ${mgainfloor}) * pow(1.0 - imd / ${imsize0}, ${mgainalpha}) + ${mgainfloor}; s.aol${CACAO_LOOPNUMBER}_mgainfact[0, 0] = ${mgainTT}; s.aol${CACAO_LOOPNUMBER}_mgainfact[1, 0] = ${mgainTT}"
+exit
 EOF
 
 cacaomsglog "END"

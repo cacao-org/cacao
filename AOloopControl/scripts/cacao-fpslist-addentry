@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+# Early-exit help flags (skip -h when sourced/called with FPSLISTADD_MODE=info)
+case "${1-}" in
+    -h1|--help-oneline)
+        if [ -n "${fpsdescr-}" ]; then
+            echo "Register FPS process: ${fpsdescr}"
+        else
+            echo "Add an FPS entry to the fpslist.txt tracking file"
+        fi
+        exit 0
+        ;;
+    -h2|--help-description)
+        echo "Sourced by cacao-fpslistadd-* scripts to" \
+             "register an FPS compute unit in" \
+             "the fpslist.txt tracking file."
+        exit 0 ;;
+    -h|--help|-hm|--help-mono)
+        if [ "${FPSLISTADD_MODE-}" != "info" ]; then
+            echo "Usage: cacao-fpslist-addentry" \
+                 "— sourced by cacao-fpslistadd-*" \
+                 "to register an FPS"
+            echo ""
+            echo "See Also:"
+            echo "  cacao-fpslistadd" \
+                "  — populate fpslist.txt and fps.conf"
+            echo "  milk-fps-set" \
+                "      — set FPS parameters"
+            exit 0
+        fi
+        ;;
+esac
+
+
+# Check if FPS is present
+FPSEXISTS="OFF"
+fpsfilename="${MILK_SHM_DIR}/${fpsfname}.fps.shm"
+if [ -f "${fpsfilename}" ]; then
+  FPSEXISTS="ON"
+fi
+
+if [ "${FPSLISTADD_MODE-}" = "info" ]; then
+
+	if [ "${FPSKWval}" = "ON" ]; then
+	  printf "\e[1;102;30m ON  \e[0m  "
+	else
+	  printf " OFF   "
+	fi
+
+	if [ "${FPSEXISTS}" = "ON" ]; then
+	  printf "\e[1;102;30m FPS  \e[0m  "
+	else
+	  printf " ---    "
+	fi
+
+	printf "\e[1;34m[${FPSKWname}]\e[0m ( ${fpsfcall} -> ${fpsfname} ) ${fpsdescr}\n"
+
+else
+
+WRITEFPSCMDS="ON"
+if [ "${FPSLISTADD_MODE-}" = "update" ]; then
+  if [ "${FPSEXISTS}" = "ON" ]; then
+    WRITEFPSCMDS="OFF"
+  fi
+fi
+
+if [ -z "${FPSLISTADDSCRIPT+x}" ]; then
+	printf "Adding \e[1;34m${FPSKWname}\e[0m:
+script should be sourced by a deployment script setting variable FPSLISTADDSCRIPT,
+and also have the following variables defined:\n"
+    printf "    FPSKWname   : FPS Keyword name\n"
+    printf "    FPSKWval    : FPS keyword value, \"ON\" for adding the entry\n"
+    printf "    fpsfcall    : Function call\n"
+    printf "    fpsarg0     : Arguments\n"
+    printf "    fpsdescr    : Short description\n"
+    printf "Run this script with FPSLISTADD_MODE set to \"info\" to print above variable values\n"
+else
+
+	if [ "${FPSKWval}" = "ON" ]; then
+
+		echolog "ON  ${FPSKWname}"
+
+		if grep -q "${fpsfname}" fpslist.txt
+		then
+			echolog "CU ${fpsfname} already registered - skipping"
+		else
+			echolog "Registering CU ${fpsfname}"
+
+            fpsentry_addmodules
+			echo "${fpsname}           ${fpsfcall}     ${fpsarg0}" >> fpslist.txt
+
+			if [ "${WRITEFPSCMDS}" = "ON" ]; then
+			  addfpscmdheader
+			  addfpscmd "setval ${fpsfname}.procinfo.enabled ON"
+			  fpsentry_addcmds
+			fi
+
+		fi
+	else
+		echolog "OFF ${FPSKWname}"
+	fi
+
+fi # end of if [ -z ${FPSLISTADDSCRIPT+x} ]
+
+fi

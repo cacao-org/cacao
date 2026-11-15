@@ -37,8 +37,7 @@ fi
 
 
 
-sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turb ON"
-sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.autoampl OFF"
+sendFPScmd "setval DMatmturb-${CACAO_LOOPNUMBER}.turbON ON"
 
 
 sleep 1

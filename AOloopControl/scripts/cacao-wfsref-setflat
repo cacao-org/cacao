@@ -11,6 +11,7 @@ such as the pyramid WFS.
 
 source milk-script-std-config
 source cacao-check-cacaovars
+RequiredCommands=( cacao-cli )
 
 
 source milk-argparse
@@ -23,15 +24,13 @@ cacaomsglog "START"
 sendFPScmd "setval acquWFS-${CACAO_LOOPNUMBER}.comp.WFSrefc OFF"
 sendFPScmd "confupdate acquWFS-${CACAO_LOOPNUMBER}"
 
-milk << EOF
-#readshmim aol${CACAO_LOOPNUMBER}_wfsmask
-loadfits "conf/wfsmask.fits" wfsmask
-wfsm=0+wfsmask
-wfsmn=wfsm/itot(wfsm)
-readshmim aol${CACAO_LOOPNUMBER}_wfsrefc
-imcpshm wfsmn aol${CACAO_LOOPNUMBER}_wfsrefc
-saveFITS wfsmn "wfsmn.fits"
-exitCLI
+cacao-cli << EOF
+iofits.loadfits "conf/wfsmask.fits" wfsmask .
+@calc "wfsm = wfsmask * 1.0; wfsmn = wfsm / itot(wfsm)"
+mem.readshmim aol${CACAO_LOOPNUMBER}_wfsrefc
+mem.imcpshm wfsmn aol${CACAO_LOOPNUMBER}_wfsrefc
+iofits.saveFITS wfsmn "!wfsmn.fits"
+exit
 EOF
 
 cacaomsglog "END"

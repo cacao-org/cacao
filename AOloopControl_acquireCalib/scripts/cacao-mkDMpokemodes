@@ -114,11 +114,10 @@ if [ -f "${DMMODEDIR}/DMmask.fits" ]; then
 echo "Using existing DMmask"
 else
 echo "Creating DMmask"
-cacao << EOF
+cacao-cli << EOF
 imgen.mkdisk DMmask ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0}
-saveFITS DMmask "${DMMODEDIR}/DMmask.fits"
-listim
-exitCLI
+iofits.saveFITS DMmask "!${DMMODEDIR}/DMmask.fits"
+exit
 EOF
 fi
 
@@ -134,14 +133,13 @@ fi
 
 # Hadamard modes
 
-cacao << EOF
-loadfits "${DMMODEDIR}/DMmask.fits" DMmask
+cacao-cli << EOF
+iofits.loadfits "${DMMODEDIR}/DMmask.fits" DMmask .
 cacaocc.mkHadamard DMmask HpokeC
-saveFITS HpokeC "${DMMODEDIR}/HpokeC.fits"
-saveFITS Hpixindex "${DMMODEDIR}/Hpixindex.fits"
-saveFITS Hmat "${DMMODEDIR}/Hmat.fits"
-listim
-exitCLI
+iofits.saveFITS HpokeC "!${DMMODEDIR}/HpokeC.fits"
+iofits.saveFITS Hpixindex "!${DMMODEDIR}/Hpixindex.fits"
+iofits.saveFITS Hmat "!${DMMODEDIR}/Hmat.fits"
+exit
 EOF
 
 
@@ -150,19 +148,17 @@ EOF
 
 deltaCPA=0.8
 
-cacao << EOF
+cacao-cli << EOF
 lintools.mkFouriermodes Fmodes ${CACAO_DMxsize} ${CACAO_DMysize} ${CPAmax} ${deltaCPA} ${DMr0} 1.1 0
-saveFITS Fmodes "${DMMODEDIR}/FpokesC.${CPAmax}.fits"
-listim
-exitCLI
+iofits.saveFITS Fmodes "!${DMMODEDIR}/FpokesC.${CPAmax}.fits"
+exit
 EOF
 
 
 # Zernike modes
 
-milk-all << EOF
+cacao-cli << EOF
 zern.mkzerc zerc ${CACAO_DMxsize} ${CACAO_DMysize} ${DMx0} ${DMy0} ${DMr0} ${NBzer}
-saveFITS zerc "${DMMODEDIR}/ZpokesC.${NBzer}.fits"
-listim
-exitCLI
+iofits.saveFITS zerc "!${DMMODEDIR}/ZpokesC.${NBzer}.fits"
+exit
 EOF

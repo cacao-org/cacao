@@ -40,12 +40,10 @@ function fpsentry_addcmds() {
     addfpscmd "setval ${fpsfname}.comp.WFSrefsub ON"
     addfpscmd "setval ${fpsfname}.comp.WFSsigav ON"
     addfpscmd "setval ${fpsfname}.comp.WFSrefc ON"
-    addfpscmd "setval ${fpsfname}.comp.imtotal ON"
-    addfpscmd "setval ${fpsfname}.comp.normwfsim ON"
 
     addfpscmd "setval ${fpsfname}.wfszpo aol${CACAO_LOOPNUMBER}_wfszpo"
 }
 
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

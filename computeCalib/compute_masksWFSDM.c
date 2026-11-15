@@ -95,6 +95,15 @@ static MILK_HOT errno_t compute_masksWFSDM_compute(const MILK_RUNNABLE *self)
 
 
     imageID IDzrm = image_ID(zrespWFS, dcimg, dcnimg);
+    if (IDzrm == -1)
+    {
+        IDzrm = read_sharedmem_image(zrespWFS, dcimg, dcnimg);
+    }
+    if (IDzrm == -1)
+    {
+        PRINT_ERROR("Cannot resolve %s", zrespWFS);
+        return RETURN_FAILURE;
+    }
     printf("IDzrm = %ld\n", IDzrm);
     uint32_t sizexWFS = dcimg[IDzrm].md[0].size[0];
     uint32_t sizeyWFS = dcimg[IDzrm].md[0].size[1];

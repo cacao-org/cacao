@@ -14,15 +14,14 @@ MSdescr="AO loop script
 # standard configuration
 # location ./scripts/
 source milk-script-std-config
+source cacao-check-cacaovars
 
 # prerequisites
 #
 
-RequiredCommands=( tmux milk )
+RequiredCommands=( tmux cacao-cli )
 
-fpsCTRLtmuxname="${CACAO_LOOPNAME}_fpsCTRL"
-fpsCTRLfifo="${MILK_SHM_DIR}/${fpsCTRLtmuxname}.fifo"
-RequiredFiles=( ${fpsCTRLfifo} )
+RequiredFiles=()
 
 RequiredDirs=()
 
@@ -42,15 +41,6 @@ RequiredDirs=()
 
 # parse arguments
 source milk-argparse
-
-
-
-
-function sendFPScmd {
-    echo "SENDING: $1"
-    echo "$1" >> ${fpsCTRLfifo}
-}
-
 
 
 exit
@@ -289,11 +279,10 @@ if [ ! -f "$stepFile" ]; then
 
     cd $CACAOWORKDIR/${LOOPNAME}dir
     pwd
-    cacao << EOF
-loadfits "fps.compsCM-${CACAO_LOOPNUMBER}.datadir/sCMat00.fits" im
-imcpshm im cmat
-listim
-exitCLI
+    cacao-cli << EOF
+iofits.loadfits "fps.compsCM-${CACAO_LOOPNUMBER}.datadir/sCMat00.fits" im .
+mem.imcpshm im cmat
+exit
 EOF
     cd ../..
 

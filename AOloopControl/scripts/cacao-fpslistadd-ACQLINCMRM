@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacaoac.aolmeaslWFSrespC"
+fpsfcall="cacao-fpsexec-cacaoac-acqWFSlincal"
 
 # short description
 fpsdescr="Acquire Linear Response Matrix on Control Modes"
@@ -31,16 +31,15 @@ function fpsentry_addcmds() {
 	CACAO_CMDMINDEX=2
 	addfpscmd "setval ${fpsfname}.AOloopindex ${CACAO_LOOPNUMBER}"
 
-	addfpscmd "setval ${fpsfname}.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
-	addfpscmd "setval ${fpsfname}.FPS_DMcomb DMch2disp-cm${CACAO_DMINDEX}"
+	addfpscmd "setval ${fpsfname}.timing.FPS_mlat mlat-${CACAO_LOOPNUMBER}"
+	addfpscmd "setval ${fpsfname}.RMDMmask.FPS_DMcomb DMch2disp-cm${CACAO_DMINDEX}"
 
 
 	# default startup values
 	addfpscmd "setval ${fpsfname}.normalize OFF"
 	addfpscmd "setval ${fpsfname}.Hpoke OFF"
-	addfpscmd "setval ${fpsfname}.autoTiming ON"
-	addfpscmd "setval ${fpsfname}.compDMmask OFF"
-	addfpscmd "setval ${fpsfname}.compMpoke OFF"
+	addfpscmd "setval ${fpsfname}.timing.autoTiming ON"
+	addfpscmd "setval ${fpsfname}.compPokeMat OFF"
 
 	addfpscmd "setval ${fpsfname}.timing.NBave 1"
 	addfpscmd "setval ${fpsfname}.timing.NBcycle 4"
@@ -59,4 +58,4 @@ function fpsentry_addcmds() {
 }
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

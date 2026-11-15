@@ -76,18 +76,16 @@ mkdir -p ${CACAO_CONFWDIR}
 datestring="$(date -u +'%Y-%m-%dT%H:%M:%S.%NZ')"
 
 cacaomsglog "START acquisition"
-MILK_QUIET=1 milk << EOF
-readshmim aol${CACAO_LOOPNUMBER}_wfsim
-streamave ..procinfo 1
-streamave ..triggersname aol${CACAO_LOOPNUMBER}_wfsim
-streamave ..triggermode 3
-streamave ..loopcntMax ${NBframe}
-streamave .out_shared 0
-streamave aol${CACAO_LOOPNUMBER}_wfsim imdark ${NBframe}
-saveFITS imdark "${CACAO_CONFWDIR}/wfsdarkraw.fits"
-listim
-exitCLI
-EOF
+_avefps="takedark_${CACAO_LOOPNUMBER}_$$"
+_darkshm="wfsdark_${CACAO_LOOPNUMBER}_$$"
+milk-shmimave "${_avefps}:fpsinit" "aol${CACAO_LOOPNUMBER}_wfsim" "${_darkshm}" "${NBframe}"
+milk-fps-set "${_avefps}.procinfo.triggersname" "aol${CACAO_LOOPNUMBER}_wfsim"
+milk-fps-set "${_avefps}.procinfo.triggermode" 3
+milk-fps-set "${_avefps}.procinfo.loopcntMax" "${NBframe}"
+milk-shmimave "${_avefps}:run"
+milk-fps-rm -f -x "${_avefps}"
+milk-fpsexec-iofits-saveFITS _savefits:exec "${_darkshm}" "!${CACAO_CONFWDIR}/wfsdarkraw.fits"
+rm -f "${MILK_SHM_DIR}/${_darkshm}.im.shm"
 cacaomsglog "STOP acquisition"
 cacaomsglog "SAVED wfsdarkraw as ${CACAO_CONFWDIR}/wfsdarkraw.fits"
 

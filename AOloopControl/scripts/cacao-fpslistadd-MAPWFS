@@ -16,7 +16,7 @@ fpsarg0="${CACAO_LOOPNUMBER}"
 fpsfname="${fpsname}-${fpsarg0}"
 
 # function call
-fpsfcall="cacaoio.mapWFS"
+fpsfcall="cacao-fpsexec-cacaoiot-mapWFS"
 
 # short description
 fpsdescr="remap WFS input"
@@ -31,7 +31,7 @@ function fpsentry_addcmds() {
     # run simulator at finite frame rate
     addfpscmd "setval ${fpsfname}.procinfo.loopcntMax -1" # infinite loop
     addfpscmd "setval ${fpsfname}.procinfo.triggermode 3" # semaphore
-    addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim "
+    addfpscmd "setval ${fpsfname}.procinfo.triggersname aol${CACAO_LOOPNUMBER}_wfsim"
 
     addfpscmd "setval ${fpsfname}.wfsin aol${CACAO_LOOPNUMBER}_wfsim"
     addfpscmd "setval ${fpsfname}.map aol${CACAO_LOOPNUMBER}_wfsmapping"
@@ -40,4 +40,4 @@ function fpsentry_addcmds() {
 
 
 
-source milk-fpslist-addentry
+source cacao-fpslist-addentry

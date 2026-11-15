@@ -47,7 +47,7 @@ ALPHAnorm="2.0"
 
 source milk-script-std-config
 
-RequiredCommands=( cacao )
+RequiredCommands=( cacao-cli )
 RequiredFiles=()
 RequiredDirs=()
 
@@ -89,18 +89,17 @@ evalMode="${inputMSargARRAY[7]}"
 timespan="${inputMSargARRAY[8]}"
 
 
-cacao << EOF
-loadfits "$streamWFScube" imwfsC
-loadfits "$streamPSFcube" impsfC
+cacao-cli << EOF
+iofits.loadfits "$streamWFScube" imwfsC .
+iofits.loadfits "$streamPSFcube" impsfC .
 
 cacaopt.aolperfselwfsfpsf imwfsC impsfC $selFrac ${windowx0} ${windowx1} ${windowy0} ${windowy1} $evalMode $ALPHAnorm
 
-saveFITS imwfsbest "imwfsbest.fits"
-saveFITS imwfsall "imwfsall.fits"
+iofits.saveFITS imwfsbest "!imwfsbest.fits"
+iofits.saveFITS imwfsall "!imwfsall.fits"
 
-saveFITS impsfbest "impsfbest.fits"
-saveFITS impsfall "impsfall.fits"
+iofits.saveFITS impsfbest "!impsfbest.fits"
+iofits.saveFITS impsfall "!impsfall.fits"
 
-listim
 exit
 EOF

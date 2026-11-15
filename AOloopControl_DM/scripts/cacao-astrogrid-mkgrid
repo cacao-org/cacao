@@ -23,7 +23,7 @@ source cacao-check-cacaovars
 
 mkdir -p AOcalibs
 
-RequiredCommands=(milk)
+RequiredCommands=( cacao-cli )
 RequiredFiles=(LOOPNUMBER)
 RequiredDirs=(AOcalibs)
 
@@ -84,12 +84,10 @@ fi
 
 
 
-milk << EOF
-mload cacaoAOloopControlDM
+cacao-cli << EOF
 cacaodm.mk3Ddmgrid im ${CACAO_DMxsize} ${CACAO_DMxsize} ${pattern} ${binfact}
-saveFITS im "AOcalibs/astrogrid.fits"
-listim
-readshmim DMastrogrid
-imcpshm im aol${AOLOOPNUMBER}_DMastrogrid
-exitCLI
+iofits.saveFITS im "!AOcalibs/astrogrid.fits"
+mem.readshmim aol${AOLOOPNUMBER}_DMastrogrid
+mem.imcpshm im aol${AOLOOPNUMBER}_DMastrogrid
+exit
 EOF

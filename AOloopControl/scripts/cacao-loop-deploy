@@ -40,7 +40,7 @@ source milk-script-std-config
 
 # prerequisites
 #
-RequiredCommands=( milk tmux cacao-cli )
+RequiredCommands=( tmux cacao-cli )
 RequiredFiles=()
 RequiredDirs=( ${MILK_ROOT} )
 

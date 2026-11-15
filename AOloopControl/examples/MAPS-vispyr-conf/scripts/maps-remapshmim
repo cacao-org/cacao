@@ -5,21 +5,9 @@ act2Dim=$2
 
 # Remap to 2D, loop
 #
-milk << EOF
-readshmim ${act1Dval}
-loadfits "data/mapping.fits" mapping
-# make output shared memory stream
-pixremap .outim.shared 1
-pixremap ..procinfo 1
-
-# trigger on semaphore of stream act1Dval
-pixremap ..triggermode 4
-pixremap ..triggerdelay 0.02
-pixremap ..triggersname ${act1Dval}
-
-# run forever, until killed
-pixremap ..loopcntMax -1
-
-pixremap ${act1Dval} mapping ${act2Dim}
-exitCLI
-EOF
+milk-FITS2shm _loadfits:exec "data/mapping.fits" "@S:_map_${act2Dim}"
+milk-fpsexec-milk-calc -loops -t "${act1Dval}" -e "s.${act2Dim} = pixremap(s.${act1Dval}, s._map_${act2Dim})" "remap_${act2Dim}:fpsinit"
+milk-fps-set "remap_${act2Dim}.procinfo.triggermode" 4
+milk-fps-set "remap_${act2Dim}.procinfo.triggerdelay" 0.02
+milk-fps-set "remap_${act2Dim}.procinfo.triggersname" "${act1Dval}"
+exec milk-fpsexec-milk-calc "remap_${act2Dim}:run"

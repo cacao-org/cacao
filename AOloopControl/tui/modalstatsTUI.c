@@ -4,36 +4,84 @@
 
 /**
  * @file    modalstatsTUI.c
- * @brief   modal statistics TUI — ANSI-native, no ncurses dependency
+ * @brief   Standalone modal statistics TUI — ANSI-native, no CLIcore/ncurses
  *
- * Terminal output uses raw ANSI escape sequences via fpsCTRL_ansi.h,
- * the same primitive layer used by milk-fpsCTRL and milk-streamCTRL.
+ * Connects directly to ImageStreamIO shared-memory streams and uses raw
+ * ANSI escape sequences via fpsCTRL_ansi.h with poll()-paced input.
  */
 
+#include <errno.h>
 #include <math.h>
+#include <poll.h>
+#include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
-#include "CLIcore.h"
-#include "COREMOD_memory/COREMOD_memory.h"
-
-/* ANSI raw-terminal helpers — key codes, color, cursor movement */
+#include "ImageStreamIO/ImageStreamIO.h"
 #include "fpsCTRL/fpsCTRL_ansi.h"
+#include "milk_config.h"
+#include "milk_help.h"
+#include "modalstatsTUI.h"
 
 /* Storage for ansi raw-mode state (required by fpsCTRL_ansi.h) */
 struct termios ansi__orig_termios;
 int            ansi__raw_active = 0;
+int            ansi__orig_flags = -1;
 
+static volatile sig_atomic_t g_keep_running = 1;
+
+static void tui_signal_handler(int sig)
+{
+    if (sig == SIGINT || sig == SIGTERM || sig == SIGHUP)
+    {
+        g_keep_running = 0;
+        return;
+    }
+
+    static const char reset_seq[] = "\033[?25h\033[?7h\033[0m\n";
+    if (write(STDERR_FILENO, reset_seq, sizeof(reset_seq) - 1) < 0)
+    {
+    }
+    if (ansi__raw_active)
+    {
+        if (ansi__orig_flags >= 0)
+        {
+            fcntl(STDIN_FILENO, F_SETFL, ansi__orig_flags);
+        }
+        tcsetattr(STDIN_FILENO, TCSAFLUSH, &ansi__orig_termios);
+    }
+
+    struct sigaction sa_dfl;
+    sa_dfl.sa_handler = SIG_DFL;
+    sigemptyset(&sa_dfl.sa_mask);
+    sa_dfl.sa_flags = 0;
+    sigaction(sig, &sa_dfl, NULL);
+    raise(sig);
+}
+
+static void install_signal_handlers(void)
+{
+    struct sigaction sa;
+    sa.sa_handler = tui_signal_handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
+    sigaction(SIGHUP, &sa, NULL);
+    sigaction(SIGSEGV, &sa, NULL);
+    sigaction(SIGBUS, &sa, NULL);
+    sigaction(SIGABRT, &sa, NULL);
+}
 
 /* =========================================================
- * Local ANSI print helpers (replace TUI_printfw / TUI_newline)
+ * Local ANSI print helpers
  * ========================================================= */
 
-/** ansi_printfw - printf to stdout (drop-in for TUI_printfw). */
 #define ansi_printfw(fmt, ...) printf(fmt, ##__VA_ARGS__)
 
-/** ansi_newline - emit CR+LF (raw mode requires explicit CR). */
 static inline void ansi_newline(void)
 {
     if (write(STDOUT_FILENO, "\r\n", 2) < 0)
@@ -41,7 +89,6 @@ static inline void ansi_newline(void)
     }
 }
 
-/** ansi_clearscreen - erase display and home cursor. */
 static inline void ansi_clearscreen(void)
 {
     if (write(STDOUT_FILENO, "\033[2J\033[H", 7) < 0)
@@ -49,13 +96,11 @@ static inline void ansi_clearscreen(void)
     }
 }
 
-
-/** ansi_get_termsize - query terminal rows/cols via ioctl. */
 static inline void ansi_get_termsize(unsigned short *rows, unsigned short *cols)
 {
     struct winsize ws;
 
-    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0)
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0 && ws.ws_row > 0 && ws.ws_col > 0)
     {
         *rows = ws.ws_row;
         *cols = ws.ws_col;
@@ -67,14 +112,12 @@ static inline void ansi_get_termsize(unsigned short *rows, unsigned short *cols)
     }
 }
 
-
 /* =========================================================
  * Display state
  * ========================================================= */
 
 static int MODALTUI_PF     = 0;
 static int MODALTUI_DMfilt = 0;
-
 
 typedef struct
 {
@@ -84,33 +127,58 @@ typedef struct
     float pscale;
 } MODALSTATSTRUCT;
 
-
 /* =========================================================
- * FPS boilerplate
+ * Stream helpers (ImageStreamIO only)
  * ========================================================= */
 
-static FPS_APP_INFO FPS_app_info = {
-    .fps_name         = "modalstatsTUI",
-    .cmdkey           = "modalstatsTUI",
-    .description      = "modal stats TUI",
-    .description_long = "TUI (Text User Interface) for real-time display of modal AO control "
-                        "statistics. Shows per-mode gains, RMS, and temporal evolution."
-};
-
-static uint64_t *AOloopindex;
-
-#define FPS_PARAMS(X)                                                                            \
-    X(".AOloopindex", &AOloopindex, FPTYPE_UINT64, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
-      "AO loop index")
-
-FPS_V2_SECTION5(FPS_PARAMS)
-
-
-static errno_t __attribute__((unused)) help_function()
+static int connect_stream_fmt(IMAGE *im, int required, const char *fmt, int loopindex)
 {
-    return RETURN_SUCCESS;
+    char name[256];
+    snprintf(name, sizeof(name), fmt, loopindex);
+    memset(im, 0, sizeof(*im));
+    if (ImageStreamIO_read_sharedmem_image_toIMAGE(name, im) != IMAGESTREAMIO_SUCCESS)
+    {
+        im->used = 0;
+        if (required)
+        {
+            fprintf(stderr, "cacao-modalstatsTUI-bin: cannot open stream '%s'\n", name);
+            return -1;
+        }
+        return 0;
+    }
+    return 0;
 }
 
+static int connect_or_create_2Df32(IMAGE      *im,
+                                   uint32_t    nbmode,
+                                   const char *fmt,
+                                   int         loopindex)
+{
+    char name[256];
+    snprintf(name, sizeof(name), fmt, loopindex);
+    memset(im, 0, sizeof(*im));
+    if (ImageStreamIO_read_sharedmem_image_toIMAGE(name, im) == IMAGESTREAMIO_SUCCESS)
+    {
+        return 0;
+    }
+    uint32_t size[2] = { nbmode, 1 };
+    if (ImageStreamIO_createIm_gpu(im, name, 2, size, _DATATYPE_FLOAT, -1, 1, 10, 0, MATH_DATA, 0) !=
+        IMAGESTREAMIO_SUCCESS)
+    {
+        im->used = 0;
+        fprintf(stderr, "cacao-modalstatsTUI-bin: cannot create stream '%s'\n", name);
+        return -1;
+    }
+    return 0;
+}
+
+static void close_stream(IMAGE *im)
+{
+    if (im->used)
+    {
+        ImageStreamIO_closeIm(im);
+    }
+}
 
 /* =========================================================
  * Key handler
@@ -118,13 +186,12 @@ static errno_t __attribute__((unused)) help_function()
 
 static int modalstats_TUI_process_user_key(int ch, MODALSTATSTRUCT *mstatstruct)
 {
-    DEBUG_TRACE_FSTART();
-
     int loopOK = 1;
 
     switch (ch)
     {
     case 'x':
+    case 'q':
         loopOK = 0;
         break;
 
@@ -162,12 +229,12 @@ static int modalstats_TUI_process_user_key(int ch, MODALSTATSTRUCT *mstatstruct)
 
     case '+':
         mstatstruct->pscaleindex++;
-        mstatstruct->pscale = powf(10.0f, mstatstruct->pscaleindex);
+        mstatstruct->pscale = powf(10.0f, (float) mstatstruct->pscaleindex);
         break;
 
     case '-':
         mstatstruct->pscaleindex--;
-        mstatstruct->pscale = powf(10.0f, mstatstruct->pscaleindex);
+        mstatstruct->pscale = powf(10.0f, (float) mstatstruct->pscaleindex);
         break;
 
     case 'P':
@@ -190,16 +257,14 @@ static int modalstats_TUI_process_user_key(int ch, MODALSTATSTRUCT *mstatstruct)
         break;
     }
 
-    DEBUG_TRACE_FEXIT();
     return loopOK;
 }
-
 
 /* =========================================================
  * Fixed-width value printers
  * ========================================================= */
 
-inline static void printfixedlen(float val, MODALSTATSTRUCT *mstatstruct)
+static inline void printfixedlen(float val, const MODALSTATSTRUCT *mstatstruct)
 {
     long tmpl = (long) (mstatstruct->pscale * val);
 
@@ -209,14 +274,13 @@ inline static void printfixedlen(float val, MODALSTATSTRUCT *mstatstruct)
     }
     else
     {
-        ansi_setcolor(3); /* yellow — overflow */
+        ansi_setcolor(3);
         ansi_printfw("+++++");
         ansi_unsetcolor(3);
     }
 }
 
-
-inline static void printfixedlen_unsigned(float val, MODALSTATSTRUCT *mstatstruct)
+static inline void printfixedlen_unsigned(float val, const MODALSTATSTRUCT *mstatstruct)
 {
     long tmpl = (long) (mstatstruct->pscale * val);
 
@@ -232,204 +296,88 @@ inline static void printfixedlen_unsigned(float val, MODALSTATSTRUCT *mstatstruc
     }
 }
 
-
 /* =========================================================
  * Main TUI function
  * ========================================================= */
 
-errno_t AOloopControl_modalstatsTUI(int loopindex)
+int AOloopControl_modalstatsTUI(int loopindex)
 {
-    DEBUG_TRACE_FSTART();
-    printf("Modal stats TUI\n");
+    IMAGE imDMmodes, imWFS, imDM, imDMf, imOL;
+    IMAGE imGain, imMult, imLimit, imLimitFrac;
+    IMAGE imDMave, imDMrms, imWFSave, imWFSrms, imOLave, imOLrms;
+    IMAGE imPFmix, imPFresrms;
+
+    memset(&imDMmodes, 0, sizeof(imDMmodes));
+    memset(&imWFS, 0, sizeof(imWFS));
+    memset(&imDM, 0, sizeof(imDM));
+    memset(&imDMf, 0, sizeof(imDMf));
+    memset(&imOL, 0, sizeof(imOL));
+    memset(&imGain, 0, sizeof(imGain));
+    memset(&imMult, 0, sizeof(imMult));
+    memset(&imLimit, 0, sizeof(imLimit));
+    memset(&imLimitFrac, 0, sizeof(imLimitFrac));
+    memset(&imDMave, 0, sizeof(imDMave));
+    memset(&imDMrms, 0, sizeof(imDMrms));
+    memset(&imWFSave, 0, sizeof(imWFSave));
+    memset(&imWFSrms, 0, sizeof(imWFSrms));
+    memset(&imOLave, 0, sizeof(imOLave));
+    memset(&imOLrms, 0, sizeof(imOLrms));
+    memset(&imPFmix, 0, sizeof(imPFmix));
+    memset(&imPFresrms, 0, sizeof(imPFresrms));
 
     MODALSTATSTRUCT mstatstruct;
     mstatstruct.modeindex   = 0;
     mstatstruct.pscaleindex = 0;
     mstatstruct.pscale      = 1.0f;
 
-    uint32_t NBmode = 1;
-
-    /* ---- connect to streams ---- */
-
-    IMGID imgDMmodes;
+    connect_stream_fmt(&imDMmodes, 0, "aol%d_CMmodesDM", loopindex);
+    if (connect_stream_fmt(&imWFS, 1, "aol%d_modevalWFS", loopindex) != 0 ||
+        connect_stream_fmt(&imDM, 1, "aol%d_modevalDM", loopindex) != 0 ||
+        connect_stream_fmt(&imDMf, 1, "aol%d_modevalDMf", loopindex) != 0 ||
+        connect_stream_fmt(&imOL, 1, "aol%d_modevalOL", loopindex) != 0 ||
+        connect_stream_fmt(&imGain, 1, "aol%d_mgain", loopindex) != 0 ||
+        connect_stream_fmt(&imMult, 1, "aol%d_mmult", loopindex) != 0 ||
+        connect_stream_fmt(&imLimit, 1, "aol%d_mlimit", loopindex) != 0 ||
+        connect_stream_fmt(&imLimitFrac, 1, "aol%d_mlimitcntfrac", loopindex) != 0)
     {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_CMmodesDM", loopindex);
-        imgDMmodes = imgid_make_from_name(name);
-        resolveIMGID(&imgDMmodes, ERRMODE_WARN, dcimg, dcnimg);
-        NBmode = imgDMmodes.md->size[2];
-    }
-    mstatstruct.NBmode = NBmode;
-
-    IMGID imgmodevalWFS;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_modevalWFS", loopindex);
-        imgmodevalWFS = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalWFS, ERRMODE_WARN, dcimg, dcnimg);
-        if (imgmodevalWFS.ID == -1)
-        {
-            return RETURN_FAILURE;
-        }
-        NBmode = imgmodevalWFS.md->size[0];
-    }
-    mstatstruct.NBmode = NBmode;
-
-    IMGID imgmodevalDM;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_modevalDM", loopindex);
-        imgmodevalDM = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalDM, ERRMODE_WARN, dcimg, dcnimg);
-        if (imgmodevalDM.ID == -1)
-        {
-            return RETURN_FAILURE;
-        }
+        goto cleanup_streams;
     }
 
-    IMGID imgmodevalDMf;
+    uint32_t NBmode    = imWFS.md->size[0];
+    mstatstruct.NBmode = (long) NBmode;
+
+    if (connect_or_create_2Df32(&imDMave, NBmode, "aol%d_mvalDMave", loopindex) != 0 ||
+        connect_or_create_2Df32(&imDMrms, NBmode, "aol%d_mvalDMrms", loopindex) != 0 ||
+        connect_or_create_2Df32(&imWFSave, NBmode, "aol%d_mvalWFSave", loopindex) != 0 ||
+        connect_or_create_2Df32(&imWFSrms, NBmode, "aol%d_mvalWFSrms", loopindex) != 0 ||
+        connect_or_create_2Df32(&imOLave, NBmode, "aol%d_mvalOLave", loopindex) != 0 ||
+        connect_or_create_2Df32(&imOLrms, NBmode, "aol%d_mvalOLrms", loopindex) != 0 ||
+        connect_or_create_2Df32(&imPFmix, NBmode, "aol%d_mPFmix", loopindex) != 0 ||
+        connect_or_create_2Df32(&imPFresrms, NBmode, "aol%d_mvalPFresrms", loopindex) != 0)
     {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_modevalDMf", loopindex);
-        imgmodevalDMf = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalDMf, ERRMODE_WARN, dcimg, dcnimg);
-        if (imgmodevalDMf.ID == -1)
-        {
-            return RETURN_FAILURE;
-        }
+        goto cleanup_streams;
     }
 
-    IMGID imgmodevalOL;
+    double *WFSave     = calloc(NBmode, sizeof(double));
+    double *WFSrms     = calloc(NBmode, sizeof(double));
+    double *DMave      = calloc(NBmode, sizeof(double));
+    double *DMrms      = calloc(NBmode, sizeof(double));
+    double *OLave      = calloc(NBmode, sizeof(double));
+    double *OLrms      = calloc(NBmode, sizeof(double));
+    double *DMmodenorm = calloc(NBmode, sizeof(double));
+    if (!WFSave || !WFSrms || !DMave || !DMrms || !OLave || !OLrms || !DMmodenorm)
     {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_modevalOL", loopindex);
-        imgmodevalOL = imgid_make_from_name(name);
-        resolveIMGID(&imgmodevalOL, ERRMODE_WARN, dcimg, dcnimg);
-        if (imgmodevalOL.ID == -1)
-        {
-            return RETURN_FAILURE;
-        }
+        free(WFSave);
+        free(WFSrms);
+        free(DMave);
+        free(DMrms);
+        free(OLave);
+        free(OLrms);
+        free(DMmodenorm);
+        goto cleanup_streams;
     }
 
-    IMGID imgmgain;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mgain", loopindex);
-        imgmgain = imgid_make_from_name(name);
-        resolveIMGID(&imgmgain, ERRMODE_WARN, dcimg, dcnimg);
-        if (imgmgain.ID == -1)
-        {
-            return RETURN_FAILURE;
-        }
-    }
-
-    IMGID imgmmult;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mmult", loopindex);
-        imgmmult = imgid_make_from_name(name);
-        resolveIMGID(&imgmmult, ERRMODE_WARN, dcimg, dcnimg);
-        if (imgmmult.ID == -1)
-        {
-            return RETURN_FAILURE;
-        }
-    }
-
-    IMGID imgmlimit;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mlimit", loopindex);
-        imgmlimit = imgid_make_from_name(name);
-        resolveIMGID(&imgmlimit, ERRMODE_WARN, dcimg, dcnimg);
-        if (imgmlimit.ID == -1)
-        {
-            return RETURN_FAILURE;
-        }
-    }
-
-    IMGID imgmlimitcntfrac;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mlimitcntfrac", loopindex);
-        imgmlimitcntfrac = imgid_make_from_name(name);
-        resolveIMGID(&imgmlimitcntfrac, ERRMODE_WARN, dcimg, dcnimg);
-        if (imgmlimitcntfrac.ID == -1)
-        {
-            return RETURN_FAILURE;
-        }
-    }
-
-    /* ---- stat accumulation streams ---- */
-
-    IMGID imgmvalDMave;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mvalDMave", loopindex);
-        imgmvalDMave = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalDMrms;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mvalDMrms", loopindex);
-        imgmvalDMrms = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalWFSave;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mvalWFSave", loopindex);
-        imgmvalWFSave = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalWFSrms;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mvalWFSrms", loopindex);
-        imgmvalWFSrms = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalOLave;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mvalOLave", loopindex);
-        imgmvalOLave = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalOLrms;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mvalOLrms", loopindex);
-        imgmvalOLrms = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-    /* ---- predictive control streams ---- */
-
-    IMGID imgmPFmix;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mPFmix", loopindex);
-        imgmPFmix = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-    IMGID imgmvalPFresrms;
-    {
-        char name[STRINGMAXLEN_STREAMNAME];
-        WRITE_IMAGENAME(name, "aol%d_mvalPFresrms", loopindex);
-        imgmvalPFresrms = stream_connect_create_2Df32(name, NBmode, 1);
-    }
-
-    /* Unused direct reference needed to avoid unused-variable warnings */
-    (void) imgmvalWFSrms;
-    (void) imgmvalOLrms;
-
-    /* ---- working buffers ---- */
-
-    double *WFSave     = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
-    double *WFSrms     = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
-    double *DMave      = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
-    double *DMrms      = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
-    double *OLave      = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
-    double *OLrms      = (double *) malloc(sizeof(double) * mstatstruct.NBmode);
-    double *DMmodenorm = (double *) malloc(sizeof(double) * NBmode);
-
-    /* ---- DM mode norms ---- */
-
-    if (imgDMmodes.ID == -1)
+    if (!imDMmodes.used)
     {
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
@@ -438,80 +386,83 @@ errno_t AOloopControl_modalstatsTUI(int loopindex)
     }
     else
     {
+        uint64_t npix = (uint64_t) imDMmodes.md->size[0] * imDMmodes.md->size[1];
+        uint32_t nmodes_dm = imDMmodes.md->size[2];
         for (uint32_t mi = 0; mi < NBmode; mi++)
         {
-            double   val    = 0.0;
-            double   valcnt = 0.0;
-            uint64_t npix   = (uint64_t) imgDMmodes.md->size[0] * imgDMmodes.md->size[1];
-
-            for (uint64_t ii = 0; ii < npix; ii++)
+            if (mi < nmodes_dm && npix > 0)
             {
-                float v = imgDMmodes.im->array.F[mi * npix + ii];
-                val += (double) (v * v);
-                valcnt += 1.0;
+                double val = 0.0;
+                for (uint64_t ii = 0; ii < npix; ii++)
+                {
+                    float v = imDMmodes.array.F[mi * npix + ii];
+                    val += (double) v * (double) v;
+                }
+                DMmodenorm[mi] = sqrt(val / (double) npix);
             }
-            DMmodenorm[mi] = sqrt(val / valcnt);
+            else
+            {
+                DMmodenorm[mi] = 1.0;
+            }
         }
     }
 
-    /* ---- enter raw ANSI terminal mode ---- */
-
+    install_signal_handlers();
     ansi_raw_mode_enter();
 
     unsigned short wrow = 24, wcol = 80;
     ansi_get_termsize(&wrow, &wcol);
 
-    int  loopOK  = 1;
-    long loopcnt = 0;
+    int      loopOK     = 1;
+    long     loopcnt    = 0;
+    int      mirange    = (int) (wrow > 5 ? wrow - 5 : 1);
+    int      mimin      = 0;
+    int      mimax      = mirange;
+    long     mioffset   = 0;
+    uint64_t buffindex0 = UINT64_MAX;
 
-    int  mirange  = (int) (wrow - 5);
-    int  mimin    = 0;
-    int  mimax    = mirange;
-    long mioffset = 0;
-
-
-    while (loopOK == 1)
+    while (loopOK == 1 && g_keep_running)
     {
-        usleep(1000);
-        int ch = ansi_get_key();
+        struct pollfd pfd = { .fd = STDIN_FILENO, .events = POLLIN, .revents = 0 };
+        poll(&pfd, 1, 20);
 
+        int ch = ansi_get_key();
         loopOK = modalstats_TUI_process_user_key(ch, &mstatstruct);
 
-        /* refresh terminal size each frame */
         ansi_get_termsize(&wrow, &wcol);
-        mirange = (int) (wrow - 5);
+        mirange = (int) (wrow > 5 ? wrow - 5 : 1);
 
         ansi_clearscreen();
 
-        long mi = mstatstruct.modeindex;
-
-        /* ---- scroll window ---- */
-
         if (mimax > mstatstruct.NBmode)
         {
-            mimax = mstatstruct.NBmode;
+            mimax = (int) mstatstruct.NBmode;
         }
         if (mstatstruct.modeindex > mimax - 10)
         {
             mioffset++;
-            mimin = mioffset;
-            mimax = mioffset + mirange;
+            mimin = (int) mioffset;
+            mimax = (int) (mioffset + mirange);
             if (mimax > mstatstruct.NBmode)
             {
                 mioffset--;
-                mimin = mioffset;
-                mimax = mioffset + mirange;
+                if (mioffset < 0)
+                {
+                    mioffset = 0;
+                }
+                mimin = (int) mioffset;
+                mimax = (int) (mioffset + mirange);
             }
         }
         if (mimax > mstatstruct.NBmode)
         {
-            mimax = mstatstruct.NBmode;
+            mimax = (int) mstatstruct.NBmode;
         }
         if (mstatstruct.modeindex < mimin + 10)
         {
             mioffset--;
-            mimin = mioffset;
-            mimax = mioffset + mirange;
+            mimin = (int) mioffset;
+            mimax = (int) (mioffset + mirange);
             if (mimin < 0)
             {
                 mioffset = 0;
@@ -521,26 +472,20 @@ errno_t AOloopControl_modalstatsTUI(int loopindex)
         }
         if (mimax > mstatstruct.NBmode)
         {
-            mimax = mstatstruct.NBmode;
+            mimax = (int) mstatstruct.NBmode;
         }
 
-        /* ---- header ---- */
-
-        ansi_printfw(" PRESS x to exit, +/- change display scale,"
-                     " UP/DOWN PGUP PGDOWN");
+        ansi_printfw(" PRESS x to exit, +/- change display scale, UP/DOWN PGUP PGDOWN");
         ansi_newline();
         ansi_printfw(" [P/p] Predictive filter  [F/f] DM filtering");
         ansi_newline();
-        ansi_printfw("Loop %d  -  Mode %5ld / %5ld [%5d-%5d]"
-                     "  loopcnt %ld",
+        ansi_printfw("Loop %d  -  Mode %5ld / %5ld [%5d-%5d]  loopcnt %ld",
                      loopindex, mstatstruct.modeindex, mstatstruct.NBmode, mimin, mimax, loopcnt);
         ansi_newline();
         ansi_printfw("scale = %f", mstatstruct.pscale);
         ansi_newline();
 
-        ansi_printfw("MODE [ gain  mult    lim  ]"
-                     "        WFS          |"
-                     "          DM       |");
+        ansi_printfw("MODE [ gain  mult    lim  ]        WFS          |          DM       |");
         if (MODALTUI_DMfilt)
         {
             ansi_printfw("    DMf       |");
@@ -552,112 +497,95 @@ errno_t AOloopControl_modalstatsTUI(int loopindex)
         }
         ansi_newline();
 
-        /* ---- update stat buffers ---- */
-
+        uint64_t buffindex = imOLrms.md->cnt0;
+        if (buffindex != buffindex0)
         {
-            static long buffindex0 = -1;
-            long        buffindex  = imgmvalOLrms.md->cnt0;
-
-            if (buffindex != buffindex0)
+            for (int32_t mii = mimin; mii < mimax; mii++)
             {
-                for (int32_t mii = mimin; mii < mimax; mii++)
-                {
-                    WFSave[mii] = imgmvalWFSave.im->array.F[mii];
-                    WFSrms[mii] = imgmvalWFSrms.im->array.F[mii];
-                    WFSrms[mii] = sqrt(WFSrms[mii] * WFSrms[mii] - WFSave[mii] * WFSave[mii]);
+                double d;
+                WFSave[mii] = imWFSave.array.F[mii];
+                d           = (double) imWFSrms.array.F[mii] * imWFSrms.array.F[mii] -
+                    WFSave[mii] * WFSave[mii];
+                WFSrms[mii] = (d > 0.0) ? sqrt(d) : 0.0;
 
-                    DMave[mii] = imgmvalDMave.im->array.F[mii];
-                    DMrms[mii] = imgmvalDMrms.im->array.F[mii];
-                    DMrms[mii] = sqrt(DMrms[mii] * DMrms[mii] - DMave[mii] * DMave[mii]);
+                DMave[mii] = imDMave.array.F[mii];
+                d          = (double) imDMrms.array.F[mii] * imDMrms.array.F[mii] -
+                    DMave[mii] * DMave[mii];
+                DMrms[mii] = (d > 0.0) ? sqrt(d) : 0.0;
 
-                    OLave[mii] = imgmvalOLave.im->array.F[mii];
-                    OLrms[mii] = imgmvalOLrms.im->array.F[mii];
-                    OLrms[mii] = sqrt(OLrms[mii] * OLrms[mii] - OLave[mii] * OLave[mii]);
-                }
-                buffindex0 = buffindex;
+                OLave[mii] = imOLave.array.F[mii];
+                d          = (double) imOLrms.array.F[mii] * imOLrms.array.F[mii] -
+                    OLave[mii] * OLave[mii];
+                OLrms[mii] = (d > 0.0) ? sqrt(d) : 0.0;
             }
-        } // buffindex update
+            buffindex0 = buffindex;
+        }
 
-        /* ---- per-mode rows ---- */
-
-        for (mi = mimin; mi < mimax; mi++)
+        for (long mi = mimin; mi < mimax; mi++)
         {
             if (mi == mstatstruct.modeindex)
             {
                 ansi_bold_on();
             }
 
-            ansi_printfw("%4ld [%5.3f %5.3f %8.6f]   ", mi, imgmgain.im->array.F[mi],
-                         imgmmult.im->array.F[mi], imgmlimit.im->array.F[mi]);
+            ansi_printfw("%4ld [%5.3f %5.3f %8.6f]   ", mi, imGain.array.F[mi],
+                         imMult.array.F[mi], imLimit.array.F[mi]);
 
-            /* WFS telemetry */
-            printfixedlen(imgmodevalWFS.im->array.F[mi] * DMmodenorm[mi], &mstatstruct);
+            printfixedlen(imWFS.array.F[mi] * (float) DMmodenorm[mi], &mstatstruct);
             ansi_printfw(" ");
-
             {
                 int color = (WFSave[mi] > WFSrms[mi]) ? 3 : 0;
                 ansi_setcolor(color);
-                printfixedlen(WFSave[mi] * DMmodenorm[mi], &mstatstruct);
+                printfixedlen((float) (WFSave[mi] * DMmodenorm[mi]), &mstatstruct);
                 ansi_unsetcolor(color);
             }
-
             ansi_printfw(" ");
-            printfixedlen_unsigned(WFSrms[mi] * DMmodenorm[mi], &mstatstruct);
+            printfixedlen_unsigned((float) (WFSrms[mi] * DMmodenorm[mi]), &mstatstruct);
             ansi_printfw(" | ");
 
-            /* DM telemetry */
-            printfixedlen(imgmodevalDM.im->array.F[mi] * DMmodenorm[mi], &mstatstruct);
+            printfixedlen(imDM.array.F[mi] * (float) DMmodenorm[mi], &mstatstruct);
             ansi_printfw(" ");
-
             {
                 int color = (DMave[mi] > DMrms[mi]) ? 3 : 0;
                 ansi_setcolor(color);
-                printfixedlen(DMave[mi] * DMmodenorm[mi], &mstatstruct);
+                printfixedlen((float) (DMave[mi] * DMmodenorm[mi]), &mstatstruct);
                 ansi_unsetcolor(color);
             }
-
             ansi_printfw(" ");
-            printfixedlen_unsigned(DMrms[mi] * DMmodenorm[mi], &mstatstruct);
+            printfixedlen_unsigned((float) (DMrms[mi] * DMmodenorm[mi]), &mstatstruct);
             ansi_printfw(" | ");
 
-            /* DMf telemetry (optional) */
             if (MODALTUI_DMfilt)
             {
-                printfixedlen(imgmodevalDMf.im->array.F[mi] * DMmodenorm[mi], &mstatstruct);
+                printfixedlen(imDMf.array.F[mi] * (float) DMmodenorm[mi], &mstatstruct);
                 ansi_printfw(" ");
-                printfixedlen((imgmodevalDMf.im->array.F[mi] - imgmodevalDM.im->array.F[mi]) *
-                                  DMmodenorm[mi],
+                printfixedlen((imDMf.array.F[mi] - imDM.array.F[mi]) * (float) DMmodenorm[mi],
                               &mstatstruct);
                 ansi_printfw("  | ");
             }
 
-            /* Open-loop telemetry */
-            printfixedlen(imgmodevalOL.im->array.F[mi] * DMmodenorm[mi], &mstatstruct);
+            printfixedlen(imOL.array.F[mi] * (float) DMmodenorm[mi], &mstatstruct);
             ansi_printfw(" ");
-
             {
                 int color = (OLave[mi] > OLrms[mi]) ? 3 : 0;
                 ansi_setcolor(color);
-                printfixedlen(OLave[mi] * DMmodenorm[mi], &mstatstruct);
+                printfixedlen((float) (OLave[mi] * DMmodenorm[mi]), &mstatstruct);
                 ansi_unsetcolor(color);
             }
-
             ansi_printfw(" ");
-            printfixedlen_unsigned(OLrms[mi] * DMmodenorm[mi], &mstatstruct);
+            printfixedlen_unsigned((float) (OLrms[mi] * DMmodenorm[mi]), &mstatstruct);
             ansi_printfw(" | ");
 
-            /* Limit truncation fraction */
             {
-                float truncfract = imgmlimitcntfrac.im->array.F[mi];
-
-                int color = 0;
+                float truncfract = imLimitFrac.array.F[mi];
+                int   color      = 0;
                 if (truncfract > 0.01f)
                 {
-                    color = 3; /* yellow */
+                    color = 3;
                 }
                 if (truncfract > 0.1f)
                 {
-                    color = 4; /* red */
+                    color = 4;
                 }
                 ansi_setcolor(color);
                 ansi_printfw("%6.4f", truncfract);
@@ -665,19 +593,17 @@ errno_t AOloopControl_modalstatsTUI(int loopindex)
                 ansi_printfw("  ");
             }
 
-            /* WFS/OL and DM/OL ratios */
             {
-                float WFSoverOL = WFSrms[mi] / OLrms[mi];
-                float DMoverOL  = DMrms[mi] / OLrms[mi];
-
-                int color = 0;
+                float WFSoverOL = (OLrms[mi] > 0.0) ? (float) (WFSrms[mi] / OLrms[mi]) : 0.0f;
+                float DMoverOL  = (OLrms[mi] > 0.0) ? (float) (DMrms[mi] / OLrms[mi]) : 0.0f;
+                int   color     = 0;
                 if (WFSoverOL < 0.9f)
                 {
-                    color = 2; /* green */
+                    color = 2;
                 }
                 if (WFSoverOL > 1.0f)
                 {
-                    color = 4; /* red */
+                    color = 4;
                 }
                 ansi_setcolor(color);
                 ansi_printfw("%6.4f", WFSoverOL);
@@ -698,28 +624,27 @@ errno_t AOloopControl_modalstatsTUI(int loopindex)
                 ansi_unsetcolor(color);
             }
 
-            /* Predictive filter (optional) */
             if (MODALTUI_PF)
             {
-                ansi_printfw("  [ %6.4f ]", imgmPFmix.im->array.F[mi]);
-                ansi_printfw("   %6.4f ", imgmvalPFresrms.im->array.F[mi]);
-                ansi_printfw("  %5.3f ",
-                             imgmvalPFresrms.im->array.F[mi] / imgmvalWFSrms.im->array.F[mi]);
-                ansi_printfw("  %8.6f ",
-                             imgmvalPFresrms.im->array.F[mi] / imgmvalOLrms.im->array.F[mi]);
+                float pfres = imPFresrms.array.F[mi];
+                float wfsr  = imWFSrms.array.F[mi];
+                float olr   = imOLrms.array.F[mi];
+                ansi_printfw("  [ %6.4f ]", imPFmix.array.F[mi]);
+                ansi_printfw("   %6.4f ", pfres);
+                ansi_printfw("  %5.3f ", (wfsr != 0.0f) ? pfres / wfsr : 0.0f);
+                ansi_printfw("  %8.6f ", (olr != 0.0f) ? pfres / olr : 0.0f);
             }
 
             ansi_newline();
-
             if (mi == mstatstruct.modeindex)
             {
                 ansi_bold_off();
             }
-        } // for mi
+        }
 
         fflush(stdout);
         loopcnt++;
-    } // while loopOK
+    }
 
     ansi_raw_mode_exit();
 
@@ -731,39 +656,63 @@ errno_t AOloopControl_modalstatsTUI(int loopindex)
     free(OLrms);
     free(DMmodenorm);
 
-    DEBUG_TRACE_FEXIT();
-    return RETURN_SUCCESS;
+cleanup_streams:
+    close_stream(&imDMmodes);
+    close_stream(&imWFS);
+    close_stream(&imDM);
+    close_stream(&imDMf);
+    close_stream(&imOL);
+    close_stream(&imGain);
+    close_stream(&imMult);
+    close_stream(&imLimit);
+    close_stream(&imLimitFrac);
+    close_stream(&imDMave);
+    close_stream(&imDMrms);
+    close_stream(&imWFSave);
+    close_stream(&imWFSrms);
+    close_stream(&imOLave);
+    close_stream(&imOLrms);
+    close_stream(&imPFmix);
+    close_stream(&imPFresrms);
+    return imWFS.used ? 0 : 1;
 }
 
-
-static errno_t compute_function()
+static void print_usage(const char *progname, int mh_color)
 {
-    DEBUG_TRACE_FSTART();
-
-    AOloopControl_modalstatsTUI((int) *AOloopindex);
-
-    DEBUG_TRACE_FEXIT();
-    return RETURN_SUCCESS;
+    printf("%s %s (commit %s)\n", MH(MH_TITLE, "Usage:"), progname, MILK_GIT_COMMIT);
+    printf("  %s [loopindex]\n", progname);
+    printf("\n%s\n", MH(MH_HDR, "Options:"));
+    printf("  " MH_PAD_FMT "Display this help\n", MH_PAD(MH_OPT, "-h, --help", 18));
+    printf("  " MH_PAD_FMT "One-line description\n", MH_PAD(MH_OPT, "-h1", 18));
+    printf("  " MH_PAD_FMT "Monochrome help\n", MH_PAD(MH_OPT, "-hm", 18));
+    printf("\nDefaults loopindex to $CACAO_LOOPNUMBER (or 0).\n");
 }
 
-
-#ifndef FPS_STANDALONE
-static errno_t CLIfunction(void)
+int main(int argc, char *argv[])
 {
-    return safe_fps_generic_CLIfunction(&FPS_app_info, farg, &CLIcmddata, my_bindings, nb_bindings,
-                                        compute_function);
+    int action = milk_help_init(argc, argv, "interactive ANSI TUI for modal AO control statistics",
+                                "Real-time terminal display of per-mode WFS, DM, open-loop, "
+                                "gain/mult/limit, and predictive-filter statistics.");
+    if (action == MH_ACTION_H1 || action == MH_ACTION_H2)
+    {
+        return 0;
+    }
+    if (action == MH_ACTION_HELP || action == MH_ACTION_MONO)
+    {
+        print_usage(argv[0], action == MH_ACTION_HELP);
+        return 0;
+    }
+
+    int loopindex = 0;
+    const char *env_loop = getenv("CACAO_LOOPNUMBER");
+    if (env_loop && env_loop[0] != '\0')
+    {
+        loopindex = atoi(env_loop);
+    }
+    if (argc >= 2 && argv[1][0] != '-')
+    {
+        loopindex = atoi(argv[1]);
+    }
+
+    return AOloopControl_modalstatsTUI(loopindex);
 }
-
-errno_t CLIADDCMD_AOloopControl__modalstatsTUI()
-{
-    safe_fps_fill_farg_examples(farg, my_bindings, nb_bindings);
-
-    INSERT_STD_CLIREGISTERFUNC
-
-    return RETURN_SUCCESS;
-}
-#endif
-
-#ifdef FPS_STANDALONE
-FPS_MAIN_STANDALONE_V2(FPS_app_info, FPS_PARAMS, compute_function)
-#endif
