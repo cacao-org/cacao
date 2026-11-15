@@ -1,0 +1,425 @@
+#!/usr/bin/env -S milk-script -q
+# SPDX-FileCopyrightText: 2026 Olivier Guyon et al
+#
+# SPDX-License-Identifier: LGPL-3.0-or-later
+#
+# cacaoloop-vispyr2.milk - High-speed 50x50 SCExAO visible Pyramid WFS loop controller
+
+set -euo pipefail
+
+SCRIPT_NAME="$(basename "$0")"
+CONFDIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+
+LOOPNAME="${CACAO_LOOPNAME:-vispyr2}"
+N="${CACAO_LOOPNUMBER:-7}"
+PFX="aol${N}_"
+DM_HW="${CACAO_DMINDEX:-00}"
+DM_SIM="${CACAO_DMSIMINDEX:-10}"
+DMX=50
+DMY=50
+WFS_HW="${CACAO_WFSSTREAM:-ocam2d}"
+WFS_SIM="${PFX}ocam2dsim"
+WFSX=120
+WFSY=120
+ROOTDIR="${CACAO_LOOPROOTDIR:-${PWD}/${LOOPNAME}-rootdir}"
+GPUINDEX="${CACAO_GPUINDEX:-99}"
+
+DESC_SHORT="deploy, switch sim/hw, and control the 50x50 SCExAO vispyr2 AO loop"
+DESC_LONG="Deploy, switch live between simulation and hardware, and operate the 50x50
+SCExAO visible Pyramid WFS AO loop with native C .fits.fz decompression."
+
+usage() {
+    cat <<EOF
+${SCRIPT_NAME} - ${DESC_SHORT}
+
+Usage:
+  ${SCRIPT_NAME} deploy [--sim|--hw] [--restart]
+  ${SCRIPT_NAME} mode <sim|hw>
+  ${SCRIPT_NAME} turb <on|off>
+  ${SCRIPT_NAME} close [gain]
+  ${SCRIPT_NAME} open
+  ${SCRIPT_NAME} zero
+  ${SCRIPT_NAME} status
+  ${SCRIPT_NAME} teardown
+
+Options:
+  --sim                  Deploy on simulated DM (${DM_SIM}) and Pyramid WFS simulator (default)
+  --hw                   Deploy on hardware DM (${DM_HW}) and camera (${WFS_HW})
+  --restart              Stop and re-initialize active FPS units during deploy
+  -h, --help, -hm        Show this help message and exit
+  -h1, --help-oneline    Print one-line description and exit
+  -h2, --help-description Print verbose description and exit
+EOF
+}
+
+case "${1:-}" in
+    -h1|--help-oneline)     echo "${DESC_SHORT}"; exit 0 ;;
+    -h2|--help-description) echo "${DESC_LONG}"; exit 0 ;;
+    -h|--help|-hm|--help-mono|"") usage; exit 0 ;;
+esac
+
+ALL_UNITS=(
+    "DMch2disp-${DM_SIM}"
+    "DMch2disp-${DM_HW}"
+    "DMstreamDelay-${DM_SIM}"
+    "DMatmturb-${N}"
+    "simmvmgpu-${N}"
+    "wfscamsim-${N}"
+    "acquWFS-${N}"
+    "wfs2cmodeval-${N}"
+    "mfilt-${N}"
+    "mvalC2dm-${N}"
+    "mlat-${N}"
+    "measlinresp-${N}"
+    "compstrCM-${N}"
+)
+
+ensure_stream_zeros() {
+    local sfx="$1" dims="$2"
+    local sname="${PFX}${sfx}"
+    __fpspipe_track_stream "${sname}"
+    if ! @exists "s.${sname}"; then
+        @calc "@S:${sname} = zeros(${dims})"
+        FPSPIPE_CREATED_STREAMS+=("${sname}")
+    fi
+}
+
+ensure_stream_ones() {
+    local sfx="$1" nx="$2" ny="$3"
+    local sname="${PFX}${sfx}"
+    __fpspipe_track_stream "${sname}"
+    if ! @exists "s.${sname}"; then
+        @calc "@S:${sname} = zeros(${nx}, ${ny}) + 1"
+        FPSPIPE_CREATED_STREAMS+=("${sname}")
+    fi
+}
+
+cmd_deploy() {
+    local mode="sim" restart=0
+    while (( $# > 0 )); do
+        case "$1" in
+            --sim)     mode="sim" ;;
+            --hw)      mode="hw" ;;
+            --restart) restart=1 ;;
+            *) echo "${SCRIPT_NAME}: unknown deploy option '$1'" >&2; return 2 ;;
+        esac
+        shift
+    done
+
+    local dm="${DM_SIM}"
+    [[ "${mode}" == "hw" ]] && dm="${DM_HW}"
+
+    cacaoloop.workdir "${LOOPNAME}" "${N}" "${ROOTDIR}" \
+        .dm="${dm}" .dmx="${DMX}" .dmy="${DMY}" .wfs="${WFS_HW}" .restart="${restart}"
+
+    if [[ "$(realpath -m "${FPSPIPE_ROOTDIR}/simLHS")" != "$(realpath -m "${CONFDIR}/simLHS")" ]]; then
+        ln -sfn "${CONFDIR}/simLHS" "${FPSPIPE_ROOTDIR}/simLHS"
+    fi
+
+    # 1. Load static FITS / Rice-compressed .fits.fz calibration directly in C (no funpack)
+    fpspipe.loadfits wfsref      ../simLHS/wfsref
+    fpspipe.loadfits wfsdark     ../simLHS/wfsdark
+    fpspipe.loadfits simwfsdark  ../simLHS/wfsdark
+    if [[ "${mode}" == "sim" ]]; then
+        fpspipe.loadfits simLHSrespM  ../simLHS/respM
+        fpspipe.loadfits simLHSwfsref ../simLHS/wfsref
+    fi
+
+    ensure_stream_ones  dmmask      "${DMX}"  "${DMY}"
+    ensure_stream_ones  wfsmask     "${WFSX}" "${WFSY}"
+    ensure_stream_zeros wfszpo      "${WFSX}, ${WFSY}"
+    ensure_stream_zeros DMastrogrid "${DMX}, ${DMY}"
+    if [[ -f ../conf/CMmodesWFS.fits && -f ../conf/CMmodesDM.fits ]]; then
+        fpspipe.loadfits CMmodesWFS ../conf/CMmodesWFS
+        fpspipe.loadfits CMmodesDM  ../conf/CMmodesDM
+    else
+        ensure_stream_zeros CMmodesWFS "${WFSX}, ${WFSY}, 16"
+        ensure_stream_zeros CMmodesDM  "${DMX}, ${DMY}, 16"
+    fi
+
+    # 2. Initialize FPS units concurrently in C
+    fpspipe.init <<EOF
+DMch2disp-${DM_SIM}       cacao-fpsexec-dmcomb
+DMch2disp-${DM_HW}        cacao-fpsexec-dmcomb
+DMstreamDelay-${DM_SIM}   milk-fpsexec-mem-streamdelay
+DMatmturb-${N}            cacao-fpsexec-dmturb
+simmvmgpu-${N}            milk-fpsexec-linalg-MVMextract
+wfscamsim-${N}            cacao-fpsexec-cacaoiot-wfscamsim
+acquWFS-${N}              cacao-fpsexec-cacaoiot-acquireWFS
+wfs2cmodeval-${N}         milk-fpsexec-linalg-MVMextract
+mfilt-${N}                cacao-fpsexec-mfilt
+mvalC2dm-${N}             milk-fpsexec-linalg-MVMextract
+mlat-${N}                 cacao-fpsexec-cacaopt-mlat
+measlinresp-${N}          cacao-fpsexec-cacaoac-measlinresp
+compstrCM-${N}            cacao-fpsexec-cacaocc-compstrcm
+EOF
+
+    # 3. Apply all parameters in one C transaction (skipping already-running units)
+    fpspipe.setparams <<EOF
+DMch2disp-${DM_SIM}.DMindex               = ${DM_SIM}
+DMch2disp-${DM_SIM}.DMxsize               = ${DMX}
+DMch2disp-${DM_SIM}.DMysize               = ${DMY}
+DMch2disp-${DM_SIM}.DMcombout             = dm${DM_SIM}disp
+DMch2disp-${DM_SIM}.AveMode               = 1
+DMch2disp-${DM_SIM}.option.voltmode       = OFF
+DMch2disp-${DM_SIM}.option.DClevel        = 0.0
+DMch2disp-${DM_SIM}.astrogrid.sname       = ${PFX}DMastrogrid
+DMch2disp-${DM_SIM}.zpoffset.DMcomboutzpo = ${PFX}dmzpo
+DMch2disp-${DM_SIM}.procinfo.loopcntMax   = -1
+DMch2disp-${DM_SIM}.procinfo.triggermode  = 4
+DMch2disp-${DM_SIM}.procinfo.triggerdelay = 0.0005
+
+DMch2disp-${DM_HW}.DMindex                = ${DM_HW}
+DMch2disp-${DM_HW}.DMxsize                = ${DMX}
+DMch2disp-${DM_HW}.DMysize                = ${DMY}
+DMch2disp-${DM_HW}.DMcombout              = dm${DM_HW}disp
+DMch2disp-${DM_HW}.AveMode                = 1
+DMch2disp-${DM_HW}.option.voltmode        = ON
+DMch2disp-${DM_HW}.option.volttype        = 2
+DMch2disp-${DM_HW}.option.stroke100       = 1.0
+DMch2disp-${DM_HW}.option.voltname        = dmvolt
+DMch2disp-${DM_HW}.option.DClevel         = 0.7
+DMch2disp-${DM_HW}.option.maxvolt         = 150.0
+DMch2disp-${DM_HW}.astrogrid.sname        = ${PFX}DMastrogrid
+DMch2disp-${DM_HW}.zpoffset.DMcomboutzpo  = ${PFX}dmzpo
+DMch2disp-${DM_HW}.procinfo.loopcntMax    = -1
+DMch2disp-${DM_HW}.procinfo.triggermode   = 4
+DMch2disp-${DM_HW}.procinfo.triggerdelay  = 0.0001
+
+DMstreamDelay-${DM_SIM}.in_name               = ${PFX}dmdisp
+DMstreamDelay-${DM_SIM}.out_name              = ${PFX}dmdispD
+DMstreamDelay-${DM_SIM}.delaysec              = 0.001
+DMstreamDelay-${DM_SIM}.procinfo.loopcntMax   = -1
+DMstreamDelay-${DM_SIM}.procinfo.triggermode  = 4
+DMstreamDelay-${DM_SIM}.procinfo.triggerdelay = 0.0005
+
+DMatmturb-${N}.dmstream                   = ${PFX}dmturb
+DMatmturb-${N}.DMpixscale                 = 0.16
+DMatmturb-${N}.wspeed                     = 10.0
+DMatmturb-${N}.wangle                     = 0.5
+DMatmturb-${N}.ampl                       = 0.2
+DMatmturb-${N}.turbseed.size              = 256
+DMatmturb-${N}.turbseed.pixscale          = 0.16
+DMatmturb-${N}.turbseed.innerscale        = 0.01
+DMatmturb-${N}.turbseed.outerscale        = 20.0
+DMatmturb-${N}.procinfo.loopcntMax        = -1
+DMatmturb-${N}.procinfo.triggermode       = 4
+DMatmturb-${N}.procinfo.triggerdelay      = 0.001
+
+simmvmgpu-${N}.GPUindex                   = ${GPUINDEX}
+simmvmgpu-${N}.insname                    = ${PFX}dmdispD
+simmvmgpu-${N}.immodes                    = ${PFX}simLHSrespM
+simmvmgpu-${N}.outcoeff                   = ${PFX}linsimWFS
+simmvmgpu-${N}.outref                     = ${PFX}simLHSwfsref
+simmvmgpu-${N}.axmode                     = 1
+simmvmgpu-${N}.option.MODENORM            = OFF
+simmvmgpu-${N}.procinfo.loopcntMax        = -1
+simmvmgpu-${N}.procinfo.triggermode       = 4
+simmvmgpu-${N}.procinfo.triggerdelay      = 0.002
+
+wfscamsim-${N}.wfssignal                  = ${PFX}linsimWFS
+wfscamsim-${N}.wfscamim                   = ${WFS_SIM}
+wfscamsim-${N}.compdarkadd                = ON
+wfscamsim-${N}.camdark                    = ${PFX}simwfsdark
+wfscamsim-${N}.fluxtotal                  = 1000000.0
+wfscamsim-${N}.compphnoise                = ON
+wfscamsim-${N}.camRON                     = 1.0
+wfscamsim-${N}.procinfo.loopcntMax        = -1
+wfscamsim-${N}.procinfo.triggermode       = 3
+wfscamsim-${N}.procinfo.triggersname      = ${PFX}linsimWFS
+
+acquWFS-${N}.AOloopindex                  = ${N}
+acquWFS-${N}.insname                      = ${PFX}wfsim
+acquWFS-${N}.WFSnormfloor                 = 1.0
+acquWFS-${N}.comp.darksub                 = ON
+acquWFS-${N}.comp.WFSnormalize            = ON
+acquWFS-${N}.comp.WFSrefsub               = ON
+acquWFS-${N}.comp.WFSsigav                = ON
+acquWFS-${N}.comp.WFSrefc                 = OFF
+acquWFS-${N}.wfszpo                       = ${PFX}wfszpo
+acquWFS-${N}.procinfo.loopcntMax          = -1
+acquWFS-${N}.procinfo.triggermode         = 3
+acquWFS-${N}.procinfo.triggersname        = ${PFX}wfsim
+
+wfs2cmodeval-${N}.GPUindex                = ${GPUINDEX}
+wfs2cmodeval-${N}.insname                 = ${PFX}imWFS2
+wfs2cmodeval-${N}.inmasksname             = ${PFX}wfsmask
+wfs2cmodeval-${N}.immodes                 = ${PFX}CMmodesWFS
+wfs2cmodeval-${N}.outcoeff                = ${PFX}modevalWFS
+wfs2cmodeval-${N}.axmode                  = 0
+wfs2cmodeval-${N}.option.MODENORM         = ON
+wfs2cmodeval-${N}.procinfo.loopcntMax     = -1
+wfs2cmodeval-${N}.procinfo.triggermode    = 3
+wfs2cmodeval-${N}.procinfo.triggersname   = ${PFX}imWFS2
+
+mfilt-${N}.AOloopindex                    = ${N}
+mfilt-${N}.inmval                         = ${PFX}modevalWFS
+mfilt-${N}.outmval                        = ${PFX}modevalDM
+mfilt-${N}.loopON                         = OFF
+mfilt-${N}.loopgain                       = 0.25
+mfilt-${N}.loopmult                       = 0.98
+mfilt-${N}.looplimit                      = 1.0
+mfilt-${N}.procinfo.loopcntMax            = -1
+mfilt-${N}.procinfo.triggermode           = 3
+mfilt-${N}.procinfo.triggersname          = ${PFX}modevalWFS
+
+mvalC2dm-${N}.GPUindex                    = ${GPUINDEX}
+mvalC2dm-${N}.insname                     = ${PFX}modevalDM
+mvalC2dm-${N}.inmasksname                 = ${PFX}dmmask
+mvalC2dm-${N}.immodes                     = ${PFX}CMmodesDM
+mvalC2dm-${N}.outcoeff                    = ${PFX}dmC
+mvalC2dm-${N}.axmode                      = 1
+mvalC2dm-${N}.option.MODENORM             = OFF
+mvalC2dm-${N}.procinfo.loopcntMax         = -1
+mvalC2dm-${N}.procinfo.triggermode        = 3
+mvalC2dm-${N}.procinfo.triggersname       = ${PFX}modevalDM
+
+mlat-${N}.NBiter                          = 100
+mlat-${N}.wfsNBframemax                   = 20
+mlat-${N}.dmstream                        = ${PFX}dmRM
+mlat-${N}.wfsstream                       = ${PFX}wfsim
+mlat-${N}.procinfo.loopcntMax             = 1
+EOF
+
+    # 4. Bring up active DM + WFS source + real-time AO stages
+    activate_mode "${mode}"
+
+    milk-fps-runstart -q "acquWFS-${N}"
+    milk-stream-wait -q -t 10 "${PFX}imWFS2+1"
+
+    milk-fps-runstart -q "wfs2cmodeval-${N}"
+    milk-stream-wait -q -t 10 "${PFX}modevalWFS+1"
+
+    milk-fps-runstart -q "mfilt-${N}"
+    milk-stream-wait -q -t 10 "${PFX}modevalDM"
+
+    milk-fps-runstart -q "mvalC2dm-${N}"
+
+    fpspipe.commit
+}
+
+activate_mode() {
+    local target="$1"
+    case "${target}" in
+        sim)
+            if [[ "$(realpath -m "${FPSPIPE_ROOTDIR}/simLHS")" != "$(realpath -m "${CONFDIR}/simLHS")" ]]; then
+                ln -sfn "${CONFDIR}/simLHS" "${FPSPIPE_ROOTDIR}/simLHS"
+            fi
+            fpspipe.loadfits simLHSrespM  ../simLHS/respM
+            fpspipe.loadfits simLHSwfsref ../simLHS/wfsref
+            milk-fps-runstart -q "DMch2disp-${DM_SIM}"
+            milk-stream-wait -q -t 10 "dm${DM_SIM}disp00" "dm${DM_SIM}disp"
+            cacaoloop.link_dm "${DM_SIM}" "${DMX}" "${DMY}"
+
+            milk-fps-runstart -q "DMstreamDelay-${DM_SIM}"
+            milk-stream-wait -q -t 10 "${PFX}dmdispD"
+
+            milk-fps-runstart -q "simmvmgpu-${N}"
+            milk-stream-wait -q -t 10 "${PFX}linsimWFS+1"
+
+            milk-fps-runstart -q "wfscamsim-${N}"
+            milk-stream-wait -q -t 10 "${WFS_SIM}+1"
+
+            milk-stream-link -q --no-conf --expect-size "${WFSX}x${WFSY}" "${WFS_SIM}=${PFX}wfsim"
+            __fpspipe_track_stream "${WFS_SIM}"
+            __fpspipe_track_stream "${PFX}wfsim"
+            ;;
+        hw)
+            milk-fps-runstart -q "DMch2disp-${DM_HW}"
+            milk-stream-wait -q -t 10 "dm${DM_HW}disp00" "dm${DM_HW}disp"
+            cacaoloop.link_dm "${DM_HW}" "${DMX}" "${DMY}"
+            milk-stream-link -q --no-conf --expect-size "${WFSX}x${WFSY}" "${WFS_HW}=${PFX}wfsim"
+            __fpspipe_track_stream "${PFX}wfsim"
+            ;;
+        *)
+            echo "${SCRIPT_NAME}: mode must be 'sim' or 'hw' (got '${target}')" >&2
+            return 2
+            ;;
+    esac
+}
+
+cmd_mode() {
+    local target="${1:-}"
+    [[ -n "${target}" ]] || { echo "${SCRIPT_NAME}: mode requires 'sim' or 'hw'" >&2; return 2; }
+    local dm="${DM_SIM}"
+    [[ "${target}" == "hw" ]] && dm="${DM_HW}"
+    cacaoloop.workdir "${LOOPNAME}" "${N}" "${ROOTDIR}" \
+        .dm="${dm}" .dmx="${DMX}" .dmy="${DMY}" .wfs="${WFS_HW}"
+    fpspipe.commit
+    activate_mode "${target}"
+}
+
+cmd_turb() {
+    case "${1:-}" in
+        on)
+            cacaoloop.workdir "${LOOPNAME}" "${N}" "${ROOTDIR}" \
+                .dm="${DM_SIM}" .dmx="${DMX}" .dmy="${DMY}" .wfs="${WFS_HW}"
+            fpspipe.commit
+            @set "f.DMatmturb-${N}.turbON=ON"
+            milk-fps-runstart -q "DMatmturb-${N}"
+            ;;
+        off)
+            if @exists "f.DMatmturb-${N}"; then
+                @set "f.DMatmturb-${N}.turbON=OFF" "f.DMatmturb-${N}.turbZERO=ON"
+                milk-fps-runstop -q "DMatmturb-${N}"
+            fi
+            ;;
+        *)
+            echo "${SCRIPT_NAME}: turb requires 'on' or 'off'" >&2
+            return 2
+            ;;
+    esac
+}
+
+cmd_close() {
+    if [[ -n "${1:-}" ]]; then
+        @set "f.mfilt-${N}.loopgain=$1"
+    fi
+    @set "f.mfilt-${N}.loopON=ON"
+}
+
+cmd_open() {
+    @set "f.mfilt-${N}.loopON=OFF"
+}
+
+cmd_zero() {
+    @set "f.mfilt-${N}.loopON=OFF" "f.mfilt-${N}.loopZERO=ON"
+}
+
+cmd_status() {
+    FPSPIPE_UNITS=("${ALL_UNITS[@]}")
+    fpspipe.status
+    if @exists "f.mfilt-${N}"; then
+        local lon lg lm cnt=0
+        @get lon="f.mfilt-${N}.loopON" lg="f.mfilt-${N}.loopgain" lm="f.mfilt-${N}.loopmult"
+        if @exists "s.${PFX}imWFS2"; then
+            @get cnt="s.${PFX}imWFS2.cnt0"
+        fi
+        printf '\nLoop %s (aol%s): loopON=%s gain=%s mult=%s imWFS2.cnt0=%s\n' \
+            "${LOOPNAME}" "${N}" "${lon}" "${lg}" "${lm}" "${cnt}"
+    fi
+}
+
+cmd_teardown() {
+    FPSPIPE_NAME="${LOOPNAME}"
+    FPSPIPE_ROOTDIR="${ROOTDIR}"
+    FPSPIPE_RUNDIR="${ROOTDIR}/${LOOPNAME}-rundir"
+    CACAO_LOOPNUMBER="${N}"
+    FPSPIPE_UNITS=("${ALL_UNITS[@]}")
+    cacaoloop.teardown .purge_dm="${DM_SIM}"
+    milk-stream-rm -q --ignore-missing imcamtmp tseed0 tseed1 >/dev/null 2>&1 || true
+}
+
+subcmd="${1:-}"
+shift || true
+case "${subcmd}" in
+    deploy)   cmd_deploy "$@" ;;
+    mode)     cmd_mode "$@" ;;
+    turb)     cmd_turb "$@" ;;
+    close)    cmd_close "$@" ;;
+    open)     cmd_open "$@" ;;
+    zero)     cmd_zero "$@" ;;
+    status)   cmd_status "$@" ;;
+    teardown) cmd_teardown "$@" ;;
+    *) echo "${SCRIPT_NAME}: unknown subcommand '${subcmd}'" >&2; usage >&2; exit 2 ;;
+esac

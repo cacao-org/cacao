@@ -138,9 +138,7 @@ function cacao_fps_is_running {
 }
 
 function cacao_fps_wait_run_done {
-	while cacao_fps_is_running "$1"; do
-		sleep 0.1
-	done
+	milk-fps-wait -q "$1"
 }
 
 function sendFPScmd {
@@ -217,7 +215,7 @@ fi
 
 
 
-RequiredCommands=( tmux cacao-cli )
+RequiredCommands=( cacao-cli )
 RequiredPipes=()
 RequiredDirs=()
 

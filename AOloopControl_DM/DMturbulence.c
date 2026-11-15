@@ -282,12 +282,28 @@ static errno_t check_recompute_seed()
 {
     if (compTurbSeed)
     {
+        if (turbseedsize == 0)
+        {
+            turbseedsize = 256;
+        }
+        if (turbseedpixscale <= 0.0f)
+        {
+            turbseedpixscale = 0.16f;
+        }
+        if (turbseedouterscale <= 0.0f)
+        {
+            turbseedouterscale = 20.0f;
+        }
+        if (turbseedinnerscale <= 0.0f)
+        {
+            turbseedinnerscale = 0.01f;
+        }
         printf("RECOMPUTING DM TURB SEED\n");
         make_seed_turbulence_screen("tseed0", "tseed1", turbseedsize,
                                     (turbseedouterscale) / (turbseedpixscale),
                                     (turbseedinnerscale) / (turbseedpixscale));
-        save_fits("tseed0", "../conf/turbseed0.fits");
-        save_fits("tseed1", "../conf/turbseed1.fits");
+        save_fits("tseed0", "!../conf/turbseed0.fits");
+        save_fits("tseed1", "!../conf/turbseed1.fits");
         compTurbSeed = 0;
     }
     return RETURN_SUCCESS;
@@ -319,6 +335,7 @@ static DMTURB_STATE *dmturb_init()
     resolveIMGID(&state->imgDM, ERRMODE_WARN, dcimg, dcnimg);
     if (state->imgDM.ID == -1)
     {
+        dmturb_cleanup(state);
         return NULL;
     }
     printf("%u x %u actuator\n", state->imgDM.md->size[0], state->imgDM.md->size[1]);
@@ -327,15 +344,18 @@ static DMTURB_STATE *dmturb_init()
     uint32_t ysize     = state->imgDM.md->size[1];
     state->turbimarray = (float *) malloc(sizeof(float) * xsize * ysize);
 
-    // Load seed 0
-    if (load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0) != 0)
+    // Load seed 0 (or generate into ../conf/turbseed0.fits when absent)
+    state->IDts0 = -1;
+    if (load_fits("../conf/turbseed0.fits", "tseed0", 0, &state->IDts0) != 0 || state->IDts0 == -1)
     {
-        // If fail, create it?
-        // Original code seemed to expect it or create it in customCONFcheck
-        // Let's force creation if not exists
         compTurbSeed = 1;
         check_recompute_seed();
         load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0);
+    }
+    if (state->IDts0 == -1)
+    {
+        dmturb_cleanup(state);
+        return NULL;
     }
 
     state->amplcoeff    = 1.0;
@@ -495,6 +515,10 @@ MILK_PARAMS_DEFINE(dmturb, FPS_PARAMS);
 static MILK_HOT errno_t dmturb_compute(const MILK_RUNNABLE *self)
 {
     DMTURB_STATE *state = dmturb_init();
+    if (state == NULL)
+    {
+        return RETURN_FAILURE;
+    }
     MILK_PROCINFO_INIT(self)
     MILK_PROCINFO_LOOPSTART(self)
     dmturb_step(processinfo, milk_data.fpsptr, state);

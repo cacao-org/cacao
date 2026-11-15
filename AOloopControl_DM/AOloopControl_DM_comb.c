@@ -565,6 +565,7 @@ static DMCOMB_STATE *dmcomb_init()
         resolveIMGID(&state->imgdmvolt, ERRMODE_WARN, dcimg, dcnimg);
         if (state->imgdmvolt.ID == -1)
         {
+            dmcomb_cleanup(state);
             return NULL;
         }
     }
@@ -838,6 +839,10 @@ MILK_PARAMS_DEFINE(dmcomb, FPS_PARAMS);
 static MILK_HOT errno_t dmcomb_compute(const MILK_RUNNABLE *self)
 {
     DMCOMB_STATE *state = dmcomb_init();
+    if (state == NULL)
+    {
+        return RETURN_FAILURE;
+    }
 
     MILK_PROCINFO_INIT(self)
     MILK_PROCINFO_LOOPSTART(self)

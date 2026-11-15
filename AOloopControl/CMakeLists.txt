@@ -26,6 +26,7 @@ target_link_libraries(${LIBNAME} PUBLIC milklinoptimtools milkstatistic)
 
 install(FILES ${INCLUDEFILES} DESTINATION include/${SRCNAME})
 install(PROGRAMS ${SCRIPTS} DESTINATION bin)
+install(FILES commands.d/cacaoloop.bash DESTINATION share/milk/commands.d)
 
 # Standalone engine-tier ANSI TUI (no CLIcore / ncurses linkage)
 add_executable(cacao-modalstatsTUI-bin tui/modalstatsTUI.c)
