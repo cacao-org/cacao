@@ -579,7 +579,7 @@ static void __attribute__((unused)) modalfilter_validate()
 
 #define FPS_PARAMS(X)                                                                             \
     X(".inmval", inmval, FPTYPE_STREAMNAME, 1,                                                    \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT | FPFLAG_STREAM_RUN_REQUIRED |              \
+      FPFLAG_DEFAULT_TRIGGER_STREAM | FPFLAG_PRIMARY_CLI_INPUT | FPFLAG_STREAM_RUN_REQUIRED |     \
           FPFLAG_CHECKSTREAM,                                                                     \
       "input mode values from WFS")                                                               \
     X(".outmval", outmval, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT, \

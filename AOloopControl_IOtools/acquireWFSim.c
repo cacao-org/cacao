@@ -45,7 +45,8 @@ static char     *wfszposname      = NULL;
  * ============================================================= */
 
 #define FPS_PARAMS(X)                                                                             \
-    X(".insname", &insname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "input stream name")      \
+    X(".insname", &insname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_TRIGGER_STREAM,                  \
+      "input stream name")                                                                        \
     X(".AOloopindex", &AOloopindex, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "loop index")         \
     X(".semindex", &semindex, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT, "input semaphore index")    \
     X(".WFStaveragegain", &WFStaveragegain, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,              \

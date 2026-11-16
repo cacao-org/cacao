@@ -26,8 +26,8 @@ static uint64_t compWFSnormalize;
 static uint64_t compWFSrefsub;
 
 #define FPS_PARAMS(X)                                                                            \
-    X(".wfsin", input_shm_name, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), \
-      "Wavefront sensor input")                                                                  \
+    X(".wfsin", input_shm_name, FPTYPE_STREAMNAME, 1,                                            \
+      (FPFLAG_DEFAULT_TRIGGER_STREAM | FPFLAG_CLI_INPUT), "Wavefront sensor input")              \
     X(".wfsmask", specmask_shm_name, FPTYPE_STREAMNAME, 1,                                       \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT), "wfs spectral extraction mask")                 \
     X(".binning", &binning, FPTYPE_UINT32, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),         \
