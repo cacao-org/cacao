@@ -181,7 +181,7 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt, DMCOMB_STATE *state)
     uint64_t xysize   = (uint64_t) (DMxsize) * (DMysize);
     double  *valarray = state->valarray;
 
-    if ((volttype) == 1)
+    if (volttype == 1)
     {
         float inrange = (maxvolt) * (stroke100) / 100.0f;
         snprintf(outv_ftype, sizeof(outv_ftype), "float32");
@@ -191,7 +191,7 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt, DMCOMB_STATE *state)
         outv_outrange_min = -maxvolt;
         outv_outrange_max = maxvolt;
     }
-    else if ((volttype) == 2)
+    else if (volttype == 2)
     {
         float inrange = (maxvolt) * (stroke100) / 100.0f;
         snprintf(outv_ftype, sizeof(outv_ftype), "uint16");
@@ -212,23 +212,17 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt, DMCOMB_STATE *state)
         float inv_range = (range != 0.0f) ? (1.0f / range) : 0.0f;
         float outscale  = outmax - outmin;
 
-        /* Specialize pow() for common
-         * exponents to avoid expensive
-         * transcendental in inner loop */
+        /* Specialize pow() for common exponents to avoid expensive transcendental in inner loop */
         if (fabsf(exp_val - 1.0f) < 1.0e-6f)
         {
             /* exp == 1.0: linear, no pow */
             for (uint64_t ii = 0; ii < xysize; ii++)
             {
                 float x = (imgdisp.im->array.F[ii] - inmin) * inv_range;
-                if (x < 0.0f)
-                {
-                    x = 0.0f;
-                }
-                if (x > 1.0f)
-                {
-                    x = 1.0f;
-                }
+                x       = isnan(x) ? 0.5 : x; // NaN check: map to mid-range
+                x       = x < 0.0 ? 0.0 : x;
+                x       = x > 1.0 ? 1.0 : x;
+
                 valarray[ii] = outmin + x * outscale;
             }
         }
@@ -238,14 +232,10 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt, DMCOMB_STATE *state)
             for (uint64_t ii = 0; ii < xysize; ii++)
             {
                 float x = (imgdisp.im->array.F[ii] - inmin) * inv_range;
-                if (x < 0.0f)
-                {
-                    x = 0.0f;
-                }
-                if (x > 1.0f)
-                {
-                    x = 1.0f;
-                }
+                x       = isnan(x) ? 0.5 : x; // NaN check: map to mid-range
+                x       = x < 0.0 ? 0.0 : x;
+                x       = x > 1.0 ? 1.0 : x;
+
                 valarray[ii] = outmin + sqrtf(x) * outscale;
             }
         }
@@ -255,20 +245,16 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt, DMCOMB_STATE *state)
             for (uint64_t ii = 0; ii < xysize; ii++)
             {
                 float x = (imgdisp.im->array.F[ii] - inmin) * inv_range;
-                if (x < 0.0f)
-                {
-                    x = 0.0f;
-                }
-                if (x > 1.0f)
-                {
-                    x = 1.0f;
-                }
+                x       = isnan(x) ? 0.5 : x; // NaN check: map to mid-range
+                x       = x < 0.0 ? 0.0 : x;
+                x       = x > 1.0 ? 1.0 : x;
+
                 valarray[ii] = outmin + powf(x, exp_val) * outscale;
             }
         }
     }
 
-    if ((volttype) == 1)
+    if (volttype == 1)
     {
         float scale = 100.0f / (stroke100);
         float maxv  = maxvolt;
@@ -286,7 +272,7 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt, DMCOMB_STATE *state)
             imgvolt.im->array.F[ii] = v;
         }
     }
-    else if ((volttype) == 2)
+    else if (volttype == 2)
     {
         float inv_s  = 1.0f / (stroke100);
         float maxv   = maxvolt;
@@ -306,7 +292,7 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt, DMCOMB_STATE *state)
             imgvolt.im->array.UI16[ii] = (unsigned short int) (volt * vscale);
         }
     }
-    else if ((volttype) == 3)
+    else if (volttype == 3)
     {
         float inv_s = 1.0f / (stroke100);
         float maxv  = maxvolt;
@@ -324,7 +310,7 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt, DMCOMB_STATE *state)
             imgvolt.im->array.UI16[ii] = (unsigned short int) (volt * 65535.0f);
         }
     }
-    else if ((volttype) == 0)
+    else if (volttype == 0)
     {
         if (strcmp(outv_ftype, "float64") == 0)
         {
