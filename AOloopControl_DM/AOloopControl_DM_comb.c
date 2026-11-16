@@ -188,8 +188,8 @@ static errno_t DM_displ2V(IMGID imgdisp, IMGID imgvolt, DMCOMB_STATE *state)
         outv_exp          = 1.0f;
         outv_inrange_min  = -inrange;
         outv_inrange_max  = inrange;
-        outv_outrange_min = -(maxvolt);
-        outv_outrange_max = -(maxvolt);
+        outv_outrange_min = -maxvolt;
+        outv_outrange_max = maxvolt;
     }
     else if ((volttype) == 2)
     {
