@@ -8,13 +8,25 @@
  *
  */
 
+// MILK_CMAKE_REQUEST_BLAS
+// MILK_CMAKE_REQUEST_CUDA
+
 #define _GNU_SOURCE
 
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "milk_runnable.h"
 
 #include "COREMOD_iofits/COREMOD_iofits.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+#include "milk_blas_lapacke.h"
+
+#ifdef HAVE_CUDA
+#    include <cublas_v2.h>
+#    include <cuda_runtime.h>
+#endif
 
 #include "computeCalib.h"
 
@@ -214,6 +226,108 @@ imageID AOloopControl_computeCalib_mkHadamardModes(const char *DMmask_name, cons
 }
 
 
+static int is_sylvester_hadamard(const float *H, long N)
+{
+    if (H == NULL || N <= 0 || (N & (N - 1)) != 0 || fabsf(H[0] - 1.0f) > 1e-5f)
+    {
+        return 0;
+    }
+    for (long len = 1; len < N; len <<= 1)
+    {
+        for (long r = 0; r < len; r++)
+        {
+            const float *row0 = &H[r * N];
+            const float *row1 = &H[(r + len) * N];
+            for (long c = 0; c < len; c++)
+            {
+                float v = row0[c];
+                if (fabsf(row0[c + len] - v) > 1e-5f || fabsf(row1[c] - v) > 1e-5f ||
+                    fabsf(row1[c + len] + v) > 1e-5f)
+                {
+                    return 0;
+                }
+            }
+        }
+    }
+    return 1;
+}
+
+static int fwht_decode_cube(
+    const float *in, long sizewfs, long NBframes, float alpha, float *decbuf)
+{
+    const long tile_w = 64;
+    long       ntiles = (sizewfs + tile_w - 1) / tile_w;
+    int        oom    = 0;
+
+#ifdef _OPENMP
+#    pragma omp parallel reduction(| : oom)
+#endif
+    {
+        float *tile = (float *) malloc(sizeof(float) * (size_t) NBframes * (size_t) tile_w);
+        if (tile == NULL)
+        {
+            oom = 1;
+        }
+        else
+        {
+#ifdef _OPENMP
+#            pragma omp for schedule(static)
+#endif
+            for (long t = 0; t < ntiles; t++)
+            {
+                long i0 = t * tile_w;
+                long bw = sizewfs - i0;
+                if (bw > tile_w)
+                {
+                    bw = tile_w;
+                }
+                for (long c = 0; c < NBframes; c++)
+                {
+                    memcpy(&tile[(size_t) c * (size_t) bw],
+                           &in[(size_t) c * (size_t) sizewfs + (size_t) i0],
+                           sizeof(float) * (size_t) bw);
+                }
+                for (long len = 1; len < NBframes; len <<= 1)
+                {
+                    long step = len << 1;
+                    for (long start = 0; start < NBframes; start += step)
+                    {
+                        for (long j = 0; j < len; j++)
+                        {
+                            float *u = &tile[(size_t) (start + j) * (size_t) bw];
+                            float *v = &tile[(size_t) (start + len + j) * (size_t) bw];
+#ifdef _OPENMP
+#                            pragma omp simd
+#endif
+                            for (long p = 0; p < bw; p++)
+                            {
+                                float a = u[p];
+                                float b = v[p];
+                                u[p]    = a + b;
+                                v[p]    = a - b;
+                            }
+                        }
+                    }
+                }
+                for (long c = 0; c < NBframes; c++)
+                {
+                    const float *src = &tile[(size_t) c * (size_t) bw];
+                    float       *dst = &decbuf[(size_t) c * (size_t) sizewfs + (size_t) i0];
+#ifdef _OPENMP
+#                    pragma omp simd
+#endif
+                    for (long p = 0; p < bw; p++)
+                    {
+                        dst[p] = src[p] * alpha;
+                    }
+                }
+            }
+            free(tile);
+        }
+    }
+    return oom ? -1 : 0;
+}
+
 imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
                                                      const char *Hmatname,
                                                      const char *indexname,
@@ -271,38 +385,129 @@ imageID AOloopControl_computeCalib_Hadamard_decodeRM(const char *inname,
     zsizeout = dcimg[IDindex].md[0].size[0] * dcimg[IDindex].md[0].size[1];
     create_3Dimage_ID(outname, sizexwfs, sizeywfs, zsizeout, &IDout);
 
-    long kk0;
-#ifdef _OPENMP
-#    pragma omp parallel for private(kk0, kk1, ii)
-#endif
-    for (kk = 0; kk < zsizeout; kk++) // output frame
+    size_t n_in   = (size_t) sizewfs * (size_t) NBframes;
+    float *decbuf = (float *) malloc(sizeof(float) * n_in);
+    if (decbuf == NULL)
     {
-        kk0 = (long) (dcimg[IDindex].array.F[kk] + 0.1);
-        if (kk0 > -1)
+        PRINT_ERROR("malloc returns NULL pointer");
+        return -1;
+    }
+
+    int   sgemm_done = 0;
+    float alpha      = 1.0f / (float) NBframes;
+
+    if (is_sylvester_hadamard(dcimg[IDhad].array.F, NBframes) &&
+        fwht_decode_cube(dcimg[IDin].array.F, sizewfs, NBframes, alpha, decbuf) == 0)
+    {
+        sgemm_done = 1;
+    }
+
+#ifdef HAVE_CUDA
+    if (!sgemm_done)
+    {
+        double flops   = 2.0 * (double) sizewfs * (double) NBframes * (double) NBframes;
+        int    use_gpu = (getenv("CACAO_FORCE_CUDA") != NULL);
+#    ifndef HAVE_BLAS
+        use_gpu = 1;
+#    else
+        if (flops >= 4.0e12)
         {
-            printf("\r  frame %5ld / %5ld     ", kk0, NBframes);
-            fflush(stdout);
+            use_gpu = 1;
+        }
+#    endif
+        if (use_gpu)
+        {
+            float beta    = 0.0f;
+            int   dev_cnt = 0;
+            if (cudaGetDeviceCount(&dev_cnt) == cudaSuccess && dev_cnt > 0)
+            {
+                float         *d_in   = NULL;
+                float         *d_had  = NULL;
+                float         *d_dec  = NULL;
+                size_t         sz_in  = sizeof(float) * n_in;
+                size_t         sz_had = sizeof(float) * (size_t) NBframes * (size_t) NBframes;
+                cublasHandle_t handle = NULL;
+
+                if (cudaMalloc((void **) &d_in, sz_in) == cudaSuccess &&
+                    cudaMalloc((void **) &d_had, sz_had) == cudaSuccess &&
+                    cudaMalloc((void **) &d_dec, sz_in) == cudaSuccess &&
+                    cublasCreate(&handle) == CUBLAS_STATUS_SUCCESS)
+                {
+                    if (cudaMemcpy(d_in, dcimg[IDin].array.F, sz_in, cudaMemcpyHostToDevice) ==
+                            cudaSuccess &&
+                        cudaMemcpy(d_had, dcimg[IDhad].array.F, sz_had,
+                                   cudaMemcpyHostToDevice) == cudaSuccess &&
+                        cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, (int) sizewfs,
+                                    (int) NBframes, (int) NBframes, &alpha, d_in, (int) sizewfs,
+                                    d_had, (int) NBframes, &beta, d_dec, (int) sizewfs) ==
+                            CUBLAS_STATUS_SUCCESS &&
+                        cudaMemcpy(decbuf, d_dec, sz_in, cudaMemcpyDeviceToHost) == cudaSuccess)
+                    {
+                        sgemm_done = 1;
+                    }
+                }
+                if (handle != NULL)
+                {
+                    cublasDestroy(handle);
+                }
+                cudaFree(d_in);
+                cudaFree(d_had);
+                cudaFree(d_dec);
+            }
+        }
+    }
+#endif
+
+    if (!sgemm_done)
+    {
+#ifdef HAVE_BLAS
+        cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, (int) sizewfs, (int) NBframes,
+                    (int) NBframes, alpha, dcimg[IDin].array.F, (int) sizewfs,
+                    dcimg[IDhad].array.F, (int) NBframes, 0.0f, decbuf, (int) sizewfs);
+        sgemm_done = 1;
+#endif
+    }
+
+    if (!sgemm_done)
+    {
+        memset(decbuf, 0, sizeof(float) * n_in);
+#ifdef _OPENMP
+#    pragma omp parallel for private(kk1, ii)
+#endif
+        for (long c = 0; c < NBframes; c++)
+        {
+            float *dst = &decbuf[(size_t) c * (size_t) sizewfs];
             for (kk1 = 0; kk1 < NBframes; kk1++)
             {
+                float        hval = dcimg[IDhad].array.F[c * NBframes + kk1] * alpha;
+                const float *src  = &dcimg[IDin].array.F[(size_t) kk1 * (size_t) sizewfs];
                 for (ii = 0; ii < sizewfs; ii++)
                 {
-                    dcimg[IDout].array.F[kk * sizewfs + ii] +=
-                        dcimg[IDin].array.F[kk1 * sizewfs + ii] *
-                        dcimg[IDhad].array.F[kk0 * NBframes + kk1];
+                    dst[ii] += src[ii] * hval;
                 }
             }
         }
     }
 
-    for (kk = 0; kk < zsizeout; kk++)
+#ifdef _OPENMP
+#    pragma omp parallel for schedule(static)
+#endif
+    for (kk = 0; kk < (long) zsizeout; kk++)
     {
-        for (ii = 0; ii < sizewfs; ii++)
+        float *dst = &dcimg[IDout].array.F[(size_t) kk * (size_t) sizewfs];
+        long   kk0 = (long) floorf(dcimg[IDindex].array.F[kk] + 0.5f);
+        if (kk0 >= 0 && kk0 < NBframes)
         {
-            dcimg[IDout].array.F[kk * sizewfs + ii] /= NBframes;
+            memcpy(dst, &decbuf[(size_t) kk0 * (size_t) sizewfs],
+                   sizeof(float) * (size_t) sizewfs);
+        }
+        else
+        {
+            memset(dst, 0, sizeof(float) * (size_t) sizewfs);
         }
     }
 
-    printf("\n\n");
+    free(decbuf);
 
     return (IDout);
 }

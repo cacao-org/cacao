@@ -7,14 +7,20 @@
  * @brief Generatermwfs module
  */
 
-/**
- * @file generateRMWFS.c
- *
- */
+// MILK_CMAKE_REQUEST_BLAS
+// MILK_CMAKE_REQUEST_CUDA
 
+#include <stdlib.h>
+#include <string.h>
 
 #include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
+#include "milk_blas_lapacke.h"
+
+#ifdef HAVE_CUDA
+#    include <cublas_v2.h>
+#    include <cuda_runtime.h>
+#endif
 
 #include "computeCalib.h"
 
@@ -106,22 +112,93 @@ static MILK_HOT errno_t generateRMWFS_compute(const MILK_RUNNABLE *self)
     MILK_PROCINFO_INIT(self)
     MILK_PROCINFO_LOOPSTART(self)
     {
-        for (uint32_t mode = 0; mode < NBmodes; mode++)
-        {
-            printf(".");
-            fflush(stdout);
+        imgoutWFSc.md->write = 1;
+        int         sgemm_done = 0;
+        const float alpha      = 1.0f;
+        const float beta       = 0.0f;
 
-            for (uint64_t iidm = 0; iidm < dmsize; iidm++)
+#ifdef HAVE_CUDA
+        {
+            double flops   = 2.0 * (double) wfssize * (double) dmsize * (double) NBmodes;
+            int    use_gpu = (getenv("CACAO_FORCE_CUDA") != NULL);
+#    ifndef HAVE_BLAS
+            use_gpu = 1;
+#    else
+            if (flops >= 4.0e12)
             {
-                for (uint64_t iiwfs = 0; iiwfs < wfssize; iiwfs++)
+                use_gpu = 1;
+            }
+#    endif
+            int dev_cnt = 0;
+            if (use_gpu && cudaGetDeviceCount(&dev_cnt) == cudaSuccess && dev_cnt > 0)
+            {
+                float         *d_zrm = NULL;
+                float         *d_dm  = NULL;
+                float         *d_out = NULL;
+                size_t         sz_z  = sizeof(float) * wfssize * dmsize;
+                size_t         sz_d  = sizeof(float) * dmsize * (size_t) NBmodes;
+                size_t         sz_o  = sizeof(float) * wfssize * (size_t) NBmodes;
+                cublasHandle_t handle = NULL;
+
+                if (cudaMalloc((void **) &d_zrm, sz_z) == cudaSuccess &&
+                    cudaMalloc((void **) &d_dm, sz_d) == cudaSuccess &&
+                    cudaMalloc((void **) &d_out, sz_o) == cudaSuccess &&
+                    cublasCreate(&handle) == CUBLAS_STATUS_SUCCESS)
                 {
-                    imgoutWFSc.im->array.F[wfssize * mode + iiwfs] +=
-                        imDMmodesC.im->array.F[dmsize * mode + iidm] *
-                        imgzRM.im->array.F[wfssize * iidm + iiwfs];
+                    if (cudaMemcpy(d_zrm, imgzRM.im->array.F, sz_z, cudaMemcpyHostToDevice) ==
+                            cudaSuccess &&
+                        cudaMemcpy(d_dm, imDMmodesC.im->array.F, sz_d,
+                                   cudaMemcpyHostToDevice) == cudaSuccess &&
+                        cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, (int) wfssize,
+                                    (int) NBmodes, (int) dmsize, &alpha, d_zrm, (int) wfssize,
+                                    d_dm, (int) dmsize, &beta, d_out, (int) wfssize) ==
+                            CUBLAS_STATUS_SUCCESS &&
+                        cudaMemcpy(imgoutWFSc.im->array.F, d_out, sz_o,
+                                   cudaMemcpyDeviceToHost) == cudaSuccess)
+                    {
+                        sgemm_done = 1;
+                    }
+                }
+                if (handle != NULL)
+                {
+                    cublasDestroy(handle);
+                }
+                cudaFree(d_zrm);
+                cudaFree(d_dm);
+                cudaFree(d_out);
+            }
+        }
+#endif
+
+        if (!sgemm_done)
+        {
+#ifdef HAVE_BLAS
+            cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, (int) wfssize, (int) NBmodes,
+                        (int) dmsize, 1.0f, imgzRM.im->array.F, (int) wfssize,
+                        imDMmodesC.im->array.F, (int) dmsize, 0.0f, imgoutWFSc.im->array.F,
+                        (int) wfssize);
+            sgemm_done = 1;
+#endif
+        }
+
+        if (!sgemm_done)
+        {
+            memset(imgoutWFSc.im->array.F, 0, sizeof(float) * wfssize * (size_t) NBmodes);
+            for (uint32_t mode = 0; mode < NBmodes; mode++)
+            {
+                for (uint64_t iidm = 0; iidm < dmsize; iidm++)
+                {
+                    float w = imDMmodesC.im->array.F[dmsize * mode + iidm];
+                    for (uint64_t iiwfs = 0; iiwfs < wfssize; iiwfs++)
+                    {
+                        imgoutWFSc.im->array.F[wfssize * mode + iiwfs] +=
+                            w * imgzRM.im->array.F[wfssize * iidm + iiwfs];
+                    }
                 }
             }
         }
-        printf("\n");
+
+        processinfo_update_output_stream(processinfo, imgoutWFSc.im, NULL);
     }
     MILK_PROCINFO_END(self)
 

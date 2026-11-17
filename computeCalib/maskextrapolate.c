@@ -13,6 +13,11 @@
  */
 
 #include <math.h>
+#include <stdlib.h>
+
+#ifdef _OPENMP
+#    include <omp.h>
+#endif
 
 #include "milk_runnable.h"
 #include "COREMOD_memory/COREMOD_memory.h"
@@ -104,76 +109,81 @@ static MILK_HOT errno_t maskextrapolate_compute(const MILK_RUNNABLE *self)
     MILK_PROCINFO_INIT(self)
     MILK_PROCINFO_LOOPSTART(self)
     {
-        // allocate nearest pixels array
-        double *npix_dist2 = (double *) malloc(sizeof(double) * xysize);
-        double *npix_coeff = (double *) malloc(sizeof(double) * xysize);
-        long   *npix_index = (long *) malloc(sizeof(long) * xysize);
-
-        for (uint32_t ii = 0; ii < xsize; ii++)
+        /* Precompute compact coordinate table of active mask pixels once */
+        uint32_t *act_x = (uint32_t *) malloc(sizeof(uint32_t) * xysize);
+        uint32_t *act_y = (uint32_t *) malloc(sizeof(uint32_t) * xysize);
+        if (act_x == NULL || act_y == NULL)
         {
-            for (uint32_t jj = 0; jj < xsize; jj++)
+            free(act_x);
+            free(act_y);
+            PRINT_ERROR("malloc returns NULL pointer");
+            return RETURN_FAILURE;
+        }
+
+        uint64_t     nact   = 0;
+        const float *mask_p = imgmask.im->array.F;
+        const float *ext_p  = imgextmask.im->array.F;
+        const float *in_p   = imginmodeC.im->array.F;
+        float       *out_p  = imgoutmoudeC.im->array.F;
+
+        for (uint32_t jj1 = 0; jj1 < ysize; jj1++)
+        {
+            for (uint32_t ii1 = 0; ii1 < xsize; ii1++)
             {
-                if (imgmask.im->array.F[jj * xsize + ii] > 0.5)
+                if (mask_p[(uint64_t) jj1 * xsize + ii1] > 0.5f)
                 {
-                    // in mask -> copy pixel value to output
+                    act_x[nact] = ii1;
+                    act_y[nact] = jj1;
+                    nact++;
+                }
+            }
+        }
+
+#ifdef _OPENMP
+#    pragma omp parallel
+#endif
+        {
+            long   *npix_index = (long *) malloc(sizeof(long) * xysize);
+            double *npix_coeff = (double *) malloc(sizeof(double) * xysize);
+
+#ifdef _OPENMP
+#    pragma omp for schedule(dynamic, 32)
+#endif
+            for (uint64_t pix = 0; pix < xysize; pix++)
+            {
+                uint32_t ii = (uint32_t) (pix % xsize);
+                uint32_t jj = (uint32_t) (pix / xsize);
+
+                if (mask_p[pix] > 0.5f)
+                {
                     for (uint32_t mi = 0; mi < NBmodes; mi++)
                     {
-                        imgoutmoudeC.im->array.F[xysize * mi + jj * xsize + ii] =
-                            imginmodeC.im->array.F[xysize * mi + jj * xsize + ii];
+                        out_p[xysize * mi + pix] = in_p[xysize * mi + pix];
                     }
                 }
-                else if (imgextmask.im->array.F[jj * xsize + ii] > 0.5)
+                else if (ext_p[pix] > 0.5f && nact > 0 && npix_index != NULL &&
+                         npix_coeff != NULL)
                 {
-                    // pixel is in extmask, but not in mask -> run extrapolation
-
-                    // find nearest active pixel
-                    float nearest_dist2 = xysize;
-
-                    for (uint32_t ii1 = 0; ii1 < xsize; ii1++)
+                    float nearest_dist2 = (float) xysize;
+                    for (uint64_t k = 0; k < nact; k++)
                     {
-                        for (uint32_t jj1 = 0; jj1 < ysize; jj1++)
+                        float dx  = (float) ii - (float) act_x[k];
+                        float dy  = (float) jj - (float) act_y[k];
+                        float dr2 = dx * dx + dy * dy;
+                        if (dr2 < nearest_dist2)
                         {
-                            if (imgmask.im->array.F[jj1 * xsize + ii1] > 0.5)
-                            {
-                                float dx  = (float) ii - ii1;
-                                float dy  = (float) jj - jj1;
-                                float dr2 = dx * dx + dy * dy;
-
-                                if (dr2 < nearest_dist2)
-                                {
-                                    nearest_dist2 = dr2;
-                                }
-                            }
+                            nearest_dist2 = dr2;
                         }
                     }
 
-                    // Kernel radius
                     int kradint = (int) (sqrtf(nearest_dist2) + 3.0f);
+                    int iimin   = ((int) ii > kradint) ? ((int) ii - kradint) : 0;
+                    int iimax =
+                        ((int) ii + kradint < (int) xsize) ? ((int) ii + kradint) : (int) xsize;
+                    int jjmin = ((int) jj > kradint) ? ((int) jj - kradint) : 0;
+                    int jjmax =
+                        ((int) jj + kradint < (int) ysize) ? ((int) jj + kradint) : (int) ysize;
 
-                    int iimin = ii - kradint;
-                    if (iimin < 0)
-                    {
-                        iimin = 0;
-                    }
-                    int iimax = ii + kradint;
-                    if (iimax > (int) xsize)
-                    {
-                        iimax = xsize;
-                    }
-
-                    int jjmin = jj - kradint;
-                    if (jjmin < 0)
-                    {
-                        jjmin = 0;
-                    }
-                    int jjmax = jj + kradint;
-                    if (jjmax > (int) ysize)
-                    {
-                        jjmax = ysize;
-                    }
-
-                    // find nearest pixels
-                    //
                     long  npixcnt    = 0;
                     float coefftotal = 0.0f;
                     float alpha1     = 1.0f / (edgeapo * nearest_dist2);
@@ -181,41 +191,45 @@ static MILK_HOT errno_t maskextrapolate_compute(const MILK_RUNNABLE *self)
                     {
                         for (int jj1 = jjmin; jj1 < jjmax; jj1++)
                         {
-                            float dx  = (float) ii - ii1;
-                            float dy  = (float) jj - jj1;
-                            float dr2 = dx * dx + dy * dy;
+                            float dx     = (float) ii - (float) ii1;
+                            float dy     = (float) jj - (float) jj1;
+                            float dr2    = dx * dx + dy * dy;
+                            double coeff = (double) expf(-alpha1 * dr2);
 
-                            //if(dr2 < nearest_dist2 + 0.2) // only consider nearest pixels
-                            //{
-                            npix_dist2[npixcnt] = dr2;
-                            npix_index[npixcnt] = jj1 * xsize + ii1;
-                            npix_coeff[npixcnt] = expf(-alpha1 * dr2);
-                            coefftotal += npix_coeff[npixcnt];
+                            npix_index[npixcnt] = (long) jj1 * (long) xsize + (long) ii1;
+                            npix_coeff[npixcnt] = coeff;
+                            coefftotal += (float) coeff;
                             npixcnt++;
-                            //}
                         }
                     }
 
-
-                    // nearest pixel
-                    //
                     for (uint32_t mi = 0; mi < NBmodes; mi++)
                     {
+                        double       acc   = 0.0;
+                        const float *src_m = &in_p[xysize * mi];
                         for (long npixi = 0; npixi < npixcnt; npixi++)
                         {
-                            imgoutmoudeC.im->array.F[xysize * mi + jj * xsize + ii] +=
-                                imginmodeC.im->array.F[xysize * mi + npix_index[npixi]] *
-                                npix_coeff[npixi];
+                            acc += (double) src_m[npix_index[npixi]] * npix_coeff[npixi];
                         }
-                        imgoutmoudeC.im->array.F[xysize * mi + jj * xsize + ii] /= coefftotal;
+                        out_p[xysize * mi + pix] =
+                            (coefftotal > 0.0f) ? (float) (acc / (double) coefftotal) : 0.0f;
+                    }
+                }
+                else
+                {
+                    for (uint32_t mi = 0; mi < NBmodes; mi++)
+                    {
+                        out_p[xysize * mi + pix] = 0.0f;
                     }
                 }
             }
+
+            free(npix_coeff);
+            free(npix_index);
         }
 
-        free(npix_dist2);
-        free(npix_coeff);
-        free(npix_index);
+        free(act_y);
+        free(act_x);
     }
     MILK_PROCINFO_END(self)
 
