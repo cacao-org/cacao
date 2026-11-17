@@ -699,14 +699,14 @@ static void __attribute__((unused)) modalfilter_validate()
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "loop on/off (off=freeze)")      \
     X(".loopNBstep", &loopNBstep, FPTYPE_INT64, 0,                                                \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "loop nb steps (-1 = inf)")      \
-    X(".comp.OLmodes", &compOL, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,         \
-      "compute open loop modes")                                                                  \
-    X(".comp.WFSfact", &psol_WFSfact, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
-      "ampl correction factor WFS")                                                               \
+    X(".comp.OLmodes", &compOL, FPTYPE_ONOFF, 0,                                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "compute open loop modes")       \
+    X(".comp.WFSfact", &psol_WFSfact, FPTYPE_FLOAT32, 0,                                          \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "ampl correction factor WFS")    \
     X(".comp.latencyhardwfr", &latencyhardwfr, FPTYPE_FLOAT32, 0,                                 \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "hw DM-to-WFS latency [fr]")                       \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "hw DM-to-WFS latency [fr]")     \
     X(".comp.latencysoftwfr", &latencysoftwfr, FPTYPE_FLOAT32, 0,                                 \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "sw latency [frame]")                              \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "sw latency [frame]")            \
     X(".comp.tbuff", &comptbuff, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
       "compute telemetry buffers")                                                                \
     X(".comp.autolim", &autolim, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \

@@ -10,6 +10,9 @@
  */
 
 #include <math.h>
+#include <limits.h>
+#include <pthread.h>
+#include <semaphore.h>
 #include <time.h>
 #include <string.h>
 #include <unistd.h>
@@ -81,19 +84,36 @@ static int32_t  zpoffsetch08                                    = 0;
 static int32_t  zpoffsetch09                                    = 0;
 static int32_t  zpoffsetch10                                    = 0;
 static int32_t  zpoffsetch11                                    = 0;
+static int32_t  semwaitall                                      = 0;
 
 static uint64_t processinfo_change_cnt_local = 0;
 
 #define NB_ZEROPOINT_CH_MAX 12
 
+struct dmcomb_state_s;
+
 typedef struct
 {
-    IMGID  *imgch;
-    IMGID   imgdisp;
-    IMGID   imgdispzpo;
-    IMGID   imgdmvolt;
-    float  *dmdisptmp;
-    double *valarray;
+    struct dmcomb_state_s *parent;
+    IMAGE                 *im;
+    int                    sem;
+    pthread_t              thr;
+    int                    started;
+} DMCOMB_CHWAIT;
+
+typedef struct dmcomb_state_s
+{
+    IMGID         *imgch;
+    IMGID          imgdisp;
+    IMGID          imgdispzpo;
+    IMGID          imgdmvolt;
+    IMGID          imgtrig;
+    DMCOMB_CHWAIT *chwait;
+    volatile int   wait_run;
+    int            wait_active;
+    int            trig_sem;
+    float         *dmdisptmp;
+    double        *valarray;
 
     // ZPO state
     int      zpoffset_channel[NB_ZEROPOINT_CH_MAX];
@@ -462,12 +482,81 @@ static errno_t update_dmdispzpo(IMGID  imgdisp,
 /* RUN LOGIC                                                                                       */
 /* =============================================================================================== */
 
+static void dmcomb_after_ns(struct timespec *ts, long ns)
+{
+    clock_gettime(CLOCK_REALTIME, ts);
+    ts->tv_nsec += ns;
+    while (ts->tv_nsec >= 1000000000L)
+    {
+        ts->tv_nsec -= 1000000000L;
+        ts->tv_sec++;
+    }
+}
+
+static void *dmcomb_ch_waiter(void *arg)
+{
+    DMCOMB_CHWAIT *w = (DMCOMB_CHWAIT *) arg;
+    while (__atomic_load_n(&w->parent->wait_run, __ATOMIC_ACQUIRE))
+    {
+        struct timespec ts;
+        dmcomb_after_ns(&ts, 200000000L);
+        if (ImageStreamIO_semtimedwait(w->im, w->sem, &ts) == 0)
+        {
+            ImageStreamIO_semflush(w->im, w->sem);
+            int tsem = __atomic_load_n(&w->parent->trig_sem, __ATOMIC_RELAXED);
+            ImageStreamIO_sempost(w->parent->imgtrig.im, tsem);
+        }
+    }
+    return NULL;
+}
+
+static void dmcomb_stop_waiters(DMCOMB_STATE *state)
+{
+    if (state == NULL)
+    {
+        return;
+    }
+    if (state->wait_active)
+    {
+        __atomic_store_n(&state->wait_run, 0, __ATOMIC_RELEASE);
+        if (state->chwait != NULL)
+        {
+            for (uint32_t ch = 0; ch < NBchannel; ch++)
+            {
+                DMCOMB_CHWAIT *w = &state->chwait[ch];
+                if (w->started && w->im != NULL && w->sem >= 0)
+                {
+                    sem_post(w->im->semptr[w->sem]);
+                }
+            }
+            for (uint32_t ch = 0; ch < NBchannel; ch++)
+            {
+                DMCOMB_CHWAIT *w = &state->chwait[ch];
+                if (w->started)
+                {
+                    pthread_join(w->thr, NULL);
+                    w->started = 0;
+                }
+                if (w->im != NULL && w->sem >= 0)
+                {
+                    w->im->semReadPID[w->sem] = 0;
+                    w->sem                    = -1;
+                }
+            }
+        }
+        state->wait_active = 0;
+    }
+    free(state->chwait);
+    state->chwait = NULL;
+}
+
 static void dmcomb_cleanup(DMCOMB_STATE *state)
 {
     if (!state)
     {
         return;
     }
+    dmcomb_stop_waiters(state);
     if (state->imgch)
     {
         free(state->imgch);
@@ -539,6 +628,13 @@ static DMCOMB_STATE *dmcomb_init()
         state->imgdispzpo = stream_connect_create_2Df32(DMcomboutzpo, DMxsize, DMysize);
     }
 
+    if (semwaitall)
+    {
+        char trigname[STRINGMAXLEN_STREAMNAME];
+        snprintf(trigname, sizeof(trigname), "dm%02utrig", DMindex);
+        state->imgtrig = stream_connect_create_2D(trigname, 1, 1, _DATATYPE_INT64);
+    }
+
     if (UNLIKELY(milk_data.Debug > 0))
     {
         printf("DEBUG  %s [%d] %s\n", __FILE__, __LINE__, __FUNCTION__);
@@ -588,8 +684,8 @@ static void dmcomb_step(PROCESSINFO *processinfo, FPS *fps, DMCOMB_STATE *state)
         fflush(stdout);
     }
 
-    // Sync parameters
-    if (fps)
+    // Sync parameters (preserve custom multi-channel trigger when semwaitall is active)
+    if (fps && !state->wait_active)
     {
         if (UNLIKELY(fps->md->processinfo_change_cnt != processinfo_change_cnt_local))
         {
@@ -689,14 +785,33 @@ static void dmcomb_step(PROCESSINFO *processinfo, FPS *fps, DMCOMB_STATE *state)
 
         if (state->imgdisp.im != NULL)
         {
+            IMAGE  *src_ch   = NULL;
+            int64_t best_acq = 0;
+            for (uint32_t ch = 0; ch < NBchannel; ch++)
+            {
+                IMAGE *cim = state->imgch[ch].im;
+                if (cim != NULL && cim->md != NULL && cim->kw != NULL)
+                {
+                    for (int k = 0; k < cim->md[0].NBkw; k++)
+                    {
+                        if (cim->kw[k].type == 'L' && strcmp(cim->kw[k].name, "_MAQTIME") == 0 &&
+                            cim->kw[k].value.numl > best_acq)
+                        {
+                            best_acq = cim->kw[k].value.numl;
+                            src_ch   = cim;
+                            break;
+                        }
+                    }
+                }
+            }
             update_dmdisp(state->imgdisp, state->imgch, state->dmdisptmp);
-            processinfo_update_output_stream(processinfo, state->imgdisp.im, NULL);
+            processinfo_update_output_stream(processinfo, state->imgdisp.im, src_ch);
 
             if (voltmode && state->imgdmvolt.im != NULL)
             {
                 state->imgdmvolt.md->write = 1;
                 DM_displ2V(state->imgdisp, state->imgdmvolt, state);
-                processinfo_update_output_stream(processinfo, state->imgdmvolt.im, NULL);
+                processinfo_update_output_stream(processinfo, state->imgdmvolt.im, state->imgdisp.im);
             }
         }
 
@@ -830,11 +945,44 @@ static void dmcomb_validate()
       "channel 09 zpoffset")                                                                      \
     X(".zpoffset.ch10", &zpoffsetch10, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                     \
       "channel 10 zpoffset")                                                                      \
-    X(".zpoffset.ch11", &zpoffsetch11, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT, "channel 11 zpoffset")
+    X(".zpoffset.ch11", &zpoffsetch11, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                     \
+      "channel 11 zpoffset")                                                                      \
+    X(".option.semwaitall", &semwaitall, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                   \
+      "Wake on any channel semaphore")
 
 
 MILK_PARAMS_DEFINE(dmcomb, FPS_PARAMS);
 
+
+static void dmcomb_start_waiters(DMCOMB_STATE *state)
+{
+    state->chwait = (DMCOMB_CHWAIT *) calloc(NBchannel, sizeof(DMCOMB_CHWAIT));
+    if (state->chwait == NULL)
+    {
+        return;
+    }
+    __atomic_store_n(&state->wait_run, 1, __ATOMIC_RELEASE);
+    state->wait_active = 1;
+    for (uint32_t ch = 0; ch < NBchannel; ch++)
+    {
+        DMCOMB_CHWAIT *w = &state->chwait[ch];
+        w->parent        = state;
+        w->im            = state->imgch[ch].im;
+        w->sem           = -1;
+        if (w->im != NULL)
+        {
+            w->sem = ImageStreamIO_getsemwaitindex(w->im, -1);
+            if (w->sem >= 0)
+            {
+                ImageStreamIO_semflush(w->im, w->sem);
+                if (pthread_create(&w->thr, NULL, dmcomb_ch_waiter, w) == 0)
+                {
+                    w->started = 1;
+                }
+            }
+        }
+    }
+}
 
 static MILK_HOT errno_t dmcomb_compute(const MILK_RUNNABLE *self)
 {
@@ -843,8 +991,38 @@ static MILK_HOT errno_t dmcomb_compute(const MILK_RUNNABLE *self)
     {
         return RETURN_FAILURE;
     }
+    state->trig_sem = -1;
+
+    if (semwaitall && state->imgtrig.im != NULL)
+    {
+        dmcomb_start_waiters(state);
+        if (state->wait_active && milk_data.fpsptr != NULL)
+        {
+            FPS *fps = milk_data.fpsptr;
+            functionparameter_SetParamValue_INT64(
+                fps, ".procinfo.triggermode", PROCESSINFO_TRIGGERMODE_SEMAPHORE);
+            functionparameter_SetParamValue_STRING(
+                fps, ".procinfo.triggersname", state->imgtrig.md->name);
+            fps->cmdset.triggermode       = PROCESSINFO_TRIGGERMODE_SEMAPHORE;
+            fps->cmdset.semindexrequested = -1;
+            snprintf(fps->cmdset.triggerstreamname, STRINGMAXLEN_IMAGE_NAME, "%s",
+                     state->imgtrig.md->name);
+        }
+    }
 
     MILK_PROCINFO_INIT(self)
+    if (state->wait_active && processinfo != NULL)
+    {
+        if (processinfo->triggermode != PROCESSINFO_TRIGGERMODE_SEMAPHORE ||
+            processinfo->trigger_image != state->imgtrig.im)
+        {
+            processinfo_waitoninputstream_init(processinfo, state->imgtrig.im,
+                                               PROCESSINFO_TRIGGERMODE_SEMAPHORE, -1);
+        }
+        __atomic_store_n(&state->trig_sem, processinfo->triggersem, __ATOMIC_RELEASE);
+        /* Kick iteration 0 immediately so dmXXdisp is published right at startup */
+        ImageStreamIO_sempost(state->imgtrig.im, processinfo->triggersem);
+    }
     MILK_PROCINFO_LOOPSTART(self)
     dmcomb_step(processinfo, milk_data.fpsptr, state);
     MILK_PROCINFO_END(self)

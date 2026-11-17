@@ -12,7 +12,11 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
+#ifdef _OPENMP
+#    include <omp.h>
+#endif
 
 #include "COREMOD_memory/COREMOD_memory.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -282,10 +286,6 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
 
     DEBUG_TRACEPOINT("%ld modes", NBmode);
 
-    // Current poke info, counters etc
-    PokeInfo pkinf;
-
-
     DEBUG_TRACEPOINT("duplicaate each mode to positive and negative amplitude");
     //
     long  NBmode2     = NBmode * 2;
@@ -508,6 +508,15 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
         }
 
 
+        /* Flush pre-queued WFS semaphores so backlog does not rush initial pokes */
+        ImageStreamIO_semflush(imgout.im, semindexout);
+
+        /* Publish zero-poke kickstart so DM-triggered lockstep benches emit frame 0 */
+        imgin.md->write = 1;
+        memset(imgin.im->array.F, 0, framesize);
+        imgin.md->cnt1 = 0;
+        processinfo_update_output_stream(processinfo, imgin.im, NULL);
+
         for (uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
         {
             processinfo_WriteMessage_fmt(processinfo, "it %lu/%lu pokeframe %6lu / %6lu", iter,
@@ -526,34 +535,31 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
                 pkinfarray[pokeframe].PokeIndexMEAS_Mapped = -1;
             }
 
-
-            // Read stream
-            //
-            //printf("%5lu  waiting for frame\n", pokeframe);
-
+            // Wait for WFS frame N and immediately copy it BEFORE sleeping or poking next mode
             ImageStreamIO_semwait(imgout.im, semindexout);
             clock_gettime(CLOCK_MILK, &pkinfarray[pokeframe].tstart);
 
-
-            // Wait for time delay
-            //
-            //printf("%5lu  waiting for delay %d ns\n", pokeframe, pkinfarray[pokeframe].pokedelayns);
+            if ((pkinfarray[pokeframe].aveindex < (int) timing_NBave) &&
+                (pkinfarray[pokeframe].PokeIndexMEAS_Mapped != -1))
             {
-                long nsec           = pkinfarray[pokeframe].pokedelayns;
-                long nsec_remaining = nsec % 1000000000;
-                long sec            = nsec / 1000000000;
+                char *ptr = (char *) dcimg[IDoutCstep[pkinfarray[pokeframe].aveindex]].array.F;
+                ptr += sizeof(float) * pkinfarray[pokeframe].PokeIndexMEAS_Mapped * sizexyout;
+                memcpy(ptr, imgout.im->array.F, sizeof(float) * sizexyout);
+            }
 
+            // Wait for fractional poke timing offset when needed
+            if (pkinfarray[pokeframe].pokedelayns > 0)
+            {
+                long            nsec           = pkinfarray[pokeframe].pokedelayns;
+                long            nsec_remaining = nsec % 1000000000;
+                long            sec            = nsec / 1000000000;
                 struct timespec timesleep;
                 timesleep.tv_sec  = sec;
                 timesleep.tv_nsec = nsec_remaining;
-
                 nanosleep(&timesleep, NULL);
             }
 
-
-            //printf("%5lu Poking\n", pokeframe);
-            // Poke
-            //
+            // Poke next pattern
             imgin.md->write = 1;
             memcpy((void *) (imgin.im->array.F),
                    (void *) (ptr0 + pkinfarray[pokeframe].PokeIndexCTRL_Mapped * framesize),
@@ -561,19 +567,6 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
             imgin.md->cnt1 = pkinfarray[pokeframe].PokeIndexCTRL_Mapped;
             processinfo_update_output_stream(processinfo, imgin.im, NULL);
             clock_gettime(CLOCK_MILK, &pkinfarray[pokeframe].tpoke);
-
-
-            // Collect signal
-            //
-            if ((pkinfarray[pokeframe].aveindex < (int) timing_NBave) &&
-                (pkinfarray[pokeframe].PokeIndexMEAS_Mapped != -1))
-            {
-                {
-                    char *ptr = (char *) dcimg[IDoutCstep[pkinfarray[pokeframe].aveindex]].array.F;
-                    ptr += sizeof(float) * pkinfarray[pokeframe].PokeIndexMEAS_Mapped * sizexyout;
-                    memcpy(ptr, imgout.im->array.F, sizeof(float) * sizexyout);
-                }
-            }
         }
 
 
@@ -599,14 +592,17 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
         for (uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
         {
             // sum over all values AveStep
-            for (pkinf.PokeIndexMEAS_Mapped = 0; pkinf.PokeIndexMEAS_Mapped < NBmode2;
-                 pkinf.PokeIndexMEAS_Mapped++)
+#ifdef _OPENMP
+#    pragma omp parallel for schedule(static)
+#endif
+            for (int meas_idx = 0; meas_idx < NBmode2; meas_idx++)
             {
+                const float *src =
+                    &dcimg[IDoutCstep[AveStep]].array.F[(size_t) meas_idx * sizexyout];
+                float *dst = &imgoutC2.im->array.F[(size_t) meas_idx * sizexyout];
                 for (uint64_t ii = 0; ii < sizexyout; ii++)
                 {
-                    imgoutC2.im->array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout + ii] +=
-                        dcimg[IDoutCstep[AveStep]]
-                            .array.F[pkinf.PokeIndexMEAS_Mapped * sizexyout + ii];
+                    dst[ii] += src[ii];
                 }
             }
         }
@@ -616,13 +612,11 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
 
         DEBUG_TRACEPOINT(" ");
 
-
-        EXECUTE_SYSTEM_COMMAND("mkdir -m775 -p %s", outdir);
-
         if (saveALL == 1)
         {
-            // Save all intermediate result
+            EXECUTE_SYSTEM_COMMAND("mkdir -m775 -p %s", outdir);
 
+            // Save all intermediate result
             FILE *fplog;
 
             char tmpfname[STRINGMAXLEN_FULLFILENAME];
@@ -641,12 +635,9 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
             // resolution
             for (uint32_t AveStep = 0; AveStep < timing_NBave; AveStep++)
             {
-                // save to disk IDoutCstep[AveStep]
-
                 char imname[STRINGMAXLEN_IMGNAME];
                 WRITE_IMAGENAME(imname, "imoutStep%03u", AveStep);
 
-                char tmpfname[STRINGMAXLEN_FULLFILENAME];
                 WRITE_FULLFILENAME(tmpfname, "%s/wfsresp.tstep%03u.iter%04d.fits", outdir, AveStep,
                                    iter);
                 printf("SAVING %s -> %s ... ", imname, tmpfname);
@@ -655,12 +646,8 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
                 printf("DONE\n");
                 fflush(stdout);
             }
-        }
 
-
-        // print poke log
-        {
-            char tmpfname[STRINGMAXLEN_FULLFILENAME];
+            // print poke log
             if (strlen(outdir) > 0)
             {
                 WRITE_FULLFILENAME(tmpfname, "%s/RMpokelog.iter%04d.txt", outdir, iter);
@@ -671,8 +658,6 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
             }
 
             FILE *fp = fopen(tmpfname, "w");
-
-
             fprintf(fp, "# Poke Log\n");
             fprintf(fp, "#\n");
             fprintf(fp, "# col 1   Poke frame\n");
@@ -696,20 +681,14 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
                         timing_NBave);
             }
             fclose(fp);
-        }
-
-
-        {
-            char tmpfname[STRINGMAXLEN_FULLFILENAME];
 
             printf("Writing poke timing to file ... ");
             fflush(stdout);
 
             WRITE_FULLFILENAME(tmpfname, "%s/RMpokeTiming.iter%04d.txt", outdir, iter);
-            FILE  *fp     = fopen(tmpfname, "w");
+            fp            = fopen(tmpfname, "w");
             double ftime0 = pkinfarray[0].tstart.tv_sec + 1.0e-9 * pkinfarray[0].tstart.tv_nsec;
             double ftime;
-
 
             fprintf(fp, "# Poke Timing\n");
             fprintf(fp, "#\n");
@@ -731,29 +710,34 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
             fclose(fp);
         }
 
-
         // compile and save
         {
-            char tmpoutfname[STRINGMAXLEN_FULLFILENAME];
-            WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.raw.iter%04d.fits", outdir, iter);
-            save_fits(imgoutC2.name, tmpoutfname);
-
-
-            WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.ave.iter%04d.fits", outdir, iter);
             IMGID imgmoderespC = imgid_make_from_name_3D("moderespC", sizexout, sizeyout, NBmode);
             createimagefromIMGID(&imgmoderespC);
 
+            const float denom = 2.0f * (float) timing_NBave * (float) (iter + 1) * ampl;
+#ifdef _OPENMP
+#    pragma omp parallel for schedule(static)
+#endif
             for (int mode = 0; mode < NBmode; mode++)
             {
+                const float *posp = &imgoutC2.im->array.F[(size_t) (mode * 2) * sizexyout];
+                const float *negp = &imgoutC2.im->array.F[(size_t) (mode * 2 + 1) * sizexyout];
+                float       *outp = &imgmoderespC.im->array.F[(size_t) mode * sizexyout];
                 for (uint64_t ii = 0; ii < sizexyout; ii++)
                 {
-                    float posval = imgoutC2.im->array.F[(mode * 2) * sizexyout + ii];
-                    float negval = imgoutC2.im->array.F[(mode * 2 + 1) * sizexyout + ii];
-                    imgmoderespC.im->array.F[mode * sizexyout + ii] =
-                        (posval - negval) / 2 / (timing_NBave * (iter + 1) * ampl);
+                    outp[ii] = (posp[ii] - negp[ii]) / denom;
                 }
             }
-            save_fits(imgmoderespC.name, tmpoutfname);
+
+            if (saveALL == 1)
+            {
+                char tmpoutfname[STRINGMAXLEN_FULLFILENAME];
+                WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.raw.iter%04d.fits", outdir, iter);
+                save_fits(imgoutC2.name, tmpoutfname);
+                WRITE_FULLFILENAME(tmpoutfname, "%s/mode_linresp.ave.iter%04d.fits", outdir, iter);
+                save_fits(imgmoderespC.name, tmpoutfname);
+            }
             save_fits(imgmoderespC.name, outCname);
         }
 
