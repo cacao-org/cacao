@@ -550,6 +550,106 @@ static void modal_filter_step(PROCESSINFO *processinfo,
             processinfo_update_output_stream(processinfo, state->imgOLmval.im, NULL);
         }
     }
+    else if (selfRMenable == 1 && enablePF == 0)
+    {
+        // Open-loop selfRM: propagate modal probe perturbations while integrator is frozen
+        for (uint32_t mi = 0; mi < NBmode; mi++)
+        {
+            state->mvaloutapply[mi] = state->mvalout[mi] + state->selfRMpokecmd[mi];
+        }
+        memcpy(imgout->array.F, state->mvaloutapply, sizeof(float) * NBmode);
+        processinfo_update_output_stream(processinfo, imgout, NULL);
+    }
+
+    if (selfRMenable == 1)
+    {
+        uint32_t max_z      = state->imgselfRM.md[0].size[2];
+        uint32_t eff_zsize  = (selfRMzsize > 0 && selfRMzsize <= max_z) ? selfRMzsize : max_z;
+        uint32_t eff_nbmode = (selfRMnbmode > 0 && selfRMnbmode < NBmode) ? selfRMnbmode : NBmode;
+        uint32_t eff_nbiter = (selfRMnbiter > 0) ? selfRMnbiter : 1;
+        float    eff_ampl   = (fabsf(selfRMpokeampl) > 1.0e-9f) ? selfRMpokeampl : 0.01f;
+
+        if (state->selfRM_pokecnt == 0 && state->selfRM_pokemode == 0 && state->blockcnt == 0 &&
+            state->selfRMiter == 0)
+        {
+            processinfo_WriteMessage(processinfo, "init selfRM");
+            memset(state->imgselfRM.im->array.F, 0, sizeof(float) * NBmode * NBmode * max_z);
+            memset(state->selfRMpokecmd, 0, sizeof(float) * NBmode);
+        }
+
+        if (state->selfRM_pokecnt == 0 && state->selfRM_pokemode == 0)
+        {
+            if (state->blockcnt == 0)
+            {
+                state->selfRMpokesign = 1.0f - 2.0f * (float) ((state->selfRMiter / 4) % 2);
+            }
+            processinfo_WriteMessage_fmt(processinfo, "sRM %u/%u ppol %d sign %+3.1f",
+                                         state->selfRMiter, eff_nbiter, state->selfRMpokeparity,
+                                         state->selfRMpokesign);
+        }
+
+        uint32_t pkmode   = state->selfRM_pokemode;
+        float    signmult = ((pkmode % 2 == 0) && (state->selfRMpokeparity == 1)) ? -1.0f : 1.0f;
+
+        if (state->selfRM_pokecnt < eff_zsize)
+        {
+            state->selfRMpokecmd[pkmode] = state->selfRMpokesign * eff_ampl * signmult;
+            float scale = 0.5f * signmult * state->selfRMpokesign / eff_ampl / (float) eff_nbiter;
+            long  base  = (long) NBmode * NBmode * state->selfRM_pokecnt + (long) NBmode * pkmode;
+            for (uint32_t mi = 0; mi < NBmode; mi++)
+            {
+                state->imgselfRM.im->array.F[base + mi] += scale * imginWFS->array.F[mi];
+            }
+        }
+        else
+        {
+            state->selfRMpokecmd[pkmode] = 0.0f;
+        }
+
+        state->selfRM_pokecnt++;
+        if (state->selfRM_pokecnt > eff_zsize + selfRMnbsettlestep)
+        {
+            state->selfRMpokecmd[pkmode] = 0.0f;
+            if (((state->selfRMiter % 8) < 2) || ((state->selfRMiter % 8) > 5))
+            {
+                state->selfRMpokesign *= -1.0f;
+            }
+            state->blockcnt++;
+            if (state->blockcnt == 2)
+            {
+                state->selfRM_pokemode++;
+                state->blockcnt = 0;
+            }
+            state->selfRM_pokecnt = 0;
+        }
+
+        if (state->selfRM_pokemode >= eff_nbmode)
+        {
+            state->selfRMpokeparity = 1 - state->selfRMpokeparity;
+            state->selfRM_pokemode  = 0;
+            state->selfRM_pokecnt   = 0;
+            state->selfRMiter++;
+        }
+
+        if (state->selfRMiter >= eff_nbiter)
+        {
+            state->selfRMiter       = 0;
+            state->selfRM_pokemode  = 0;
+            state->selfRM_pokecnt   = 0;
+            state->blockcnt         = 0;
+            state->selfRMpokeparity = 0;
+            memset(state->selfRMpokecmd, 0, sizeof(float) * NBmode);
+            if (loopON == 0 && enablePF == 0)
+            {
+                memcpy(imgout->array.F, state->mvalout, sizeof(float) * NBmode);
+                processinfo_update_output_stream(processinfo, imgout, NULL);
+            }
+            processinfo_update_output_stream(processinfo, state->imgselfRM.im, NULL);
+            save_fits(state->imgselfRM.name, "!selfRM.fits");
+            selfRMenable = 0;
+            processinfo_WriteMessage(processinfo, "selfRM done");
+        }
+    }
 }
 
 /**
@@ -582,8 +682,7 @@ static void __attribute__((unused)) modalfilter_validate()
 
 #define FPS_PARAMS(X)                                                                             \
     X(".inmval", inmval, FPTYPE_STREAMNAME, 1,                                                    \
-      FPFLAG_DEFAULT_TRIGGER_STREAM | FPFLAG_PRIMARY_CLI_INPUT,                                   \
-      "input mode values from WFS")                                                               \
+      FPFLAG_DEFAULT_TRIGGER_STREAM | FPFLAG_PRIMARY_CLI_INPUT, "input mode values from WFS")     \
     X(".outmval", outmval, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT, \
       "output mode values to DM")                                                                 \
     X(".loopgain", &loopgain, FPTYPE_FLOAT32, 0,                                                  \
@@ -638,18 +737,18 @@ static void __attribute__((unused)) modalfilter_validate()
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "autoloop self-test")                              \
     X(".autoloop.sleep", &autoloopsleep, FPTYPE_FLOAT32, 0,                                       \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "loop sleep time")                                 \
-    X(".selfRM.enable", &selfRMenable, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,  \
-      "start self RM measurement")                                                                \
-    X(".selfRM.NBmode", &selfRMnbmode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
-      "number of mode poked")                                                                     \
+    X(".selfRM.enable", &selfRMenable, FPTYPE_ONOFF, 0,                                           \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "start self RM measurement")     \
+    X(".selfRM.NBmode", &selfRMnbmode, FPTYPE_UINT32, 0,                                          \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "number of mode poked")          \
     X(".selfRM.pokeampl", &selfRMpokeampl, FPTYPE_FLOAT32, 0,                                     \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "poke amplitude")                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "poke amplitude")                \
     X(".selfRM.zsize", &selfRMzsize, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,   \
       "nb time steps recorded")                                                                   \
-    X(".selfRM.nbiter", &selfRMnbiter, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
-      "nb iterations averaged")                                                                   \
+    X(".selfRM.nbiter", &selfRMnbiter, FPTYPE_UINT32, 0,                                          \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "nb iterations averaged")        \
     X(".selfRM.nbsettle", &selfRMnbsettlestep, FPTYPE_UINT32, 0,                                  \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "nb loop iter to settle")                          \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "nb loop iter to settle")        \
     X(".testOL.enable", &testOL, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
       "OL reconstruction test")                                                                   \
     X(".testOL.loop", &testOLloop, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
