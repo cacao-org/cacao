@@ -65,6 +65,7 @@ static float    selfRMpokeampl                        = 0.01f;
 static uint32_t selfRMzsize                           = 20;
 static uint32_t selfRMnbiter                          = 8;
 static uint32_t selfRMnbsettlestep                    = 1;
+static int32_t  selfRMsaveFITS                        = 1;
 static int32_t  testOL                                = 0;
 static int32_t  testOLloop                            = 0;
 static float    testOLupdategain                      = 0.1f;
@@ -645,7 +646,10 @@ static void modal_filter_step(PROCESSINFO *processinfo,
                 processinfo_update_output_stream(processinfo, imgout, NULL);
             }
             processinfo_update_output_stream(processinfo, state->imgselfRM.im, NULL);
-            save_fits(state->imgselfRM.name, "!selfRM.fits");
+            if (selfRMsaveFITS)
+            {
+                save_fits(state->imgselfRM.name, "!selfRM.fits");
+            }
             selfRMenable = 0;
             processinfo_WriteMessage(processinfo, "selfRM done");
         }
@@ -749,6 +753,8 @@ static void __attribute__((unused)) modalfilter_validate()
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "nb iterations averaged")        \
     X(".selfRM.nbsettle", &selfRMnbsettlestep, FPTYPE_UINT32, 0,                                  \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "nb loop iter to settle")        \
+    X(".selfRM.saveFITS", &selfRMsaveFITS, FPTYPE_ONOFF, 0,                                       \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "save !selfRM.fits on done")     \
     X(".testOL.enable", &testOL, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
       "OL reconstruction test")                                                                   \
     X(".testOL.loop", &testOLloop, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \

@@ -11,7 +11,11 @@
 // MILK_CMAKE_REQUEST_BLAS
 // MILK_CMAKE_REQUEST_CUDA
 
+#include <limits.h>
 #include <math.h>
+#include <omp.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include "milk_runnable.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -170,11 +174,14 @@ static MILK_HOT errno_t compute_straight_CM_compute(const MILK_RUNNABLE *self)
 
         // multiply RMmodesWFS by WFSmask
         printf("Masking RM WFS by WFSmask\n");
+#pragma omp parallel for schedule(static)
         for (int m = 0; m < nbmode; m++)
         {
+            float       *dst = &imgRMWFS.im->array.F[(size_t) m * nbwfspix];
+            const float *msk = imgWFSmask.im->array.F;
             for (int ii = 0; ii < nbwfspix; ii++)
             {
-                imgRMWFS.im->array.F[m * nbwfspix + ii] *= imgWFSmask.im->array.F[ii];
+                dst[ii] *= msk[ii];
             }
         }
 
@@ -197,264 +204,199 @@ static MILK_HOT errno_t compute_straight_CM_compute(const MILK_RUNNABLE *self)
 
         clock_gettime(CLOCK_MILK, &t0);
 
-
-        {
-            processinfo_WriteMessage(processinfo, "Create ATA");
-            // create ATA
-            IMGID imgATA = imgid_make_from_name_2D("ATA", nbmode, nbmode);
-            createimagefromIMGID(&imgATA);
-
-            {
-                int SGEMMcomputed = 0;
-                if ((GPUdevice >= 0) && (GPUdevice <= 99))
-                {
-#ifdef HAVE_CUDA
-                    printf("Running SGEMM 1 on GPU device %d\n", GPUdevice);
-                    fflush(stdout);
-
-                    const float  alf   = 1;
-                    const float  bet   = 0;
-                    const float *alpha = &alf;
-                    const float *beta  = &bet;
-
-                    float *d_RMWFS;
-                    cudaMalloc((void **) &d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
-                    cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float),
-                               cudaMemcpyHostToDevice);
-
-                    float *d_ATA;
-                    cudaMalloc((void **) &d_ATA, imgATA.md->nelement * sizeof(float));
-
-                    cublasHandle_t handle;
-                    cublasCreate(&handle);
-
-                    // Do the actual multiplication
-                    cublasSgemm(handle, CUBLAS_OP_T, CUBLAS_OP_N, nbmode, nbmode, nbwfspix, alpha,
-                                d_RMWFS, nbwfspix, d_RMWFS, nbwfspix, beta, d_ATA, nbmode);
-
-                    cublasDestroy(handle);
-
-                    cudaMemcpy(imgATA.im->array.F, d_ATA, imgATA.md->nelement * sizeof(float),
-                               cudaMemcpyDeviceToHost);
-
-                    cudaFree(d_RMWFS);
-                    cudaFree(d_ATA);
-
-                    SGEMMcomputed = 1;
-#endif // #ifdef HAVE_CUDA
-                }
-                if (SGEMMcomputed == 0)
-                {
-#ifdef HAVE_BLAS
-                    printf("Running SGEMM 1 on CPU\n");
-                    fflush(stdout);
-
-                    cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans, nbmode, nbmode, nbwfspix,
-                                1.0, imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix,
-                                0.0, imgATA.im->array.F, nbmode);
-                    SGEMMcomputed = 1;
-#endif // #ifdef HAVE_BLAS
-                }
-                if (SGEMMcomputed == 0)
-                {
-                    PRINT_ERROR("FATAL -- need either of CUDA or BLAS for this computation\n");
-                    exit(1);
-                }
-            }
-
-
-            clock_gettime(CLOCK_MILK, &t1);
-            //save_fits("ATA", "compstrCM-ATA.fits");
-
-
-            //nbmode = 100;
-            //float *a = (float*) malloc(sizeof(float)*nbmode*nbmode);
-            float *d = (float *) malloc(sizeof(float) * nbmode);
-            float *e = (float *) malloc(sizeof(float) * nbmode);
-            float *t = (float *) malloc(sizeof(float) * nbmode);
-
-
-#ifdef HAVE_MKL
-            mkl_set_interface_layer(MKL_INTERFACE_LP64);
-#endif
-
-            LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, (float *) imgATA.im->array.F, nbmode, d,
-                           e, t);
-
-            clock_gettime(CLOCK_MILK, &t2);
-
-            // Assemble Q matrix
-            LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, t);
-
-
-            clock_gettime(CLOCK_MILK, &t3);
-
-
-            processinfo_WriteMessage(processinfo, "comp eigenv");
-
-            memcpy(imgevec.im->array.F, imgATA.im->array.F, sizeof(float) * nbmode * nbmode);
-            LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
-            memcpy(imgeval.im->array.F, d, sizeof(float) * nbmode);
-
-            clock_gettime(CLOCK_MILK, &t4);
-
-            free(d);
-            free(e);
-            free(t);
-
-            //save_fits("eigenvec", "./mkmodestmp/eigenvec.fits");
-        }
-
-
-        // create CM WFS
-
-        processinfo_WriteMessage(processinfo, "create CM WFS");
-
         IMGID imgCMWFSall = imgid_make_from_name_3D("CMmodesWFSall", imgRMWFS.md->size[0],
                                                     imgRMWFS.md->size[1], imgRMDM.md->size[2]);
         createimagefromIMGID(&imgCMWFSall);
 
-        clock_gettime(CLOCK_MILK, &t5);
-
-
-        // Compute WFS modes
-        // Multiply RMmodesWFS by Vmat
-        //
-
-        {
-            int SGEMMcomputed = 0;
-            if ((GPUdevice >= 0) && (GPUdevice <= 99))
-            {
-#ifdef HAVE_CUDA
-                printf("Running SGEMM 2 on GPU device %d\n", GPUdevice);
-                fflush(stdout);
-
-                const float  alf   = 1;
-                const float  bet   = 0;
-                const float *alpha = &alf;
-                const float *beta  = &bet;
-
-                float *d_RMWFS;
-                cudaMalloc((void **) &d_RMWFS, imgRMWFS.md->nelement * sizeof(float));
-                cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float),
-                           cudaMemcpyHostToDevice);
-
-                float *d_evec;
-                cudaMalloc((void **) &d_evec, imgevec.md->nelement * sizeof(float));
-                cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float),
-                           cudaMemcpyHostToDevice);
-
-                float *d_CMWFSall;
-                cudaMalloc((void **) &d_CMWFSall, imgCMWFSall.md->nelement * sizeof(float));
-                //cudaMemcpy(d_RMWFS,imgRMWFS.im->array.F, imgRMWFS.md->nelement * sizeof(float), cudaMemcpyHostToDevice);
-
-                // Create a handle for CUBLAS
-                cublasHandle_t handle;
-                cublasCreate(&handle);
-
-                // Do the actual multiplication
-                cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, nbwfspix, nbmode, nbmode, alpha,
-                            d_RMWFS, nbwfspix, d_evec, nbmode, beta, d_CMWFSall, nbwfspix);
-
-                // Destroy the handle
-                cublasDestroy(handle);
-
-                cudaMemcpy(imgCMWFSall.im->array.F, d_CMWFSall,
-                           imgCMWFSall.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
-
-                cudaFree(d_RMWFS);
-                cudaFree(d_evec);
-                cudaFree(d_CMWFSall);
-
-                SGEMMcomputed = 1;
-#endif // #ifdef HAVE_CUDA
-            }
-
-            if (SGEMMcomputed == 0)
-            {
-#ifdef HAVE_BLAS
-                printf("Running SGEMM 2 on CPU\n");
-                fflush(stdout);
-
-                cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, nbwfspix, nbmode, nbmode,
-                            1.0, imgRMWFS.im->array.F, nbwfspix, imgevec.im->array.F, nbmode, 0.0,
-                            imgCMWFSall.im->array.F, nbwfspix);
-#endif // #ifdef HAVE_BLAS
-            }
-        }
-
-
-        clock_gettime(CLOCK_MILK, &t6);
-
-        // create CM DM
-        processinfo_WriteMessage(processinfo, "create CM DM");
         IMGID imgCMDMall = imgid_make_from_name_3D("CMmodesDMall", imgRMDM.md->size[0],
                                                    imgRMDM.md->size[1], imgRMDM.md->size[2]);
         createimagefromIMGID(&imgCMDMall);
 
-
-        // Compute DM modes
-        // Multiply RMmodesDM by Vmat
-        //
-        {
-            int SGEMMcomputed = 0;
-            if ((GPUdevice >= 0) && (GPUdevice <= 99))
-            {
+        int gpu_pipeline_done = 0;
 #ifdef HAVE_CUDA
-                printf("Running SGEMM 3 on GPU device %d\n", GPUdevice);
-                fflush(stdout);
-
-                const float  alf   = 1;
-                const float  bet   = 0;
-                const float *alpha = &alf;
-                const float *beta  = &bet;
-
-                float *d_RMDM;
-                cudaMalloc((void **) &d_RMDM, imgRMDM.md->nelement * sizeof(float));
-                cudaMemcpy(d_RMDM, imgRMDM.im->array.F, imgRMDM.md->nelement * sizeof(float),
-                           cudaMemcpyHostToDevice);
-
-                float *d_evec;
-                cudaMalloc((void **) &d_evec, imgevec.md->nelement * sizeof(float));
-                cudaMemcpy(d_evec, imgevec.im->array.F, imgevec.md->nelement * sizeof(float),
-                           cudaMemcpyHostToDevice);
-
-                float *d_CMDMall;
-                cudaMalloc((void **) &d_CMDMall, imgCMDMall.md->nelement * sizeof(float));
-
-                // Create a handle for CUBLAS
-                cublasHandle_t handle;
-                cublasCreate(&handle);
-
-                // Do the actual multiplication
-                cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, nbact, nbmode, nbmode, alpha, d_RMDM,
-                            nbact, d_evec, nbmode, beta, d_CMDMall, nbact);
-
-                // Destroy the handle
-                cublasDestroy(handle);
-
-                cudaMemcpy(imgCMDMall.im->array.F, d_CMDMall,
-                           imgCMDMall.md->nelement * sizeof(float), cudaMemcpyDeviceToHost);
-
-                cudaFree(d_RMDM);
-                cudaFree(d_evec);
-                cudaFree(d_CMDMall);
-
-                SGEMMcomputed = 1;
-#endif // #ifdef HAVE_CUDA
-            }
-
-            if (SGEMMcomputed == 0)
+        if ((GPUdevice >= 0) && (GPUdevice < 99))
+        {
+            int ndev = 0;
+            if (cudaGetDeviceCount(&ndev) == cudaSuccess && GPUdevice < ndev)
             {
-#ifdef HAVE_BLAS
-                printf("Running SGEMM 3 on CPU\n");
+                cudaSetDevice(GPUdevice);
+                printf("Running GPU cuBLAS + cuSOLVER Ssyevd pipeline on device %d\n", GPUdevice);
                 fflush(stdout);
 
-                cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, nbact, nbmode, nbmode, 1.0,
-                            imgRMDM.im->array.F, nbact, imgevec.im->array.F, nbmode, 0.0,
-                            imgCMDMall.im->array.F, nbact);
-#endif // #ifdef HAVE_BLAS
+                const float alf  = 1.0f;
+                const float bet  = 0.0f;
+                float      *d_RMWFS    = NULL;
+                float      *d_ATA      = NULL;
+                float      *d_eval     = NULL;
+                float      *d_work     = NULL;
+                int        *d_info     = NULL;
+                float      *d_CMWFSall = NULL;
+                float      *d_RMDM     = NULL;
+                float      *d_CMDMall  = NULL;
+
+                cublasHandle_t     cublasH   = NULL;
+                cusolverDnHandle_t cusolverH = NULL;
+
+                size_t rmwfs_bytes = imgRMWFS.md->nelement * sizeof(float);
+                size_t rmdm_bytes  = imgRMDM.md->nelement * sizeof(float);
+                size_t ata_bytes   = (size_t) nbmode * (size_t) nbmode * sizeof(float);
+                size_t eval_bytes  = (size_t) nbmode * sizeof(float);
+
+                if (cublasCreate(&cublasH) == CUBLAS_STATUS_SUCCESS &&
+                    cusolverDnCreate(&cusolverH) == CUSOLVER_STATUS_SUCCESS &&
+                    cudaMalloc((void **) &d_RMWFS, rmwfs_bytes) == cudaSuccess &&
+                    cudaMalloc((void **) &d_ATA, ata_bytes) == cudaSuccess &&
+                    cudaMalloc((void **) &d_eval, eval_bytes) == cudaSuccess &&
+                    cudaMalloc((void **) &d_info, sizeof(int)) == cudaSuccess)
+                {
+                    processinfo_WriteMessage(processinfo, "Create ATA (GPU)");
+                    cudaMemcpy(d_RMWFS, imgRMWFS.im->array.F, rmwfs_bytes, cudaMemcpyHostToDevice);
+                    cublasSgemm(cublasH, CUBLAS_OP_T, CUBLAS_OP_N, nbmode, nbmode, nbwfspix, &alf,
+                                d_RMWFS, nbwfspix, d_RMWFS, nbwfspix, &bet, d_ATA, nbmode);
+
+                    clock_gettime(CLOCK_MILK, &t1);
+                    t2 = t1;
+                    t3 = t1;
+
+                    processinfo_WriteMessage(processinfo, "comp eigenv (GPU)");
+                    int lwork = 0;
+                    if (cusolverDnSsyevd_bufferSize(cusolverH, CUSOLVER_EIG_MODE_VECTOR,
+                                                    CUBLAS_FILL_MODE_UPPER, nbmode, d_ATA, nbmode,
+                                                    d_eval, &lwork) == CUSOLVER_STATUS_SUCCESS &&
+                        cudaMalloc((void **) &d_work, (size_t) (lwork > 0 ? lwork : 1) *
+                                                          sizeof(float)) == cudaSuccess)
+                    {
+                        int h_info = -1;
+                        if (cusolverDnSsyevd(cusolverH, CUSOLVER_EIG_MODE_VECTOR,
+                                             CUBLAS_FILL_MODE_UPPER, nbmode, d_ATA, nbmode, d_eval,
+                                             d_work, lwork, d_info) == CUSOLVER_STATUS_SUCCESS)
+                        {
+                            cudaMemcpy(&h_info, d_info, sizeof(int), cudaMemcpyDeviceToHost);
+                        }
+                        if (h_info == 0)
+                        {
+                            cudaMemcpy(imgeval.im->array.F, d_eval, eval_bytes,
+                                       cudaMemcpyDeviceToHost);
+                            cudaMemcpy(imgevec.im->array.F, d_ATA, ata_bytes,
+                                       cudaMemcpyDeviceToHost);
+                            clock_gettime(CLOCK_MILK, &t4);
+
+                            processinfo_WriteMessage(processinfo, "create CM WFS (GPU)");
+                            clock_gettime(CLOCK_MILK, &t5);
+                            if (cudaMalloc((void **) &d_CMWFSall, rmwfs_bytes) == cudaSuccess)
+                            {
+                                cublasSgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, nbwfspix, nbmode,
+                                            nbmode, &alf, d_RMWFS, nbwfspix, d_ATA, nbmode, &bet,
+                                            d_CMWFSall, nbwfspix);
+                                cudaMemcpy(imgCMWFSall.im->array.F, d_CMWFSall, rmwfs_bytes,
+                                           cudaMemcpyDeviceToHost);
+                                cudaFree(d_CMWFSall);
+                                d_CMWFSall = NULL;
+                                cudaFree(d_RMWFS);
+                                d_RMWFS = NULL;
+                                clock_gettime(CLOCK_MILK, &t6);
+
+                                processinfo_WriteMessage(processinfo, "create CM DM (GPU)");
+                                if (cudaMalloc((void **) &d_RMDM, rmdm_bytes) == cudaSuccess &&
+                                    cudaMalloc((void **) &d_CMDMall, rmdm_bytes) == cudaSuccess)
+                                {
+                                    cudaMemcpy(d_RMDM, imgRMDM.im->array.F, rmdm_bytes,
+                                               cudaMemcpyHostToDevice);
+                                    cublasSgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, nbact, nbmode,
+                                                nbmode, &alf, d_RMDM, nbact, d_ATA, nbmode, &bet,
+                                                d_CMDMall, nbact);
+                                    cudaMemcpy(imgCMDMall.im->array.F, d_CMDMall, rmdm_bytes,
+                                               cudaMemcpyDeviceToHost);
+                                    gpu_pipeline_done = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (d_CMDMall)
+                    cudaFree(d_CMDMall);
+                if (d_RMDM)
+                    cudaFree(d_RMDM);
+                if (d_CMWFSall)
+                    cudaFree(d_CMWFSall);
+                if (d_work)
+                    cudaFree(d_work);
+                if (d_info)
+                    cudaFree(d_info);
+                if (d_eval)
+                    cudaFree(d_eval);
+                if (d_ATA)
+                    cudaFree(d_ATA);
+                if (d_RMWFS)
+                    cudaFree(d_RMWFS);
+                if (cusolverH)
+                    cusolverDnDestroy(cusolverH);
+                if (cublasH)
+                    cublasDestroy(cublasH);
             }
+        }
+#endif
+
+        if (!gpu_pipeline_done)
+        {
+            processinfo_WriteMessage(processinfo, "Create ATA (CPU)");
+            IMGID imgATA = imgid_make_from_name_2D("ATA", nbmode, nbmode);
+            createimagefromIMGID(&imgATA);
+
+#ifdef HAVE_BLAS
+            printf("Running SGEMM 1 + divide-and-conquer ssyevd on CPU\n");
+            fflush(stdout);
+            cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans, nbmode, nbmode, nbwfspix, 1.0f,
+                        imgRMWFS.im->array.F, nbwfspix, imgRMWFS.im->array.F, nbwfspix, 0.0f,
+                        imgATA.im->array.F, nbmode);
+#else
+            PRINT_ERROR("FATAL -- need either of CUDA or BLAS for this computation\n");
+            exit(1);
+#endif
+            clock_gettime(CLOCK_MILK, &t1);
+            t2 = t1;
+            t3 = t1;
+
+#ifdef HAVE_MKL
+            mkl_set_interface_layer(MKL_INTERFACE_LP64);
+#endif
+            processinfo_WriteMessage(processinfo, "comp eigenv");
+            memcpy(imgevec.im->array.F, imgATA.im->array.F,
+                   sizeof(float) * (size_t) nbmode * (size_t) nbmode);
+            if (LAPACKE_ssyevd(LAPACK_COL_MAJOR, 'V', 'U', nbmode, imgevec.im->array.F, nbmode,
+                               imgeval.im->array.F) != 0)
+            {
+                float *d = (float *) malloc(sizeof(float) * nbmode);
+                float *e = (float *) malloc(sizeof(float) * nbmode);
+                float *t = (float *) malloc(sizeof(float) * nbmode);
+                LAPACKE_ssytrd(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, d, e, t);
+                LAPACKE_sorgtr(LAPACK_COL_MAJOR, 'U', nbmode, imgATA.im->array.F, nbmode, t);
+                memcpy(imgevec.im->array.F, imgATA.im->array.F,
+                       sizeof(float) * (size_t) nbmode * (size_t) nbmode);
+                LAPACKE_ssteqr(LAPACK_COL_MAJOR, 'V', nbmode, d, e, imgevec.im->array.F, nbmode);
+                memcpy(imgeval.im->array.F, d, sizeof(float) * nbmode);
+                free(d);
+                free(e);
+                free(t);
+            }
+            clock_gettime(CLOCK_MILK, &t4);
+
+            processinfo_WriteMessage(processinfo, "create CM WFS");
+            clock_gettime(CLOCK_MILK, &t5);
+#ifdef HAVE_BLAS
+            cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, nbwfspix, nbmode, nbmode, 1.0f,
+                        imgRMWFS.im->array.F, nbwfspix, imgevec.im->array.F, nbmode, 0.0f,
+                        imgCMWFSall.im->array.F, nbwfspix);
+#endif
+            clock_gettime(CLOCK_MILK, &t6);
+
+            processinfo_WriteMessage(processinfo, "create CM DM");
+#ifdef HAVE_BLAS
+            cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, nbact, nbmode, nbmode, 1.0f,
+                        imgRMDM.im->array.F, nbact, imgevec.im->array.F, nbmode, 0.0f,
+                        imgCMDMall.im->array.F, nbact);
+#endif
         }
 
 
@@ -467,56 +409,51 @@ static MILK_HOT errno_t compute_straight_CM_compute(const MILK_RUNNABLE *self)
         float *n2cmDM  = (float *) malloc(sizeof(float) * nbmode);
 
         {
-            // measure norm of modes in DM and WFS space
-            //
-            FILE *fp = fopen("mkmodestmp/mode_norm.txt", "w");
+            double DMnormcnt  = 0.0;
+            double WFSnormcnt = 0.0;
+            for (int ii = 0; ii < nbact; ii++)
+            {
+                DMnormcnt += (double) imgDMmask.im->array.F[ii];
+            }
+            for (int ii = 0; ii < nbwfspix; ii++)
+            {
+                WFSnormcnt += (double) imgWFSmask.im->array.F[ii];
+            }
+
+#pragma omp parallel for schedule(static)
             for (int mi = 0; mi < nbmode; mi++)
             {
-                //char *ptr;
-
+                double       DMnorm  = 0.0;
+                const float *dm_src  = &imgCMDMall.im->array.F[(size_t) mi * nbact];
+                const float *dm_msk  = imgDMmask.im->array.F;
+                for (int ii = 0; ii < nbact; ii++)
                 {
-                    double   DMnorm    = 0.0;
-                    double   DMnormcnt = 0.0;
-                    uint64_t iioffset  = mi * imgCMDMall.md->size[0] * imgCMDMall.md->size[1];
-                    for (uint64_t ii = 0; ii < imgCMDMall.md->size[0] * imgCMDMall.md->size[1];
-                         ii++)
-                    {
-                        double val  = imgCMDMall.im->array.F[iioffset + ii];
-                        double valm = imgDMmask.im->array.F[ii];
-                        DMnorm += val * val * valm;
-                        DMnormcnt += valm;
-                    }
-                    n2cmDM[mi] = sqrt(DMnorm / DMnormcnt);
+                    double val = (double) dm_src[ii];
+                    DMnorm += val * val * (double) dm_msk[ii];
                 }
+                n2cmDM[mi] = (float) sqrt(DMnorm / DMnormcnt);
 
+                double       WFSnorm = 0.0;
+                const float *wfs_src = &imgCMWFSall.im->array.F[(size_t) mi * nbwfspix];
+                const float *wfs_msk = imgWFSmask.im->array.F;
+                for (int ii = 0; ii < nbwfspix; ii++)
                 {
-                    double   WFSnorm    = 0.0;
-                    double   WFSnormcnt = 0.0;
-                    uint64_t iioffset   = mi * imgCMWFSall.md->size[0] * imgCMWFSall.md->size[1];
-                    for (uint64_t ii = 0; ii < imgCMWFSall.md->size[0] * imgCMWFSall.md->size[1];
-                         ii++)
-                    {
-                        double val  = imgCMWFSall.im->array.F[iioffset + ii];
-                        double valm = imgWFSmask.im->array.F[ii];
-                        WFSnorm += val * val * valm;
-                        WFSnormcnt += valm;
-                    }
-                    n2cmWFS[mi] = sqrt(WFSnorm / WFSnormcnt);
+                    double val = (double) wfs_src[ii];
+                    WFSnorm += val * val * (double) wfs_msk[ii];
                 }
-
-
-                //ptr = (void *) imgCMDMall.im->array.F;
-                //ptr += sizeof(float) * mi * nbact;
-                //n2cmDM[mi] = cblas_snrm2(nbact, (float *) ptr, 1);
-
-                //ptr = (void *) imgCMWFSall.im->array.F;
-                //ptr += sizeof(float) * mi * nbwfspix;
-                //n2cmWFS[mi] = cblas_snrm2(nbwfspix, (float *) ptr, 1);
-
-                fprintf(fp, "%4d    %20g    %20g   %20g\n", mi, n2cmDM[mi], n2cmWFS[mi],
-                        imgeval.im->array.F[mi]);
+                n2cmWFS[mi] = (float) sqrt(WFSnorm / WFSnormcnt);
             }
-            fclose(fp);
+
+            FILE *fp = fopen("mkmodestmp/mode_norm.txt", "w");
+            if (fp != NULL)
+            {
+                for (int mi = 0; mi < nbmode; mi++)
+                {
+                    fprintf(fp, "%4d    %20g    %20g   %20g\n", mi, n2cmDM[mi], n2cmWFS[mi],
+                            imgeval.im->array.F[mi]);
+                }
+                fclose(fp);
+            }
         }
 
         clock_gettime(CLOCK_MILK, &t8);
@@ -528,7 +465,7 @@ static MILK_HOT errno_t compute_straight_CM_compute(const MILK_RUNNABLE *self)
         float evlim   = svdlim * svdlim;
         {
             int mi = 0;
-            while (imgeval.im->array.F[mi] < evalmax * evlim)
+            while (mi < nbmode && imgeval.im->array.F[mi] < evalmax * evlim)
             {
                 mi++;
             }
@@ -557,67 +494,72 @@ static MILK_HOT errno_t compute_straight_CM_compute(const MILK_RUNNABLE *self)
         //
         // Modes are normalized to RMS=1 in DM space
         //
+#pragma omp parallel for schedule(static)
         for (int CMmode = 0; CMmode < ecnt; CMmode++)
         {
-            // index in WFSall and CMall cubes
-            //
-            int mi = nbmode - 1 - CMmode;
+            int   mi       = nbmode - 1 - CMmode;
+            float inv_norm = 1.0f / n2cmDM[mi];
 
-            // copy and normalize by norm2 DM
-
+            float       *dst_wfs = &imgCMWFS.im->array.F[(size_t) CMmode * nbwfspix];
+            const float *src_wfs = &imgCMWFSall.im->array.F[(size_t) mi * nbwfspix];
             for (int ii = 0; ii < nbwfspix; ii++)
             {
-                imgCMWFS.im->array.F[CMmode * nbwfspix + ii] =
-                    imgCMWFSall.im->array.F[mi * nbwfspix + ii] / n2cmDM[mi];
+                dst_wfs[ii] = src_wfs[ii] * inv_norm;
             }
 
+            float       *dst_dm = &imgCMDM.im->array.F[(size_t) CMmode * nbact];
+            const float *src_dm = &imgCMDMall.im->array.F[(size_t) mi * nbact];
             for (int ii = 0; ii < nbact; ii++)
             {
-                imgCMDM.im->array.F[CMmode * nbact + ii] =
-                    imgCMDMall.im->array.F[mi * nbact + ii] / n2cmDM[mi];
+                dst_dm[ii] = src_dm[ii] * inv_norm;
             }
         }
 
-
         {
-            // measure norm of modes in DM and WFS space
-            //
-            FILE *fp = fopen("mkmodestmp/mode_norm_1.txt", "w");
+            double DMnormcnt  = 0.0;
+            double WFSnormcnt = 0.0;
+            for (int ii = 0; ii < nbact; ii++)
+            {
+                DMnormcnt += (double) imgDMmask.im->array.F[ii];
+            }
+            for (int ii = 0; ii < nbwfspix; ii++)
+            {
+                WFSnormcnt += (double) imgWFSmask.im->array.F[ii];
+            }
+
+#pragma omp parallel for schedule(static)
             for (int CMmode = 0; CMmode < ecnt; CMmode++)
             {
+                double       WFSnorm = 0.0;
+                const float *wfs_src = &imgCMWFS.im->array.F[(size_t) CMmode * nbwfspix];
+                const float *wfs_msk = imgWFSmask.im->array.F;
+                for (int ii = 0; ii < nbwfspix; ii++)
                 {
-                    double WFSnorm    = 0.0;
-                    double WFSnormcnt = 0.0;
-
-                    for (int ii = 0; ii < nbwfspix; ii++)
-                    {
-                        double val  = imgCMWFS.im->array.F[CMmode * nbwfspix + ii];
-                        double valm = imgWFSmask.im->array.F[ii];
-                        WFSnorm += val * val * valm;
-                        WFSnormcnt += valm;
-                    }
-                    n2cmWFS[CMmode] = sqrt(WFSnorm / WFSnormcnt);
+                    double val = (double) wfs_src[ii];
+                    WFSnorm += val * val * (double) wfs_msk[ii];
                 }
+                n2cmWFS[CMmode] = (float) sqrt(WFSnorm / WFSnormcnt);
 
-
+                double       DMnorm = 0.0;
+                const float *dm_src = &imgCMDM.im->array.F[(size_t) CMmode * nbact];
+                const float *dm_msk = imgDMmask.im->array.F;
+                for (int ii = 0; ii < nbact; ii++)
                 {
-                    double DMnorm    = 0.0;
-                    double DMnormcnt = 0.0;
-
-                    for (int ii = 0; ii < nbact; ii++)
-                    {
-                        double val  = imgCMDM.im->array.F[CMmode * nbact + ii];
-                        double valm = imgDMmask.im->array.F[ii];
-                        DMnorm += val * val * valm;
-                        DMnormcnt += valm;
-                    }
-                    n2cmDM[CMmode] = sqrt(DMnorm / DMnormcnt);
+                    double val = (double) dm_src[ii];
+                    DMnorm += val * val * (double) dm_msk[ii];
                 }
-
-
-                fprintf(fp, "%4d    %20g    %20g \n", CMmode, n2cmDM[CMmode], n2cmWFS[CMmode]);
+                n2cmDM[CMmode] = (float) sqrt(DMnorm / DMnormcnt);
             }
-            fclose(fp);
+
+            FILE *fp = fopen("mkmodestmp/mode_norm_1.txt", "w");
+            if (fp != NULL)
+            {
+                for (int CMmode = 0; CMmode < ecnt; CMmode++)
+                {
+                    fprintf(fp, "%4d    %20g    %20g \n", CMmode, n2cmDM[CMmode], n2cmWFS[CMmode]);
+                }
+                fclose(fp);
+            }
         }
 
 
@@ -626,14 +568,30 @@ static MILK_HOT errno_t compute_straight_CM_compute(const MILK_RUNNABLE *self)
 
         printf("SAVING FILES TO DISK \n");
         save_fits("VTmat", "./mkmodestmp/VTmat.fits");
-        save_fits("CMmodesWFS", "./mkmodestmp/CMmodesWFS.fits");
-        save_fits("CMmodesDM", "./mkmodestmp/CMmodesDM.fits");
 
         printf("writing CMmodesDM  to file %s\n", CMmodesDMfname);
         printf("writing CMmodesWFS to file %s\n", CMmodesWFSfname);
 
         save_fits("CMmodesDM", CMmodesDMfname);
         save_fits("CMmodesWFS", CMmodesWFSfname);
+
+        {
+            char abs_buf[PATH_MAX];
+            const char *dm_p  = (CMmodesDMfname[0] == '!') ? (CMmodesDMfname + 1) : CMmodesDMfname;
+            const char *wfs_p = (CMmodesWFSfname[0] == '!') ? (CMmodesWFSfname + 1) : CMmodesWFSfname;
+            unlink("./mkmodestmp/CMmodesDM.fits");
+            if (dm_p[0] == '\0' || realpath(dm_p, abs_buf) == NULL ||
+                symlink(abs_buf, "./mkmodestmp/CMmodesDM.fits") != 0)
+            {
+                save_fits("CMmodesDM", "./mkmodestmp/CMmodesDM.fits");
+            }
+            unlink("./mkmodestmp/CMmodesWFS.fits");
+            if (wfs_p[0] == '\0' || realpath(wfs_p, abs_buf) == NULL ||
+                symlink(abs_buf, "./mkmodestmp/CMmodesWFS.fits") != 0)
+            {
+                save_fits("CMmodesWFS", "./mkmodestmp/CMmodesWFS.fits");
+            }
+        }
     }
     MILK_PROCINFO_END(self)
 
