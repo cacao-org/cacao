@@ -402,8 +402,7 @@ static errno_t customCONFcheck()
         // Update RM files
         if (milk_data.fpsptr
                 ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".upRMfiles")]
-                .fpflag &
-            FPFLAG_ONOFF)
+                .val.i64[0])
         {
             if (FPS_zRMacqu.SMfd > 0)
             {
@@ -448,15 +447,14 @@ static errno_t customCONFcheck()
             // set back to OFF
             milk_data.fpsptr
                 ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".upRMfiles")]
-                .fpflag &= ~FPFLAG_ONOFF;
+                .val.i64[0] = 0;
         }
 
 
         // update align params for auto mask
         if (milk_data.fpsptr
                 ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.upAlign")]
-                .fpflag &
-            FPFLAG_ONOFF)
+                .val.i64[0])
         {
             if (FPS_DMcomb.SMfd > 0)
             {
@@ -479,7 +477,7 @@ static errno_t customCONFcheck()
             }
             milk_data.fpsptr
                 ->parray[functionparameter_GetParamIndex(milk_data.fpsptr, ".DMgeom.upAlign")]
-                .fpflag &= ~FPFLAG_ONOFF;
+                .val.i64[0] = 0;
         }
 
 

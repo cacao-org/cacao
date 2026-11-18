@@ -134,7 +134,7 @@ static errno_t DMdisp_add_disp_from_circular_buffer(DMCOMB_STATE *state)
         state->DMdisp_add_disp_from_circular_buffer_init = 1;
     }
 
-    if ((astrogrid) &FPFLAG_ONOFF)
+    if (astrogrid)
     {
         state->ag_framecnt++;
         if (state->ag_framecnt >= (astrogridNBframe))
@@ -400,7 +400,7 @@ static errno_t update_dmdisp(IMGID imgdisp, IMGID *imgch, float *dmdisptmp)
         for (uint_fast64_t ii = 0; ii < size; ii++)
         {
             dmdisptmp[ii] += (DClevel - ave);
-            if ((voltmode) &FPFLAG_ONOFF)
+            if (voltmode)
             {
                 if (dmdisptmp[ii] < 0.0)
                 {
@@ -536,7 +536,7 @@ static DMCOMB_STATE *dmcomb_init()
         fflush(stdout);
     }
 
-    if (((voltmode) &FPFLAG_ONOFF) && voltname[0] != '\0')
+    if ((voltmode) && voltname[0] != '\0')
     {
         if (image_ID(voltname, dcimg, dcnimg) == -1)
         {
@@ -579,18 +579,18 @@ static void dmcomb_step(PROCESSINFO *processinfo, FPS *fps, DMCOMB_STATE *state)
     }
 
     // Update ZPO channels state
-    state->zpoffset_channel[0]  = ((zpoffsetch00) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[1]  = ((zpoffsetch01) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[2]  = ((zpoffsetch02) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[3]  = ((zpoffsetch03) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[4]  = ((zpoffsetch04) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[5]  = ((zpoffsetch05) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[6]  = ((zpoffsetch06) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[7]  = ((zpoffsetch07) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[8]  = ((zpoffsetch08) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[9]  = ((zpoffsetch09) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[10] = ((zpoffsetch10) &FPFLAG_ONOFF) ? 1 : 0;
-    state->zpoffset_channel[11] = ((zpoffsetch11) &FPFLAG_ONOFF) ? 1 : 0;
+    state->zpoffset_channel[0]  = (zpoffsetch00) ? 1 : 0;
+    state->zpoffset_channel[1]  = (zpoffsetch01) ? 1 : 0;
+    state->zpoffset_channel[2]  = (zpoffsetch02) ? 1 : 0;
+    state->zpoffset_channel[3]  = (zpoffsetch03) ? 1 : 0;
+    state->zpoffset_channel[4]  = (zpoffsetch04) ? 1 : 0;
+    state->zpoffset_channel[5]  = (zpoffsetch05) ? 1 : 0;
+    state->zpoffset_channel[6]  = (zpoffsetch06) ? 1 : 0;
+    state->zpoffset_channel[7]  = (zpoffsetch07) ? 1 : 0;
+    state->zpoffset_channel[8]  = (zpoffsetch08) ? 1 : 0;
+    state->zpoffset_channel[9]  = (zpoffsetch09) ? 1 : 0;
+    state->zpoffset_channel[10] = (zpoffsetch10) ? 1 : 0;
+    state->zpoffset_channel[11] = (zpoffsetch11) ? 1 : 0;
 
     int zpooffsetchange = 0;
     state->zpochecksum  = 0;
@@ -612,14 +612,14 @@ static void dmcomb_step(PROCESSINFO *processinfo, FPS *fps, DMCOMB_STATE *state)
     long cnt0sum     = 0;
     long cnt0sumzpo  = 0;
 
-    if ((astrogrid) &FPFLAG_ONOFF)
+    if (astrogrid)
     {
         for (uint32_t ch = 0; ch < NBchannel; ch++)
         {
             if (ch != astrogridchan)
             {
                 cnt0sum += state->imgch[ch].md->cnt0;
-                if (((zpoffsetenable) &FPFLAG_ONOFF) && state->zpoffset_channel[ch])
+                if ((zpoffsetenable) && state->zpoffset_channel[ch])
                 {
                     cnt0sumzpo += state->imgch[ch].md->cnt0;
                 }
@@ -631,7 +631,7 @@ static void dmcomb_step(PROCESSINFO *processinfo, FPS *fps, DMCOMB_STATE *state)
         for (uint32_t ch = 0; ch < NBchannel; ch++)
         {
             cnt0sum += state->imgch[ch].md->cnt0;
-            if (((zpoffsetenable) &FPFLAG_ONOFF) && state->zpoffset_channel[ch])
+            if ((zpoffsetenable) && state->zpoffset_channel[ch])
             {
                 cnt0sumzpo += state->imgch[ch].md->cnt0;
             }
@@ -648,19 +648,19 @@ static void dmcomb_step(PROCESSINFO *processinfo, FPS *fps, DMCOMB_STATE *state)
         state->cntsumrefzpo = cnt0sumzpo;
         DMupdatezpo         = 1;
     }
-    if (((zpoffsetenable) &FPFLAG_ONOFF) && zpooffsetchange)
+    if ((zpoffsetenable) && zpooffsetchange)
     {
         DMupdatezpo = 1;
     }
 
     if (LIKELY(DMupdate))
     {
-        if (!((astrogrid) &FPFLAG_ONOFF))
+        if (!(astrogrid))
         {
             state->DMdisp_add_disp_from_circular_buffer_init = 0;
         }
 
-        if (((astrogrid) &FPFLAG_ONOFF) && (astrogridtdelay == 0))
+        if ((astrogrid) && (astrogridtdelay == 0))
         {
             DMdisp_add_disp_from_circular_buffer(state);
             processinfo_update_output_stream(processinfo, state->imgch[astrogridchan].im, NULL);
@@ -671,7 +671,7 @@ static void dmcomb_step(PROCESSINFO *processinfo, FPS *fps, DMCOMB_STATE *state)
             update_dmdisp(state->imgdisp, state->imgch, state->dmdisptmp);
             processinfo_update_output_stream(processinfo, state->imgdisp.im, NULL);
 
-            if (((voltmode) &FPFLAG_ONOFF) && state->imgdmvolt.im != NULL)
+            if ((voltmode) && state->imgdmvolt.im != NULL)
             {
                 state->imgdmvolt.md->write = 1;
                 DM_displ2V(state->imgdisp, state->imgdmvolt, state);
@@ -679,7 +679,7 @@ static void dmcomb_step(PROCESSINFO *processinfo, FPS *fps, DMCOMB_STATE *state)
             }
         }
 
-        if (((astrogrid) &FPFLAG_ONOFF) && (astrogridtdelay != 0))
+        if ((astrogrid) && (astrogridtdelay != 0))
         {
             long            nsec = (long) (1000 * (astrogridtdelay));
             struct timespec timesleep;
@@ -695,7 +695,7 @@ static void dmcomb_step(PROCESSINFO *processinfo, FPS *fps, DMCOMB_STATE *state)
                 update_dmdisp(state->imgdisp, state->imgch, state->dmdisptmp);
                 processinfo_update_output_stream(processinfo, state->imgdisp.im, NULL);
 
-                if (((voltmode) &FPFLAG_ONOFF) && state->imgdmvolt.im != NULL)
+                if ((voltmode) && state->imgdmvolt.im != NULL)
                 {
                     state->imgdmvolt.md->write = 1;
                     DM_displ2V(state->imgdisp, state->imgdmvolt, state);

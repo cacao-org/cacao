@@ -232,8 +232,7 @@ static errno_t customCONFcheck()
 
         // update hardware latency
         //
-        if (fpi_update_mlat > -1 &&
-            (milk_data.fpsptr->parray[fpi_update_mlat].fpflag & FPFLAG_ONOFF))
+        if (fpi_update_mlat > -1 && (milk_data.fpsptr->parray[fpi_update_mlat].val.i64[0]))
         {
             printf("Updating from mlat FPS\n");
 
@@ -248,14 +247,14 @@ static errno_t customCONFcheck()
                 functionparameter_SetParamValue_FLOAT32(milk_data.fpsptr, ".timing.hardwlatfr",
                                                         latencyfr);
             }
-            milk_data.fpsptr->parray[fpi_update_mlat].fpflag &= ~FPFLAG_ONOFF;
+            milk_data.fpsptr->parray[fpi_update_mlat].val.i64[0] = 0;
         }
 
 
         // Auto timing
         //
         if (fpi_autotiming > -1 &&
-            (milk_data.fpsptr->parray[fpi_autotiming].fpflag & FPFLAG_ONOFF)) // ON state
+            (milk_data.fpsptr->parray[fpi_autotiming].val.i64[0])) // ON state
         {
             printf("UPDATE TIMING >>>>>>>>>\n");
 
@@ -295,7 +294,7 @@ static errno_t customCONFcheck()
             long fpi_update_RMDMmask =
                 functionparameter_GetParamIndex(milk_data.fpsptr, ".RMDMmask.upmlat");
             if (fpi_update_RMDMmask > -1 &&
-                (milk_data.fpsptr->parray[fpi_update_RMDMmask].fpflag & FPFLAG_ONOFF))
+                (milk_data.fpsptr->parray[fpi_update_RMDMmask].val.i64[0]))
             {
                 printf("Updating RM DM mask\n");
 
@@ -378,7 +377,7 @@ static errno_t customCONFcheck()
                     functionparameter_SetParamValue_FLOAT32(milk_data.fpsptr, ".timing.hardwlatfr",
                                                             latencyfr);
                 }
-                milk_data.fpsptr->parray[fpi_update_RMDMmask].fpflag &= ~FPFLAG_ONOFF;
+                milk_data.fpsptr->parray[fpi_update_RMDMmask].val.i64[0] = 0;
             }
 
 
@@ -388,8 +387,7 @@ static errno_t customCONFcheck()
             //
             long fpi_compPokeMat =
                 functionparameter_GetParamIndex(milk_data.fpsptr, ".compPokeMat");
-            if (fpi_compPokeMat > -1 &&
-                (milk_data.fpsptr->parray[fpi_compPokeMat].fpflag & FPFLAG_ONOFF))
+            if (fpi_compPokeMat > -1 && (milk_data.fpsptr->parray[fpi_compPokeMat].val.i64[0]))
             {
                 imageID IDdmRM = image_ID(dmstream, dcimg, dcnimg);
 
@@ -397,8 +395,7 @@ static errno_t customCONFcheck()
                 {
                     long fpi_Hpokemode =
                         functionparameter_GetParamIndex(milk_data.fpsptr, ".Hpoke");
-                    if (fpi_Hpokemode > -1 &&
-                        (milk_data.fpsptr->parray[fpi_Hpokemode].fpflag & FPFLAG_ONOFF))
+                    if (fpi_Hpokemode > -1 && (milk_data.fpsptr->parray[fpi_Hpokemode].val.i64[0]))
                     {
                         AOloopControl_computeCalib_mkHadamardModes("RMDMmask", "Hpoke");
 
@@ -447,7 +444,7 @@ static errno_t customCONFcheck()
                     }
                 }
 
-                milk_data.fpsptr->parray[fpi_compPokeMat].fpflag &= ~FPFLAG_ONOFF;
+                milk_data.fpsptr->parray[fpi_compPokeMat].val.i64[0] = 0;
             }
         }
     }
