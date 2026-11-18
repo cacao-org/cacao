@@ -328,8 +328,7 @@ static MILK_HOT errno_t acquireWFSspec_compute(const MILK_RUNNABLE *self)
         int  status_darksub = 0;
         long fpi_compWFSsubdark =
             functionparameter_GetParamIndex(milk_data.fpsptr, ".comp.darksub");
-        if (fpi_compWFSsubdark > -1 &&
-            (milk_data.fpsptr->parray[fpi_compWFSsubdark].fpflag & FPFLAG_ONOFF))
+        if (fpi_compWFSsubdark > -1 && (milk_data.fpsptr->parray[fpi_compWFSsubdark].val.i64[0]))
         {
             if (imgWFSdark.ID != -1)
             {
@@ -360,7 +359,7 @@ static MILK_HOT errno_t acquireWFSspec_compute(const MILK_RUNNABLE *self)
         long fpi_compWFSnormalize =
             functionparameter_GetParamIndex(milk_data.fpsptr, ".comp.WFSnormalize");
         if (fpi_compWFSnormalize > -1 &&
-            (milk_data.fpsptr->parray[fpi_compWFSnormalize].fpflag & FPFLAG_ONOFF))
+            (milk_data.fpsptr->parray[fpi_compWFSnormalize].val.i64[0]))
         {
             status_normalize = 1;
             spec_norm(imgimWFS0, imgimWFS1);
@@ -377,8 +376,7 @@ static MILK_HOT errno_t acquireWFSspec_compute(const MILK_RUNNABLE *self)
         imgimWFS2.md->write                       = 1;
         long fpi_compWFSrefsub =
             functionparameter_GetParamIndex(milk_data.fpsptr, ".comp.WFSrefsub");
-        if (fpi_compWFSrefsub > -1 &&
-            (milk_data.fpsptr->parray[fpi_compWFSrefsub].fpflag & FPFLAG_ONOFF))
+        if (fpi_compWFSrefsub > -1 && (milk_data.fpsptr->parray[fpi_compWFSrefsub].val.i64[0]))
         {
             // subtract reference
             status_refsub = 1;

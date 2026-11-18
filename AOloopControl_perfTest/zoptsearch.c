@@ -551,7 +551,7 @@ static MILK_HOT errno_t zoptsearch_compute(const MILK_RUNNABLE *self)
         }
 
 
-        //        if(milk_data.fpsptr->parray[fpi_compWFSrefc].fpflag & FPFLAG_ONOFF)
+        //        if(milk_data.fpsptr->parray[fpi_compWFSrefc].val.i64[0])
     }
     MILK_PROCINFO_END(self)
 

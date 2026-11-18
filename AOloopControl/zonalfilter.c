@@ -87,7 +87,7 @@ static void zonal_filter_step(PROCESSINFO *processinfo,
 {
     uint32_t dmxysize = imginDM->md[0].size[0] * imginDM->md[0].size[1];
 
-    if (loopZERO && ((*loopZERO) & FPFLAG_ONOFF))
+    if (loopZERO && (*loopZERO))
     {
         for (uint32_t act = 0; act < dmxysize; act++)
         {
@@ -95,7 +95,7 @@ static void zonal_filter_step(PROCESSINFO *processinfo,
         }
         memcpy(imgout->array.F, zvalDMc, sizeof(float) * dmxysize);
         processinfo_update_output_stream(processinfo, imgout, NULL);
-        (*loopZERO) &= ~FPFLAG_ONOFF;
+        *loopZERO = 0;
     }
 
     if ((*loopON) == 1)
@@ -106,8 +106,7 @@ static void zonal_filter_step(PROCESSINFO *processinfo,
         }
         if (*loopNBstep == 0)
         {
-            *loopON = 0;
-            (*loopON) &= ~FPFLAG_ONOFF;
+            *loopON     = 0;
             *loopNBstep = 1;
         }
 

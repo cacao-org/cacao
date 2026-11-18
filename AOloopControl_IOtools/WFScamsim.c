@@ -155,8 +155,7 @@ static MILK_HOT errno_t WFScamsim_compute(const MILK_RUNNABLE *self)
         {
             long fpi_compphnoise =
                 functionparameter_GetParamIndex(milk_data.fpsptr, ".compphnoise");
-            if (fpi_compphnoise > -1 &&
-                (milk_data.fpsptr->parray[fpi_compphnoise].fpflag & FPFLAG_ONOFF))
+            if (fpi_compphnoise > -1 && (milk_data.fpsptr->parray[fpi_compphnoise].val.i64[0]))
             {
                 for (uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
