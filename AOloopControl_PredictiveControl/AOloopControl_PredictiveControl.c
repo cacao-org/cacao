@@ -19,6 +19,8 @@
 #include "AOloopControl/AOloopControl.h"
 #include "AOloopControl_PredictiveControl/AOloopControl_PredictiveControl.h"
 
+MILK_RUNNABLE_WEAK_DECL(runnable_AOloopControl_PredictiveControl_mkEOFPF);
+
 
 /* =============================================================
  *  Parameters
@@ -188,6 +190,10 @@ static const MILK_RUNNABLE *const runnables[] = {
     &runnable_AOloopControl_PredictiveControl_mappfilt,
     &runnable_AOloopControl_PredictiveControl_mkpfilt,
     &runnable_AOloopControl_PredictiveControl_pfsetave,
+    &runnable_AOloopControl_PredictiveControl_mkARPF,
+    &runnable_AOloopControl_PredictiveControl_applyARPF,
+    &runnable_AOloopControl_PredictiveControl_mkEOFPF,
+    &runnable_AOloopControl_PredictiveControl_applyEOFPF,
 };
 
 MILK_MODULE_RUNNABLES(AOloopControl_PredictiveControl, NULL, runnables);

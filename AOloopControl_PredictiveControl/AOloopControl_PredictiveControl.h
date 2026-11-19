@@ -48,4 +48,9 @@ imageID AOloopControl_PredictiveControl_builPFloop_WatchInput(long loop,
 /** @brief Set predictive filter to simple average of previous measures */
 imageID AOloopControl_PredictiveControl_setPFsimpleAve(char *IDPF_name, float DecayCoeff);
 
+extern const MILK_RUNNABLE runnable_AOloopControl_PredictiveControl_mkARPF;
+extern const MILK_RUNNABLE runnable_AOloopControl_PredictiveControl_applyARPF;
+extern const MILK_RUNNABLE runnable_AOloopControl_PredictiveControl_mkEOFPF;
+extern const MILK_RUNNABLE runnable_AOloopControl_PredictiveControl_applyEOFPF;
+
 #endif
