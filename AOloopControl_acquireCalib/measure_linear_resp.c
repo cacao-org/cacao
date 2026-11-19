@@ -41,26 +41,26 @@ typedef struct
 static PokeInfo *pkinfarray;
 
 
-static char     *streamin           = NULL;
-static char     *streamout          = NULL;
-static char     *inmodeC            = NULL;
-static char     *outmodeC           = NULL;
-static float    *pokeampl           = NULL;
-static float    *timing_framerateHz = NULL;
-static float    *timing_latencyfr   = NULL;
-static uint32_t *NBave              = NULL;
-static uint32_t *NBexcl             = NULL;
-static uint32_t *NBinnerCycle       = NULL;
-static int64_t  *saveALL            = NULL;
+static char     streamin[FUNCTION_PARAMETER_STRMAXLEN]  = "";
+static char     streamout[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static char     inmodeC[FUNCTION_PARAMETER_STRMAXLEN]   = "";
+static char     outmodeC[FUNCTION_PARAMETER_STRMAXLEN]  = "";
+static float    pokeampl                                = 0.0f;
+static float    timing_framerateHz                      = 0.0f;
+static float    timing_latencyfr                        = 0.0f;
+static uint32_t NBave                                   = 0;
+static uint32_t NBexcl                                  = 0;
+static uint32_t NBinnerCycle                            = 0;
+static int32_t  saveALL                                 = 0;
 
 
 #define FPS_PARAMS(X)                                                                              \
-    X(".streamin", &streamin, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT,                          \
+    X(".streamin", streamin, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT,                           \
       "input (perturbation) stream")                                                               \
-    X(".streamout", &streamout, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT,                        \
+    X(".streamout", streamout, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT,                         \
       "output (signal) stream")                                                                    \
-    X(".inmodes", &inmodeC, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "input modes")           \
-    X(".outmodes", &outmodeC, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "output modes")        \
+    X(".inmodes", inmodeC, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "input modes")            \
+    X(".outmodes", outmodeC, FPTYPE_FITSFILENAME, 1, FPFLAG_DEFAULT_INPUT, "output modes")         \
     X(".ampl", &pokeampl, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "RM poke amplitude")            \
     X(".timing.WFSfrequ", &timing_framerateHz, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,            \
       "WFS frame rate [Hz]")                                                                       \
@@ -817,9 +817,8 @@ static MILK_HOT errno_t measlinresp_compute(const MILK_RUNNABLE *self)
     mkUTtimestring_nanosec_now(timestring);
     WRITE_DIRNAME(savedir, "measlinrespm/%s", timestring);
 
-    Measure_Linear_Response_Modal(self, imgin, imgout, imginmodeC, *pokeampl, *timing_framerateHz,
-                                  *timing_latencyfr, *NBave, *NBexcl, 1, outmodeC, savedir,
-                                  *saveALL);
+    Measure_Linear_Response_Modal(self, imgin, imgout, imginmodeC, pokeampl, timing_framerateHz,
+                                  timing_latencyfr, NBave, NBexcl, 1, outmodeC, savedir, saveALL);
 
     list_image_ID();
 
