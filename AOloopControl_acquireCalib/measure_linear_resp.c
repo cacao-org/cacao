@@ -507,6 +507,9 @@ static errno_t Measure_Linear_Response_Modal(const MILK_RUNNABLE *self,
             }
         }
 
+        // Drop frames posted during setup or the previous cycle's save: the first poke must
+        // wait for a fresh frame.
+        ImageStreamIO_semflush(imgout.im, semindexout);
 
         for (uint64_t pokeframe = 0; pokeframe < NBpokeframe; pokeframe++)
         {
