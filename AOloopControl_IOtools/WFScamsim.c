@@ -21,6 +21,7 @@ static char     wfssignal_in[FUNCTION_PARAMETER_STRMAXLEN];
 static char     wfsim_out[FUNCTION_PARAMETER_STRMAXLEN];
 static uint64_t compdarkadd;
 static char     wfsdark[FUNCTION_PARAMETER_STRMAXLEN];
+static float    zerolevel = 0.0f;
 static float    fluxtotal;
 static float    camgain;
 static uint64_t compphnoise;
@@ -34,11 +35,13 @@ static float    camRON;
     X(".compdarkadd", &compdarkadd, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "subtract dark")        \
     X(".camdark", wfsdark, FPTYPE_STREAMNAME, 1, (FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT),        \
       "camera dark frame")                                                                         \
-    X(".fluxtotal", &fluxtotal, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT,                          \
+    X(".zerolevel", &zerolevel, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,                           \
+      "added to the input signal before scaling [signal units]")                                   \
+    X(".fluxtotal", &fluxtotal, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,                           \
       "total output flux [phe-], <0 if no scaling")                                                \
-    X(".camgain", &camgain, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT, "camera gain [e- / ADU]")    \
+    X(".camgain", &camgain, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT, "camera gain [e- / ADU]")     \
     X(".compphnoise", &compphnoise, FPTYPE_ONOFF, 1, FPFLAG_DEFAULT_INPUT, "compute photon noise") \
-    X(".camRON", &camRON, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_OUTPUT,                                \
+    X(".camRON", &camRON, FPTYPE_FLOAT32, 1, FPFLAG_DEFAULT_INPUT,                                 \
       "camera readout noise [e-] (neg = 0)")
 
 MILK_PARAMS_DEFINE(WFScamsim, FPS_PARAMS);
@@ -52,6 +55,7 @@ static errno_t customCONFcheck()
     if (milk_data.fpsptr != NULL)
     {
         long fpi_compdarkadd = functionparameter_GetParamIndex(milk_data.fpsptr, ".compdarkadd");
+        long fpi_zerolevel   = functionparameter_GetParamIndex(milk_data.fpsptr, ".zerolevel");
         long fpi_fluxtotal   = functionparameter_GetParamIndex(milk_data.fpsptr, ".fluxtotal");
         long fpi_camgain     = functionparameter_GetParamIndex(milk_data.fpsptr, ".camgain");
         long fpi_compphnoise = functionparameter_GetParamIndex(milk_data.fpsptr, ".compphnoise");
@@ -60,6 +64,10 @@ static errno_t customCONFcheck()
         if (fpi_compdarkadd > -1)
         {
             milk_data.fpsptr->parray[fpi_compdarkadd].fpflag |= FPFLAG_WRITERUN;
+        }
+        if (fpi_zerolevel > -1)
+        {
+            milk_data.fpsptr->parray[fpi_zerolevel].fpflag |= FPFLAG_WRITERUN;
         }
         if (fpi_fluxtotal > -1)
         {
@@ -132,15 +140,19 @@ static MILK_HOT errno_t WFScamsim_compute(const MILK_RUNNABLE *self)
         if (fluxtotal < 0.0)
         {
             // do not scale
-            memcpy(imcamtmpimg.im->array.F, wfssignalimg.im->array.F, sizeof(float) * sizexWFS);
+            for (uint64_t ii = 0; ii < sizeWFS; ii++)
+            {
+                imcamtmpimg.im->array.F[ii] = wfssignalimg.im->array.F[ii] + zerolevel;
+            }
         }
         else
         {
             for (uint64_t ii = 0; ii < sizeWFS; ii++)
             {
-                if (wfssignalimg.im->array.F[ii] > 0.0)
+                float val = wfssignalimg.im->array.F[ii] + zerolevel;
+                if (val > 0.0)
                 {
-                    imcamtmpimg.im->array.F[ii] = fluxtotal * wfssignalimg.im->array.F[ii];
+                    imcamtmpimg.im->array.F[ii] = fluxtotal * val;
                 }
                 else
                 {
