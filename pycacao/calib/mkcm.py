@@ -22,7 +22,7 @@ CM = tuple[Array, Array, Array]
 def _svd(
     modes_dm: Array, modes_wfs: Array, nmodes: int | None, rcond: float | None
 ) -> tuple[Array, Array, Array, Array, Array, np.dtype]:
-    """-> (D, V_K, sv_K, U_K^T, sv, dtype). Raises ValueError when K is empty."""
+    """-> (D, V_K, sv_K, U_K^T, sv, dtype). Raises ValueError when K is empty or W is zero."""
     n = modes_dm.shape[0]
     D = modes_dm.reshape(n, -1).astype(np.float64)
     v, sv, ut = np.linalg.svd(
@@ -31,7 +31,7 @@ def _svd(
     keep = np.arange(sv.size) < (sv.size if nmodes is None else nmodes)
     if rcond is not None:
         keep &= sv > rcond * sv[0]
-    if not keep.any():
+    if sv[0] == 0 or not keep.any():
         raise ValueError("no singular mode kept")
     dtype = np.result_type(modes_dm.dtype, modes_wfs.dtype, np.float32)
     return D, v[:, keep], sv[keep], ut[keep], sv, dtype
