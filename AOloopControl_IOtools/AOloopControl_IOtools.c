@@ -29,6 +29,7 @@ static const MILK_RUNNABLE *const runnables[] = {
     &runnable_AOloopControl_IOtools_acquireWFSim,
     &runnable_AOloopControl_IOtools_spotpos,
     &runnable_AOloopControl_IOtools_WFScamsim,
+    &runnable_AOloopControl_IOtools_PyWFSsim,
     &runnable_AOloopControl_IOtools_WFSmap,
     &runnable_AOloopControl_IOtools_findspots,
     &runnable_AOloopControl_IOtools_ao188_preprocessor,

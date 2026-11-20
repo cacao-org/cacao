@@ -6,6 +6,7 @@ Module responsible for `AOloopControl_IOtools` functionality.
 
 | File                   | Description                                                                 |
 | ---------------------- | --------------------------------------------------------------------------- |
+| `PyWFSsim.c`           | cheap pyramid WFS simulation: DM slopes to four pupil images                |
 | `WFScamsim.c`          | camera simulation for WFS                                                   |
 | `WFSmap.c`             | remap WFS image                                                             |
 | `acquireWFSim.c`       | Acquirewfsim module                                                         |
@@ -19,6 +20,7 @@ Module responsible for `AOloopControl_IOtools` functionality.
 | Executable                          | Source File      | Description         |
 | ----------------------------------- | ---------------- | ------------------- |
 | `cacao-fpsexec-cacaoiot-acquireWFS` | `acquireWFSim.c` | Acquirewfsim module |
+| `cacao-fpsexec-cacaoiot-pywfssim`   | `PyWFSsim.c`     | cheap PyWFS simulation |
 
 ## Dependencies
 
