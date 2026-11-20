@@ -282,13 +282,14 @@ static errno_t check_recompute_seed()
 {
     if (compTurbSeed)
     {
-        printf("RECOMPUTING DM TURB SEED\n");
+        printf("RECOMPUTING DM TURB SEED...");
         make_seed_turbulence_screen("tseed0", "tseed1", turbseedsize,
                                     (turbseedouterscale) / (turbseedpixscale),
                                     (turbseedinnerscale) / (turbseedpixscale));
         save_fits("tseed0", "../conf/turbseed0.fits");
         save_fits("tseed1", "../conf/turbseed1.fits");
         compTurbSeed = 0;
+        printf("   COMPLETED.\n");
     }
     return RETURN_SUCCESS;
 }
@@ -328,14 +329,14 @@ static DMTURB_STATE *dmturb_init()
     state->turbimarray = (float *) malloc(sizeof(float) * xsize * ysize);
 
     // Load seed 0
-    if (load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0) != 0)
+    // load_fits errmode 1 returns success with IDts0 = -1 when the file is missing
+    load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0);
+    if (state->IDts0 == -1)
     {
-        // If fail, create it?
-        // Original code seemed to expect it or create it in customCONFcheck
-        // Let's force creation if not exists
+        // No seed on disk: compute it (also saves it), use the in-memory image
         compTurbSeed = 1;
         check_recompute_seed();
-        load_fits("../conf/turbseed0.fits", "tseed0", 1, &state->IDts0);
+        state->IDts0 = image_ID("tseed0", dcimg, dcnimg);
     }
 
     state->amplcoeff    = 1.0;
