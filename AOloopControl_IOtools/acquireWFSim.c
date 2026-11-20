@@ -138,7 +138,7 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
     {
         // if wfsmask created here, initialize it to 1
         printf("INITIALIZING wfsmask to 1\n");
-        for (uint64_t ii; ii < imgwfsmask.md->nelement; ii++)
+        for (uint64_t ii = 0; ii < imgwfsmask.md->nelement; ii++)
         {
             imgwfsmask.im->array.F[ii] = 1.0;
         }
