@@ -9,6 +9,7 @@ Module responsible for `AOloopControl` functionality.
 | `cacao-fpsexec-cacao-zonalfilter` | `zonalfilter.c` | Apply zonal filtering in DM space             |
 | `cacao-fpsexec-mfilt`             | `modalfilter.c` | Apply modal filtering following FPS practices |
 | `cacao-fpsexec-modalwhite`        | `modalwhite.c`  | Closed-loop residual whiteness & OOS monitor  |
+| `cacao-fpsexec-modalog`           | `modalog.c`     | Online closed-loop DM-poke optical gain (IV)  |
 
 ## Dependencies
 

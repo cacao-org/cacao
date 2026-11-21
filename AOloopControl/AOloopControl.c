@@ -37,6 +37,7 @@ static const MILK_RUNNABLE *const runnables[] = {
     &runnable_AOloopControl_modalfilter_test,
     &runnable_AOloopControl_modalCTRL_stats,
     &runnable_AOloopControl_modalwhite,
+    &runnable_AOloopControl_modalog,
     &runnable_AOloopControl_zonalfilter,
 };
 

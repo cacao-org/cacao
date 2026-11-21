@@ -30,6 +30,9 @@ extern const MILK_RUNNABLE runnable_AOloopControl_modalCTRL_stats;
 /** @brief Closed-loop modal residual whiteness and predictability monitor. */
 extern const MILK_RUNNABLE runnable_AOloopControl_modalwhite;
 
+/** @brief Online single-stage optical-gain estimator via closed-loop DM pokes. */
+extern const MILK_RUNNABLE runnable_AOloopControl_modalog;
+
 /** @brief Apply zonal filtering in DM space (fpsexec "cacao-zonalfilter"). */
 extern const MILK_RUNNABLE runnable_AOloopControl_zonalfilter;
 

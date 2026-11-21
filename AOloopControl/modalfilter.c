@@ -64,6 +64,12 @@ static int32_t  dynpsol_reload                        = 0;
 static uint32_t dynpsol_mode                          = 0;
 static uint32_t dynpsol_ntaps                         = 0;
 static uint32_t dynpsol_nmode                         = 0;
+static int32_t  ogprobe_enable                        = 0;
+static float    ogprobe_ampl                          = 0.002f;
+static uint32_t ogprobe_nbmode                        = 64;
+static uint32_t ogprobe_stride                        = 1;
+static uint32_t ogprobe_hold                          = 3;
+static uint64_t ogprobe_seed                          = 0x506F6B654F47ULL;
 static int32_t  comptbuff                             = 0;
 static int32_t  autolim                               = 0;
 static float    autolimprobegain                      = 0.1f;
@@ -176,10 +182,18 @@ typedef struct
     IMGID    imgtbuff_mvalDM;
     IMGID    imgtbuff_mvalWFS;
     IMGID    imgtbuff_mvalOL;
+    IMGID    imgtbuff_mvalprobe;
     uint32_t tbuff_alloc_size;
     uint32_t tbuffindex;
     int      tbuffslice;
     uint64_t stats_accum_cnt;
+
+    // Online optical-gain exogenous probe generator
+    IMGID    imgmogprobew;
+    float   *ogprobecmd;
+    uint64_t ogprobe_rng;
+    uint32_t ogprobe_hold_cnt;
+    int      ogprobe_was_on;
 
     double *mvalDMave;
     double *mvalDMrms;
@@ -396,6 +410,15 @@ static MFILT_STATE *modal_filter_init(uint32_t NBmode)
     state->imgtbuff_mvalWFS = stream_connect_create_3Df32(name, NBmode, tbsize, 2);
     WRITE_IMAGENAME(name, "aol%lu_modevalOL_buff", AOloopindex);
     state->imgtbuff_mvalOL = stream_connect_create_3Df32(name, NBmode, tbsize, 2);
+    WRITE_IMAGENAME(name, "aol%lu_modevalprobe_buff", AOloopindex);
+    state->imgtbuff_mvalprobe = stream_connect_create_3Df32(name, NBmode, tbsize, 2);
+
+    // Online optical-gain probe weights & state
+    WRITE_IMAGENAME(name, "aol%lu_mogprobe_w", AOloopindex);
+    state->imgmogprobew = stream_connect_create_2Df32(name, NBmode, 1);
+    init_ones_if_all_zero(state->imgmogprobew, NBmode);
+    state->ogprobecmd  = (float *) calloc(NBmode, sizeof(float));
+    state->ogprobe_rng = (ogprobe_seed != 0ULL) ? ogprobe_seed : 0x506F6B654F47ULL;
 
     // SelfRM
     uint32_t srmzsize = (selfRMzsize > 0) ? selfRMzsize : 20;
@@ -442,6 +465,7 @@ static void modal_filter_cleanup(MFILT_STATE *state)
     free(state->mvalPFresave);
     free(state->mvalPFresrms);
     free(state->autolimDMsigma);
+    free(state->ogprobecmd);
     free(state->selfRMpokecmd);
     free(state->psOL_probe);
     free(state->psOL_wfs);
@@ -750,6 +774,8 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
         memset(state->mvaloutapply, 0, sizeof(float) * NBmode);
         memset(state->mvalDMbuff, 0, sizeof(float) * NBmode * MFILT_NBDMTSTEP);
         memset(state->mvalDMOL, 0, sizeof(float) * NBmode);
+        memset(state->ogprobecmd, 0, sizeof(float) * NBmode);
+        state->ogprobe_hold_cnt = 0;
         imgout->md[0].write = 1;
         memset(imgout->array.F, 0, sizeof(float) * NBmode);
         processinfo_update_output_stream(processinfo, imgout, NULL);
@@ -836,6 +862,44 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
             state->testOL_pokecmd = testOLampl * sinf((float) testOLcnt * 0.16f * freqfact);
         }
 
+        // Optional low-RMS orthogonal exogenous probe for online optical-gain ID
+        if (ogprobe_enable == 1)
+        {
+            uint32_t hold = (ogprobe_hold >= 1) ? ogprobe_hold : 1;
+            if (state->ogprobe_hold_cnt == 0 || !state->ogprobe_was_on)
+            {
+                uint32_t eff_nb =
+                    (ogprobe_nbmode > 0 && ogprobe_nbmode < NBmode) ? ogprobe_nbmode : NBmode;
+                uint32_t st = (ogprobe_stride >= 1) ? ogprobe_stride : 1;
+                const float *restrict pw = state->imgmogprobew.im->array.F;
+                memset(state->ogprobecmd, 0, sizeof(float) * NBmode);
+                uint64_t rng = state->ogprobe_rng;
+                for (uint32_t mi = 0; mi < eff_nb; mi += st)
+                {
+                    float w = pw[mi];
+                    if (w == 0.0f)
+                    {
+                        continue;
+                    }
+                    rng ^= rng >> 12;
+                    rng ^= rng << 25;
+                    rng ^= rng >> 27;
+                    float sgn = ((rng * 0x2545F4914F6CDD1DULL) >> 63) ? 1.0f : -1.0f;
+                    state->ogprobecmd[mi] = sgn * ogprobe_ampl * w;
+                }
+                state->ogprobe_rng      = rng;
+                state->ogprobe_hold_cnt = hold;
+            }
+            state->ogprobe_hold_cnt--;
+            state->ogprobe_was_on = 1;
+        }
+        else if (state->ogprobe_was_on)
+        {
+            memset(state->ogprobecmd, 0, sizeof(float) * NBmode);
+            state->ogprobe_hold_cnt = 0;
+            state->ogprobe_was_on   = 0;
+        }
+
         // Standard Modal Leaky-Integrator Step
         const float *restrict wfs_in = imginWFS->array.F;
         const float *restrict zpo    = state->imgmzeropoint.im->array.F;
@@ -869,7 +933,8 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
             {
                 state->mvalout[mi] = dmc;
             }
-            state->mvaloutapply[mi] = state->mvalout[mi] + state->selfRMpokecmd[mi];
+            state->mvaloutapply[mi] =
+                state->mvalout[mi] + state->selfRMpokecmd[mi] + state->ogprobecmd[mi];
         }
         if (testOL == 1 && compOL == 1)
         {
@@ -1119,7 +1184,8 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                         {
                             state->mvalout[mi] = dmc_new;
                         }
-                        state->mvaloutapply[mi] = state->mvalout[mi] + state->selfRMpokecmd[mi];
+                        state->mvaloutapply[mi] =
+                            state->mvalout[mi] + state->selfRMpokecmd[mi] + state->ogprobecmd[mi];
                     }
                 }
                 if (testOL == 1)
@@ -1232,6 +1298,8 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
             memcpy(&state->imgtbuff_mvalWFS.im->array.F[kkoff], wfs_in, sizeof(float) * NBmode);
             memcpy(&state->imgtbuff_mvalOL.im->array.F[kkoff], state->imgOLmval.im->array.F,
                    sizeof(float) * NBmode);
+            memcpy(&state->imgtbuff_mvalprobe.im->array.F[kkoff], state->ogprobecmd,
+                   sizeof(float) * NBmode);
             if (auxDMmvalenable == 1)
             {
                 for (uint32_t mi = 0; mi < NBmode; mi++)
@@ -1271,10 +1339,12 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                 state->tbuffindex = 0;
                 state->tbuffslice = 1 - done_slice;
 
-                state->imgtbuff_mvalDM.md[0].cnt1  = (uint64_t) done_slice;
-                state->imgtbuff_mvalWFS.md[0].cnt1 = (uint64_t) done_slice;
-                state->imgtbuff_mvalOL.md[0].cnt1  = (uint64_t) done_slice;
+                state->imgtbuff_mvalDM.md[0].cnt1    = (uint64_t) done_slice;
+                state->imgtbuff_mvalprobe.md[0].cnt1 = (uint64_t) done_slice;
+                state->imgtbuff_mvalWFS.md[0].cnt1   = (uint64_t) done_slice;
+                state->imgtbuff_mvalOL.md[0].cnt1    = (uint64_t) done_slice;
                 processinfo_update_output_stream(processinfo, state->imgtbuff_mvalDM.im, NULL);
+                processinfo_update_output_stream(processinfo, state->imgtbuff_mvalprobe.im, NULL);
                 processinfo_update_output_stream(processinfo, state->imgtbuff_mvalWFS.im, NULL);
                 processinfo_update_output_stream(processinfo, state->imgtbuff_mvalOL.im, NULL);
 
@@ -1527,6 +1597,18 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
       "active dynamic PSOL tap length L")                                                         \
     X(".comp.dynpsol.nmode", &dynpsol_nmode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_OUTPUT,             \
       "active dynamic PSOL modal span")                                                           \
+    X(".comp.ogprobe.enable", &ogprobe_enable, FPTYPE_ONOFF, 0,                                   \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "enable online OG DM probe")     \
+    X(".comp.ogprobe.ampl", &ogprobe_ampl, FPTYPE_FLOAT32, 0,                                     \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "online OG probe amplitude")     \
+    X(".comp.ogprobe.nbmode", &ogprobe_nbmode, FPTYPE_UINT32, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "leading modes probed (0=all)")  \
+    X(".comp.ogprobe.stride", &ogprobe_stride, FPTYPE_UINT32, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "mode stride for sparse probes") \
+    X(".comp.ogprobe.hold", &ogprobe_hold, FPTYPE_UINT32, 0,                                      \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "frames per probe chip (>=1)")   \
+    X(".comp.ogprobe.seed", &ogprobe_seed, FPTYPE_UINT64, 0,                                      \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "PRNG seed for Rademacher OG probe")               \
     X(".comp.tbuff", &comptbuff, FPTYPE_ONOFF, 0,                                                 \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "compute telemetry buffers")     \
     X(".comp.autolim", &autolim, FPTYPE_ONOFF, 0,                                                 \
