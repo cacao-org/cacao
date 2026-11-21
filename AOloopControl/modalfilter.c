@@ -7,12 +7,19 @@
  * @brief   Real-time modal filtering, pseudo-open-loop (PSOL) reconstruction, and predictive mixing
  */
 
+// MILK_CMAKE_REQUEST_BLAS
+
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+
+#ifdef HAVE_BLAS
+#    include "milk_blas_lapacke.h"
+#endif
 
 #include "milk_runnable.h"
 #include "ImageStreamIO/ImageStruct.h"
@@ -31,7 +38,7 @@
 #    define M_PI 3.14159265358979323846
 #endif
 
-#define MFILT_NBDMTSTEP    32
+#define MFILT_NBDMTSTEP    64
 #define MFILT_PFCBUFF_SIZE 32
 
 /* ================================================================
@@ -51,6 +58,12 @@ static int32_t  compOL                                = 0;
 static float    psol_WFSfact                          = 1.0f;
 static float    latencyhardwfr                        = 1.7f;
 static float    latencysoftwfr                        = 1.5f;
+static int32_t  dynpsol_enable                        = 0;
+static char     dynpsol_kernel[FUNCTION_PARAMETER_STRMAXLEN] = "";
+static int32_t  dynpsol_reload                        = 0;
+static uint32_t dynpsol_mode                          = 0;
+static uint32_t dynpsol_ntaps                         = 0;
+static uint32_t dynpsol_nmode                         = 0;
 static int32_t  comptbuff                             = 0;
 static int32_t  autolim                               = 0;
 static float    autolimprobegain                      = 0.1f;
@@ -98,11 +111,20 @@ typedef struct
     float *mvaloutapply;
 
     // Pseudo-Open-Loop (PSOL) reconstruction
-    float *mvalDMbuff;
-    float *mvalDMOL;
-    int    DMtstep;
-    IMGID  imgOLmval;
-    IMGID  imgmWFSfact;
+    float   *mvalDMbuff;
+    float   *mvalDMOL;
+    int      DMtstep;
+    IMGID    imgOLmval;
+    IMGID    imgmWFSfact;
+    int      dyn_ready;
+    uint32_t dyn_mode;   /* 0=legacy 2-tap, 1=diag FIR, 2=MIMO FIR */
+    uint32_t dyn_ntaps;
+    uint32_t dyn_nmode;
+    float   *dyn_H_diag; /* [dyn_ntaps * dyn_nmode] */
+    float   *dyn_H_mimo; /* [dyn_ntaps * dyn_nmode * dyn_nmode] */
+    uint8_t  dyn_tap_nz[MFILT_NBDMTSTEP];
+    char     dyn_loaded_path[FUNCTION_PARAMETER_STRMAXLEN];
+    int      dyn_prev_enable;
 
     // Aux DM
     IMGID  imgauxmDM;
@@ -406,6 +428,8 @@ static void modal_filter_cleanup(MFILT_STATE *state)
     free(state->mvaloutapply);
     free(state->mvalDMbuff);
     free(state->mvalDMOL);
+    free(state->dyn_H_diag);
+    free(state->dyn_H_mimo);
     free(state->mvalPFres);
     free(state->mvalPFold);
     free(state->mlimitcntarray);
@@ -503,6 +527,194 @@ static void solve_and_apply_testOL(PROCESSINFO *processinfo, FPS *fps, MFILT_STA
     }
     processinfo_WriteMessage_fmt(processinfo, "testOL lag=%.3ffr WFSf=%.3f",
                                  latencyhardwfr + latencysoftwfr, psol_WFSfact);
+}
+
+/**
+ * @brief Load 2D H_diag [N_in, L] or 3D H_mimo [N_in, N_in, L] FITS kernel for Dynamic PSOL.
+ */
+static int mfilt_load_dyn_kernel(PROCESSINFO *processinfo,
+                                 MFILT_STATE *state,
+                                 uint32_t     NBmode,
+                                 const char  *raw_path)
+{
+    free(state->dyn_H_diag);
+    free(state->dyn_H_mimo);
+    state->dyn_H_diag = NULL;
+    state->dyn_H_mimo = NULL;
+    state->dyn_ready  = 0;
+    state->dyn_mode   = 0;
+    state->dyn_ntaps  = 0;
+    state->dyn_nmode  = 0;
+    memset(state->dyn_tap_nz, 0, sizeof(state->dyn_tap_nz));
+    snprintf(state->dyn_loaded_path, sizeof(state->dyn_loaded_path), "%s",
+             (raw_path != NULL) ? raw_path : "");
+
+    if (raw_path == NULL || raw_path[0] == '\0' || strcmp(raw_path, "none") == 0)
+    {
+        return -1;
+    }
+
+#ifdef USE_CFITSIO
+    const char *path   = (raw_path[0] == '!') ? (raw_path + 1) : raw_path;
+    fitsfile   *fptr   = NULL;
+    int         status = 0;
+    if (fits_open_file(&fptr, path, READONLY, &status) != 0)
+    {
+        processinfo_WriteMessage_fmt(processinfo, "dynpsol: cannot open %s", path);
+        return -1;
+    }
+    int  naxis    = 0;
+    long naxes[3] = { 1, 1, 1 };
+    fits_get_img_dim(fptr, &naxis, &status);
+    if (status != 0 || (naxis != 2 && naxis != 3))
+    {
+        fits_close_file(fptr, &status);
+        processinfo_WriteMessage_fmt(processinfo, "dynpsol: bad naxis=%d", naxis);
+        return -1;
+    }
+    fits_get_img_size(fptr, naxis, naxes, &status);
+    if (status != 0)
+    {
+        fits_close_file(fptr, &status);
+        return -1;
+    }
+
+    LONGLONG nelem = (LONGLONG) naxes[0] * (LONGLONG) naxes[1] *
+                     ((naxis == 3) ? (LONGLONG) naxes[2] : 1LL);
+    float *raw = (float *) malloc(sizeof(float) * (size_t) nelem);
+    if (raw == NULL)
+    {
+        fits_close_file(fptr, &status);
+        return -1;
+    }
+    int anynul = 0;
+    fits_read_img(fptr, TFLOAT, 1, nelem, NULL, raw, &anynul, &status);
+    fits_close_file(fptr, &status);
+    if (status != 0)
+    {
+        free(raw);
+        return -1;
+    }
+
+    if (naxis == 2)
+    {
+        uint32_t f_nin = (uint32_t) naxes[0];
+        uint32_t f_L   = (uint32_t) naxes[1];
+        if (f_nin == 0 || f_L < 2 || f_L >= MFILT_NBDMTSTEP)
+        {
+            free(raw);
+            processinfo_WriteMessage_fmt(processinfo, "dynpsol: bad 2D dims %ux%u", f_nin, f_L);
+            return -1;
+        }
+        uint32_t n_dyn = (f_nin == 1) ? NBmode : ((f_nin < NBmode) ? f_nin : NBmode);
+        float   *hd    = (float *) calloc((size_t) f_L * n_dyn, sizeof(float));
+        if (hd == NULL)
+        {
+            free(raw);
+            return -1;
+        }
+        for (uint32_t l = 0; l < f_L; l++)
+        {
+            float maxv = 0.0f;
+            for (uint32_t m = 0; m < n_dyn; m++)
+            {
+                float v                  = (f_nin == 1) ? raw[l] : raw[(size_t) l * f_nin + m];
+                hd[(size_t) l * n_dyn + m] = v;
+                float av                 = fabsf(v);
+                if (av > maxv)
+                {
+                    maxv = av;
+                }
+            }
+            state->dyn_tap_nz[l] = (maxv > 1.0e-7f) ? 1u : 0u;
+        }
+        free(raw);
+        state->dyn_H_diag = hd;
+        state->dyn_mode   = 1;
+        state->dyn_ntaps  = f_L;
+        state->dyn_nmode  = n_dyn;
+        state->dyn_ready  = 1;
+        processinfo_WriteMessage_fmt(processinfo, "dynpsol: DIAG N=%u L=%u", n_dyn, f_L);
+        return 0;
+    }
+
+    // 3D MIMO kernel [N_in, N_in, L]
+    uint32_t f_nin = (uint32_t) naxes[0];
+    uint32_t f_ns  = (uint32_t) naxes[1];
+    uint32_t f_L   = (uint32_t) naxes[2];
+    if (f_nin == 0 || f_nin != f_ns || f_L < 2 || f_L >= MFILT_NBDMTSTEP)
+    {
+        free(raw);
+        processinfo_WriteMessage_fmt(processinfo, "dynpsol: bad 3D %ux%ux%u", f_nin, f_ns, f_L);
+        return -1;
+    }
+    if (f_nin == 1)
+    {
+        float *hd = (float *) calloc((size_t) f_L * NBmode, sizeof(float));
+        if (hd == NULL)
+        {
+            free(raw);
+            return -1;
+        }
+        for (uint32_t l = 0; l < f_L; l++)
+        {
+            float v = raw[l];
+            for (uint32_t m = 0; m < NBmode; m++)
+            {
+                hd[(size_t) l * NBmode + m] = v;
+            }
+            state->dyn_tap_nz[l] = (fabsf(v) > 1.0e-7f) ? 1u : 0u;
+        }
+        free(raw);
+        state->dyn_H_diag = hd;
+        state->dyn_mode   = 1;
+        state->dyn_ntaps  = f_L;
+        state->dyn_nmode  = NBmode;
+        state->dyn_ready  = 1;
+        processinfo_WriteMessage_fmt(processinfo, "dynpsol: DIAG(bcast) N=%u L=%u", NBmode, f_L);
+        return 0;
+    }
+
+    uint32_t n_dyn = (f_nin < NBmode) ? f_nin : NBmode;
+    float   *hm    = (float *) calloc((size_t) f_L * n_dyn * n_dyn, sizeof(float));
+    if (hm == NULL)
+    {
+        free(raw);
+        return -1;
+    }
+    for (uint32_t l = 0; l < f_L; l++)
+    {
+        float maxv = 0.0f;
+        for (uint32_t s = 0; s < n_dyn; s++)
+        {
+            const float *src = &raw[((size_t) l * f_nin + s) * f_nin];
+            float       *dst = &hm[((size_t) l * n_dyn + s) * n_dyn];
+            for (uint32_t q = 0; q < n_dyn; q++)
+            {
+                float v  = src[q];
+                dst[q]   = v;
+                float av = fabsf(v);
+                if (av > maxv)
+                {
+                    maxv = av;
+                }
+            }
+        }
+        state->dyn_tap_nz[l] = (maxv > 1.0e-7f) ? 1u : 0u;
+    }
+    free(raw);
+    state->dyn_H_mimo = hm;
+    state->dyn_mode   = 2;
+    state->dyn_ntaps  = f_L;
+    state->dyn_nmode  = n_dyn;
+    state->dyn_ready  = 1;
+    processinfo_WriteMessage_fmt(processinfo, "dynpsol: MIMO N=%u L=%u", n_dyn, f_L);
+    return 0;
+#else
+    (void) processinfo;
+    (void) NBmode;
+    return -1;
+#endif
 }
 
 /**
@@ -709,18 +921,109 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                 }
             }
 
-            const float *restrict dm_b0 = &state->mvalDMbuff[(size_t) DMtstep0 * NBmode];
-            const float *restrict dm_b1 = &state->mvalDMbuff[(size_t) DMtstep1 * NBmode];
-            const float *restrict mwfsf = state->imgmWFSfact.im->array.F;
+            const float *restrict dm_b0  = &state->mvalDMbuff[(size_t) DMtstep0 * NBmode];
+            const float *restrict dm_b1  = &state->mvalDMbuff[(size_t) DMtstep1 * NBmode];
+            const float *restrict mwfsf  = state->imgmWFSfact.im->array.F;
             float       *restrict ol_out = state->imgOLmval.im->array.F;
             float w_b1                   = 1.0f - latfrac;
 
-            state->imgOLmval.md[0].write = 1;
-            for (uint32_t mi = 0; mi < NBmode; mi++)
+            // Lazy-load or reload Dynamic PSOL kernel off hot path when enabled/changed
+            if (dynpsol_enable == 1)
             {
-                float tmpmDMval     = latfrac * dm_b0[mi] + w_b1 * dm_b1[mi];
-                state->mvalDMOL[mi] = tmpmDMval;
-                ol_out[mi]          = (psol_WFSfact * mwfsf[mi]) * wfs_in[mi] - tmpmDMval;
+                int need_load = (dynpsol_reload == 1) ||
+                                (strcmp(dynpsol_kernel, state->dyn_loaded_path) != 0) ||
+                                (!state->dyn_ready && state->dyn_prev_enable == 0);
+                if (need_load)
+                {
+                    (void) mfilt_load_dyn_kernel(processinfo, state, NBmode, dynpsol_kernel);
+                    dynpsol_reload = 0;
+                }
+                dynpsol_mode  = state->dyn_ready ? state->dyn_mode : 0u;
+                dynpsol_ntaps = state->dyn_ready ? state->dyn_ntaps : 0u;
+                dynpsol_nmode = state->dyn_ready ? state->dyn_nmode : 0u;
+            }
+            else if (state->dyn_prev_enable != 0)
+            {
+                dynpsol_mode  = 0;
+                dynpsol_ntaps = 0;
+                dynpsol_nmode = 0;
+            }
+            state->dyn_prev_enable = dynpsol_enable;
+
+            state->imgOLmval.md[0].write = 1;
+            if (dynpsol_enable == 1 && state->dyn_ready)
+            {
+                uint32_t n_dyn = state->dyn_nmode;
+                uint32_t L     = state->dyn_ntaps;
+                memset(state->mvalDMOL, 0, sizeof(float) * n_dyn);
+
+                if (state->dyn_mode == 1)
+                {
+                    for (uint32_t l = 1; l < L; l++)
+                    {
+                        if (!state->dyn_tap_nz[l])
+                        {
+                            continue;
+                        }
+                        uint32_t slot =
+                            (uint32_t) (state->DMtstep - (int) l) & (MFILT_NBDMTSTEP - 1);
+                        const float *restrict u_l = &state->mvalDMbuff[(size_t) slot * NBmode];
+                        const float *restrict h_l = &state->dyn_H_diag[(size_t) l * n_dyn];
+                        for (uint32_t mi = 0; mi < n_dyn; mi++)
+                        {
+                            state->mvalDMOL[mi] += h_l[mi] * u_l[mi];
+                        }
+                    }
+                }
+                else if (state->dyn_mode == 2)
+                {
+                    for (uint32_t l = 1; l < L; l++)
+                    {
+                        if (!state->dyn_tap_nz[l])
+                        {
+                            continue;
+                        }
+                        uint32_t slot =
+                            (uint32_t) (state->DMtstep - (int) l) & (MFILT_NBDMTSTEP - 1);
+                        const float *restrict u_l = &state->mvalDMbuff[(size_t) slot * NBmode];
+                        const float *restrict h_l =
+                            &state->dyn_H_mimo[(size_t) l * n_dyn * n_dyn];
+#ifdef HAVE_BLAS
+                        cblas_sgemv(CblasRowMajor, CblasNoTrans, (int) n_dyn, (int) n_dyn, 1.0f,
+                                    h_l, (int) n_dyn, u_l, 1, 1.0f, state->mvalDMOL, 1);
+#else
+                        for (uint32_t s = 0; s < n_dyn; s++)
+                        {
+                            const float *restrict h_row = &h_l[(size_t) s * n_dyn];
+                            float acc                   = 0.0f;
+                            for (uint32_t q = 0; q < n_dyn; q++)
+                            {
+                                acc += h_row[q] * u_l[q];
+                            }
+                            state->mvalDMOL[s] += acc;
+                        }
+#endif
+                    }
+                }
+
+                // Hybrid fallback for uncalibrated high-order modes (mi >= n_dyn)
+                for (uint32_t mi = n_dyn; mi < NBmode; mi++)
+                {
+                    state->mvalDMOL[mi] = latfrac * dm_b0[mi] + w_b1 * dm_b1[mi];
+                }
+                for (uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    ol_out[mi] = (psol_WFSfact * mwfsf[mi]) * wfs_in[mi] - state->mvalDMOL[mi];
+                }
+            }
+            else
+            {
+                for (uint32_t mi = 0; mi < NBmode; mi++)
+                {
+                    float tmpmDMval     = latfrac * dm_b0[mi] + w_b1 * dm_b1[mi];
+                    state->mvalDMOL[mi] = tmpmDMval;
+                    ol_out[mi]          = (psol_WFSfact * mwfsf[mi]) * wfs_in[mi] - tmpmDMval;
+                }
             }
             processinfo_update_output_stream(processinfo, state->imgOLmval.im, NULL);
 
@@ -792,9 +1095,10 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
 
                     if (mixf > 0.0f)
                     {
-                        // PSOL modevalOL/modevalPF has +phi_turb sign; DM correction is zpo - PF
-                        float cmd_pf  = zpo[mi] - mval_pf[mi];
-                        float dmc_new = mixf * cmd_pf + (1.0f - mixf) * state->mvalDMc[mi];
+                        // PSOL modevalOL/PF has +phi_turb sign in DM units; scale WFS zpo by 1/g
+                        float wfs_to_dm = psol_WFSfact * mwfsf[mi];
+                        float cmd_pf    = wfs_to_dm * zpo[mi] - mval_pf[mi];
+                        float dmc_new   = mixf * cmd_pf + (1.0f - mixf) * state->mvalDMc[mi];
                         float limit   = ml[mi];
                         if (dmc_new > limit)
                         {
@@ -862,8 +1166,8 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                 }
             }
 
-            // Record actual applied DM command into PSOL ring buffer
-            memcpy(&state->mvalDMbuff[(size_t) state->DMtstep * NBmode], state->mvalout,
+            // Record actual applied DM command (ctrl + selfRM/testOL probes) into PSOL ring buffer
+            memcpy(&state->mvalDMbuff[(size_t) state->DMtstep * NBmode], state->mvaloutapply,
                    sizeof(float) * NBmode);
             state->DMtstep = next_tstep;
 
@@ -1211,6 +1515,18 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "hw DM-to-WFS latency [fr]")     \
     X(".comp.latencysoftwfr", &latencysoftwfr, FPTYPE_FLOAT32, 0,                                 \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "sw latency [frame]")            \
+    X(".comp.dynpsol.enable", &dynpsol_enable, FPTYPE_ONOFF, 0,                                   \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "enable 3D FIR dynamic PSOL")    \
+    X(".comp.dynpsol.kernel", dynpsol_kernel, FPTYPE_FITSFILENAME, 0,                             \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "H_diag/H_mimo FITS kernel")     \
+    X(".comp.dynpsol.reload", &dynpsol_reload, FPTYPE_ONOFF, 0,                                   \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "reload dynamic PSOL kernel")    \
+    X(".comp.dynpsol.mode", &dynpsol_mode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_OUTPUT,               \
+      "active PSOL mode (0=2tap 1=diag 2=MIMO)")                                                  \
+    X(".comp.dynpsol.ntaps", &dynpsol_ntaps, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_OUTPUT,             \
+      "active dynamic PSOL tap length L")                                                         \
+    X(".comp.dynpsol.nmode", &dynpsol_nmode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_OUTPUT,             \
+      "active dynamic PSOL modal span")                                                           \
     X(".comp.tbuff", &comptbuff, FPTYPE_ONOFF, 0,                                                 \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "compute telemetry buffers")     \
     X(".comp.autolim", &autolim, FPTYPE_ONOFF, 0,                                                 \

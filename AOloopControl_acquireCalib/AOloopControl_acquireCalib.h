@@ -19,5 +19,6 @@
 extern const MILK_RUNNABLE runnable_AOloopControl_acquireCalib_acqWFSlincal;
 extern const MILK_RUNNABLE runnable_AOloopControl_acquireCalib_measlinresp;
 extern const MILK_RUNNABLE runnable_AOloopControl_acquireCalib_measdynresp;
+extern const MILK_RUNNABLE runnable_AOloopControl_acquireCalib_factordynrm;
 
 #endif
