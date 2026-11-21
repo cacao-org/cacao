@@ -28,6 +28,7 @@
 // Module registry: CLI exposure = membership here.
 static const MILK_RUNNABLE *const runnables[] = {
     &runnable_AOloopControl_DM_comb,
+    &runnable_AOloopControl_DM_preshaper,
     &runnable_AOloopControl_DM_mk3Ddmgrid,
     &runnable_AOloopControl_DM_DMturbulence,
     &runnable_AOloopControl_DM_pokerndmodes,

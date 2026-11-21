@@ -21,6 +21,7 @@
 // Mandated units (LAPACKE, BLAS): NULL when their file is dropped from the build
 MILK_RUNNABLE_WEAK_DECL(runnable_computeCalib_RM2zonal);
 MILK_RUNNABLE_WEAK_DECL(runnable_computeCalib_compute_straight_CM);
+MILK_RUNNABLE_WEAK_DECL(runnable_computeCalib_compute_dm_preshaper);
 
 
 /* =============================================================
@@ -77,6 +78,7 @@ static const MILK_RUNNABLE *const runnables[] = {
     &runnable_computeCalib_RM2zonal,
     &runnable_computeCalib_mkCMsvd,
     &runnable_computeCalib_actmap_sample2D,
+    &runnable_computeCalib_compute_dm_preshaper,
 };
 
 MILK_MODULE_RUNNABLES(AOloopControl_computeCalib, NULL, runnables);

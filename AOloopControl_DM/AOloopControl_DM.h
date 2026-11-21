@@ -13,6 +13,7 @@
 #include "milk_runnable.h"
 
 extern const MILK_RUNNABLE runnable_AOloopControl_DM_comb;
+extern const MILK_RUNNABLE runnable_AOloopControl_DM_preshaper;
 extern const MILK_RUNNABLE runnable_AOloopControl_DM_DMturbulence;
 extern const MILK_RUNNABLE runnable_AOloopControl_DM_mk3Ddmgrid;
 extern const MILK_RUNNABLE runnable_AOloopControl_DM_pokerndmodes;

@@ -4,16 +4,18 @@ Module responsible for `AOloopControl_acquireCalib` functionality.
 
 ## Source Files
 
-| File                    | Description                 |
-| ----------------------- | --------------------------- |
-| `acquireWFSlincalib.c`  | Acquire linear WFS response |
-| `measure_linear_resp.c` | Measure linear resp module  |
+| File                    | Description                                 |
+| ----------------------- | ------------------------------------------- |
+| `acquireWFSlincalib.c`  | Acquire linear WFS response                 |
+| `measure_linear_resp.c` | Measure linear resp module                  |
+| `measure_dyn_resp.c`    | Acquire raw 3D spatiotemporal response cube |
 
 ## Standalone Executables
 
-| Executable                          | Source File             | Description                |
-| ----------------------------------- | ----------------------- | -------------------------- |
-| `cacao-fpsexec-cacaoac-measlinresp` | `measure_linear_resp.c` | Measure linear resp module |
+| Executable                          | Source File             | Description                                 |
+| ----------------------------------- | ----------------------- | ------------------------------------------- |
+| `cacao-fpsexec-cacaoac-measlinresp` | `measure_linear_resp.c` | Measure linear resp module                  |
+| `cacao-fpsexec-cacaoac-measdynresp` | `measure_dyn_resp.c`    | Acquire raw 3D spatiotemporal response cube |
 
 ## Dependencies
 

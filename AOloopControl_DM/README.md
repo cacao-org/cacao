@@ -6,7 +6,8 @@ Module responsible for `AOloopControl_DM` functionality.
 
 | File                      | Description                              |
 | ------------------------- | ---------------------------------------- |
-| `AOloopControl_DM_comb.c` | DM control - Combine DM channels         |
+| `AOloopControl_DM_comb.c`      | DM control - Combine DM channels                            |
+| `AOloopControl_DM_preshaper.c` | High-rate asynchronous look-ahead DM command pre-shaper     |
 | `DMturbulence.c`          | DM turbulence simulation                 |
 | `mk3Ddmgrid.c`            | Create DM grid patterns for calibrations |
 | `pokerndmodes.c`          | poke mode values                         |
@@ -15,7 +16,8 @@ Module responsible for `AOloopControl_DM` functionality.
 
 | Executable             | Source File               | Description                      |
 | ---------------------- | ------------------------- | -------------------------------- |
-| `cacao-fpsexec-dmcomb` | `AOloopControl_DM_comb.c` | DM control - Combine DM channels |
+| `cacao-fpsexec-dmcomb`      | `AOloopControl_DM_comb.c`      | DM control - Combine DM channels                        |
+| `cacao-fpsexec-dmpreshaper` | `AOloopControl_DM_preshaper.c` | High-rate asynchronous look-ahead DM command pre-shaper |
 | `cacao-fpsexec-dmturb` | `DMturbulence.c`          | DM turbulence simulation         |
 
 ## Dependencies

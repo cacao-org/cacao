@@ -15,6 +15,7 @@ Module responsible for `computeCalib` functionality.
 | `compute_control_modes.c`                | Compute AO control modes in both input (WFS) and output (DM) space |
 | `compute_masksWFSDM.c`                   | Compute maskswfsdm module                                          |
 | `compute_straight_CM.c`                  | Compute straight cm module                                         |
+| `compute_dm_preshaper.c`                 | Synthesize high-rate look-ahead DM pre-shaper kernel from 3D RM    |
 | `generateRMWFS.c`                        | Generatermwfs module                                               |
 | `maskextrapolate.c`                      | Maskextrapolate module                                             |
 | `modes_spatial_extrapolate.c`            | Modes spatial extrapolate module                                   |
@@ -31,6 +32,7 @@ Module responsible for `computeCalib` functionality.
 | `cacao-fpsexec-cacaocc-compmaskwfsdm`   | `compute_masksWFSDM.c`    | Compute maskswfsdm module                                          |
 | `cacao-fpsexec-cacaocc-compstrcm`       | `compute_straight_CM.c`   | Compute straight cm module                                         |
 | `cacao-fpsexec-cacaocc-compctrlmodes`   | `compute_control_modes.c` | Compute AO control modes in both input (WFS) and output (DM) space |
+| `cacao-fpsexec-cacaocc-compdmpreshaper` | `compute_dm_preshaper.c`  | Synthesize high-rate look-ahead DM pre-shaper kernel from 3D RM    |
 
 ## Dependencies
 

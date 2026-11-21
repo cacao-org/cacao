@@ -30,6 +30,7 @@
 static const MILK_RUNNABLE *const runnables[] = {
     &runnable_AOloopControl_acquireCalib_acqWFSlincal,
     &runnable_AOloopControl_acquireCalib_measlinresp,
+    &runnable_AOloopControl_acquireCalib_measdynresp,
 };
 
 MILK_MODULE_RUNNABLES(AOloopControl_acquireCalib, NULL, runnables);
