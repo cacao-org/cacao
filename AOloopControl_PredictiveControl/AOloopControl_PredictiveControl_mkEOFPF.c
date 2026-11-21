@@ -279,7 +279,8 @@ static void solve_diag_bootstrap(const float *hist_x,
                                  int          use_fx,
                                  uint32_t     fx_start,
                                  uint32_t     NBmode,
-                                 uint32_t     eff_modes,
+                                 uint32_t     m_start,
+                                 uint32_t     m_end,
                                  uint32_t     n_valid,
                                  uint32_t     P_eof,
                                  uint32_t     P_diag,
@@ -297,7 +298,7 @@ static void solve_diag_bootstrap(const float *hist_x,
     uint32_t t0_idx = use_fx ? (fx_start + P - 1u) : (P - 1u);
     uint32_t t1_idx = use_fx ? n_valid : (n_valid - lat_i - 1u);
     uint32_t nrows  = (t1_idx > t0_idx) ? (t1_idx - t0_idx) : 0;
-    if (nrows < 16)
+    if (nrows < 16 || m_end <= m_start)
     {
         return;
     }
@@ -310,10 +311,8 @@ static void solve_diag_bootstrap(const float *hist_x,
     double sum_var_zoh  = 0.0;
     double sum_var_pred = 0.0;
 
-    memset(w_stage, 0, sizeof(float) * (size_t) NBmode * stride);
-
 #pragma omp parallel for schedule(static) reduction(+ : sum_var_ol, sum_var_zoh, sum_var_pred)
-    for (uint32_t m = 0; m < eff_modes; m++)
+    for (uint32_t m = m_start; m < m_end; m++)
     {
         double G[EOFPF_MAX_ORDER * EOFPF_MAX_ORDER];
         double rhs[EOFPF_MAX_ORDER];
@@ -1432,6 +1431,25 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
                 uint32_t b  = (s0 + B <= eff_modes) ? B : (eff_modes - s0);
                 uint32_t D  = P * b;
 
+                // Unpriored high-order blocks stay on safe diagonal AR until empirical
+                // sample count reaches eof_req, preventing underdetermined N < D overfitting.
+                if (o_phys_active && blk >= phys.nblocks && avail_samples < (uint64_t) eof_req)
+                {
+                    double dv_ol   = 0.0;
+                    double dv_zoh  = 0.0;
+                    double dv_pred = 0.0;
+                    solve_diag_bootstrap(hist_x, hist_fm, use_fx, fx_t0, NBmode, s0, s0 + b,
+                                         n_valid, P, P_diag, B, stride, lat_i, lat_a, w_stage,
+                                         &dv_ol, &dv_zoh, &dv_pred);
+                    if (!use_gram)
+                    {
+                        sum_var_ol  += dv_ol;
+                        sum_var_zoh += dv_zoh;
+                    }
+                    sum_var_pred += dv_pred;
+                    continue;
+                }
+
                 double b_y2   = 0.0;
                 double b_zoh2 = 0.0;
                 double b_sum_y[EOFPF_MAX_BLOCK];
@@ -1782,7 +1800,8 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
             double sum_var_ol   = 0.0;
             double sum_var_zoh  = 0.0;
             double sum_var_pred = 0.0;
-            solve_diag_bootstrap(hist_x, hist_fm, use_fx, fx_t0, NBmode, eff_modes, n_valid, P,
+            memset(w_stage, 0, sizeof(float) * (size_t) NBmode * stride);
+            solve_diag_bootstrap(hist_x, hist_fm, use_fx, fx_t0, NBmode, 0u, eff_modes, n_valid, P,
                                  P_diag, B, stride, lat_i, lat_a, w_stage, &sum_var_ol,
                                  &sum_var_zoh, &sum_var_pred);
 

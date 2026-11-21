@@ -710,6 +710,23 @@ static MILK_HOT errno_t modalog_compute(const MILK_RUNNABLE *self)
         // Leading n_free modes (TT/petals) remain individually unsmoothed
         uint32_t n_free = (p_n_free < NBmode) ? p_n_free : NBmode;
         double   bw     = (double) p_smooth_bw;
+        double   f_lo_v = 1.0e30;
+        double   f_hi_v = -1.0;
+        for (uint32_t j = n_free; j < NBmode; j++)
+        {
+            if (m_valid[j])
+            {
+                double fj = sqrt((double) (j + 1u));
+                if (fj < f_lo_v)
+                {
+                    f_lo_v = fj;
+                }
+                if (fj > f_hi_v)
+                {
+                    f_hi_v = fj;
+                }
+            }
+        }
         for (uint32_t m = 0; m < NBmode; m++)
         {
             double g_est = (double) g_ema[m];
@@ -720,11 +737,20 @@ static MILK_HOT errno_t modalog_compute(const MILK_RUNNABLE *self)
                     g_est = g_raw[m];
                 }
             }
-            else if (n_valid > 0)
+            else if (n_valid > 0 && f_hi_v >= f_lo_v)
             {
-                // 1st-order local-linear weighted regression in radial coordinate f_m = sqrt(m+1)
-                // (eliminates Nadaraya-Watson boundary bias on sloped PyWFS OG profiles)
-                double fm   = sqrt((double) (m + 1u));
+                // 1st-order local-linear weighted regression in radial coordinate f_m = sqrt(m+1),
+                // clamped to the probed support [f_lo_v, f_hi_v] to prevent slope blowup on
+                // unprobed high-order modes while keeping zero boundary bias inside the probe band.
+                double fm = sqrt((double) (m + 1u));
+                if (fm < f_lo_v)
+                {
+                    fm = f_lo_v;
+                }
+                else if (fm > f_hi_v)
+                {
+                    fm = f_hi_v;
+                }
                 double inv2 = 0.5 / (bw * bw);
                 double s0   = 0.0;
                 double s1   = 0.0;
