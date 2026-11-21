@@ -229,9 +229,12 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
         printf(" --> size   : %u\n", blksize[blki]);
         fflush(stdout);
         blki++;
-        blkoffset[blki] = blkoffset[blki - 1] + blksize[blki - 1];
-        printf(" --> offset : %u\n", blkoffset[blki]);
-        fflush(stdout);
+        if (blki < (uint32_t) MAXBLK)
+        {
+            blkoffset[blki] = blkoffset[blki - 1] + blksize[blki - 1];
+            printf(" --> offset : %u\n", blkoffset[blki]);
+            fflush(stdout);
+        }
         NBblk++;
     }
     for (uint32_t blki1 = blki; blki1 < (uint32_t) MAXBLK; blki1++)
@@ -335,7 +338,10 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
         // fill up block telemetry streams
         //
         {
-            int slice = imgtbuff_mvalOL.md->cnt1;
+            uint32_t ns_ol = (imgtbuff_mvalOL.md->naxis >= 3 && imgtbuff_mvalOL.md->size[2] > 0)
+                                 ? imgtbuff_mvalOL.md->size[2]
+                                 : 1;
+            int      slice = (int) (imgtbuff_mvalOL.md->cnt1 % ns_ol);
             for (uint32_t sample = 0; sample < NBsample; sample++)
             {
                 for (uint32_t blki = 0; blki < NBblk; blki++)
@@ -379,7 +385,10 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
                 mvalWFS_mqrms2[mi] = 0.0;
             }
 
-            slice = imgtbuff_mvalDM.md->cnt1;
+            uint32_t ns_dm = (imgtbuff_mvalDM.md->naxis >= 3 && imgtbuff_mvalDM.md->size[2] > 0)
+                                 ? imgtbuff_mvalDM.md->size[2]
+                                 : 1;
+            slice          = (int) (imgtbuff_mvalDM.md->cnt1 % ns_dm);
             for (uint32_t sample = 0; sample < NBsample; sample++)
             {
                 for (uint32_t mi = 0; mi < NBmode; mi++)
@@ -391,7 +400,10 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
                 }
             }
 
-            slice = imgtbuff_mvalWFS.md->cnt1;
+            uint32_t ns_wfs = (imgtbuff_mvalWFS.md->naxis >= 3 && imgtbuff_mvalWFS.md->size[2] > 0)
+                                  ? imgtbuff_mvalWFS.md->size[2]
+                                  : 1;
+            slice           = (int) (imgtbuff_mvalWFS.md->cnt1 % ns_wfs);
             for (uint32_t sample = 0; sample < NBsample; sample++)
             {
                 for (uint32_t mi = 0; mi < NBmode; mi++)
@@ -403,7 +415,7 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
                 }
             }
 
-            // linear noise derivation
+            // linear noise derivation (3-point second difference)
             //
             for (uint32_t sample = 1; sample < NBsample - 1; sample++)
             {
@@ -416,12 +428,12 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
                     float tmpv2 = imgtbuff_mvalWFS.im->array
                                       .F[slice * NBsample * NBmode + (sample + 1) * NBmode + mi];
 
-                    float tmpv = 0.5 * (tmpv0 + tmpv2) - tmpv1;
+                    float tmpv = 0.5f * (tmpv0 + tmpv2) - tmpv1;
                     mvalWFS_mrms2[mi] += tmpv * tmpv;
                 }
             }
 
-            // linear noise derivation
+            // quadratic noise derivation (4-point third difference)
             //
             for (uint32_t sample = 1; sample < NBsample - 2; sample++)
             {
@@ -434,15 +446,17 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
                     float tmpv2 = imgtbuff_mvalWFS.im->array
                                       .F[slice * NBsample * NBmode + (sample + 1) * NBmode + mi];
                     float tmpv3 = imgtbuff_mvalWFS.im->array
-                                      .F[slice * NBsample * NBmode + (sample + 1) * NBmode + mi];
+                                      .F[slice * NBsample * NBmode + (sample + 2) * NBmode + mi];
 
-                    float tmpv = -0.5 * tmpv0 + 1.5 * tmpv1 - 1.5 * tmpv2 + 0.5 * tmpv3;
+                    float tmpv = -0.5f * tmpv0 + 1.5f * tmpv1 - 1.5f * tmpv2 + 0.5f * tmpv3;
                     mvalWFS_mqrms2[mi] += tmpv * tmpv;
                 }
             }
 
-
-            slice = imgtbuff_mvalOL.md->cnt1;
+            uint32_t ns_ol2 = (imgtbuff_mvalOL.md->naxis >= 3 && imgtbuff_mvalOL.md->size[2] > 0)
+                                  ? imgtbuff_mvalOL.md->size[2]
+                                  : 1;
+            slice           = (int) (imgtbuff_mvalOL.md->cnt1 % ns_ol2);
             for (uint32_t sample = 0; sample < NBsample; sample++)
             {
                 for (uint32_t mi = 0; mi < NBmode; mi++)
@@ -454,30 +468,43 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
                 }
             }
 
-
             for (uint32_t mi = 0; mi < NBmode; mi++)
             {
-                mvalDM_ave[mi] /= NBsample;
-                mvalWFS_ave[mi] /= NBsample;
-                mvalOL_ave[mi] /= NBsample;
+                mvalDM_ave[mi] /= (double) NBsample;
+                mvalWFS_ave[mi] /= (double) NBsample;
+                mvalOL_ave[mi] /= (double) NBsample;
 
-                mvalDM_rms2[mi] /= NBsample;
-                mvalWFS_rms2[mi] /= NBsample;
-                mvalOL_rms2[mi] /= NBsample;
+                mvalDM_rms2[mi] /= (double) NBsample;
+                mvalWFS_rms2[mi] /= (double) NBsample;
+                mvalOL_rms2[mi] /= (double) NBsample;
 
-                // factor 1.5 excess variance is from linear comb of 3 values with coeffs 0.5, 1, 0.5
-                // variance = 0.25 + 1 + 0.25 = 1.5
-                mvalWFS_mrms2[mi] /= (NBsample - 2) * 1.5;
-                mvalWFS_mqrms2[mi] /= (NBsample - 3) * 5;
-
+                // 3-pt coeffs (0.5, -1.0, 0.5): variance factor = 0.25 + 1.0 + 0.25 = 1.5
+                if (NBsample > 2)
+                {
+                    mvalWFS_mrms2[mi] /= (double) (NBsample - 2) * 1.5;
+                }
+                // 4-pt coeffs (-0.5, 1.5, -1.5, 0.5): 0.25 + 2.25 + 2.25 + 0.25 = 5.0
+                if (NBsample > 3)
+                {
+                    mvalWFS_mqrms2[mi] /= (double) (NBsample - 3) * 5.0;
+                }
 
                 mvalDM_rms2[mi] -= (mvalDM_ave[mi] * mvalDM_ave[mi]);
-
                 mvalWFS_rms2[mi] -= (mvalWFS_ave[mi] * mvalWFS_ave[mi]);
-
                 mvalOL_rms2[mi] -= (mvalOL_ave[mi] * mvalOL_ave[mi]);
+                if (mvalDM_rms2[mi] < 0.0)
+                {
+                    mvalDM_rms2[mi] = 0.0;
+                }
+                if (mvalWFS_rms2[mi] < 0.0)
+                {
+                    mvalWFS_rms2[mi] = 0.0;
+                }
+                if (mvalOL_rms2[mi] < 0.0)
+                {
+                    mvalOL_rms2[mi] = 0.0;
+                }
             }
-
 
             for (uint32_t block = 0; block < mblksizemax; block++)
             {
@@ -491,20 +518,30 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
 
             for (uint32_t mi = 0; mi < NBmode; mi++)
             {
-                // remove noise
+                // remove noise (clamp at 0 to avoid sqrtf(NaN) on ringing modes)
                 mvalWFS_rms2[mi] -= mvalWFS_mqrms2[mi];
+                if (mvalWFS_rms2[mi] < 0.0)
+                {
+                    mvalWFS_rms2[mi] = 0.0;
+                }
                 mvalOL_rms2[mi] -= mvalWFS_mqrms2[mi];
+                if (mvalOL_rms2[mi] < 0.0)
+                {
+                    mvalOL_rms2[mi] = 0.0;
+                }
 
                 // add to corresponding block
                 int32_t block = imgblock.im->array.SI32[mi];
-                block_cnt[block]++;
-                block_DMrms2[block] += mvalDM_rms2[mi];
-                block_WFSrms2[block] += mvalWFS_rms2[mi];
-                block_WFSmrms2[block] += mvalWFS_mrms2[mi];
-                block_WFSmqrms2[block] += mvalWFS_mqrms2[mi];
-                block_OLrms2[block] += mvalOL_rms2[mi];
+                if (block >= 0 && (uint32_t) block < mblksizemax)
+                {
+                    block_cnt[block]++;
+                    block_DMrms2[block] += mvalDM_rms2[mi];
+                    block_WFSrms2[block] += mvalWFS_rms2[mi];
+                    block_WFSmrms2[block] += mvalWFS_mrms2[mi];
+                    block_WFSmqrms2[block] += mvalWFS_mqrms2[mi];
+                    block_OLrms2[block] += mvalOL_rms2[mi];
+                }
             }
-
 
             if (compstatswrite == 1)
             {
@@ -512,32 +549,31 @@ static MILK_HOT errno_t modalCTRL_stats_compute(const MILK_RUNNABLE *self)
                 {
                     if (block_cnt[block] > 0)
                     {
-                        //block_DMrms2[block] /= block_cnt[block];
-                        //block_WFSrms2[block] /= block_cnt[block];
-                        //block_OLrms2[block] /= block_cnt[block];
+                        float wfs_rms = sqrtf(block_WFSrms2[block]);
+                        float ol_rms  = sqrtf(block_OLrms2[block]);
+                        float ratio   = (ol_rms > 1.0e-12f) ? (wfs_rms / ol_rms) : 0.0f;
                         printf("BLOCK %2d (%5ld modes) RMS  WFS = %7.3f (noise = "
                                "%7.3f "
                                "%7.3f)  DM = "
                                "%7.3f   "
                                "OL = "
                                "%7.3f   [nm]  --> %5.3f\n",
-                               block, block_cnt[block], 1000.0 * sqrtf(block_WFSrms2[block]),
+                               block, block_cnt[block], 1000.0 * wfs_rms,
                                1000.0 * sqrtf(block_WFSmrms2[block]),
                                1000.0 * sqrtf(block_WFSmqrms2[block]),
-                               1000.0 * sqrtf(block_DMrms2[block]),
-                               1000.0 * sqrtf(block_OLrms2[block]),
-                               sqrtf(block_WFSrms2[block]) / sqrtf(block_OLrms2[block]));
+                               1000.0 * sqrtf(block_DMrms2[block]), 1000.0 * ol_rms, ratio);
 
                         char ffname[STRINGMAXLEN_FULLFILENAME];
                         WRITE_FULLFILENAME(ffname, "AOmodalstat.dat");
                         FILE *fp = fopen(ffname, "a");
-                        fprintf(fp, "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
-                                processinfo->loopcnt, block, 1000.0 * sqrtf(block_WFSrms2[block]),
-                                1000.0 * sqrtf(block_WFSmqrms2[block]),
-                                1000.0 * sqrtf(block_DMrms2[block]),
-                                1000.0 * sqrtf(block_OLrms2[block]),
-                                sqrtf(block_WFSrms2[block]) / sqrtf(block_OLrms2[block]));
-                        fclose(fp);
+                        if (fp != NULL)
+                        {
+                            fprintf(fp, "%5ld  %02d   %7.3f %7.3f %7.3f %7.3f  %5.3f\n",
+                                    processinfo->loopcnt, block, 1000.0 * wfs_rms,
+                                    1000.0 * sqrtf(block_WFSmqrms2[block]),
+                                    1000.0 * sqrtf(block_DMrms2[block]), 1000.0 * ol_rms, ratio);
+                            fclose(fp);
+                        }
                     }
                 }
             }

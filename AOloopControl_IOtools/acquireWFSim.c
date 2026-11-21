@@ -37,6 +37,7 @@ static int32_t  compWFSrefsub                               = 1;
 static int32_t  compWFSsigav                                = 1;
 static int32_t  compWFSrefc                                 = 1;
 static int32_t  resetWFSrefc                                = 0;
+static float    WFSzpogain                                  = 1.0f;
 static char     wfszposname[FUNCTION_PARAMETER_STRMAXLEN] = "aolX_wfszpo";
 
 
@@ -77,6 +78,8 @@ static char     wfszposname[FUNCTION_PARAMETER_STRMAXLEN] = "aolX_wfszpo";
       "WFS reference correction")                                                                   \
     X(".comp.resetWFSrefc", &resetWFSrefc, FPTYPE_ONOFF, 0,                                         \
       (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN), "reset WFS reference correction")                   \
+    X(".WFSzpogain", &WFSzpogain, FPTYPE_FLOAT32, 0, (FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN),      \
+      "optical-gain scale applied to wfszpo")                                                       \
     X(".wfszpo", wfszposname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS zero point offset")
 
 
@@ -547,15 +550,16 @@ static MILK_HOT errno_t acquireWFSim_compute(const MILK_RUNNABLE *self)
             imgwfsrefc.md->write = 1;
             float refcgain       = WFSrefcgain;
             float refcmult       = WFSrefcmult;
+            float zpogain        = isfinite(WFSzpogain) ? WFSzpogain : 1.0f;
             if (imgwfsref.ID != -1)
             {
-                // refcmult is pulling refc toward ref-wfszpo
-                // if refcmult = 1, then refc=ref
+                // refcmult is pulling refc toward ref + zpogain*wfszpo
+                // if refcmult = 1, then refc = mask * (ref + zpogain*wfszpo)
                 for (uint64_t ii = 0; ii < sizeWFS; ii++)
                 {
                     imgwfsrefc.im->array.F[ii] =
                         imgwfsmask.im->array.F[ii] * refcmult *
-                            (imgwfsref.im->array.F[ii] + imgdispzpo.im->array.F[ii]) +
+                            (imgwfsref.im->array.F[ii] + zpogain * imgdispzpo.im->array.F[ii]) +
                         (1.0 - refcmult) * imgwfsrefc.im->array.F[ii];
                 }
             }

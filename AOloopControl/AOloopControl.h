@@ -27,6 +27,9 @@ extern const MILK_RUNNABLE runnable_AOloopControl_modalfilter_test;
 /** @brief Modal control statistics. */
 extern const MILK_RUNNABLE runnable_AOloopControl_modalCTRL_stats;
 
+/** @brief Closed-loop modal residual whiteness and predictability monitor. */
+extern const MILK_RUNNABLE runnable_AOloopControl_modalwhite;
+
 /** @brief Apply zonal filtering in DM space (fpsexec "cacao-zonalfilter"). */
 extern const MILK_RUNNABLE runnable_AOloopControl_zonalfilter;
 

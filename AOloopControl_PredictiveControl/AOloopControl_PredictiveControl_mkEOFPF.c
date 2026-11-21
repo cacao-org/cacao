@@ -61,8 +61,13 @@ static float    o_rms_ol        = 0.0f;
 static float    o_rms_zoh       = 0.0f;
 static float    o_rms_pred      = 0.0f;
 static float    o_var_red_pct   = 0.0f;
-static float    o_offdiag_frac  = 0.0f;
-static float    o_last_lam      = 0.0f;
+static float    o_offdiag_frac   = 0.0f;
+static float    o_last_lam       = 0.0f;
+static float    o_rms_zoh_oos    = 0.0f;
+static float    o_rms_pred_oos   = 0.0f;
+static float    o_var_red_oos    = 0.0f;
+static float    o_overfit_ratio  = 0.0f;
+static float    o_oos_rho_d_b0   = 0.0f;
 
 #define FPS_PARAMS_MKEOFPF(X)                                                                     \
     X(".AOloopindex", &p_loopindex, FPTYPE_UINT64, 1,                                             \
@@ -120,7 +125,17 @@ static float    o_last_lam      = 0.0f;
     X(".out.offdiag_frac", &o_offdiag_frac, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,             \
       "off-diagonal cross-mode L2 energy fraction")                                               \
     X(".out.last_lam", &o_last_lam, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                     \
-      "effective relative lambda on block 0")
+      "effective relative lambda on block 0")                                                     \
+    X(".out.rms_zoh_oos", &o_rms_zoh_oos, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,               \
+      "out-of-sample pure-lag ZOH modal RMS")                                                     \
+    X(".out.rms_pred_oos", &o_rms_pred_oos, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,             \
+      "out-of-sample published filter modal RMS")                                                 \
+    X(".out.var_red_oos_pct", &o_var_red_oos, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,           \
+      "out-of-sample variance reduction vs ZOH [%]")                                              \
+    X(".out.overfit_ratio", &o_overfit_ratio, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,           \
+      "OOS/in-sample predicted RMS ratio")                                                        \
+    X(".out.oos_rho_d_b0", &o_oos_rho_d_b0, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,             \
+      "Block-0 lag-d autocorr of OOS pred residual")
 
 MILK_PARAMS_DEFINE(cacaopc_mkEOFPF, FPS_PARAMS_MKEOFPF);
 
@@ -484,6 +499,11 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
     o_var_red_pct          = 0.0f;
     o_offdiag_frac         = 0.0f;
     o_last_lam             = 0.0f;
+    o_rms_zoh_oos          = 0.0f;
+    o_rms_pred_oos         = 0.0f;
+    o_var_red_oos          = 0.0f;
+    o_overfit_ratio        = 0.0f;
+    o_oos_rho_d_b0         = 0.0f;
 
     MILK_PROCINFO_INIT(self)
     MILK_PROCINFO_LOOPSTART(self)
@@ -529,6 +549,7 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
             }
         }
 
+        uint32_t n_added = 0;
         if (first_nz < nslice)
         {
             uint32_t n_add = nslice - first_nz;
@@ -549,6 +570,7 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
             memcpy(&hist_fm[(size_t) n_valid * NBmode], &tmp_in[(size_t) first_nz * NBmode],
                    sizeof(float) * (size_t) n_add * NBmode);
             n_valid += n_add;
+            n_added  = n_add;
             o_n_samples = n_valid;
         }
 
@@ -560,6 +582,216 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
         uint32_t eof_req   = (p_minsamples >= P + lat_i + 64) ? p_minsamples : (P + lat_i + 64);
         uint32_t eff_modes = (p_nbmodemax < NBmode) ? p_nbmodemax : NBmode;
         uint32_t upd_per   = (p_updateperiod >= 1) ? p_updateperiod : 1;
+
+        // Strictly out-of-sample evaluation of the EXISTING published filter on newly arrived
+        // frames (runs on every fresh slice before any refit or updateperiod skip).
+        if (o_n_updates > 0 && n_added > 1 && n_valid > P_diag + lat_i + 1)
+        {
+            uint32_t new_start = n_valid - n_added;
+            uint32_t P_need    = (o_eof_active == 1 || diag_tail > 0) ? P_diag : P;
+            uint32_t t_start   = (new_start > lat_i) ? (new_start - lat_i) : 0;
+            if (t_start < P_need - 1)
+            {
+                t_start = P_need - 1;
+            }
+            uint32_t t_end = n_valid - lat_i - 1;
+            uint32_t n_oos = (t_end > t_start) ? (t_end - t_start) : 0;
+            if (n_oos >= 8)
+            {
+                const float *cur_pf   = imgoutPF.im->array.F;
+                uint32_t     pb_len   = P * B;
+                double       oos_zoh2 = 0.0;
+                double       oos_prd2 = 0.0;
+                uint32_t     d_ceil   = (uint32_t) ceil((double) lat_fr - 1.0e-4);
+                if (d_ceil < 1)
+                {
+                    d_ceil = 1;
+                }
+                double b0_rho_num = 0.0;
+                double b0_rho_den = 0.0;
+
+                if (o_eof_active == 2)
+                {
+                    uint32_t nblocks = (eff_modes + B - 1) / B;
+                    for (uint32_t blk = 0; blk < nblocks; blk++)
+                    {
+                        uint32_t s0 = blk * B;
+                        uint32_t b  = (s0 + B <= eff_modes) ? B : (eff_modes - s0);
+                        uint32_t D  = P * b;
+
+                        // Assemble X_blk [n_oos x D] and unpack published W_blk [D x b]
+#pragma omp parallel for schedule(static)
+                        for (uint32_t r = 0; r < n_oos; r++)
+                        {
+                            uint32_t tk   = t_start + r;
+                            double  *xrow = &X_blk[(size_t) r * D];
+                            for (uint32_t k = 0; k < P; k++)
+                            {
+                                const float *hk = &hist_fm[(size_t) (tk - k) * NBmode + s0];
+                                double      *xd = &xrow[(size_t) k * b];
+                                for (uint32_t i = 0; i < b; i++)
+                                {
+                                    xd[i] = (double) hk[i];
+                                }
+                            }
+                        }
+                        for (uint32_t j = 0; j < b; j++)
+                        {
+                            const float *row_pf = &cur_pf[(size_t) (s0 + j) * stride];
+                            for (uint32_t k = 0; k < P; k++)
+                            {
+                                const float *lag_pf = &row_pf[(size_t) k * B];
+                                for (uint32_t i = 0; i < b; i++)
+                                {
+                                    W_blk[(size_t) (k * b + i) * b + j] = (double) lag_pf[i];
+                                }
+                            }
+                        }
+                        cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, (int) n_oos,
+                                    (int) b, (int) D, 1.0, X_blk, (int) D, W_blk, (int) b, 0.0,
+                                    Y_blk, (int) b);
+
+                        double blk_zoh = 0.0;
+                        double blk_prd = 0.0;
+#pragma omp parallel for schedule(static) reduction(+ : blk_zoh, blk_prd)
+                        for (uint32_t r = 0; r < n_oos; r++)
+                        {
+                            uint32_t     tk  = t_start + r;
+                            const float *h0  = &hist_fm[(size_t) tk * NBmode + s0];
+                            const float *hf0 = &hist_fm[(size_t) (tk + lat_i) * NBmode + s0];
+                            const float *hf1 = &hist_fm[(size_t) (tk + lat_i + 1) * NBmode + s0];
+                            double      *pr  = &Y_blk[(size_t) r * b];
+                            for (uint32_t j = 0; j < b; j++)
+                            {
+                                double pred = pr[j];
+                                if (diag_tail > 0)
+                                {
+                                    const float *tail =
+                                        &cur_pf[(size_t) (s0 + j) * stride + pb_len];
+                                    for (uint32_t kt = 0; kt < diag_tail; kt++)
+                                    {
+                                        pred += (double) tail[kt] *
+                                                (double) hist_fm[(size_t) (tk - (P + kt)) * NBmode +
+                                                                 (s0 + j)];
+                                    }
+                                }
+                                double yv  = (1.0 - lat_a) * (double) hf0[j] +
+                                             lat_a * (double) hf1[j];
+                                double dz  = yv - (double) h0[j];
+                                double err = yv - pred;
+                                pr[j]      = err;
+                                blk_zoh   += dz * dz;
+                                blk_prd   += err * err;
+                            }
+                        }
+                        oos_zoh2 += blk_zoh;
+                        oos_prd2 += blk_prd;
+
+                        if (blk == 0 && n_oos > d_ceil + 4)
+                        {
+                            for (uint32_t j = 0; j < b; j++)
+                            {
+                                double mu = 0.0;
+                                for (uint32_t r = 0; r < n_oos; r++)
+                                {
+                                    mu += Y_blk[(size_t) r * b + j];
+                                }
+                                mu /= (double) n_oos;
+                                double v0 = 0.0;
+                                double vd = 0.0;
+                                for (uint32_t r = 0; r < n_oos; r++)
+                                {
+                                    double er = Y_blk[(size_t) r * b + j] - mu;
+                                    v0       += er * er;
+                                    if (r >= d_ceil)
+                                    {
+                                        double ep = Y_blk[(size_t) (r - d_ceil) * b + j] - mu;
+                                        vd       += er * ep;
+                                    }
+                                }
+                                b0_rho_num += vd;
+                                b0_rho_den += v0;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    uint32_t b0_lim = (B < eff_modes) ? B : eff_modes;
+#pragma omp parallel for schedule(static) reduction(+ : oos_zoh2, oos_prd2, b0_rho_num, b0_rho_den)
+                    for (uint32_t m = 0; m < eff_modes; m++)
+                    {
+                        uint32_t     local_m = m % B;
+                        const float *row_pf  = &cur_pf[(size_t) m * stride];
+                        double       w_loc[EOFPF_MAX_ORDER];
+                        for (uint32_t k = 0; k < P; k++)
+                        {
+                            w_loc[k] = (double) row_pf[(size_t) k * B + local_m];
+                        }
+                        for (uint32_t k = P; k < P_diag; k++)
+                        {
+                            w_loc[k] = (double) row_pf[pb_len + (k - P)];
+                        }
+
+                        double mu = 0.0;
+                        double e_prev[32];
+                        uint32_t ring_sz = (d_ceil < 32) ? 32 : 0;
+                        double   v0      = 0.0;
+                        double   vd      = 0.0;
+                        for (uint32_t r = 0; r < n_oos; r++)
+                        {
+                            uint32_t tk = t_start + r;
+                            double y0 = (double) hist_fm[(size_t) (tk + lat_i) * NBmode + m];
+                            double y1 = (double) hist_fm[(size_t) (tk + lat_i + 1) * NBmode + m];
+                            double yv = (1.0 - lat_a) * y0 + lat_a * y1;
+                            double h0   = (double) hist_fm[(size_t) tk * NBmode + m];
+                            double pred = 0.0;
+                            for (uint32_t k = 0; k < P_diag; k++)
+                            {
+                                pred += w_loc[k] * (double) hist_fm[(size_t) (tk - k) * NBmode + m];
+                            }
+                            double dz  = yv - h0;
+                            double err = yv - pred;
+                            oos_zoh2  += dz * dz;
+                            oos_prd2  += err * err;
+                            if (m < b0_lim && ring_sz > 0)
+                            {
+                                mu                       += err;
+                                v0                       += err * err;
+                                e_prev[r & 31u]           = err;
+                                if (r >= d_ceil)
+                                {
+                                    vd += err * e_prev[(r - d_ceil) & 31u];
+                                }
+                            }
+                        }
+                        if (m < b0_lim && ring_sz > 0 && n_oos > d_ceil + 4)
+                        {
+                            double mean_e = mu / (double) n_oos;
+                            double c0     = v0 - (double) n_oos * mean_e * mean_e;
+                            double cd     = vd - (double) (n_oos - d_ceil) * mean_e * mean_e;
+                            if (c0 > 0.0)
+                            {
+                                b0_rho_num += cd;
+                                b0_rho_den += c0;
+                            }
+                        }
+                    }
+                }
+
+                double inv_noos  = 1.0 / (double) n_oos;
+                double v_zoh_oos = oos_zoh2 * inv_noos;
+                double v_prd_oos = oos_prd2 * inv_noos;
+                o_rms_zoh_oos    = (float) sqrt(v_zoh_oos);
+                o_rms_pred_oos   = (float) sqrt(v_prd_oos);
+                o_var_red_oos    = (v_zoh_oos > 1.0e-24)
+                                       ? (float) ((1.0 - v_prd_oos / v_zoh_oos) * 100.0)
+                                       : 0.0f;
+                o_overfit_ratio  = (o_rms_pred > 1.0e-12f) ? (o_rms_pred_oos / o_rms_pred) : 1.0f;
+                o_oos_rho_d_b0   = (b0_rho_den > 1.0e-24) ? (float) (b0_rho_num / b0_rho_den)
+                                                          : 0.0f;
+            }
+        }
 
         int do_eof  = (n_valid >= eof_req) && (n_valid > P + lat_i + 32) && (B > 1);
         int do_diag = (!do_eof) && (n_valid >= diag_req) && (n_valid > P_diag + lat_i + 4);
