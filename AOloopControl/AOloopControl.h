@@ -33,6 +33,9 @@ extern const MILK_RUNNABLE runnable_AOloopControl_modalwhite;
 /** @brief Online single-stage optical-gain estimator via closed-loop DM pokes. */
 extern const MILK_RUNNABLE runnable_AOloopControl_modalog;
 
+/** @brief Online per-mode leaky-integrator (gain, leak) autotuner. */
+extern const MILK_RUNNABLE runnable_AOloopControl_modalopt;
+
 /** @brief Apply zonal filtering in DM space (fpsexec "cacao-zonalfilter"). */
 extern const MILK_RUNNABLE runnable_AOloopControl_zonalfilter;
 

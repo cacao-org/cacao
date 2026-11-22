@@ -831,8 +831,26 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
             state->prev_mlf_cnt0  = state->imgmlimitfact.md[0].cnt0;
             for (uint32_t mi = 0; mi < NBmode; mi++)
             {
-                state->imgmgain.im->array.F[mi]  = state->imgmgainfact.im->array.F[mi] * loopgain;
-                state->imgmmult.im->array.F[mi]  = state->imgmmultfact.im->array.F[mi] * loopmult;
+                float mg_v = state->imgmgainfact.im->array.F[mi] * loopgain;
+                float mm_v = state->imgmmultfact.im->array.F[mi] * loopmult;
+                if (!isfinite(mg_v) || mg_v < 0.0f)
+                {
+                    mg_v = 0.0f;
+                }
+                else if (mg_v > 2.0f)
+                {
+                    mg_v = 2.0f;
+                }
+                if (!isfinite(mm_v) || mm_v < 0.0f)
+                {
+                    mm_v = 0.0f;
+                }
+                else if (mm_v > 1.0f)
+                {
+                    mm_v = 1.0f;
+                }
+                state->imgmgain.im->array.F[mi]  = mg_v;
+                state->imgmmult.im->array.F[mi]  = mm_v;
                 state->imgmlimit.im->array.F[mi] = state->imgmlimitfact.im->array.F[mi] * looplimit;
             }
             ImageStreamIO_UpdateIm(state->imgmgain.im);
