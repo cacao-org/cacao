@@ -194,6 +194,7 @@ static const MILK_RUNNABLE *const runnables[] = {
     &runnable_AOloopControl_PredictiveControl_applyARPF,
     &runnable_AOloopControl_PredictiveControl_mkEOFPF,
     &runnable_AOloopControl_PredictiveControl_applyEOFPF,
+    &runnable_AOloopControl_PredictiveControl_selflearn,
 };
 
 MILK_MODULE_RUNNABLES(AOloopControl_PredictiveControl, NULL, runnables);

@@ -52,5 +52,6 @@ extern const MILK_RUNNABLE runnable_AOloopControl_PredictiveControl_mkARPF;
 extern const MILK_RUNNABLE runnable_AOloopControl_PredictiveControl_applyARPF;
 extern const MILK_RUNNABLE runnable_AOloopControl_PredictiveControl_mkEOFPF;
 extern const MILK_RUNNABLE runnable_AOloopControl_PredictiveControl_applyEOFPF;
+extern const MILK_RUNNABLE runnable_AOloopControl_PredictiveControl_selflearn;
 
 #endif
