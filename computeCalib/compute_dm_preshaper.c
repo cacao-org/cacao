@@ -20,9 +20,11 @@
  *
  * Outputs a single self-contained multi-extension FITS (MEF) file:
  *   - Primary HDU (HDU 0): C look-ahead kernel (float32)
- *       KMODE = 0 (MIMO modal/subspace): [N_in, N_in, M_buf]
- *       KMODE = 1 (SISO decoupled):      [N_in, N_in, M_buf] (diagonal slices)
- *       KMODE = 2 (SISO uniform):        [1, 1, M_buf]
+ *       KMODE = 0 (MIMO modal/subspace):      [N_in, N_in, M_buf]
+ *       KMODE = 1 (SISO decoupled modal):     [N_in, N_in, M_buf] (diagonal slices)
+ *       KMODE = 2 (SISO uniform broadcast):   [1, 1, M_buf]
+ *       KMODE = 3 (SISO per-actuator):        [dmx, dmy, M_buf]
+ *       KMODE = 4 (MIMO per-actuator stencil):[N_nb, dmx*dmy, M_buf] (gather weights)
  *   - Extension P_FWD  (KMODE 0, 1): forward DM mode basis [dmx, dmy, N_in] (float32)
  *   - Extension P_PINV (KMODE 0, 1): dual projection basis [dmx, dmy, N_in] (float32)
  */
@@ -69,6 +71,12 @@ static float    p_dt_us                                   = 0.0f;
 static float    p_lambda_ctrl                             = 0.02f;
 static float    p_lambda_diff                             = 0.02f;
 static float    p_max_gain                                = 2.5f;
+static int64_t  p_deconv_exp                              = 1;
+static float    p_lambda_deconv                           = 2.8e-2f;
+static float    p_deconv_tmax_ms                          = 0.0f;
+static int64_t  p_energy_weight                           = 1;
+static uint32_t p_stencil_rad                             = 2;
+static int64_t  p_fill_uncal                              = 0;
 
 static float o_err_before      = 0.0f;
 static float o_err_after       = 0.0f;
@@ -90,7 +98,7 @@ static float o_max_step_gain   = 0.0f;
     X(".outpred", p_outpred, FPTYPE_FITSFILENAME, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
       "optional predicted shaped modal step cube [N_in, N_in, L]")                                 \
     X(".mode", &p_mode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,                 \
-      "0: MIMO modal/subspace | 1: SISO decoupled | 2: SISO uniform")                              \
+      "0: MIMO modal | 1: SISO modal | 2: SISO uniform | 3: SISO per-act | 4: MIMO per-act stencil") \
     X(".svdlim", &p_svdlim, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,            \
       "relative SVD threshold for static & mode pseudo-inverses")                                  \
     X(".n_taps", &p_ntaps, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,              \
@@ -110,6 +118,21 @@ static float o_max_step_gain   = 0.0f;
       "temporal smoothness & zero-tail penalty on ||dC||^2")                                       \
     X(".max_gain", &p_max_gain, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
       "safety cap on max|I + C[k]| step gain (<= 0 = uncapped)")                                   \
+    X(".deconv_exp", &p_deconv_exp, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
+      "two-sided finite-support Toeplitz WFS-exposure deconvolution before inversion")             \
+    X(".lambda_deconv", &p_lambda_deconv, FPTYPE_FLOAT32, 0,                                       \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,                                                     \
+      "dimensionless Toeplitz exposure deconvolution weight (scaled by diag(B^T B) = 1/n_box)")    \
+    X(".deconv_tmax_ms", &p_deconv_tmax_ms, FPTYPE_FLOAT32, 0,                                     \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,                                                     \
+      "settling horizon [ms] for two-sided deconvolution (<= 0 = auto)")                           \
+    X(".energy_weight", &p_energy_weight, FPTYPE_ONOFF, 0,                                         \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,                                                     \
+      "weight MIMO residuals & penalties by physical static WFS & actuator L2 energy")             \
+    X(".stencil_rad", &p_stencil_rad, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,   \
+      "local neighborhood half-width R for KMODE=4 ((2R+1)x(2R+1) per-actuator stencil, 1..5)")    \
+    X(".fill_uncal", &p_fill_uncal, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
+      "KMODE=3/4: smoothly interpolate uncalibrated actuators from calibrated neighbors")          \
     X(".out.err_before", &o_err_before, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                  \
       "unshaped tracking error norm vs ideal target")                                              \
     X(".out.err_after", &o_err_after, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                    \
@@ -275,11 +298,16 @@ typedef struct
     uint32_t dmy;
     uint32_t n_in;
     uint32_t m_buf;
+    uint32_t stencil_rad;
+    uint32_t stencil_nb;
     double   tau_tar_us;
     double   delay_us;
     double   texp_us;
     double   lam_ctrl;
     double   lam_diff;
+    double   lam_deconv;
+    int      deconv_exp;
+    int      energy_weight;
     double   max_gain;
     double   err_before;
     double   err_after;
@@ -321,7 +349,8 @@ static int ps_write_mef_kernel(const char        *raw_path,
     double dval;
 
     lval = (long) meta->kmode;
-    fits_update_key(fptr, TLONG, "KMODE", &lval, "0=MIMO, 1=SISO_MODAL, 2=SISO_UNIFORM", &status);
+    fits_update_key(fptr, TLONG, "KMODE", &lval,
+                    "0=MIMO, 1=SISO_MOD, 2=SISO_UNI, 3=SISO_ACT, 4=MIMO_ACT", &status);
     dval = meta->dt_sec;
     fits_update_key(fptr, TDOUBLE, "DT_SEC", &dval, "Kernel tick period [s]", &status);
     lval = (long) meta->dmx;
@@ -333,6 +362,15 @@ static int ps_write_mef_kernel(const char        *raw_path,
     lval = (long) meta->m_buf;
     fits_update_key(fptr, TLONG, "MBUF", &lval, "Number of look-ahead buffer slots (M - 1)",
                     &status);
+    if (meta->kmode == 4u)
+    {
+        lval = (long) meta->stencil_rad;
+        fits_update_key(fptr, TLONG, "STNCLRAD", &lval,
+                        "Per-actuator local MIMO stencil radius R ((2R+1)x(2R+1))", &status);
+        lval = (long) meta->stencil_nb;
+        fits_update_key(fptr, TLONG, "STNCLNB", &lval,
+                        "Number of neighbors per actuator stencil ((2R+1)^2)", &status);
+    }
     dval = meta->tau_tar_us;
     fits_update_key(fptr, TDOUBLE, "TAUTARUS", &dval, "Target physical rise constant [us]",
                     &status);
@@ -345,6 +383,14 @@ static int ps_write_mef_kernel(const char        *raw_path,
                     &status);
     dval = meta->lam_diff;
     fits_update_key(fptr, TDOUBLE, "LAMDIFF", &dval, "Smoothness regularization lambda", &status);
+    lval = (long) meta->deconv_exp;
+    fits_update_key(fptr, TLONG, "DECONV", &lval, "1=two-sided Toeplitz exposure deconv", &status);
+    dval = meta->lam_deconv;
+    fits_update_key(fptr, TDOUBLE, "LAMDEC", &dval, "Exposure deconvolution regularization",
+                    &status);
+    lval = (long) meta->energy_weight;
+    fits_update_key(fptr, TLONG, "ENRGWGT", &lval, "1=physical WFS/actuator energy weighting",
+                    &status);
     dval = meta->max_gain;
     fits_update_key(fptr, TDOUBLE, "MAXGAIN", &dval, "Peak shaped step command gain", &status);
     dval = meta->err_before;
@@ -610,6 +656,226 @@ static void ps_build_target_step(double *s_tar,
     free(cs);
 }
 
+/**
+ * Two-sided finite-support Toeplitz exposure deconvolution for a [len, n_in, n_in] step cube.
+ *
+ * Uses both physical boundary conditions (s_phys[n] = 0 for n < n_on and s_phys[n] = I for
+ * n >= n_end) so the tall rectangular boxcar operator B [len x l_act] has full column rank
+ * with zero null space even at the periodic camera sinc nulls f = k / T_exp.
+ *
+ * Return: 0 on success, -1 if deconvolution cannot be applied (caller falls back to raw s_obs).
+ */
+static int ps_deconv_twosided_toeplitz(const double *s_obs,
+                                       size_t        len,
+                                       size_t        n_in,
+                                       size_t        n_box,
+                                       double        dt_sec,
+                                       double        lam_dec,
+                                       double        tmax_ms,
+                                       double       *s_phys_out,
+                                       size_t       *out_n_on)
+{
+    if (n_box < 2 || len <= 2 * n_box + 4)
+    {
+        return -1;
+    }
+
+    size_t n_on = 0;
+    for (size_t n = 0; n < len; n++)
+    {
+        double tr = 0.0;
+        for (size_t i = 0; i < n_in; i++)
+        {
+            tr += s_obs[(n * n_in + i) * n_in + i];
+        }
+        if (tr / (double) n_in >= 0.015)
+        {
+            n_on = n;
+            break;
+        }
+    }
+
+    const size_t max_end = len - (n_box - 1);
+    const size_t min_end = n_on + 2 * n_box;
+    if (min_end >= max_end)
+    {
+        return -1;
+    }
+
+    size_t n_end = (tmax_ms > 0.0) ? (size_t) llround((tmax_ms * 1.0e-3) / dt_sec)
+                                   : (size_t) llround(0.018 / dt_sec);
+    if (n_end > max_end)
+    {
+        n_end = max_end;
+    }
+    if (n_end < min_end)
+    {
+        n_end = min_end;
+    }
+    const size_t l_act = n_end - n_on;
+    const size_t n_col = n_in * n_in;
+
+    double *b_mat  = (double *) calloc(len * l_act, sizeof(double));
+    double *c_tail = (double *) calloc(len, sizeof(double));
+    double *w_env  = (double *) malloc(sizeof(double) * l_act);
+    double *a_dec  = (double *) calloc(l_act * l_act, sizeof(double));
+    double *y_rhs  = (double *) malloc(sizeof(double) * len * n_col);
+    double *b_rhs  = (double *) calloc(l_act * n_col, sizeof(double));
+    if (!b_mat || !c_tail || !w_env || !a_dec || !y_rhs || !b_rhs)
+    {
+        free(b_rhs);
+        free(y_rhs);
+        free(a_dec);
+        free(w_env);
+        free(c_tail);
+        free(b_mat);
+        return -1;
+    }
+
+    const double inv_box = 1.0 / (double) n_box;
+    for (size_t n = 0; n < len; n++)
+    {
+        for (size_t j = 0; j < n_box; j++)
+        {
+            if (n < j)
+            {
+                continue;
+            }
+            size_t idx = n - j;
+            if (idx >= n_on && idx < n_end)
+            {
+                b_mat[n * l_act + (idx - n_on)] += inv_box;
+            }
+            else if (idx >= n_end)
+            {
+                c_tail[n] += inv_box;
+            }
+        }
+    }
+
+    for (size_t k = 0; k < l_act; k++)
+    {
+        double ex = 1.5 * (((double) k + 0.5) * dt_sec / 0.008);
+        if (ex > 4.0)
+        {
+            ex = 4.0;
+        }
+        w_env[k] = exp(ex);
+    }
+
+    for (size_t n = 0; n < len; n++)
+    {
+        const double *s_sl = &s_obs[n * n_col];
+        double       *y_sl = &y_rhs[n * n_col];
+        const double  ct   = c_tail[n];
+        for (size_t r = 0; r < n_in; r++)
+        {
+            for (size_t c = 0; c < n_in; c++)
+            {
+                size_t m = r * n_in + c;
+                y_sl[m]  = s_sl[m] - ((r == c) ? ct : 0.0);
+            }
+        }
+    }
+
+#if defined(HAVE_MKL) || defined(HAVE_OPENBLAS)
+    cblas_dsyrk(CblasRowMajor, CblasUpper, CblasTrans, (int) l_act, (int) len, 1.0, b_mat,
+                (int) l_act, 0.0, a_dec, (int) l_act);
+    cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans, (int) l_act, (int) n_col, (int) len, 1.0,
+                b_mat, (int) l_act, y_rhs, (int) n_col, 0.0, b_rhs, (int) n_col);
+#else
+    for (size_t i = 0; i < l_act; i++)
+    {
+        for (size_t j = i; j < l_act; j++)
+        {
+            double sum = 0.0;
+            for (size_t n = 0; n < len; n++)
+            {
+                sum += b_mat[n * l_act + i] * b_mat[n * l_act + j];
+            }
+            a_dec[i * l_act + j] = sum;
+        }
+        for (size_t m = 0; m < n_col; m++)
+        {
+            double sum = 0.0;
+            for (size_t n = 0; n < len; n++)
+            {
+                sum += b_mat[n * l_act + i] * y_rhs[n * n_col + m];
+            }
+            b_rhs[i * n_col + m] = sum;
+        }
+    }
+#endif
+
+    /* Scale dimensionless lambda_deconv by diag(B^T B) = 1/n_box for NBsubfr invariance */
+    const double lam_eff = lam_dec * inv_box;
+    const double lam_env = 0.15 * lam_eff;
+    const double lam_sm  = 0.85 * lam_eff;
+    for (size_t i = 0; i < l_act; i++)
+    {
+        for (size_t j = i + 1; j < l_act; j++)
+        {
+            a_dec[j * l_act + i] = a_dec[i * l_act + j];
+        }
+        a_dec[i * l_act + i] += lam_env * w_env[i] + 2.0 * lam_sm;
+        if (i + 1 < l_act)
+        {
+            a_dec[i * l_act + (i + 1)] -= lam_sm;
+            a_dec[(i + 1) * l_act + i] -= lam_sm;
+        }
+    }
+
+    for (size_t k = 0; k < l_act; k++)
+    {
+        const double add_env = lam_env * w_env[k];
+        for (size_t i = 0; i < n_in; i++)
+        {
+            b_rhs[k * n_col + i * n_in + i] += add_env;
+        }
+    }
+    for (size_t i = 0; i < n_in; i++)
+    {
+        b_rhs[(l_act - 1) * n_col + i * n_in + i] += lam_sm;
+    }
+
+    lapack_int info =
+        LAPACKE_dpotrf(LAPACK_ROW_MAJOR, 'U', (lapack_int) l_act, a_dec, (lapack_int) l_act);
+    if (info == 0)
+    {
+        info = LAPACKE_dpotrs(LAPACK_ROW_MAJOR, 'U', (lapack_int) l_act, (lapack_int) n_col, a_dec,
+                              (lapack_int) l_act, b_rhs, (lapack_int) n_col);
+    }
+
+    if (info == 0)
+    {
+        memset(s_phys_out, 0, sizeof(double) * len * n_col);
+        for (size_t k = 0; k < l_act; k++)
+        {
+            memcpy(&s_phys_out[(n_on + k) * n_col], &b_rhs[k * n_col], sizeof(double) * n_col);
+        }
+        for (size_t n = n_end; n < len; n++)
+        {
+            double *sl = &s_phys_out[n * n_col];
+            for (size_t i = 0; i < n_in; i++)
+            {
+                sl[i * n_in + i] = 1.0;
+            }
+        }
+        if (out_n_on != NULL)
+        {
+            *out_n_on = n_on;
+        }
+    }
+
+    free(b_rhs);
+    free(y_rhs);
+    free(a_dec);
+    free(w_env);
+    free(c_tail);
+    free(b_mat);
+    return (info == 0) ? 0 : -1;
+}
+
 /* ================================================================
  * 4.  RUNNABLE ENTRY POINT
  * ============================================================= */
@@ -637,13 +903,20 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
     double *c_static  = NULL;
     double *p_pinv_d  = NULL;
     double *s_post    = NULL;
+    double *s_work    = NULL;
     double *h_raw     = NULL;
     double *s_tar     = NULL;
+    double *w_out     = NULL;
+    double *w_act     = NULL;
     double *c_kern    = NULL;
     double *s_shaped  = NULL;
     float  *c_out_f32 = NULL;
     float  *pf_f32    = NULL;
     float  *pp_f32    = NULL;
+    int    *mode_ax   = NULL;
+    int    *mode_ay   = NULL;
+    double *mode_amp  = NULL;
+    int    *act2mode  = NULL;
     errno_t ret       = RETURN_FAILURE;
 
     MILK_PROCINFO_LOOPSTART(self);
@@ -754,20 +1027,50 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
     }
 
     const double svdlim = (p_svdlim > 0.0f) ? (double) p_svdlim : 1.0e-3;
-    if (ps_svd_pinv_transpose(stat_raw, n_in, n_out, svdlim, c_static) != 0)
+    if (p_mode == 2u || p_mode == 3u)
     {
-        goto cleanup;
+        /* Matched-filter WFS projection c_static[m] = stat_raw[m] / ||stat_raw[m]||^2:
+         * avoids oblique static-facesheet overlap bias between adjacent zonal actuators
+         * when solving 1D diagonal SISO pre-shapers (identical to pinv for orthogonal modes). */
+        for (size_t m = 0; m < n_in; m++)
+        {
+            const double *row = &stat_raw[m * n_out];
+            double       *dst = &c_static[m * n_out];
+            double        n2  = 0.0;
+            for (size_t p = 0; p < n_out; p++)
+            {
+                n2 += row[p] * row[p];
+            }
+            const double inv = (n2 > 1.0e-24) ? (1.0 / n2) : 0.0;
+            for (size_t p = 0; p < n_out; p++)
+            {
+                dst[p] = row[p] * inv;
+            }
+        }
     }
-    if (ps_svd_pinv_transpose(inm_raw, n_in, n_dm, svdlim, p_pinv_d) != 0)
+    else
     {
-        goto cleanup;
+        if (ps_svd_pinv_transpose(stat_raw, n_in, n_out, svdlim, c_static) != 0)
+        {
+            goto cleanup;
+        }
+    }
+    if (p_mode <= 1u)
+    {
+        if (ps_svd_pinv_transpose(inm_raw, n_in, n_dm, svdlim, p_pinv_d) != 0)
+        {
+            goto cleanup;
+        }
     }
 
     /* 4. Project post-poke slices: S_post[n, s, q] = sum_p c_static[s, p] * r3[q0+n, q, p] */
     s_post = (double *) calloc(len * n_in * n_in, sizeof(double));
+    s_work = (double *) calloc(len * n_in * n_in, sizeof(double));
     h_raw  = (double *) calloc(len * n_in * n_in, sizeof(double));
     s_tar  = (double *) calloc(len, sizeof(double));
-    if (!s_post || !h_raw || !s_tar)
+    w_out  = (double *) malloc(sizeof(double) * n_in);
+    w_act  = (double *) malloc(sizeof(double) * n_in);
+    if (!s_post || !s_work || !h_raw || !s_tar || !w_out || !w_act)
     {
         goto cleanup;
     }
@@ -798,10 +1101,83 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
 #endif
     }
 
+    /* 4b. Compute physical-space output (WFS static norm) & input (actuator L2 norm) weights */
+    if (p_energy_weight != 0)
+    {
+        double mean_wo = 0.0;
+        double mean_wa = 0.0;
+        for (size_t m = 0; m < n_in; m++)
+        {
+            double s2 = 0.0;
+            for (size_t p = 0; p < n_out; p++)
+            {
+                double v = stat_raw[m * n_out + p];
+                s2      += v * v;
+            }
+            w_out[m] = sqrt(s2);
+            mean_wo += w_out[m];
+
+            double a2 = 0.0;
+            for (size_t d = 0; d < n_dm; d++)
+            {
+                double v = inm_raw[m * n_dm + d];
+                a2      += v * v;
+            }
+            w_act[m] = sqrt(a2);
+            mean_wa += w_act[m];
+        }
+        mean_wo = (mean_wo > 1.0e-18) ? (mean_wo / (double) n_in) : 1.0;
+        mean_wa = (mean_wa > 1.0e-18) ? (mean_wa / (double) n_in) : 1.0;
+        for (size_t m = 0; m < n_in; m++)
+        {
+            w_out[m] /= mean_wo;
+            w_act[m] /= mean_wa;
+            if (w_out[m] < 1.0e-3)
+            {
+                w_out[m] = 1.0e-3;
+            }
+            if (w_act[m] < 1.0e-3)
+            {
+                w_act[m] = 1.0e-3;
+            }
+        }
+    }
+    else
+    {
+        for (size_t m = 0; m < n_in; m++)
+        {
+            w_out[m] = 1.0;
+            w_act[m] = 1.0;
+        }
+    }
+
+    /* 5. Optional two-sided finite-support Toeplitz exposure deconvolution (removes sinc nulls) */
+    const double texp_sec = (p_texp_us < 0.0f) ? ((double) nbsubfr * dt_sec)
+                                               : ((double) p_texp_us * 1.0e-6);
+    const double tau_tar_sec =
+        (p_tau_target_us > 0.0f) ? ((double) p_tau_target_us * 1.0e-6) : 0.0;
+    const double lam_dec = (p_lambda_deconv > 1.0e-9f) ? (double) p_lambda_deconv : 1.0e-9;
+
+    int    used_deconv = 0;
+    size_t n_on_deconv = 0;
+    size_t n_box_dec   = (texp_sec > 0.5 * dt_sec) ? (size_t) llround(texp_sec / dt_sec) : 1;
+    if (p_deconv_exp != 0 && n_box_dec >= 2)
+    {
+        if (ps_deconv_twosided_toeplitz(s_post, len, n_in, n_box_dec, dt_sec, lam_dec,
+                                        (double) p_deconv_tmax_ms, s_work, &n_on_deconv) == 0)
+        {
+            used_deconv = 1;
+        }
+    }
+    if (!used_deconv)
+    {
+        memcpy(s_work, s_post, sizeof(double) * len * n_in * n_in);
+    }
+
     for (size_t n = 0; n < len; n++)
     {
-        const double *cur  = &s_post[n * n_in * n_in];
-        const double *prev = (n > 0) ? &s_post[(n - 1) * n_in * n_in] : NULL;
+        const double *cur  = &s_work[n * n_in * n_in];
+        const double *prev = (n > 0) ? &s_work[(n - 1) * n_in * n_in] : NULL;
         double       *dst  = &h_raw[n * n_in * n_in];
         for (size_t i = 0; i < n_in * n_in; i++)
         {
@@ -809,53 +1185,56 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
         }
     }
 
-    /* 5. Determine causal onset delay and build exposure-convolved target step s_tar[0..len-1] */
-    const double texp_sec = (p_texp_us < 0.0f) ? ((double) nbsubfr * dt_sec)
-                                               : ((double) p_texp_us * 1.0e-6);
-    const double tau_tar_sec =
-        (p_tau_target_us > 0.0f) ? ((double) p_tau_target_us * 1.0e-6) : 0.0;
-
-    double delay_sec = (double) p_delay_us * 1.0e-6;
+    /* 5b. Determine causal onset delay and build target step s_tar[0..len-1] */
+    const double texp_tar_sec = used_deconv ? 0.0 : texp_sec;
+    double       delay_sec    = (double) p_delay_us * 1.0e-6;
     if (p_delay_us < 0.0f)
     {
-        double *diag_mean = (double *) malloc(sizeof(double) * len);
-        double *s_zero    = (double *) malloc(sizeof(double) * len);
-        if (diag_mean != NULL && s_zero != NULL)
+        if (used_deconv)
         {
-            for (size_t n = 0; n < len; n++)
-            {
-                double tr = 0.0;
-                for (size_t i = 0; i < n_in; i++)
-                {
-                    tr += s_post[(n * n_in + i) * n_in + i];
-                }
-                diag_mean[n] = tr / (double) n_in;
-            }
-            size_t idx_on = 0;
-            for (size_t n = 0; n < len; n++)
-            {
-                if (diag_mean[n] >= 0.02)
-                {
-                    idx_on = n;
-                    break;
-                }
-            }
-            double d_floor = (idx_on > 0) ? (((double) idx_on - 0.5) * dt_sec) : 0.0;
-            ps_build_target_step(s_zero, len, dt_sec, 0.0, tau_tar_sec, texp_sec);
-            double t50_raw = ps_crossing_time(diag_mean, len, dt_sec, 0.50);
-            double t50_tar = ps_crossing_time(s_zero, len, dt_sec, 0.50);
-            double d50     = (t50_raw > t50_tar) ? (t50_raw - t50_tar) : 0.0;
-            delay_sec      = (d50 > d_floor) ? d50 : d_floor;
+            delay_sec = (double) n_on_deconv * dt_sec;
         }
         else
         {
-            delay_sec = 0.0;
+            double *diag_mean = (double *) malloc(sizeof(double) * len);
+            double *s_zero    = (double *) malloc(sizeof(double) * len);
+            if (diag_mean != NULL && s_zero != NULL)
+            {
+                for (size_t n = 0; n < len; n++)
+                {
+                    double tr = 0.0;
+                    for (size_t i = 0; i < n_in; i++)
+                    {
+                        tr += s_work[(n * n_in + i) * n_in + i];
+                    }
+                    diag_mean[n] = tr / (double) n_in;
+                }
+                size_t idx_on = 0;
+                for (size_t n = 0; n < len; n++)
+                {
+                    if (diag_mean[n] >= 0.02)
+                    {
+                        idx_on = n;
+                        break;
+                    }
+                }
+                double d_floor = (idx_on > 0) ? (((double) idx_on - 0.5) * dt_sec) : 0.0;
+                ps_build_target_step(s_zero, len, dt_sec, 0.0, tau_tar_sec, texp_tar_sec);
+                double t50_raw = ps_crossing_time(diag_mean, len, dt_sec, 0.50);
+                double t50_tar = ps_crossing_time(s_zero, len, dt_sec, 0.50);
+                double d50     = (t50_raw > t50_tar) ? (t50_raw - t50_tar) : 0.0;
+                delay_sec      = (d50 > d_floor) ? d50 : d_floor;
+            }
+            else
+            {
+                delay_sec = 0.0;
+            }
+            free(s_zero);
+            free(diag_mean);
         }
-        free(s_zero);
-        free(diag_mean);
     }
 
-    ps_build_target_step(s_tar, len, dt_sec, delay_sec, tau_tar_sec, texp_sec);
+    ps_build_target_step(s_tar, len, dt_sec, delay_sec, tau_tar_sec, texp_tar_sec);
 
     /* 6. Solve constrained normal equations directly for look-ahead kernel C[0..m_buf-1] */
     size_t n_taps = p_ntaps;
@@ -872,9 +1251,57 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
         n_taps = len - 1;
     }
     const size_t   m_buf    = n_taps - 1;
-    const uint32_t kmode    = (p_mode <= 2u) ? p_mode : 0u;
+    const uint32_t kmode    = (p_mode <= 4u) ? p_mode : 0u;
     const double   lam_ctrl = (p_lambda_ctrl > 1.0e-9f) ? (double) p_lambda_ctrl : 1.0e-9;
     const double   lam_diff = (p_lambda_diff >= 0.0f) ? (double) p_lambda_diff : 0.0;
+    const uint32_t st_rad   = (kmode == 4u)
+                                  ? ((p_stencil_rad >= 1u && p_stencil_rad <= 5u) ? p_stencil_rad
+                                                                                  : 2u)
+                                  : 0u;
+    const uint32_t st_side  = (kmode == 4u) ? (2u * st_rad + 1u) : 0u;
+    const uint32_t st_nb    = (kmode == 4u) ? (st_side * st_side) : 0u;
+
+    /* For per-actuator modes (KMODE 3, 4), map each calibrated input mode to its peak (ax, ay) */
+    if (kmode == 3u || kmode == 4u)
+    {
+        mode_ax  = (int *) calloc(n_in, sizeof(int));
+        mode_ay  = (int *) calloc(n_in, sizeof(int));
+        mode_amp = (double *) calloc(n_in, sizeof(double));
+        act2mode = (int *) malloc(sizeof(int) * n_dm);
+        if (!mode_ax || !mode_ay || !mode_amp || !act2mode)
+        {
+            goto cleanup;
+        }
+        for (size_t i = 0; i < n_dm; i++)
+        {
+            act2mode[i] = -1;
+        }
+        for (size_t m = 0; m < n_in; m++)
+        {
+            const double *mp   = &inm_raw[m * n_dm];
+            size_t        best = 0;
+            double        babs = fabs(mp[0]);
+            for (size_t i = 1; i < n_dm; i++)
+            {
+                double a = fabs(mp[i]);
+                if (a > babs)
+                {
+                    babs = a;
+                    best = i;
+                }
+            }
+            mode_ax[m]  = (int) (best % dmx);
+            mode_ay[m]  = (int) (best / dmx);
+            mode_amp[m] = (babs > 1.0e-12) ? mp[best] : 1.0;
+            if (act2mode[best] >= 0)
+            {
+                fprintf(stderr,
+                        "compdmpreshaper: warning: duplicate actuator (%d,%d) for modes %d & %zu\n",
+                        mode_ax[m], mode_ay[m], act2mode[best], m);
+            }
+            act2mode[best] = (int) m;
+        }
+    }
 
     c_kern = (double *) calloc(m_buf * n_in * n_in, sizeof(double));
     if (c_kern == NULL)
@@ -910,18 +1337,24 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
                 const double *h_bl = &h_raw[(n - k) * n_in * n_in];
                 for (size_t r = 0; r < n_in; r++)
                 {
-                    double *dst = &h_mat[(n * n_in + r) * n_sys + k * n_in];
-                    memcpy(dst, &h_bl[r * n_in], sizeof(double) * n_in);
+                    const double  wr  = w_out[r];
+                    const double *src = &h_bl[r * n_in];
+                    double       *dst = &h_mat[(n * n_in + r) * n_sys + k * n_in];
+                    for (size_t c = 0; c < n_in; c++)
+                    {
+                        dst[c] = wr * src[c];
+                    }
                 }
             }
-            const double *s_bl = &s_post[n * n_in * n_in];
+            const double *s_bl = &s_work[n * n_in * n_in];
             for (size_t r = 0; r < n_in; r++)
             {
-                double *r_row = &rhs[(n * n_in + r) * n_in];
+                const double wr    = w_out[r];
+                double      *r_row = &rhs[(n * n_in + r) * n_in];
                 for (size_t c = 0; c < n_in; c++)
                 {
                     double target = (r == c) ? s_tar[n] : 0.0;
-                    r_row[c]      = target - s_bl[r * n_in + c];
+                    r_row[c]      = wr * (target - s_bl[r * n_in + c]);
                 }
             }
         }
@@ -958,14 +1391,16 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
             }
         }
 #endif
-        /* Symmetrize and add Tikhonov + second-difference smoothness (C[-1]=0, C[m_buf]=0) */
+        /* Symmetrize and add physical-energy-weighted Tikhonov + smoothness (C[-1]=0, C[m_buf]=0) */
         for (size_t i = 0; i < n_sys; i++)
         {
             for (size_t j = i + 1; j < n_sys; j++)
             {
                 a_sys[j * n_sys + i] = a_sys[i * n_sys + j];
             }
-            a_sys[i * n_sys + i] += lam_ctrl + 2.0 * lam_diff;
+            const size_t m   = i % n_in;
+            const double wa2 = w_act[m] * w_act[m];
+            a_sys[i * n_sys + i] += (lam_ctrl + 2.0 * lam_diff) * wa2;
         }
         if (lam_diff > 0.0)
         {
@@ -973,10 +1408,11 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
             {
                 for (size_t m = 0; m < n_in; m++)
                 {
-                    size_t i1               = k * n_in + m;
-                    size_t i2               = (k + 1) * n_in + m;
-                    a_sys[i1 * n_sys + i2] -= lam_diff;
-                    a_sys[i2 * n_sys + i1] -= lam_diff;
+                    const double wa2        = w_act[m] * w_act[m];
+                    size_t       i1         = k * n_in + m;
+                    size_t       i2         = (k + 1) * n_in + m;
+                    a_sys[i1 * n_sys + i2] -= lam_diff * wa2;
+                    a_sys[i2 * n_sys + i1] -= lam_diff * wa2;
                 }
             }
         }
@@ -1004,10 +1440,222 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
         free(rhs);
         free(h_mat);
     }
+    else if (kmode == 4u)
+    {
+        /* Per-actuator spatially-varying local-stencil MIMO:
+         * For each calibrated input actuator m at (ax_m, ay_m), solve an independent
+         * local (2R+1)x(2R+1) MIMO Cholesky system driving only calibrated actuators
+         * q in N(m) to match target s_tar on m and suppress cross-actuator waves across
+         * the observation patch O(m). */
+        const int    rad_i  = (int) st_rad;
+        const int    obs_r  = rad_i + 3;
+        size_t      *loc_q  = (size_t *) malloc(sizeof(size_t) * st_nb);
+        size_t      *obs_id = (size_t *) malloc(sizeof(size_t) * n_in);
+        const size_t max_sys = m_buf * st_nb;
+        const size_t max_obs = (n_in <= 256u) ? n_in : (size_t) ((2 * obs_r + 1) * (2 * obs_r + 1));
+        const size_t max_rows = len * ((max_obs < n_in) ? max_obs : n_in);
+        double      *h_loc  = (double *) malloc(sizeof(double) * max_rows * max_sys);
+        double      *r_loc  = (double *) malloc(sizeof(double) * max_rows);
+        double      *a_loc  = (double *) malloc(sizeof(double) * max_sys * max_sys);
+        double      *b_loc  = (double *) malloc(sizeof(double) * max_sys);
+        if (!loc_q || !obs_id || !h_loc || !r_loc || !a_loc || !b_loc)
+        {
+            free(b_loc);
+            free(a_loc);
+            free(r_loc);
+            free(h_loc);
+            free(obs_id);
+            free(loc_q);
+            goto cleanup;
+        }
+
+        int solve_ok = 1;
+        for (size_t m = 0; m < n_in; m++)
+        {
+            const int ax_m = mode_ax[m];
+            const int ay_m = mode_ay[m];
+
+            /* Gather calibrated control neighbors q in (2R+1)x(2R+1) stencil around (ax_m, ay_m) */
+            size_t n_loc = 0;
+            for (int dy = -rad_i; dy <= rad_i; dy++)
+            {
+                int qy = ay_m + dy;
+                if (qy < 0 || qy >= (int) dmy)
+                {
+                    continue;
+                }
+                for (int dx = -rad_i; dx <= rad_i; dx++)
+                {
+                    int qx = ax_m + dx;
+                    if (qx < 0 || qx >= (int) dmx)
+                    {
+                        continue;
+                    }
+                    int qm = act2mode[(size_t) qy * dmx + (size_t) qx];
+                    if (qm >= 0)
+                    {
+                        loc_q[n_loc++] = (size_t) qm;
+                    }
+                }
+            }
+            if (n_loc == 0)
+            {
+                loc_q[n_loc++] = m;
+            }
+
+            /* Gather observation actuators r in O(m) (all calibrated actuators when n_in <= 256) */
+            size_t n_obs = 0;
+            if (n_in <= 256u)
+            {
+                for (size_t r = 0; r < n_in; r++)
+                {
+                    obs_id[n_obs++] = r;
+                }
+            }
+            else
+            {
+                for (int dy = -obs_r; dy <= obs_r; dy++)
+                {
+                    int ry = ay_m + dy;
+                    if (ry < 0 || ry >= (int) dmy)
+                    {
+                        continue;
+                    }
+                    for (int dx = -obs_r; dx <= obs_r; dx++)
+                    {
+                        int rx = ax_m + dx;
+                        if (rx < 0 || rx >= (int) dmx)
+                        {
+                            continue;
+                        }
+                        int rm = act2mode[(size_t) ry * dmx + (size_t) rx];
+                        if (rm >= 0)
+                        {
+                            obs_id[n_obs++] = (size_t) rm;
+                        }
+                    }
+                }
+            }
+
+            const size_t n_sys_loc = m_buf * n_loc;
+            const size_t n_rows    = len * n_obs;
+            memset(h_loc, 0, sizeof(double) * n_rows * n_sys_loc);
+
+            for (size_t n = 0; n < len; n++)
+            {
+                for (size_t ir = 0; ir < n_obs; ir++)
+                {
+                    const size_t r   = obs_id[ir];
+                    const double wr  = w_out[r];
+                    const size_t row = n * n_obs + ir;
+                    const double tar = (r == m) ? s_tar[n] : 0.0;
+                    r_loc[row]       = wr * (tar - s_work[(n * n_in + r) * n_in + m]);
+
+                    const size_t k_lim = (n + 1 < m_buf) ? (n + 1) : m_buf;
+                    for (size_t k = 0; k < k_lim; k++)
+                    {
+                        const double *h_row = &h_raw[((n - k) * n_in + r) * n_in];
+                        double       *dst   = &h_loc[row * n_sys_loc + k * n_loc];
+                        for (size_t iq = 0; iq < n_loc; iq++)
+                        {
+                            dst[iq] = wr * h_row[loc_q[iq]];
+                        }
+                    }
+                }
+            }
+
+#if defined(HAVE_MKL) || defined(HAVE_OPENBLAS)
+            cblas_dsyrk(CblasRowMajor, CblasUpper, CblasTrans, (int) n_sys_loc, (int) n_rows, 1.0,
+                        h_loc, (int) n_sys_loc, 0.0, a_loc, (int) n_sys_loc);
+            cblas_dgemv(CblasRowMajor, CblasTrans, (int) n_rows, (int) n_sys_loc, 1.0, h_loc,
+                        (int) n_sys_loc, r_loc, 1, 0.0, b_loc, 1);
+#else
+            for (size_t i = 0; i < n_sys_loc; i++)
+            {
+                for (size_t j = i; j < n_sys_loc; j++)
+                {
+                    double sum = 0.0;
+                    for (size_t row = 0; row < n_rows; row++)
+                    {
+                        sum += h_loc[row * n_sys_loc + i] * h_loc[row * n_sys_loc + j];
+                    }
+                    a_loc[i * n_sys_loc + j] = sum;
+                }
+                double bsum = 0.0;
+                for (size_t row = 0; row < n_rows; row++)
+                {
+                    bsum += h_loc[row * n_sys_loc + i] * r_loc[row];
+                }
+                b_loc[i] = bsum;
+            }
+#endif
+            for (size_t i = 0; i < n_sys_loc; i++)
+            {
+                for (size_t j = i + 1; j < n_sys_loc; j++)
+                {
+                    a_loc[j * n_sys_loc + i] = a_loc[i * n_sys_loc + j];
+                }
+                const size_t q   = loc_q[i % n_loc];
+                const double wa2 = w_act[q] * w_act[q];
+                a_loc[i * n_sys_loc + i] += (lam_ctrl + 2.0 * lam_diff) * wa2;
+            }
+            if (lam_diff > 0.0)
+            {
+                for (size_t k = 0; k + 1 < m_buf; k++)
+                {
+                    for (size_t iq = 0; iq < n_loc; iq++)
+                    {
+                        const size_t q   = loc_q[iq];
+                        const double wa2 = w_act[q] * w_act[q];
+                        const size_t i1  = k * n_loc + iq;
+                        const size_t i2  = (k + 1) * n_loc + iq;
+                        a_loc[i1 * n_sys_loc + i2] -= lam_diff * wa2;
+                        a_loc[i2 * n_sys_loc + i1] -= lam_diff * wa2;
+                    }
+                }
+            }
+
+            lapack_int info = LAPACKE_dpotrf(LAPACK_ROW_MAJOR, 'U', (lapack_int) n_sys_loc, a_loc,
+                                             (lapack_int) n_sys_loc);
+            if (info == 0)
+            {
+                info = LAPACKE_dpotrs(LAPACK_ROW_MAJOR, 'U', (lapack_int) n_sys_loc, 1, a_loc,
+                                      (lapack_int) n_sys_loc, b_loc, 1);
+            }
+            if (info != 0)
+            {
+                fprintf(stderr,
+                        "compdmpreshaper: KMODE=4 local Cholesky failed (act m=%zu, info=%d)\n", m,
+                        (int) info);
+                solve_ok = 0;
+                break;
+            }
+
+            for (size_t k = 0; k < m_buf; k++)
+            {
+                for (size_t iq = 0; iq < n_loc; iq++)
+                {
+                    const size_t q = loc_q[iq];
+                    c_kern[(k * n_in + q) * n_in + m] = b_loc[k * n_loc + iq];
+                }
+            }
+        }
+
+        free(b_loc);
+        free(a_loc);
+        free(r_loc);
+        free(h_loc);
+        free(obs_id);
+        free(loc_q);
+        if (!solve_ok)
+        {
+            goto cleanup;
+        }
+    }
     else
     {
-        /* Mode 1 (per-mode decoupled SISO) or Mode 2 (uniform averaged SISO) */
-        const size_t n_solves = (kmode == 1u) ? n_in : 1u;
+        /* Mode 1 (per-mode decoupled SISO), Mode 2 (uniform SISO), or Mode 3 (per-actuator SISO) */
+        const size_t n_solves = (kmode == 2u) ? 1u : n_in;
         double      *a_siso   = (double *) malloc(sizeof(double) * m_buf * m_buf);
         double      *b_siso   = (double *) malloc(sizeof(double) * m_buf);
         double      *s_1d     = (double *) malloc(sizeof(double) * len);
@@ -1025,16 +1673,16 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
         {
             for (size_t n = 0; n < len; n++)
             {
-                if (kmode == 1u)
+                if (kmode == 1u || kmode == 3u)
                 {
-                    s_1d[n] = s_post[(n * n_in + m) * n_in + m];
+                    s_1d[n] = s_work[(n * n_in + m) * n_in + m];
                 }
                 else
                 {
                     double tr = 0.0;
                     for (size_t i = 0; i < n_in; i++)
                     {
-                        tr += s_post[(n * n_in + i) * n_in + i];
+                        tr += s_work[(n * n_in + i) * n_in + i];
                     }
                     s_1d[n] = tr / (double) n_in;
                 }
@@ -1087,7 +1735,7 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
                 goto cleanup;
             }
 
-            if (kmode == 1u)
+            if (kmode == 1u || kmode == 3u)
             {
                 for (size_t k = 0; k < m_buf; k++)
                 {
@@ -1137,13 +1785,13 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
         max_step_gain = (double) p_max_gain;
     }
 
-    /* 8. Compute predicted pre-shaped response S_shaped = S_post + H_raw * C and diagnostics */
+    /* 8. Compute predicted pre-shaped response S_shaped = S_work + H_raw * C and diagnostics */
     s_shaped = (double *) malloc(sizeof(double) * len * n_in * n_in);
     if (s_shaped == NULL)
     {
         goto cleanup;
     }
-    memcpy(s_shaped, s_post, sizeof(double) * len * n_in * n_in);
+    memcpy(s_shaped, s_work, sizeof(double) * len * n_in * n_in);
 
     for (size_t n = 0; n < len; n++)
     {
@@ -1186,7 +1834,7 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
             for (size_t c = 0; c < n_in; c++)
             {
                 double tar = (r == c) ? s_tar[n] : 0.0;
-                double vb  = s_post[(n * n_in + r) * n_in + c];
+                double vb  = s_work[(n * n_in + r) * n_in + c];
                 double va  = s_shaped[(n * n_in + r) * n_in + c];
                 err_pre_sq  += (vb - tar) * (vb - tar);
                 err_post_sq += (va - tar) * (va - tar);
@@ -1215,7 +1863,7 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
         double pk_a = 0.0;
         for (size_t n = 0; n < len; n++)
         {
-            double vb = s_post[(n * n_in + i) * n_in + i];
+            double vb = s_work[(n * n_in + i) * n_in + i];
             double va = s_shaped[(n * n_in + i) * n_in + i];
             if (vb > pk_b)
             {
@@ -1247,11 +1895,16 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
     meta.dmy           = (uint32_t) dmy;
     meta.n_in          = (uint32_t) n_in;
     meta.m_buf         = (uint32_t) m_buf;
+    meta.stencil_rad   = st_rad;
+    meta.stencil_nb    = st_nb;
     meta.tau_tar_us    = tau_tar_sec * 1.0e6;
     meta.delay_us      = delay_sec * 1.0e6;
     meta.texp_us       = texp_sec * 1.0e6;
     meta.lam_ctrl      = lam_ctrl;
     meta.lam_diff      = lam_diff;
+    meta.lam_deconv    = lam_dec;
+    meta.deconv_exp    = used_deconv;
+    meta.energy_weight = (p_energy_weight != 0) ? 1 : 0;
     meta.max_gain      = max_step_gain;
     meta.err_before    = err_pre;
     meta.err_after     = err_post;
@@ -1272,6 +1925,167 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
             c_out_f32[k] = (float) c_kern[(k * n_in + 0) * n_in + 0];
         }
         long c_naxes[3] = { 1, 1, (long) m_buf };
+        if (ps_write_mef_kernel(p_outkernel, c_out_f32, c_naxes, NULL, NULL, p_naxes, &meta) != 0)
+        {
+            goto cleanup;
+        }
+    }
+    else if (kmode == 3u)
+    {
+        /* Per-actuator SISO: Primary HDU [dmx, dmy, M_buf], no P_FWD/P_PINV */
+        c_out_f32 = (float *) calloc(m_buf * n_dm, sizeof(float));
+        if (!c_out_f32)
+        {
+            goto cleanup;
+        }
+        for (size_t m = 0; m < n_in; m++)
+        {
+            const size_t i_dm = (size_t) mode_ay[m] * dmx + (size_t) mode_ax[m];
+            for (size_t k = 0; k < m_buf; k++)
+            {
+                c_out_f32[k * n_dm + i_dm] = (float) c_kern[(k * n_in + m) * n_in + m];
+            }
+        }
+        if (p_fill_uncal != 0 && n_in > 0)
+        {
+            for (size_t iy = 0; iy < dmy; iy++)
+            {
+                for (size_t ix = 0; ix < dmx; ix++)
+                {
+                    const size_t i_dm = iy * dmx + ix;
+                    if (act2mode[i_dm] >= 0)
+                    {
+                        continue;
+                    }
+                    double wsum = 0.0;
+                    for (size_t m = 0; m < n_in; m++)
+                    {
+                        double dx = (double) ix - (double) mode_ax[m];
+                        double dy = (double) iy - (double) mode_ay[m];
+                        double w  = 1.0 / (dx * dx + dy * dy + 0.5);
+                        wsum     += w;
+                        for (size_t k = 0; k < m_buf; k++)
+                        {
+                            c_out_f32[k * n_dm + i_dm] +=
+                                (float) (w * c_kern[(k * n_in + m) * n_in + m]);
+                        }
+                    }
+                    if (wsum > 1.0e-12)
+                    {
+                        const float inv_w = (float) (1.0 / wsum);
+                        for (size_t k = 0; k < m_buf; k++)
+                        {
+                            c_out_f32[k * n_dm + i_dm] *= inv_w;
+                        }
+                    }
+                }
+            }
+        }
+        long c_naxes[3] = { (long) dmx, (long) dmy, (long) m_buf };
+        if (ps_write_mef_kernel(p_outkernel, c_out_f32, c_naxes, NULL, NULL, p_naxes, &meta) != 0)
+        {
+            goto cleanup;
+        }
+    }
+    else if (kmode == 4u)
+    {
+        /* Per-actuator spatially-varying local-stencil MIMO (gather layout):
+         * C_gather[k, i_out, (dy + R)*S + (dx + R)] = (a_q / a_m) * c_kern[k, q=i_out, m=j_in]
+         * where dx = ax_in - ax_out, dy = ay_in - ay_out in [-R, +R].
+         * Primary HDU [N_nb, dmx*dmy, M_buf], no P_FWD/P_PINV. */
+        const int rad_i = (int) st_rad;
+        const int side  = (int) st_side;
+        c_out_f32       = (float *) calloc(m_buf * n_dm * st_nb, sizeof(float));
+        if (!c_out_f32)
+        {
+            goto cleanup;
+        }
+        for (size_t m = 0; m < n_in; m++)
+        {
+            const int    jx  = mode_ax[m];
+            const int    jy  = mode_ay[m];
+            const double am  = (fabs(mode_amp[m]) > 1.0e-12) ? mode_amp[m] : 1.0;
+            for (int oy = -rad_i; oy <= rad_i; oy++)
+            {
+                const int iy = jy + oy;
+                if (iy < 0 || iy >= (int) dmy)
+                {
+                    continue;
+                }
+                for (int ox = -rad_i; ox <= rad_i; ox++)
+                {
+                    const int ix = jx + ox;
+                    if (ix < 0 || ix >= (int) dmx)
+                    {
+                        continue;
+                    }
+                    const size_t i_dm = (size_t) iy * dmx + (size_t) ix;
+                    const int    qm   = act2mode[i_dm];
+                    if (qm < 0)
+                    {
+                        continue;
+                    }
+                    const int    dx    = jx - ix; /* = -ox in [-R, +R] */
+                    const int    dy    = jy - iy; /* = -oy in [-R, +R] */
+                    const size_t p_idx = (size_t) ((dy + rad_i) * side + (dx + rad_i));
+                    const double scale = mode_amp[qm] / am;
+                    for (size_t k = 0; k < m_buf; k++)
+                    {
+                        c_out_f32[(k * n_dm + i_dm) * st_nb + p_idx] =
+                            (float) (scale * c_kern[(k * n_in + (size_t) qm) * n_in + m]);
+                    }
+                }
+            }
+        }
+        if (p_fill_uncal != 0 && n_in > 0)
+        {
+            /* Fill uncalibrated actuators by copying the stencil of their nearest calibrated neighbor */
+            for (int iy = 0; iy < (int) dmy; iy++)
+            {
+                for (int ix = 0; ix < (int) dmx; ix++)
+                {
+                    const size_t i_dm = (size_t) iy * dmx + (size_t) ix;
+                    if (act2mode[i_dm] >= 0)
+                    {
+                        continue;
+                    }
+                    size_t best_m = 0;
+                    double best_d = 1.0e30;
+                    for (size_t m = 0; m < n_in; m++)
+                    {
+                        double ddx = (double) ix - (double) mode_ax[m];
+                        double ddy = (double) iy - (double) mode_ay[m];
+                        double d2  = ddx * ddx + ddy * ddy;
+                        if (d2 < best_d)
+                        {
+                            best_d = d2;
+                            best_m = m;
+                        }
+                    }
+                    const size_t src_dm =
+                        (size_t) mode_ay[best_m] * dmx + (size_t) mode_ax[best_m];
+                    for (size_t k = 0; k < m_buf; k++)
+                    {
+                        const float *src = &c_out_f32[(k * n_dm + src_dm) * st_nb];
+                        float       *dst = &c_out_f32[(k * n_dm + i_dm) * st_nb];
+                        for (int dy = -rad_i; dy <= rad_i; dy++)
+                        {
+                            int jy = iy + dy;
+                            for (int dx = -rad_i; dx <= rad_i; dx++)
+                            {
+                                int    jx = ix + dx;
+                                size_t p  = (size_t) ((dy + rad_i) * side + (dx + rad_i));
+                                if (jx >= 0 && jx < (int) dmx && jy >= 0 && jy < (int) dmy)
+                                {
+                                    dst[p] = src[p];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        long c_naxes[3] = { (long) st_nb, (long) n_dm, (long) m_buf };
         if (ps_write_mef_kernel(p_outkernel, c_out_f32, c_naxes, NULL, NULL, p_naxes, &meta) != 0)
         {
             goto cleanup;
@@ -1343,13 +2157,20 @@ static MILK_HOT errno_t compdmpreshaper_compute(const MILK_RUNNABLE *self)
     ret = RETURN_SUCCESS;
 
 cleanup:
+    free(act2mode);
+    free(mode_amp);
+    free(mode_ay);
+    free(mode_ax);
     free(pp_f32);
     free(pf_f32);
     free(c_out_f32);
     free(s_shaped);
     free(c_kern);
+    free(w_act);
+    free(w_out);
     free(s_tar);
     free(h_raw);
+    free(s_work);
     free(s_post);
     free(p_pinv_d);
     free(c_static);

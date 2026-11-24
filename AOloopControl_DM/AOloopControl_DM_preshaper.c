@@ -16,10 +16,12 @@
  *   ring[(head + k) % M_ring] += gain * C[k] * du   (k = 0 .. M_hw - 1)
  *   u_out = clip(u_base + ring[head])               (slot M_hw drains cleanly to 0)
  *
- * Supports all three kernel layouts produced by cacao-fpsexec-cacaocc-compdmpreshaper:
+ * Supports all five kernel layouts produced by cacao-fpsexec-cacaocc-compdmpreshaper:
  *   - KMODE 0: MIMO modal/subspace (ring stored in modal space [M_ring x N_in])
  *   - KMODE 1: Decoupled SISO modal (diagonal C in modal space [M_ring x N_in])
  *   - KMODE 2: Uniform broadcast SISO (ring stored directly in actuator space [M_ring x N_dm])
+ *   - KMODE 3: Per-actuator diagonal SISO ([dmx, dmy, M_buf], actuator-space ring [M_ring x N_dm])
+ *   - KMODE 4: Per-actuator spatially-varying local-stencil MIMO ([N_nb, N_dm, M_buf], actuator-space ring)
  *
  * When idle (look-ahead buffer drained and .freerun=OFF), waits directly on .streamin's
  * semaphore for < 5 us reaction latency; while draining scheduled taps, paces strictly on
@@ -37,6 +39,9 @@
 #endif
 #include <time.h>
 #include <unistd.h>
+#ifdef _OPENMP
+#    include <omp.h>
+#endif
 
 #include "milk_runnable.h"
 #include "COREMOD_iofits/COREMOD_iofits.h"
@@ -199,9 +204,11 @@ typedef struct
     uint32_t dmy;
     uint32_t n_in;
     uint32_t m_buf;
-    float   *c_kern; /* KMODE 0,1: [m_buf, n_in, n_in]; KMODE 2: [m_buf] */
-    float   *p_fwd;  /* [n_in, n_dm] (NULL for KMODE 2) */
-    float   *p_pinv; /* [n_in, n_dm] (NULL for KMODE 2) */
+    uint32_t stencil_rad;
+    uint32_t stencil_nb;
+    float   *c_kern; /* KMODE 0,1: [m_buf, n_in, n_in]; 2: [m_buf]; 3: [m_buf, n_dm]; 4: [m_buf, n_dm, n_nb] */
+    float   *p_fwd;  /* [n_in, n_dm] (NULL for KMODE 2, 3, 4) */
+    float   *p_pinv; /* [n_in, n_dm] (NULL for KMODE 2, 3, 4) */
 } DMPS_KERNEL;
 
 static void dmps_kernel_free(DMPS_KERNEL *k)
@@ -268,10 +275,60 @@ static int dmps_load_kernel(const char *raw_path, DMPS_KERNEL *out)
         return -1;
     }
 
+    if (out->kmode > 4u)
+    {
+        fprintf(stderr, "dmpreshaper: unsupported KMODE=%u in '%s'\n", out->kmode, path);
+        fits_close_file(fptr, &status);
+        return -1;
+    }
+
     if (out->kmode == 2u)
     {
         out->n_in  = 1u;
         out->m_buf = (naxis == 3) ? (uint32_t) naxes[2] : (uint32_t) naxes[0];
+    }
+    else if (out->kmode == 3u)
+    {
+        if (naxis != 3)
+        {
+            fprintf(stderr, "dmpreshaper: expected 3D [dmx, dmy, M_buf] kernel for KMODE=3\n");
+            fits_close_file(fptr, &status);
+            return -1;
+        }
+        out->dmx   = (uint32_t) naxes[0];
+        out->dmy   = (uint32_t) naxes[1];
+        out->n_in  = 1u;
+        out->m_buf = (uint32_t) naxes[2];
+    }
+    else if (out->kmode == 4u)
+    {
+        if (naxis != 3)
+        {
+            fprintf(stderr, "dmpreshaper: expected 3D [N_nb, N_dm, M_buf] kernel for KMODE=4\n");
+            fits_close_file(fptr, &status);
+            return -1;
+        }
+        kst = 0;
+        if (fits_read_key(fptr, TLONG, "STNCLRAD", &lval, NULL, &kst) != 0 || lval < 1 || lval > 5)
+        {
+            fprintf(stderr, "dmpreshaper: missing/invalid STNCLRAD header for KMODE=4\n");
+            fits_close_file(fptr, &status);
+            return -1;
+        }
+        out->stencil_rad = (uint32_t) lval;
+        uint32_t s_side  = 2u * out->stencil_rad + 1u;
+        out->stencil_nb  = s_side * s_side;
+        if ((uint32_t) naxes[0] != out->stencil_nb ||
+            (uint64_t) naxes[1] != (uint64_t) out->dmx * out->dmy)
+        {
+            fprintf(stderr,
+                    "dmpreshaper: KMODE=4 shape mismatch [%ld,%ld,%ld] vs nb=%u dmx=%u dmy=%u\n",
+                    naxes[0], naxes[1], naxes[2], out->stencil_nb, out->dmx, out->dmy);
+            fits_close_file(fptr, &status);
+            return -1;
+        }
+        out->n_in  = 1u;
+        out->m_buf = (uint32_t) naxes[2];
     }
     else
     {
@@ -301,7 +358,7 @@ static int dmps_load_kernel(const char *raw_path, DMPS_KERNEL *out)
         return -1;
     }
 
-    if (out->kmode != 2u)
+    if (out->kmode <= 1u)
     {
         int  hdutype = 0;
         long pax[3]  = { 1, 1, 1 };
@@ -372,7 +429,19 @@ static int dmps_resample_kernel(const DMPS_KERNEL *k,
                                 float            **c_hw_out,
                                 uint32_t          *m_hw_out)
 {
-    const size_t block_sz = (k->kmode == 2u) ? 1u : ((size_t) k->n_in * k->n_in);
+    size_t block_sz = 1u;
+    if (k->kmode <= 1u)
+    {
+        block_sz = (size_t) k->n_in * k->n_in;
+    }
+    else if (k->kmode == 3u)
+    {
+        block_sz = (size_t) k->dmx * k->dmy;
+    }
+    else if (k->kmode == 4u)
+    {
+        block_sz = (size_t) k->dmx * k->dmy * k->stencil_nb;
+    }
     const double rel_diff = fabs(dt_hw_s - k->dt_kern_s) / k->dt_kern_s;
 
     if (rel_diff < 1.0e-4)
@@ -444,12 +513,13 @@ typedef struct
     uint32_t dmy;
     uint64_t n_dm;
 
-    float *u_base;
-    float *u_prev;
-    float *du;
-    float *u_out;
-    float *dc;
-    float *ring; /* KMODE 0,1: [m_ring, n_in]; KMODE 2: [m_ring, n_dm] */
+    float   *u_base;
+    float   *u_prev;
+    float   *du;
+    float   *u_out;
+    float   *dc;
+    float   *ring;   /* KMODE 0,1: [m_ring, n_in]; KMODE 2,3,4: [m_ring, n_dm] */
+    uint8_t *row_nz; /* [dmy] non-zero input row mask for fast KMODE 4 gather */
 
     IMGID img_in;
     IMGID img_out;
@@ -468,7 +538,7 @@ typedef struct
 
 static void dmps_clear_ring(DMPS_CTX *ctx)
 {
-    const size_t slot_len = (ctx->kern.kmode == 2u) ? (size_t) ctx->n_dm : (size_t) ctx->kern.n_in;
+    const size_t slot_len = (ctx->kern.kmode >= 2u) ? (size_t) ctx->n_dm : (size_t) ctx->kern.n_in;
     memset(ctx->ring, 0, sizeof(float) * ctx->m_ring * slot_len);
     ctx->head       = 0;
     ctx->active_rem = 0;
@@ -575,6 +645,99 @@ static int dmps_ingest_input(DMPS_CTX *ctx)
             }
         }
     }
+    else if (ctx->kern.kmode == 3u)
+    {
+        /* Per-actuator diagonal SISO: c_hw [m_hw x n_dm], ring [m_ring x n_dm] */
+        for (uint32_t k = 0; k < m_hw; k++)
+        {
+            const uint32_t slot = (head + k) % m_ring;
+            float         *dst  = &ctx->ring[(size_t) slot * n_dm];
+            const float   *ck   = &ctx->c_hw[(size_t) k * n_dm];
+#pragma omp simd
+            for (uint64_t i = 0; i < n_dm; i++)
+            {
+                dst[i] += gain * ck[i] * du[i];
+            }
+        }
+    }
+    else if (ctx->kern.kmode == 4u)
+    {
+        /* Per-actuator spatially-varying local-stencil MIMO gather:
+         * c_hw [m_hw, n_dm, n_nb], ring [m_ring, n_dm].
+         * Build row non-zero mask so sparse pokes skip empty rows cleanly. */
+        const int      dmx_i = (int) ctx->dmx;
+        const int      dmy_i = (int) ctx->dmy;
+        const int      rad_i = (int) ctx->kern.stencil_rad;
+        const int      side  = 2 * rad_i + 1;
+        const uint32_t n_nb  = ctx->kern.stencil_nb;
+        uint8_t       *rnz   = ctx->row_nz;
+        for (int jy = 0; jy < dmy_i; jy++)
+        {
+            uint8_t      nz   = 0;
+            const float *drow = &du[(size_t) jy * (size_t) dmx_i];
+            for (int jx = 0; jx < dmx_i; jx++)
+            {
+                if (fabsf(drow[jx]) > 1.0e-12f)
+                {
+                    nz = 1;
+                    break;
+                }
+            }
+            rnz[jy] = nz;
+        }
+
+#ifdef _OPENMP
+#    pragma omp parallel for schedule(static) if ((size_t) m_hw * (size_t) n_dm * n_nb > 32768u)
+#endif
+        for (uint32_t k = 0; k < m_hw; k++)
+        {
+            const uint32_t slot = (head + k) % m_ring;
+            float         *dst  = &ctx->ring[(size_t) slot * n_dm];
+            const float   *ck   = &ctx->c_hw[(size_t) k * n_dm * n_nb];
+
+            for (int iy = 0; iy < dmy_i; iy++)
+            {
+                const int dy0 = (iy - rad_i < 0) ? -iy : -rad_i;
+                const int dy1 = (iy + rad_i >= dmy_i) ? (dmy_i - 1 - iy) : rad_i;
+                int       any = 0;
+                for (int dy = dy0; dy <= dy1; dy++)
+                {
+                    if (rnz[iy + dy])
+                    {
+                        any = 1;
+                        break;
+                    }
+                }
+                if (!any)
+                {
+                    continue;
+                }
+                for (int ix = 0; ix < dmx_i; ix++)
+                {
+                    const size_t i_dm = (size_t) iy * (size_t) dmx_i + (size_t) ix;
+                    const float *w    = &ck[i_dm * n_nb];
+                    const int    dx0  = (ix - rad_i < 0) ? -ix : -rad_i;
+                    const int    dx1  = (ix + rad_i >= dmx_i) ? (dmx_i - 1 - ix) : rad_i;
+                    float        acc  = 0.0f;
+                    for (int dy = dy0; dy <= dy1; dy++)
+                    {
+                        const int jy = iy + dy;
+                        if (!rnz[jy])
+                        {
+                            continue;
+                        }
+                        const float *wrow = &w[(size_t) (dy + rad_i) * (size_t) side + (size_t) rad_i];
+                        const float *drow = &du[(size_t) jy * (size_t) dmx_i + (size_t) ix];
+                        for (int dx = dx0; dx <= dx1; dx++)
+                        {
+                            acc += wrow[dx] * drow[dx];
+                        }
+                    }
+                    dst[i_dm] += gain * acc;
+                }
+            }
+        }
+    }
     else
     {
         /* Modal / Subspace MIMO (kmode=0) or Decoupled Modal SISO (kmode=1) */
@@ -664,7 +827,7 @@ static void dmps_emit_tick(DMPS_CTX *ctx)
     memcpy(u_out, ctx->u_base, sizeof(float) * n_dm);
 
     float pk = 0.0f;
-    if (ctx->kern.kmode == 2u)
+    if (ctx->kern.kmode >= 2u)
     {
         float *rslot = &ctx->ring[(size_t) slot * n_dm];
         for (uint64_t i = 0; i < n_dm; i++)
@@ -836,16 +999,18 @@ static MILK_HOT errno_t dmpreshaper_compute(const MILK_RUNNABLE *self)
     ctx.m_ring = ctx.m_hw + 1u;
 
     /* 6. Allocate real-time working buffers & look-ahead ring */
-    const size_t slot_len = (ctx.kern.kmode == 2u) ? (size_t) ctx.n_dm : (size_t) ctx.kern.n_in;
+    const size_t slot_len = (ctx.kern.kmode >= 2u) ? (size_t) ctx.n_dm : (size_t) ctx.kern.n_in;
     ctx.u_base            = (float *) calloc(ctx.n_dm, sizeof(float));
     ctx.u_prev            = (float *) calloc(ctx.n_dm, sizeof(float));
     ctx.du                = (float *) calloc(ctx.n_dm, sizeof(float));
     ctx.u_out             = (float *) calloc(ctx.n_dm, sizeof(float));
     ctx.dc                = (float *) calloc(ctx.kern.n_in, sizeof(float));
     ctx.ring              = (float *) calloc((size_t) ctx.m_ring * slot_len, sizeof(float));
+    ctx.row_nz            = (uint8_t *) calloc(ctx.dmy, sizeof(uint8_t));
 
-    if (!ctx.u_base || !ctx.u_prev || !ctx.du || !ctx.u_out || !ctx.dc || !ctx.ring)
+    if (!ctx.u_base || !ctx.u_prev || !ctx.du || !ctx.u_out || !ctx.dc || !ctx.ring || !ctx.row_nz)
     {
+        free(ctx.row_nz);
         free(ctx.ring);
         free(ctx.dc);
         free(ctx.u_out);
@@ -986,6 +1151,7 @@ static MILK_HOT errno_t dmpreshaper_compute(const MILK_RUNNABLE *self)
         fpsresync_modvar_to_fps(dcfpsptr, dcfpsbindings, dcfpsnbindings);
     }
 
+    free(ctx.row_nz);
     free(ctx.ring);
     free(ctx.dc);
     free(ctx.u_out);
