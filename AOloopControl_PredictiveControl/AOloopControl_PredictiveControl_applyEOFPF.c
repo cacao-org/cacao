@@ -27,15 +27,18 @@
 
 static uint64_t p_loopindex                             = 0;
 static char     p_indata[FUNCTION_PARAMETER_STRMAXLEN]  = "aol0_modevalOL";
-static char     p_PFmat[FUNCTION_PARAMETER_STRMAXLEN]   = "aol0_eofPFmat";
-static char     p_outdata[FUNCTION_PARAMETER_STRMAXLEN] = "aol0_modevalPF";
-static char     p_outstat[FUNCTION_PARAMETER_STRMAXLEN] = "aol0_outPFstat";
-static uint32_t p_pforder                               = 8;
-static uint32_t p_diagorder                             = 16;
-static uint32_t p_blocksize                             = 128;
-static uint32_t p_nbmodemax                             = 4096;
-static uint32_t p_rampsteps                             = 64;
-static uint32_t p_nthreads                              = 4;
+static char     p_PFmat[FUNCTION_PARAMETER_STRMAXLEN]      = "aol0_eofPFmat";
+static char     p_PFmat_vel[FUNCTION_PARAMETER_STRMAXLEN]  = "aol0_eofPFmat_vel";
+static char     p_outdata[FUNCTION_PARAMETER_STRMAXLEN]    = "aol0_modevalPF";
+static char     p_outdata_vel[FUNCTION_PARAMETER_STRMAXLEN] = "aol0_modevalPF_vel";
+static char     p_outstat[FUNCTION_PARAMETER_STRMAXLEN]    = "aol0_outPFstat";
+static uint32_t p_pforder                                  = 8;
+static uint32_t p_diagorder                                = 16;
+static uint32_t p_blocksize                                = 128;
+static uint32_t p_nbmodemax                                = 4096;
+static uint32_t p_rampsteps                                = 64;
+static uint32_t p_nthreads                                 = 4;
+static int32_t  p_mr_enable                                = 0;
 
 static uint64_t o_active_frames = 0;
 
@@ -46,8 +49,12 @@ static uint64_t o_active_frames = 0;
       FPFLAG_DEFAULT_TRIGGER_STREAM | FPFLAG_PRIMARY_CLI_INPUT, "input PSOL mode stream")         \
     X(".PFmat", p_PFmat, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT,   \
       "input block-EOF matrix [(PForder*B) x NBmode]")                                            \
+    X(".PFmat_vel", p_PFmat_vel, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,   \
+      "optional multi-rate velocity block-EOF matrix")                                            \
     X(".outdata", p_outdata, FPTYPE_STREAMNAME, 1,                                                \
       FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT, "output predicted mode stream")            \
+    X(".outdata_vel", p_outdata_vel, FPTYPE_STREAMNAME, 0,                                        \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "optional multi-rate velocity mode stream")         \
     X(".outPFstat", p_outstat, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,     \
       "output per-mode active status [0..1]")                                                     \
     X(".PForder", &p_pforder, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,          \
@@ -62,6 +69,9 @@ static uint64_t o_active_frames = 0;
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "fade-in ramp steps")            \
     X(".nthreads", &p_nthreads, FPTYPE_UINT32, 0,                                                 \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "OpenMP threads across blocks")  \
+    X(".mr_enable", &p_mr_enable, FPTYPE_ONOFF, 0,                                                \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "enable multi-rate position+velocity prediction")                                           \
     X(".out.active_frames", &o_active_frames, FPTYPE_UINT64, 0, FPFLAG_DEFAULT_OUTPUT,            \
       "frames predicted with trained filter")
 
@@ -148,9 +158,33 @@ static MILK_HOT errno_t applyEOFPF_compute(const MILK_RUNNABLE *self)
     IMGID imgout     = stream_connect_create_2Df32(p_outdata, NBmode, 1);
     IMGID imgoutstat = stream_connect_create_2Df32(p_outstat, NBmode, 1);
 
+    char vel_mat_name[FUNCTION_PARAMETER_STRMAXLEN + 16];
+    char vel_out_name[FUNCTION_PARAMETER_STRMAXLEN + 16];
+    if (p_PFmat_vel[0] != '\0' && strcmp(p_PFmat_vel, "aol0_eofPFmat_vel") != 0)
+    {
+        snprintf(vel_mat_name, sizeof(vel_mat_name), "%s", p_PFmat_vel);
+    }
+    else
+    {
+        snprintf(vel_mat_name, sizeof(vel_mat_name), "%s_vel", p_PFmat);
+    }
+    if (p_outdata_vel[0] != '\0' && strcmp(p_outdata_vel, "aol0_modevalPF_vel") != 0)
+    {
+        snprintf(vel_out_name, sizeof(vel_out_name), "%s", p_outdata_vel);
+    }
+    else
+    {
+        snprintf(vel_out_name, sizeof(vel_out_name), "%s_vel", p_outdata);
+    }
+
+    IMGID imgPFmat_vel = stream_connect_create_2Df32(vel_mat_name, stride, NBmode);
+    IMGID imgout_vel   = stream_connect_create_2Df32(vel_out_name, NBmode, 1);
+
     memset(imgout.im->array.F, 0, sizeof(float) * NBmode);
+    memset(imgout_vel.im->array.F, 0, sizeof(float) * NBmode);
     memset(imgoutstat.im->array.F, 0, sizeof(float) * NBmode);
     ImageStreamIO_UpdateIm(imgoutstat.im);
+    ImageStreamIO_UpdateIm(imgout_vel.im);
 
     float *hist_ring = NULL;
     if (posix_memalign((void **) &hist_ring, 64, sizeof(float) * (size_t) NBmode * P_ring) != 0 ||
@@ -160,19 +194,26 @@ static MILK_HOT errno_t applyEOFPF_compute(const MILK_RUNNABLE *self)
     }
     memset(hist_ring, 0, sizeof(float) * (size_t) NBmode * P_ring);
 
-    float *out_buf = NULL;
-    if (posix_memalign((void **) &out_buf, 64, sizeof(float) * NBmode) != 0 || out_buf == NULL)
+    float *out_buf     = NULL;
+    float *out_vel_buf = NULL;
+    if (posix_memalign((void **) &out_buf, 64, sizeof(float) * NBmode) != 0 || out_buf == NULL ||
+        posix_memalign((void **) &out_vel_buf, 64, sizeof(float) * NBmode) != 0 ||
+        out_vel_buf == NULL)
     {
+        free(out_vel_buf);
+        free(out_buf);
         free(hist_ring);
         return RETURN_FAILURE;
     }
     memset(out_buf, 0, sizeof(float) * NBmode);
+    memset(out_vel_buf, 0, sizeof(float) * NBmode);
 
     uint32_t max_blocks = (NBmode + B - 1) / B;
     float   *x_pack     = NULL;
     if (posix_memalign((void **) &x_pack, 64, sizeof(float) * (size_t) max_blocks * pb_len) != 0 ||
         x_pack == NULL)
     {
+        free(out_vel_buf);
         free(out_buf);
         free(hist_ring);
         return RETURN_FAILURE;
@@ -194,12 +235,16 @@ static MILK_HOT errno_t applyEOFPF_compute(const MILK_RUNNABLE *self)
 
         uint32_t eff_modes = (p_nbmodemax < NBmode) ? p_nbmodemax : NBmode;
         int      pf_ready  = (imgPFmat.md[0].cnt0 > 0) && (n_hist >= (uint64_t) P_ring);
+        int      vel_ready =
+            pf_ready && (p_mr_enable == 1) && (imgPFmat_vel.md[0].cnt0 > 0) &&
+            (imgPFmat_vel.md[0].size[0] == stride) && (imgPFmat_vel.md[0].size[1] == NBmode);
 
         if (pf_ready && eff_modes > 0)
         {
-            const float *restrict pf_w = imgPFmat.im->array.F;
-            uint32_t nblocks           = (eff_modes + B - 1) / B;
-            int      nt                = (p_nthreads >= 1 && p_nthreads <= 16) ? (int) p_nthreads : 4;
+            const float *restrict pf_w     = imgPFmat.im->array.F;
+            const float *restrict pf_w_vel = vel_ready ? imgPFmat_vel.im->array.F : NULL;
+            uint32_t nblocks               = (eff_modes + B - 1) / B;
+            int      nt                    = (p_nthreads >= 1 && p_nthreads <= 16) ? (int) p_nthreads : 4;
             if ((uint32_t) nt > nblocks)
             {
                 nt = (int) nblocks;
@@ -208,6 +253,10 @@ static MILK_HOT errno_t applyEOFPF_compute(const MILK_RUNNABLE *self)
             if (eff_modes < NBmode)
             {
                 memset(&out_buf[eff_modes], 0, sizeof(float) * (NBmode - eff_modes));
+                if (vel_ready)
+                {
+                    memset(&out_vel_buf[eff_modes], 0, sizeof(float) * (NBmode - eff_modes));
+                }
             }
 
             size_t tail_off[EOFPF_MAX_ORDER];
@@ -251,6 +300,22 @@ static MILK_HOT errno_t applyEOFPF_compute(const MILK_RUNNABLE *self)
                         acc += row[pb_len + t] * hist_ring[tail_off[t] + m];
                     }
                     out_buf[m] = acc;
+
+                    if (pf_w_vel != NULL)
+                    {
+                        const float *restrict vrow = &pf_w_vel[(size_t) m * stride];
+                        float vacc                 = 0.0f;
+#pragma omp simd reduction(+ : vacc)
+                        for (uint32_t d = 0; d < pb_len; d++)
+                        {
+                            vacc += vrow[d] * xblk[d];
+                        }
+                        for (uint32_t t = 0; t < diag_tail; t++)
+                        {
+                            vacc += vrow[pb_len + t] * hist_ring[tail_off[t] + m];
+                        }
+                        out_vel_buf[m] = vacc;
+                    }
                 }
             }
 
@@ -276,6 +341,21 @@ static MILK_HOT errno_t applyEOFPF_compute(const MILK_RUNNABLE *self)
                 processinfo_update_output_stream(processinfo, imgoutstat.im, NULL);
             }
 
+            /* Publish velocity stream BEFORE imgout so modalfilter wakes with synchronized pair */
+            if (p_mr_enable == 1)
+            {
+                imgout_vel.md[0].write = 1;
+                if (vel_ready)
+                {
+                    memcpy(imgout_vel.im->array.F, out_vel_buf, sizeof(float) * NBmode);
+                }
+                else
+                {
+                    memset(imgout_vel.im->array.F, 0, sizeof(float) * NBmode);
+                }
+                processinfo_update_output_stream(processinfo, imgout_vel.im, NULL);
+            }
+
             imgout.md[0].write = 1;
             memcpy(imgout.im->array.F, out_buf, sizeof(float) * NBmode);
             processinfo_update_output_stream(processinfo, imgout.im, NULL);
@@ -290,6 +370,12 @@ static MILK_HOT errno_t applyEOFPF_compute(const MILK_RUNNABLE *self)
                 memset(imgoutstat.im->array.F, 0, sizeof(float) * NBmode);
                 processinfo_update_output_stream(processinfo, imgoutstat.im, NULL);
             }
+            if (p_mr_enable == 1)
+            {
+                imgout_vel.md[0].write = 1;
+                memset(imgout_vel.im->array.F, 0, sizeof(float) * NBmode);
+                processinfo_update_output_stream(processinfo, imgout_vel.im, NULL);
+            }
             imgout.md[0].write = 1;
             memset(imgout.im->array.F, 0, sizeof(float) * NBmode);
             processinfo_update_output_stream(processinfo, imgout.im, NULL);
@@ -300,6 +386,7 @@ static MILK_HOT errno_t applyEOFPF_compute(const MILK_RUNNABLE *self)
     MILK_PROCINFO_END(self)
 
     free(x_pack);
+    free(out_vel_buf);
     free(out_buf);
     free(hist_ring);
     return RETURN_SUCCESS;

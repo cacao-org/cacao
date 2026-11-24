@@ -38,6 +38,7 @@
 static uint64_t p_loopindex                                = 0;
 static char     p_inbuff[FUNCTION_PARAMETER_STRMAXLEN]     = "aol0_modevalOL_buff";
 static char     p_outPF[FUNCTION_PARAMETER_STRMAXLEN]      = "aol0_eofPFmat";
+static char     p_outPFvel[FUNCTION_PARAMETER_STRMAXLEN]   = "aol0_eofPFmat_vel";
 static uint32_t p_pforder                                  = 8;
 static uint32_t p_diagorder                                = 16;
 static uint32_t p_blocksize                                = 128;
@@ -69,6 +70,9 @@ static float    p_regime_kappa                             = 0.10f;
 static float    p_regime_bw                                = 3.0f;
 static float    p_regime_rlim                              = 3.0f;
 static char     p_regime_in[FUNCTION_PARAMETER_STRMAXLEN]  = "";
+static int32_t  p_mr_enable                                = 0;
+static float    p_mr_vel_reg_mult                          = 3.5f;
+static float    p_mr_vel_maxnorm2                          = 1.0f;
 
 static uint64_t o_n_updates     = 0;
 static uint64_t o_n_eof_updates = 0;
@@ -90,6 +94,7 @@ static float    o_rms_pred_oos  = 0.0f;
 static float    o_var_red_oos   = 0.0f;
 static float    o_overfit_ratio = 0.0f;
 static float    o_oos_rho_d_b0  = 0.0f;
+static float    o_mr_vel_rms    = 0.0f;
 
 #define FPS_PARAMS_MKEOFPF(X)                                                                     \
     X(".AOloopindex", &p_loopindex, FPTYPE_UINT64, 1,                                             \
@@ -98,6 +103,8 @@ static float    o_oos_rho_d_b0  = 0.0f;
       FPFLAG_DEFAULT_TRIGGER_STREAM | FPFLAG_PRIMARY_CLI_INPUT, "input PSOL telemetry buffer")    \
     X(".outPF", p_outPF, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT,   \
       "output block-EOF matrix [(PForder*B) x NBmode]")                                           \
+    X(".outPFvel", p_outPFvel, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,     \
+      "optional multi-rate velocity block-EOF matrix")                                            \
     X(".PForder", &p_pforder, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,          \
       "EOF lookback tap order (1..64)")                                                           \
     X(".diagorder", &p_diagorder, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
@@ -167,6 +174,15 @@ static float    o_oos_rho_d_b0  = 0.0f;
       "regime anchor spawn radius")                                                               \
     X(".regime_in", p_regime_in, FPTYPE_STREAMNAME, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,   \
       "optional 1D external regime descriptor SHM stream")                                        \
+    X(".mr_enable", &p_mr_enable, FPTYPE_ONOFF, 0,                                                \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "enable multi-rate position+velocity matrix solve")                                         \
+    X(".mr_vel_reg_mult", &p_mr_vel_reg_mult, FPTYPE_FLOAT32, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "extra ridge multiplier on multi-rate velocity channel")                                    \
+    X(".mr_vel_maxnorm2", &p_mr_vel_maxnorm2, FPTYPE_FLOAT32, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "row ||F_vel||_2^2 cap on multi-rate velocity channel")                                     \
     X(".out.n_updates", &o_n_updates, FPTYPE_UINT64, 0, FPFLAG_DEFAULT_OUTPUT,                    \
       "total published filter updates")                                                           \
     X(".out.n_eof_updates", &o_n_eof_updates, FPTYPE_UINT64, 0, FPFLAG_DEFAULT_OUTPUT,            \
@@ -206,7 +222,9 @@ static float    o_oos_rho_d_b0  = 0.0f;
     X(".out.overfit_ratio", &o_overfit_ratio, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,           \
       "OOS/in-sample predicted RMS ratio")                                                        \
     X(".out.oos_rho_d_b0", &o_oos_rho_d_b0, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,             \
-      "Block-0 lag-d autocorr of OOS pred residual")
+      "Block-0 lag-d autocorr of OOS pred residual")                                              \
+    X(".out.mr_vel_rms", &o_mr_vel_rms, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                 \
+      "RMS velocity target amplitude for multi-rate ramp")
 
 MILK_PARAMS_DEFINE(cacaopc_mkEOFPF, FPS_PARAMS_MKEOFPF);
 
@@ -269,10 +287,55 @@ static int solve_spd_diag(uint32_t P, const double *A, const double *b, double *
     return 1;
 }
 
+/* 4-point Catmull-Rom cubic interpolation of PSOL history at continuous frame coordinate t_f. */
+static inline double eval_cr_sample(const float *hist_fm,
+                                    uint32_t     n_valid,
+                                    uint32_t     NBmode,
+                                    uint32_t     m,
+                                    double       t_f)
+{
+    int64_t n  = (int64_t) n_valid;
+    int64_t i1 = (int64_t) floor(t_f);
+    double  u  = t_f - (double) i1;
+    if (i1 < 0)
+    {
+        i1 = 0;
+        u  = 0.0;
+    }
+    if (i1 >= n)
+    {
+        i1 = n - 1;
+        u  = 0.0;
+    }
+    int64_t i0 = (i1 > 0) ? (i1 - 1) : 0;
+    int64_t i2 = (i1 + 1 < n) ? (i1 + 1) : (n - 1);
+    int64_t i3 = (i1 + 2 < n) ? (i1 + 2) : (n - 1);
+
+    double p0 = (double) hist_fm[(size_t) i0 * NBmode + m];
+    double p1 = (double) hist_fm[(size_t) i1 * NBmode + m];
+    double p2 = (double) hist_fm[(size_t) i2 * NBmode + m];
+    double p3 = (double) hist_fm[(size_t) i3 * NBmode + m];
+    double u2 = u * u;
+    double u3 = u2 * u;
+    return 0.5 * ((2.0 * p1) + (-p0 + p2) * u + (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * u2 +
+                  (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * u3);
+}
+
+static inline double eval_cr_vel_target(const float *hist_fm,
+                                        uint32_t     n_valid,
+                                        uint32_t     NBmode,
+                                        uint32_t     m,
+                                        double       t_center)
+{
+    return eval_cr_sample(hist_fm, n_valid, NBmode, m, t_center + 0.5) -
+           eval_cr_sample(hist_fm, n_valid, NBmode, m, t_center - 0.5);
+}
+
 /**
  * @brief Progressive cold-start bootstrap: fit per-mode diagonal AR(P_diag) into block-EOF layout.
  *        Taps 0..P_eof-1 are placed on the block diagonal (k*B + local_m); extra taps
  *        P_eof..P_diag-1 are placed in the trailing diag_tail columns at offset P_eof*B.
+ *        When w_vel_stage != NULL, also solves zero-centered velocity ramp weights per mode.
  */
 static void solve_diag_bootstrap(const float *hist_x,
                                  const float *hist_y,
@@ -289,6 +352,7 @@ static void solve_diag_bootstrap(const float *hist_x,
                                  uint32_t     lat_i,
                                  double       lat_a,
                                  float       *w_stage,
+                                 float       *w_vel_stage,
                                  double      *out_var_ol,
                                  double      *out_var_zoh,
                                  double      *out_var_pred)
@@ -303,9 +367,16 @@ static void solve_diag_bootstrap(const float *hist_x,
         return;
     }
 
-    double reg_rel   = (p_diagreglambda > 1.0e-8f) ? (double) p_diagreglambda : 5.0e-3;
-    double max_norm2 = (p_diagmaxnorm2 > 0.1f) ? (double) p_diagmaxnorm2 : 1.35;
-    double max_dc    = 0.985;
+    double reg_rel    = (p_diagreglambda > 1.0e-8f) ? (double) p_diagreglambda : 5.0e-3;
+    double max_norm2  = (p_diagmaxnorm2 > 0.1f) ? (double) p_diagmaxnorm2 : 1.35;
+    double max_dc     = 0.985;
+    double vel_rmult  = (p_mr_vel_reg_mult > 0.25f) ? (double) p_mr_vel_reg_mult : 3.5;
+    double vel_n2cap  = (p_mr_vel_maxnorm2 > 0.05f) ? (double) p_mr_vel_maxnorm2 : 1.0;
+    double lat_tot    = (double) lat_i + lat_a;
+    uint32_t t1_vel   = use_fx ? ((n_valid > 2u) ? (n_valid - 2u) : 0u)
+                               : ((n_valid > lat_i + 2u) ? (n_valid - lat_i - 2u) : 0u);
+    uint32_t nrows_v  = (t1_vel > t0_idx) ? (t1_vel - t0_idx) : 0u;
+    int      do_vel   = (w_vel_stage != NULL && nrows_v >= 16u);
 
     double sum_var_ol   = 0.0;
     double sum_var_zoh  = 0.0;
@@ -316,12 +387,15 @@ static void solve_diag_bootstrap(const float *hist_x,
     {
         double G[EOFPF_MAX_ORDER * EOFPF_MAX_ORDER];
         double rhs[EOFPF_MAX_ORDER];
+        double rhs_v[EOFPF_MAX_ORDER];
         double rhs_r[EOFPF_MAX_ORDER];
         double A[EOFPF_MAX_ORDER * EOFPF_MAX_ORDER];
         double w_sol[EOFPF_MAX_ORDER];
+        double w_vel[EOFPF_MAX_ORDER];
 
         memset(G, 0, sizeof(double) * P * P);
         memset(rhs, 0, sizeof(double) * P);
+        memset(rhs_v, 0, sizeof(double) * P);
 
         double s_y    = 0.0;
         double s_y2   = 0.0;
@@ -341,6 +415,12 @@ static void solve_diag_bootstrap(const float *hist_x,
                 double y1 = (double) hist_y[(size_t) (tk + lat_i + 1u) * NBmode + m];
                 yk        = (1.0 - lat_a) * y0 + lat_a * y1;
             }
+            double yvk = 0.0;
+            if (do_vel && r < nrows_v)
+            {
+                double tc = use_fx ? (double) tk : ((double) tk + lat_tot);
+                yvk       = eval_cr_vel_target(hist_y, n_valid, NBmode, m, tc);
+            }
             double x0   = (double) hist_x[(size_t) tk * NBmode + m];
             double dz   = yk - x0;
             s_y    += yk;
@@ -351,6 +431,10 @@ static void solve_diag_bootstrap(const float *hist_x,
             {
                 double xi = (double) hist_x[(size_t) (tk - i) * NBmode + m];
                 rhs[i] += xi * yk;
+                if (do_vel && r < nrows_v)
+                {
+                    rhs_v[i] += xi * yvk;
+                }
                 for (uint32_t j = 0; j <= i; j++)
                 {
                     G[i * P + j] += xi * (double) hist_x[(size_t) (tk - j) * NBmode + m];
@@ -370,6 +454,7 @@ static void solve_diag_bootstrap(const float *hist_x,
         tr /= (double) P;
 
         memset(w_sol, 0, sizeof(double) * P);
+        memset(w_vel, 0, sizeof(double) * P);
         if (tr > 1.0e-26)
         {
             double lam = reg_rel * tr;
@@ -408,6 +493,56 @@ static void solve_diag_bootstrap(const float *hist_x,
             if (!ok)
             {
                 memset(w_sol, 0, sizeof(double) * P);
+            }
+
+            if (do_vel)
+            {
+                double lam_v = reg_rel * vel_rmult * tr;
+                int    ok_v  = 0;
+                for (int attempt = 0; attempt < 10; attempt++)
+                {
+                    memcpy(A, G, sizeof(double) * P * P);
+                    for (uint32_t i = 0; i < P; i++)
+                    {
+                        A[i * P + i] += lam_v;
+                    }
+                    if (!solve_spd_diag(P, A, rhs_v, w_vel))
+                    {
+                        lam_v *= 4.0;
+                        continue;
+                    }
+                    double n2 = 0.0;
+                    for (uint32_t k = 0; k < P; k++)
+                    {
+                        n2 += w_vel[k] * w_vel[k];
+                    }
+                    ok_v = 1;
+                    if (n2 <= vel_n2cap)
+                    {
+                        break;
+                    }
+                    lam_v *= 3.0;
+                }
+                if (!ok_v)
+                {
+                    memset(w_vel, 0, sizeof(double) * P);
+                }
+                else
+                {
+                    double dcv = 0.0;
+                    for (uint32_t k = 0; k < P; k++)
+                    {
+                        dcv += w_vel[k];
+                    }
+                    if (fabs(dcv) > 0.25)
+                    {
+                        double sc = 0.25 / fabs(dcv);
+                        for (uint32_t k = 0; k < P; k++)
+                        {
+                            w_vel[k] *= sc;
+                        }
+                    }
+                }
             }
         }
 
@@ -463,6 +598,29 @@ static void solve_diag_bootstrap(const float *hist_x,
         for (uint32_t k = p_main; k < P; k++)
         {
             row_out[pb_len + (k - p_main)] = (float) w_sol[k];
+        }
+        if (do_vel)
+        {
+            /* Enforce exact zero DC gain on velocity filter so static/slow offsets never sawtooth */
+            double vmean = 0.0;
+            for (uint32_t k = 0; k < P; k++)
+            {
+                vmean += w_vel[k];
+            }
+            vmean /= (double) P;
+            for (uint32_t k = 0; k < P; k++)
+            {
+                w_vel[k] -= vmean;
+            }
+            float *vrow_out = &w_vel_stage[(size_t) m * stride];
+            for (uint32_t k = 0; k < p_main; k++)
+            {
+                vrow_out[k * B + local_m] = (float) w_vel[k];
+            }
+            for (uint32_t k = p_main; k < P; k++)
+            {
+                vrow_out[pb_len + (k - p_main)] = (float) w_vel[k];
+            }
         }
     }
 
@@ -633,6 +791,17 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
     uint32_t stride         = P * B + diag_tail;
     IMGID    imgoutPF       = stream_connect_create_2Df32(p_outPF, stride, NBmode);
 
+    char out_vel_name[FUNCTION_PARAMETER_STRMAXLEN + 16];
+    if (p_outPFvel[0] != '\0' && strcmp(p_outPFvel, "aol0_eofPFmat_vel") != 0)
+    {
+        snprintf(out_vel_name, sizeof(out_vel_name), "%s", p_outPFvel);
+    }
+    else
+    {
+        snprintf(out_vel_name, sizeof(out_vel_name), "%s_vel", p_outPF);
+    }
+    IMGID imgoutPFvel = stream_connect_create_2Df32(out_vel_name, stride, NBmode);
+
     uint32_t max_slice_frames = 1;
     if (imgin.md[0].naxis == 3 && imgin.md[0].size[2] == 2 && imgin.md[0].size[1] > 1)
     {
@@ -712,8 +881,9 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
                                                   NBmode,
                                               sizeof(float))
                            : NULL;
-    float *w_stage   = (float *) calloc((size_t) NBmode * stride, sizeof(float));
-    float *tmp_in    = (float *) calloc((size_t) max_slice_frames * NBmode, sizeof(float));
+    float *w_stage     = (float *) calloc((size_t) NBmode * stride, sizeof(float));
+    float *w_vel_stage = (float *) calloc((size_t) NBmode * stride, sizeof(float));
+    float *tmp_in      = (float *) calloc((size_t) max_slice_frames * NBmode, sizeof(float));
 
     // Reusable double-precision BLAS/LAPACKE workspace for one block (max size D = P * B)
     size_t  D_max = (size_t) P * B;
@@ -725,8 +895,8 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
     double *W_blk = (double *) malloc(sizeof(double) * D_max * B);
     double *GW    = (double *) malloc(sizeof(double) * D_max * B);
 
-    if (!hist_fm || !w_stage || !tmp_in || !X_blk || !Y_blk || !G_blk || !A_blk || !R_blk ||
-        !W_blk || !GW || (dm_kern.mode > 0 && (!hist_fx || !u_oos_buf || !y_oos_buf)))
+    if (!hist_fm || !w_stage || !w_vel_stage || !tmp_in || !X_blk || !Y_blk || !G_blk || !A_blk ||
+        !R_blk || !W_blk || !GW || (dm_kern.mode > 0 && (!hist_fx || !u_oos_buf || !y_oos_buf)))
     {
         eofpf_gram_free(&gstate);
         eofpf_phys_free(&phys);
@@ -735,6 +905,7 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
         free(hist_fx);
         free(u_oos_buf);
         free(y_oos_buf);
+        free(w_vel_stage);
         free(w_stage);
         free(tmp_in);
         free(X_blk);
@@ -1418,11 +1589,22 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
             double sum_var_ol   = 0.0;
             double sum_var_zoh  = 0.0;
             double sum_var_pred = 0.0;
+            double sum_var_vel  = 0.0;
             double sum_e_tot    = 0.0;
             double sum_e_off    = 0.0;
             double w_eff_b0     = (double) nrows;
+            int    mr_on        = (p_mr_enable == 1);
+            double vel_rmult    = (p_mr_vel_reg_mult > 0.25f) ? (double) p_mr_vel_reg_mult : 3.5;
+            double vel_n2cap    = (p_mr_vel_maxnorm2 > 0.05f) ? (double) p_mr_vel_maxnorm2 : 1.0;
+            uint32_t t1_vel     = use_fx ? ((n_valid > 2u) ? (n_valid - 2u) : 0u)
+                                         : ((n_valid > lat_i + 2u) ? (n_valid - lat_i - 2u) : 0u);
+            uint32_t nrows_vel  = (t1_vel > t0_idx) ? (t1_vel - t0_idx) : 0u;
 
             memset(w_stage, 0, sizeof(float) * (size_t) NBmode * stride);
+            if (mr_on)
+            {
+                memset(w_vel_stage, 0, sizeof(float) * (size_t) NBmode * stride);
+            }
 
             uint32_t nblocks = (eff_modes + B - 1u) / B;
             for (uint32_t blk = 0; blk < nblocks; blk++)
@@ -1440,7 +1622,7 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
                     double dv_pred = 0.0;
                     solve_diag_bootstrap(hist_x, hist_fm, use_fx, fx_t0, NBmode, s0, s0 + b,
                                          n_valid, P, P_diag, B, stride, lat_i, lat_a, w_stage,
-                                         &dv_ol, &dv_zoh, &dv_pred);
+                                         mr_on ? w_vel_stage : NULL, &dv_ol, &dv_zoh, &dv_pred);
                     if (!use_gram)
                     {
                         sum_var_ol  += dv_ol;
@@ -1755,6 +1937,226 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
                         }
                     }
                 }
+
+                // Multi-rate smooth velocity ramp block solve in exact temporal-difference space
+                // (guarantees sum_k W_vel[k, i, j] == 0 so large static/slow modes never produce
+                // mean-reversion sawtooth jumps at WFS frame boundaries!).
+                if (mr_on && P >= 2u && nrows_vel >= 64u)
+                {
+                    uint32_t P_d  = P - 1u;
+                    uint32_t D_d  = P_d * b;
+                    double   b_v2 = 0.0;
+#pragma omp parallel for schedule(static)
+                    for (uint32_t r = 0; r < nrows_vel; r++)
+                    {
+                        uint32_t tk   = t0_idx + r;
+                        double  *xrow = &X_blk[(size_t) r * D_d];
+                        for (uint32_t k = 0; k < P_d; k++)
+                        {
+                            const float *hk0 = &hist_x[(size_t) (tk - k) * NBmode + s0];
+                            const float *hk1 = &hist_x[(size_t) (tk - k - 1u) * NBmode + s0];
+                            double      *xd  = &xrow[(size_t) k * b];
+                            for (uint32_t j = 0; j < b; j++)
+                            {
+                                xd[j] = (double) hk0[j] - (double) hk1[j];
+                            }
+                        }
+                    }
+                    cblas_dsyrk(CblasRowMajor, CblasLower, CblasTrans, (int) D_d, (int) nrows_vel,
+                                1.0, X_blk, (int) D_d, 0.0, G_blk, (int) D_d);
+                    for (uint32_t i = 0; i < D_d; i++)
+                    {
+                        for (uint32_t j = 0; j < i; j++)
+                        {
+                            G_blk[(size_t) j * D_d + i] = G_blk[(size_t) i * D_d + j];
+                        }
+                    }
+                    double tr_d = 0.0;
+                    for (uint32_t i = 0; i < D_d; i++)
+                    {
+                        tr_d += G_blk[(size_t) i * D_d + i];
+                    }
+                    tr_d /= (double) D_d;
+
+#pragma omp parallel for schedule(static) reduction(+ : b_v2)
+                    for (uint32_t r = 0; r < nrows_vel; r++)
+                    {
+                        uint32_t tk   = t0_idx + r;
+                        double   tc   = use_fx ? (double) tk : ((double) tk + (double) lat_fr);
+                        double  *yrow = &Y_blk[(size_t) r * b];
+                        for (uint32_t j = 0; j < b; j++)
+                        {
+                            double yv = eval_cr_vel_target(hist_fm, n_valid, NBmode, s0 + j, tc);
+                            yrow[j]   = yv;
+                            b_v2     += yv * yv;
+                        }
+                    }
+                    sum_var_vel += b_v2 / (double) nrows_vel;
+
+                    cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans, (int) D_d, (int) b,
+                                (int) nrows_vel, 1.0, X_blk, (int) D_d, Y_blk, (int) b, 0.0, R_blk,
+                                (int) b);
+
+                    int    solved_v     = 0;
+                    double lam_v_abs_ok = 0.0;
+                    if (tr_d > 1.0e-26)
+                    {
+                        double lam_v = lam_rel_used * vel_rmult;
+                        if (lam_v < reg_init * vel_rmult)
+                        {
+                            lam_v = reg_init * vel_rmult;
+                        }
+                        for (int attempt = 0; attempt < 10; attempt++)
+                        {
+                            memcpy(A_blk, G_blk, sizeof(double) * (size_t) D_d * D_d);
+                            double lam_abs = lam_v * tr_d;
+                            for (uint32_t i = 0; i < D_d; i++)
+                            {
+                                A_blk[(size_t) i * D_d + i] += lam_abs;
+                            }
+                            memcpy(W_blk, R_blk, sizeof(double) * (size_t) D_d * b);
+                            lapack_int info = LAPACKE_dpotrf(LAPACK_ROW_MAJOR, 'L', (lapack_int) D_d,
+                                                             A_blk, (lapack_int) D_d);
+                            if (info != 0)
+                            {
+                                lam_v *= 4.0;
+                                continue;
+                            }
+                            info = LAPACKE_dpotrs(LAPACK_ROW_MAJOR, 'L', (lapack_int) D_d,
+                                                  (lapack_int) b, A_blk, (lapack_int) D_d, W_blk,
+                                                  (lapack_int) b);
+                            if (info != 0)
+                            {
+                                lam_v *= 4.0;
+                                continue;
+                            }
+                            for (uint32_t j = 0; j < b; j++)
+                            {
+                                double n2 = 0.0;
+                                for (uint32_t d = 0; d < D_d; d++)
+                                {
+                                    double wv = W_blk[(size_t) d * b + j];
+                                    n2 += wv * wv;
+                                }
+                                n2_sorted[j] = n2;
+                            }
+                            qsort(n2_sorted, b, sizeof(double), cmp_double_asc);
+                            uint32_t idx95 = (b > 1) ? (uint32_t) (0.95 * (double) (b - 1)) : 0;
+                            solved_v       = 1;
+                            lam_v_abs_ok   = lam_abs;
+                            if (n2_sorted[idx95] <= vel_n2cap &&
+                                n2_sorted[b - 1] <= 1.75 * vel_n2cap)
+                            {
+                                break;
+                            }
+                            lam_v *= 2.5;
+                        }
+                    }
+                    if (!solved_v)
+                    {
+                        memset(W_blk, 0, sizeof(double) * (size_t) D_d * b);
+                    }
+                    else
+                    {
+                        /* Exact effective DOF df = D_d - lam_abs * tr((G + lam_abs I)^-1)
+                         * for per-mode James-Stein velocity shrinkage (zeroes pure white noise
+                         * and low-SNR faint-star high-order modes while keeping >98% of wind). */
+                        double df_eff = (double) D_d;
+                        if (LAPACKE_dpotri(LAPACK_ROW_MAJOR, 'L', (lapack_int) D_d, A_blk,
+                                           (lapack_int) D_d) == 0)
+                        {
+                            double tr_inv = 0.0;
+                            for (uint32_t i = 0; i < D_d; i++)
+                            {
+                                tr_inv += A_blk[(size_t) i * D_d + i];
+                            }
+                            df_eff = (double) D_d - lam_v_abs_ok * tr_inv;
+                            if (df_eff < 1.0)
+                            {
+                                df_eff = 1.0;
+                            }
+                            if (df_eff > (double) D_d)
+                            {
+                                df_eff = (double) D_d;
+                            }
+                        }
+                        cblas_dsymm(CblasRowMajor, CblasLeft, CblasLower, (int) D_d, (int) b, 1.0,
+                                    G_blk, (int) D_d, W_blk, (int) b, 0.0, GW, (int) b);
+                        double dof_den = (double) nrows_vel - df_eff;
+                        if (dof_den < 1.0)
+                        {
+                            dof_den = 1.0;
+                        }
+                        for (uint32_t j = 0; j < b; j++)
+                        {
+                            double y2_j  = 0.0;
+                            double wr_j  = 0.0;
+                            double wGw_j = 0.0;
+                            for (uint32_t r = 0; r < nrows_vel; r++)
+                            {
+                                double yv = Y_blk[(size_t) r * b + j];
+                                y2_j += yv * yv;
+                            }
+                            for (uint32_t d = 0; d < D_d; d++)
+                            {
+                                double wv  = W_blk[(size_t) d * b + j];
+                                wr_j      += wv * R_blk[(size_t) d * b + j];
+                                wGw_j     += wv * GW[(size_t) d * b + j];
+                            }
+                            double res2_j = y2_j - 2.0 * wr_j + wGw_j;
+                            if (res2_j < 0.0)
+                            {
+                                res2_j = 0.0;
+                            }
+                            double sig2_e = res2_j / dof_den;
+                            double alpha_s =
+                                (wGw_j > 1.0e-30) ? (1.0 - 1.5 * df_eff * sig2_e / wGw_j) : 0.0;
+                            if (alpha_s < 0.0)
+                            {
+                                alpha_s = 0.0;
+                            }
+                            if (alpha_s < 1.0)
+                            {
+                                for (uint32_t d = 0; d < D_d; d++)
+                                {
+                                    W_blk[(size_t) d * b + j] *= alpha_s;
+                                }
+                            }
+                        }
+                    }
+                    double hard_vn2 = 1.75 * vel_n2cap;
+                    for (uint32_t j = 0; j < b; j++)
+                    {
+                        double n2 = 0.0;
+                        for (uint32_t d = 0; d < D_d; d++)
+                        {
+                            double wv = W_blk[(size_t) d * b + j];
+                            n2 += wv * wv;
+                        }
+                        if (n2 > hard_vn2)
+                        {
+                            double sc = sqrt(hard_vn2 / n2);
+                            for (uint32_t d = 0; d < D_d; d++)
+                            {
+                                W_blk[(size_t) d * b + j] *= sc;
+                            }
+                        }
+                        /* Map difference weights W_diff[0..P_d-1] -> exact zero-DC position-lag
+                         * weights W_vel[0..P-1]: W[0]=V[0], W[k]=V[k]-V[k-1], W[P-1]=-V[P_d-1]. */
+                        float *vrow_out = &w_vel_stage[(size_t) (s0 + j) * stride];
+                        for (uint32_t k = 0; k < P; k++)
+                        {
+                            float *lag_out = &vrow_out[(size_t) k * B];
+                            for (uint32_t i = 0; i < b; i++)
+                            {
+                                double vp = (k < P_d) ? W_blk[(size_t) (k * b + i) * b + j] : 0.0;
+                                double vm =
+                                    (k > 0u) ? W_blk[(size_t) ((k - 1u) * b + i) * b + j] : 0.0;
+                                lag_out[i] = (float) (vp - vm);
+                            }
+                        }
+                    }
+                }
             }
 
             // Smooth cross-fade from diag AR(P_diag) bootstrap into cross-mode EOF
@@ -1766,6 +2168,26 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
             }
             float  beta   = 1.0f - alpha;
             size_t n_elem = (size_t) NBmode * stride;
+
+            if (mr_on)
+            {
+                imgoutPFvel.md[0].write = 1;
+                float *vdst             = imgoutPFvel.im->array.F;
+                if (alpha >= 0.9999f || imgoutPFvel.md[0].cnt0 == 0)
+                {
+                    memcpy(vdst, w_vel_stage, sizeof(float) * n_elem);
+                }
+                else
+                {
+#pragma omp parallel for schedule(static)
+                    for (size_t idx = 0; idx < n_elem; idx++)
+                    {
+                        vdst[idx] = beta * vdst[idx] + alpha * w_vel_stage[idx];
+                    }
+                }
+                processinfo_update_output_stream(processinfo, imgoutPFvel.im, NULL);
+                o_mr_vel_rms = (float) sqrt(sum_var_vel);
+            }
 
             imgoutPF.md[0].write = 1;
             float *dst           = imgoutPF.im->array.F;
@@ -1800,14 +2222,39 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
             double sum_var_ol   = 0.0;
             double sum_var_zoh  = 0.0;
             double sum_var_pred = 0.0;
+            int    mr_on        = (p_mr_enable == 1);
             memset(w_stage, 0, sizeof(float) * (size_t) NBmode * stride);
+            if (mr_on)
+            {
+                memset(w_vel_stage, 0, sizeof(float) * (size_t) NBmode * stride);
+            }
             solve_diag_bootstrap(hist_x, hist_fm, use_fx, fx_t0, NBmode, 0u, eff_modes, n_valid, P,
-                                 P_diag, B, stride, lat_i, lat_a, w_stage, &sum_var_ol,
-                                 &sum_var_zoh, &sum_var_pred);
+                                 P_diag, B, stride, lat_i, lat_a, w_stage,
+                                 mr_on ? w_vel_stage : NULL, &sum_var_ol, &sum_var_zoh,
+                                 &sum_var_pred);
 
-            float alpha = (o_n_updates == 0) ? 1.0f : 0.30f;
-            float beta  = 1.0f - alpha;
+            float  alpha  = (o_n_updates == 0) ? 1.0f : 0.30f;
+            float  beta   = 1.0f - alpha;
             size_t n_elem = (size_t) NBmode * stride;
+
+            if (mr_on)
+            {
+                imgoutPFvel.md[0].write = 1;
+                float *vdst             = imgoutPFvel.im->array.F;
+                if (alpha >= 0.9999f || imgoutPFvel.md[0].cnt0 == 0)
+                {
+                    memcpy(vdst, w_vel_stage, sizeof(float) * n_elem);
+                }
+                else
+                {
+#pragma omp parallel for schedule(static)
+                    for (size_t idx = 0; idx < n_elem; idx++)
+                    {
+                        vdst[idx] = beta * vdst[idx] + alpha * w_vel_stage[idx];
+                    }
+                }
+                processinfo_update_output_stream(processinfo, imgoutPFvel.im, NULL);
+            }
 
             imgoutPF.md[0].write = 1;
             float *dst           = imgoutPF.im->array.F;
@@ -1858,6 +2305,7 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
     free(Y_blk);
     free(X_blk);
     free(tmp_in);
+    free(w_vel_stage);
     free(w_stage);
     free(y_oos_buf);
     free(u_oos_buf);

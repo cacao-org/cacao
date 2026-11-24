@@ -84,6 +84,10 @@ static uint32_t PF_NBblock                            = 0;
 static uint32_t PF_maxwaitus                          = 500;
 static float    PFmixcoeff                            = 1.0f;
 static uint64_t PF_timeout_cnt                        = 0;
+static int32_t  PF_mr_enable                          = 0;
+static float    PF_mr_velgain                         = 1.0f;
+static uint32_t PF_mr_substeps                        = 1;
+static int32_t  PF_mr_pacer_out                       = 0;
 static int32_t  autoloopenable                        = 0;
 static float    autoloopsleep                         = 0.001f;
 static int32_t  selfRMenable                          = 0;
@@ -118,10 +122,14 @@ typedef struct
 
     // Pseudo-Open-Loop (PSOL) reconstruction
     float   *mvalDMbuff;
+    float   *mvalDMvelbuff;
+    float   *mvalvelapply;
     float   *mvalDMOL;
     int      DMtstep;
     IMGID    imgOLmval;
     IMGID    imgmWFSfact;
+    IMGID    imgmvalPFvel;
+    IMGID    imgDMtraj;
     int      dyn_ready;
     uint32_t dyn_mode;   /* 0=legacy 2-tap, 1=diag FIR, 2=MIMO FIR */
     uint32_t dyn_ntaps;
@@ -277,8 +285,10 @@ static MFILT_STATE *modal_filter_init(uint32_t NBmode)
     state->mvaloutapply = (float *) calloc(NBmode, sizeof(float));
 
     // Pseudo-Open-Loop (PSOL)
-    state->mvalDMbuff = (float *) calloc((size_t) NBmode * MFILT_NBDMTSTEP, sizeof(float));
-    state->mvalDMOL   = (float *) calloc(NBmode, sizeof(float));
+    state->mvalDMbuff    = (float *) calloc((size_t) NBmode * MFILT_NBDMTSTEP, sizeof(float));
+    state->mvalDMvelbuff = (float *) calloc((size_t) NBmode * MFILT_NBDMTSTEP, sizeof(float));
+    state->mvalvelapply  = (float *) calloc(NBmode, sizeof(float));
+    state->mvalDMOL      = (float *) calloc(NBmode, sizeof(float));
 
     char name[STRINGMAXLEN_STREAMNAME];
 
@@ -288,6 +298,12 @@ static MFILT_STATE *modal_filter_init(uint32_t NBmode)
     WRITE_IMAGENAME(name, "aol%lu_mWFSfact", AOloopindex);
     state->imgmWFSfact = stream_connect_create_2Df32(name, NBmode, 1);
     init_ones_if_all_zero(state->imgmWFSfact, NBmode);
+
+    WRITE_IMAGENAME(name, "aol%lu_modevalPF_vel", AOloopindex);
+    state->imgmvalPFvel = stream_connect_create_2Df32(name, NBmode, 1);
+
+    WRITE_IMAGENAME(name, "aol%lu_modevalDM_traj", AOloopindex);
+    state->imgDMtraj = stream_connect_create_2Df32(name, NBmode, 2);
 
     WRITE_IMAGENAME(name, "aol%lu_modevalauxDM", AOloopindex);
     state->imgauxmDM = stream_connect_create_2Df32(name, NBmode, 1);
@@ -450,6 +466,8 @@ static void modal_filter_cleanup(MFILT_STATE *state)
     free(state->mvalout);
     free(state->mvaloutapply);
     free(state->mvalDMbuff);
+    free(state->mvalDMvelbuff);
+    free(state->mvalvelapply);
     free(state->mvalDMOL);
     free(state->dyn_H_diag);
     free(state->dyn_H_mimo);
@@ -965,9 +983,20 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
         // Emit immediately on critical path when PF is disabled
         if (!use_pf)
         {
-            imgout->md[0].write = 1;
-            memcpy(imgout->array.F, state->mvaloutapply, sizeof(float) * NBmode);
-            processinfo_update_output_stream(processinfo, imgout, NULL);
+            memset(state->mvalvelapply, 0, sizeof(float) * NBmode);
+            if (PF_mr_enable == 1)
+            {
+                state->imgDMtraj.md[0].write = 1;
+                memcpy(state->imgDMtraj.im->array.F, state->mvaloutapply, sizeof(float) * NBmode);
+                memset(&state->imgDMtraj.im->array.F[NBmode], 0, sizeof(float) * NBmode);
+                processinfo_update_output_stream(processinfo, state->imgDMtraj.im, NULL);
+            }
+            if (!(PF_mr_enable == 1 && PF_mr_pacer_out == 1))
+            {
+                imgout->md[0].write = 1;
+                memcpy(imgout->array.F, state->mvaloutapply, sizeof(float) * NBmode);
+                processinfo_update_output_stream(processinfo, imgout, NULL);
+            }
         }
 
         // Pseudo-Open-Loop (PSOL) Reconstruction & Optional Predictive Control
@@ -1094,6 +1123,16 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                 {
                     state->mvalDMOL[mi] = latfrac * dm_b0[mi] + w_b1 * dm_b1[mi];
                 }
+                if (PF_mr_enable == 1 && PF_mr_substeps > 1u)
+                {
+                    const float *restrict dmv_b0 = &state->mvalDMvelbuff[(size_t) DMtstep0 * NBmode];
+                    const float *restrict dmv_b1 = &state->mvalDMvelbuff[(size_t) DMtstep1 * NBmode];
+                    float c_ramp                 = 0.5f * latfrac * w_b1;
+                    for (uint32_t mi = 0; mi < NBmode; mi++)
+                    {
+                        state->mvalDMOL[mi] += c_ramp * (dmv_b0[mi] - dmv_b1[mi]);
+                    }
+                }
                 for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
                     ol_out[mi] = (psol_WFSfact * mwfsf[mi]) * wfs_in[mi] - state->mvalDMOL[mi];
@@ -1101,9 +1140,14 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
             }
             else
             {
+                const float *restrict dmv_b0 = &state->mvalDMvelbuff[(size_t) DMtstep0 * NBmode];
+                const float *restrict dmv_b1 = &state->mvalDMvelbuff[(size_t) DMtstep1 * NBmode];
+                float c_ramp =
+                    (PF_mr_enable == 1 && PF_mr_substeps > 1u) ? (0.5f * latfrac * w_b1) : 0.0f;
                 for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
-                    float tmpmDMval     = latfrac * dm_b0[mi] + w_b1 * dm_b1[mi];
+                    float tmpmDMval = latfrac * dm_b0[mi] + w_b1 * dm_b1[mi] +
+                                      c_ramp * (dmv_b0[mi] - dmv_b1[mi]);
                     state->mvalDMOL[mi] = tmpmDMval;
                     ol_out[mi]          = (psol_WFSfact * mwfsf[mi]) * wfs_in[mi] - tmpmDMval;
                 }
@@ -1149,10 +1193,13 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                     }
                 }
 
-                const float *restrict mval_pf  = state->imgmvalPF.im->array.F;
-                const float *restrict pf_stat  = state->imgoutPFstat.im->array.F;
-                const float *restrict mix_fact = state->imgmPFmixfact.im->array.F;
-                float       *restrict mix_out  = state->imgmPFmix.im->array.F;
+                const float *restrict mval_pf     = state->imgmvalPF.im->array.F;
+                const float *restrict mval_pf_vel = state->imgmvalPFvel.im->array.F;
+                const float *restrict pf_stat     = state->imgoutPFstat.im->array.F;
+                const float *restrict mix_fact    = state->imgmPFmixfact.im->array.F;
+                float       *restrict mix_out     = state->imgmPFmix.im->array.F;
+                int mr_vel_on =
+                    (PF_mr_enable == 1 && PF_mr_substeps > 1u && state->imgmvalPFvel.md[0].cnt0 > 0);
 
                 for (uint32_t mi = 0; mi < NBmode; mi++)
                 {
@@ -1174,7 +1221,8 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                     {
                         mixf = 1.0f;
                     }
-                    mix_out[mi] = mixf;
+                    mix_out[mi]            = mixf;
+                    state->mvalvelapply[mi] = 0.0f;
 
                     if (mixf > 0.0f)
                     {
@@ -1182,7 +1230,7 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                         float wfs_to_dm = psol_WFSfact * mwfsf[mi];
                         float cmd_pf    = wfs_to_dm * zpo[mi] - mval_pf[mi];
                         float dmc_new   = mixf * cmd_pf + (1.0f - mixf) * state->mvalDMc[mi];
-                        float limit   = ml[mi];
+                        float limit     = ml[mi];
                         if (dmc_new > limit)
                         {
                             dmc_new = limit;
@@ -1204,6 +1252,21 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                         }
                         state->mvaloutapply[mi] =
                             state->mvalout[mi] + state->selfRMpokecmd[mi] + state->ogprobecmd[mi];
+
+                        if (mr_vel_on)
+                        {
+                            float vr   = -mixf * PF_mr_velgain * mval_pf_vel[mi];
+                            float vlim = 0.5f * limit;
+                            if (vr > vlim)
+                            {
+                                vr = vlim;
+                            }
+                            else if (vr < -vlim)
+                            {
+                                vr = -vlim;
+                            }
+                            state->mvalvelapply[mi] = vr;
+                        }
                     }
                 }
                 if (testOL == 1)
@@ -1211,9 +1274,21 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                     state->mvaloutapply[state->testOL_active_mode] += state->testOL_pokecmd;
                 }
 
-                imgout->md[0].write = 1;
-                memcpy(imgout->array.F, state->mvaloutapply, sizeof(float) * NBmode);
-                processinfo_update_output_stream(processinfo, imgout, NULL);
+                if (PF_mr_enable == 1)
+                {
+                    state->imgDMtraj.md[0].write = 1;
+                    memcpy(state->imgDMtraj.im->array.F, state->mvaloutapply,
+                           sizeof(float) * NBmode);
+                    memcpy(&state->imgDMtraj.im->array.F[NBmode], state->mvalvelapply,
+                           sizeof(float) * NBmode);
+                    processinfo_update_output_stream(processinfo, state->imgDMtraj.im, NULL);
+                }
+                if (!(PF_mr_enable == 1 && PF_mr_pacer_out == 1))
+                {
+                    imgout->md[0].write = 1;
+                    memcpy(imgout->array.F, state->mvaloutapply, sizeof(float) * NBmode);
+                    processinfo_update_output_stream(processinfo, imgout, NULL);
+                }
 
                 if (PFmixcoeff != state->prev_pfmix ||
                     state->imgmPFmixfact.md[0].cnt0 != state->prev_mpf_cnt0)
@@ -1250,8 +1325,10 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
                 }
             }
 
-            // Record actual applied DM command (ctrl + selfRM/testOL probes) into PSOL ring buffer
+            // Record actual applied DM command & ramp velocity into PSOL ring buffers
             memcpy(&state->mvalDMbuff[(size_t) state->DMtstep * NBmode], state->mvaloutapply,
+                   sizeof(float) * NBmode);
+            memcpy(&state->mvalDMvelbuff[(size_t) state->DMtstep * NBmode], state->mvalvelapply,
                    sizeof(float) * NBmode);
             state->DMtstep = next_tstep;
 
@@ -1653,6 +1730,18 @@ static MILK_HOT void modal_filter_step(PROCESSINFO *processinfo,
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "max wait time blks [us]")       \
     X(".PF.mixcoeff", &PFmixcoeff, FPTYPE_FLOAT32, 0,                                             \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "mixing coeff")                  \
+    X(".PF.mr_enable", &PF_mr_enable, FPTYPE_ONOFF, 0,                                            \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "enable multi-rate trajectory output and exposure-averaged PSOL")                           \
+    X(".PF.mr_velgain", &PF_mr_velgain, FPTYPE_FLOAT32, 0,                                        \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "multi-rate velocity ramp gain multiplier")                                                 \
+    X(".PF.mr_substeps", &PF_mr_substeps, FPTYPE_UINT32, 0,                                       \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "DM sub-steps per WFS frame (1=ZOH, >1=multi-rate)")                                        \
+    X(".PF.mr_pacer_out", &PF_mr_pacer_out, FPTYPE_ONOFF, 0,                                      \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "suppress direct outmval write when mvalpacer owns modevalDM")                              \
     X(".PF.timeout_cnt", &PF_timeout_cnt, FPTYPE_UINT64, 0, FPFLAG_DEFAULT_OUTPUT,                \
       "PF wait timeouts")                                                                         \
     X(".autoloop.enable", &autoloopenable, FPTYPE_ONOFF, 0,                                       \
