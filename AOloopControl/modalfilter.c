@@ -610,105 +610,100 @@ static void __attribute__((unused)) modalfilter_validate()
  * 2.  UNIFIED PARAMETER TABLE (X-Macro)
  * ============================================================= */
 
-#define FPS_PARAMS(X)                                                                             \
-    X(".inmval", inmval, FPTYPE_STREAMNAME, 1,                                                    \
-      FPFLAG_DEFAULT_TRIGGER_STREAM | FPFLAG_PRIMARY_CLI_INPUT | FPFLAG_STREAM_RUN_REQUIRED |     \
-          FPFLAG_CHECKSTREAM,                                                                     \
-      "input mode values from WFS")                                                               \
-    X(".outmval", outmval, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT, \
-      "output mode values to DM")                                                                 \
-    X(".loopgain", &loopgain, FPTYPE_FLOAT32, 0,                                                  \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "loop gain")                     \
-    X(".loopmult", &loopmult, FPTYPE_FLOAT32, 0,                                                  \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "loop mult")                     \
-    X(".looplimit", &looplimit, FPTYPE_FLOAT32, 0,                                                \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "loop limit")                    \
-    X(".loopZERO", &loopZERO, FPTYPE_ONOFF, 0,                                                    \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "loop zero")                     \
-    X(".AOloopindex", &AOloopindex, FPTYPE_UINT64, 1,                                             \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_PRIMARY_CLI_INPUT, "AO loop index")                           \
-    X(".loopON", &loopON, FPTYPE_ONOFF, 0,                                                        \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "loop on/off (off=freeze)")      \
-    X(".loopNBstep", &loopNBstep, FPTYPE_INT64, 0,                                                \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "loop nb steps (-1 = inf)")      \
-    X(".comp.OLmodes", &compOL, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,         \
-      "compute open loop modes")                                                                  \
-    X(".comp.WFSfact", &psol_WFSfact, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
-      "ampl correction factor WFS")                                                               \
-    X(".comp.latencyhardwfr", &latencyhardwfr, FPTYPE_FLOAT32, 0,                                 \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "hw DM-to-WFS latency [fr]")                       \
-    X(".comp.latencysoftwfr", &latencysoftwfr, FPTYPE_FLOAT32, 0,                                 \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "sw latency [frame]")                              \
-    X(".comp.tbuff", &comptbuff, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
-      "compute telemetry buffers")                                                                \
-    X(".comp.autolim", &autolim, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
-      "automatic modal limits")                                                                   \
-    X(".comp.autolimprobegain", &autolimprobegain, FPTYPE_FLOAT32, 0,                             \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "sigma measurement gain")                          \
-    X(".comp.autolimsigmafact", &autolimsigmafact, FPTYPE_FLOAT32, 0,                             \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "autolimit sigma clip factor")                     \
-    X(".comp.tbuffsize", &tbuffsize, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,   \
-      "buffer time size")                                                                         \
-    X(".auxDMmval.enable", &auxDMmvalenable, FPTYPE_ONOFF, 0,                                     \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "mixing aux DM mode vals")                         \
-    X(".auxDMmval.mixfact", &auxDMmvalmixfact, FPTYPE_FLOAT32, 0,                                 \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "mixing mult factor")                              \
-    X(".auxDMmval.modulate", &auxDMmvalmodulate, FPTYPE_ONOFF, 0,                                 \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "modulate auxDM temporally")                       \
-    X(".auxDMmval.modperiod", &auxDMmvalmodperiod, FPTYPE_FLOAT32, 0,                             \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "auxDM mod period [frame]")                        \
-    X(".PF.enable", &enablePF, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,          \
-      "enable predictive filter")                                                                 \
-    X(".PF.NBblock", &PF_NBblock, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
-      "nb blocks to wait from")                                                                   \
-    X(".PF.maxwaitus", &PF_maxwaitus, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,  \
-      "max wait time blks [us]")                                                                  \
-    X(".PF.mixcoeff", &PFmixcoeff, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,    \
-      "mixing coeff")                                                                             \
-    X(".autoloop.enable", &autoloopenable, FPTYPE_ONOFF, 0,                                       \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "autoloop self-test")                              \
-    X(".autoloop.sleep", &autoloopsleep, FPTYPE_FLOAT32, 0,                                       \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "loop sleep time")                                 \
-    X(".selfRM.enable", &selfRMenable, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,  \
-      "start self RM measurement")                                                                \
-    X(".selfRM.NBmode", &selfRMnbmode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
-      "number of mode poked")                                                                     \
-    X(".selfRM.pokeampl", &selfRMpokeampl, FPTYPE_FLOAT32, 0,                                     \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "poke amplitude")                                  \
-    X(".selfRM.zsize", &selfRMzsize, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,   \
-      "nb time steps recorded")                                                                   \
-    X(".selfRM.nbiter", &selfRMnbiter, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, \
-      "nb iterations averaged")                                                                   \
-    X(".selfRM.nbsettle", &selfRMnbsettlestep, FPTYPE_UINT32, 0,                                  \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "nb loop iter to settle")                          \
-    X(".testOL.enable", &testOL, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
-      "OL reconstruction test")                                                                   \
-    X(".testOL.loop", &testOLloop, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
-      "run inloop")                                                                               \
-    X(".testOL.updategain", &testOLupdategain, FPTYPE_FLOAT32, 0,                                 \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "update gain")                                     \
-    X(".testOL.mode", &testOLmode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,     \
-      "mode index")                                                                               \
-    X(".testOL.ampl", &testOLampl, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,    \
-      "amplitude")                                                                                \
-    X(".testOL.nbsample", &testOLnbsample, FPTYPE_UINT32, 0,                                      \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "number of samples")                               \
-    X(".testOL.cnt", &testOLcnt, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,       \
-      "samples count")                                                                            \
-    X(".offload.enable", &offload, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
-      "offload output ON/OFF")                                                                    \
-    X(".offload.loopgain", &offloadloopgain, FPTYPE_FLOAT32, 0,                                   \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "offload loop gain")                               \
-    X(".offload.loopmult", &offloadloopmult, FPTYPE_FLOAT32, 0,                                   \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "offload loop mult")                               \
-    X(".offload.looplimit", &offloadlooplimit, FPTYPE_FLOAT32, 0,                                 \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "offload loop limit")                              \
-    X(".rec.enable", &recburst, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,         \
-      "telemetry burt write")                                                                     \
-    X(".rec.mode", &recburst_mode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,     \
-      "mode index")                                                                               \
-    X(".rec.nbstep", &recburst_nbsample, FPTYPE_UINT32, 0,                                        \
-      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT, "number of steps recorded")
+#define FPS_PARAMS(X)                                                                              \
+    X(".inmval", inmval, FPTYPE_STREAMNAME, 1,                                                     \
+      FPFLAG_DEFAULT_TRIGGER_STREAM | FPFLAG_STREAM_RUN_REQUIRED | FPFLAG_CHECKSTREAM,             \
+      "input mode values from WFS")                                                                \
+    X(".outmval", outmval, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "output mode values to DM") \
+    X(".loopgain", &loopgain, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,           \
+      "loop gain")                                                                                 \
+    X(".loopmult", &loopmult, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,           \
+      "loop mult")                                                                                 \
+    X(".looplimit", &looplimit, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,         \
+      "loop limit")                                                                                \
+    X(".loopZERO", &loopZERO, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,             \
+      "loop zero")                                                                                 \
+    X(".AOloopindex", &AOloopindex, FPTYPE_UINT64, 1, FPFLAG_DEFAULT_INPUT, "AO loop index")       \
+    X(".loopON", &loopON, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,                 \
+      "loop on/off (off=freeze)")                                                                  \
+    X(".loopNBstep", &loopNBstep, FPTYPE_INT64, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,         \
+      "loop nb steps (-1 = inf)")                                                                  \
+    X(".comp.OLmodes", &compOL, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,           \
+      "compute open loop modes")                                                                   \
+    X(".comp.WFSfact", &psol_WFSfact, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,   \
+      "ampl correction factor WFS")                                                                \
+    X(".comp.latencyhardwfr", &latencyhardwfr, FPTYPE_FLOAT32, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "hw DM-to-WFS latency [fr]")                         \
+    X(".comp.latencysoftwfr", &latencysoftwfr, FPTYPE_FLOAT32, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "sw latency [frame]")                                \
+    X(".comp.tbuff", &comptbuff, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,          \
+      "compute telemetry buffers")                                                                 \
+    X(".comp.autolim", &autolim, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,          \
+      "automatic modal limits")                                                                    \
+    X(".comp.autolimprobegain", &autolimprobegain, FPTYPE_FLOAT32, 0,                              \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "sigma measurement gain")                            \
+    X(".comp.autolimsigmafact", &autolimsigmafact, FPTYPE_FLOAT32, 0,                              \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "autolimit sigma clip factor")                       \
+    X(".comp.tbuffsize", &tbuffsize, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT, "buffer time size")   \
+    X(".auxDMmval.enable", &auxDMmvalenable, FPTYPE_ONOFF, 0,                                      \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "mixing aux DM mode vals")                           \
+    X(".auxDMmval.mixfact", &auxDMmvalmixfact, FPTYPE_FLOAT32, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "mixing mult factor")                                \
+    X(".auxDMmval.modulate", &auxDMmvalmodulate, FPTYPE_ONOFF, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "modulate auxDM temporally")                         \
+    X(".auxDMmval.modperiod", &auxDMmvalmodperiod, FPTYPE_FLOAT32, 0,                              \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "auxDM mod period [frame]")                          \
+    X(".PF.enable", &enablePF, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,            \
+      "enable predictive filter")                                                                  \
+    X(".PF.NBblock", &PF_NBblock, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,        \
+      "nb blocks to wait from")                                                                    \
+    X(".PF.maxwaitus", &PF_maxwaitus, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,    \
+      "max wait time blks [us]")                                                                   \
+    X(".PF.mixcoeff", &PFmixcoeff, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,      \
+      "mixing coeff")                                                                              \
+    X(".autoloop.enable", &autoloopenable, FPTYPE_ONOFF, 0,                                        \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "autoloop self-test")                                \
+    X(".autoloop.sleep", &autoloopsleep, FPTYPE_FLOAT32, 0,                                        \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "loop sleep time")                                   \
+    X(".selfRM.enable", &selfRMenable, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,    \
+      "start self RM measurement")                                                                 \
+    X(".selfRM.NBmode", &selfRMnbmode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,   \
+      "number of mode poked")                                                                      \
+    X(".selfRM.pokeampl", &selfRMpokeampl, FPTYPE_FLOAT32, 0,                                      \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "poke amplitude")                                    \
+    X(".selfRM.zsize", &selfRMzsize, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT,                       \
+      "nb time steps recorded")                                                                    \
+    X(".selfRM.nbiter", &selfRMnbiter, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,   \
+      "nb iterations averaged")                                                                    \
+    X(".selfRM.nbsettle", &selfRMnbsettlestep, FPTYPE_UINT32, 0,                                   \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "nb loop iter to settle")                            \
+    X(".testOL.enable", &testOL, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,          \
+      "OL reconstruction test")                                                                    \
+    X(".testOL.loop", &testOLloop, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,        \
+      "run inloop")                                                                                \
+    X(".testOL.updategain", &testOLupdategain, FPTYPE_FLOAT32, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "update gain")                                       \
+    X(".testOL.mode", &testOLmode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,       \
+      "mode index")                                                                                \
+    X(".testOL.ampl", &testOLampl, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,      \
+      "amplitude")                                                                                 \
+    X(".testOL.nbsample", &testOLnbsample, FPTYPE_UINT32, 0,                                       \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "number of samples")                                 \
+    X(".testOL.cnt", &testOLcnt, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT, "samples count")          \
+    X(".offload.enable", &offload, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,        \
+      "offload output ON/OFF")                                                                     \
+    X(".offload.loopgain", &offloadloopgain, FPTYPE_FLOAT32, 0,                                    \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "offload loop gain")                                 \
+    X(".offload.loopmult", &offloadloopmult, FPTYPE_FLOAT32, 0,                                    \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "offload loop mult")                                 \
+    X(".offload.looplimit", &offloadlooplimit, FPTYPE_FLOAT32, 0,                                  \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "offload loop limit")                                \
+    X(".rec.enable", &recburst, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,           \
+      "telemetry burt write")                                                                      \
+    X(".rec.mode", &recburst_mode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,       \
+      "mode index")                                                                                \
+    X(".rec.nbstep", &recburst_nbsample, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, \
+      "number of steps recorded")
 
 
 /* ================================================================

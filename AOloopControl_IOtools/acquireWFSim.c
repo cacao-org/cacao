@@ -49,33 +49,34 @@ static char     wfszposname[FUNCTION_PARAMETER_STRMAXLEN] = "";
       "input stream name")                                                                        \
     X(".AOloopindex", &AOloopindex, FPTYPE_UINT32, 1, FPFLAG_DEFAULT_INPUT, "loop index")         \
     X(".semindex", &semindex, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT, "input semaphore index")    \
-    X(".WFStaveragegain", &WFStaveragegain, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,              \
-      "tmlt*(1-tg)*imwfs3+tg*imwfs2")                                                             \
-    X(".WFStaveragemult", &WFStaveragemult, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,              \
-      "tmlt*(1-tg)*imwfs3+tg*imwfs2")                                                             \
-    X(".WFSrefcmult", &WFSrefcmult, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                      \
+    X(".WFStaveragegain", &WFStaveragegain, FPTYPE_FLOAT32, 0,                                    \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "tmlt*(1-tg)*imwfs3+tg*imwfs2")                     \
+    X(".WFStaveragemult", &WFStaveragemult, FPTYPE_FLOAT32, 0,                                    \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "tmlt*(1-tg)*imwfs3+tg*imwfs2")                     \
+    X(".WFSrefcmult", &WFSrefcmult, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,    \
       "mlt*(wfsref-zpo)+(1-m)*refc")                                                              \
-    X(".WFSrefcgain", &WFSrefcgain, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                      \
+    X(".WFSrefcgain", &WFSrefcgain, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,    \
       "wfsrefc+gain*imwfs3->wfsrefc")                                                             \
     X(".out.fluxtotal", &fluxtotal, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT, "total flux")       \
     X(".out.GPUalpha", &GPUalpha, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                       \
       "GPU alpha coefficient")                                                                    \
     X(".out.GPUbeta", &GPUbeta, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT, "GPU beta coefficient") \
-    X(".WFSnormfloor", &WFSnormfloor, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT,                    \
+    X(".WFSnormfloor", &WFSnormfloor, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,  \
       "WFS flux floor for normalize")                                                             \
-    X(".comp.darksub", &compWFSsubdark, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                    \
+    X(".comp.darksub", &compWFSsubdark, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,  \
       "-wfsdark, x wfsmult->imWFS0")                                                              \
-    X(".comp.WFSnormalize", &compWFSnormalize, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,             \
-      "normalize over wfsmask->imWFS1")                                                           \
-    X(".comp.compWFSmask", &compWFSmask, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT, "x wfsmask ?")    \
-    X(".comp.WFSrefsub", &compWFSrefsub, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                   \
+    X(".comp.WFSnormalize", &compWFSnormalize, FPTYPE_ONOFF, 0,                                   \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "normalize over wfsmask->imWFS1")                   \
+    X(".comp.compWFSmask", &compWFSmask, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, \
+      "x wfsmask ?")                                                                              \
+    X(".comp.WFSrefsub", &compWFSrefsub, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, \
       "subtract WFS ref ->imWFS2")                                                                \
-    X(".comp.WFSsigav", &compWFSsigav, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                     \
+    X(".comp.WFSsigav", &compWFSsigav, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,   \
       "average WFS signal")                                                                       \
-    X(".comp.WFSrefc", &compWFSrefc, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                       \
+    X(".comp.WFSrefc", &compWFSrefc, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN,     \
       "WFS reference correction")                                                                 \
-    X(".comp.resetWFSrefc", &resetWFSrefc, FPTYPE_ONOFF, 0, FPFLAG_DEFAULT_INPUT,                 \
-      "reset WFS reference correction")                                                           \
+    X(".comp.resetWFSrefc", &resetWFSrefc, FPTYPE_ONOFF, 0,                                       \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_WRITERUN, "reset WFS reference correction")                   \
     X(".wfszpo", wfszposname, FPTYPE_STREAMNAME, 1, FPFLAG_DEFAULT_INPUT, "WFS zero point offset")
 
 
