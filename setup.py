@@ -36,7 +36,7 @@ setup(
     author_email="vdeo@naoj.org",
     url="http://www.github.com/cacao-org/cacao",
     packages=["pycacao"],  # same as name
-    install_requires=["numpy", "astropy"],
+    install_requires=["numpy", "astropy", "scipy"],
     scripts=scripts,
     cmdclass={"develop": PreInstallCommand},
 )
