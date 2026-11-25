@@ -36,47 +36,47 @@ static char     outmval[FUNCTION_PARAMETER_STRMAXLEN] = "";
 static float    loopgain                              = 0;
 static float    loopmult                              = 0;
 static float    looplimit                             = 0;
-static uint64_t loopZERO                              = 0;
+static int32_t  loopZERO                              = 0;
 static uint64_t AOloopindex                           = 0;
-static uint64_t loopON                                = 0;
-static int64_t  loopNBstep                            = 0;
-static uint64_t compOL                                = 0;
+static int32_t  loopON                                = 0;
+static int64_t  loopNBstep                            = -1;
+static int32_t  compOL                                = 0;
 static float    psol_WFSfact                          = 0;
 static float    latencyhardwfr                        = 0;
 static float    latencysoftwfr                        = 0;
-static uint64_t comptbuff                             = 0;
-static uint64_t autolim                               = 0;
+static int32_t  comptbuff                             = 0;
+static int32_t  autolim                               = 0;
 static float    autolimprobegain                      = 0;
 static float    autolimsigmafact                      = 0;
 static uint32_t tbuffsize                             = 0;
-static uint64_t auxDMmvalenable                       = 0;
+static int32_t  auxDMmvalenable                       = 0;
 static float    auxDMmvalmixfact                      = 0;
-static uint64_t auxDMmvalmodulate                     = 0;
+static int32_t  auxDMmvalmodulate                     = 0;
 static float    auxDMmvalmodperiod                    = 0;
-static uint64_t enablePF                              = 0;
+static int32_t  enablePF                              = 0;
 static uint32_t PF_NBblock                            = 0;
 static uint32_t PF_maxwaitus                          = 0;
 static float    PFmixcoeff                            = 0;
-static uint64_t autoloopenable                        = 0;
+static int32_t  autoloopenable                        = 0;
 static float    autoloopsleep                         = 0;
-static uint64_t selfRMenable                          = 0;
+static int32_t  selfRMenable                          = 0;
 static uint32_t selfRMnbmode                          = 0;
 static float    selfRMpokeampl                        = 0;
 static uint32_t selfRMzsize                           = 0;
 static uint32_t selfRMnbiter                          = 0;
 static uint32_t selfRMnbsettlestep                    = 0;
-static uint64_t testOL                                = 0;
-static uint64_t testOLloop                            = 0;
+static int32_t  testOL                                = 0;
+static int32_t  testOLloop                            = 0;
 static float    testOLupdategain                      = 0;
 static uint32_t testOLmode                            = 0;
 static float    testOLampl                            = 0;
 static uint32_t testOLnbsample                        = 0;
 static uint32_t testOLcnt                             = 0;
-static uint64_t offload                               = 0;
+static int32_t  offload                               = 0;
 static float    offloadloopgain                       = 0;
 static float    offloadloopmult                       = 0;
 static float    offloadlooplimit                      = 0;
-static uint64_t recburst                              = 0;
+static int32_t  recburst                              = 0;
 static uint32_t recburst_mode                         = 0;
 static uint32_t recburst_nbsample                     = 0;
 
@@ -123,6 +123,10 @@ typedef struct
     IMGID imgoffloadmlimit;
     IMGID imgoffloadmlimitfact;
     IMGID imgmvaloffloadDM;
+
+    // Change detection for gain/mult/limit outputs: [0..2] loop, [3..5] offload
+    float    gmlvalold[6];
+    uint64_t gmlcntold[6];
 
     // Counters
     long *mlimitcntarray;
@@ -364,6 +368,31 @@ static void modal_filter_cleanup(MFILT_STATE *state)
 }
 
 /**
+ * @brief Recompute and post out = fact * val, only when val or the fact stream changed.
+ */
+static void mfilt_update_scaled(PROCESSINFO *processinfo,
+                                IMGID       *out,
+                                IMGID       *fact,
+                                float        val,
+                                float       *valold,
+                                uint64_t    *cntold,
+                                uint32_t     NBmode)
+{
+    uint64_t cnt = fact->md->cnt0;
+    if (val == *valold && cnt == *cntold)
+    {
+        return;
+    }
+    *valold = val;
+    *cntold = cnt;
+    for (uint32_t mi = 0; mi < NBmode; mi++)
+    {
+        out->im->array.F[mi] = fact->im->array.F[mi] * val;
+    }
+    processinfo_update_output_stream(processinfo, out->im, NULL);
+}
+
+/**
  * @brief Modal filtering computation.
  */
 static void modal_filter_step(PROCESSINFO *processinfo,
@@ -440,12 +469,12 @@ static void modal_filter_step(PROCESSINFO *processinfo,
         }
 
         // Update Gain/Mult/Limit arrays
-        for (uint32_t mi = 0; mi < NBmode; mi++)
-        {
-            state->imgmgain.im->array.F[mi]  = state->imgmgainfact.im->array.F[mi] * (loopgain);
-            state->imgmmult.im->array.F[mi]  = state->imgmmultfact.im->array.F[mi] * (loopmult);
-            state->imgmlimit.im->array.F[mi] = state->imgmlimitfact.im->array.F[mi] * (looplimit);
-        }
+        mfilt_update_scaled(processinfo, &state->imgmgain, &state->imgmgainfact, loopgain,
+                            &state->gmlvalold[0], &state->gmlcntold[0], NBmode);
+        mfilt_update_scaled(processinfo, &state->imgmmult, &state->imgmmultfact, loopmult,
+                            &state->gmlvalold[1], &state->gmlcntold[1], NBmode);
+        mfilt_update_scaled(processinfo, &state->imgmlimit, &state->imgmlimitfact, looplimit,
+                            &state->gmlvalold[2], &state->gmlcntold[2], NBmode);
 
         // Modal Control
         for (uint32_t mi = 0; mi < NBmode; mi++)
@@ -484,20 +513,24 @@ static void modal_filter_step(PROCESSINFO *processinfo,
         if (enablePF == 0)
         {
             memcpy(imgout->array.F, state->mvaloutapply, sizeof(float) * NBmode);
+            processinfo_update_output_stream(processinfo, imgout, NULL);
         }
 
         // Offload Loop
         if ((offload) == 1)
         {
+            mfilt_update_scaled(processinfo, &state->imgoffloadmgain, &state->imgoffloadmgainfact,
+                                offloadloopgain, &state->gmlvalold[3], &state->gmlcntold[3],
+                                NBmode);
+            mfilt_update_scaled(processinfo, &state->imgoffloadmmult, &state->imgoffloadmmultfact,
+                                offloadloopmult, &state->gmlvalold[4], &state->gmlcntold[4],
+                                NBmode);
+            mfilt_update_scaled(processinfo, &state->imgoffloadmlimit, &state->imgoffloadmlimitfact,
+                                offloadlooplimit, &state->gmlvalold[5], &state->gmlcntold[5],
+                                NBmode);
+
             for (uint32_t mi = 0; mi < NBmode; mi++)
             {
-                state->imgoffloadmgain.im->array.F[mi] =
-                    state->imgoffloadmgainfact.im->array.F[mi] * (offloadloopgain);
-                state->imgoffloadmmult.im->array.F[mi] =
-                    state->imgoffloadmmultfact.im->array.F[mi] * (offloadloopmult);
-                state->imgoffloadmlimit.im->array.F[mi] =
-                    state->imgoffloadmlimitfact.im->array.F[mi] * (offloadlooplimit);
-
                 float val = state->imgmvaloffloadDM.im->array.F[mi];
                 val += state->imgoffloadmgain.im->array.F[mi] * imgout->array.F[mi];
                 val *= state->imgoffloadmmult.im->array.F[mi];
