@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: 2026 Olivier Guyon et al
+#
+# SPDX-License-Identifier: LGPL-3.0-or-later
+#
+# Tier 0 milk.calc quad-cell vibration & modulator-beat spectral monitor.
+# Triggered on `<pfx>_tlm` (linked or named `pyr_tlm` [29 x 1]).
+# Maintains a 256-sample temporal ring `pyr_tlm_hist` and periodically computes
+# the 1D FFT magnitude spectrum of (qx_mean, qy_mean, qdiag, df_pup) to flag
+# narrowband TT vibrations or camera-to-modulator phase/frequency beats.
+#
+# Launch via `pyrwfs.vibmon_start` or directly:
+#   milk-fpsexec-milk-calc -n pyrvibmon -t pyr_tlm \
+#       -p "upd_stride:int=64 fs_hz:float=100.0 peak_hz:float=0 peak_ratio:float=0 \
+#           df_mean:float=0 df_std:float=0" \
+#       -i "pyr_vibpsd = zeros(129, 3)" -f pyrwfs_vibmon.calc fpsinit
+
+hist(pyr_tlm, 256)
+
+if _n < 256 || (_n % upd_stride != 0): skip
+
+# Extract recent 256-sample series for qx (col 14), qy (col 15), qdiag (col 18), df_pup (col 11)
+local sx = pyr_tlm_hist[14, 0, *]
+local sy = pyr_tlm_hist[15, 0, *]
+local sd = pyr_tlm_hist[18, 0, *]
+local sf = pyr_tlm_hist[11, 0, *]
+
+df_mean, df_std = istats(sf)
+
+local px = abs(fft(sx - imean(sx)))
+local py = abs(fft(sy - imean(sy)))
+local pd = abs(fft(sd - imean(sd)))
+
+# Store one-sided amplitude spectra [0..128]
+pyr_vibpsd[*, 0] = px[0:128]
+pyr_vibpsd[*, 1] = py[0:128]
+pyr_vibpsd[*, 2] = pd[0:128]
+
+# Dominant non-DC spectral peak in combined TT spectrum (bins 2..128)
+local ptt = hypot(px[2:128], py[2:128])
+kpk = iargmax(ptt)
+pmax = imax(ptt)
+pmed = imean(ptt)
+peak_hz = (kpk + 2.0) * (fs_hz / 256.0)
+peak_ratio = pmax / max(pmed, 1e-12)
+post(pyr_vibpsd)

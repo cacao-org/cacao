@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Olivier Guyon et al
+#
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
+set -euo pipefail
+
+case "${1-}" in
+    -h1|--help-oneline)
+        echo "attach mlt.windlayers to live pyramid WFS telemetry geometry and intensity streams"
+        exit 0
+        ;;
+    -h2|--help-description)
+        echo "Read live tracked pupil geometry from pyWFStlm and launch mlt.windlayers without duplicating wind profiling."
+        exit 0
+        ;;
+    -h|--help|-hm|--help-mono)
+        cat <<'EOF'
+Usage: cacao-pyrwfs-windattach [loop] [prefix] [wfs] [pha] [frate] [diam] [mode] [wlname]
+   or: cacao-pyrwfs-windattach .loop=0 .frate=1000 .diam=8.0 ...
+
+Attach mlt.windlayers to live pyWFStlm outputs via pyrwfs.windattach.
+EOF
+        command -v milk-cli >/dev/null 2>&1 && MILK_QUIET=1 milk-cli -q -c "pyrwfs.windattach -h" || true
+        exit 0
+        ;;
+esac
+
+_q=""
+if (( $# > 0 )); then
+    printf -v _q '%q ' "$@"
+fi
+MILK_QUIET=1 exec milk-cli -q -e -o -c "pyrwfs.windattach ${_q}"

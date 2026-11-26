@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Olivier Guyon et al
+#
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
+set -euo pipefail
+
+case "${1-}" in
+    -h1|--help-oneline)
+        echo "manage live pyramid WFS telemetry engine (start/stop/status)"
+        exit 0
+        ;;
+    -h2|--help-description)
+        echo "Start, stop, or inspect the live cacao-fpsexec-pyrwfstlm telemetry process via pyrwfs.tlm_{start,stop,status}."
+        exit 0
+        ;;
+    -h|--help|-hm|--help-mono|"")
+        cat <<'EOF'
+Usage: cacao-pyrwfs-tlm <start|stop|status> [args...]
+
+Examples:
+  cacao-pyrwfs-tlm start 0 .inwfs=aol0_imWFS0 .inref=aol0_wfsref
+  cacao-pyrwfs-tlm status 0
+  cacao-pyrwfs-tlm stop 0
+EOF
+        exit 0
+        ;;
+esac
+
+_sub="$1"
+shift
+case "${_sub}" in
+    start|stop|status) ;;
+    *)
+        echo "cacao-pyrwfs-tlm: unknown subcommand '${_sub}' (expected start|stop|status)" >&2
+        exit 2
+        ;;
+esac
+
+_q=""
+if (( $# > 0 )); then
+    printf -v _q '%q ' "$@"
+fi
+MILK_QUIET=1 exec milk-cli -q -e -o -c "pyrwfs.tlm_${_sub} ${_q}"

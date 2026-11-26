@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Olivier Guyon et al
+#
+# SPDX-License-Identifier: LGPL-3.0-or-later
+
+set -euo pipefail
+
+case "${1-}" in
+    -h1|--help-oneline)
+        echo "inspect an offline 3D pyramid WFS FITS cube and generate telemetry summary"
+        exit 0
+        ;;
+    -h2|--help-description)
+        echo "Run cacao-fpsexec-pyrwfstlm in 3D cube mode and summarize flux budget, Strehl proxy, jitter, scintillation, curl, LWE, and 6-DOF pupil alignment."
+        exit 0
+        ;;
+    -h|--help|-hm|--help-mono)
+        cat <<'EOF'
+Usage: cacao-pyrwfs-inspect <cube.fits|stream> [ref.fits|stream] [outdir] [reg_stride] [sub_bg]
+   or: cacao-pyrwfs-inspect .cube=<path> [.ref=<path>] [.outdir=<dir>] ...
+
+Inspect a 3D pyramid WFS telemetry cube via pyrwfs.inspect.
+EOF
+        command -v milk-cli >/dev/null 2>&1 && MILK_QUIET=1 milk-cli -q -c "pyrwfs.inspect -h" || true
+        exit 0
+        ;;
+esac
+
+_q=""
+printf -v _q '%q ' "$@"
+MILK_QUIET=1 exec milk-cli -q -e -o -c "pyrwfs.inspect ${_q}"

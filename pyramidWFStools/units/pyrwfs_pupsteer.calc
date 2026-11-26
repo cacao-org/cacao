@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: 2026 Olivier Guyon et al
+#
+# SPDX-License-Identifier: LGPL-3.0-or-later
+#
+# Tier 0 milk.calc slow pupil-steering & axial-focus offload integrator.
+# Triggered on `<pfx>_pupdof` (linked or named `pupdof`) alongside `pupgeom`.
+# Outputs `pupsteer_cmd` [3]: [cmd_x, cmd_y, cmd_z] (in pupil-shift pixels / stage units).
+#
+# Launch via `pyrwfs.pupsteer_start` or directly:
+#   milk-fpsexec-milk-calc -n pyrpupsteer -t pupdof \
+#       -p "gain:float=0.15 leak:float=0.999 deadband:float=0.03 maxcmd:float=5.0 \
+#           corr_min:float=0.4 max_resid:float=0.5 z_gain:float=0.05 \
+#           cmd_x:float=0 cmd_y:float=0 cmd_z:float=0 locked:int=0" \
+#       -i "pupsteer_cmd = zeros(3)" -f pyrwfs_pupsteer.calc fpsinit
+
+c0 = pupgeom[3, 0]
+c1 = pupgeom[3, 1]
+c2 = pupgeom[3, 2]
+c3 = pupgeom[3, 3]
+cmin = min(min(c0, c1), min(c2, c3))
+resid = pupdof[7, 0]
+
+if cmin < corr_min || resid > max_resid {
+    locked = 0
+    skip
+}
+
+locked = 1
+ex = pupdof[0, 0]
+ey = pupdof[1, 0]
+ez = 0.5 * (pupdof[2, 0] + pupdof[3, 0])
+
+if abs(ex) < deadband: ex = 0.0
+if abs(ey) < deadband: ey = 0.0
+if abs(ez) < deadband: ez = 0.0
+
+cmd_x = clamp(leak * cmd_x + gain * ex, -maxcmd, maxcmd)
+cmd_y = clamp(leak * cmd_y + gain * ey, -maxcmd, maxcmd)
+cmd_z = clamp(leak * cmd_z + z_gain * ez, -maxcmd, maxcmd)
+
+pupsteer_cmd[0] = cmd_x
+pupsteer_cmd[1] = cmd_y
+pupsteer_cmd[2] = cmd_z
+post(pupsteer_cmd)
