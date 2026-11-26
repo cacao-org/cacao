@@ -153,10 +153,11 @@ typedef struct
     uint32_t nx;
     uint32_t ny;
     uint32_t npix;       /* Registered pupil grid size (npix x npix) */
-    int      sub_bg;     /* 1: subtract bg_mean before flux budget */
+    int      sub_bg;     /* 1: subtract bg_mean before flux budget, 0: subtract bg_const */
     int      norm_mode;  /* 0: global mean Isum norm, 1: local Isum norm */
     int      edge_mode;  /* 0: full soft-Sobel, 1: downweight inner diffraction quadrant */
     int      maxshift;   /* Registration search half-width [pix] */
+    double   bg_const;   /* Fixed camera dark/bias pedestal [ADU] used when sub_bg == 0 */
     double   sat_hi;     /* High saturation threshold [ADU] */
     double   dark_floor; /* Dark-floor / facet-dropout threshold [ADU] */
     double   flux_min;   /* Minimum valid total flux for flux_ok interlock */
@@ -482,18 +483,33 @@ static inline int pyrwfs_detect_pupils(const float      *im,
             rout = 3.0;
         }
 
-        /* Refine (xc, yc, rout) via 2-pass outer-rim radial-cliff Kasa circle fit,
+        /* Refine (xc, yc, rout) via 3-pass outer-rim radial-cliff Kasa circle fit,
          * walking INWARD from the outside to grab the outermost rim (never central
-         * obscuration) and excluding the inner sector facing the central diamond. */
+         * obscuration or inner apex diffraction cusp). On iter==0 start near the
+         * quadrant geometric center with wide rhi so faint non-modulated pupils
+         * whose inner cusp is much brighter than the interior still hit the true rim. */
         double in_x = (q == 0 || q == 1) ? 1.0 : -1.0;
         double in_y = (q == 0 || q == 2) ? 1.0 : -1.0;
+        double qcx  = 0.5 * (double) (x0 + x1);
+        double qcy  = 0.5 * (double) (y0 + y1);
+        double qmin = (double) ((x1 - x0 < y1 - y0) ? (x1 - x0) : (y1 - y0));
+
+        /* If initial intensity centroid got pulled inward toward the central apex
+         * or shrank (characteristic of non-modulated flat-WF diffraction), seed at (qcx, qcy). */
+        if ((xc - qcx) * in_x > 0.04 * qmin || (yc - qcy) * in_y > 0.04 * qmin ||
+            rout < 0.32 * qmin)
+        {
+            xc   = qcx;
+            yc   = qcy;
+            rout = 0.40 * qmin;
+        }
 
         for (int iter = 0; iter < 3; iter++)
         {
             double px[96], py[96], pw[96];
             int    npts = 0;
-            double rlo  = (iter == 0) ? (0.55 * rout) : (0.75 * rout);
-            double rhi  = (iter == 0) ? (1.70 * rout) : (1.35 * rout);
+            double rlo  = (iter == 0) ? (0.22 * qmin) : (0.72 * rout);
+            double rhi  = (iter == 0) ? (0.50 * qmin) : (1.35 * rout);
 
             for (int k = 0; k < 72; k++)
             {
@@ -551,10 +567,10 @@ static inline int pyrwfs_detect_pupils(const float      *im,
                 {
                     continue;
                 }
-                double drops[128];
-                if (nstep > 127)
+                double drops[160];
+                if (nstep > 159)
                 {
-                    nstep = 127;
+                    nstep = 159;
                 }
                 double max_drop = 0.0;
                 for (int s = 0; s <= nstep; s++)
@@ -572,17 +588,20 @@ static inline int pyrwfs_detect_pupils(const float      *im,
                         max_drop = drop;
                     }
                 }
-                if (max_drop <= 0.15 * vmed)
+                if (max_drop <= 0.12 * vmed)
                 {
                     continue;
                 }
 
-                /* Walk INWARD from rhi and pick the OUTERMOST local peak >= 0.40 * max_drop */
+                /* Walk INWARD from rhi and pick the OUTERMOST local peak.
+                 * Use 0.22 on coarse iter 0 (captures faint outer rim vs bright inner cusp),
+                 * then 0.40 on refinement passes (rejects weak outer Airy sidelobes). */
+                double frac_thr  = (iter == 0) ? 0.22 : 0.40;
                 int    best_s    = -1;
                 double best_drop = 0.0;
                 for (int s = nstep - 1; s >= 1; s--)
                 {
-                    if (drops[s] >= 0.40 * max_drop && drops[s] >= drops[s - 1] &&
+                    if (drops[s] >= frac_thr * max_drop && drops[s] >= drops[s - 1] &&
                         drops[s] >= drops[s + 1])
                     {
                         best_s    = s;
@@ -709,6 +728,50 @@ static inline int pyrwfs_detect_pupils(const float      *im,
         out->corr[q] = 1.0f;
     }
 
+    /* 4-pupil symmetry consensus guard: all 4 pyramid pupils share the same aperture radius.
+     * If a single quadrant locked onto an inner diffraction cusp instead of the outer rim,
+     * replace it with the mirror-symmetric estimate from the 3 consistent quadrants. */
+    float rs[PYRWFS_NPUP];
+    for (int q = 0; q < PYRWFS_NPUP; q++)
+    {
+        rs[q] = out->rout[q];
+    }
+    for (int a = 0; a < PYRWFS_NPUP; a++)
+    {
+        for (int b = a + 1; b < PYRWFS_NPUP; b++)
+        {
+            if (rs[b] < rs[a])
+            {
+                float t = rs[a];
+                rs[a]   = rs[b];
+                rs[b]   = t;
+            }
+        }
+    }
+    /* Upper-median radius favors the true outer rim over a shrunken inner-cusp outlier */
+    float r_ref = 0.5f * (rs[1] + rs[2]);
+    if (rs[3] - rs[1] < 0.08f * rs[3] && rs[1] - rs[0] > 0.12f * rs[3])
+    {
+        r_ref = rs[2];
+    }
+    for (int q = 0; q < PYRWFS_NPUP; q++)
+    {
+        if (fabsf(out->rout[q] - r_ref) > 0.12f * r_ref)
+        {
+            /* Opposite in X: (0<->2, 1<->3); opposite in Y: (0<->1, 2<->3) */
+            int q_same_x = q ^ 1;
+            int q_same_y = q ^ 2;
+            if (fabsf(out->rout[q_same_x] - r_ref) <= 0.12f * r_ref &&
+                fabsf(out->rout[q_same_y] - r_ref) <= 0.12f * r_ref)
+            {
+                out->xc[q]   = out->xc[q_same_x];
+                out->yc[q]   = out->yc[q_same_y];
+                out->rout[q] = r_ref;
+                out->rin[q]  = 0.5f * (out->rin[q_same_x] + out->rin[q_same_y]);
+            }
+        }
+    }
+
     return 0;
 }
 
@@ -733,11 +796,15 @@ static inline void pyrwfs_build_default_zones(uint32_t                nx,
     double sa  = sin(ang);
     double shw = (double) spider_halfwidth;
 
-    /* Corner box size for background monitoring */
-    double bg_margin = 0.14 * (double) ((nx < ny) ? nx : ny);
+    /* Compact far-corner box for background monitoring (strictly outside outer halo) */
+    double bg_margin = 0.05 * (double) ((nx < ny) ? nx : ny);
     if (bg_margin < 3.0)
     {
         bg_margin = 3.0;
+    }
+    if (bg_margin > 8.0)
+    {
+        bg_margin = 8.0;
     }
 
     for (uint32_t y = 0; y < ny; y++)
@@ -850,13 +917,9 @@ static inline void pyrwfs_build_default_zones(uint32_t                nx,
                     {
                         z = PYRWFS_ZONE_BG;
                     }
-                    else if (dmin <= 0.45 * ravg + 3.0)
-                    {
-                        z = PYRWFS_ZONE_OUTER;
-                    }
                     else
                     {
-                        z = PYRWFS_ZONE_BG;
+                        z = PYRWFS_ZONE_OUTER;
                     }
                 }
             }
@@ -1272,17 +1335,18 @@ static inline int pyrwfs_pupreg_run(pyrwfs_pupreg_state_t *st,
 /* =========================================================================
  * Sub-Pixel 4-Pupil Cutout & Registration Gather -> Isum, Sx, Sy
  * ========================================================================= */
-static inline void pyrwfs_extract4_run(const float            *im,
-                                       uint32_t                nx,
-                                       uint32_t                ny,
-                                       const pyrwfs_pupgeom_t *geom,
-                                       uint32_t                npix,
-                                       int                     norm_mode,
-                                       float                  *isum_out,
-                                       float                  *sx_out,
-                                       float                  *sy_out)
+static inline void pyrwfs_extract4_run_bg(const float            *im,
+                                          uint32_t                nx,
+                                          uint32_t                ny,
+                                          const pyrwfs_pupgeom_t *geom,
+                                          uint32_t                npix,
+                                          int                     norm_mode,
+                                          float                   bg_sub,
+                                          float                  *isum_out,
+                                          float                  *sx_out,
+                                          float                  *sy_out)
 {
-    const float half = 0.5f * (float) (npix - 1u);
+    const float half    = 0.5f * (float) (npix - 1u);
     double      sum_all = 0.0;
     size_t      cnt_pos = 0;
 
@@ -1294,10 +1358,14 @@ static inline void pyrwfs_extract4_run(const float            *im,
             float  u   = (float) i - half;
             size_t idx = (size_t) j * npix + i;
 
-            float i0 = pyrwfs_sample_bilinear(im, nx, ny, geom->xc[0] + u, geom->yc[0] + v);
-            float i1 = pyrwfs_sample_bilinear(im, nx, ny, geom->xc[1] + u, geom->yc[1] + v);
-            float i2 = pyrwfs_sample_bilinear(im, nx, ny, geom->xc[2] + u, geom->yc[2] + v);
-            float i3 = pyrwfs_sample_bilinear(im, nx, ny, geom->xc[3] + u, geom->yc[3] + v);
+            float i0 =
+                pyrwfs_sample_bilinear(im, nx, ny, geom->xc[0] + u, geom->yc[0] + v) - bg_sub;
+            float i1 =
+                pyrwfs_sample_bilinear(im, nx, ny, geom->xc[1] + u, geom->yc[1] + v) - bg_sub;
+            float i2 =
+                pyrwfs_sample_bilinear(im, nx, ny, geom->xc[2] + u, geom->yc[2] + v) - bg_sub;
+            float i3 =
+                pyrwfs_sample_bilinear(im, nx, ny, geom->xc[3] + u, geom->yc[3] + v) - bg_sub;
 
             float isum    = i0 + i1 + i2 + i3;
             isum_out[idx] = isum;
@@ -1311,7 +1379,7 @@ static inline void pyrwfs_extract4_run(const float            *im,
         }
     }
 
-    float gnorm = (cnt_pos > 0u) ? (float) (sum_all / (double) cnt_pos) : 1.0f;
+    float gnorm   = (cnt_pos > 0u) ? (float) (sum_all / (double) cnt_pos) : 1.0f;
     float floor_v = 1e-6f * ((gnorm > 1.0f) ? gnorm : 1.0f);
 
     if (norm_mode == 1)
@@ -1343,6 +1411,19 @@ static inline void pyrwfs_extract4_run(const float            *im,
             sy_out[idx] *= inv;
         }
     }
+}
+
+static inline void pyrwfs_extract4_run(const float            *im,
+                                       uint32_t                nx,
+                                       uint32_t                ny,
+                                       const pyrwfs_pupgeom_t *geom,
+                                       uint32_t                npix,
+                                       int                     norm_mode,
+                                       float                  *isum_out,
+                                       float                  *sx_out,
+                                       float                  *sy_out)
+{
+    pyrwfs_extract4_run_bg(im, nx, ny, geom, npix, norm_mode, 0.0f, isum_out, sx_out, sy_out);
 }
 
 /* =========================================================================
@@ -1441,7 +1522,7 @@ static inline void pyrwfs_compute_frame_metrics(const float            *im,
         bg_var = 0.0;
     }
 
-    double bg_sub = cfg->sub_bg ? bg_mean : 0.0;
+    double bg_sub = cfg->sub_bg ? bg_mean : cfg->bg_const;
     double fpup   = 0.0;
     for (int q = 0; q < PYRWFS_NPUP; q++)
     {
@@ -1680,7 +1761,7 @@ static inline int pyrwfs_tlm_init(pyrwfs_tlm_state_t     *st,
         st->has_ref = 1;
         pyrwfs_frame_metrics_t fm0;
         pyrwfs_compute_frame_metrics(ref_im, st->zones, NULL, NULL, nx, ny, &st->cfg, &fm0);
-        double bg_sub = st->cfg.sub_bg ? fm0.bg_mean : 0.0;
+        double bg_sub = st->cfg.sub_bg ? fm0.bg_mean : st->cfg.bg_const;
         double inv_t  = (fm0.ftot > 1e-9) ? (1.0 / fm0.ftot) : 0.0;
         for (size_t i = 0; i < nimg; i++)
         {
@@ -1691,9 +1772,9 @@ static inline int pyrwfs_tlm_init(pyrwfs_tlm_state_t     *st,
         {
             st->cfg.f_pup0 = fm0.f_pup;
         }
-        /* Precompute reference normalized 4-pupil sum */
-        pyrwfs_extract4_run(ref_im, nx, ny, nom, npix, st->cfg.norm_mode, st->isum0_norm, st->sx,
-                            st->sy);
+        /* Precompute reference normalized 4-pupil sum (background-subtracted when sub_bg) */
+        pyrwfs_extract4_run_bg(ref_im, nx, ny, nom, npix, st->cfg.norm_mode, (float) bg_sub,
+                               st->isum0_norm, st->sx, st->sy);
         double isum_m = 0.0;
         size_t icnt   = 0;
         for (size_t i = 0; i < np2; i++)
@@ -1887,8 +1968,10 @@ static inline void pyrwfs_tlm_step(pyrwfs_tlm_state_t     *st,
         }
     }
 
-    /* 5. Registered 4-pupil gather -> Isum, Sx, Sy */
-    pyrwfs_extract4_run(im, nx, ny, &st->live, npix, st->cfg.norm_mode, st->isum, st->sx, st->sy);
+    /* 5. Registered 4-pupil gather -> Isum, Sx, Sy (background-subtracted) */
+    float frm_bg = st->cfg.sub_bg ? (float) fm.bg_mean : (float) st->cfg.bg_const;
+    pyrwfs_extract4_run_bg(im, nx, ny, &st->live, npix, st->cfg.norm_mode, frm_bg, st->isum,
+                           st->sx, st->sy);
 
     /* 6. Scintillation map, local phase-variance map, and spider LWE metric */
     double as     = st->cfg.a_slow;
@@ -1921,17 +2004,19 @@ static inline void pyrwfs_tlm_step(pyrwfs_tlm_state_t     *st,
             cnt_in++;
         }
     }
-    double inv_mi = (cnt_in > 0u && mean_i > 1e-9) ? ((double) cnt_in / mean_i) : 0.0;
-    double ifloor = (cnt_in > 0u) ? (1e-4 * mean_i / (double) cnt_in) : 1e-6;
-    if (ifloor < 1e-9)
+    double mean_p = (cnt_in > 0u) ? (mean_i / (double) cnt_in) : 0.0;
+    double inv_mi = (mean_p > 1e-9) ? (1.0 / mean_p) : 0.0;
+    double ifloor = 0.15 * mean_p;
+    if (ifloor < 1e-6)
     {
-        ifloor = 1e-9;
+        ifloor = 1e-6;
     }
 
     for (size_t i = 0; i < np2; i++)
     {
         double ia  = (double) st->isum_avg[i];
-        double rel = (ia > ifloor) ? (((double) st->isum[i] - ia) / ia) : 0.0;
+        double den = (ia > ifloor) ? ia : ifloor;
+        double rel = (st->p_in_mask[i] && mean_p > 1e-9) ? (((double) st->isum[i] - ia) / den) : 0.0;
         double sc  = (1.0 - as) * (double) st->scint_map[i] + as * rel * rel;
         st->scint_map[i] = (float) sc;
         st->lvar_map[i]  = (float) (ia * inv_mi - (double) st->isum0_norm[i]);

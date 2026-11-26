@@ -45,6 +45,7 @@ static char     p_inzones[FUNCTION_PARAMETER_STRMAXLEN]     = "";
 static char     p_innomgeom[FUNCTION_PARAMETER_STRMAXLEN]   = "";
 static char     p_ineven[FUNCTION_PARAMETER_STRMAXLEN]      = "";
 static char     p_outprefix[FUNCTION_PARAMETER_STRMAXLEN]   = "";
+static char     p_outcsv[FUNCTION_PARAMETER_STRMAXLEN]      = "";
 
 static uint32_t p_stride     = 1;
 static uint32_t p_reg_stride = 20;
@@ -56,6 +57,8 @@ static int32_t  p_maxshift   = 6;
 static int32_t  p_pub_maps   = 1;
 static int32_t  p_reset      = 0;
 
+static float p_dt_phys    = 0.0f;
+static float p_bg_const   = 0.0f;
 static float p_sat_hi     = 60000.0f;
 static float p_dark_floor = 0.0f;
 static float p_flux_min   = 100.0f;
@@ -77,6 +80,7 @@ static float    o_sat_hi_frac   = 0.0f;
 static float    o_sat_dark_frac = 0.0f;
 static int32_t  o_flux_ok       = 0;
 
+static float o_f_pup0   = 0.0f;
 static float o_f_pup    = 0.0f;
 static float o_f_diam   = 0.0f;
 static float o_f_bH     = 0.0f;
@@ -120,6 +124,10 @@ static float o_pup_corr  = 0.0f;
       "optional even-mode Strehl basis")                                                         \
     X(".outprefix", p_outprefix, FPTYPE_STRING, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
       "output stream prefix (empty=aolN_pyr)")                                                   \
+    X(".outcsv", p_outcsv, FPTYPE_STRING, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,            \
+      "optional CSV path for full telemetry timeseries")                                         \
+    X(".dt_phys", &p_dt_phys, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
+      "physical dt per input frame [s] (0=wall ts)")                                             \
     X(".stride", &p_stride, FPTYPE_UINT32, 0,                                                    \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN, "process every Nth frame")      \
     X(".reg_stride", &p_reg_stride, FPTYPE_UINT32, 0,                                            \
@@ -130,6 +138,9 @@ static float o_pup_corr  = 0.0f;
     X(".sub_bg", &p_sub_bg, FPTYPE_ONOFF, 0,                                                     \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                 \
       "subtract corner background before budget")                                                \
+    X(".bg_const", &p_bg_const, FPTYPE_FLOAT32, 0,                                               \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                 \
+      "fixed camera bias pedestal [ADU] when sub_bg=OFF")                                        \
     X(".norm_mode", &p_norm_mode, FPTYPE_INT32, 0,                                               \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                 \
       "slope norm: 0=global mean, 1=local Isum")                                                 \
@@ -178,6 +189,8 @@ static float o_pup_corr  = 0.0f;
       "dark-floor pupil pixel fraction")                                                         \
     X(".health.flux_ok", &o_flux_ok, FPTYPE_INT32, 0, FPFLAG_DEFAULT_OUTPUT,                     \
       "1 when flux & saturation interlocks pass")                                                \
+    X(".flux.pup0", &o_f_pup0, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                         \
+      "flat-WF reference in-pupil flux fraction")                                                \
     X(".flux.pup", &o_f_pup, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                           \
       "in-pupil flux fraction")                                                                  \
     X(".flux.diam", &o_f_diam, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                         \
@@ -417,6 +430,7 @@ static void pywt_write_pupgeom_stream(PROCESSINFO              *pinfo,
 static void pywt_update_fps_outputs(const pyrwfs_tlm_state_t *st, const float tlm[PYRWFS_TLM_NCOL])
 {
     o_nframes       = st->nframe;
+    o_f_pup0        = (float) st->cfg.f_pup0;
     o_ftot          = tlm[PYRWFS_TLM_FTOT];
     o_bg_mean       = tlm[PYRWFS_TLM_BG_MEAN];
     o_bg_std        = tlm[PYRWFS_TLM_BG_STD];
@@ -465,6 +479,61 @@ static double pywt_frame_timestamp(const IMAGE *im)
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);
     return (double) ts.tv_sec + 1e-9 * (double) ts.tv_nsec;
+}
+
+static FILE *pywt_csv_open(const char *path)
+{
+    if (path == NULL || path[0] == '\0')
+    {
+        return NULL;
+    }
+    FILE *fp = fopen(path, "w");
+    if (fp == NULL)
+    {
+        printf("[pyWFStlm] WARN: cannot open outcsv '%s' for writing\n", path);
+        return NULL;
+    }
+    fprintf(fp,
+            "frame,t_phys_s,timestamp,ftot,bg_mean,bg_std,sat_hi_frac,sat_dark_frac,flux_ok,"
+            "f_pup,f_diam,f_bH,f_bV,f_out,df_pup,aniso,nl_ratio,"
+            "qx,qy,qx_mean,qy_mean,qx_rms,qy_rms,qdiag,"
+            "scint_idx,curl_ratio,lwe_metric,"
+            "pup_dx,pup_dy,pup_ds,pup_dast,pup_rot,pup_corr\n");
+    return fp;
+}
+
+static void pywt_csv_write_row(FILE                         *fp,
+                               uint64_t                      frame_idx,
+                               double                        t_phys_s,
+                               double                        ts_val,
+                               const pyrwfs_frame_metrics_t *fm,
+                               const float                   tlm[PYRWFS_TLM_NCOL])
+{
+    if (fp == NULL)
+    {
+        return;
+    }
+    fprintf(fp,
+            "%llu,%.6f,%.6f,%.3f,%.4f,%.4f,%.6f,%.6f,%d,"
+            "%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,"
+            "%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,"
+            "%.6f,%.6f,%.6f,"
+            "%.4f,%.4f,%.4f,%.4f,%.4f,%.5f\n",
+            (unsigned long long) frame_idx, t_phys_s, ts_val, (double) tlm[PYRWFS_TLM_FTOT],
+            (double) tlm[PYRWFS_TLM_BG_MEAN], (double) tlm[PYRWFS_TLM_BG_STD],
+            (double) tlm[PYRWFS_TLM_SAT_HI_FRAC], (double) tlm[PYRWFS_TLM_SAT_DARK_FRAC],
+            (tlm[PYRWFS_TLM_FLUX_OK] > 0.5f) ? 1 : 0, (double) tlm[PYRWFS_TLM_F_PUP],
+            (double) tlm[PYRWFS_TLM_F_DIAM], (double) tlm[PYRWFS_TLM_F_BH],
+            (double) tlm[PYRWFS_TLM_F_BV], (double) tlm[PYRWFS_TLM_F_OUT],
+            (double) tlm[PYRWFS_TLM_DF_PUP], (double) tlm[PYRWFS_TLM_ANISO],
+            (double) tlm[PYRWFS_TLM_NL_RATIO], fm->qx, fm->qy, (double) tlm[PYRWFS_TLM_QX_MEAN],
+            (double) tlm[PYRWFS_TLM_QY_MEAN], (double) tlm[PYRWFS_TLM_QX_RMS],
+            (double) tlm[PYRWFS_TLM_QY_RMS], (double) tlm[PYRWFS_TLM_QDIAG],
+            (double) tlm[PYRWFS_TLM_SCINT_IDX], (double) tlm[PYRWFS_TLM_CURL_RATIO],
+            (double) tlm[PYRWFS_TLM_LWE_METRIC], (double) tlm[PYRWFS_TLM_PUP_DX],
+            (double) tlm[PYRWFS_TLM_PUP_DY], (double) tlm[PYRWFS_TLM_PUP_DS],
+            (double) tlm[PYRWFS_TLM_PUP_DAST], (double) tlm[PYRWFS_TLM_PUP_ROT],
+            (double) tlm[PYRWFS_TLM_PUP_CORR]);
 }
 
 /* ================================================================
@@ -629,6 +698,7 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
     cfg.norm_mode  = p_norm_mode;
     cfg.edge_mode  = p_edge_mode;
     cfg.maxshift   = p_maxshift;
+    cfg.bg_const   = (double) p_bg_const;
     cfg.sat_hi     = (double) p_sat_hi;
     cfg.dark_floor = (double) p_dark_floor;
     cfg.flux_min   = (double) p_flux_min;
@@ -652,14 +722,16 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
 
     /* Create output SHM streams */
     char  sname[STRINGMAXLEN_IMGNAME];
-    IMGID out_tlm   = { .ID = -1 };
-    IMGID out_geom  = { .ID = -1 };
-    IMGID out_dof   = { .ID = -1 };
-    IMGID out_isum  = { .ID = -1 };
-    IMGID out_sx    = { .ID = -1 };
-    IMGID out_sy    = { .ID = -1 };
-    IMGID out_scint = { .ID = -1 };
-    IMGID out_lvar  = { .ID = -1 };
+    IMGID out_tlm      = { .ID = -1 };
+    IMGID out_geom     = { .ID = -1 };
+    IMGID out_dof      = { .ID = -1 };
+    IMGID out_isum     = { .ID = -1 };
+    IMGID out_isum_avg = { .ID = -1 };
+    IMGID out_sx       = { .ID = -1 };
+    IMGID out_sy       = { .ID = -1 };
+    IMGID out_scint    = { .ID = -1 };
+    IMGID out_lvar     = { .ID = -1 };
+    IMGID out_zones    = { .ID = -1 };
 
     uint32_t tlm_rows = iscube ? ncube : 1u;
     snprintf(sname, sizeof(sname), "%s_tlm", pfx);
@@ -676,6 +748,8 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
     {
         snprintf(sname, sizeof(sname), "%s_isum", pfx);
         out_isum = stream_connect_create_2Df32(sname, npix, npix);
+        snprintf(sname, sizeof(sname), "%s_isum_avg", pfx);
+        out_isum_avg = stream_connect_create_2Df32(sname, npix, npix);
         snprintf(sname, sizeof(sname), "%s_sx", pfx);
         out_sx = stream_connect_create_2Df32(sname, npix, npix);
         snprintf(sname, sizeof(sname), "%s_sy", pfx);
@@ -684,12 +758,29 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
         out_scint = stream_connect_create_2Df32(sname, npix, npix);
         snprintf(sname, sizeof(sname), "%s_lvar", pfx);
         out_lvar = stream_connect_create_2Df32(sname, npix, npix);
+        snprintf(sname, sizeof(sname), "%s_zones", pfx);
+        out_zones = stream_connect_create_2Df32(sname, nx, ny);
+        if (out_zones.ID != -1)
+        {
+            out_zones.md->write = 1;
+            for (size_t i = 0; i < nimg; i++)
+            {
+                out_zones.im->array.F[i] = (float) st.zones_nom[i];
+            }
+            processinfo_update_output_stream(NULL, out_zones.im, img_wfs.im);
+        }
     }
 
     pywt_write_pupgeom_stream(NULL, img_wfs.im, &out_geom, &out_dof, &st);
 
+    FILE    *csv_fp     = pywt_csv_open(p_outcsv);
+    int      have_t0    = 0;
+    uint64_t cnt0_start = 0;
+    double   ts_start   = 0.0;
+
     o_nframes = 0;
     o_ntorn   = 0;
+    o_f_pup0  = (float) st.cfg.f_pup0;
 
     uint64_t tick_cnt = 0;
     errno_t  ret      = RETURN_SUCCESS;
@@ -706,6 +797,7 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
         st.cfg.sub_bg     = p_sub_bg;
         st.cfg.norm_mode  = p_norm_mode;
         st.cfg.maxshift   = p_maxshift;
+        st.cfg.bg_const   = (double) p_bg_const;
         st.cfg.sat_hi     = (double) p_sat_hi;
         st.cfg.dark_floor = (double) p_dark_floor;
         st.cfg.flux_min   = (double) p_flux_min;
@@ -741,11 +833,15 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
                     ret = RETURN_FAILURE;
                     break;
                 }
-                int do_reg = (p_reg_stride > 0u) && ((k % p_reg_stride) == 0u);
-                float *row = (out_tlm.ID != -1)
-                                 ? (out_tlm.im->array.F + (size_t) k * PYRWFS_TLM_NCOL)
-                                 : last_tlm;
-                pyrwfs_tlm_step(&st, buf_frame, (double) k, do_reg, NULL, row);
+                int                    do_reg = (p_reg_stride > 0u) && ((k % p_reg_stride) == 0u);
+                pyrwfs_frame_metrics_t fm;
+                float                 *row = (out_tlm.ID != -1)
+                                                 ? (out_tlm.im->array.F +
+                                                    (size_t) k * PYRWFS_TLM_NCOL)
+                                                 : last_tlm;
+                pyrwfs_tlm_step(&st, buf_frame, (double) k, do_reg, &fm, row);
+                double t_phys = (p_dt_phys > 0.0f) ? ((double) k * (double) p_dt_phys) : (double) k;
+                pywt_csv_write_row(csv_fp, (uint64_t) k, t_phys, (double) k, &fm, row);
                 memcpy(last_tlm, row, sizeof(last_tlm));
             }
             if (out_tlm.ID != -1)
@@ -761,6 +857,12 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
                     out_isum.md->write = 1;
                     memcpy(out_isum.im->array.F, st.isum_avg, nb);
                     processinfo_update_output_stream(processinfo, out_isum.im, img_wfs.im);
+                }
+                if (out_isum_avg.ID != -1)
+                {
+                    out_isum_avg.md->write = 1;
+                    memcpy(out_isum_avg.im->array.F, st.isum_avg, nb);
+                    processinfo_update_output_stream(processinfo, out_isum_avg.im, img_wfs.im);
                 }
                 if (out_sx.ID != -1)
                 {
@@ -802,6 +904,7 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
             uint32_t stride = (p_stride > 0u) ? p_stride : 1u;
             if ((tick_cnt++ % stride) == 0u)
             {
+                uint64_t cur_cnt0 = img_wfs.md->cnt0;
                 if (pywt_snapshot_f32(img_wfs.im, buf_frame, &o_ntorn) != 0)
                 {
                     ret           = RETURN_FAILURE;
@@ -809,11 +912,29 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
                 }
                 else
                 {
-                    double ts     = pywt_frame_timestamp(img_wfs.im);
-                    int    do_reg = (p_reg_stride > 0u) && ((st.nframe % p_reg_stride) == 0u);
-                    float  tlm[PYRWFS_TLM_NCOL];
+                    double ts = pywt_frame_timestamp(img_wfs.im);
+                    if (!have_t0)
+                    {
+                        cnt0_start = cur_cnt0;
+                        ts_start   = ts;
+                        have_t0    = 1;
+                    }
+                    double t_phys = (p_dt_phys > 0.0f && cur_cnt0 >= cnt0_start)
+                                        ? ((double) (cur_cnt0 - cnt0_start) * (double) p_dt_phys)
+                                        : (ts - ts_start);
+                    int                    do_reg = (p_reg_stride > 0u) &&
+                                                    ((st.nframe % p_reg_stride) == 0u);
+                    pyrwfs_frame_metrics_t fm;
+                    float                  tlm[PYRWFS_TLM_NCOL];
 
-                    pyrwfs_tlm_step(&st, buf_frame, ts, do_reg, NULL, tlm);
+                    pyrwfs_tlm_step(&st, buf_frame, ts, do_reg, &fm, tlm);
+                    pywt_csv_write_row(csv_fp, (cur_cnt0 >= cnt0_start) ? (cur_cnt0 - cnt0_start)
+                                                                        : (st.nframe - 1u),
+                                       t_phys, ts, &fm, tlm);
+                    if (csv_fp != NULL && (st.nframe % 64u) == 0u)
+                    {
+                        fflush(csv_fp);
+                    }
 
                     if (out_tlm.ID != -1)
                     {
@@ -833,6 +954,13 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
                             out_isum.md->write = 1;
                             memcpy(out_isum.im->array.F, st.isum, nb);
                             processinfo_update_output_stream(processinfo, out_isum.im, img_wfs.im);
+                        }
+                        if (out_isum_avg.ID != -1 && (st.nframe % 10u) == 0u)
+                        {
+                            out_isum_avg.md->write = 1;
+                            memcpy(out_isum_avg.im->array.F, st.isum_avg, nb);
+                            processinfo_update_output_stream(processinfo, out_isum_avg.im,
+                                                             img_wfs.im);
                         }
                         if (out_sx.ID != -1)
                         {
@@ -873,6 +1001,36 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
         }
     }
     MILK_PROCINFO_END(self)
+
+    /* Flush final converged 2D EMA maps & CSV file on clean loop exit */
+    if (!iscube && p_pub_maps && st.nframe > 0u)
+    {
+        size_t nb = (size_t) npix * npix * sizeof(float);
+        if (out_isum_avg.ID != -1)
+        {
+            out_isum_avg.md->write = 1;
+            memcpy(out_isum_avg.im->array.F, st.isum_avg, nb);
+            processinfo_update_output_stream(NULL, out_isum_avg.im, img_wfs.im);
+        }
+        if (out_scint.ID != -1)
+        {
+            out_scint.md->write = 1;
+            memcpy(out_scint.im->array.F, st.scint_map, nb);
+            processinfo_update_output_stream(NULL, out_scint.im, img_wfs.im);
+        }
+        if (out_lvar.ID != -1)
+        {
+            out_lvar.md->write = 1;
+            memcpy(out_lvar.im->array.F, st.lvar_map, nb);
+            processinfo_update_output_stream(NULL, out_lvar.im, img_wfs.im);
+        }
+        pywt_write_pupgeom_stream(NULL, img_wfs.im, &out_geom, &out_dof, &st);
+    }
+    if (csv_fp != NULL)
+    {
+        fflush(csv_fp);
+        fclose(csv_fp);
+    }
 
     if (dcfpsptr != NULL)
     {
