@@ -737,11 +737,12 @@ typedef struct
     float    *cur_vec;  /* [n_out] */
 
     /* Accumulators: FITS order [N_out, N_in, N_t] => C [t][m_in][out] */
-    float    *acc;      /* [n_t * n_in * n_out] */
-    float    *asym_acc; /* [n_t * n_in * n_out] if saveall */
-    double   *wsum;     /* [n_t * n_in] */
-    double   *tsum;     /* [n_t * n_in] */
-    uint32_t *cnt;      /* [n_t * n_in] */
+    float    *acc;       /* [n_t * n_in * n_out] */
+    float    *asym_acc;  /* [n_t * n_in * n_out] if saveall */
+    double   *wsum;      /* [n_t * n_in] */
+    double   *asym_wsum; /* [n_t * n_in] if saveall (w_+ - w_-) */
+    double   *tsum;      /* [n_t * n_in] */
+    uint32_t *cnt;       /* [n_t * n_in] */
 
     uint64_t last_wfs_t_ns;
     uint64_t last_cnt0;
@@ -810,9 +811,9 @@ static int mdr_wait_next_wfs(MDR_CTX *ctx, int track_drops)
         {
             ctx->dropped_frames++;
         }
-        else if (!ctx->use_lockstep && dt > 0.5 * ctx->t_live_ns && dt < 1.5 * ctx->t_live_ns)
+        else if (!ctx->use_lockstep && dt > 0.90 * ctx->t_live_ns && dt < 1.10 * ctx->t_live_ns)
         {
-            ctx->t_live_ns = 0.98 * ctx->t_live_ns + 0.02 * dt;
+            ctx->t_live_ns = 0.99 * ctx->t_live_ns + 0.01 * dt;
         }
     }
 
@@ -845,6 +846,8 @@ static void mdr_accum_sample(MDR_CTX     *ctx,
         dst[i] += step_ampl * (frame[i] - base[i]);
     }
 
+    const double w_samp = (double) step_ampl * (double) step_ampl;
+
     if (ctx->asym_acc != NULL && asym_sign != 0.0f)
     {
         float       *adst = &ctx->asym_acc[bin * n_out];
@@ -854,9 +857,13 @@ static void mdr_accum_sample(MDR_CTX     *ctx,
         {
             adst[i] += w * (frame[i] - base[i]);
         }
+        if (ctx->asym_wsum != NULL)
+        {
+            ctx->asym_wsum[bin] += (double) asym_sign * w_samp;
+        }
     }
 
-    ctx->wsum[bin] += (double) step_ampl * (double) step_ampl;
+    ctx->wsum[bin] += w_samp;
     ctx->tsum[bin] += tau_s;
     ctx->cnt[bin]  += 1u;
 }
@@ -964,6 +971,8 @@ static int mdr_run_transition(MDR_CTX     *ctx,
         (!ctx->use_lockstep && ctx->t_live_ns > 0.0)
             ? ((ctx->t_live_ns * 1.0e-9) / (double) ctx->n_subfr)
             : ctx->dt_bin_s;
+    const double tau_scale =
+        (!ctx->use_lockstep && dt_bin_live_s > 1.0e-12) ? (ctx->dt_bin_s / dt_bin_live_s) : 1.0;
 
     if (!skip_ac)
     {
@@ -976,8 +985,9 @@ static int mdr_run_transition(MDR_CTX     *ctx,
         }
         else
         {
-            tau_pre = ((double) t_k0 - (double) t_poke) * 1.0e-9;
-            q_pre   = (int) floor(tau_pre / dt_bin_live_s) + (int) ctx->q0_bin;
+            double tau_wall = ((double) t_k0 - (double) t_poke) * 1.0e-9;
+            q_pre           = (int) floor(tau_wall / dt_bin_live_s) + (int) ctx->q0_bin;
+            tau_pre         = tau_wall * tau_scale;
         }
         mdr_accum_sample(ctx, mode_idx, q_pre, tau_pre, ctx->k0_vec, step_ampl, asym_sign);
     }
@@ -1002,8 +1012,9 @@ static int mdr_run_transition(MDR_CTX     *ctx,
             }
             else
             {
-                tau_s = ((double) ctx->last_wfs_t_ns - (double) t_poke) * 1.0e-9;
-                q     = (int) floor(tau_s / dt_bin_live_s) + (int) ctx->q0_bin;
+                double tau_wall = ((double) ctx->last_wfs_t_ns - (double) t_poke) * 1.0e-9;
+                q               = (int) floor(tau_wall / dt_bin_live_s) + (int) ctx->q0_bin;
+                tau_s           = tau_wall * tau_scale;
             }
             mdr_accum_sample(ctx, mode_idx, q, tau_s, ctx->cur_vec, step_ampl, asym_sign);
         }
@@ -1243,8 +1254,8 @@ static int mdr_save_outputs(const MDR_CTX *ctx, uint32_t completed_cycles, int w
         }
         free(static_rm);
 
-        /* 3. Optional asymmetry cube [N_out, N_in, N_t] */
-        if (ctx->saveall && ctx->asym_acc != NULL)
+        /* 3. Optional polarity-balanced asymmetry cube [N_out, N_in, N_t]: 0.5*(y_+ - y_-) */
+        if (ctx->saveall && ctx->asym_acc != NULL && ctx->asym_wsum != NULL)
         {
             float *asym_cube = (float *) malloc(sizeof(float) * n_elems);
             if (asym_cube != NULL)
@@ -1254,14 +1265,18 @@ static int mdr_save_outputs(const MDR_CTX *ctx, uint32_t completed_cycles, int w
 #endif
                 for (size_t bin = 0; bin < n_bins; bin++)
                 {
-                    const float *src = &ctx->asym_acc[bin * n_out];
-                    float       *dst = &asym_cube[bin * n_out];
-                    if (ctx->wsum[bin] > 1.0e-30)
+                    const float *asrc  = &ctx->asym_acc[bin * n_out];
+                    const float *ssrc  = &ctx->acc[bin * n_out];
+                    float       *dst   = &asym_cube[bin * n_out];
+                    double       w_pos = 0.5 * (ctx->wsum[bin] + ctx->asym_wsum[bin]);
+                    double       w_neg = 0.5 * (ctx->wsum[bin] - ctx->asym_wsum[bin]);
+                    if (w_pos > 1.0e-30 && w_neg > 1.0e-30)
                     {
-                        float inv = (float) (1.0 / ctx->wsum[bin]);
+                        float c_sum  = (float) (0.25 / w_pos - 0.25 / w_neg);
+                        float c_diff = (float) (0.25 / w_pos + 0.25 / w_neg);
                         for (uint64_t i = 0; i < n_out; i++)
                         {
-                            dst[i] = src[i] * inv;
+                            dst[i] = c_sum * ssrc[i] + c_diff * asrc[i];
                         }
                     }
                     else
@@ -1496,19 +1511,22 @@ static MILK_HOT errno_t measdynresp_compute(const MILK_RUNNABLE *self)
     ctx.cnt      = (uint32_t *) calloc(n_bins, sizeof(uint32_t));
     if (ctx.saveall)
     {
-        ctx.asym_acc = (float *) calloc(n_elems, sizeof(float));
+        ctx.asym_acc  = (float *) calloc(n_elems, sizeof(float));
+        ctx.asym_wsum = (double *) calloc(n_bins, sizeof(double));
     }
 
     uint32_t *phase_seq = (uint32_t *) malloc(sizeof(uint32_t) * ctx.n_subfr);
     uint32_t *mode_seq  = (uint32_t *) malloc(sizeof(uint32_t) * ctx.n_in);
 
     if (!ctx.pre_ring || !ctx.base_vec || !ctx.k0_vec || !ctx.cur_vec || !ctx.acc || !ctx.wsum ||
-        !ctx.tsum || !ctx.cnt || (ctx.saveall && !ctx.asym_acc) || !phase_seq || !mode_seq)
+        !ctx.tsum || !ctx.cnt || (ctx.saveall && (!ctx.asym_acc || !ctx.asym_wsum)) ||
+        !phase_seq || !mode_seq)
     {
         fprintf(stderr, "measdynresp: out of memory allocating 3D cube (%lu x %u x %u)\n",
                 (unsigned long) ctx.n_out, ctx.n_in, ctx.n_t);
         free(mode_seq);
         free(phase_seq);
+        free(ctx.asym_wsum);
         free(ctx.asym_acc);
         free(ctx.cnt);
         free(ctx.tsum);
@@ -1763,6 +1781,7 @@ static MILK_HOT errno_t measdynresp_compute(const MILK_RUNNABLE *self)
 
     free(mode_seq);
     free(phase_seq);
+    free(ctx.asym_wsum);
     free(ctx.asym_acc);
     free(ctx.cnt);
     free(ctx.tsum);
