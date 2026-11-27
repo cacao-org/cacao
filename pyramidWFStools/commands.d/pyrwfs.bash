@@ -150,7 +150,8 @@ pyrwfs.mkzones() {
 }
 
 # Calibrate pyramid geometry, zone masks, and flat-WF baseline flux fractions.
-# Uses pyWFSgridmatch when zrespM is supplied, else auto-detects 4 pupils via pyrwfs_detect.
+# Uses pyWFSgridmatch when zrespM is supplied, temporal-variance 4-pupil sum minimization
+# when a 3D turbulent cube is supplied, else single-frame pyrwfs_detect on ref.
 pyrwfs.calib() {
     @args 'ref:str:flat-WF reference 2D stream (e.g. aol0_wfsref or mean imWFS0)' \
           'prefix:str=aol0_pyr:output SHM prefix (<prefix>_nomgeom, _zones, _even)' \
@@ -158,10 +159,11 @@ pyrwfs.calib() {
           'dmx:int=0:DM x size (required if zrespM is given)' \
           'dmy:int=0:DM y size (required if zrespM is given)' \
           'spotsize:float=2.0:spot radius for pyWFSgridmatch [pix]' \
-          'thr:float=0.25:footprint threshold for pyrwfs_detect (when zrespM empty)' \
+          'thr:float=0.25:footprint threshold for pyrwfs_detect (when zrespM/cube empty)' \
           'sp_ang:float=45.0:spider arm angle [deg]' \
           'sp_hw:float=1.5:spider band half-width [pix]' \
-          'outdir:str=:optional output directory to save FITS + baseline.kv' -- "$@"
+          'outdir:str=:optional output directory to save FITS + baseline.kv' \
+          'cube:str=:optional 3D turbulent WFS cube for temporal-variance pupil detection' -- "$@"
 
     local _g="${prefix}_nomgeom"
     local _z="${prefix}_zones"
@@ -174,6 +176,8 @@ pyrwfs.calib() {
         fi
         cacaopyrwfs.pyWFSgridmatch ".in_name=${zrespM}" ".spotsize=${spotsize}" \
             ".dmxsize=${dmx}" ".dmysize=${dmy}" ".outgeom=${_g}" || return 1
+    elif [[ -n "${cube}" ]]; then
+        @calc "S:${_g} = pyrwfs_detect(${cube}, thr=${thr})" || return 1
     else
         @calc "S:${_g} = pyrwfs_detect(${ref}, thr=${thr})" || return 1
     fi

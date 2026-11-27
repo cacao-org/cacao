@@ -7,7 +7,7 @@ tracking, and live/offline telemetry tools for `cacao`.
 
 | Layer | File(s) | Purpose |
 | :--- | :--- | :--- |
-| Pure-C core | `pyrwfs_tlm_core.h` | Zero-milk-dependency single-pass packed-zone flux budget, 4-pupil binary detector, soft-Sobel 6-DOF pupil registration, bilinear 4-pupil gather (`Isum`, `Sx`, `Sy`), scintillation, curl/div, LWE |
+| Pure-C core | `pyrwfs_tlm_core.h` | Zero-milk-dependency single-pass packed-zone flux budget, single-frame & temporal-variance 4-pupil geometry detector (`pyrwfs_detect_pupils_cube`), soft-Sobel 6-DOF pupil registration, bilinear 4-pupil gather (`Isum`, `Sx`, `Sy`), scintillation, curl/div, LWE |
 | C FPS unit | `pyWFStlm.c` (`cacao-fpsexec-pyrwfstlm`) | Live 2D stream & offline 3D cube telemetry engine publishing `<p>_tlm`, `<p>_pupgeom`, `<p>_pupdof`, and registered 2D maps |
 | C FPS unit | `pyWFSgridmatch.c` (`cacao-fpsexec-pywfsgridmatch`) | Exact weighted linear least-squares 4-pupil + DM affine grid fitter on `zrespM` |
 | Tier 2 `@calc` ext | `calc/pyrwfs_calc_ext.c` (`lib/milk/calc.d/libcacaopyrwfs_calc.so`) | Auto-loaded `@calc` ops: `pyrwfs_detect`, `pyrwfs_pupreg`, `pyrwfs_extract4`, `pyrwfs_metrics` |

@@ -398,3 +398,325 @@ pyrwfs.tlm_stop 0
     cx, cy, lk = [float(v) for v in (work / "live_steer.txt").read_text().strip().split()]
     assert lk == 1.0, f"Expected pupsteer locked=1, got {lk}"
     assert cx > 0.2 and cy < -0.1, f"Expected pupsteer integrating toward (+1.5,-0.8), got ({cx},{cy})"
+
+
+def _sample_2d_bilinear(im: np.ndarray, x: np.ndarray, y: np.ndarray) -> np.ndarray:
+    ny, nx = im.shape
+    x0 = np.floor(x).astype(np.int32)
+    y0 = np.floor(y).astype(np.int32)
+    fx = x - x0
+    fy = y - y0
+    ok = (x0 >= 0) & (x0 < nx - 1) & (y0 >= 0) & (y0 < ny - 1)
+    x0c = np.clip(x0, 0, nx - 2)
+    y0c = np.clip(y0, 0, ny - 2)
+    out = (1.0 - fy) * ((1.0 - fx) * im[y0c, x0c] + fx * im[y0c, x0c + 1]) + fy * (
+        (1.0 - fx) * im[y0c + 1, x0c] + fx * im[y0c + 1, x0c + 1]
+    )
+    return np.where(ok, out, 0.0)
+
+
+def test_temporal_variance_pupil_detection_cube_and_live_autocal(tmp_path: Path):
+    """Verify temporal-variance 4-pupil detection via @calc pyrwfs_detect(cube), pyrwfs.calib, and live autocal."""
+    env = make_env(tmp_path)
+    work = tmp_path / "work"
+
+    # 1. Build challenging non-modulated cube:
+    #    global shift (+5.2, -4.3), rotation 10 deg, unequal sep (24.5, 21.0),
+    #    non-rigid facet wedge shift (+1.7, -1.3) on pupil 3, strong TT illumination bias,
+    #    readout noise, and 2 dark dropout frames.
+    N, R, T = 128, 17.0, 48
+    rng = np.random.default_rng(42)
+    ang = math.radians(10.0)
+    ca, sa = math.cos(ang), math.sin(ang)
+    cx_t, cy_t = 64.0 + 5.2, 64.0 - 4.3
+    sx_t, sy_t = 24.5, 21.0
+    s0 = 28.0
+
+    y, x = np.mgrid[-N // 2 : N // 2, -N // 2 : N // 2].astype(np.float64)
+    r = np.hypot(x, y)
+    P = ((r <= R) & (r >= 0.30 * R)).astype(np.float64)
+    P[(np.abs((x + y) * 0.7071) < 0.8) | (np.abs((-x + y) * 0.7071) < 0.8)] = 0.0
+    fy, fx = np.mgrid[-N // 2 : N // 2, -N // 2 : N // 2] / float(N)
+    M = np.exp(-1j * 2.0 * np.pi * s0 * (np.abs(fx) + np.abs(fy)))
+
+    base = [(-sx_t, -sy_t), (-sx_t, +sy_t), (+sx_t, -sy_t), (+sx_t, +sy_t)]
+    true_c = np.array(
+        [
+            [
+                cx_t + ux * ca - uy * sa + (1.7 if q == 3 else 0.0),
+                cy_t + ux * sa + uy * ca + (-1.3 if q == 3 else 0.0),
+            ]
+            for q, (ux, uy) in enumerate(base)
+        ],
+        dtype=np.float64,
+    )
+    src_c = np.array([[64 - s0, 64 - s0], [64 - s0, 64 + s0], [64 + s0, 64 - s0], [64 + s0, 64 + s0]])
+    yy_i, xx_i = np.mgrid[0:N, 0:N].astype(np.float64)
+
+    def warp_frame(I0: np.ndarray, noise_std: float) -> np.ndarray:
+        frame = np.full((N, N), 50.0, dtype=np.float64)
+        for q in range(4):
+            u = xx_i - true_c[q, 0]
+            v = yy_i - true_c[q, 1]
+            frame += np.where(
+                (u * u + v * v) <= ((s0 - 2.0) ** 2),
+                _sample_2d_bilinear(I0, src_c[q, 0] + u, src_c[q, 1] + v),
+                0.0,
+            )
+        if noise_std > 0.0:
+            frame += rng.normal(0.0, noise_std, (N, N))
+        return frame.astype(np.float32)
+
+    # Flat-WF reference at the same warped pupil locations
+    F_flat = np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(P)))
+    I0_flat = np.abs(np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(F_flat * M)))) ** 2
+    I0_flat = I0_flat / I0_flat.sum() * 2e5
+    ref_warp = warp_frame(I0_flat, noise_std=0.0)
+
+    cube = np.zeros((T + 2, N, N), dtype=np.float32)
+    for k in range(T):
+        ph = make_kolm_phase(N, R, rms=1.1, seed=700 + k)
+        ph += (0.5 + 0.4 * rng.normal()) * (x / R) + (-0.7 + 0.4 * rng.normal()) * (y / R)
+        F_p = np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(P * np.exp(1j * ph))))
+        I0 = np.abs(np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(F_p * M)))) ** 2
+        I0 = I0 / I0.sum() * 2e5
+        cube[k] = warp_frame(I0, noise_std=3.0)
+    # Append 2 dark shutter-closed frames to verify dropout rejection
+    cube[T] = np.full((N, N), 50.0, dtype=np.float32)
+    cube[T + 1] = np.full((N, N), 50.0, dtype=np.float32)
+
+    # Static cube (identical copies of ref_warp) to verify clean fallback
+    static_cube = np.repeat(ref_warp[None, :, :], 8, axis=0)
+
+    fits.writeto(work / "warped_ref.fits", ref_warp, overwrite=True)
+    fits.writeto(work / "warped_cube.fits", cube, overwrite=True)
+    fits.writeto(work / "static_cube.fits", static_cube, overwrite=True)
+
+    # 2. Test @calc pyrwfs_detect(cube), pyrwfs.calib .cube=..., static fallback, and pyWFStlm 3D cube
+    caldir = work / "cal_cube"
+    cmd = f"""
+iofits.loadfits warped_ref.fits @S:wref 1
+iofits.loadfits warped_cube.fits @S:wcube 1
+iofits.loadfits static_cube.fits @S:scube 1
+@calc '
+    S:g_cube = pyrwfs_detect(wcube)
+    S:g_stat = pyrwfs_detect(scube)
+'
+pyrwfs.calib wref calp .cube=wcube .outdir={caldir}
+cacao-fpsexec-pyrwfstlm -n tvartest exec .inwfs=wcube .inref=wref .outprefix=tvar .reg_stride=0 .pub_maps=ON
+iofits.saveFITS g_cube g_cube.fits
+iofits.saveFITS g_stat g_stat.fits
+iofits.saveFITS tvar_pupgeom tvar_pupgeom.fits
+"""
+    run_cli(cmd, env, work)
+
+    g_cube = fits.getdata(work / "g_cube.fits")
+    g_stat = fits.getdata(work / "g_stat.fits")
+    g_cal = fits.getdata(caldir / "nomgeom.fits")
+    g_tlm = fits.getdata(work / "tvar_pupgeom.fits")
+
+    for tag, geom in [("calc_cube", g_cube), ("calib_cube", g_cal), ("tlm_cube", g_tlm)]:
+        assert geom.shape == (4, 4), f"{tag}: unexpected shape {geom.shape}"
+        err_x = geom[:, 0] - true_c[:, 0]
+        err_y = geom[:, 1] - true_c[:, 1]
+        rel_x = err_x - np.mean(err_x)
+        rel_y = err_y - np.mean(err_y)
+        assert np.max(np.abs(err_x)) < 0.35, f"{tag}: abs X err too large: {err_x}"
+        assert np.max(np.abs(err_y)) < 0.35, f"{tag}: abs Y err too large: {err_y}"
+        assert np.max(np.abs(rel_x)) < 0.20, f"{tag}: rel X err too large: {rel_x}"
+        assert np.max(np.abs(rel_y)) < 0.20, f"{tag}: rel Y err too large: {rel_y}"
+        assert np.all(np.abs(geom[:, 2] - R) < 1.2), f"{tag}: Rout err: {geom[:, 2]} vs {R}"
+
+    assert g_stat.shape == (4, 4) and np.all(np.isfinite(g_stat)) and np.all(g_stat[:, 2] > 5.0)
+
+    # 3. Test LIVE 2D stream auto-calibration (no innomgeom supplied, autocal_n=24)
+    live_cmd = """
+iofits.loadfits warped_ref.fits @S:lref 1
+iofits.loadfits warped_cube.fits @L:lcb 1
+@calc 'S:lwfs = lref * 1.0'
+cacao-fpsexec-pyrwfstlm -n liveautocal -loops fpsinit \
+    .inwfs=lwfs .inref=lref .outprefix=lac .autocal_n=24 .reg_stride=0 .pub_maps=ON
+cacao-fpsexec-pyrwfstlm -n liveautocal runstart
+for k in $(seq 0 32); do
+    @calc "S:lwfs = lcb[*, *, ${k}]"
+    sleep 0.015
+done
+cacao-fpsexec-pyrwfstlm -n liveautocal runstop
+iofits.saveFITS lac_pupgeom lac_pupgeom.fits
+"""
+    try:
+        run_cli(live_cmd, env, work, timeout=60)
+    finally:
+        subprocess.run(
+            [str(BIN / "cacao-fpsexec-pyrwfstlm"), "-n", "liveautocal", "runstop"],
+            env=env,
+            cwd=str(work),
+            capture_output=True,
+        )
+
+    g_live = fits.getdata(work / "lac_pupgeom.fits")
+    assert g_live.shape == (4, 4)
+    err_x = g_live[:, 0] - true_c[:, 0]
+    err_y = g_live[:, 1] - true_c[:, 1]
+    rel_x = err_x - np.mean(err_x)
+    rel_y = err_y - np.mean(err_y)
+    assert np.max(np.abs(err_x)) < 0.45, f"live_autocal abs X err: {err_x}"
+    assert np.max(np.abs(err_y)) < 0.45, f"live_autocal abs Y err: {err_y}"
+    assert np.max(np.abs(rel_x)) < 0.25, f"live_autocal rel X err: {rel_x}"
+    assert np.max(np.abs(rel_y)) < 0.25, f"live_autocal rel Y err: {rel_y}"
+
+
+def test_scintillation_noise_debias(tmp_path: Path):
+    """Verify lag-1 EMA-corrected scintillation cancels white noise while preserving flying shadows."""
+    env = make_env(tmp_path)
+    work = tmp_path / "work"
+    N, R, s, T = 128, 18.0, 24.0, 120
+    rng = np.random.default_rng(77)
+
+    I_flat = sim_pywfs_frame(np.zeros((N, N)), N=N, R=R, s=s, flux=5e5, bg=100.0)
+    fits.writeto(work / "ref.fits", I_flat, overwrite=True)
+
+    # Estimate pupil pixel signal level so we can inject strong white photon/RON noise (~25% RMS)
+    sig_lvl = float(np.percentile(I_flat - 100.0, 92.0))
+    noise_sigma = 0.28 * sig_lvl
+
+    # Cube 1: Pure white detector noise on flat WF (true scintillation = 0)
+    cube_noise = np.empty((T, N, N), dtype=np.float32)
+    for k in range(T):
+        cube_noise[k] = (I_flat + rng.normal(0.0, noise_sigma, (N, N))).astype(np.float32)
+
+    # Cube 2: Temporally correlated flying-shadow scintillation (drifting smooth amplitude screen)
+    #         PLUS the same strong white detector noise
+    scr = make_kolm_phase(N, R, rms=1.0, seed=901, fmin=2.0, fmax=10.0)
+    scr = scr / (np.std(scr) + 1e-12)
+    cube_scint = np.empty((T, N, N), dtype=np.float32)
+    for k in range(T):
+        # Slow drift (0.5 px/fr) -> high lag-1 temporal correlation
+        sh_x = int(round(0.5 * k))
+        sh_y = int(round(0.25 * k))
+        sc = np.clip(1.0 + 0.16 * np.roll(np.roll(scr, sh_x, axis=1), sh_y, axis=0), 0.35, 1.9)
+        frm = sim_pywfs_frame(np.zeros((N, N)), amp=sc, N=N, R=R, s=s, flux=5e5, bg=100.0)
+        cube_scint[k] = (frm + rng.normal(0.0, noise_sigma, (N, N))).astype(np.float32)
+
+    fits.writeto(work / "cube_noise.fits", cube_noise, overwrite=True)
+    fits.writeto(work / "cube_scint.fits", cube_scint, overwrite=True)
+
+    cmd = """
+iofits.loadfits ref.fits @S:sref 1
+iofits.loadfits cube_noise.fits @S:cnoise 1
+iofits.loadfits cube_scint.fits @S:cscint 1
+cacao-fpsexec-pyrwfstlm --no-procinfo -n sn_noise exec \
+    .inwfs=cnoise .inref=sref .outprefix=snn .outcsv=noise.csv \
+    .sub_bg=OFF .bg_const=100.0 .autocal_n=0 .reg_stride=0 .a_slow=0.04 .pub_maps=ON
+cacao-fpsexec-pyrwfstlm --no-procinfo -n sn_scint exec \
+    .inwfs=cscint .inref=sref .outprefix=sns .outcsv=scint.csv \
+    .sub_bg=OFF .bg_const=100.0 .autocal_n=0 .reg_stride=0 .a_slow=0.04 .pub_maps=ON
+iofits.saveFITS snn_scint_debias snn_deb.fits
+iofits.saveFITS sns_scint_debias sns_deb.fits
+"""
+    run_cli(cmd, env, work)
+
+    def _tail_means(csv_path: Path):
+        import csv
+
+        raw_v, deb_v = [], []
+        with csv_path.open("r", encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                raw_v.append(float(row["scint_idx"]))
+                deb_v.append(float(row["scint_debias"]))
+        return float(np.mean(raw_v[50:])), float(np.mean(deb_v[50:]))
+
+    raw_n, deb_n = _tail_means(work / "noise.csv")
+    raw_s, deb_s = _tail_means(work / "scint.csv")
+
+    # Pure white noise: raw scint_idx is strongly inflated (>0.015), debiased cancels near 0
+    assert raw_n > 0.012, f"Expected noticeable raw noise variance, got {raw_n}"
+    assert abs(deb_n) < 0.003, f"Expected near-zero debiased scint on white noise, got {deb_n} (raw={raw_n})"
+
+    # Flying-shadow scintillation + white noise: debiased recovers true correlated variance (~4*0.16^2 ~ 0.05..0.10)
+    # while staying clearly below the noise-inflated raw scint_idx!
+    assert deb_s > 0.020, f"Expected strong positive debiased scint on flying shadows, got {deb_s}"
+    assert raw_s > deb_s + 0.5 * raw_n, f"Expected raw ({raw_s}) > deb ({deb_s}) + noise floor ({raw_n})"
+    assert fits.getdata(work / "sns_deb.fits").ndim == 2
+
+
+def test_high_strehl_closed_loop_120x120_scintillation_pupil_detection(tmp_path: Path):
+    """Regression test for Stage-2 closed-loop 120x120 PyWFS with high-SF residuals + scintillation + X/Y anisotropy."""
+    env = make_env(tmp_path)
+    work = tmp_path / "work"
+    N, R, s, T = 120, 27.5, 30.0, 64
+    rng = np.random.default_rng(2026)
+
+    y, x = np.mgrid[-N // 2 : N // 2, -N // 2 : N // 2].astype(np.float64)
+    r = np.hypot(x, y)
+    P = ((r <= R) & (r >= 0.30 * R)).astype(np.float64)
+    P[(np.abs((x + y) * 0.7071) < 0.8) | (np.abs((-x + y) * 0.7071) < 0.8)] = 0.0
+    fy, fx = np.mgrid[-N // 2 : N // 2, -N // 2 : N // 2] / float(N)
+    fr = np.hypot(fx * N, fy * N)
+    # Shift by (-0.5, -0.5) so pupils sit symmetrically at (29.5, 29.5) .. (89.5, 89.5) like SCExAO 120x120
+    M = np.exp(-1j * 2.0 * np.pi * s * (np.abs(fx) + np.abs(fy)) + 1j * 2.0 * np.pi * (-0.5 * fx - 0.5 * fy))
+
+    def make_high_sf_phase(seed: int) -> np.ndarray:
+        r2 = np.random.default_rng(seed)
+        # Closed-loop residual: low orders suppressed (< 10 cyc/frame), high-SF speckles (10..26 cyc)
+        # plus anisotropic X/Y weighting so Var(Wx) != Var(Wy)
+        mask_f = (fr >= 10.0) & (fr <= 26.0)
+        aniso = 1.0 + 0.8 * (fx**2 / (fx**2 + fy**2 + 1e-12))
+        amp_f = np.zeros_like(fr)
+        amp_f[mask_f] = aniso[mask_f] * (fr[mask_f] ** (-0.5))
+        ph = np.real(np.fft.ifft2(np.fft.ifftshift(amp_f * np.exp(1j * r2.uniform(0, 2 * np.pi, (N, N))))))
+        pup = P > 0.5
+        ph = (ph - ph[pup].mean()) / (ph[pup].std() + 1e-12) * 0.35
+        return ph
+
+    def make_scint(seed: int) -> np.ndarray:
+        r2 = np.random.default_rng(seed)
+        mask_f = (fr >= 4.0) & (fr <= 14.0)
+        amp_f = np.zeros_like(fr)
+        amp_f[mask_f] = fr[mask_f] ** (-1.0)
+        sc = np.real(np.fft.ifft2(np.fft.ifftshift(amp_f * np.exp(1j * r2.uniform(0, 2 * np.pi, (N, N))))))
+        pup = P > 0.5
+        sc = (sc - sc[pup].mean()) / (sc[pup].std() + 1e-12)
+        return np.clip(1.0 + 0.22 * sc, 0.35, 1.9)
+
+    F_flat = np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(P)))
+    I_ref = np.abs(np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(F_flat * M)))) ** 2
+    I_ref = (I_ref / I_ref.sum() * 1.1e5 + 100.0).astype(np.float32)
+
+    cube = np.empty((T, N, N), dtype=np.float32)
+    for k in range(T):
+        ph = make_high_sf_phase(4000 + k)
+        amp = make_scint(5000 + k)
+        F_p = np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(P * amp * np.exp(1j * ph))))
+        I0 = np.abs(np.fft.fftshift(np.fft.fft2(np.fft.ifftshift(F_p * M)))) ** 2
+        I0 = I0 / I0.sum() * 1.1e5 + 100.0 + rng.normal(0.0, 0.35, (N, N))
+        cube[k] = I0.astype(np.float32)
+
+    fits.writeto(work / "ref120.fits", I_ref, overwrite=True)
+    fits.writeto(work / "cube120.fits", cube, overwrite=True)
+
+    cmd = """
+iofits.loadfits ref120.fits @S:r120 1
+iofits.loadfits cube120.fits @S:c120 1
+@calc 'S:g120 = pyrwfs_detect(c120)'
+cacao-fpsexec-pyrwfstlm --no-procinfo -n cl120 exec .inwfs=c120 .inref=r120 .outprefix=p120 .reg_stride=0 .pub_maps=OFF
+iofits.saveFITS g120 g120.fits
+iofits.saveFITS p120_pupgeom p120_pupgeom.fits
+"""
+    run_cli(cmd, env, work)
+
+    exp_x = np.array([29.5, 29.5, 89.5, 89.5])
+    exp_y = np.array([29.5, 89.5, 29.5, 89.5])
+    for tag, fname in [("calc_120", "g120.fits"), ("tlm_120", "p120_pupgeom.fits")]:
+        geom = fits.getdata(work / fname)
+        err_x = geom[:, 0] - exp_x
+        err_y = geom[:, 1] - exp_y
+        rel_x = err_x - np.mean(err_x)
+        rel_y = err_y - np.mean(err_y)
+        assert np.max(np.abs(err_x)) < 0.30, f"{tag}: abs X err {err_x}"
+        assert np.max(np.abs(err_y)) < 0.30, f"{tag}: abs Y err {err_y}"
+        assert np.max(np.abs(rel_x)) < 0.15, f"{tag}: rel X err {rel_x}"
+        assert np.max(np.abs(rel_y)) < 0.15, f"{tag}: rel Y err {rel_y}"
+        assert np.all(np.abs(geom[:, 2] - R) < 1.0), f"{tag}: Rout {geom[:, 2]} vs {R}"
+
+

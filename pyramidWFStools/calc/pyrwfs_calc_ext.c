@@ -55,7 +55,7 @@ static int ext_read_geom(const IMAGE *im, pyrwfs_pupgeom_t *g)
       "Binary footprint threshold fraction")
 
 #define PYR_DETECT_PORTS(M)                                                                     \
-    M(IN, im, MILK_PORT_IMAGE, 0, "2D PyWFS intensity image")                                   \
+    M(IN, im, MILK_PORT_IMAGE, 0, "2D PyWFS intensity image or 3D turbulent WFS cube")          \
     M(OUT, nomgeom, MILK_PORT_IMAGE, 0, "Detected [4 x 4] pupil geometry [xc, yc, rout, rin]")
 
 MILK_CALC_OP_DECLARE(pyrwfs_detect, PYR_DETECT_PARAMS, PYR_DETECT_PORTS);
@@ -84,8 +84,18 @@ static int pyrwfs_detect_exec(milk_calc_op_ctx_t *ctx, const void *P, void *stat
         return -1;
     }
     pyrwfs_pupgeom_t g;
-    if (pyrwfs_detect_pupils(im->array.F, im->md[0].size[0], im->md[0].size[1], (float) par->thr,
-                             &g) != 0)
+    int              rc;
+    if (im->md[0].naxis >= 3 && im->md[0].size[2] >= 4u)
+    {
+        rc = pyrwfs_detect_pupils_cube(im->array.F, im->md[0].size[0], im->md[0].size[1],
+                                       im->md[0].size[2], NULL, &g);
+    }
+    else
+    {
+        rc = pyrwfs_detect_pupils(im->array.F, im->md[0].size[0], im->md[0].size[1],
+                                  (float) par->thr, &g);
+    }
+    if (rc != 0)
     {
         return -1;
     }

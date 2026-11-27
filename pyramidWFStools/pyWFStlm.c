@@ -49,6 +49,7 @@ static char     p_outcsv[FUNCTION_PARAMETER_STRMAXLEN]      = "";
 
 static uint32_t p_stride     = 1;
 static uint32_t p_reg_stride = 20;
+static uint32_t p_autocal_n  = 64;
 static uint32_t p_npix       = 0;
 static int32_t  p_sub_bg     = 1;
 static int32_t  p_norm_mode  = 0;
@@ -96,9 +97,10 @@ static float o_qx_rms  = 0.0f;
 static float o_qy_rms  = 0.0f;
 static float o_qdiag   = 0.0f;
 
-static float o_scint_idx  = 0.0f;
-static float o_curl_ratio = 0.0f;
-static float o_lwe_metric = 0.0f;
+static float o_scint_idx    = 0.0f;
+static float o_scint_debias = 0.0f;
+static float o_curl_ratio   = 0.0f;
+static float o_lwe_metric   = 0.0f;
 
 static float o_pup_dx    = 0.0f;
 static float o_pup_dy    = 0.0f;
@@ -133,6 +135,8 @@ static float o_pup_corr  = 0.0f;
     X(".reg_stride", &p_reg_stride, FPTYPE_UINT32, 0,                                            \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                 \
       "pupil registration cadence [processed fr]")                                               \
+    X(".autocal_n", &p_autocal_n, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,     \
+      "frames for temporal-variance pupil autocal (0=off)")                                      \
     X(".npix", &p_npix, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,               \
       "registered pupil grid size (0=auto)")                                                     \
     X(".sub_bg", &p_sub_bg, FPTYPE_ONOFF, 0,                                                     \
@@ -218,7 +222,9 @@ static float o_pup_corr  = 0.0f;
     X(".jitter.qdiag", &o_qdiag, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                       \
       "quad-cell diagonal imbalance")                                                            \
     X(".wf.scint_idx", &o_scint_idx, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                   \
-      "pupil-plane scintillation index")                                                         \
+      "pupil-plane scintillation index (raw)")                                                   \
+    X(".wf.scint_debias", &o_scint_debias, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,             \
+      "noise-debiased pupil-plane scintillation index (lag-1 cov)")                              \
     X(".wf.curl_ratio", &o_curl_ratio, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                 \
       "slope curl / divergence RMS ratio")                                                       \
     X(".wf.lwe_metric", &o_lwe_metric, FPTYPE_FLOAT32, 0, FPFLAG_DEFAULT_OUTPUT,                 \
@@ -453,9 +459,10 @@ static void pywt_update_fps_outputs(const pyrwfs_tlm_state_t *st, const float tl
     o_qy_rms  = tlm[PYRWFS_TLM_QY_RMS];
     o_qdiag   = tlm[PYRWFS_TLM_QDIAG];
 
-    o_scint_idx  = tlm[PYRWFS_TLM_SCINT_IDX];
-    o_curl_ratio = tlm[PYRWFS_TLM_CURL_RATIO];
-    o_lwe_metric = tlm[PYRWFS_TLM_LWE_METRIC];
+    o_scint_idx    = tlm[PYRWFS_TLM_SCINT_IDX];
+    o_scint_debias = (float) st->scint_debias;
+    o_curl_ratio   = tlm[PYRWFS_TLM_CURL_RATIO];
+    o_lwe_metric   = tlm[PYRWFS_TLM_LWE_METRIC];
 
     o_pup_dx    = tlm[PYRWFS_TLM_PUP_DX];
     o_pup_dy    = tlm[PYRWFS_TLM_PUP_DY];
@@ -498,7 +505,7 @@ static FILE *pywt_csv_open(const char *path)
             "f_pup,f_diam,f_bH,f_bV,f_out,df_pup,aniso,nl_ratio,"
             "qx,qy,qx_mean,qy_mean,qx_rms,qy_rms,qdiag,"
             "scint_idx,curl_ratio,lwe_metric,"
-            "pup_dx,pup_dy,pup_ds,pup_dast,pup_rot,pup_corr\n");
+            "pup_dx,pup_dy,pup_ds,pup_dast,pup_rot,pup_corr,scint_debias\n");
     return fp;
 }
 
@@ -507,7 +514,8 @@ static void pywt_csv_write_row(FILE                         *fp,
                                double                        t_phys_s,
                                double                        ts_val,
                                const pyrwfs_frame_metrics_t *fm,
-                               const float                   tlm[PYRWFS_TLM_NCOL])
+                               const float                   tlm[PYRWFS_TLM_NCOL],
+                               double                        scint_debias)
 {
     if (fp == NULL)
     {
@@ -518,7 +526,7 @@ static void pywt_csv_write_row(FILE                         *fp,
             "%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,"
             "%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,"
             "%.6f,%.6f,%.6f,"
-            "%.4f,%.4f,%.4f,%.4f,%.4f,%.5f\n",
+            "%.4f,%.4f,%.4f,%.4f,%.4f,%.5f,%.6f\n",
             (unsigned long long) frame_idx, t_phys_s, ts_val, (double) tlm[PYRWFS_TLM_FTOT],
             (double) tlm[PYRWFS_TLM_BG_MEAN], (double) tlm[PYRWFS_TLM_BG_STD],
             (double) tlm[PYRWFS_TLM_SAT_HI_FRAC], (double) tlm[PYRWFS_TLM_SAT_DARK_FRAC],
@@ -533,7 +541,7 @@ static void pywt_csv_write_row(FILE                         *fp,
             (double) tlm[PYRWFS_TLM_LWE_METRIC], (double) tlm[PYRWFS_TLM_PUP_DX],
             (double) tlm[PYRWFS_TLM_PUP_DY], (double) tlm[PYRWFS_TLM_PUP_DS],
             (double) tlm[PYRWFS_TLM_PUP_DAST], (double) tlm[PYRWFS_TLM_PUP_ROT],
-            (double) tlm[PYRWFS_TLM_PUP_CORR]);
+            (double) tlm[PYRWFS_TLM_PUP_CORR], scint_debias);
 }
 
 /* ================================================================
@@ -629,9 +637,13 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
         }
     }
 
+    int have_custom_zones = (buf_zones != NULL);
+    int have_custom_even  = (buf_even != NULL);
+
     pyrwfs_pupgeom_t nom;
     memset(&nom, 0, sizeof(nom));
-    int have_nom = 0;
+    int have_nom      = 0;
+    int user_supplied = 0;
 
     if (p_innomgeom[0] != '\0')
     {
@@ -639,7 +651,36 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
         resolveIMGID(&ig, ERRMODE_WARN, dcimg, dcnimg);
         if (ig.ID != -1 && pywt_read_nomgeom(ig.im, &nom) == 0)
         {
-            have_nom = 1;
+            have_nom      = 1;
+            user_supplied = 1;
+        }
+    }
+    if (!have_nom && iscube && p_autocal_n > 0u && ncube >= 4u)
+    {
+        /* Offline 3D cube: detect 4-pupil geometry by minimizing 4-pupil sum temporal variance */
+        uint32_t n_cal = (p_autocal_n > 128u) ? p_autocal_n : 128u;
+        if (n_cal > ncube)
+        {
+            n_cal = ncube;
+        }
+        float *cal_buf = (float *) malloc((size_t) n_cal * nimg * sizeof(float));
+        if (cal_buf != NULL)
+        {
+            int ok_read = 1;
+            for (uint32_t ci = 0u; ci < n_cal; ci++)
+            {
+                uint32_t sl = (uint32_t) (((uint64_t) ci * ncube) / n_cal);
+                if (pywt_slice_to_f32(img_wfs.im, sl, cal_buf + (size_t) ci * nimg) != 0)
+                {
+                    ok_read = 0;
+                    break;
+                }
+            }
+            if (ok_read && pyrwfs_detect_pupils_cube(cal_buf, nx, ny, n_cal, buf_ref, &nom) == 0)
+            {
+                have_nom = 1;
+            }
+            free(cal_buf);
         }
     }
     if (!have_nom)
@@ -727,11 +768,12 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
     IMGID out_dof      = { .ID = -1 };
     IMGID out_isum     = { .ID = -1 };
     IMGID out_isum_avg = { .ID = -1 };
-    IMGID out_sx       = { .ID = -1 };
-    IMGID out_sy       = { .ID = -1 };
-    IMGID out_scint    = { .ID = -1 };
-    IMGID out_lvar     = { .ID = -1 };
-    IMGID out_zones    = { .ID = -1 };
+    IMGID out_sx           = { .ID = -1 };
+    IMGID out_sy           = { .ID = -1 };
+    IMGID out_scint        = { .ID = -1 };
+    IMGID out_scint_debias = { .ID = -1 };
+    IMGID out_lvar         = { .ID = -1 };
+    IMGID out_zones        = { .ID = -1 };
 
     uint32_t tlm_rows = iscube ? ncube : 1u;
     snprintf(sname, sizeof(sname), "%s_tlm", pfx);
@@ -756,6 +798,8 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
         out_sy = stream_connect_create_2Df32(sname, npix, npix);
         snprintf(sname, sizeof(sname), "%s_scint", pfx);
         out_scint = stream_connect_create_2Df32(sname, npix, npix);
+        snprintf(sname, sizeof(sname), "%s_scint_debias", pfx);
+        out_scint_debias = stream_connect_create_2Df32(sname, npix, npix);
         snprintf(sname, sizeof(sname), "%s_lvar", pfx);
         out_lvar = stream_connect_create_2Df32(sname, npix, npix);
         snprintf(sname, sizeof(sname), "%s_zones", pfx);
@@ -782,8 +826,18 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
     o_ntorn   = 0;
     o_f_pup0  = (float) st.cfg.f_pup0;
 
-    uint64_t tick_cnt = 0;
-    errno_t  ret      = RETURN_SUCCESS;
+    uint64_t tick_cnt      = 0;
+    errno_t  ret           = RETURN_SUCCESS;
+    uint32_t live_cal_cap  = (!iscube && !user_supplied && p_autocal_n >= 4u) ? p_autocal_n : 0u;
+    uint32_t live_cal_cnt  = 0u;
+    int      live_cal_done = (live_cal_cap == 0u);
+    float   *live_cal_buf  = (live_cal_cap > 0u)
+                                 ? (float *) malloc((size_t) live_cal_cap * nimg * sizeof(float))
+                                 : NULL;
+    if (live_cal_buf == NULL)
+    {
+        live_cal_done = 1;
+    }
 
     MILK_PROCINFO_INIT(self)
     if (iscube && processinfo != NULL)
@@ -812,8 +866,10 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
 
         if (p_reset)
         {
-            st.nframe = 0;
-            p_reset   = 0;
+            st.nframe       = 0;
+            st.maps_seeded  = 0;
+            st.has_prev_rel = 0;
+            p_reset         = 0;
         }
 
         if (iscube)
@@ -841,7 +897,8 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
                                                  : last_tlm;
                 pyrwfs_tlm_step(&st, buf_frame, (double) k, do_reg, &fm, row);
                 double t_phys = (p_dt_phys > 0.0f) ? ((double) k * (double) p_dt_phys) : (double) k;
-                pywt_csv_write_row(csv_fp, (uint64_t) k, t_phys, (double) k, &fm, row);
+                pywt_csv_write_row(csv_fp, (uint64_t) k, t_phys, (double) k, &fm, row,
+                                   st.scint_debias);
                 memcpy(last_tlm, row, sizeof(last_tlm));
             }
             if (out_tlm.ID != -1)
@@ -881,6 +938,12 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
                     out_scint.md->write = 1;
                     memcpy(out_scint.im->array.F, st.scint_map, nb);
                     processinfo_update_output_stream(processinfo, out_scint.im, img_wfs.im);
+                }
+                if (out_scint_debias.ID != -1)
+                {
+                    out_scint_debias.md->write = 1;
+                    memcpy(out_scint_debias.im->array.F, st.scint_debias_map, nb);
+                    processinfo_update_output_stream(processinfo, out_scint_debias.im, img_wfs.im);
                 }
                 if (out_lvar.ID != -1)
                 {
@@ -928,9 +991,52 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
                     float                  tlm[PYRWFS_TLM_NCOL];
 
                     pyrwfs_tlm_step(&st, buf_frame, ts, do_reg, &fm, tlm);
+
+                    /* Live temporal-variance 4-pupil geometry auto-calibration */
+                    if (!live_cal_done && fm.flux_ok && live_cal_buf != NULL)
+                    {
+                        memcpy(live_cal_buf + (size_t) live_cal_cnt * nimg, buf_frame,
+                               nimg * sizeof(float));
+                        live_cal_cnt++;
+                        if (live_cal_cnt >= live_cal_cap)
+                        {
+                            pyrwfs_pupgeom_t nom_cal;
+                            if (pyrwfs_detect_pupils_cube(live_cal_buf, nx, ny, live_cal_cnt,
+                                                          buf_ref, &nom_cal) == 0 &&
+                                pyrwfs_tlm_recalibrate_geom(
+                                    &st, &nom_cal, buf_ref, have_custom_zones ? buf_zones : NULL,
+                                    have_custom_even ? buf_even : NULL, p_sp_ang, p_sp_hw,
+                                    (double) p_f_pup0) == 0)
+                            {
+                                o_f_pup0 = (float) st.cfg.f_pup0;
+                                if (out_zones.ID != -1)
+                                {
+                                    out_zones.md->write = 1;
+                                    for (size_t zi = 0; zi < nimg; zi++)
+                                    {
+                                        out_zones.im->array.F[zi] = (float) st.zones_nom[zi];
+                                    }
+                                    processinfo_update_output_stream(processinfo, out_zones.im,
+                                                                     img_wfs.im);
+                                }
+                                pywt_write_pupgeom_stream(processinfo, img_wfs.im, &out_geom,
+                                                          &out_dof, &st);
+                                printf("[pyWFStlm] autocal (N=%u): "
+                                       "p0=(%.2f,%.2f) p1=(%.2f,%.2f) p2=(%.2f,%.2f) p3=(%.2f,%.2f) "
+                                       "R=%.2f Rin=%.2f\n",
+                                       live_cal_cnt, nom_cal.xc[0], nom_cal.yc[0], nom_cal.xc[1],
+                                       nom_cal.yc[1], nom_cal.xc[2], nom_cal.yc[2], nom_cal.xc[3],
+                                       nom_cal.yc[3], nom_cal.rout[0], nom_cal.rin[0]);
+                            }
+                            free(live_cal_buf);
+                            live_cal_buf  = NULL;
+                            live_cal_done = 1;
+                        }
+                    }
+
                     pywt_csv_write_row(csv_fp, (cur_cnt0 >= cnt0_start) ? (cur_cnt0 - cnt0_start)
                                                                         : (st.nframe - 1u),
-                                       t_phys, ts, &fm, tlm);
+                                       t_phys, ts, &fm, tlm, st.scint_debias);
                     if (csv_fp != NULL && (st.nframe % 64u) == 0u)
                     {
                         fflush(csv_fp);
@@ -980,6 +1086,13 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
                             memcpy(out_scint.im->array.F, st.scint_map, nb);
                             processinfo_update_output_stream(processinfo, out_scint.im, img_wfs.im);
                         }
+                        if (out_scint_debias.ID != -1 && (st.nframe % 10u) == 0u)
+                        {
+                            out_scint_debias.md->write = 1;
+                            memcpy(out_scint_debias.im->array.F, st.scint_debias_map, nb);
+                            processinfo_update_output_stream(processinfo, out_scint_debias.im,
+                                                             img_wfs.im);
+                        }
                         if (out_lvar.ID != -1 && (st.nframe % 10u) == 0u)
                         {
                             out_lvar.md->write = 1;
@@ -1018,6 +1131,12 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
             memcpy(out_scint.im->array.F, st.scint_map, nb);
             processinfo_update_output_stream(NULL, out_scint.im, img_wfs.im);
         }
+        if (out_scint_debias.ID != -1)
+        {
+            out_scint_debias.md->write = 1;
+            memcpy(out_scint_debias.im->array.F, st.scint_debias_map, nb);
+            processinfo_update_output_stream(NULL, out_scint_debias.im, img_wfs.im);
+        }
         if (out_lvar.ID != -1)
         {
             out_lvar.md->write = 1;
@@ -1038,6 +1157,7 @@ static MILK_HOT errno_t pyWFStlm_compute(const MILK_RUNNABLE *self)
     }
 
     pyrwfs_tlm_free(&st);
+    free(live_cal_buf);
     free(buf_frame);
     free(buf_ref);
     free(buf_zones);
