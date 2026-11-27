@@ -39,6 +39,7 @@ static char     p_outtweak[FUNCTION_PARAMETER_STRMAXLEN]  = "aol1_selflearn_twea
 static char     p_savedir[FUNCTION_PARAMETER_STRMAXLEN]   = "";
 
 static uint32_t p_out_mode   = 0;      /* 0=PF (synchronous PSOL), 1=auxDM */
+static uint32_t p_nl_mode    = 0;      /* 0=linear phi, 1=+odd PyWFS NL, 2=+shared WFS xtalk */
 static uint32_t p_key_mode   = 0;      /* 0=TT2_E2, 1=E1, 2=LO4, 3=TT2_DM2_E2, 4=REGIME, 5=EXT */
 static uint32_t p_nbmodemax  = 64;     /* Max controlled modes tweaked */
 static uint32_t p_kmax       = 16;     /* Max GRIC clusters (1..64) */
@@ -115,6 +116,8 @@ static float    o_l1_rms         = 0.0f;
       "optional directory to save GRIC anchors on stop")                                          \
     X(".out_mode", &p_out_mode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
       "0=PF synchronous PSOL, 1=auxDM additive tweak")                                            \
+    X(".nl_mode", &p_nl_mode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,          \
+      "0=linear phi, 1=+odd PyWFS NL terms, 2=+shared WFS xtalk")                                 \
     X(".key_mode", &p_key_mode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,        \
       "0=TT2_E2, 1=E1, 2=WFS_LO4, 3=TT2_DM2_E2, 4=REGIME, 5=EXT")                                 \
     X(".NBmodeMax", &p_nbmodemax, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,      \
@@ -294,6 +297,7 @@ static MILK_HOT errno_t selflearn_compute(const MILK_RUNNABLE *self)
     cfg.key_warmup  = p_keywarmup;
     cfg.blend_soft  = (p_blend_soft != 0) ? 1u : 0u;
     cfg.out_mode    = p_out_mode;
+    cfg.nl_mode     = p_nl_mode;
     cfg.rlim        = (double) p_rlim;
     cfg.gate_mult   = (double) p_gate_mult;
     cfg.blend_bw    = (double) p_blend_bw;

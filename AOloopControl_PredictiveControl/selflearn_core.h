@@ -26,8 +26,9 @@ extern "C"
 #define SL_MAX_KEY_DIM   16
 #define SL_MAX_CLUSTERS  64
 #define SL_MAX_QSHARED   8
-#define SL_AR_DIFF_TAPS  4 /* [dOL(t), dOL(t-1), dOL(t-2), dOL(t-3)] + w_m(t) + dOL_lo(0..q-1) */
-#define SL_MAX_PFEAT     (SL_AR_DIFF_TAPS + 1 + SL_MAX_QSHARED)
+#define SL_AR_DIFF_TAPS  4 /* [dOL(t), dOL(t-1), dOL(t-2), dOL(t-3)] */
+#define SL_NL_WFS_TAPS   3 /* [w*|w|, w*tanh(0.5*logE_lo), w*tanh(0.5*(r_TT-1))] */
+#define SL_MAX_PFEAT     (SL_AR_DIFF_TAPS + 1 + SL_NL_WFS_TAPS + 2 * SL_MAX_QSHARED)
 #define SL_RING_SIZE     64 /* Power of 2; covers causal lag up to 60 frames */
 #define SL_ENERGY_WIN    8
 #define SL_VEL_WIN       64
@@ -53,6 +54,7 @@ typedef struct
     uint32_t key_warmup;   /* Frames to stabilize online key/feature std before freezing scale */
     uint32_t blend_soft;   /* 1 = soft Gaussian LWPR blend across anchors, 0 = hard nearest */
     uint32_t out_mode;     /* 0 = PF (synchronous PSOL), 1 = auxDM (damped additive DM tweak) */
+    uint32_t nl_mode;      /* 0 = linear phi, 1 = +odd PyWFS NL WFS terms, 2 = +shared WFS xtalk */
     double   rlim;         /* GRIC cluster spawn radius in standardized key space */
     double   gate_mult;    /* Fail-safe distance gate multiplier (0 out if dist > gate_mult*rlim) */
     double   blend_bw;     /* Soft kernel bandwidth multiplier relative to rlim (default 1.0) */

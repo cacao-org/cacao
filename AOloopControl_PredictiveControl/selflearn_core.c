@@ -39,8 +39,11 @@ struct SL_ENGINE
     SL_CONFIG cfg;
     uint32_t  M;
     uint32_t  key_dim;
-    uint32_t  p_feat; /* SL_AR_DIFF_TAPS + 1 + q_sh */
+    uint32_t  p_feat;   /* SL_AR_DIFF_TAPS + 1 + n_nl + q_sh + n_wsh */
     uint32_t  q_sh;
+    uint32_t  n_nl;     /* 0 (nl_mode=0) or SL_NL_WFS_TAPS (nl_mode>=1) */
+    uint32_t  n_wsh;    /* 0 (nl_mode<2) or q_sh (nl_mode>=2) */
+    double    last_l_lo; /* Latest rolling log low-order WFS energy from extract_key */
 
     /* Online causal standardization stats */
     uint64_t stat_n;
@@ -241,7 +244,9 @@ SL_ENGINE *sl_engine_create(const SL_CONFIG *cfg_in)
 
     eng->M       = eng->cfg.n_modes;
     eng->q_sh    = (eng->cfg.q_shared <= eng->M) ? eng->cfg.q_shared : eng->M;
-    eng->p_feat  = SL_AR_DIFF_TAPS + 1u + eng->q_sh;
+    eng->n_nl    = (eng->cfg.nl_mode >= 1u) ? SL_NL_WFS_TAPS : 0u;
+    eng->n_wsh   = (eng->cfg.nl_mode >= 2u) ? eng->q_sh : 0u;
+    eng->p_feat  = SL_AR_DIFF_TAPS + 1u + eng->n_nl + eng->q_sh + eng->n_wsh;
     eng->key_dim = resolve_key_dim(eng->cfg.key_mode, eng->cfg.ext_key_dim);
 
     uint32_t M    = eng->M;
@@ -512,20 +517,27 @@ static inline void rls_gram_update_solve(double      *Gm,
  *     (or symmetric [-max_wfs_gain, +max_wfs_gain] in auxDM mode). */
 static inline void project_weights_stable(double  *wm,
                                           uint32_t p,
+                                          uint32_t n_nl,
+                                          uint32_t q_sh,
+                                          uint32_t n_wsh,
                                           double   dol_sd,
                                           double   w_sd,
                                           double   max_ar_norm2,
                                           double   max_wfs_gain,
                                           uint32_t out_mode)
 {
-    double inv_dol = 1.0 / fmax(dol_sd, 1.0e-6);
-    double ar_n2   = 0.0;
+    uint32_t idx_w   = SL_AR_DIFF_TAPS;
+    uint32_t idx_nl  = idx_w + 1u;
+    uint32_t idx_dol = idx_nl + n_nl;
+    uint32_t idx_wsh = idx_dol + q_sh;
+    double   inv_dol = 1.0 / fmax(dol_sd, 1.0e-6);
+    double   ar_n2   = 0.0;
     for (uint32_t i = 0; i < SL_AR_DIFF_TAPS; i++)
     {
         double phys = wm[i] * inv_dol;
         ar_n2      += phys * phys;
     }
-    for (uint32_t i = SL_AR_DIFF_TAPS + 1u; i < p; i++)
+    for (uint32_t i = idx_dol; i < idx_dol + q_sh && i < p; i++)
     {
         double phys = wm[i] * inv_dol;
         ar_n2      += phys * phys;
@@ -537,24 +549,71 @@ static inline void project_weights_stable(double  *wm,
         {
             wm[i] *= sc;
         }
-        for (uint32_t i = SL_AR_DIFF_TAPS + 1u; i < p; i++)
+        for (uint32_t i = idx_dol; i < idx_dol + q_sh && i < p; i++)
         {
             wm[i] *= sc;
         }
     }
 
-    /* Cap WFS residual weight in physical DM/WFS units */
+    /* Cap linear WFS residual weight in physical DM/WFS units */
+    double w_sd_safe = fmax(w_sd, 1.0e-6);
     double w_phys_lo = (out_mode == 0u) ? -0.35 : -max_wfs_gain;
     double w_phys_hi = max_wfs_gain;
-    double w_lim_lo  = w_phys_lo * fmax(w_sd, 1.0e-6);
-    double w_lim_hi  = w_phys_hi * fmax(w_sd, 1.0e-6);
-    if (wm[SL_AR_DIFF_TAPS] < w_lim_lo)
+    double w_lim_lo  = w_phys_lo * w_sd_safe;
+    double w_lim_hi  = w_phys_hi * w_sd_safe;
+    if (wm[idx_w] < w_lim_lo)
     {
-        wm[SL_AR_DIFF_TAPS] = w_lim_lo;
+        wm[idx_w] = w_lim_lo;
     }
-    else if (wm[SL_AR_DIFF_TAPS] > w_lim_hi)
+    else if (wm[idx_w] > w_lim_hi)
     {
-        wm[SL_AR_DIFF_TAPS] = w_lim_hi;
+        wm[idx_w] = w_lim_hi;
+    }
+
+    /* Cap nonlinear odd-in-wfs optical-gain/saturation weights inside stability ball */
+    if (n_nl > 0u)
+    {
+        double nl_lo  = -0.60 * max_wfs_gain * w_sd_safe;
+        double nl_hi  = 0.80 * max_wfs_gain * w_sd_safe;
+        double nl_sum = 0.0;
+        for (uint32_t i = idx_nl; i < idx_nl + n_nl && i < p; i++)
+        {
+            if (wm[i] < nl_lo) wm[i] = nl_lo;
+            else if (wm[i] > nl_hi) wm[i] = nl_hi;
+            nl_sum += fabs(wm[i]);
+        }
+        double w_pos = (wm[idx_w] > 0.0) ? wm[idx_w] : 0.0;
+        double cap_l1 = 1.60 * max_wfs_gain * w_sd_safe;
+        if (w_pos + nl_sum > cap_l1 && nl_sum > 1.0e-18)
+        {
+            double budget = fmax(0.0, cap_l1 - w_pos);
+            double sc     = budget / nl_sum;
+            for (uint32_t i = idx_nl; i < idx_nl + n_nl && i < p; i++)
+            {
+                wm[i] *= sc;
+            }
+        }
+    }
+
+    /* Cap shared low-order WFS cross-talk L2 norm */
+    if (n_wsh > 0u)
+    {
+        double inv_w = 1.0 / w_sd_safe;
+        double xt_n2 = 0.0;
+        for (uint32_t i = idx_wsh; i < idx_wsh + n_wsh && i < p; i++)
+        {
+            double phys = wm[i] * inv_w;
+            xt_n2      += phys * phys;
+        }
+        double max_xt2 = 0.25 * max_wfs_gain * max_wfs_gain;
+        if (xt_n2 > max_xt2 && xt_n2 > 1.0e-18)
+        {
+            double sc = sqrt(max_xt2 / xt_n2);
+            for (uint32_t i = idx_wsh; i < idx_wsh + n_wsh && i < p; i++)
+            {
+                wm[i] *= sc;
+            }
+        }
     }
 }
 
@@ -665,6 +724,7 @@ static void extract_key(SL_ENGINE   *eng,
     double l_hi  = log(fmax(eng->e_hi_sum / ew_n, 1.0e-8));
     double l_tot = log(fmax(eng->e_tot_sum / ew_n, 1.0e-8));
     double l_vel = log(fmax(eng->e_vel_sum / vw_n, 1.0e-8));
+    eng->last_l_lo = l_lo;
 
     double raw[SL_MAX_KEY_DIM];
     memset(raw, 0, sizeof(raw));
@@ -869,11 +929,18 @@ void sl_engine_step(SL_ENGINE   *eng,
     extract_key(eng, wfs, dm, eng->cur_dol, ext_key, z_cur);
 
     /* 2. Build zero-DC per-mode regressor:
-     *    phi[0..3] = dOL_m(t..t-3) / dol_sd[m]
-     *    phi[4]    = w_m(t) / w_sd[m]           (for bounded optical-gain compensation)
-     *    phi[5..5+q-1] = dOL_j(t) / dol_sd[j]   (shared low-order velocity cross-talk) */
+     *    phi[0..3]         = dOL_m(t..t-3) / dol_sd[m]
+     *    phi[4]            = w_m(t) / w_sd[m]
+     *    if nl_mode >= 1:
+     *      phi[5]          = w_z * min(|w_z|, 3) / 3          (odd PyWFS S-curve saturation)
+     *      phi[6]          = w_z * tanh(0.5 * log(E_lo))      (Strehl/energy OG modulation)
+     *      phi[7]          = w_z * tanh(0.5 * (r_TT - 1))     (TT off-apex OG modulation)
+     *    phi[idx_dol..+q]  = dOL_j(t) / dol_sd[j]             (shared low-order velocity)
+     *    if nl_mode >= 2:
+     *      phi[idx_wsh..+q]= w_j(t) / w_sd[j]                 (shared low-order WFS crosstalk) */
     double cap = eng->cfg.outlier_sig;
     float  dol_lo_z[SL_MAX_QSHARED];
+    float  wfs_lo_z[SL_MAX_QSHARED];
     for (uint32_t j = 0; j < q; j++)
     {
         double dz = (double) eng->cur_dol[j] / eng->dol_sd[j];
@@ -881,6 +948,25 @@ void sl_engine_step(SL_ENGINE   *eng,
         if (dz > cap) dz = cap;
         else if (dz < -cap) dz = -cap;
         dol_lo_z[j] = (float) dz;
+
+        double wzj = (double) wfs[j] / eng->w_sd[j];
+        if (!sl_isfinite_d(wzj)) wzj = 0.0;
+        if (wzj > cap) wzj = cap;
+        else if (wzj < -cap) wzj = -cap;
+        wfs_lo_z[j] = (float) wzj;
+    }
+
+    double og_mod = 0.0;
+    double tt_mod = 0.0;
+    if (eng->n_nl > 0u)
+    {
+        og_mod = tanh(0.5 * eng->last_l_lo);
+        double w0z = (M > 0u) ? ((double) wfs[0] / eng->w_sd[0]) : 0.0;
+        double w1z = (M > 1u) ? ((double) wfs[1] / eng->w_sd[1]) : 0.0;
+        if (!sl_isfinite_d(w0z)) w0z = 0.0;
+        if (!sl_isfinite_d(w1z)) w1z = 0.0;
+        double r_tt = sqrt(w0z * w0z + w1z * w1z);
+        tt_mod      = tanh(0.5 * (r_tt - 1.0));
     }
 
     uint32_t tap_slot[SL_AR_DIFF_TAPS];
@@ -888,6 +974,10 @@ void sl_engine_step(SL_ENGINE   *eng,
     {
         tap_slot[k] = (dh + SL_AR_DIFF_TAPS - k) % SL_AR_DIFF_TAPS;
     }
+
+    uint32_t idx_nl  = SL_AR_DIFF_TAPS + 1u;
+    uint32_t idx_dol = idx_nl + eng->n_nl;
+    uint32_t idx_wsh = idx_dol + q;
 
     for (uint32_t m = 0; m < M; m++)
     {
@@ -908,9 +998,20 @@ void sl_engine_step(SL_ENGINE   *eng,
         if (wz > cap) wz = cap;
         else if (wz < -cap) wz = -cap;
         pm[SL_AR_DIFF_TAPS] = (float) wz;
+        if (eng->n_nl > 0u)
+        {
+            double sat_fac = fmin(fabs(wz), 3.0) / 3.0;
+            pm[idx_nl + 0u] = (float) (wz * sat_fac);
+            pm[idx_nl + 1u] = (float) (wz * og_mod);
+            pm[idx_nl + 2u] = (float) (wz * tt_mod);
+        }
         for (uint32_t j = 0; j < q; j++)
         {
-            pm[SL_AR_DIFF_TAPS + 1u + j] = dol_lo_z[j];
+            pm[idx_dol + j] = dol_lo_z[j];
+        }
+        for (uint32_t j = 0; j < eng->n_wsh; j++)
+        {
+            pm[idx_wsh + j] = wfs_lo_z[j];
         }
     }
 
@@ -1188,8 +1289,9 @@ void sl_engine_step(SL_ENGINE   *eng,
             y0_fit      += w0m[j] * (double) xm[j];
             w0_raw_m[j]  = sh0 * w0m[j];
         }
-        project_weights_stable(w0_raw_m, p, eng->dol_sd[m], eng->w_sd[m],
-                               eng->cfg.max_ar_norm2, eng->cfg.max_wfs_gain, eng->cfg.out_mode);
+        project_weights_stable(w0_raw_m, p, eng->n_nl, eng->q_sh, eng->n_wsh,
+                               eng->dol_sd[m], eng->w_sd[m], eng->cfg.max_ar_norm2,
+                               eng->cfg.max_wfs_gain, eng->cfg.out_mode);
 
         double y0_proj_raw = 0.0;
         for (uint32_t j = 0; j < p; j++)
@@ -1206,9 +1308,9 @@ void sl_engine_step(SL_ENGINE   *eng,
             {
                 w_tot_m[j] = w0_act_m[j] + w1m[j];
             }
-            project_weights_stable(w_tot_m, p, eng->dol_sd[m], eng->w_sd[m],
-                                   eng->cfg.max_ar_norm2, eng->cfg.max_wfs_gain,
-                                   eng->cfg.out_mode);
+            project_weights_stable(w_tot_m, p, eng->n_nl, eng->q_sh, eng->n_wsh,
+                                   eng->dol_sd[m], eng->w_sd[m], eng->cfg.max_ar_norm2,
+                                   eng->cfg.max_wfs_gain, eng->cfg.out_mode);
             double y_tot_raw = 0.0;
             for (uint32_t j = 0; j < p; j++)
             {
@@ -1221,8 +1323,9 @@ void sl_engine_step(SL_ENGINE   *eng,
         {
             w_eff_m[j] = w0_act_m[j] + ((enable_l1 && w1m != NULL) ? (a1 * w1m[j]) : 0.0);
         }
-        project_weights_stable(w_eff_m, p, eng->dol_sd[m], eng->w_sd[m],
-                               eng->cfg.max_ar_norm2, eng->cfg.max_wfs_gain, eng->cfg.out_mode);
+        project_weights_stable(w_eff_m, p, eng->n_nl, eng->q_sh, eng->n_wsh,
+                               eng->dol_sd[m], eng->w_sd[m], eng->cfg.max_ar_norm2,
+                               eng->cfg.max_wfs_gain, eng->cfg.out_mode);
         double y_eff = 0.0;
         for (uint32_t j = 0; j < p; j++)
         {
