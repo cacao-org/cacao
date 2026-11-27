@@ -73,6 +73,11 @@ static char     p_regime_in[FUNCTION_PARAMETER_STRMAXLEN]  = "";
 static int32_t  p_mr_enable                                = 0;
 static float    p_mr_vel_reg_mult                          = 3.5f;
 static float    p_mr_vel_maxnorm2                          = 1.0f;
+static uint32_t p_diff_nmode                               = 0;
+static uint32_t p_diff_order                               = 0;
+static float    p_diff_reg                                 = 0.05f;
+static float    p_diff_maxnorm2                            = 4.0f;
+static float    p_diff_maxdcgain                           = 0.9995f;
 
 static uint64_t o_n_updates     = 0;
 static uint64_t o_n_eof_updates = 0;
@@ -183,6 +188,19 @@ static float    o_mr_vel_rms    = 0.0f;
     X(".mr_vel_maxnorm2", &p_mr_vel_maxnorm2, FPTYPE_FLOAT32, 0,                                  \
       FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
       "row ||F_vel||_2^2 cap on multi-rate velocity channel")                                     \
+    X(".diff_nmode", &p_diff_nmode, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,    \
+      "leading modes solved in temporal-difference space (0=off)")                                \
+    X(".diff_order", &p_diff_order, FPTYPE_UINT32, 0, FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT,    \
+      "difference-space lookback tap order (0=diagorder, 2..64)")                                 \
+    X(".diff_reg", &p_diff_reg, FPTYPE_FLOAT32, 0,                                                \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "difference-space relative Tikhonov lambda")                                                \
+    X(".diff_maxnorm2", &p_diff_maxnorm2, FPTYPE_FLOAT32, 0,                                      \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "difference-space position-equivalent ||W_m||_2^2 cap")                                     \
+    X(".diff_maxdcgain", &p_diff_maxdcgain, FPTYPE_FLOAT32, 0,                                    \
+      FPFLAG_DEFAULT_INPUT | FPFLAG_CLI_INPUT | FPFLAG_WRITERUN,                                  \
+      "difference-space exact self-DC gain (0.9..0.99995)")                                       \
     X(".out.n_updates", &o_n_updates, FPTYPE_UINT64, 0, FPFLAG_DEFAULT_OUTPUT,                    \
       "total published filter updates")                                                           \
     X(".out.n_eof_updates", &o_n_eof_updates, FPTYPE_UINT64, 0, FPFLAG_DEFAULT_OUTPUT,            \
@@ -629,6 +647,385 @@ static void solve_diag_bootstrap(const float *hist_x,
     *out_var_pred = sum_var_pred;
 }
 
+/**
+ * @brief Temporal-difference (increment-space) solver for leading high-SNR low-order modes
+ *        (e.g. Tip-Tilt 0..1 or leading Zernikes 0..n_diff-1).
+ *
+ * Solves:
+ *   y_m(t + d) - x_m(t) = sum_{k=0}^{P_diff-2} v_{self,k} dx_m(t - k)
+ *                       + sum_{j != m, j < C} sum_{k=0}^{P_eof-2} v_{j,k} dx_j(t - k)
+ * and folds algebraically back into the standard position-lag layout of eofPFmat:
+ *   w_self[0] = alpha_dc + v_self[0], w_self[k] = v_self[k] - v_self[k-1], w_self[last] = -v_self[last]
+ *   w_j[0]    = v_j[0],               w_j[k]    = v_j[k] - v_j[k-1],       w_j[last]    = -v_j[last]
+ *
+ * Guarantees identically:
+ *   1. Self DC gain == alpha_dc (eliminates 0-5 Hz droop without post-hoc row rescaling).
+ *   2. Every off-diagonal mode coupling sums to 0.0 at DC (zero cross-mode DC/petal leakage).
+ *   3. Ridge lambda scales with dynamic increment variance rather than huge 0-5 Hz DC variance,
+ *      preventing ridge starvation of 49/100/138 Hz vibration eigenvectors.
+ */
+static void solve_diff_loworder(const float *hist_x,
+                                const float *hist_y,
+                                int          use_fx,
+                                uint32_t     fx_start,
+                                uint32_t     NBmode,
+                                uint32_t     n_diff,
+                                uint32_t     n_valid,
+                                uint32_t     P_eof,
+                                uint32_t     P_diff,
+                                uint32_t     B,
+                                uint32_t     stride,
+                                uint32_t     lat_i,
+                                double       lat_a,
+                                int          couple,
+                                float       *w_stage,
+                                double      *out_var_ol,
+                                double      *out_var_zoh,
+                                double      *out_var_pred,
+                                double      *out_e_tot,
+                                double      *out_e_off)
+{
+    if (n_diff == 0u || P_diff < 2u)
+    {
+        return;
+    }
+
+    uint32_t pb_len = P_eof * B;
+    uint32_t t0_idx = (use_fx ? fx_start : 0u) + P_diff - 1u;
+    uint32_t t1_idx = use_fx ? n_valid : ((n_valid > lat_i + 1u) ? (n_valid - lat_i - 1u) : 0u);
+    uint32_t nrows  = (t1_idx > t0_idx) ? (t1_idx - t0_idx) : 0u;
+    if (nrows < 16u)
+    {
+        return;
+    }
+
+    uint32_t pd_self  = P_diff - 1u;
+    uint32_t pd_cross = (P_eof > 1u) ? (P_eof - 1u) : 0u;
+    uint32_t c_max    = (couple && n_diff >= 2u && pd_cross >= 1u) ? n_diff : 1u;
+    if (c_max > B)
+    {
+        c_max = B;
+    }
+    if (c_max > 16u)
+    {
+        c_max = 16u;
+    }
+
+    double reg_init = (p_diff_reg > 1.0e-8f) ? (double) p_diff_reg : 0.05;
+    double max_n2   = (p_diff_maxnorm2 > 1.05f) ? (double) p_diff_maxnorm2 : 4.0;
+    double alpha_dc =
+        (p_diff_maxdcgain >= 0.90f && p_diff_maxdcgain <= 0.99995f) ? (double) p_diff_maxdcgain
+                                                                    : 0.9995;
+    double hi_max_n2 =
+        (p_maxnorm2 > 1.05f && (double) p_maxnorm2 < max_n2) ? (double) p_maxnorm2 : max_n2;
+    double hi_alpha_dc =
+        (p_maxdcgain >= 0.90f && (double) p_maxdcgain < alpha_dc) ? (double) p_maxdcgain
+                                                                  : alpha_dc;
+
+    double sum_var_ol   = 0.0;
+    double sum_var_zoh  = 0.0;
+    double sum_var_pred = 0.0;
+    double sum_e_tot    = 0.0;
+    double sum_e_off    = 0.0;
+
+#pragma omp parallel for schedule(dynamic) \
+    reduction(+ : sum_var_ol, sum_var_zoh, sum_var_pred, sum_e_tot, sum_e_off)
+    for (uint32_t m = 0; m < n_diff; m++)
+    {
+        uint32_t c_m        = (m < c_max) ? c_max : 1u;
+        double   max_n2_m   = (m < c_max) ? max_n2 : hi_max_n2;
+        double   alpha_dc_m = (m < c_max) ? alpha_dc : hi_alpha_dc;
+        double   hard_n2_m  = (m < c_max) ? (1.5 * max_n2_m) : (1.25 * max_n2_m);
+        uint32_t n_x        = (c_m > 1u) ? (c_m - 1u) : 0u;
+        uint32_t D_m = pd_self + n_x * pd_cross;
+        double  *Xm  = (double *) malloc(sizeof(double) * (size_t) nrows * D_m);
+        double  *dym = (double *) malloc(sizeof(double) * (size_t) nrows);
+        double  *Gm  = (double *) malloc(sizeof(double) * (size_t) D_m * D_m);
+        double  *Am  = (double *) malloc(sizeof(double) * (size_t) D_m * D_m);
+        double  *rm  = (double *) malloc(sizeof(double) * (size_t) D_m);
+        double  *vm  = (double *) malloc(sizeof(double) * (size_t) D_m);
+        if (!Xm || !dym || !Gm || !Am || !rm || !vm)
+        {
+            free(vm);
+            free(rm);
+            free(Am);
+            free(Gm);
+            free(dym);
+            free(Xm);
+            continue;
+        }
+
+        uint32_t x_modes[16];
+        uint32_t nx_idx = 0;
+        for (uint32_t j = 0; j < c_m; j++)
+        {
+            if (j != m)
+            {
+                x_modes[nx_idx++] = j;
+            }
+        }
+
+        double s_y    = 0.0;
+        double s_y2   = 0.0;
+        double s_zoh2 = 0.0;
+
+        for (uint32_t r = 0; r < nrows; r++)
+        {
+            uint32_t tk = t0_idx + r;
+            double   yk;
+            if (use_fx)
+            {
+                yk = (double) hist_y[(size_t) tk * NBmode + m];
+            }
+            else
+            {
+                double y0 = (double) hist_y[(size_t) (tk + lat_i) * NBmode + m];
+                double y1 = (double) hist_y[(size_t) (tk + lat_i + 1u) * NBmode + m];
+                yk        = (1.0 - lat_a) * y0 + lat_a * y1;
+            }
+            double x0 = (double) hist_x[(size_t) tk * NBmode + m];
+            double dz = yk - x0;
+            dym[r]    = dz;
+            s_y      += yk;
+            s_y2     += yk * yk;
+            s_zoh2   += dz * dz;
+
+            double *xrow = &Xm[(size_t) r * D_m];
+            for (uint32_t k = 0; k < pd_self; k++)
+            {
+                double a = (double) hist_x[(size_t) (tk - k) * NBmode + m];
+                double b = (double) hist_x[(size_t) (tk - k - 1u) * NBmode + m];
+                xrow[k]  = a - b;
+            }
+            for (uint32_t c = 0; c < n_x; c++)
+            {
+                uint32_t mj   = x_modes[c];
+                double  *xseg = &xrow[pd_self + c * pd_cross];
+                for (uint32_t k = 0; k < pd_cross; k++)
+                {
+                    double a = (double) hist_x[(size_t) (tk - k) * NBmode + mj];
+                    double b = (double) hist_x[(size_t) (tk - k - 1u) * NBmode + mj];
+                    xseg[k]  = a - b;
+                }
+            }
+        }
+
+        cblas_dsyrk(CblasRowMajor, CblasLower, CblasTrans, (int) D_m, (int) nrows, 1.0, Xm,
+                    (int) D_m, 0.0, Gm, (int) D_m);
+        for (uint32_t i = 0; i < D_m; i++)
+        {
+            for (uint32_t j = 0; j < i; j++)
+            {
+                Gm[(size_t) j * D_m + i] = Gm[(size_t) i * D_m + j];
+            }
+        }
+        cblas_dgemv(CblasRowMajor, CblasTrans, (int) nrows, (int) D_m, 1.0, Xm, (int) D_m, dym, 1,
+                    0.0, rm, 1);
+
+        double tr = 0.0;
+        for (uint32_t i = 0; i < D_m; i++)
+        {
+            tr += Gm[(size_t) i * D_m + i];
+        }
+        tr /= (double) D_m;
+
+        memset(vm, 0, sizeof(double) * (size_t) D_m);
+        int    solved = 0;
+        double n2_v   = 0.0;
+        double n2_pos = alpha_dc_m * alpha_dc_m;
+
+        if (tr > 1.0e-26)
+        {
+            double lam_rel = reg_init;
+            for (int attempt = 0; attempt < 12; attempt++)
+            {
+                memcpy(Am, Gm, sizeof(double) * (size_t) D_m * D_m);
+                double lam_abs = lam_rel * tr;
+                for (uint32_t i = 0; i < D_m; i++)
+                {
+                    Am[(size_t) i * D_m + i] += lam_abs;
+                }
+                memcpy(vm, rm, sizeof(double) * (size_t) D_m);
+                if (LAPACKE_dpotrf(LAPACK_ROW_MAJOR, 'L', (lapack_int) D_m, Am, (lapack_int) D_m) !=
+                    0)
+                {
+                    lam_rel *= 4.0;
+                    continue;
+                }
+                if (LAPACKE_dpotrs(LAPACK_ROW_MAJOR, 'L', (lapack_int) D_m, 1, Am, (lapack_int) D_m,
+                                   vm, 1) != 0)
+                {
+                    lam_rel *= 4.0;
+                    continue;
+                }
+
+                // Evaluate position-space equivalent L2 norm^2 without touching alpha_dc_m
+                double v_part = vm[0] * vm[0];
+                for (uint32_t k = 1; k < pd_self; k++)
+                {
+                    double wk = vm[k] - vm[k - 1u];
+                    v_part   += wk * wk;
+                }
+                v_part += vm[pd_self - 1u] * vm[pd_self - 1u];
+                for (uint32_t c = 0; c < n_x; c++)
+                {
+                    const double *vs = &vm[pd_self + c * pd_cross];
+                    v_part          += vs[0] * vs[0];
+                    for (uint32_t k = 1; k < pd_cross; k++)
+                    {
+                        double wk = vs[k] - vs[k - 1u];
+                        v_part   += wk * wk;
+                    }
+                    v_part += vs[pd_cross - 1u] * vs[pd_cross - 1u];
+                }
+                n2_v   = v_part;
+                n2_pos = alpha_dc_m * alpha_dc_m + 2.0 * alpha_dc_m * vm[0] + v_part;
+                solved = 1;
+                if (n2_pos <= max_n2_m)
+                {
+                    break;
+                }
+                lam_rel *= 2.0;
+            }
+        }
+
+        if (!solved)
+        {
+            memset(vm, 0, sizeof(double) * (size_t) D_m);
+        }
+        else if (n2_pos > hard_n2_m && n2_v > 1.0e-24)
+        {
+            // Scale ONLY increment weights v so exact self-DC gain == alpha_dc_m is preserved.
+            double b_q  = 2.0 * alpha_dc_m * vm[0];
+            double c_q  = alpha_dc_m * alpha_dc_m - hard_n2_m;
+            double disc = b_q * b_q - 4.0 * n2_v * c_q;
+            double sc   = (disc > 0.0) ? ((-b_q + sqrt(disc)) / (2.0 * n2_v)) : 0.0;
+            if (sc < 0.0)
+            {
+                sc = 0.0;
+            }
+            if (sc > 1.0)
+            {
+                sc = 1.0;
+            }
+            for (uint32_t d = 0; d < D_m; d++)
+            {
+                vm[d] *= sc;
+            }
+        }
+
+        // Exact training residual: err = yk - (alpha_dc_m * x0 + Xm * vm)
+        double s_pred2 = 0.0;
+        for (uint32_t r = 0; r < nrows; r++)
+        {
+            uint32_t      tk   = t0_idx + r;
+            const double *xrow = &Xm[(size_t) r * D_m];
+            double        dv   = 0.0;
+            for (uint32_t d = 0; d < D_m; d++)
+            {
+                dv += xrow[d] * vm[d];
+            }
+            double x0  = (double) hist_x[(size_t) tk * NBmode + m];
+            double err = dym[r] + (1.0 - alpha_dc_m) * x0 - dv;
+            s_pred2   += err * err;
+        }
+        double inv_n = 1.0 / (double) nrows;
+        double my    = s_y * inv_n;
+        double v_ol  = s_y2 * inv_n - my * my;
+        if (v_ol < 0.0)
+        {
+            v_ol = 0.0;
+        }
+        sum_var_ol   += v_ol;
+        sum_var_zoh  += s_zoh2 * inv_n;
+        sum_var_pred += s_pred2 * inv_n;
+
+        // Pack folded position-lag weights into standard eofPFmat row [P*B + diag_tail]
+        float   *row_out = &w_stage[(size_t) m * stride];
+        uint32_t local_m = m % B;
+        memset(row_out, 0, sizeof(float) * stride);
+
+        for (uint32_t k = 0; k < P_diff; k++)
+        {
+            double wk = 0.0;
+            if (k == 0u)
+            {
+                wk = alpha_dc_m + vm[0];
+            }
+            else if (k < pd_self)
+            {
+                wk = vm[k] - vm[k - 1u];
+            }
+            else
+            {
+                wk = -vm[pd_self - 1u];
+            }
+            if (k < P_eof)
+            {
+                row_out[(size_t) k * B + local_m] = (float) wk;
+            }
+            else
+            {
+                row_out[pb_len + (k - P_eof)] = (float) wk;
+            }
+            sum_e_tot += wk * wk;
+        }
+
+        for (uint32_t c = 0; c < n_x; c++)
+        {
+            uint32_t      mj = x_modes[c];
+            const double *vs = &vm[pd_self + c * pd_cross];
+            for (uint32_t k = 0; k < P_eof; k++)
+            {
+                double wk = 0.0;
+                if (k == 0u)
+                {
+                    wk = vs[0];
+                }
+                else if (k < pd_cross)
+                {
+                    wk = vs[k] - vs[k - 1u];
+                }
+                else
+                {
+                    wk = -vs[pd_cross - 1u];
+                }
+                row_out[(size_t) k * B + mj] = (float) wk;
+                sum_e_tot                   += wk * wk;
+                sum_e_off                   += wk * wk;
+            }
+        }
+
+        free(vm);
+        free(rm);
+        free(Am);
+        free(Gm);
+        free(dym);
+        free(Xm);
+    }
+
+    if (out_var_ol != NULL)
+    {
+        *out_var_ol += sum_var_ol;
+    }
+    if (out_var_zoh != NULL)
+    {
+        *out_var_zoh += sum_var_zoh;
+    }
+    if (out_var_pred != NULL)
+    {
+        *out_var_pred += sum_var_pred;
+    }
+    if (out_e_tot != NULL)
+    {
+        *out_e_tot += sum_e_tot;
+    }
+    if (out_e_off != NULL)
+    {
+        *out_e_off += sum_e_off;
+    }
+}
+
 static void compute_chunk_descriptor(const float            *hist_fm,
                                      uint32_t                NBmode,
                                      uint32_t                eff_modes,
@@ -756,7 +1153,25 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
         P = EOFPF_MAX_ORDER;
     }
 
+    uint32_t P_diff_cfg = 0;
+    if (p_diff_nmode > 0u)
+    {
+        P_diff_cfg = (p_diff_order >= 2u) ? p_diff_order : p_diagorder;
+        if (P_diff_cfg < 2u)
+        {
+            P_diff_cfg = 2u;
+        }
+        if (P_diff_cfg > EOFPF_MAX_ORDER)
+        {
+            P_diff_cfg = EOFPF_MAX_ORDER;
+        }
+    }
+
     uint32_t P_diag = p_diagorder;
+    if (P_diff_cfg > P_diag)
+    {
+        P_diag = P_diff_cfg;
+    }
     if (P_diag < P)
     {
         P_diag = P;
@@ -1554,11 +1969,15 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
             }
         }
 
+        uint32_t n_diff_eff    = (p_diff_nmode > 0u && P_diff_cfg >= 2u)
+                                     ? ((p_diff_nmode < eff_modes) ? p_diff_nmode : eff_modes)
+                                     : 0u;
+        uint32_t P_eof_need    = (n_diff_eff > 0u && P_diff_cfg > P) ? P_diff_cfg : P;
         uint64_t avail_samples = use_gram ? total_g_rows : (uint64_t) n_valid;
-        uint32_t phys_min_req  = P + lat_i + fx_t0 + 64u;
+        uint32_t phys_min_req  = P_eof_need + lat_i + fx_t0 + 64u;
         uint32_t eof_need      = o_phys_active ? phys_min_req : eof_req;
         int      do_eof        = (avail_samples >= (uint64_t) eof_need) &&
-                                 (n_valid > P + lat_i + fx_t0 + 16u) && (B > 1u);
+                                 (n_valid > P_eof_need + lat_i + fx_t0 + 16u) && (B > 1u);
         int      do_diag       = (!do_eof) && (n_valid >= diag_req) &&
                                  (n_valid > P_diag + lat_i + fx_t0 + 4u);
 
@@ -1582,7 +2001,7 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
 
             double reg_init  = (p_reglambda > 1.0e-9f) ? (double) p_reglambda : 1.0e-4;
             double max_norm2 = (p_maxnorm2 > 0.1f) ? (double) p_maxnorm2 : 2.0;
-            double max_dc    = (p_maxdcgain > 0.1f && p_maxdcgain < 0.9999f)
+            double max_dc    = (p_maxdcgain > 0.1f && p_maxdcgain <= 0.99995f)
                                    ? (double) p_maxdcgain
                                    : 0.995;
 
@@ -1612,6 +2031,17 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
                 uint32_t s0 = blk * B;
                 uint32_t b  = (s0 + B <= eff_modes) ? B : (eff_modes - s0);
                 uint32_t D  = P * b;
+
+                // Skip redundant position-space block Cholesky when solve_diff_loworder()
+                // will completely overwrite this block and multi-rate velocity is not needed.
+                if (s0 + b <= n_diff_eff && !mr_on)
+                {
+                    if (blk == 0u)
+                    {
+                        o_last_lam = (p_diff_reg > 1.0e-8f) ? p_diff_reg : 0.05f;
+                    }
+                    continue;
+                }
 
                 // Unpriored high-order blocks stay on safe diagonal AR until empirical
                 // sample count reaches eof_req, preventing underdetermined N < D overfitting.
@@ -1882,44 +2312,99 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
                 }
 
                 // Exact training-window residual: ||Y||_F^2 - 2 <W, R> + <W, G W>
+                uint32_t j_start = 0u;
+                if (s0 < n_diff_eff)
+                {
+                    j_start = ((n_diff_eff - s0) < b) ? (n_diff_eff - s0) : b;
+                }
                 cblas_dsymm(CblasRowMajor, CblasLeft, CblasLower, (int) D, (int) b, 1.0, G_blk,
                             (int) D, W_blk, (int) b, 0.0, GW, (int) b);
-                double wr  = 0.0;
-                double wGw = 0.0;
-                for (size_t idx = 0; idx < (size_t) D * b; idx++)
-                {
-                    wr  += W_blk[idx] * R_blk[idx];
-                    wGw += W_blk[idx] * GW[idx];
-                }
-                double b_pred2 = (b_y2 + prior_y2) - 2.0 * wr + wGw;
-                if (b_pred2 < 0.0)
-                {
-                    b_pred2 = 0.0;
-                }
-
                 double w_den      = use_gram ? ((w_emp > 1.0) ? w_emp : 1.0) : (double) nrows;
                 double inv_n      = 1.0 / w_den;
                 double inv_n_post = 1.0 / (w_den + w_prior);
-                if (!use_gram)
+                if (j_start == 0u)
                 {
-                    double b_mean = 0.0;
-                    for (uint32_t j = 0; j < b; j++)
+                    double wr  = 0.0;
+                    double wGw = 0.0;
+                    for (size_t idx = 0; idx < (size_t) D * b; idx++)
+                    {
+                        wr  += W_blk[idx] * R_blk[idx];
+                        wGw += W_blk[idx] * GW[idx];
+                    }
+                    double b_pred2 = (b_y2 + prior_y2) - 2.0 * wr + wGw;
+                    if (b_pred2 < 0.0)
+                    {
+                        b_pred2 = 0.0;
+                    }
+                    if (!use_gram)
+                    {
+                        double b_mean = 0.0;
+                        for (uint32_t j = 0; j < b; j++)
+                        {
+                            double mj = b_sum_y[j] * inv_n;
+                            b_mean   += mj * mj;
+                        }
+                        double b_vol = b_y2 * inv_n - b_mean;
+                        if (b_vol < 0.0)
+                        {
+                            b_vol = 0.0;
+                        }
+                        sum_var_ol  += b_vol;
+                        sum_var_zoh += b_zoh2 * inv_n;
+                    }
+                    sum_var_pred += b_pred2 * inv_n_post;
+                }
+                else if (j_start < b && !use_gram)
+                {
+                    double rem_y2   = 0.0;
+                    double rem_zoh2 = 0.0;
+                    for (uint32_t r = 0; r < nrows; r++)
+                    {
+                        uint32_t      tk   = t0_idx + r;
+                        const float  *h0   = &hist_x[(size_t) tk * NBmode + s0];
+                        const double *yrow = &Y_blk[(size_t) r * b];
+                        for (uint32_t j = j_start; j < b; j++)
+                        {
+                            double yv = yrow[j];
+                            double dz = yv - (double) h0[j];
+                            rem_y2   += yv * yv;
+                            rem_zoh2 += dz * dz;
+                        }
+                    }
+                    double wr_rem  = 0.0;
+                    double wGw_rem = 0.0;
+                    for (uint32_t d = 0; d < D; d++)
+                    {
+                        for (uint32_t j = j_start; j < b; j++)
+                        {
+                            size_t idx = (size_t) d * b + j;
+                            wr_rem    += W_blk[idx] * R_blk[idx];
+                            wGw_rem   += W_blk[idx] * GW[idx];
+                        }
+                    }
+                    double rem_pred2 = rem_y2 - 2.0 * wr_rem + wGw_rem;
+                    if (rem_pred2 < 0.0)
+                    {
+                        rem_pred2 = 0.0;
+                    }
+                    double rem_mean = 0.0;
+                    for (uint32_t j = j_start; j < b; j++)
                     {
                         double mj = b_sum_y[j] * inv_n;
-                        b_mean   += mj * mj;
+                        rem_mean += mj * mj;
                     }
-                    double b_vol = b_y2 * inv_n - b_mean;
-                    if (b_vol < 0.0)
+                    double rem_vol = rem_y2 * inv_n - rem_mean;
+                    if (rem_vol < 0.0)
                     {
-                        b_vol = 0.0;
+                        rem_vol = 0.0;
                     }
-                    sum_var_ol   += b_vol;
-                    sum_var_zoh  += b_zoh2 * inv_n;
+                    sum_var_ol   += rem_vol;
+                    sum_var_zoh  += rem_zoh2 * inv_n;
+                    sum_var_pred += rem_pred2 * inv_n;
                 }
-                sum_var_pred += b_pred2 * inv_n_post;
 
                 // Pack block matrix into row-major [NBmode x (P*B)] staging array
-                for (uint32_t j = 0; j < b; j++)
+                for (uint32_t j = j_start; j < b; j++)
                 {
                     float *row_out = &w_stage[(size_t) (s0 + j) * stride];
                     for (uint32_t k = 0; k < P; k++)
@@ -2159,6 +2644,13 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
                 }
             }
 
+            if (n_diff_eff > 0u)
+            {
+                solve_diff_loworder(hist_x, hist_fm, use_fx, fx_t0, NBmode, n_diff_eff, n_valid, P,
+                                    P_diff_cfg, B, stride, lat_i, lat_a, 1, w_stage, &sum_var_ol,
+                                    &sum_var_zoh, &sum_var_pred, &sum_e_tot, &sum_e_off);
+            }
+
             // Smooth cross-fade from diag AR(P_diag) bootstrap into cross-mode EOF
             // (immediate full publish on first update or detected wind switch).
             float alpha = (o_n_updates == 0 || wind_switched_now) ? 1.0f : p_loopgain;
@@ -2228,10 +2720,19 @@ static MILK_HOT errno_t mkEOFPF_compute(const MILK_RUNNABLE *self)
             {
                 memset(w_vel_stage, 0, sizeof(float) * (size_t) NBmode * stride);
             }
-            solve_diag_bootstrap(hist_x, hist_fm, use_fx, fx_t0, NBmode, 0u, eff_modes, n_valid, P,
-                                 P_diag, B, stride, lat_i, lat_a, w_stage,
-                                 mr_on ? w_vel_stage : NULL, &sum_var_ol, &sum_var_zoh,
-                                 &sum_var_pred);
+            if (n_diff_eff < eff_modes)
+            {
+                solve_diag_bootstrap(hist_x, hist_fm, use_fx, fx_t0, NBmode, n_diff_eff, eff_modes,
+                                     n_valid, P, P_diag, B, stride, lat_i, lat_a, w_stage,
+                                     mr_on ? w_vel_stage : NULL, &sum_var_ol, &sum_var_zoh,
+                                     &sum_var_pred);
+            }
+            if (n_diff_eff > 0u)
+            {
+                solve_diff_loworder(hist_x, hist_fm, use_fx, fx_t0, NBmode, n_diff_eff, n_valid, P,
+                                    P_diff_cfg, B, stride, lat_i, lat_a, 0, w_stage, &sum_var_ol,
+                                    &sum_var_zoh, &sum_var_pred, NULL, NULL);
+            }
 
             float  alpha  = (o_n_updates == 0) ? 1.0f : 0.30f;
             float  beta   = 1.0f - alpha;
